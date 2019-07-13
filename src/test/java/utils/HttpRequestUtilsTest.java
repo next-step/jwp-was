@@ -1,7 +1,7 @@
-package util;
+package utils;
 
 import org.junit.jupiter.api.Test;
-import util.HttpRequestUtils.Pair;
+import utils.HttpRequestUtils.Pair;
 
 import java.util.Map;
 

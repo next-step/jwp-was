@@ -1,4 +1,4 @@
-package util;
+package utils;
 
 import java.util.Arrays;
 import java.util.Map;
