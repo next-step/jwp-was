@@ -9,8 +9,8 @@ public class RequestLine {
 
     public static RequestLine parse(String s) {
 
-        return null;
-         String[] values = s.split("");
+    
+
 
          return new RequestLine(values[0], values[1]);
     }
