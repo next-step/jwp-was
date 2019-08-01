@@ -10,7 +10,9 @@ class RequestLineTest {
 
     @DisplayName("요청을 받았을 시 requestLine을 구하는데 성공한다")
     @ParameterizedTest
-    @ValueSource(strings = {"GET /users HTTP/1.1", "POST /users HTTP/1.1"})
+    @ValueSource(strings = {
+            "GET /users HTTP/1.1",
+            "POST /users HTTP/1.1"})
     void getRequestLine_success(String request) {
         // when
         RequestLine requestLine = RequestLine.parse(request);
