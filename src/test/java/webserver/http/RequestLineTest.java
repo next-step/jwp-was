@@ -34,6 +34,16 @@ public class RequestLineTest {
         assertThat(requestLine.getHttpVersion()).isEqualTo("HTTP/1.1");
     }
 
+    @Test
+    void not_include_query_string_parsing() {
+        RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
+
+        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getPath()).isEqualTo("/users");
+        assertThat(requestLine.getQueryString()).hasSize(0);
+        assertThat(requestLine.getHttpVersion()).isEqualTo("HTTP/1.1");
+    }
+
     @ParameterizedTest
     @CsvSource({"userId, javajigi"})
     public void parameterized_test(String key, String value) {
