@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 public class HttpURL {
 
-    private static final String DELIMITER = "?";
+    private static final String SEPARATOR = "?";
     private String path;
     private QueryString queryString;
 
@@ -14,12 +14,11 @@ public class HttpURL {
     }
 
     static HttpURL of(String path) {
-        String[] content = path.split(Pattern.quote(DELIMITER));
-
-        if(path.contains(DELIMITER)){
+        if (path.contains(SEPARATOR)) {
+            String[] content = path.split(Pattern.quote(SEPARATOR));
             return new HttpURL(content[0], QueryString.of(content[1]));
         }
-        return new HttpURL(path, null);
+        return new HttpURL(path, QueryString.EMPTY);
     }
 
     String getPath() {
