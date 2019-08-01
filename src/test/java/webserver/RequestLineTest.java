@@ -19,7 +19,23 @@ class RequestLineTest {
 
         // then
         assertThat(requestLine.getMethod()).isEqualTo(method);
-        assertThat(requestLine.getPath()).isEqualTo(expectedResult[1]);
+        assertThat(requestLine.getUrl().getPath()).isEqualTo(expectedResult[1]);
         assertThat(requestLine.getVersion()).isEqualTo(expectedResult[2]);
+    }
+
+    @DisplayName("GET 메소드 요청 시 requestLine을 생성한다")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "GET /users HTTP/1.1",
+            "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1",
+            "GET /users?userId=javajigi HTTP/1.1"
+    })
+    void requesetLine_GET_thenSuccess(String request) {
+        // when
+        RequestLine requestLine = RequestLine.parse(request);
+
+        // then
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
+        assertThat(requestLine.getUrl().getPath()).isEqualTo("/users");
     }
 }

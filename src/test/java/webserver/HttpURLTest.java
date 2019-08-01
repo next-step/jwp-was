@@ -9,7 +9,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class HttpURLTest {
 
-    @DisplayName("path를 구한다")
+    @DisplayName("path를 구하는데 성공한다")
     @ParameterizedTest
     @ValueSource(strings = {
             "/users",
@@ -22,7 +22,7 @@ class HttpURLTest {
         assertThat(httpURL.getPath()).isEqualTo("/users");
     }
 
-    @DisplayName("query 속성의 값을 구한다")
+    @DisplayName("query 속성의 값을 구하는데 성꽁한다")
     @ParameterizedTest
     @CsvSource({
             "'userId', 'javajigi'",
@@ -31,10 +31,10 @@ class HttpURLTest {
     })
     void returnQueryString_success(String attribute, String value) {
         // given
-        String path = "/users?userId=javajigi&password=password&name=JaeSung";
+        String url = "/users?userId=javajigi&password=password&name=JaeSung";
 
         // when
-        HttpURL httpURL = HttpURL.of(path);
+        HttpURL httpURL = HttpURL.of(url);
         String result = httpURL.getRequestParam(attribute);
 
         // then

@@ -13,12 +13,12 @@ public class HttpURL {
         this.queryString = queryString;
     }
 
-    static HttpURL of(String path) {
-        if (path.contains(SEPARATOR)) {
-            String[] content = path.split(Pattern.quote(SEPARATOR));
+    static HttpURL of(String url) {
+        if (url.contains(SEPARATOR)) {
+            String[] content = url.split(Pattern.quote(SEPARATOR));
             return new HttpURL(content[0], QueryString.of(content[1]));
         }
-        return new HttpURL(path, QueryString.EMPTY);
+        return new HttpURL(url, QueryString.EMPTY);
     }
 
     String getPath() {
