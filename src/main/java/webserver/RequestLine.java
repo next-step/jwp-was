@@ -2,9 +2,10 @@ package webserver;
 
 public class RequestLine {
 
-    public static final int INDEX_OF_METHOD = 0;
-    public static final int INDEX_OF_URL = 1;
-    public static final int INDEX_OF_VERSION = 2;
+    private static final int INDEX_OF_METHOD = 0;
+    private static final int INDEX_OF_URL = 1;
+    private static final int INDEX_OF_VERSION = 2;
+
     private HttpMethod method;
     private HttpURL url;
     private String version;

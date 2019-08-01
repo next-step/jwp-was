@@ -44,6 +44,8 @@ public class QueryString {
 
     static class Parameter {
 
+        private static final int INDEX_OF_ATTRIBUTE = 0;
+        private static final int INDEX_OF_VALUE = 1;
         private static final String SEPARATOR = "=";
 
         private String attribute;
@@ -56,7 +58,7 @@ public class QueryString {
 
         static Parameter of(String parameter) {
             String[] pair = parameter.split(SEPARATOR);
-            return new Parameter(pair[0], pair[1]);
+            return new Parameter(pair[INDEX_OF_ATTRIBUTE], pair[INDEX_OF_VALUE]);
         }
 
         String getAttribute() {
