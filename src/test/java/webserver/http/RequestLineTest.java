@@ -1,7 +1,11 @@
 package webserver.http;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import webserver.RequestLine;
+
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,5 +32,13 @@ public class RequestLineTest {
         assertThat(requestLine.getQueryString()).hasSize(3);
         assertThat(requestLine.getQueryString()).containsKeys("userId", "password", "name");
         assertThat(requestLine.getHttpVersion()).isEqualTo("HTTP/1.1");
+    }
+
+    @ParameterizedTest
+    @CsvSource({"userId, javajigi"})
+    public void parameterized_test(String key, String value) {
+        RequestLine requestLine = RequestLine.parse("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
+        assertThat(requestLine.getQueryString()).containsKeys(key);
+        assertThat(requestLine.getQueryString()).containsValue(Collections.singletonList(value));
     }
 }
