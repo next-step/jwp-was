@@ -18,14 +18,14 @@ public class RequestLine {
     }
 
     String getMethod() {
-        return new String(method);
+        return method;
     }
 
     String getPath() {
-        return new String(path);
+        return path;
     }
 
     String getVersion() {
-        return new String(version);
+        return version;
     }
 }
