@@ -7,19 +7,21 @@ import webserver.request.enums.HttpVersion;
  * Created by hspark on 2019-08-01.
  */
 public class RequestLine {
+	public static final String BLANK = " ";
+
 	private HttpMethod httpMethod;
 	private String requestUrl;
 	private HttpVersion httpVersion;
 
-	private RequestLine(String requestLineStr) {
-		String[] requestLineArr = requestLineStr.split(" ");
-		httpMethod = HttpMethod.valueOf(requestLineArr[0]);
-		requestUrl = requestLineArr[1];
-		httpVersion = HttpVersion.findByHeaderValue(requestLineArr[2]);
+	public RequestLine(String httpMethod, String requestUrl, String httpVersion) {
+		this.httpMethod = HttpMethod.valueOf(httpMethod);
+		this.requestUrl = requestUrl;
+		this.httpVersion = HttpVersion.findByHeaderValue(httpVersion);
 	}
 
 	public static RequestLine parse(String requestLineStr) {
-		return new RequestLine(requestLineStr);
+		String[] requestLineArr = requestLineStr.split(BLANK);
+		return new RequestLine(requestLineArr[0], requestLineArr[1], requestLineArr[2]);
 	}
 
 	public HttpMethod getHttpMethod() {
