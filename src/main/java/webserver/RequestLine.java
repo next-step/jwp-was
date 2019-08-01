@@ -2,12 +2,12 @@ package webserver;
 
 public class RequestLine {
 
-    private String method;
+    private HttpMethod method;
     private String path;
     private String version;
 
     private RequestLine(String method, String path, String version) {
-        this.method = method;
+        this.method = HttpMethod.valueOf(method);
         this.path = path;
         this.version = version;
     }
@@ -17,7 +17,7 @@ public class RequestLine {
         return new RequestLine(requests[0], requests[1], requests[2]);
     }
 
-    String getMethod() {
+    HttpMethod getMethod() {
         return method;
     }
 
