@@ -24,3 +24,4 @@
     * [o] if문 제거 연습
         * [o] FigureFactory 클래스의 getInstance() 메소드에서 if절 없이 객체 생성하도록 구현
         * [o] Map Collection을 활용하여 구현
+
