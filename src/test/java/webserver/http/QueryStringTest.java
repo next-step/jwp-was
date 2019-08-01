@@ -1,15 +1,19 @@
 package webserver.http;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class QueryStringTest {
 
+    @DisplayName("빈값의 쿼리스트링을 생성하면 빈값이다.")
     @ParameterizedTest
+    @NullAndEmptySource
     @ValueSource(strings = {
-            "", " "
+            " "
     })
     void empty(final String rawQueryString) {
         // when
@@ -19,6 +23,7 @@ class QueryStringTest {
         assertThat(queryString).isEqualTo(QueryString.EMPTY);
     }
 
+    @DisplayName("쿼리스트링의 값을 가져온다.")
     @ParameterizedTest
     @ValueSource(strings = {
             "a", "b", "c"
@@ -34,6 +39,7 @@ class QueryStringTest {
         assertThat(value).isEqualTo(key);
     }
 
+    @DisplayName("쿼리스트링의 값이 없으면 null을 반환한다.")
     @ParameterizedTest
     @ValueSource(strings = {
             "a", "b", "c"
