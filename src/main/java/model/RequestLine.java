@@ -1,7 +1,5 @@
 package model;
 
-import java.io.File;
-
 /**
  * @author : yusik
  * @date : 2019-08-01
