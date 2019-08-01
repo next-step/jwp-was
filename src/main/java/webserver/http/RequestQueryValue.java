@@ -2,24 +2,24 @@ package webserver.http;
 
 import utils.StringUtils;
 
-class QueryStringValue {
+class RequestQueryValue {
 
     private static final String EQUAL_SIGN = "=";
     private static final int SIZE = 2;
 
-    private static final int KEY_INDEX = 0;
-    private static final int VALUE_INDEX = 1;
+    private static final int INDEX_OF_KEY = 0;
+    private static final int INDEX_OF_VALUE = 1;
 
     private final String key;
     private final String value;
 
-    private QueryStringValue(final String key,
-                             final String value) {
+    private RequestQueryValue(final String key,
+                              final String value) {
         this.key = key;
         this.value = value;
     }
 
-    static QueryStringValue of(final String rawQueryStringValue) {
+    static RequestQueryValue of(final String rawQueryStringValue) {
         if (StringUtils.isBlank(rawQueryStringValue)) {
             throw new InvalidQueryStringValueException(rawQueryStringValue);
         }
@@ -29,10 +29,10 @@ class QueryStringValue {
             throw new InvalidQueryStringValueException(rawQueryStringValue);
         }
 
-        final String key = splitQueryStringValue[KEY_INDEX].trim();
-        final String value = splitQueryStringValue[VALUE_INDEX].trim();
+        final String key = splitQueryStringValue[INDEX_OF_KEY].trim();
+        final String value = splitQueryStringValue[INDEX_OF_VALUE].trim();
 
-        return new QueryStringValue(key, value);
+        return new RequestQueryValue(key, value);
     }
 
     String getKey() {

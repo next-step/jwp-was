@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-class QueryStringValueTest {
+class RequestQueryValueTest {
 
     @DisplayName("쿼리스트링 값을 생성한다.")
     @ParameterizedTest
@@ -23,13 +23,13 @@ class QueryStringValueTest {
     })
     void create(final String rawQueryStringValue) {
         // when
-        final QueryStringValue queryStringValue = QueryStringValue.of(rawQueryStringValue);
+        final RequestQueryValue requestQueryValue = RequestQueryValue.of(rawQueryStringValue);
 
         // then
-        assertThat(queryStringValue).isNotNull();
+        assertThat(requestQueryValue).isNotNull();
     }
 
-    @DisplayName("쿼리스트링 생성 시 올바르지 않으면 에러를 반환한다.")
+    @DisplayName("쿼리스트링 생성 시 올바르지 않으면 예외처리한다.")
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {
@@ -37,9 +37,9 @@ class QueryStringValueTest {
             "=",
             " "
     })
-    void invalidQueryStringValue(final String rawQueryStringValue) {
+    void throwInvalidQueryStringValueException(final String rawQueryStringValue) {
         // when / then
         assertThatExceptionOfType(InvalidQueryStringValueException.class)
-                .isThrownBy(() -> QueryStringValue.of(rawQueryStringValue));
+                .isThrownBy(() -> RequestQueryValue.of(rawQueryStringValue));
     }
 }

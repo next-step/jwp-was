@@ -9,27 +9,27 @@ import java.util.Map;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toMap;
 
-public class QueryString {
+public class RequestQuery {
 
-    static final QueryString EMPTY = new QueryString(Collections.emptyMap());
+    static final RequestQuery EMPTY = new RequestQuery(Collections.emptyMap());
 
     private static final String AMPERSAND = "&";
 
     private final Map<String, String> queryString;
 
-    private QueryString(final Map<String, String> queryString) {
+    private RequestQuery(final Map<String, String> queryString) {
         this.queryString = queryString;
     }
 
-    public static QueryString of(final String rawQueryString) {
+    public static RequestQuery of(final String rawQueryString) {
         if (StringUtils.isBlank(rawQueryString)) {
             return EMPTY;
         }
 
         return Arrays.stream(rawQueryString.split(AMPERSAND))
-                .map(QueryStringValue::of)
-                .collect(collectingAndThen(toMap(QueryStringValue::getKey, QueryStringValue::getValue),
-                        QueryString::new));
+                .map(RequestQueryValue::of)
+                .collect(collectingAndThen(toMap(RequestQueryValue::getKey, RequestQueryValue::getValue),
+                        RequestQuery::new));
     }
 
     public String getString(final String key) {
