@@ -5,12 +5,12 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RequestLineTest {
+class RequestLineTest {
     @ParameterizedTest
     @CsvSource(value = {"GET /users HTTP/1.1, GET, /users", "POST /users HTTP/1.1, POST, /users"})
-    void parse(final String line, final String method, final String path) {
-        RequestLine requestLine = RequestLine.parse(line);
+    void parse(final String line, final String method, final String requestUri) {
+        final RequestLine requestLine = RequestLine.parse(line);
         assertThat(requestLine.getMethod()).isEqualTo(method);
-        assertThat(requestLine.getRequestUri()).isEqualTo(path);
+        assertThat(requestLine.getRequestUri()).isEqualTo(requestUri);
     }
 }
