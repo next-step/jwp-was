@@ -5,6 +5,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static webserver.RequestLine.INDEX_OF_METHOD;
+import static webserver.RequestLine.INDEX_OF_URL;
+import static webserver.RequestLine.INDEX_OF_VERSION;
 
 class RequestLineTest {
 
@@ -17,12 +20,12 @@ class RequestLineTest {
         // when
         RequestLine requestLine = RequestLine.parse(request);
         String[] expectedResult = request.split(" ");
-        HttpMethod method = HttpMethod.valueOf(expectedResult[0]);
+        HttpMethod method = HttpMethod.valueOf(expectedResult[INDEX_OF_METHOD]);
 
         // then
         assertThat(requestLine.getMethod()).isEqualTo(method);
-        assertThat(requestLine.getUrl().getPath()).isEqualTo(expectedResult[1]);
-        assertThat(requestLine.getVersion()).isEqualTo(expectedResult[2]);
+        assertThat(requestLine.getUrl().getPath()).isEqualTo(expectedResult[INDEX_OF_URL]);
+        assertThat(requestLine.getVersion()).isEqualTo(expectedResult[INDEX_OF_VERSION]);
     }
 
     @DisplayName("GET 메소드 요청 시 requestLine을 생성한다")
