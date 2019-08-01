@@ -34,4 +34,8 @@ public class RequestURL {
 
         return new RequestURL(requestPath, requestQuery);
     }
+
+    String getPath() {
+        return requestPath.getRequestPath();
+    }
 }
