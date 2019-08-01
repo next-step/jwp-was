@@ -12,12 +12,12 @@ class RequestLineTest {
 
 	@Test
 	void test_requestLine_생성_GET() {
-		String requestLineStr = "GET /users HTTP/1.1";
+		String requestLineStr = "GaET /users HTTP/1.1";
 
 		RequestLine requestLine = RequestLine.parse(requestLineStr);
 
 		Assertions.assertThat(requestLine.getHttpMethod()).isEqualTo(HttpMethod.GET);
-		Assertions.assertThat(requestLine.getRequestUrl()).isEqualTo("/users");
+		Assertions.assertThat(requestLine.getRequestUrl().getPath()).isEqualTo("/users");
 		Assertions.assertThat(requestLine.getHttpVersion()).isEqualTo(HttpVersion.HTTP_1_1);
 	}
 
@@ -28,7 +28,7 @@ class RequestLineTest {
 		RequestLine requestLine = RequestLine.parse(requestLineStr);
 
 		Assertions.assertThat(requestLine.getHttpMethod()).isEqualTo(HttpMethod.POST);
-		Assertions.assertThat(requestLine.getRequestUrl()).isEqualTo("/users");
+		Assertions.assertThat(requestLine.getRequestUrl().getPath()).isEqualTo("/users");
 		Assertions.assertThat(requestLine.getHttpVersion()).isEqualTo(HttpVersion.HTTP_1_1);
 	}
 }

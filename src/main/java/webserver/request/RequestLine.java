@@ -10,12 +10,12 @@ public class RequestLine {
 	public static final String BLANK = " ";
 
 	private HttpMethod httpMethod;
-	private String requestUrl;
+	private URI requestUrl;
 	private HttpVersion httpVersion;
 
 	public RequestLine(String httpMethod, String requestUrl, String httpVersion) {
 		this.httpMethod = HttpMethod.valueOf(httpMethod);
-		this.requestUrl = requestUrl;
+		this.requestUrl = URI.parse(requestUrl);
 		this.httpVersion = HttpVersion.findByHeaderValue(httpVersion);
 	}
 
@@ -28,7 +28,7 @@ public class RequestLine {
 		return httpMethod;
 	}
 
-	public String getRequestUrl() {
+	public URI getRequestUrl() {
 		return requestUrl;
 	}
 
