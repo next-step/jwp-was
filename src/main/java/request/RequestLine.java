@@ -1,4 +1,4 @@
-package webserver;
+package request;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -12,12 +12,12 @@ import static utils.StringUtils.*;
  * Created by youngjae.havi on 2019-08-01
  */
 public class RequestLine {
-    private String method;
+    private HttpMethod method;
     private String path;
     private MultiValueMap<String, String> queryStringMap;
     private String httpVersion;
 
-    public RequestLine(String method, String path, MultiValueMap<String, String> queryStringMap, String httpVersion) {
+    public RequestLine(HttpMethod method, String path, MultiValueMap<String, String> queryStringMap, String httpVersion) {
         this.method = method;
         this.path = path;
         this.queryStringMap = queryStringMap;
@@ -35,7 +35,7 @@ public class RequestLine {
             makeQueryString(queryString, queryStringMap);
         }
 
-        return new RequestLine(lines[0], splitPathAndQuery[0], queryStringMap, lines[2]);
+        return new RequestLine(HttpMethod.of(lines[0]), splitPathAndQuery[0], queryStringMap, lines[2]);
     }
 
     private static void makeQueryString(String queryString, MultiValueMap<String, String> queryStringMap) {
@@ -47,7 +47,7 @@ public class RequestLine {
         }
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
