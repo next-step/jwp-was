@@ -5,10 +5,9 @@ public class RequestLine {
     private final String path;
 
     public static RequestLine parse(String requestString) {
-        String[] splited = requestString.split(requestString);
-        String method = splited[0];
-        String path = splited[1];
-        //String protocol = splited[2];
+        String[] split = requestString.split(" ");
+        String method = split[0];
+        String path = split[1];
         return new RequestLine(method, path);
     }
 
