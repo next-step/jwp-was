@@ -10,4 +10,4 @@
 
 ## 요구사항
 ### [0단계 - TDD로 RequestLine 파싱](./docs/step0.md) 
-
+### [1단계 - Header 파싱, if문 제거](./docs/step1.md)
