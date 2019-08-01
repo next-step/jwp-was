@@ -12,7 +12,7 @@ class RequestLineTest {
 
 	@Test
 	void test_requestLine_생성_GET() {
-		String requestLineStr = "GaET /users HTTP/1.1";
+		String requestLineStr = "GET /users HTTP/1.1";
 
 		RequestLine requestLine = RequestLine.parse(requestLineStr);
 

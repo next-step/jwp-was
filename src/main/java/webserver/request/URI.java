@@ -1,5 +1,7 @@
 package webserver.request;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
+
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Map;
@@ -12,6 +14,8 @@ public class URI {
 	public static final String QUERY_STRING_DELIMETER = "\\?";
 	public static final String EQUALS = "=";
 	public static final String AMPERSAND = "&";
+	public static final int QUERY_STRING_INDEX = 2;
+
 	private String path;
 	private String queryString;
 	private Map<String, String> parameters;
@@ -24,13 +28,17 @@ public class URI {
 
 	public static URI parse(String uri) {
 		String[] parsedUri = uri.split(QUERY_STRING_DELIMETER);
-		return new URI(parsedUri[0], parsedUri[1]);
+		String path = parsedUri[0];
+		String queryString = parsedUri.length < QUERY_STRING_INDEX ? StringUtils.EMPTY : parsedUri[1];
+		return new URI(path, queryString);
 	}
 
 	private Map<String, String> parseQueryString(String queryString) {
 		String[] queries = queryString.split(AMPERSAND);
-		return Arrays.stream(queries).map(this::parseQuery)
-			.collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+		return Arrays.stream(queries)
+			.filter(it -> StringUtils.isNotBlank(it))
+			.map(this::parseQuery)
+			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	private AbstractMap.SimpleEntry<String, String> parseQuery(String strs) {
