@@ -6,7 +6,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.Arrays;
 
 import static com.github.jknack.handlebars.internal.lang3.StringUtils.SPACE;
-import static utils.StringUtils.*;
+import static request.UriSplitter.*;
 
 /**
  * Created by youngjae.havi on 2019-08-01
@@ -26,7 +26,7 @@ public class RequestLine {
 
     public static RequestLine parse(String requestLine) {
         String[] lines = requestLine.split(SPACE);
-        String[] splitPathAndQuery = lines[1].split(START_QUERY);
+        String[] splitPathAndQuery = lines[1].split(START_QUERY.getSplitter());
         MultiValueMap<String, String> queryStringMap = new LinkedMultiValueMap<>();
 
         boolean hasQueryString = splitPathAndQuery.length > 1;
@@ -39,11 +39,11 @@ public class RequestLine {
     }
 
     private static void makeQueryString(String queryString, MultiValueMap<String, String> queryStringMap) {
-        String[] splitQuery = queryString.split(SPLIT_QUERY);
+        String[] splitQuery = queryString.split(SPLIT_QUERY.getSplitter());
         if (splitQuery.length > 0) {
             Arrays.stream(splitQuery)
-                    .map(query -> query.split(SPLIT_KEY_VALUE))
-                    .forEach(keyValue -> queryStringMap.put(keyValue[0], Arrays.asList(keyValue[1].split(COMMA))));
+                    .map(query -> query.split(SPLIT_KEY_VALUE.getSplitter()))
+                    .forEach(keyValue -> queryStringMap.put(keyValue[0], Arrays.asList(keyValue[1].split(COMMA.getSplitter()))));
         }
     }
 
