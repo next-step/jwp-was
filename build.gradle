@@ -8,6 +8,10 @@ repositories {
     mavenCentral()
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation 'com.google.guava:guava:28.0-jre'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
