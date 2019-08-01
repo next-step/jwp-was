@@ -13,7 +13,7 @@ public class RequestLineTest {
         RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
 
         // then
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
-        assertThat(requestLine.getPath()).isEqualTo("/users");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
+        assertThat(requestLine.getRequestUri()).isEqualTo("/users");
     }
 }

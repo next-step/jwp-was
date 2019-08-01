@@ -1,28 +1,34 @@
 package webserver.http;
 
+import com.google.common.base.Strings;
+
 public class RequestLine {
 
-    private String requestLine;
-    private String method;
-    private String path;
+    private static final String token = " ";
+
+    private final HttpMethod method;
+    private final String requestUri;
 
     public static RequestLine parse(String requestLine) {
-        final String[] requestLines = requestLine.split(" ");
+        if (Strings.isNullOrEmpty(requestLine)) {
+            throw new IllegalArgumentException("Request-Line은 필수입니다.");
+        }
 
-        return new RequestLine(requestLine, requestLines[0], requestLines[1]);
+        final String[] requestLines = requestLine.split(token);
+
+        return new RequestLine(requestLines[0], requestLines[1]);
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
-    public String getPath() {
-        return path;
+    public String getRequestUri() {
+        return requestUri;
     }
 
-    private RequestLine(String requestLine, String method, String path) {
-        this.requestLine = requestLine;
-        this.method = method;
-        this.path = path;
+    private RequestLine(String method, String requestUri) {
+        this.method = HttpMethod.valueOf(method);
+        this.requestUri = requestUri;
     }
 }
