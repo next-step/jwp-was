@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import webserver.request.enums.HttpMethod;
 import webserver.request.RequestLine;
+import webserver.request.enums.HttpVersion;
 
 /**
  * Created by hspark on 2019-08-01.
@@ -18,7 +19,7 @@ class RequestLineTest {
 
 		Assertions.assertThat(requestLine.getHttpMethod()).isEqualTo(HttpMethod.GET);
 		Assertions.assertThat(requestLine.getRequestUrl()).isEqualTo("/users");
-		Assertions.assertThat(requestLine.getHttpVersion()).isEqualTo("HTTP/1.1");
+		Assertions.assertThat(requestLine.getHttpVersion()).isEqualTo(HttpVersion.HTTP_1_1);
 	}
 
 	@Test
@@ -29,6 +30,6 @@ class RequestLineTest {
 
 		Assertions.assertThat(requestLine.getHttpMethod()).isEqualTo(HttpMethod.POST);
 		Assertions.assertThat(requestLine.getRequestUrl()).isEqualTo("/users");
-		Assertions.assertThat(requestLine.getHttpVersion()).isEqualTo("HTTP/1.1");
+		Assertions.assertThat(requestLine.getHttpVersion()).isEqualTo(HttpVersion.HTTP_1_1);
 	}
 }

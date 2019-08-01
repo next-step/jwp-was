@@ -1,6 +1,7 @@
 package webserver.request;
 
 import webserver.request.enums.HttpMethod;
+import webserver.request.enums.HttpVersion;
 
 /**
  * Created by hspark on 2019-08-01.
@@ -8,13 +9,13 @@ import webserver.request.enums.HttpMethod;
 public class RequestLine {
 	private HttpMethod httpMethod;
 	private String requestUrl;
-	private String httpVersion;
+	private HttpVersion httpVersion;
 
 	private RequestLine(String requestLineStr) {
 		String[] requestLineArr = requestLineStr.split(" ");
 		httpMethod = HttpMethod.valueOf(requestLineArr[0]);
 		requestUrl = requestLineArr[1];
-		httpVersion = requestLineArr[2];
+		httpVersion = HttpVersion.findByHeaderValue(requestLineArr[2]);
 	}
 
 	public static RequestLine parse(String requestLineStr) {
@@ -29,7 +30,7 @@ public class RequestLine {
 		return requestUrl;
 	}
 
-	public String getHttpVersion() {
+	public HttpVersion getHttpVersion() {
 		return httpVersion;
 	}
 }
