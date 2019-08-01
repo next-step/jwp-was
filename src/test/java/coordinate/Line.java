@@ -3,13 +3,16 @@ package coordinate;
 import java.util.List;
 
 public class Line extends AbstractFigure {
+
+    static final int SIZE = 2;
+
     public Line(List<Point> points) {
         super(points);
     }
 
     @Override
     public int size() {
-        return 2;
+        return SIZE;
     }
 
     @Override

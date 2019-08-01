@@ -3,13 +3,16 @@ package coordinate;
 import java.util.List;
 
 public class Rectangle extends AbstractFigure {
+
+    static final int SIZE = 4;
+
     public Rectangle(List<Point> points) {
         super(points);
     }
 
     @Override
     public int size() {
-        return 4;
+        return SIZE;
     }
 
     @Override
