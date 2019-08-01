@@ -18,6 +18,7 @@ public class QueryString {
         String queryString = path.substring(path.indexOf("?") + 1);
         String[] values = queryString.split("&");
         Map<String, Object> parameterMap = Stream.of(values)
+                .filter(value -> value.contains("="))
                 .map(QueryString::makeKeyValuePair)
                 .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
