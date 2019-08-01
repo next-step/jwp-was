@@ -1,9 +1,8 @@
-package webserver;
+package webserver.request;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import webserver.request.enums.HttpMethod;
-import webserver.request.RequestLine;
 import webserver.request.enums.HttpVersion;
 
 /**
