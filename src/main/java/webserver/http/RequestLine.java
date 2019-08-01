@@ -3,15 +3,17 @@ package webserver.http;
 public class RequestLine {
     private String method;
     private String path;
+    private QueryString queryString;
 
     private RequestLine(String method, String path) {
         this.method = method;
         this.path = path;
+        this.queryString = QueryString.parse(path);
     }
 
     public static RequestLine parse(String path) {
-        String[] pathInfo = path.split(" ");
-        return new RequestLine(pathInfo[0], pathInfo[1]);
+        String[] values = path.split(" ");
+        return new RequestLine(values[0], values[1]);
     }
 
     public String getMethod() {
@@ -20,5 +22,9 @@ public class RequestLine {
 
     public String getPath() {
         return this.path;
+    }
+
+    public QueryString getQueryString() {
+        return this.queryString;
     }
 }
