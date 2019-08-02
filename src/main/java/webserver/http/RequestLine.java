@@ -30,4 +30,12 @@ public class RequestLine {
     public String getPath() {
         return url.getPath();
     }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method=" + method +
+                ", url=" + url +
+                '}';
+    }
 }

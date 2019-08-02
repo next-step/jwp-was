@@ -52,4 +52,11 @@ class RequestPath {
     public int hashCode() {
         return Objects.hash(requestPath);
     }
+
+    @Override
+    public String toString() {
+        return "RequestPath{" +
+                "requestPath='" + requestPath + '\'' +
+                '}';
+    }
 }
