@@ -2,10 +2,11 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.http.HttpRequest;
+import java.net.URISyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
 import utils.StringUtils;
 import webserver.http.HttpHeaders;
 import webserver.http.RequestLine;
@@ -15,6 +16,7 @@ import static java.lang.System.lineSeparator;
 public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final String FILE_PREFIX = "templates/";
 
     private final Socket connection;
 
@@ -37,13 +39,12 @@ public class RequestHandler implements Runnable {
 
             logger.debug("Parse header [RequestLine={}, HttpHeaders={}]", requestLine, httpHeaders);
 
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             final DataOutputStream dos = new DataOutputStream(out);
-            final byte[] body = "Hello World".getBytes();
+            final byte[] body = FileIoUtils.loadFileFromClasspath(FILE_PREFIX + requestLine.getPath());
 
             response200Header(dos, body.length);
             responseBody(dos, body);
-        } catch (IOException e) {
+        } catch (final IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
