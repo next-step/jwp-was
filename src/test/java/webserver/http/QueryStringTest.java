@@ -20,4 +20,13 @@ class QueryStringTest {
         assertThat(queryParameters.get("name")).isEqualTo("JaeSung");
         assertThat(queryParameters.size()).isEqualTo(3);
     }
+
+    @DisplayName("query string parse test query string의 value 값이 없는 경우")
+    @Test
+    void querystring_parse_test_without_value() {
+        QueryString queryString = QueryString.parse("userId=");
+        Map<String, String> queryParameters = queryString.getQueryParameters();
+
+        assertThat(queryParameters.size()).isEqualTo(0);
+    }
 }

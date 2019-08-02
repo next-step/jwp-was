@@ -10,6 +10,7 @@ public class QueryString {
 
     private static final String QUERY_STRING_DELIMITER = "\\&";
     private static final String KEY_VALUE_DELIMITER = "\\=";
+    private static final int KEY_VALUE_COUNT = 2;
 
     private Map<String, String> queryParameters;
 
@@ -25,11 +26,17 @@ public class QueryString {
         Map<String, String> parameters;
 
         String [] keyValues = queryStringValue.split(QUERY_STRING_DELIMITER);
+
         parameters = Arrays.stream(keyValues)
                 .map(keyValue -> keyValue.split(KEY_VALUE_DELIMITER))
+                .filter(QueryString::hasKeyValue)
                 .collect(Collectors.toMap(values -> values[0], values -> values[1], (a, b) -> b));
 
         return new QueryString(parameters);
+    }
+
+    private static boolean hasKeyValue(String[] values) {
+        return values.length == KEY_VALUE_COUNT;
     }
 
     public Map<String, String> getQueryParameters() {

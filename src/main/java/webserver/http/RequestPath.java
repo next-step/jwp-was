@@ -19,7 +19,10 @@ public class RequestPath {
         String [] values = requestPathValue.split(REQUEST_PATH_DELIMITER);
 
         String path = values[0];
-        String queryString = hasQueryString(values.length) ? values[1] : StringUtils.EMPTY;
+        String queryString = StringUtils.EMPTY;
+
+        if(hasQueryString(values.length))
+            queryString = values[1];
 
         return new RequestPath(path, QueryString.parse(queryString));
     }
