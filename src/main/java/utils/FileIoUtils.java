@@ -16,7 +16,7 @@ public class FileIoUtils {
 
         URL resourceUrl = FileIoUtils.class.getClassLoader().getResource(filePath);
         if(resourceUrl == null){
-            throw new ResourceNotFoundException(filePath);
+            throw new ResourceNotFoundException("Can not find Resource : " + filePath);
         }
 
         URI uri = resourceUrl.toURI();
