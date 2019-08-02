@@ -10,6 +10,7 @@ public class RequestLine {
     private static final String QUERY_PREFIX = "\\?";
     private static final String QUERY_DELIMITER = "&";
     private static final String QUERY_KEY_VALUE_DELIMITER = "=";
+    private static final String EMPTY_PARAMETER = "";
 
     private String method;
     private String path;
@@ -35,9 +36,16 @@ public class RequestLine {
         Map<String, String> params = new HashMap<>();
         for (String param : requestUri[1].split(QUERY_DELIMITER)) {
             String[] entry = param.split(QUERY_KEY_VALUE_DELIMITER);
-            params.put(entry[0], entry[1]);
+            params.put(entry[0], getParamValueOrDefault(entry));
         }
         return params;
+    }
+
+    private static String getParamValueOrDefault(String[] entry) {
+        if (entry.length <= 1) {
+            return EMPTY_PARAMETER;
+        }
+        return entry[1];
     }
 
     public String getMethod() {

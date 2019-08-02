@@ -33,6 +33,14 @@ public class RequestLineTest {
                             put("userId", "javajigi");
                             put("password", "password");
                             put("name", "JaeSung");
+                        }}),
+                Arguments.of("GET /users?userId= HTTP/1.1", "GET", "/users",
+                        new HashMap<String, String>() {{
+                            put("userId", "");
+                        }}),
+                Arguments.of("GET /users?userId HTTP/1.1", "GET", "/users",
+                        new HashMap<String, String>() {{
+                            put("userId", "");
                         }})
         );
     }
