@@ -54,7 +54,7 @@ public class HttpRequest {
     public HttpMethod getMethod() {return this.requestLine.getMethod();}
 
     public String getPath() {
-        return this.requestLine.getPath().replaceAll("\\?.*", "");
+        return this.requestLine.getPath();
     }
 
     public String getParameter(String name) {

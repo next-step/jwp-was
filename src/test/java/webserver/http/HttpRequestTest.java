@@ -11,10 +11,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpRequestTest {
 
+
     private final static String HTTP_PLAIN_GET = "GET /index.html HTTP/1.1\n" +
             "Host: localhost:8080\n" +
             "Connection: keep-alive\n" +
             "Accept: */*\n";
+
+
+    private final static String HTTP_PLAIN_GET_QUERY_STRING = "GET http://localhost:8080/index.html?userId=circlee HTTP/1.1\n" +
+            "Host: localhost:8080\n" +
+            "Connection: keep-alive\n" +
+            "Accept: */*\n";
+
 
     private final static String HTTP_PLAIN_POST = "POST /user/create HTTP/1.1\n" +
             "Host: localhost:8080\n" +
@@ -27,11 +35,14 @@ public class HttpRequestTest {
 
     InputStream inputStreamGet;
 
+    InputStream inputStreamGetQueryString;
+
     InputStream inputStreamPost;
 
     @BeforeEach
     public void beforeSet(){
         inputStreamGet = new ByteArrayInputStream(HTTP_PLAIN_GET.getBytes());
+        inputStreamGetQueryString = new ByteArrayInputStream(HTTP_PLAIN_GET_QUERY_STRING.getBytes());
         inputStreamPost = new ByteArrayInputStream(HTTP_PLAIN_POST.getBytes());
     }
 
@@ -42,6 +53,20 @@ public class HttpRequestTest {
             HttpRequest httpRequest = HttpRequest.parse(inputStreamGet);
             assertThat(httpRequest).isNotNull();
             assertThat(httpRequest.getPath()).isEqualTo("/index.html");
+        } catch (Exception e) {
+            assertThat(e).hasNoCause();
+        }
+
+    }
+
+    @DisplayName("Get Http Request 테스트 : queryString")
+    @Test
+    public void httpRequestParse2(){
+        try{
+            HttpRequest httpRequest = HttpRequest.parse(inputStreamGetQueryString);
+            assertThat(httpRequest).isNotNull();
+            assertThat(httpRequest.getPath()).isEqualTo("http://localhost:8080/index.html?userId=circlee");
+            assertThat(httpRequest.getRequestURI()).isEqualTo("/index.html");
         } catch (Exception e) {
             assertThat(e).hasNoCause();
         }
