@@ -2,7 +2,6 @@ package webserver.http;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -15,7 +14,6 @@ public class QueryParameter {
     private Map<String, String> queryParameters;
 
     private QueryParameter(Map<String, String> queryParameters) {
-        this.queryParameters = new HashMap<>();
         this.queryParameters = queryParameters;
     }
 
@@ -29,12 +27,10 @@ public class QueryParameter {
     }
 
     private static Map<String, String> generateQueryParameters(String[] keyValues) {
-        Map<String, String> parameters = Arrays.stream(keyValues)
+        return Arrays.stream(keyValues)
                 .map(keyValue -> keyValue.split(KEY_VALUE_DELIMITER))
                 .filter(QueryParameter::hasKeyValue)
                 .collect(Collectors.toMap(values -> values[0], values -> values[1], (a, b) -> b));
-
-        return parameters;
     }
 
     private static boolean hasKeyValue(String[] values) {
