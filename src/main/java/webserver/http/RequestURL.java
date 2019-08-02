@@ -2,13 +2,12 @@ package webserver.http;
 
 import utils.StringUtils;
 
-import java.util.regex.Pattern;
-
 public class RequestURL {
 
     private static final String SEPARATOR = "?";
-    private static final int INDEX_OF_REQUEST_PATH = 0;
-    private static final int INDEX_OF_REQUEST_QUERY = 1;
+
+    private static final int SEPARATOR_NOT_FOUND_INDEX = -1;
+    private static final int START_INDEX = 0;
 
     private final RequestPath requestPath;
     private final RequestQuery requestQuery;
@@ -24,19 +23,35 @@ public class RequestURL {
             throw new InvalidRequestURLException(rawRequestURL);
         }
 
-        if (!rawRequestURL.contains(SEPARATOR)) {
+        final int separatorIndex = parseSeparatorIndex(rawRequestURL);
+        if (separatorIndex == SEPARATOR_NOT_FOUND_INDEX) {
             return new RequestURL(RequestPath.of(rawRequestURL), RequestQuery.EMPTY);
         }
 
-        final String[] splitRawRequestURL = rawRequestURL.split(Pattern.quote(SEPARATOR));
-        final RequestPath requestPath = RequestPath.of(splitRawRequestURL[INDEX_OF_REQUEST_PATH]);
-        final RequestQuery requestQuery = RequestQuery.of(splitRawRequestURL[INDEX_OF_REQUEST_QUERY]);
+        final RequestPath requestPath = parseRequestPath(rawRequestURL, separatorIndex);
+        final RequestQuery requestQuery = parseRequestQuery(rawRequestURL, separatorIndex);
 
         return new RequestURL(requestPath, requestQuery);
     }
 
     String getPath() {
         return requestPath.getRequestPath();
+    }
+
+    private static int parseSeparatorIndex(final String rawRequestURL) {
+        return rawRequestURL.indexOf(SEPARATOR);
+    }
+
+    private static RequestPath parseRequestPath(final String rawRequestURL,
+                                                final int separatorIndex) {
+        final String rawRequestPath = rawRequestURL.substring(START_INDEX, separatorIndex);
+        return RequestPath.of(rawRequestPath);
+    }
+
+    private static RequestQuery parseRequestQuery(final String rawRequestURL,
+                                                  final int separatorIndex) {
+        final String rawRequestQuery = rawRequestURL.substring(separatorIndex + SEPARATOR.length());
+        return RequestQuery.of(rawRequestQuery);
     }
 
     @Override

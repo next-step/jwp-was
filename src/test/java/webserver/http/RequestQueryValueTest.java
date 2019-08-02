@@ -16,6 +16,7 @@ class RequestQueryValueTest {
             "a=bbb",
             "a=123",
             "a= ",
+            "a=",
             "a=tt4tt3",
             "b=34g5tg432",
             "cdsfasd=!!!",

@@ -4,11 +4,10 @@ import utils.StringUtils;
 
 class RequestQueryValue {
 
-    private static final String EQUAL_SIGN = "=";
-    private static final int SIZE = 2;
+    private static final String SEPARATOR = "=";
 
-    private static final int INDEX_OF_KEY = 0;
-    private static final int INDEX_OF_VALUE = 1;
+    private static final int SEPARATOR_NOT_FOUND_INDEX = -1;
+    private static final int START_INDEX = 0;
 
     private final String key;
     private final String value;
@@ -24,13 +23,10 @@ class RequestQueryValue {
             throw new InvalidRequestQueryValueException(rawRequestQueryValue);
         }
 
-        final String[] splitRequestQueryValue = rawRequestQueryValue.split(EQUAL_SIGN);
-        if (splitRequestQueryValue.length != SIZE) {
-            throw new InvalidRequestQueryValueException(rawRequestQueryValue);
-        }
+        final int separatorIndex = parseSeparatorIndex(rawRequestQueryValue);
 
-        final String key = splitRequestQueryValue[INDEX_OF_KEY].trim();
-        final String value = splitRequestQueryValue[INDEX_OF_VALUE].trim();
+        final String key = parseKey(rawRequestQueryValue, separatorIndex);
+        final String value = parseValue(rawRequestQueryValue, separatorIndex);
 
         return new RequestQueryValue(key, value);
     }
@@ -41,5 +37,29 @@ class RequestQueryValue {
 
     String getValue() {
         return value;
+    }
+
+    private static int parseSeparatorIndex(final String rawRequestQueryValue) {
+        final int separatorIndex = rawRequestQueryValue.indexOf(SEPARATOR);
+        if (separatorIndex == SEPARATOR_NOT_FOUND_INDEX) {
+            throw new InvalidRequestQueryValueException(rawRequestQueryValue);
+        }
+
+        return separatorIndex;
+    }
+
+    private static String parseKey(final String rawRequestQueryValue,
+                                   final int separatorIndex) {
+        final String key = rawRequestQueryValue.substring(START_INDEX, separatorIndex);
+        if (StringUtils.isBlank(key)) {
+            throw new InvalidRequestQueryValueException(rawRequestQueryValue);
+        }
+
+        return key;
+    }
+
+    private static String parseValue(final String rawRequestQueryValue,
+                                     final int separatorIndex) {
+        return rawRequestQueryValue.substring(separatorIndex + SEPARATOR.length());
     }
 }

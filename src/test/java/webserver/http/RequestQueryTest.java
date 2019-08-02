@@ -68,7 +68,7 @@ class RequestQueryTest {
         final RequestQuery requestQuery = RequestQuery.of(rawRequestQuery);
 
         // then
-        assertThat(requestQuery).isNull();
+        assertThat(requestQuery).isNotNull();
     }
 
     @DisplayName("요청 쿼리의 값이 여러 개일 때 value가 없어도 생성할 수 있다.")
@@ -84,6 +84,6 @@ class RequestQueryTest {
         final RequestQuery requestQuery = RequestQuery.of(rawRequestQuery);
 
         // then
-        assertThat(requestQuery).isNull();
+        assertThat(requestQuery).isNotNull();
     }
 }
