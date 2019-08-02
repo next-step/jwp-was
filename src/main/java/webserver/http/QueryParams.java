@@ -1,5 +1,7 @@
 package webserver.http;
 
+import utils.StringUtils;
+
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -29,11 +31,15 @@ public class QueryParams {
 
     public static QueryParams parseByPath(String path) {
 
-        String[] queryParamKeyVaues = path.replaceAll(PATH_QUERY_STRING_IGNORE_REGEX, EMPTY_STRING)
-                .split(QUERY_STRING_SPLIT_SIGN);
+        String[] queryParamKeyVaues = splitPathToQueryParamKeyValues(path);
 
         return new QueryParams(queryParamKeyVaues);
     };
+
+    private static String[] splitPathToQueryParamKeyValues(String path) {
+        return path.replaceAll(PATH_QUERY_STRING_IGNORE_REGEX, EMPTY_STRING)
+                .split(QUERY_STRING_SPLIT_SIGN);
+    }
 
     private void setQueryParam(Map<String, List<String>> parameterMap, String queryKeyValue) {
 
@@ -53,6 +59,11 @@ public class QueryParams {
     }
 
     private boolean isValidQueryParamPattern(String queryKeyValue) {
+
+        if(StringUtils.isEmpty(queryKeyValue)) {
+            return false;
+        }
+
         if(!QUERY_PARAM_PATTERN.matcher(queryKeyValue).find()) {
             return false;
         }
