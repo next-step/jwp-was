@@ -1,11 +1,14 @@
 package coordinate;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class FigureFactoryTest {
     @Test
@@ -42,5 +45,12 @@ public class FigureFactoryTest {
         Figure figure = FigureFactory.getInstance(points);
         assertThat(figure).isInstanceOfAny(Rectangle.class);
         assertThat(figure.getName()).isEqualTo("사각형");
+    }
+
+    @DisplayName("없는 도형일 경우 예외를 반환한다")
+    @Test
+    void notExistFigure() {
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> FigureFactory.getInstance(Collections.emptyList()));
     }
 }
