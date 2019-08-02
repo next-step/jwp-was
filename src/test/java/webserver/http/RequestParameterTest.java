@@ -1,7 +1,6 @@
 package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -20,11 +19,13 @@ class RequestParameterTest {
         assertThat(requestParameter).isEqualTo(RequestParameter.EMPTY);
     }
 
-    @Test
     @DisplayName("Parse from query with or without question mark ")
-    void parse() {
-        String queryString = "userId=javajigi&password=password&name=JaeSung";
-
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "userId=javajigi&password=password&name=JaeSung",
+            "?userId=javajigi&password=password&name=JaeSung"
+    })
+    void parse(String queryString) {
         RequestParameter requestParameter = RequestParameter.parse(queryString);
 
         assertThat(requestParameter.getParameters())

@@ -5,7 +5,7 @@ import java.util.Map;
 public class RequestLine {
 
     private static final String SEPARATOR = " ";
-    private static final String QUERY_PREFIX = "\\?";
+    private static final String ESCAPED_QUERY_PREFIX = "\\?";
 
     private String method;
     private String path;
@@ -19,7 +19,7 @@ public class RequestLine {
 
     public static RequestLine parse(String rawRequestLine) {
         String[] requestLine = rawRequestLine.split(SEPARATOR);
-        String[] requestUri = requestLine[1].split(QUERY_PREFIX);
+        String[] requestUri = requestLine[1].split(ESCAPED_QUERY_PREFIX);
         return new RequestLine(requestLine[0], requestUri[0], parseQueryString(requestUri));
     }
 
