@@ -30,18 +30,18 @@ public class RequestHandler implements Runnable {
             Response response = requestMappingHandler.request(requestHeader);
 
             DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, response.getBodyLength());
+            response200Header(dos, response);
             responseBody(dos, response.getBody());
         } catch (Exception e) {
             logger.error("main error", e);
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dos, Response response) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("HTTP/1.1 "+ response.getHttpStatus() + " OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("Content-Length: " + response.getBodyLength() + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());

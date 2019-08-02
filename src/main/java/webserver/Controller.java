@@ -48,7 +48,6 @@ public class Controller {
     public Response userCreate(RequestHeader requestHeader) throws IOException, URISyntaxException {
         MultiValueMap<String, String> bodyMap = requestHeader.getBodyMap();
         User user = new User(bodyMap.getFirst("userId"), bodyMap.getFirst("password"), bodyMap.getFirst("name"), bodyMap.getFirst("email"));
-        //return Response.redirect("./templates/index.html");
-        return Response.of(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
+        return Response.redirect(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
     }
 }

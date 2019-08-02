@@ -36,6 +36,9 @@ public class RequestMappingHandler implements Request {
         RequestLine requestLine = requestHeader.getRequestLine();
         Method method = controllerBean.get(requestLine.getMethod(), requestLine.getPath());
         try {
+            if (method == null) {
+                throw new RuntimeException("There are not exist request path.");
+            }
             return (Response) method.invoke(controller, requestHeader);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("RequestMappingHandler getBody failed: ", e);
