@@ -7,13 +7,13 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class QueryStringTest {
+class QueryParameterTest {
 
     @DisplayName("query string parse test")
     @Test
     void querystring_parse_test() {
-        QueryString queryString = QueryString.parse("userId=javajigi&password=password&name=JaeSung");
-        Map<String, String> queryParameters = queryString.getQueryParameters();
+        QueryParameter queryParameter = QueryParameter.parse("userId=javajigi&password=password&name=JaeSung");
+        Map<String, String> queryParameters = queryParameter.getQueryParameters();
 
         assertThat(queryParameters.get("userId")).isEqualTo("javajigi");
         assertThat(queryParameters.get("password")).isEqualTo("password");
@@ -24,8 +24,8 @@ class QueryStringTest {
     @DisplayName("query string parse test query string의 value 값이 없는 경우")
     @Test
     void querystring_parse_test_without_value() {
-        QueryString queryString = QueryString.parse("userId=");
-        Map<String, String> queryParameters = queryString.getQueryParameters();
+        QueryParameter queryParameter = QueryParameter.parse("userId=");
+        Map<String, String> queryParameters = queryParameter.getQueryParameters();
 
         assertThat(queryParameters.size()).isEqualTo(0);
     }
