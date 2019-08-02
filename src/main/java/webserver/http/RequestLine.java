@@ -1,25 +1,20 @@
 package webserver.http;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 public class RequestLine {
 
     private static final String SEPARATOR = " ";
     private static final String QUERY_PREFIX = "\\?";
-    private static final String QUERY_DELIMITER = "&";
-    private static final String QUERY_KEY_VALUE_DELIMITER = "=";
-    private static final String EMPTY_PARAMETER = "";
 
     private String method;
     private String path;
-    private Map<String, String> params;
+    private RequestParameter parameter;
 
-    private RequestLine(String method, String path, Map<String, String> params) {
+    private RequestLine(String method, String path, RequestParameter parameter) {
         this.method = method;
         this.path = path;
-        this.params = Collections.unmodifiableMap(params);
+        this.parameter = parameter;
     }
 
     public static RequestLine parse(String rawRequestLine) {
@@ -28,24 +23,11 @@ public class RequestLine {
         return new RequestLine(requestLine[0], requestUri[0], parseQueryString(requestUri));
     }
 
-    private static Map<String, String> parseQueryString(String[] requestUri) {
+    private static RequestParameter parseQueryString(String[] requestUri) {
         if (requestUri.length == 1) {
-            return Collections.emptyMap();
+            return RequestParameter.EMPTY;
         }
-
-        Map<String, String> params = new HashMap<>();
-        for (String param : requestUri[1].split(QUERY_DELIMITER)) {
-            String[] entry = param.split(QUERY_KEY_VALUE_DELIMITER);
-            params.put(entry[0], getParamValueOrDefault(entry));
-        }
-        return params;
-    }
-
-    private static String getParamValueOrDefault(String[] entry) {
-        if (entry.length <= 1) {
-            return EMPTY_PARAMETER;
-        }
-        return entry[1];
+        return RequestParameter.parse(requestUri[1]);
     }
 
     public String getMethod() {
@@ -56,7 +38,7 @@ public class RequestLine {
         return path;
     }
 
-    public Map<String, String> getParams() {
-        return params;
+    public Map<String, String> getParameters() {
+        return parameter.getParameters();
     }
 }

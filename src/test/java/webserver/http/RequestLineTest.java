@@ -22,7 +22,7 @@ public class RequestLineTest {
 
         assertThat(requestLine.getMethod()).isEqualTo(expectedMethod);
         assertThat(requestLine.getPath()).isEqualTo(expectedPath);
-        assertThat(requestLine.getParams()).containsAllEntriesOf(expectedParams);
+        assertThat(requestLine.getParameters()).containsAllEntriesOf(expectedParams);
     }
 
     private static Stream<Arguments> parseRequestLine() {
