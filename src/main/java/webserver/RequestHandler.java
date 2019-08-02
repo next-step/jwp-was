@@ -26,7 +26,7 @@ public class RequestHandler implements Runnable {
 
             Controller controller = new Controller();
             RequestMappingHandler requestMappingHandler = new RequestMappingHandler(controller);
-            byte[] body = requestMappingHandler.getBody(requestHeader.getRequestLine());
+            byte[] body = requestMappingHandler.getBody(requestHeader);
 
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length);

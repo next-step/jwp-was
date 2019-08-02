@@ -32,19 +32,21 @@ public class RequestLine {
         boolean hasQueryString = splitPathAndQuery.length > 1;
         if (hasQueryString) {
             String queryString = splitPathAndQuery[1];
-            makeQueryString(queryString, queryStringMap);
+            queryStringMap = makeQueryString(queryString);
         }
 
         return new RequestLine(HttpMethod.of(lines[0]), splitPathAndQuery[0], queryStringMap, lines[2]);
     }
 
-    private static void makeQueryString(String queryString, MultiValueMap<String, String> queryStringMap) {
+    public static MultiValueMap<String, String> makeQueryString(String queryString) {
+        MultiValueMap<String, String> queryStringMap = new LinkedMultiValueMap<>();
         String[] splitQuery = queryString.split(SPLIT_QUERY.getSplitter());
         if (splitQuery.length > 0) {
             Arrays.stream(splitQuery)
                     .map(query -> query.split(SPLIT_KEY_VALUE.getSplitter()))
                     .forEach(keyValue -> queryStringMap.put(keyValue[0], Arrays.asList(keyValue[1].split(COMMA.getSplitter()))));
         }
+        return queryStringMap;
     }
 
     public HttpMethod getMethod() {

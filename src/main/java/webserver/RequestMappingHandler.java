@@ -7,6 +7,7 @@ package webserver;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import request.HttpMethod;
+import request.RequestHeader;
 import request.RequestLine;
 
 import java.lang.reflect.InvocationTargetException;
@@ -30,10 +31,11 @@ public class RequestMappingHandler implements RequestMapping {
     }
 
     @Override
-    public byte[] getBody(RequestLine requestLine) {
+    public byte[] getBody(RequestHeader requestHeader) {
+        RequestLine requestLine = requestHeader.getRequestLine();
         Method method = controllerBean.get(requestLine.getMethod(), requestLine.getPath());
         try {
-            return (byte[]) method.invoke(controller, requestLine);
+            return (byte[]) method.invoke(controller, requestHeader);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("RequestMappingHandler getBody failed: ", e);
         }

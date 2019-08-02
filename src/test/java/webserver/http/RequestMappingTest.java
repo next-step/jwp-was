@@ -5,6 +5,7 @@
 package webserver.http;
 
 import org.junit.jupiter.api.Test;
+import request.RequestHeader;
 import request.RequestLine;
 import webserver.Controller;
 import webserver.RequestMappingHandler;
@@ -19,7 +20,8 @@ public class RequestMappingTest {
     @Test
     void index_request_mapping_test() {
         RequestLine requestLine = RequestLine.parse("GET /index.html HTTP/1.1");
-        byte[] body = new RequestMappingHandler(new Controller()).getBody(requestLine);
+        RequestHeader requestHeader = new RequestHeader(requestLine);
+        byte[] body = new RequestMappingHandler(new Controller()).getBody(requestHeader);
         String stringBody = new String(body);
 
         assertThat(stringBody).isNotEmpty();
@@ -28,7 +30,8 @@ public class RequestMappingTest {
     @Test
     void main_request_mapping_test() {
         RequestLine requestLine = RequestLine.parse("GET / HTTP/1.1");
-        byte[] body = new RequestMappingHandler(new Controller()).getBody(requestLine);
+        RequestHeader requestHeader = new RequestHeader(requestLine);
+        byte[] body = new RequestMappingHandler(new Controller()).getBody(requestHeader);
         String stringBody = new String(body);
 
         assertThat(stringBody).isNotEmpty();

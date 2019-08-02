@@ -4,11 +4,11 @@
  */
 package webserver;
 
-import request.RequestLine;
+import request.RequestHeader;
 
 /**
  * Created by youngjae.havi on 2019-08-02
  */
 public interface RequestMapping {
-    byte[] getBody(RequestLine requestLine);
+    byte[] getBody(RequestHeader requestHeader);
 }

@@ -4,11 +4,13 @@
  */
 package request;
 
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -50,6 +52,12 @@ public class RequestHeader {
 
     private String body;
 
+    private MultiValueMap<String, String> bodyMap;
+
+    public RequestHeader(RequestLine requestLine) {
+        this.requestLine = requestLine;
+    }
+
     public RequestHeader(BufferedReader bufferedReader) throws Exception {
         boolean isRequestLine = true;
         String line;
@@ -75,8 +83,10 @@ public class RequestHeader {
         }
 
         String body = bufferedReader.readLine();
-        if (!StringUtils.isEmpty(body)) { //TODO:content-Legth 체크
+        if (!StringUtils.isEmpty(body)) {
+            if (Integer.parseInt(Objects.requireNonNull(this.contentLength)) != body.length()) throw new IllegalArgumentException("content-length not matched");
             this.body = body;
+            this.bodyMap = RequestLine.makeQueryString(body);
         }
     }
 
@@ -116,8 +126,20 @@ public class RequestHeader {
         return cookie;
     }
 
+    public String getContentType() {
+        return contentType;
+    }
+
+    public String getContentLength() {
+        return contentLength;
+    }
+
     public String getBody() {
         return body;
+    }
+
+    public MultiValueMap<String, String> getBodyMap() {
+        return bodyMap;
     }
 
     @Override
@@ -132,6 +154,9 @@ public class RequestHeader {
                 ", connection='" + connection + '\'' +
                 ", cacheControl='" + cacheControl + '\'' +
                 ", cookie='" + cookie + '\'' +
+                ", contentType='" + contentType + '\'' +
+                ", contentLength='" + contentLength + '\'' +
+                ", body='" + body + '\'' +
                 '}';
     }
 }

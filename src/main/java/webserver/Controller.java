@@ -6,7 +6,7 @@ package webserver;
 
 import model.User;
 import org.springframework.util.MultiValueMap;
-import request.RequestLine;
+import request.RequestHeader;
 import utils.FileIoUtils;
 
 import static request.HttpMethod.GET;
@@ -18,12 +18,12 @@ import static request.HttpMethod.POST;
 public class Controller {
 
     @Request(method = GET, path = {"", "/"})
-    public byte[] main(RequestLine requestLine) {
+    public byte[] main(RequestHeader requestHeader) {
         return "Hello World".getBytes();
     }
 
     @Request(method = GET, path = "/index.html")
-    public byte[] index(RequestLine requestLine) {
+    public byte[] index(RequestHeader requestHeader) {
         try {
             return FileIoUtils.loadFileFromClasspath("./templates/index.html");
         } catch (Exception e) {
@@ -32,7 +32,7 @@ public class Controller {
     }
 
     @Request(method = GET, path = "/user/form.html")
-    public byte[] userForm(RequestLine requestLine) {
+    public byte[] userForm(RequestHeader requestHeader) {
         try {
             return FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
         } catch (Exception e) {
@@ -41,9 +41,9 @@ public class Controller {
     }
 
     @Request(method = POST, path = "/user/create")
-    public byte[] userCreate(RequestLine requestLine) {
-        MultiValueMap<String, String> queryString = requestLine.getQueryString();
-        //User user = new User(queryString.getFirst("userId"), queryString.getFirst("password"), queryString.getFirst("name"), queryString.getFirst("email"));
+    public byte[] userCreate(RequestHeader requestHeader) {
+        MultiValueMap<String, String> bodyMap = requestHeader.getBodyMap();
+        User user = new User(bodyMap.getFirst("userId"), bodyMap.getFirst("password"), bodyMap.getFirst("name"), bodyMap.getFirst("email"));
         return null;
     }
 }
