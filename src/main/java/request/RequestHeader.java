@@ -6,6 +6,7 @@ package request;
 
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.lang.reflect.Field;
@@ -50,8 +51,10 @@ public class RequestHeader {
     @RequestHeaderProperty("Content-Length")
     private String contentLength;
 
+    @RequestHeaderProperty
     private String body;
 
+    @RequestHeaderProperty
     private MultiValueMap<String, String> bodyMap;
 
     public RequestHeader(RequestLine requestLine) {
@@ -82,12 +85,20 @@ public class RequestHeader {
             field.set(this, keyValue[1]);
         }
 
-        String body = bufferedReader.readLine();
-        if (!StringUtils.isEmpty(body)) {
-            if (Integer.parseInt(Objects.requireNonNull(this.contentLength)) != body.length()) throw new IllegalArgumentException("content-length not matched");
-            this.body = body;
-            this.bodyMap = RequestLine.makeQueryString(body);
+        if (HttpMethod.GET != requestLine.getMethod()) {
+            String body = IOUtils.readData(bufferedReader, Integer.parseInt(Objects.requireNonNull(this.contentLength).trim()));
+            if (!StringUtils.isEmpty(body)) {
+                this.body = body;
+                this.bodyMap = RequestLine.makeQueryString(body);
+            }
         }
+        /*String body;
+        while ((body = bufferedReader.readLine()) != null && !StringUtils.isEmpty(line)) {
+            if (!StringUtils.isEmpty(body)) {
+                this.body = body;
+                this.bodyMap = RequestLine.makeQueryString(body);
+            }
+        }*/
     }
 
     public RequestLine getRequestLine() {

@@ -3,6 +3,7 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import request.RequestHeader;
+import response.Response;
 
 import java.io.*;
 import java.net.Socket;
@@ -26,13 +27,13 @@ public class RequestHandler implements Runnable {
 
             Controller controller = new Controller();
             RequestMappingHandler requestMappingHandler = new RequestMappingHandler(controller);
-            byte[] body = requestMappingHandler.getBody(requestHeader);
+            Response response = requestMappingHandler.request(requestHeader);
 
             DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            response200Header(dos, response.getBodyLength());
+            responseBody(dos, response.getBody());
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("main error", e);
         }
     }
 

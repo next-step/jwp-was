@@ -4,11 +4,21 @@
  */
 package webserver;
 
-import request.RequestHeader;
+import request.HttpMethod;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Created by youngjae.havi on 2019-08-02
  */
-public interface RequestMapping {
-    byte[] getBody(RequestHeader requestHeader);
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RequestMapping {
+
+    HttpMethod method() default HttpMethod.GET;
+
+    String[] path() default {};
 }

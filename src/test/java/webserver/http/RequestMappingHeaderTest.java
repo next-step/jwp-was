@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by youngjae.havi on 2019-08-02
  */
-public class RequestHeaderTest {
+public class RequestMappingHeaderTest {
 
     @Test
     void read_header() throws Exception {
