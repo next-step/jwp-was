@@ -12,14 +12,14 @@ public class QueryString {
     private final static String PARAMETER_SEPARATOR = "&";
     private final static String KEY_VALUE_SEPARATOR = "=";
 
-    private Map<String, Object> parameterMap;
+    private Map<String, String> parameterMap;
 
-    private QueryString(Map<String, Object> parameterMap) {
+    private QueryString(Map<String, String> parameterMap) {
         this.parameterMap = parameterMap;
     }
 
     public static QueryString parse(String path) {
-        Map<String, Object> parameterMap = getParameterStrings(path).stream()
+        Map<String, String> parameterMap = getParameterStrings(path).stream()
                 .map(QueryString::makeKeyValuePair)
                 .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
@@ -33,7 +33,7 @@ public class QueryString {
                 .collect(Collectors.toList());
     }
 
-    private static Pair<String, Object> makeKeyValuePair(String v) {
+    private static Pair<String, String> makeKeyValuePair(String v) {
         String[] param = v.split(KEY_VALUE_SEPARATOR);
         return new Pair<>(param[0], param[1]);
     }
