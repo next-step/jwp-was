@@ -6,7 +6,10 @@ package webserver.http;
 
 import org.junit.jupiter.api.Test;
 import request.RequestLine;
+import webserver.Controller;
 import webserver.HttpRequestMapping;
+import webserver.RequestMapping;
+import webserver.RequestMappingHandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,8 +21,7 @@ public class RequestMappingTest {
     @Test
     void index_request_mapping_test() {
         RequestLine requestLine = RequestLine.parse("GET /index.html HTTP/1.1");
-        HttpRequestMapping httpRequestMapping = HttpRequestMapping.get(requestLine);
-        byte[] body = httpRequestMapping.getBody();
+        byte[] body = new RequestMappingHandler(new Controller()).getBody(requestLine);
         String stringBody = new String(body);
 
         assertThat(stringBody).isNotEmpty();
@@ -28,7 +30,7 @@ public class RequestMappingTest {
     @Test
     void main_request_mapping_test() {
         RequestLine requestLine = RequestLine.parse("GET / HTTP/1.1");
-        HttpRequestMapping httpRequestMapping = HttpRequestMapping.get(requestLine);
+        RequestMapping httpRequestMapping = HttpRequestMapping.get(requestLine);
         byte[] body = httpRequestMapping.getBody();
         String stringBody = new String(body);
 

@@ -62,4 +62,14 @@ public class RequestLine {
     public MultiValueMap<String, String> getQueryString() {
         return this.queryStringMap;
     }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method=" + method +
+                ", path='" + path + '\'' +
+                ", queryStringMap=" + queryStringMap +
+                ", httpVersion='" + httpVersion + '\'' +
+                '}';
+    }
 }

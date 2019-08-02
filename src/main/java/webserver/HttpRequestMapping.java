@@ -33,6 +33,26 @@ public enum HttpRequestMapping implements RequestMapping {
                 throw new RuntimeException("read index file exception: ", e);
             }
         }
+    },
+    USER_FORM(GET, Collections.singletonList("/user/form.html")) {
+        @Override
+        public byte[] getBody() {
+            try {
+                return FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
+            } catch (Exception e) {
+                throw new RuntimeException("read index file exception: ", e);
+            }
+        }
+    },
+    USER_CREATE(GET, Collections.singletonList("/user/form.html")) {
+        @Override
+        public byte[] getBody() {
+            try {
+                return FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
+            } catch (Exception e) {
+                throw new RuntimeException("read index file exception: ", e);
+            }
+        }
     };
 
     private HttpMethod httpMethod;
@@ -43,15 +63,14 @@ public enum HttpRequestMapping implements RequestMapping {
         this.path = path;
     }
 
-    public static HttpRequestMapping get(RequestLine requestLine) {
+    public static RequestMapping get(RequestLine requestLine) {
         return Arrays.stream(HttpRequestMapping.values())
                 .filter(httpRequestMapping -> httpRequestMapping.isMatching(requestLine))
                 .findAny()
-                .orElseThrow(() -> new RuntimeException(""));
+                .orElseThrow(() -> new RuntimeException("Not mapping request: " + requestLine.toString()));
     }
 
     private boolean isMatching(RequestLine requestLine) {
         return this.httpMethod == requestLine.getMethod() && this.path.contains(requestLine.getPath());
     }
-
 }

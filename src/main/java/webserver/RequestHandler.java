@@ -24,8 +24,8 @@ public class RequestHandler implements Runnable {
             RequestHeader requestHeader = new RequestHeader(bufferedReader);
             logger.debug(requestHeader.toString());
 
-            HttpRequestMapping httpRequestMapping = HttpRequestMapping.get(requestHeader.getRequestLine());
-            byte[] body = httpRequestMapping.getBody();
+            RequestMapping requestMapping = HttpRequestMapping.get(requestHeader.getRequestLine());
+            byte[] body = requestMapping.getBody();
 
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length);
