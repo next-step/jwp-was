@@ -7,23 +7,21 @@ public class RequestLine {
     private static final String REQUEST_LINE_SEPARATOR = " ";
 
     private String httpMethod;
-    private String path;
-    private Map<String, String> queryParams;
+    private RequestUri requestUri;
     private String httpVersion;
 
-    private RequestLine(String httpMethod, String path, Map<String, String> queryParams, String httpVersion) {
+    private RequestLine(String httpMethod, RequestUri requestUri, String httpVersion) {
         this.httpMethod = httpMethod;
-        this.path = path;
-        this.queryParams = queryParams;
+        this.requestUri = requestUri;
         this.httpVersion = httpVersion;
     }
 
     public static RequestLine parse(String line) {
         String[] values = line.split(REQUEST_LINE_SEPARATOR);
 
-        RequestUriFactory requestUri = RequestUriFactory.parse(values[1]);
+        RequestUri requestUri = RequestUriFactory.parse(values[1]);
 
-        return new RequestLine(values[0], requestUri.getPath(), requestUri.getQueryParams(), values[2]);
+        return new RequestLine(values[0], requestUri, values[2]);
     }
 
     public String getHttpMethod() {
@@ -31,11 +29,11 @@ public class RequestLine {
     }
 
     public String getPath() {
-        return path;
+        return requestUri.getPath();
     }
 
     public Map<String, String> getQueryParams() {
-        return queryParams;
+        return requestUri.getQueryParams();
     }
 
     public String getHttpVersion() {
