@@ -1,19 +1,22 @@
 package webserver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.net.http.HttpRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.StringUtils;
+import webserver.http.HttpHeaders;
+import webserver.http.RequestLine;
+
+import static java.lang.System.lineSeparator;
 
 public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private Socket connection;
+    private final Socket connection;
 
     RequestHandler(final Socket connection) {
         this.connection = connection;
@@ -21,11 +24,18 @@ public class RequestHandler implements Runnable {
 
     @Override
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
+        logger.debug("New Client Connect! [ConnectedIP={}, Port={}]", connection.getInetAddress(),
                 connection.getPort());
 
-        try (final InputStream in = connection.getInputStream();
+        try (connection;
+             final InputStream in = connection.getInputStream();
              final OutputStream out = connection.getOutputStream()) {
+            final BufferedReader requestReader = new BufferedReader(new InputStreamReader(in));
+
+            final RequestLine requestLine = RequestLine.parse(requestReader.readLine());
+            final HttpHeaders httpHeaders = readHeaders(requestReader);
+
+            logger.debug("Parse header [RequestLine={}, HttpHeaders={}]", requestLine, httpHeaders);
 
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             final DataOutputStream dos = new DataOutputStream(out);
@@ -36,6 +46,19 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private HttpHeaders readHeaders(final BufferedReader requestReader) throws IOException {
+        final StringBuilder rawHeadersBuilder = new StringBuilder();
+
+        String readRawHeader = requestReader.readLine();
+        while (StringUtils.isNotBlank(readRawHeader)) {
+            rawHeadersBuilder.append(readRawHeader).append(lineSeparator());
+
+            readRawHeader = requestReader.readLine();
+        };
+
+        return HttpHeaders.of(rawHeadersBuilder.toString());
     }
 
     private void response200Header(final DataOutputStream dos,
