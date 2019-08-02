@@ -1,5 +1,7 @@
 package http;
 
+import static java.util.Collections.EMPTY_MAP;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -13,6 +15,7 @@ public class Parameters {
   private static final int VALUE_INDEX = 1;
   private static final int HAS_VALUE_CONDITION_LENGTH = 1;
 
+  public static final Parameters EMPTY = new Parameters(EMPTY_MAP);
   private Map<String, String> parameters;
 
   private Parameters(Map<String, String> parameters) {
