@@ -1,9 +1,23 @@
-# 웹 애플리케이션 서버
-## 진행 방법
-* 웹 애플리케이션 서버 요구사항을 파악한다.
-* 요구사항에 대한 구현을 완료한 후 자신의 github 아이디에 해당하는 브랜치에 Pull Request(이하 PR)를 통해 코드 리뷰 요청을 한다.
-* 코드 리뷰 피드백에 대한 개선 작업을 하고 다시 PUSH한다.
-* 모든 피드백을 완료하면 다음 단계를 도전하고 앞의 과정을 반복한다.
+### 1단계 - Header 파싱, if문 제거
+- 요구사항 1 : Query String 파싱
+- 요구사항 2 : @ParameterizedTest 사용
+- 요구사항 3 : if문 제거
 
-## 온라인 코드 리뷰 과정
-* [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+### 2단계 - HTTP 웹 서버 구현 
+- 요구사항 1 : html 파일 응답
+    - Request Header 파싱
+    - *.html 로 요청이 들어왔을때 html 파일 return
+- 요구사항 2 : 회원가입 Get Request 방식으로 구현
+    - model.User 클래스에 저장
+- 요구사항 3 : 회원가입 Post Request 방식으로 수정
+    - RequestBody 파싱 구현
+- 요구사항 4 : redirect 구현
+    - Redirect Response 구현
+- 요구사항 5 : 로그인 구현
+    - 로그인 시도 후 이동페이지 분기
+    - 로그인 결과 Cookie 저장
+- 요구사항 6 : 사용자 목록 출력
+    - 인증된 사용자면 사용자 목록 출력
+    - 인증되지 않은 사용자면 로그인 페이지로 이동
+- 요구사항 7 : Stylesheet 파일 지원
+    - Request Contents-Type에 맞는 Response 구현 
