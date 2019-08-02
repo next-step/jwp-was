@@ -1,5 +1,6 @@
 package webserver.http;
 
+import enums.HttpMethod;
 import utils.IOUtils;
 import utils.StringUtils;
 
@@ -14,14 +15,21 @@ public class HttpRequest {
     private final QueryParams queryParams;
     private final HttpHeaders httpHeaders;
     private final String body;
+    private final String requestUri;
 
     private HttpRequest(RequestLine requestLine, HttpHeaders httpHeaders, String body){
         this.requestLine = requestLine;
         this.queryParams = QueryParams.parseByPath(requestLine.getPath());
         this.httpHeaders = httpHeaders;
         this.body = body;
+        this.requestUri = parseRequestUri(requestLine.getPath());
+
     }
 
+    public static String parseRequestUri(String path) {
+        return path.replaceAll("http(s)?://.*?(?=/)", "")
+                .replaceAll("\\?.*$", "");
+    }
 
     public static HttpRequest parse(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -43,9 +51,10 @@ public class HttpRequest {
         return new HttpRequest(requestLine, httpHeaders, body);
     }
 
+    public HttpMethod getMethod() {return this.requestLine.getMethod();}
 
     public String getPath() {
-        return this.requestLine.getPath();
+        return this.requestLine.getPath().replaceAll("\\?.*", "");
     }
 
     public String getParameter(String name) {
@@ -62,6 +71,10 @@ public class HttpRequest {
 
     public String getBody(){
         return this.body;
+    }
+
+    public String getRequestURI() {
+        return this.requestUri;
     }
 
 
