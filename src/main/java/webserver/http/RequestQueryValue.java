@@ -19,18 +19,18 @@ class RequestQueryValue {
         this.value = value;
     }
 
-    static RequestQueryValue of(final String rawQueryStringValue) {
-        if (StringUtils.isBlank(rawQueryStringValue)) {
-            throw new InvalidQueryStringValueException(rawQueryStringValue);
+    static RequestQueryValue of(final String rawRequestQueryValue) {
+        if (StringUtils.isBlank(rawRequestQueryValue)) {
+            throw new InvalidRequestQueryValueException(rawRequestQueryValue);
         }
 
-        final String[] splitQueryStringValue = rawQueryStringValue.split(EQUAL_SIGN);
-        if (splitQueryStringValue.length != SIZE) {
-            throw new InvalidQueryStringValueException(rawQueryStringValue);
+        final String[] splitRequestQueryValue = rawRequestQueryValue.split(EQUAL_SIGN);
+        if (splitRequestQueryValue.length != SIZE) {
+            throw new InvalidRequestQueryValueException(rawRequestQueryValue);
         }
 
-        final String key = splitQueryStringValue[INDEX_OF_KEY].trim();
-        final String value = splitQueryStringValue[INDEX_OF_VALUE].trim();
+        final String key = splitRequestQueryValue[INDEX_OF_KEY].trim();
+        final String value = splitRequestQueryValue[INDEX_OF_VALUE].trim();
 
         return new RequestQueryValue(key, value);
     }

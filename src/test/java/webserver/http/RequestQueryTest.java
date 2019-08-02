@@ -9,21 +9,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class RequestQueryTest {
 
-    @DisplayName("빈값의 쿼리스트링을 생성하면 빈값이다.")
+    @DisplayName("빈값의 요청 쿼리을 생성하면 빈값이다.")
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {
             " "
     })
-    void empty(final String rawQueryString) {
+    void empty(final String rawRequestQuery) {
         // when
-        final RequestQuery requestQuery = RequestQuery.of(rawQueryString);
+        final RequestQuery requestQuery = RequestQuery.of(rawRequestQuery);
 
         // then
         assertThat(requestQuery).isEqualTo(RequestQuery.EMPTY);
     }
 
-    @DisplayName("쿼리스트링의 값을 가져온다.")
+    @DisplayName("요청 쿼리의 값을 가져온다.")
     @ParameterizedTest
     @ValueSource(strings = {
             "a", "b", "c"
@@ -39,7 +39,7 @@ class RequestQueryTest {
         assertThat(value).isEqualTo(key);
     }
 
-    @DisplayName("쿼리스트링의 값이 없으면 null을 반환한다.")
+    @DisplayName("요청 쿼리의 값이 없으면 null을 반환한다.")
     @ParameterizedTest
     @ValueSource(strings = {
             "a", "b", "c"
@@ -54,5 +54,36 @@ class RequestQueryTest {
 
         // then
         assertThat(value).isNull();
+    }
+
+    @DisplayName("요청 쿼리의 값이 한 개일 때 value가 없어도 생성할 수 있다.")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "a=",
+            "b=",
+            "casdsdasda="
+    })
+    void singleBlank(final String rawRequestQuery) {
+        // when
+        final RequestQuery requestQuery = RequestQuery.of(rawRequestQuery);
+
+        // then
+        assertThat(requestQuery).isNull();
+    }
+
+    @DisplayName("요청 쿼리의 값이 여러 개일 때 value가 없어도 생성할 수 있다.")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "a=&b=",
+            "a=&b=&cds=",
+            "a=aaa&b=&cds=sdfgfd",
+            "a=aaa&b=&cds="
+    })
+    void multiBlank(final String rawRequestQuery) {
+        // when
+        final RequestQuery requestQuery = RequestQuery.of(rawRequestQuery);
+
+        // then
+        assertThat(requestQuery).isNull();
     }
 }

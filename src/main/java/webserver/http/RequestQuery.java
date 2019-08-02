@@ -15,31 +15,31 @@ public class RequestQuery {
 
     private static final String SEPARATOR = "&";
 
-    private final Map<String, String> queryString;
+    private final Map<String, String> requestQuery;
 
-    private RequestQuery(final Map<String, String> queryString) {
-        this.queryString = queryString;
+    private RequestQuery(final Map<String, String> requestQuery) {
+        this.requestQuery = requestQuery;
     }
 
-    public static RequestQuery of(final String rawQueryString) {
-        if (StringUtils.isBlank(rawQueryString)) {
+    public static RequestQuery of(final String rawRequestQuery) {
+        if (StringUtils.isBlank(rawRequestQuery)) {
             return EMPTY;
         }
 
-        return Arrays.stream(rawQueryString.split(SEPARATOR))
+        return Arrays.stream(rawRequestQuery.split(SEPARATOR))
                 .map(RequestQueryValue::of)
                 .collect(collectingAndThen(toMap(RequestQueryValue::getKey, RequestQueryValue::getValue),
                         RequestQuery::new));
     }
 
     public String getString(final String key) {
-        return queryString.get(key);
+        return requestQuery.get(key);
     }
 
     @Override
     public String toString() {
         return "RequestQuery{" +
-                "queryString=" + queryString +
+                "requestQuery=" + requestQuery +
                 '}';
     }
 }

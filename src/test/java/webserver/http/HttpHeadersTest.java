@@ -42,7 +42,9 @@ class HttpHeadersTest {
     @DisplayName("헤더의 값을 가져온다.")
     @ParameterizedTest
     @ValueSource(strings = {
-            "a", "b", "c"
+            "a",
+            "b",
+            "c"
     })
     void getString(final String key) {
         // given
@@ -58,7 +60,9 @@ class HttpHeadersTest {
     @DisplayName("헤더의 값이 없으면 null을 반환한다.")
     @ParameterizedTest
     @ValueSource(strings = {
-            "a", "b", "c"
+            "a",
+            "b",
+            "c"
     })
     void notFound(final String key) {
         // given
