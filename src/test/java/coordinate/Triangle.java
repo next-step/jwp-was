@@ -3,22 +3,25 @@ package coordinate;
 import java.util.List;
 
 public class Triangle extends AbstractFigure {
-    public Triangle(List<Point> points) {
-        super(points);
-    }
 
-    @Override
-    public int size() {
-        return 3;
-    }
+  public static final int SIZE = 3;
 
-    @Override
-    public String getName() {
-        return "삼각형";
-    }
+  public Triangle(List<Point> points) {
+    super(points);
+  }
 
-    @Override
-    public double area() {
-        return 0;
-    }
+  @Override
+  public int size() {
+    return SIZE;
+  }
+
+  @Override
+  public String getName() {
+    return "삼각형";
+  }
+
+  @Override
+  public double area() {
+    return 0;
+  }
 }
