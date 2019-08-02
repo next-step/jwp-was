@@ -1,8 +1,9 @@
 package webserver.http;
 
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RequestParameter {
 
@@ -22,12 +23,16 @@ public class RequestParameter {
             return EMPTY;
         }
 
-        Map<String, String> params = new HashMap<>();
-        for (String param : queryString.split(QUERY_DELIMITER)) {
-            String[] entry = param.split(QUERY_KEY_VALUE_DELIMITER);
-            params.put(entry[0], getParamValueOrDefault(entry));
-        }
-        return new RequestParameter(params);
+        return new RequestParameter(parseParameters(queryString));
+    }
+
+    private static Map<String, String> parseParameters(String queryString) {
+        return Arrays.stream(queryString.split(QUERY_DELIMITER))
+                .map(param -> param.split(QUERY_KEY_VALUE_DELIMITER))
+                .collect(Collectors.toMap(
+                        param -> param[0],
+                        RequestParameter::getParamValueOrDefault
+                ));
     }
 
     private static String getParamValueOrDefault(String[] entry) {
