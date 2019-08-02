@@ -60,7 +60,7 @@ class HttpHeaderTest {
 
         // when
         final String key = httpHeader.getKey();
-        final String expected = rawHttpHeader.split(HttpHeader.SEPARATOR)[HttpHeader.INDEX_OF_KEY];
+        final String expected = rawHttpHeader.split(HttpHeader.SEPARATOR)[0];
 
         // then
         assertThat(key).isEqualTo(expected);
@@ -82,7 +82,7 @@ class HttpHeaderTest {
 
         // when
         final String value = httpHeader.getValue();
-        final String expected = rawHttpHeader.split(HttpHeader.SEPARATOR)[HttpHeader.INDEX_OF_VALUE];
+        final String expected = rawHttpHeader.split(HttpHeader.SEPARATOR)[1];
 
         // then
         assertThat(value).isEqualTo(expected);
