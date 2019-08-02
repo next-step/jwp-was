@@ -4,6 +4,9 @@
  */
 package webserver;
 
+import request.RequestLine;
+import utils.FileIoUtils;
+
 import static request.HttpMethod.GET;
 
 /**
@@ -12,22 +15,30 @@ import static request.HttpMethod.GET;
 public class Controller {
 
     @Request(method = GET, path = {"", "/"})
-    public byte[] main() {
-        return null;
+    public byte[] main(RequestLine requestLine) {
+        return "Hello World".getBytes();
     }
 
     @Request(method = GET, path = "/index.html")
-    public byte[] index() {
-        return null;
+    public byte[] index(RequestLine requestLine) {
+        try {
+            return FileIoUtils.loadFileFromClasspath("./templates/index.html");
+        } catch (Exception e) {
+            throw new RuntimeException("read index file exception: ", e);
+        }
     }
 
     @Request(method = GET, path = "/user/form.html")
-    public byte[] userForm() {
-        return null;
+    public byte[] userForm(RequestLine requestLine) {
+        try {
+            return FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
+        } catch (Exception e) {
+            throw new RuntimeException("read index file exception: ", e);
+        }
     }
 
     @Request(method = GET, path = "/create")
-    public byte[] userCreate() {
+    public byte[] userCreate(RequestLine requestLine) {
         return null;
     }
 }

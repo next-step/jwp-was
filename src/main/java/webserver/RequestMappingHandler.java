@@ -9,24 +9,33 @@ import com.google.common.collect.Table;
 import request.HttpMethod;
 import request.RequestLine;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
  * Created by youngjae.havi on 2019-08-02
  */
-public class RequestMappingHandler {
+public class RequestMappingHandler implements RequestMapping {
 
+    private Controller controller;
     private Table<HttpMethod, String, Method> controllerBean = HashBasedTable.create(); //httpMethod(key1), path(key2), method(value)
 
     public RequestMappingHandler(Controller controller) {
+        this.controller = controller;
         for (Method method : controller.getClass().getDeclaredMethods()) {
             Request request = method.getAnnotationsByType(Request.class)[0];
             Arrays.stream(request.path()).forEach(path -> controllerBean.put(request.method(), path, method));
         }
     }
 
+    @Override
     public byte[] getBody(RequestLine requestLine) {
-        return new byte[0];
+        Method method = controllerBean.get(requestLine.getMethod(), requestLine.getPath());
+        try {
+            return (byte[]) method.invoke(controller, requestLine);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("RequestMappingHandler getBody failed: ", e);
+        }
     }
 }
