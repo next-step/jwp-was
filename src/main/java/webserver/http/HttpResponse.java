@@ -1,10 +1,12 @@
 package webserver.http;
 
+import enums.HttpStatus;
+
 import java.util.List;
 
 public class HttpResponse {
 
-    private int httpStatus = 200;
+    private HttpStatus httpStatus = HttpStatus.OK;
 
     private final HttpHeaders httpHeaders;
 
@@ -14,11 +16,11 @@ public class HttpResponse {
         httpHeaders = new HttpHeaders();
     }
 
-    public int getHttpStatus() {
+    public HttpStatus getHttpStatus() {
         return httpStatus;
     }
 
-    public void setHttpStatus(int httpStatus) {
+    public void setHttpStatus(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
     }
 
@@ -35,6 +37,7 @@ public class HttpResponse {
     }
 
     public void setResponseBody(byte[] responseBody) {
+        setHttpHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(responseBody.length));
         this.responseBody = responseBody;
     }
 }
