@@ -5,7 +5,17 @@ import java.util.regex.Pattern;
 
 public class QueryParams {
 
-    private final static Pattern QUERY_PARAM_PATTERN = Pattern.compile("^[^=\\s]+(=(\\S+)?)?");
+    private static final int QUERY_KEY_VALUE_SPLIT_LIMIT = 2;
+
+    private static final String QUERY_KEY_VALUE_SPLIT_SIGN = "=";
+    
+    private static final String PATH_QUERY_STRING_IGNORE_REGEX = "^.*\\?";
+
+    private static final String QUERY_STRING_SPLIT_SIGN = "&";
+
+    private static final String EMPTY_STRING = "";
+
+    private static final Pattern QUERY_PARAM_PATTERN = Pattern.compile("^[^=\\s]+(=(\\S+)?)?");
 
     private final Map<String, List<String>> parameterMap;
 
@@ -23,9 +33,9 @@ public class QueryParams {
             throw new IllegalArgumentException("queryString 형식이아닙니다.");
         }
 
-        String[] keyAndValue = queryKeyValue.split("=", 2);
+        String[] keyAndValue = queryKeyValue.split(QUERY_KEY_VALUE_SPLIT_SIGN, QUERY_KEY_VALUE_SPLIT_LIMIT);
 
-        if(keyAndValue.length != 2) {
+        if(keyAndValue.length != QUERY_KEY_VALUE_SPLIT_LIMIT) {
             return;
         }
 
@@ -36,8 +46,8 @@ public class QueryParams {
 
     public static QueryParams parseByPath(String path) {
 
-        String[] queryParamKeyVaues = path.replaceAll("^.*\\?", "")
-                .split("&");
+        String[] queryParamKeyVaues = path.replaceAll(PATH_QUERY_STRING_IGNORE_REGEX, EMPTY_STRING)
+                .split(QUERY_STRING_SPLIT_SIGN);
 
         return new QueryParams(queryParamKeyVaues);
     };
