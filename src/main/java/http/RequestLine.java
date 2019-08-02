@@ -11,7 +11,7 @@ public class RequestLine {
   private HttpURL url;
   private String version;
 
-  public RequestLine(String method, String url, String version) {
+  private RequestLine(String method, String url, String version) {
     this.method = method;
     this.url = HttpURL.parse(url);
     this.version = version;

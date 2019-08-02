@@ -11,7 +11,7 @@ public class HttpURL {
   private String path;
   private Parameters queryString;
 
-  public HttpURL(String[] urlToken) {
+  private HttpURL(String[] urlToken) {
     this.path = urlToken[PATH_INDEX];
     this.queryString = Parameters.parse(
         urlToken.length > HAS_QUERYSTRING_CONDITION_LENGTH ? urlToken[QUERYSTRING_INDEX] : DEFAULTS_QUERYSTRING);
