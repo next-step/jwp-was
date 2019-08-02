@@ -2,30 +2,30 @@ package webserver.http;
 
 public class RequestLine {
 
-    private static final String REQUEST_SPLITTER =" ";
+    private static final String REQUEST_DELIMITER =" ";
 
     private String method;
-    private String path;
+    private RequestUri uri;
     private String version;
 
-    private RequestLine(String method, String path, String version) {
+    private RequestLine(String method, RequestUri uri, String version) {
         this.method = method;
-        this.path = path;
+        this.uri = uri;
         this.version = version;
     }
 
-    public static RequestLine parse(String request) {
-        String[] requests = request.split(REQUEST_SPLITTER);
+    public static RequestLine parse(String requestLineValue) {
+        String[] values = requestLineValue.split(REQUEST_DELIMITER);
 
-        return new RequestLine(requests[0], requests[1], requests[2]);
+        return new RequestLine(values[0], RequestUri.parse(values[1]), values[2]);
     }
 
     public String getMethod() {
         return method;
     }
 
-    public String getPath() {
-        return path;
+    public RequestUri getUri() {
+        return uri;
     }
 
     public String getVersion() {
