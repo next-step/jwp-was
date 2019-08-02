@@ -1,15 +1,20 @@
 package webserver.http;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 public class RequestLine {
 
     private final String method;
-    private final String path;
+    private final Path path;
+    private final QueryParam queryParam;
 
     public RequestLine(String method, String path) {
         this.method = method;
-        this.path = path;
+        this.path = Path.from(path);
+        this.queryParam = QueryParam.parse(this.path.getQueryString().orElse(""));
     }
-
 
     public static RequestLine parse(String requestLine) {
         String[] values = requestLine.split("\\s");
@@ -20,8 +25,19 @@ public class RequestLine {
         return this.method;
     }
 
-    public String getPath() {
-        return this.path;
+    public String getUri() {
+        return this.path.getUri();
     }
 
+    public List<String> paramValues() {
+        return this.queryParam.paramValues();
+    }
+
+    public Set<String> paramKeys() {
+        return this.queryParam.paramKeys();
+    }
+
+    public Optional<String> getParam(String key) {
+        return this.queryParam.get(key);
+    }
 }
