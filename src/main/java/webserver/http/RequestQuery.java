@@ -13,7 +13,7 @@ public class RequestQuery {
 
     static final RequestQuery EMPTY = new RequestQuery(Collections.emptyMap());
 
-    private static final String AMPERSAND = "&";
+    private static final String SEPARATOR = "&";
 
     private final Map<String, String> queryString;
 
@@ -26,7 +26,7 @@ public class RequestQuery {
             return EMPTY;
         }
 
-        return Arrays.stream(rawQueryString.split(AMPERSAND))
+        return Arrays.stream(rawQueryString.split(SEPARATOR))
                 .map(RequestQueryValue::of)
                 .collect(collectingAndThen(toMap(RequestQueryValue::getKey, RequestQueryValue::getValue),
                         RequestQuery::new));
@@ -34,5 +34,12 @@ public class RequestQuery {
 
     public String getString(final String key) {
         return queryString.get(key);
+    }
+
+    @Override
+    public String toString() {
+        return "RequestQuery{" +
+                "queryString=" + queryString +
+                '}';
     }
 }

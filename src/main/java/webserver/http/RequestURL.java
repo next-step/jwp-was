@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class RequestURL {
 
-    private static final String QUESTION_MARK = "?";
+    private static final String SEPARATOR = "?";
     private static final int INDEX_OF_REQUEST_PATH = 0;
     private static final int INDEX_OF_REQUEST_QUERY = 1;
 
@@ -24,11 +24,11 @@ public class RequestURL {
             throw new InvalidRequestURLException(rawRequestURL);
         }
 
-        if (!rawRequestURL.contains(QUESTION_MARK)) {
+        if (!rawRequestURL.contains(SEPARATOR)) {
             return new RequestURL(RequestPath.of(rawRequestURL), RequestQuery.EMPTY);
         }
 
-        final String[] splitRawRequestURL = rawRequestURL.split(Pattern.quote(QUESTION_MARK));
+        final String[] splitRawRequestURL = rawRequestURL.split(Pattern.quote(SEPARATOR));
         final RequestPath requestPath = RequestPath.of(splitRawRequestURL[INDEX_OF_REQUEST_PATH]);
         final RequestQuery requestQuery = RequestQuery.of(splitRawRequestURL[INDEX_OF_REQUEST_QUERY]);
 
@@ -37,5 +37,13 @@ public class RequestURL {
 
     String getPath() {
         return requestPath.getRequestPath();
+    }
+
+    @Override
+    public String toString() {
+        return "RequestURL{" +
+                "requestPath=" + requestPath +
+                ", requestQuery=" + requestQuery +
+                '}';
     }
 }
