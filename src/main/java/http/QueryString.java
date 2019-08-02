@@ -23,12 +23,17 @@ public class QueryString {
     Map<String, String> params = new HashMap<>();
 
     for (String param : queryString.split(AMPERSAND_DELIMITER)) {
-      String[] keyAndValue = param.split(EQUALS_DELIMITER);
-      params.put(keyAndValue[KEY_INDEX],
-          keyAndValue.length > HAS_VALUE_CONDITION_LENGTH ? keyAndValue[VALUE_INDEX]
-              : DEFAULTS_VALUE);
+      fillParams(params, param);
     }
+
     return new QueryString(params);
+  }
+
+  private static void fillParams(Map<String, String> params, String param) {
+    String[] keyAndValue = param.split(EQUALS_DELIMITER);
+    params.put(keyAndValue[KEY_INDEX],
+        keyAndValue.length > HAS_VALUE_CONDITION_LENGTH ? keyAndValue[VALUE_INDEX]
+            : DEFAULTS_VALUE);
   }
 
   public String getParam(String key) {
