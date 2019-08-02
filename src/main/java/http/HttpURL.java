@@ -9,16 +9,18 @@ public class HttpURL {
   private static final String DEFAULTS_QUERYSTRING = "";
 
   private String path;
-  private Parameters queryString;
+  private Parameters parameters;
 
-  private HttpURL(String[] urlToken) {
-    this.path = urlToken[PATH_INDEX];
-    this.queryString = Parameters.parse(
-        urlToken.length > HAS_QUERYSTRING_CONDITION_LENGTH ? urlToken[QUERYSTRING_INDEX] : DEFAULTS_QUERYSTRING);
+  private HttpURL(String path, Parameters parameters) {
+    this.path = path;
+    this.parameters = parameters;
   }
 
   public static HttpURL parse(String url) {
-    return new HttpURL(url.split(QUESTION_DELIMITER));
+    String[] urlToken = url.split(QUESTION_DELIMITER);
+    return new HttpURL(urlToken[PATH_INDEX], Parameters.parse(
+        urlToken.length > HAS_QUERYSTRING_CONDITION_LENGTH ? urlToken[QUERYSTRING_INDEX]
+            : DEFAULTS_QUERYSTRING));
   }
 
   public String getPath() {
@@ -26,6 +28,6 @@ public class HttpURL {
   }
 
   public String getParameter(String key) {
-    return queryString.getParameter(key);
+    return parameters.getParameter(key);
   }
 }
