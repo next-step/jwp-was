@@ -12,13 +12,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class RequestLineTest {
 
-    public static final String EMPTY_STRING = "";
-
     @Test
     void parse() {
         RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP/1.1");
     }
@@ -28,7 +26,7 @@ public class RequestLineTest {
         RequestLine requestLine = RequestLine
             .parse("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
 
         assertThat(requestLine.getQueryValue("userId")).isEqualTo("javajigi");
@@ -40,7 +38,7 @@ public class RequestLineTest {
 
     @ParameterizedTest
     @MethodSource("provideStringsForRequestLine")
-    void parameterizedTest(String urlString, String method, String path, Map<String, String> parameter, String protocol) {
+    void parameterizedTest(String urlString, HttpMethod method, String path, Map<String, String> parameter, String protocol) {
         RequestLine requestLine = RequestLine.parse(urlString);
 
         assertThat(requestLine.getMethod()).isEqualTo(method);
@@ -52,19 +50,19 @@ public class RequestLineTest {
     private static Stream<Arguments> provideStringsForRequestLine() {
         return Stream.of(
             Arguments.of("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1",
-                "GET", "/users", new HashMap<String, String>() {
+                HttpMethod.GET, "/users", new HashMap<String, String>() {
                     {put("userId", "javajigi");
                     put("password", "password");
                     put("name", "JaeSung");
                     }}, "HTTP/1.1"),
             Arguments.of("GET /users?userId=mirrors89&password=test&name=KeeSeung HTTP/2",
-                "GET", "/users", new HashMap<String, String>() {
+                HttpMethod.GET, "/users", new HashMap<String, String>() {
                     {put("userId", "mirrors89");
                         put("password", "test");
                         put("name", "KeeSeung");
                     }}, "HTTP/2"),
             Arguments.of("POST /users HTTP/1.1",
-                "POST", "/users", new HashMap<String, String>(), "HTTP/1.1"));
+                HttpMethod.POST, "/users", new HashMap<String, String>(), "HTTP/1.1"));
     }
 
 }

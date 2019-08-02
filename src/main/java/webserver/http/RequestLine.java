@@ -7,12 +7,11 @@ public class RequestLine {
     private static final int METHOD_URL = 1;
     private static final int METHOD_PROTOCOL = 2;
 
-
-    private String method;
+    private HttpMethod method;
     private RequestURL requestURL;
     private String protocol;
 
-    public RequestLine(String method, RequestURL requestURL, String protocol) {
+    public RequestLine(HttpMethod method, RequestURL requestURL, String protocol) {
         this.method = method;
         this.requestURL = requestURL;
         this.protocol = protocol;
@@ -20,12 +19,13 @@ public class RequestLine {
 
     public static RequestLine parse(String requestLine) {
         String[] requestLineSplit = requestLine.split(" ");
+        HttpMethod method = HttpMethod.find(requestLineSplit[METHOD_INDEX]);
         RequestURL requestURL = RequestURL.parse(requestLineSplit[METHOD_URL]);
 
-        return new RequestLine(requestLineSplit[METHOD_INDEX], requestURL, requestLineSplit[METHOD_PROTOCOL]);
+        return new RequestLine(method, requestURL, requestLineSplit[METHOD_PROTOCOL]);
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
