@@ -35,7 +35,7 @@ public class RequestLine {
     return url.getPath();
   }
 
-  public String getParam(String key) {
-    return url.getParam(key);
+  public String getParameter(String key) {
+    return url.getParameter(key);
   }
 }

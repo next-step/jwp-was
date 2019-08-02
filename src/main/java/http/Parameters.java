@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class QueryString {
+public class Parameters {
 
   private static final String AMPERSAND_DELIMITER = "&";
   private static final String EQUALS_DELIMITER = "=";
@@ -13,20 +13,20 @@ public class QueryString {
   private static final int VALUE_INDEX = 1;
   private static final int HAS_VALUE_CONDITION_LENGTH = 1;
 
-  private Map<String, String> params;
+  private Map<String, String> parameters;
 
-  public QueryString(Map<String, String> params) {
-    this.params = params;
+  private Parameters(Map<String, String> parameters) {
+    this.parameters = parameters;
   }
 
-  public static QueryString parse(String queryString) {
+  public static Parameters parse(String queryString) {
     Map<String, String> params = new HashMap<>();
 
     for (String param : queryString.split(AMPERSAND_DELIMITER)) {
       fillParams(params, param);
     }
 
-    return new QueryString(params);
+    return new Parameters(params);
   }
 
   private static void fillParams(Map<String, String> params, String param) {
@@ -36,8 +36,8 @@ public class QueryString {
             : DEFAULTS_VALUE);
   }
 
-  public String getParam(String key) {
-    return params.get(key);
+  public String getParameter(String key) {
+    return parameters.get(key);
   }
 
   @Override
@@ -48,12 +48,12 @@ public class QueryString {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    QueryString that = (QueryString) o;
-    return Objects.equals(params, that.params);
+    Parameters that = (Parameters) o;
+    return Objects.equals(parameters, that.parameters);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(params);
+    return Objects.hash(parameters);
   }
 }

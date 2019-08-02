@@ -7,23 +7,23 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-public class QueryStringTest {
+public class ParametersTest {
 
-  QueryString queryString;
+  Parameters parameters;
 
   @BeforeEach
   void 생성() {
-    queryString = QueryString.parse("userId=javajigi&password=password&name=JaeSung&noValue=");
+    parameters = Parameters.parse("userId=javajigi&password=password&name=JaeSung&noValue=");
   }
 
   @ParameterizedTest
   @CsvSource({"userId,javajigi", "password,password", "name,JaeSung"})
   void 파라미터확인(String key, String value) {
-    assertThat(queryString.getParam(key)).isEqualTo(value);
+    assertThat(parameters.getParameter(key)).isEqualTo(value);
   }
 
   @Test
   void key값만_들어오면_빈값을_준다() {
-    assertThat(queryString.getParam("noValue")).isEqualTo("");
+    assertThat(parameters.getParameter("noValue")).isEqualTo("");
   }
 }

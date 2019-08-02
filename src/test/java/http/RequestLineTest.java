@@ -35,7 +35,7 @@ public class RequestLineTest {
   @ParameterizedTest
   @CsvSource({"userId,javajigi", "password,password", "name,JaeSung"})
   void 파라미터확인(String key, String value) {
-    assertThat(requestLine.getParam(key)).isEqualTo(value);
+    assertThat(requestLine.getParameter(key)).isEqualTo(value);
   }
 
 }

@@ -9,11 +9,11 @@ public class HttpURL {
   private static final String DEFAULTS_QUERYSTRING = "";
 
   private String path;
-  private QueryString queryString;
+  private Parameters queryString;
 
   public HttpURL(String[] urlToken) {
     this.path = urlToken[PATH_INDEX];
-    this.queryString = QueryString.parse(
+    this.queryString = Parameters.parse(
         urlToken.length > HAS_QUERYSTRING_CONDITION_LENGTH ? urlToken[QUERYSTRING_INDEX] : DEFAULTS_QUERYSTRING);
   }
 
@@ -25,7 +25,7 @@ public class HttpURL {
     return path;
   }
 
-  public String getParam(String key) {
-    return queryString.getParam(key);
+  public String getParameter(String key) {
+    return queryString.getParameter(key);
   }
 }
