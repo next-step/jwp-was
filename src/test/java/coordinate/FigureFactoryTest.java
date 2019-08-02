@@ -49,6 +49,6 @@ public class FigureFactoryTest {
     @Test
     void point() {
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() ->FigureFactory.getInstance(Collections.emptyList()));
+                .isThrownBy(() -> FigureFactory.getInstance(Collections.emptyList()));
     }
 }

@@ -1,6 +1,7 @@
 package coordinate;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public enum FigureType {
     LINE(2,  Line::new),
@@ -13,9 +14,8 @@ public enum FigureType {
     private static Map<Integer, FigureType> figures;
 
     static {
-        figures = new HashMap<>();
-        Arrays.stream(values())
-                .forEach(figureType -> figures.put(figureType.numberOfPoints, figureType));
+        figures = Arrays.stream(values())
+                .collect(Collectors.toMap(figureType -> figureType.numberOfPoints, figureType -> figureType, (figureType1, figureType2) -> figureType1));
     }
 
     FigureType(int numberOfPoints, FigureCreator figureCreator) {

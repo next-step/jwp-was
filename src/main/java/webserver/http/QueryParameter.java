@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 public class QueryParameter {
 
-    private static final String QUERY_STRING_DELIMITER = "\\&";
-    private static final String KEY_VALUE_DELIMITER = "\\=";
+    private static final String QUERY_STRING_DELIMITER = "&";
+    private static final String KEY_VALUE_DELIMITER = "=";
     private static final int QUERY_STRING_PAIR_COUNT = 2;
 
     private Map<String, String> queryParameters;
