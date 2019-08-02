@@ -7,3 +7,7 @@
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+
+## 요구사항
+### [0단계 - TDD로 RequestLine 파싱](./docs/step0.md) 
+### [1단계 - Header 파싱, if문 제거](./docs/step1.md)

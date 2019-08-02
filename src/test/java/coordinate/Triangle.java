@@ -3,13 +3,16 @@ package coordinate;
 import java.util.List;
 
 public class Triangle extends AbstractFigure {
+
+    static final int SIZE = 3;
+
     public Triangle(List<Point> points) {
         super(points);
     }
 
     @Override
     public int size() {
-        return 3;
+        return SIZE;
     }
 
     @Override
