@@ -13,7 +13,8 @@ public class RequestLineTest {
     RequestLine requestLine = RequestLine
         .parse("GET /users?userId=javajigi&password=password&name=JaeSung&noValue= HTTP/1.1");
 
-    Parameters parameters = Parameters.parse("userId=javajigi&password=password&name=JaeSung&noValue=");
+    Parameters parameters = Parameters
+        .parse("userId=javajigi&password=password&name=JaeSung&noValue=");
 
     assertThat(requestLine.getMethod()).isEqualTo("GET");
     assertThat(requestLine.getPath()).isEqualTo("/users");
@@ -24,8 +25,7 @@ public class RequestLineTest {
   @Test
   @DisplayName("queryString이 없을때 Parameters는 빈값이다")
   void emptyQueryString() {
-    RequestLine requestLine = RequestLine
-        .parse("GET /users HTTP/1.1");
+    RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
 
     assertThat(requestLine.getMethod()).isEqualTo("GET");
     assertThat(requestLine.getPath()).isEqualTo("/users");
