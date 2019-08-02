@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 import java.io.BufferedReader;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Created by youngjae.havi on 2019-08-02
@@ -35,6 +36,12 @@ public class RequestHeader {
     @RequestHeaderProperty("Connection")
     private String connection;
 
+    @RequestHeaderProperty("Cache-Control")
+    private String cacheControl;
+
+    @RequestHeaderProperty("Cookie")
+    private String cookie;
+
     public RequestHeader(BufferedReader bufferedReader) throws Exception {
         boolean isRequestLine = true;
         String line;
@@ -46,10 +53,15 @@ public class RequestHeader {
             }
 
             String[] keyValue = line.split(":");
-            Field field = Arrays.stream(this.getClass().getDeclaredFields())
+            Optional<Field> optionalField = Arrays.stream(this.getClass().getDeclaredFields())
                     .filter(f -> f.getAnnotationsByType(RequestHeaderProperty.class)[0].value().equalsIgnoreCase(keyValue[0]))
-                    .findAny()
-                    .orElseThrow(() -> new RuntimeException("It's not permmited header"));
+                    .findAny();
+
+            if (!optionalField.isPresent()) {
+                continue;
+            }
+
+            Field field = optionalField.get();
             field.setAccessible(true);
             field.set(this, keyValue[1]);
         }
@@ -81,5 +93,28 @@ public class RequestHeader {
 
     public String getConnection() {
         return connection;
+    }
+
+    public String getCacheControl() {
+        return cacheControl;
+    }
+
+    public String getCookie() {
+        return cookie;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestHeader{" +
+                "requestLine=" + requestLine +
+                ", host='" + host + '\'' +
+                ", accept='" + accept + '\'' +
+                ", acceptLanguage='" + acceptLanguage + '\'' +
+                ", acceptEncoding='" + acceptEncoding + '\'' +
+                ", userAgent='" + userAgent + '\'' +
+                ", connection='" + connection + '\'' +
+                ", cacheControl='" + cacheControl + '\'' +
+                ", cookie='" + cookie + '\'' +
+                '}';
     }
 }

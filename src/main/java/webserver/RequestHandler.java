@@ -22,6 +22,8 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
             RequestHeader requestHeader = new RequestHeader(bufferedReader);
+            logger.debug(requestHeader.toString());
+
             HttpRequestMapping httpRequestMapping = HttpRequestMapping.get(requestHeader.getRequestLine());
             byte[] body = httpRequestMapping.getBody();
 
