@@ -42,6 +42,13 @@ public class QueryString {
         return Collections.unmodifiableMap(parameters);
     }
 
+    @Override
+    public String toString() {
+        return "QueryString{" +
+                "parameters=" + parameters +
+                '}';
+    }
+
     static class Parameter {
 
         private static final int INDEX_OF_ATTRIBUTE = 0;

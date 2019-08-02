@@ -31,4 +31,12 @@ public class HttpURL {
     String getRequestParam(String attribute) {
         return queryString.get(attribute);
     }
+
+    @Override
+    public String toString() {
+        return "HttpURL{" +
+                "queryString=" + queryString +
+                ", path='" + path + '\'' +
+                '}';
+    }
 }
