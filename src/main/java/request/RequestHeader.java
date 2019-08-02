@@ -42,6 +42,14 @@ public class RequestHeader {
     @RequestHeaderProperty("Cookie")
     private String cookie;
 
+    @RequestHeaderProperty("Content-Type")
+    private String contentType;
+
+    @RequestHeaderProperty("Content-Length")
+    private String contentLength;
+
+    private String body;
+
     public RequestHeader(BufferedReader bufferedReader) throws Exception {
         boolean isRequestLine = true;
         String line;
@@ -64,6 +72,11 @@ public class RequestHeader {
             Field field = optionalField.get();
             field.setAccessible(true);
             field.set(this, keyValue[1]);
+        }
+
+        String body = bufferedReader.readLine();
+        if (!StringUtils.isEmpty(body)) { //TODO:content-Legth 체크
+            this.body = body;
         }
     }
 
@@ -101,6 +114,10 @@ public class RequestHeader {
 
     public String getCookie() {
         return cookie;
+    }
+
+    public String getBody() {
+        return body;
     }
 
     @Override
