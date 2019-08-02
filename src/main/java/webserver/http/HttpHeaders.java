@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class HttpHeaders {
 
@@ -147,9 +148,44 @@ public class HttpHeaders {
 
 
     public void addHeaderLine(String headerLine) {
-
         String[] headerNameAndValue = parseHeaderLine(headerLine);
         setHeader(this.headers, headerNameAndValue[0], headerNameAndValue[1]);
+    }
+
+    public List<String> getHeaderValue(String name) {
+        return get(name);
+    }
+
+    public String getHeaderValueFirst(String name) {
+        return getFirst(name);
+    }
+
+    public String getContentType() {
+        return getFirst(CONTENT_TYPE);
+    }
+
+    public long getContentLength() {
+        String value = getFirst(CONTENT_LENGTH);
+        return (value != null ? Long.parseLong(value) : -1);
+    }
+
+    public void setHeader(String name, String value) {
+        setHeader(this.headers, name, value);
+    }
+
+    public List<String> getHeaderLines() {
+        return this.headers.entrySet().stream()
+                .flatMap(entry -> {
+                    String name = entry.getKey();
+                    return entry.getValue().stream()
+                            .map(value -> this.getHeaderLine(name, value));
+                })
+                .collect(Collectors.toList());
+
+    }
+
+    private String getHeaderLine(String name, String value) {
+        return String.join(HEADER_LINE_SPLIT_SIGN, name, value);
     }
 
     private void setHeader(MultiValueMap<String, String> headerValueByName, String name, String value) {
@@ -188,23 +224,6 @@ public class HttpHeaders {
         return true;
     }
 
-    public List<String> getHeaderValue(String name) {
-        return get(name);
-    }
-
-    public String getHeaderValueFirst(String name) {
-        return getFirst(name);
-    }
-
-    public String getContentType() {
-        return getFirst(CONTENT_TYPE);
-    }
-
-    public long getContentLength() {
-        String value = getFirst(CONTENT_LENGTH);
-        return (value != null ? Long.parseLong(value) : -1);
-    }
-
     private List<String> get(String name){
         return this.headers.get(name);
     }
@@ -212,6 +231,7 @@ public class HttpHeaders {
     private String getFirst(String name){
         return this.headers.getFirst(name);
     }
+
 
 
 }
