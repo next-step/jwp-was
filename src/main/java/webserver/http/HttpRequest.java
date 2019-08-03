@@ -78,6 +78,7 @@ public class HttpRequest {
         return "HttpRequest{" +
                 "requestLine=" + requestLine +
                 ", httpHeaders=" + httpHeaders +
+                ", body='" + body + '\'' +
                 '}';
     }
 }

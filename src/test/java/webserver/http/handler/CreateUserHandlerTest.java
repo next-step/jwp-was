@@ -8,6 +8,7 @@ import webserver.HttpResponse;
 import webserver.http.HttpRequest;
 
 import java.io.ByteArrayInputStream;
+import java.io.OutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,15 +24,19 @@ class CreateUserHandlerTest {
     @Test
     void createUser() throws Exception {
         // given
-        final HttpRequest request = HttpRequest.of(new ByteArrayInputStream(("GET /create?userId=jaeyeonling&password=password&" +
-                "name=jaeyeon&email=jaeyeonling@gmail.com HTTP/1.1 \n\n").getBytes()));
-        final HttpResponse response = HttpResponse.of(System.out);
+        final HttpRequest request = HttpRequest.of(new ByteArrayInputStream(("POST /user/create HTTP/1.1 \r\n" +
+                "Content-Length: 77\r\n\r\n" +
+                "userId=jaeyeonling&password=password&name=jaeyeon&email=jaeyeonling@gmail.com").getBytes()));
 
         // when
-        createUserHandler.handle(request, response);
+        createUserHandler.handle(request, HttpResponse.of(new OutputStream() {
+            @Override
+            public void write(int ignore) { }
+        }));
+
         final User user = DataBase.findUserById("jaeyeonling");
 
         // then
-        assertThat(user).isNotNull();
+        assertThat(user.getUserId()).isEqualTo("jaeyeonling");
     }
 }
