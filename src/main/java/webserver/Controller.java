@@ -4,6 +4,10 @@
  */
 package webserver;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.User;
 import org.springframework.util.MultiValueMap;
@@ -13,6 +17,8 @@ import utils.FileIoUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import static request.HttpMethod.GET;
@@ -75,5 +81,22 @@ public class Controller {
         }
 
         return Response.loginSuccess("login success".getBytes());
+    }
+
+    @RequestMapping(method = GET, path = "/user/list.html")
+    public Response userList(RequestHeader requestHeader) throws IOException, URISyntaxException {
+        if ("logined=false".equals(requestHeader.getCookie())) {
+            return Response.redirect(FileIoUtils.loadFileFromClasspath("./templates/index.html"), requestHeader.getHost());
+        }
+
+        TemplateLoader loader = new ClassPathTemplateLoader();
+        loader.setPrefix("/templates");
+        loader.setSuffix(".html");
+        Handlebars handlebars = new Handlebars(loader);
+
+        Template template = handlebars.compile("user/list");
+        String profilePage = template.apply(DataBase.findAll());
+
+        return Response.of(profilePage.getBytes());
     }
 }
