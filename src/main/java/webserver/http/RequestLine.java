@@ -1,11 +1,15 @@
 package webserver.http;
 
 public class RequestLine {
+    public HttpRequest httpRequest;
 
-    public String url;
+    public String httpMsg;
 
-    public RequestLine(String url){
-        this.url = url;
+
+    public RequestLine(String httpMsg){
+        this.httpMsg = httpMsg;
+        httpRequest = new HttpRequest(httpMsg);
+
     }
 
     public static RequestLine parse(String url){
@@ -13,15 +17,16 @@ public class RequestLine {
     }
 
     public String getMethod(){
-        return strSplit()[0];
+        return httpRequest.getHttpMethod();
     }
 
     public String getPath(){
-        return strSplit()[1];
+        return httpRequest.getHttpPath();
     }
 
-    private String[] strSplit(){
-        return url.split(" ");
+    public String getParameter(String keyStr){
+        return httpRequest.getHttpParameterValue(keyStr);
     }
+
 
 }

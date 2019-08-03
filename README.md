@@ -7,3 +7,12 @@
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+
+##1주차 작업 내역
+feat ($step1): HTTP 파싱 및 IF문 중복 제거
+
+새로 추가한 작업 $step1:
+- FigureConstructor 클래스 추가
+- FigureFactory 클래스 내 중복 IF문 FigureConstructor 클래스 사용하여 해결
+- RequestLineTest 파라미터 파싱 테스트 추가
+- RequestLine 파라미터 분리 메소드 추가
