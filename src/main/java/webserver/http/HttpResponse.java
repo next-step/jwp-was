@@ -5,12 +5,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Map;
+import java.util.Optional;
 
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
     private byte[] body;
     private Cookie cookie;
+    private HttpHeaders httpHeaders;
     private Model model;
     private int statusCode;
     private String redirectPath;
@@ -19,6 +20,7 @@ public class HttpResponse {
         this.cookie = new Cookie();
         this.model = new Model();
         this.statusCode = 200;
+        this.httpHeaders = new HttpHeaders();
     }
 
     public HttpResponse(int statusCode, byte[] body) {
@@ -26,6 +28,11 @@ public class HttpResponse {
         this.cookie = new Cookie();
         this.model = new Model();
         this.statusCode = statusCode;
+        this.httpHeaders = new HttpHeaders();
+    }
+
+    public HttpHeaders getHttpHeaders() {
+        return httpHeaders;
     }
 
     public byte[] getBody() {
@@ -79,13 +86,20 @@ public class HttpResponse {
     private void response200Header(DataOutputStream dos) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + body.length + "\r\n");
+            setContentType(dos);
             setCookies(dos);
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private void setContentType(DataOutputStream dos) throws IOException {
+        String contentType = Optional.ofNullable(httpHeaders.get("Content-Type"))
+                .orElse("text/html");
+
+        dos.writeBytes("Content-Type: " + contentType + ";charset=utf-8\r\n");
     }
 
     private void response302Header(DataOutputStream dos) {

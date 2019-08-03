@@ -16,8 +16,10 @@ import java.net.URISyntaxException;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final String TEMPLATES_PREFIX = "/templates";
+    private static final String TEMPLATE_FILE_PREFIX = "/templates";
     private static final String HTML_FILE_SUFFIX = ".html";
+    private static final String STATIC_FILE_PREFIX = "/static";
+    private static final String CSS_FILE_SUFFIX = ".css";
     private static final String ERROR_TEMPLATES_PREFIX = "error";
 
     private Socket connection;
@@ -44,10 +46,17 @@ public class RequestHandler implements Runnable {
 
     HttpResponse getResponse(HttpRequest httpRequest) throws IOException, URISyntaxException {
         String requestPath = httpRequest.getUri().getPath();
-        if (requestPath.endsWith(HTML_FILE_SUFFIX))
-            return new HttpResponse(200, FileIoUtils.loadFileFromClasspath("." + TEMPLATES_PREFIX + requestPath));
-
         HttpResponse httpResponse = new HttpResponse();
+        if (requestPath.endsWith(HTML_FILE_SUFFIX)) {
+            return new HttpResponse(200, FileIoUtils.loadFileFromClasspath("." + TEMPLATE_FILE_PREFIX + requestPath));
+        }
+
+        if (requestPath.endsWith(CSS_FILE_SUFFIX)) {
+            httpResponse = new HttpResponse(200, FileIoUtils.loadFileFromClasspath("." + STATIC_FILE_PREFIX + requestPath));
+            httpResponse.getHttpHeaders().set("Content-Type", "text/css");
+            return httpResponse;
+        }
+
         String viewName = getViewName(httpRequest, httpResponse);
         if (viewName.startsWith("redirect:")) {
             String redirectPath = String.format("http://%s%s", httpRequest.getHeaders().get("Host"), viewName.substring(viewName.indexOf(":") + 1));
@@ -68,7 +77,7 @@ public class RequestHandler implements Runnable {
     private String viewMapping(HttpRequest request, HttpResponse response) throws IOException {
         String path = Router.route(request, response).orElse("");
         TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix(TEMPLATES_PREFIX);
+        loader.setPrefix(TEMPLATE_FILE_PREFIX);
         loader.setSuffix(HTML_FILE_SUFFIX);
         Handlebars handlebars = new Handlebars(loader);
         Template template = handlebars.compile(path);
