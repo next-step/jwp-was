@@ -39,7 +39,7 @@ public class QueryString {
         return new QueryString(parameterMap);
     }
 
-    public QueryString(Map<String, Object> parameterMap) {
+    private QueryString(Map<String, Object> parameterMap) {
         this.parameterMap = parameterMap;
     }
 
