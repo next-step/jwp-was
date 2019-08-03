@@ -6,7 +6,7 @@ package webserver.http;
 
 import org.junit.jupiter.api.Test;
 import request.HttpMethod;
-import request.RequestHeader;
+import request.HttpRequest;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Created by youngjae.havi on 2019-08-02
  */
-public class RequestHeaderTest {
+public class HttpRequestTest {
 
     @Test
     void read_header() throws Exception {
@@ -27,19 +27,19 @@ public class RequestHeaderTest {
                 "Accept-Language: en-us\n" +
                 "Accept-Encoding: gzip, deflate\n" +
                 "User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)"));
-        RequestHeader requestHeader = new RequestHeader(bufferedReader);
+        HttpRequest httpRequest = new HttpRequest(bufferedReader);
 
-        assertThat(requestHeader.getRequestLine().getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(requestHeader.getHost()).isEqualTo(" www.nowhere123.com");
-        assertThat(requestHeader.getAccept()).isEqualTo(" image/gif, image/jpeg, */*");
-        assertThat(requestHeader.getAcceptLanguage()).isEqualTo(" en-us");
-        assertThat(requestHeader.getAcceptEncoding()).isEqualTo(" gzip, deflate");
-        assertThat(requestHeader.getUserAgent()).isEqualTo(" Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+        assertThat(httpRequest.getRequestLine().getMethod()).isEqualTo(HttpMethod.GET);
+        assertThat(httpRequest.getHost()).isEqualTo(" www.nowhere123.com");
+        assertThat(httpRequest.getAccept()).isEqualTo(" image/gif, image/jpeg, */*");
+        assertThat(httpRequest.getAcceptLanguage()).isEqualTo(" en-us");
+        assertThat(httpRequest.getAcceptEncoding()).isEqualTo(" gzip, deflate");
+        assertThat(httpRequest.getUserAgent()).isEqualTo(" Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
     }
 
     @Test
     void invalid_header() {
         BufferedReader bufferedReader = new BufferedReader(new StringReader("GIT /index.html HTTP/1.1\n"));
-        assertThrows(IllegalArgumentException.class, () -> new RequestHeader(bufferedReader));
+        assertThrows(IllegalArgumentException.class, () -> new HttpRequest(bufferedReader));
     }
 }

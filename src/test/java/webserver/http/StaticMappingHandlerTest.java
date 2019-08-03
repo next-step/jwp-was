@@ -1,8 +1,8 @@
 package webserver.http;
 
 import org.junit.jupiter.api.Test;
-import request.RequestHeader;
-import response.Response;
+import request.HttpRequest;
+import response.HttpResponse;
 import handler.StaticMappingHandler;
 
 import java.io.BufferedReader;
@@ -17,13 +17,13 @@ public class StaticMappingHandlerTest {
 
     @Test
     void style_sheet_mapping_test() throws Exception {
-        BufferedReader bufferedReader = new BufferedReader(new StringReader("GET ./css/style.css HTTP/1.1\n" +
+        BufferedReader bufferedReader = new BufferedReader(new StringReader("GET /css/styles.css HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
                 "Accept: text/css,*/*;q=0.1\n" +
                 "Connection: keep-alive"));
-        RequestHeader requestHeader = new RequestHeader(bufferedReader);
-        Response response = new StaticMappingHandler().request(requestHeader);
-        String stringBody = new String(response.getBody());
+        HttpRequest httpRequest = new HttpRequest(bufferedReader);
+        HttpResponse httpResponse = new StaticMappingHandler().request(httpRequest);
+        String stringBody = new String(httpResponse.getBody());
 
         assertThat(stringBody).isNotEmpty();
     }

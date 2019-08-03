@@ -12,44 +12,44 @@ import static response.ResponseType.*;
 /**
  * Created by youngjae.havi on 2019-08-03
  */
-public class Response {
-    private static final Logger logger = LoggerFactory.getLogger(Response.class);
+public class HttpResponse {
+    private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
     private String httpStatus;
     private byte[] body;
     private String host;
     private ResponseType responseType;
 
-    public Response(byte[] bytes, ResponseType responseType) {
+    public HttpResponse(byte[] bytes, ResponseType responseType) {
         this.httpStatus = "200 OK";
         this.body = bytes;
         this.responseType = responseType;
     }
 
-    public Response(String httpStatus, byte[] bytes) {
+    public HttpResponse(String httpStatus, byte[] bytes) {
         this.httpStatus = httpStatus;
         this.body = bytes;
         this.responseType = NOT_LOGIN;
     }
 
-    public static Response of(byte[] bytes) {
-        return new Response(bytes, NOT_LOGIN);
+    public static HttpResponse of(byte[] bytes) {
+        return new HttpResponse(bytes, NOT_LOGIN);
     }
 
-    public static Response redirect(byte[] bytes, String host) {
-        return new Response("302 FOUND", bytes);
+    public static HttpResponse redirect(byte[] bytes, String host) {
+        return new HttpResponse("302 FOUND", bytes);
     }
 
-    public static Response loginFail(byte[] bytes) {
-        return new Response(bytes, LOGIN_FAILED);
+    public static HttpResponse loginFail(byte[] bytes) {
+        return new HttpResponse(bytes, LOGIN_FAILED);
     }
 
-    public static Response loginSuccess(byte[] bytes) {
-        return new Response(bytes, LOGIN_SUCCESS);
+    public static HttpResponse loginSuccess(byte[] bytes) {
+        return new HttpResponse(bytes, LOGIN_SUCCESS);
     }
 
-    public static Response css(byte[] bytes) {
-        return new Response(bytes, CSS);
+    public static HttpResponse css(byte[] bytes) {
+        return new HttpResponse(bytes, CSS);
     }
 
     public int getBodyLength() {

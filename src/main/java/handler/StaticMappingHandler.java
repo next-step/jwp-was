@@ -2,8 +2,8 @@ package handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import request.RequestHeader;
-import response.Response;
+import request.HttpRequest;
+import response.HttpResponse;
 import utils.FileIoUtils;
 import webserver.RequestHandler;
 
@@ -14,9 +14,9 @@ public class StaticMappingHandler implements RequestStrategy {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     @Override
-    public Response request(RequestHeader requestHeader) {
+    public HttpResponse request(HttpRequest httpRequest) {
         try {
-            return Response.css(FileIoUtils.loadFileFromClasspath("./static" + requestHeader.getRequestLine().getPath().trim()));
+            return HttpResponse.css(FileIoUtils.loadFileFromClasspath("./static" + httpRequest.getRequestLine().getPath().trim()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new RuntimeException("StaticMappingHandler request failed: ", e);
@@ -24,8 +24,8 @@ public class StaticMappingHandler implements RequestStrategy {
     }
 
     @Override
-    public boolean isSupport(RequestHeader requestHeader) {
-        String path = requestHeader.getRequestLine().getPath();
+    public boolean isSupport(HttpRequest httpRequest) {
+        String path = httpRequest.getRequestLine().getPath();
         return path.contains(".css") || path.contains(".js");
     }
 }

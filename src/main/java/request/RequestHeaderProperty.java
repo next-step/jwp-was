@@ -19,7 +19,7 @@ public @interface RequestHeaderProperty {
     String USE_DEFAULT_NAME = "";
 
     /**
-     * Request Header에서 전달되는 파라미터의 명과 {@link RequestHeader}의 필드값을 맵핑하기 위해 사용
+     * Request Header에서 전달되는 파라미터의 명과 {@link HttpRequest}의 필드값을 맵핑하기 위해 사용
      * @return Request Header에서 전달되는 파라미터의 정식 명칭
      */
     String value() default USE_DEFAULT_NAME;

@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * Created by youngjae.havi on 2019-08-02
  */
-public class RequestHeader {
+public class HttpRequest {
     @RequestHeaderProperty("RequestLine")
     private RequestLine requestLine;
 
@@ -58,11 +58,11 @@ public class RequestHeader {
     @RequestHeaderProperty
     private MultiValueMap<String, String> bodyMap;
 
-    public RequestHeader(RequestLine requestLine) {
+    public HttpRequest(RequestLine requestLine) {
         this.requestLine = requestLine;
     }
 
-    public RequestHeader(BufferedReader bufferedReader) throws Exception {
+    public HttpRequest(BufferedReader bufferedReader) throws Exception {
         setHeaders(bufferedReader);
         setBodyIfNotGet(bufferedReader);
     }

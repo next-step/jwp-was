@@ -7,9 +7,9 @@ package handler;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import request.HttpMethod;
-import request.RequestHeader;
+import request.HttpRequest;
 import request.RequestLine;
-import response.Response;
+import response.HttpResponse;
 import controller.Controller;
 import controller.RequestMapping;
 
@@ -34,22 +34,22 @@ public class RequestMappingHandler implements RequestStrategy {
     }
 
     @Override
-    public Response request(RequestHeader requestHeader) {
-        RequestLine requestLine = requestHeader.getRequestLine();
+    public HttpResponse request(HttpRequest httpRequest) {
+        RequestLine requestLine = httpRequest.getRequestLine();
         Method method = controllerBean.get(requestLine.getMethod(), requestLine.getPath());
         try {
             if (method == null) {
                 throw new RuntimeException("There are not exist request path.");
             }
-            return (Response) method.invoke(controller, requestHeader);
+            return (HttpResponse) method.invoke(controller, httpRequest);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("RequestMappingHandler getBody failed: ", e);
         }
     }
 
     @Override
-    public boolean isSupport(RequestHeader requestHeader) {
-        RequestLine requestLine = requestHeader.getRequestLine();
+    public boolean isSupport(HttpRequest httpRequest) {
+        RequestLine requestLine = httpRequest.getRequestLine();
         return controllerBean.contains(requestLine.getMethod(), requestLine.getPath());
     }
 }
