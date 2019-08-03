@@ -1,10 +1,10 @@
 package domain.user;
 
 import db.DataBase;
-import webserver.http.response.HttpResponse;
-import webserver.http.request.HttpRequest;
-import webserver.http.request.RequestQuery;
 import webserver.handler.Handler;
+import webserver.http.request.Request;
+import webserver.http.request.RequestQuery;
+import webserver.http.response.Response;
 
 import java.util.Optional;
 
@@ -20,8 +20,8 @@ public class LoginHandler implements Handler {
     }
 
     @Override
-    public void handle(final HttpRequest request,
-                       final HttpResponse response) throws Exception {
+    public void handle(final Request request,
+                       final Response response) throws Exception {
         final RequestQuery requestQuery = RequestQuery.of(request.getBody());
         
         final String userId = requestQuery.getString("userId");

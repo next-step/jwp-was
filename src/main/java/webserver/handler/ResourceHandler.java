@@ -1,8 +1,8 @@
 package webserver.handler;
 
 import utils.FileIoUtils;
-import webserver.http.response.HttpResponse;
-import webserver.http.request.HttpRequest;
+import webserver.http.request.Request;
+import webserver.http.response.Response;
 
 public class ResourceHandler implements Handler {
 
@@ -13,8 +13,8 @@ public class ResourceHandler implements Handler {
     }
 
     @Override
-    public void handle(final HttpRequest request,
-                       final HttpResponse response) throws Exception {
+    public void handle(final Request request,
+                       final Response response) throws Exception {
         final String accept = request.getHeader("Accept");
         final String contentType = accept.split(",")[0];
 

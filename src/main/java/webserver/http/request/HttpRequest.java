@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import static java.lang.System.lineSeparator;
 
-public class HttpRequest {
+public class HttpRequest implements Request {
 
     private final RequestLine requestLine;
     private final HttpHeaders httpHeaders;
@@ -38,30 +38,37 @@ public class HttpRequest {
         return new HttpRequest(requestLine, httpHeaders, body);
     }
 
+    @Override
     public String getPath() {
         return requestLine.getPath();
     }
 
+    @Override
     public boolean matchPath(final String regex) {
         return Pattern.matches(regex, getPath());
     }
 
+    @Override
     public String getParameter(final String key) {
         return requestLine.getParameter(key);
     }
 
+    @Override
     public boolean matchMethod(final RequestMethod method) {
         return requestLine.matchMethod(method);
     }
 
+    @Override
     public String getHeader(final String key) {
         return httpHeaders.getString(key);
     }
 
+    @Override
     public String getBody() {
         return body;
     }
 
+    @Override
     public Cookie getCookie() {
         return Cookie.of(getHeader("Cookie"));
     }

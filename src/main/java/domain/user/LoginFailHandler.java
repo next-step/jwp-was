@@ -1,14 +1,14 @@
 package domain.user;
 
-import webserver.http.response.HttpResponse;
-import webserver.http.request.HttpRequest;
 import webserver.handler.Handler;
+import webserver.http.request.Request;
+import webserver.http.response.Response;
 
 public class LoginFailHandler implements Handler {
 
     @Override
-    public void handle(final HttpRequest request,
-                       final HttpResponse response) {
+    public void handle(final Request request,
+                       final Response response) {
         response.addHeader("Cookie", "logined=false");
         response.redirect("/user/login_failed.html");
     }

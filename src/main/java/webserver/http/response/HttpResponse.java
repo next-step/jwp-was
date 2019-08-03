@@ -8,7 +8,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class HttpResponse implements AutoCloseable {
+public class HttpResponse implements Response {
 
     private final OutputStream out;
     private final HttpHeaders headers = HttpHeaders.empty();
@@ -24,19 +24,23 @@ public class HttpResponse implements AutoCloseable {
         return new HttpResponse(out);
     }
 
+    @Override
     public void addHeader(final String key,
                           final String value) {
         headers.add(key, value);
     }
 
+    @Override
     public void notFound() {
         responseLine = ResponseLine.of(HttpStatus.NOT_FOUND);
     }
 
+    @Override
     public void ok(final String body) {
         ok(body.getBytes());
     }
 
+    @Override
     public void ok(final byte[] body) {
         responseLine = ResponseLine.of(HttpStatus.OK);
         headers.setContentLength(body.length);
@@ -44,6 +48,7 @@ public class HttpResponse implements AutoCloseable {
         this.body = body;
     }
 
+    @Override
     public void redirect(final String redirectPath) {
         responseLine = ResponseLine.of(HttpStatus.FOUND);
         headers.setLocation(redirectPath);

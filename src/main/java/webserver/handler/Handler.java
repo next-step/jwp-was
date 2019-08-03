@@ -1,11 +1,10 @@
 package webserver.handler;
 
-import webserver.http.response.HttpResponse;
-import webserver.http.request.HttpRequest;
+import webserver.http.request.Request;
+import webserver.http.response.Response;
 
 @FunctionalInterface
 public interface Handler {
 
-    void handle(final HttpRequest request,
-                final HttpResponse response) throws Exception;
+    void handle(final Request request, final Response response) throws Exception;
 }

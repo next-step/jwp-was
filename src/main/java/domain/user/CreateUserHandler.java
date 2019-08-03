@@ -2,16 +2,16 @@ package domain.user;
 
 import db.DataBase;
 import model.User;
-import webserver.http.response.HttpResponse;
-import webserver.http.request.HttpRequest;
-import webserver.http.request.RequestQuery;
 import webserver.handler.Handler;
+import webserver.http.request.Request;
+import webserver.http.request.RequestQuery;
+import webserver.http.response.Response;
 
 public class CreateUserHandler implements Handler {
 
     @Override
-    public void handle(final HttpRequest request,
-                       final HttpResponse response) {
+    public void handle(final Request request,
+                       final Response response) {
         final RequestQuery formData = RequestQuery.of(request.getBody());
         
         final String userId = formData.getString("userId");

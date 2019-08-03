@@ -1,9 +1,9 @@
 package webserver.handler;
 
-import webserver.http.request.HttpRequest;
+import webserver.http.request.Request;
 
 public interface HandlerProvider {
 
-    boolean support(final HttpRequest request);
+    boolean support(final Request request);
     Handler provide();
 }

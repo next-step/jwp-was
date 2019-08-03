@@ -1,6 +1,6 @@
 package webserver.handler;
 
-import webserver.http.request.HttpRequest;
+import webserver.http.request.Request;
 
 public class ConditionHandlerProvider implements HandlerProvider {
 
@@ -14,7 +14,7 @@ public class ConditionHandlerProvider implements HandlerProvider {
     }
 
     @Override
-    public boolean support(final HttpRequest request) {
+    public boolean support(final Request request) {
         return condition.support(request);
     }
 

@@ -2,9 +2,9 @@ package domain.user;
 
 import db.DataBase;
 import view.ViewCompiler;
-import webserver.http.response.HttpResponse;
+import webserver.http.request.Request;
 import webserver.handler.SecureHandler;
-import webserver.http.request.HttpRequest;
+import webserver.http.response.Response;
 
 public class UserListHandler extends SecureHandler {
 
@@ -15,8 +15,8 @@ public class UserListHandler extends SecureHandler {
     }
 
     @Override
-    protected void secureHandle(final HttpRequest request,
-                                final HttpResponse response) throws Exception {
+    protected void secureHandle(final Request request,
+                                final Response response) throws Exception {
         response.ok(viewCompiler.compile(request.getPath(), DataBase.findAll()));
     }
 }

@@ -1,17 +1,17 @@
 package webserver.handler;
 
-import webserver.http.response.HttpResponse;
+import webserver.http.request.Request;
 import webserver.http.cookie.Cookie;
-import webserver.http.request.HttpRequest;
+import webserver.http.response.Response;
 
 public abstract class SecureHandler implements Handler {
 
-    protected abstract void secureHandle(final HttpRequest request,
-                                         final HttpResponse response) throws Exception;
+    protected abstract void secureHandle(final Request request,
+                                         final Response response) throws Exception;
 
     @Override
-    public void handle(final HttpRequest request,
-                       final HttpResponse response) throws Exception {
+    public void handle(final Request request,
+                       final Response response) throws Exception {
         final Cookie cookie = request.getCookie();
         if (!cookie.getBoolean("logined")) {
             response.redirect("/user/login.html");
