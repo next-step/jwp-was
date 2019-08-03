@@ -31,6 +31,10 @@ public class RequestLine {
         return url.getPath();
     }
 
+    public String getParameter(final String key) {
+        return url.getParameter(key);
+    }
+
     @Override
     public String toString() {
         return "RequestLine{" +

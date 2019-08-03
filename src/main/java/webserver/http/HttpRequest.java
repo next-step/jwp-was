@@ -38,8 +38,8 @@ public class HttpRequest {
         return Pattern.matches(regex, getPath());
     }
 
-    public HttpHeaders getHttpHeaders() {
-        return httpHeaders;
+    public String getParameter(final String key) {
+        return requestLine.getParameter(key);
     }
 
     private static HttpHeaders readHeaders(final BufferedReader requestReader) throws IOException {

@@ -38,6 +38,10 @@ public class RequestURL {
         return requestPath.getRequestPath();
     }
 
+    String getParameter(final String key) {
+        return requestQuery.getString(key);
+    }
+
     private static int parseSeparatorIndex(final String rawRequestURL) {
         return rawRequestURL.indexOf(SEPARATOR);
     }
