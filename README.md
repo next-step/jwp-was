@@ -7,3 +7,25 @@
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+
+
+### step1
+
+#### 요구사항 1 - QueryString 파싱
+* method와 path분리
+* path에서 queryString 분리
+    > queryString이 존재하는지 확인 필요
+    > 존재하면 분리 진행.
+    > 없으면 PASS
+* queryString에서 key, value 분리
+> 공통기능 : 구분자를 기준으로 데이터 분리
+
+ * Path객체 만들기
+    > path와 parameter list 저장
+ 
+* 검증
+ > requestLine이 null 또는 size 0
+ 
+ #### 요구사항 3 - if문 제거 연습
+ * FigureCreatorFactory 생성 + 도형별 생성객체 Map으로 저장
+ * FigureCreator 상속받아 도형별 생성객체 생성
