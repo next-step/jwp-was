@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,9 +37,11 @@ public class RequestHandlerTest {
     void responseIndexHtmlTest() throws IOException, URISyntaxException {
         String filePath ="./templates/index.html";
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+        HttpResponse httpResponse = new HttpResponse();
+
         RequestHandler requestHandler = new RequestHandler(null);
 
-        byte[] responseBody = requestHandler.getHttpResponse(httpRequest).getBody();
+        byte[] responseBody = requestHandler.getResponse(httpRequest).getBody();
         log.debug("response body : {}", new String(responseBody));
         assertThat(responseBody).isEqualTo(FileIoUtils.loadFileFromClasspath(filePath));
     }

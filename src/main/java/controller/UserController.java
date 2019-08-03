@@ -1,9 +1,11 @@
 package controller;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import db.DataBase;
 import model.User;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.Model;
 import webserver.http.RequestBody;
 
 import java.util.Objects;
@@ -37,5 +39,16 @@ public class UserController {
 
         httpResponse.getCookie().set("logined", "true");
         return Optional.of("redirect:/index.html");
+    }
+
+    public static Optional list(HttpRequest httpRequest, HttpResponse httpResponse) {
+        String logined = httpRequest.getCookie().get("logined");
+        if (StringUtils.isBlank(logined) || !Boolean.parseBoolean(logined)) {
+            return Optional.of("redirect:/user/login.html");
+        }
+
+        Model model = httpResponse.getModel();
+        model.set("users", DataBase.findAll());
+        return Optional.of("/user/list");
     }
 }

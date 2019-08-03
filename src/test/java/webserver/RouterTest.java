@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,17 +22,20 @@ public class RouterTest {
     void route() throws IOException {
         BufferedReader bufferedReader = makeGetRequestBufferedReader();
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+        HttpResponse httpResponse = new HttpResponse();
         User user = new User("javajigi", "password", "박재성", "javajigi@slipp.net");
 
-        assertThat(Router.route(httpRequest).apply(httpRequest).orElse("").toString()).isEqualTo(user.toString());
+        assertThat(Router.route(httpRequest, httpResponse).orElse("").toString()).isEqualTo(user.toString());
     }
 
     @Test
     void postRequestCreateUserTest() throws IOException {
         BufferedReader bufferedReader = makePostBufferedReader(CREATE_USER_URL, "userId=javajigi&password=password&name=박재성&email=javajigi%40slipp.net");
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+        HttpResponse httpResponse = new HttpResponse();
 
-        assertThat(Router.route(httpRequest).apply(httpRequest).orElse("").toString())
+
+        assertThat(Router.route(httpRequest, httpResponse).orElse("").toString())
                 .isEqualTo("redirect:/index.html");
     }
 
@@ -40,8 +44,10 @@ public class RouterTest {
         createUser();
         BufferedReader bufferedReader = makeLoginSuccessBufferedReader();
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+        HttpResponse httpResponse = new HttpResponse();
 
-        assertThat(Router.route(httpRequest).apply(httpRequest).orElse("").toString())
+
+        assertThat(Router.route(httpRequest, httpResponse).orElse("").toString())
                 .isEqualTo("redirect:/index.html");
     }
 
@@ -50,15 +56,19 @@ public class RouterTest {
         createUser();
         BufferedReader bufferedReader = makeLoginFailBufferedReader();
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+        HttpResponse httpResponse = new HttpResponse();
 
-        assertThat(Router.route(httpRequest).apply(httpRequest).orElse("").toString())
+
+        assertThat(Router.route(httpRequest, httpResponse).orElse("").toString())
                 .isEqualTo("redirect:/user/login_failed.html");
     }
 
     private void createUser() throws IOException {
         BufferedReader bufferedReader = makePostBufferedReader(CREATE_USER_URL, "userId=javajigi&password=password&name=박재성&email=javajigi%40slipp.net");
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
-        Router.route(httpRequest).apply(httpRequest);
+        HttpResponse httpResponse = new HttpResponse();
+
+        Router.route(httpRequest, httpResponse);
     }
 
     private BufferedReader makeLoginSuccessBufferedReader() {

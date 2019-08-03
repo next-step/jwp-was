@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public class ErrorController {
     public static Optional notFound(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return Optional.of("404 Not Found");
+        return Optional.of("/error/not_found");
     }
 }
