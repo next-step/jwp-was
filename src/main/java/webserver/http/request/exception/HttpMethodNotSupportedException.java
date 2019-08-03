@@ -1,4 +1,4 @@
-package webserver.http.exception;
+package webserver.http.request.exception;
 
 /**
  * @author : yusik

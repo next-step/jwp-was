@@ -3,8 +3,9 @@ package webserver.http;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.platform.commons.util.StringUtils;
-import webserver.http.exception.HttpMethodNotSupportedException;
+import webserver.http.request.HttpMethod;
+import webserver.http.request.exception.HttpMethodNotSupportedException;
+import webserver.http.request.RequestLine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,13 +21,13 @@ public class RequestLineTest {
     @DisplayName("기본 테스트")
     @ParameterizedTest(name = "{index} {0}")
     @ValueSource(strings = {
-            "GET /users HTTP/1.1",
+            "GET /users/123 HTTP/1.1",
             "POST /users/123 HTTP/1.1",
     })
     void defaultTest(String requestLineString) {
         RequestLine requestLine = RequestLine.parse(requestLineString);
         assertTrue(HttpMethod.contains(requestLine.getMethod()));
-        assertThat(StringUtils.isNotBlank(requestLine.getPath())).isEqualTo(true);
+        assertThat(requestLine.getRequestURI().getPath()).isEqualTo("/users/123");
     }
 
     @DisplayName("예외 테스트: 허용되지 않는 method")
