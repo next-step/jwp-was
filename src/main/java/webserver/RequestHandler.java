@@ -2,85 +2,48 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.URISyntaxException;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
-import utils.StringUtils;
-import webserver.http.HttpHeaders;
-import webserver.http.RequestLine;
-
-import static java.lang.System.lineSeparator;
+import webserver.http.HttpRequest;
+import webserver.http.handler.Handler;
+import webserver.http.handler.HandlerProvider;
 
 public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final String FILE_PREFIX = "templates/";
+    private static final Handler NOT_FOUND = (ignore, response) -> response.notFound();
 
     private final Socket connection;
+    private final List<HandlerProvider> handlerProviders;
 
-    RequestHandler(final Socket connection) {
+    RequestHandler(final Socket connection,
+                   final List<HandlerProvider> handlerProviders) {
         this.connection = connection;
+        this.handlerProviders = handlerProviders;
     }
 
     @Override
     public void run() {
-        logger.debug("New Client Connect! [ConnectedIP={}, Port={}]", connection.getInetAddress(),
-                connection.getPort());
+        logger.debug("New Client Connect! [ConnectedIP={}, Port={}]",
+                connection.getInetAddress(), connection.getPort());
 
         try (connection;
              final InputStream in = connection.getInputStream();
-             final OutputStream out = connection.getOutputStream()) {
-            final BufferedReader requestReader = new BufferedReader(new InputStreamReader(in));
+             final OutputStream out = connection.getOutputStream();
+             final HttpResponse response = HttpResponse.of(out)) {
+             final HttpRequest request = HttpRequest.of(in);
+             logger.debug("In request [request={}]", request);
 
-            final RequestLine requestLine = RequestLine.parse(requestReader.readLine());
-            final HttpHeaders httpHeaders = readHeaders(requestReader);
-
-            logger.debug("Parse header [RequestLine={}, HttpHeaders={}]", requestLine, httpHeaders);
-
-            final DataOutputStream dos = new DataOutputStream(out);
-            final byte[] body = FileIoUtils.loadFileFromClasspath(FILE_PREFIX + requestLine.getPath());
-
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-        } catch (final IOException | URISyntaxException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private HttpHeaders readHeaders(final BufferedReader requestReader) throws IOException {
-        final StringBuilder rawHeadersBuilder = new StringBuilder();
-
-        String readRawHeader = requestReader.readLine();
-        while (StringUtils.isNotBlank(readRawHeader)) {
-            rawHeadersBuilder.append(readRawHeader).append(lineSeparator());
-
-            readRawHeader = requestReader.readLine();
-        };
-
-        return HttpHeaders.of(rawHeadersBuilder.toString());
-    }
-
-    private void response200Header(final DataOutputStream dos,
-                                   final int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(final DataOutputStream dos,
-                              final byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+            handlerProviders.stream()
+                    .filter(handlerProvider -> handlerProvider.support(request))
+                    .findFirst()
+                    .map(HandlerProvider::provide)
+                    .orElse(NOT_FOUND)
+                    .handle(request, response);
+        } catch (final Exception e) {
+            logger.error("Error ", e);
         }
     }
 }

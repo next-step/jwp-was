@@ -2,9 +2,13 @@ package webserver;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.handler.PatternMatchHandlerProvider;
+import webserver.http.handler.ResourceHandler;
+import webserver.http.handler.HandlerProvider;
 
 public class WebServer {
 
@@ -13,6 +17,7 @@ public class WebServer {
 
     public static void main(final String... args) throws Exception {
         final int port = getPort(args);
+        final List<HandlerProvider> handlerProviders = getHandlerProviders();
 
         // 서버소켓을 생성한다. 웹서버는 기본적으로 8080번 포트를 사용한다.
         try (final ServerSocket listenSocket = new ServerSocket(port)) {
@@ -21,12 +26,19 @@ public class WebServer {
             // 클라이언트가 연결될때까지 대기한다.
             while (true) {
                 final Socket connection = listenSocket.accept();
-                final Runnable requestHandler = new RequestHandler(connection);
+                final Runnable requestHandler = new RequestHandler(connection, handlerProviders);
                 final Thread thread = new Thread(requestHandler);
 
                 thread.start();
             }
         }
+    }
+
+    private static List<HandlerProvider> getHandlerProviders() {
+        return List.of(
+                new PatternMatchHandlerProvider("(.)*.html", new ResourceHandler("templates")),
+                new PatternMatchHandlerProvider("(.)*.(css|fonts|images|js)$", new ResourceHandler("static"))
+        );
     }
 
     private static int getPort(final String... args) {
