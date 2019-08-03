@@ -24,6 +24,7 @@ public class HttpResponse implements AutoCloseable {
     public void notFound() {
         try (final DataOutputStream responseWriter = new DataOutputStream(out)) {
             responseWriter.writeBytes("HTTP/1.1 404 Not Found \r\n\r\n");
+            responseWriter.flush();
         } catch (final IOException e) {
             // TODO: error handling??
             e.printStackTrace();
@@ -37,6 +38,17 @@ public class HttpResponse implements AutoCloseable {
             responseWriter.writeBytes("Content-Length: " + body.length + "\r\n");
             responseWriter.writeBytes("\r\n");
             responseWriter.write(body, 0, body.length);
+            responseWriter.flush();
+        } catch (final IOException e) {
+            // TODO: error handling??
+            e.printStackTrace();
+        }
+    }
+
+    public void redirect(final String redirectPath) {
+        try (final DataOutputStream responseWriter = new DataOutputStream(out)) {
+            responseWriter.writeBytes("HTTP/1.1 302 Found \r\n");
+            responseWriter.writeBytes("Location: " + redirectPath + "\r\n\r\n");
             responseWriter.flush();
         } catch (final IOException e) {
             // TODO: error handling??
