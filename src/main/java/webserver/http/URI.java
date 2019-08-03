@@ -2,11 +2,18 @@ package webserver.http;
 
 public class URI {
     private String path;
+    private String url;
     private QueryString queryString;
 
-    private URI(String path, QueryString queryString) {
-        this.path = path;
+    private URI(String url, QueryString queryString) {
+        this.path = parsePath(url);
+        this.url = url;
         this.queryString = queryString;
+    }
+
+    private String parsePath(String url) {
+        int lastIndex = url.contains("?") ? url.indexOf("?") : url.length();
+        return url.substring(0, lastIndex);
     }
 
     public static URI parse(String path) {
@@ -14,10 +21,14 @@ public class URI {
     }
 
     public String getPath() {
-        return path;
+        return this.path;
     }
 
     public QueryString getQueryString() {
-        return queryString;
+        return this.queryString;
+    }
+
+    public String getUrl() {
+        return this.url;
     }
 }

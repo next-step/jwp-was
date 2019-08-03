@@ -6,16 +6,17 @@ import utils.StringParseUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class HttpHeaders {
     private static final String HEADER_LINE_SEPARATOR = ": ";
 
     private Map<String, String> headerMap;
+
+    public HttpHeaders() {
+        headerMap = new HashMap<>();
+    }
 
     private HttpHeaders(Map<String, String> headerMap) {
         this.headerMap = headerMap;
@@ -31,7 +32,11 @@ public class HttpHeaders {
     }
 
     public String get(String key) {
-        return headerMap.get(key);
+        return this.headerMap.get(key);
+    }
+
+    public void set(String key, String value) {
+        this.headerMap.put(key, value);
     }
 
     private static List<String> parseHeaderLines(BufferedReader bufferedReader) throws IOException {

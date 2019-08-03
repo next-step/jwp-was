@@ -1,9 +1,13 @@
 package webserver.http;
 
+import utils.FileIoUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class HttpRequest {
+    private final static String TEMPLATES_PREFIX = "./templates";
     private RequestLine requestLine;
     private HttpHeaders httpHeaders;
 
@@ -25,5 +29,14 @@ public class HttpRequest {
 
     public HttpHeaders getHeaders() {
         return this.httpHeaders;
+    }
+
+    public HttpResponse doGet() throws IOException, URISyntaxException {
+        byte[] body = "Hello World".getBytes();
+        String requestPath = requestLine.getUri().getPath();
+        if (requestPath.endsWith(".html"))
+            body = FileIoUtils.loadFileFromClasspath(TEMPLATES_PREFIX + requestPath);
+
+        return new HttpResponse(body);
     }
 }
