@@ -1,6 +1,7 @@
 package webserver.http;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,12 @@ public class RequestLineTest {
         assertThat(requestLine.getQueryValue("name")).isEqualTo("JaeSung");
 
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP/1.1");
+    }
+
+    @Test
+    void duplicateParameter() {
+        assertThatIllegalStateException().isThrownBy(
+            () -> RequestLine.parse("GET /users?userId=javajigi&userId=javajigi22 HTTP/1.1"));
     }
 
     @ParameterizedTest

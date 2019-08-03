@@ -1,10 +1,12 @@
 package webserver.http;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Parameter {
-    private static final Parameter EMPTY_PARAMETER = new Parameter(new HashMap<>());
+    private static final Parameter EMPTY_PARAMETER = new Parameter(Collections.emptyMap());
 
     private final static int QUERY_KEY_INDEX = 0;
     private final static int QUERY_VALUE_INDEX = 1;
@@ -18,11 +20,16 @@ public class Parameter {
         this.parameter = parameter;
     }
 
-    public static Parameter parse(String querySting) {
-        Map<String, String> query = new HashMap<>();
-        setKeyAndValue(querySting, query);
+    public static Parameter parse(String queryString) {
+        Map<String, String> query = parseParameter(queryString);
 
         return new Parameter(query);
+    }
+
+    private static Map<String, String> parseParameter(String queryString) {
+        return Arrays.stream(queryString.split(PARAMETER_SEPARATOR))
+            .map(array -> array.split(KEY_VALUE_SEPARATOR))
+            .collect(Collectors.toMap(keyValue -> keyValue[QUERY_KEY_INDEX], keyValue -> keyValue[QUERY_VALUE_INDEX]));
     }
 
     public Map<String, String> getParameters() {
@@ -36,13 +43,4 @@ public class Parameter {
     public String get(String key) {
         return parameter.get(key);
     }
-
-
-    private static void setKeyAndValue(String querySting, Map<String, String> query) {
-        for(String param : querySting.split(PARAMETER_SEPARATOR)) {
-            String[] keyValue = param.split(KEY_VALUE_SEPARATOR);
-            query.put(keyValue[QUERY_KEY_INDEX], keyValue[QUERY_VALUE_INDEX]);
-        }
-    }
-
 }
