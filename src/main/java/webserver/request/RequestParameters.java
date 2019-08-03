@@ -26,7 +26,7 @@ public class RequestParameters {
 			.map(Parameter::getValue).findAny();
 	}
 
-	public List getAll(String key) {
+	public List<String> getAll(String key) {
 		return parameters.stream().
 			filter(it -> it.equalsKey(key))
 			.map(Parameter::getValue)
