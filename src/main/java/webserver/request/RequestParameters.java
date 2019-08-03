@@ -30,7 +30,6 @@ public class RequestParameters {
 		return parameters.stream().
 			filter(it -> it.equalsKey(key))
 			.map(Parameter::getValue)
-			.distinct()
 			.collect(Collectors.toList());
 	}
 
