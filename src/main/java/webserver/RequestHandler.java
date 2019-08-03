@@ -27,6 +27,7 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
             HttpRequest httpRequest = HttpRequest.parse(new BufferedReader(new InputStreamReader(in)));
+            logger.debug("Request {}", httpRequest.getRequestLine());
 
             byte[] body = doGet(httpRequest).getBody();
             response200Header(dos, body.length);
@@ -36,12 +37,16 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private HttpResponse doGet(HttpRequest request) throws IOException, URISyntaxException {
-        byte[] body = "Hello World".getBytes();
+    HttpResponse doGet(HttpRequest request) throws IOException, URISyntaxException {
         String requestPath = request.getUri().getPath();
         if (requestPath.endsWith(".html"))
-            body = FileIoUtils.loadFileFromClasspath(TEMPLATES_PREFIX + requestPath);
+            return new HttpResponse(FileIoUtils.loadFileFromClasspath(TEMPLATES_PREFIX + requestPath));
 
+        return getResponse(request);
+    }
+
+    private HttpResponse getResponse(HttpRequest request) {
+        byte[] body = Router.route(request).apply(request).orElse("").toString().getBytes();
         return new HttpResponse(body);
     }
 

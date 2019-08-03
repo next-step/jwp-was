@@ -19,16 +19,16 @@ public class QueryString {
         this.parameterMap = parameterMap;
     }
 
-    public static QueryString parse(String path) {
-        Map<String, String> parameterMap = getParameterStrings(path).stream()
+    public static QueryString parse(String url) {
+        Map<String, String> parameterMap = getParameterStrings(url).stream()
                 .map(value -> StringParseUtils.makeKeyValuePair(value, KEY_VALUE_SEPARATOR))
                 .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
         return new QueryString(parameterMap);
     }
 
-    private static List<String> getParameterStrings(String path) {
-        String queryString = path.substring(path.indexOf(PATH_SEPARATOR) + 1);
+    private static List<String> getParameterStrings(String url) {
+        String queryString = url.substring(url.indexOf(PATH_SEPARATOR) + 1);
         return Stream.of(queryString.split(PARAMETER_SEPARATOR))
                 .filter(value -> value.contains(KEY_VALUE_SEPARATOR))
                 .collect(Collectors.toList());
@@ -38,7 +38,7 @@ public class QueryString {
         return parameterMap.size();
     }
 
-    public Object get(String key) {
+    public String get(String key) {
         return parameterMap.get(key);
     }
 }

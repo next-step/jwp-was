@@ -19,11 +19,19 @@ public class HttpRequest {
         return new HttpRequest(requestLine, httpHeaders);
     }
 
+    public String getMethod() {
+        return this.requestLine.getMethod();
+    }
+
     public URI getUri() {
-        return requestLine.getUri();
+        return this.requestLine.getUri();
     }
 
     public HttpHeaders getHeaders() {
         return this.httpHeaders;
+    }
+
+    public RequestLine getRequestLine() {
+        return requestLine;
     }
 }

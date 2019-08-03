@@ -5,9 +5,9 @@ public class RequestLine {
     private URI uri;
     private String version;
 
-    private RequestLine(String method, String path, String version) {
+    private RequestLine(String method, String uriString, String version) {
         this.method = method;
-        this.uri = URI.parse(path);
+        this.uri = URI.parse(uriString);
         this.version = version;
     }
 
@@ -22,5 +22,14 @@ public class RequestLine {
 
     public URI getUri() {
         return this.uri;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method='" + method + '\'' +
+                ", uri=" + uri +
+                ", version='" + version + '\'' +
+                '}';
     }
 }

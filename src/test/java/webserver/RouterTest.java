@@ -1,22 +1,17 @@
-package webserver.http;
+package webserver;
 
+import model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
-import utils.FileIoUtilsTest;
+import webserver.http.HttpRequest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HttpResponseTest {
-    private static final Logger log = LoggerFactory.getLogger(FileIoUtilsTest.class);
-
+public class RouterTest {
     private static BufferedReader bufferedReader;
 
     @BeforeAll
@@ -24,21 +19,18 @@ public class HttpResponseTest {
         bufferedReader = Mockito.mock(BufferedReader.class);
         Mockito.when(bufferedReader.readLine())
                 .thenReturn(
-                        "GET /index.html HTTP/1.1",
+                        "GET /create?userId=javajigi&password=password&name=박재성&email=javajigi%40slipp.net HTTP/1.1",
                         "Host: localhost:8080",
                         "Connection: keep-alive",
                         "Accept: */*",
                         ""
                 );
     }
-
     @Test
-    void responseIndexHtmlTest() throws IOException, URISyntaxException {
-        String filePath ="./templates/index.html";
+    void route() throws IOException {
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+        User user = new User("javajigi", "password", "박재성", "javajigi@slipp.net");
 
-        HttpResponse httpResponse = httpRequest.doGet();
-        log.debug("response body : {}", new String(httpResponse.getBody()));
-        assertThat(httpResponse.getBody()).isEqualTo(FileIoUtils.loadFileFromClasspath(filePath));
+        assertThat(Router.route(httpRequest).apply(httpRequest).orElse("").toString()).isEqualTo(user.toString());
     }
 }
