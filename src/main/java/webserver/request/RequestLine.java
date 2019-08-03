@@ -1,5 +1,7 @@
 package webserver.request;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.MapUtils;
 import utils.StringUtils;
 import webserver.HttpMethod;
@@ -11,6 +13,8 @@ import java.util.Map;
 import static utils.StringUtils.*;
 
 public class RequestLine {
+
+    private static final Logger logger = LoggerFactory.getLogger(RequestLine.class);
 
     private HttpMethod method;
     private String path;
@@ -45,6 +49,7 @@ public class RequestLine {
     }
 
     public static RequestLine parse(String requestLine) {
+
         StringUtils.requireNotBlank(requestLine, "requestLine must be not null");
         String[] requests = requestLine.split(" ");
 
@@ -52,10 +57,12 @@ public class RequestLine {
             throw new IllegalArgumentException("invalid arguments [ " + requestLine + " ]");
         }
 
-        HttpMethod httpMethod = HttpMethod.getHttpMethod(requests[0]);
+        HttpMethod httpMethod = HttpMethod.valueOf(requests[0]);
         String path = frontSplitWithOrigin(requests[1], '?');
         String protocol = requests[2];
         Map<String, String> queryMap = getQueryMap(endSplit(requests[1], '?'));
+
+        logger.debug("## parse request-line: httpMethod: {}, path: {}", httpMethod.name(), path);
 
         return new Builder(httpMethod, path, protocol)
                 .queryMap(queryMap)

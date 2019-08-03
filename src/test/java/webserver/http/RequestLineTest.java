@@ -2,6 +2,7 @@ package webserver.http;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -30,7 +31,7 @@ class RequestLineTest {
         assertThat(requestLine.getMethod()).isEqualTo(expectedHttpMethod);
         assertThat(requestLine.getPath()).isEqualTo(expectedPath);
         assertThat(requestLine.getProtocol()).isEqualTo(expectedProtocol);
-        assertThat(requestLine.getQueryMap()).containsAllEntriesOf(expectedQueryMap);
+        assertThat(requestLine.getUrlQuery().getQueryMap()).containsAllEntriesOf(expectedQueryMap);
     }
 
     @DisplayName("invalid request arguments")
@@ -60,6 +61,10 @@ class RequestLineTest {
                         }}));
     }
 
-
+    @Test
+    void httpMethodTest() {
+        assertThat(HttpMethod.valueOf("GET")).isEqualTo(HttpMethod.GET);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> HttpMethod.valueOf("NoHttpMethod"));
+    }
 
 }

@@ -2,18 +2,25 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.Request;
+import utils.StringUtils;
+import webserver.request.RequestHeader;
+import webserver.request.RequestHolder;
+import webserver.request.RequestLine;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private ResponseHandler responseHandler;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
+        this.responseHandler = new ResponseHandler();
     }
 
     public void run() {
@@ -21,34 +28,26 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            Request request = Request.parse(in);
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
+            RequestHolder requestHolder = createRequestHolder(in);
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            responseHandler.handle(dos, requestHolder);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+    private RequestHolder createRequestHolder(InputStream in) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        List<String> requestHeaders = new ArrayList<>();
+        RequestLine requestLine = RequestLine.parse(reader.readLine());
+
+        String header;
+        while (StringUtils.isNotBlank(header = reader.readLine())) {
+            requestHeaders.add(header);
         }
+
+        return new RequestHolder(requestLine, RequestHeader.parse(requestHeaders));
     }
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
+
 }
