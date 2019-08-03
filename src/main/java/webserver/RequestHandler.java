@@ -6,9 +6,10 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.HttpRequest;
-import webserver.http.handler.Handler;
-import webserver.http.handler.HandlerProvider;
+import webserver.http.request.HttpRequest;
+import webserver.handler.Handler;
+import webserver.handler.HandlerProvider;
+import webserver.http.response.HttpResponse;
 
 public class RequestHandler implements Runnable {
 

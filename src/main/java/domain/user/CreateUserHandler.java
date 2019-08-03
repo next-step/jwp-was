@@ -2,10 +2,10 @@ package domain.user;
 
 import db.DataBase;
 import model.User;
-import webserver.HttpResponse;
-import webserver.http.HttpRequest;
-import webserver.http.RequestQuery;
-import webserver.http.handler.Handler;
+import webserver.http.response.HttpResponse;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestQuery;
+import webserver.handler.Handler;
 
 public class CreateUserHandler implements Handler {
 

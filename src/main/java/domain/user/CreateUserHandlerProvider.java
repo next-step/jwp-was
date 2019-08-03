@@ -1,9 +1,9 @@
 package domain.user;
 
 import webserver.http.RequestMethod;
-import webserver.http.handler.Condition;
-import webserver.http.handler.Handler;
-import webserver.http.handler.PatternMatchHandlerProvider;
+import webserver.handler.Condition;
+import webserver.handler.Handler;
+import webserver.handler.PatternMatchHandlerProvider;
 
 public class CreateUserHandlerProvider extends PatternMatchHandlerProvider {
 

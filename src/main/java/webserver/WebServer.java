@@ -4,13 +4,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 
+import domain.user.UserListHandlerProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import domain.user.CreateUserHandlerProvider;
 import domain.user.LoginHandlerProvider;
-import webserver.http.handler.PatternMatchHandlerProvider;
-import webserver.http.handler.ResourceHandler;
-import webserver.http.handler.HandlerProvider;
+import view.HandlebarsCompiler;
+import webserver.handler.PatternMatchHandlerProvider;
+import webserver.handler.ResourceHandler;
+import webserver.handler.HandlerProvider;
 
 public class WebServer {
 
@@ -46,7 +48,8 @@ public class WebServer {
                 templatesResourceProvider,
                 staticResourceProvider,
                 new CreateUserHandlerProvider(),
-                new LoginHandlerProvider()
+                new LoginHandlerProvider(),
+                new UserListHandlerProvider(HandlebarsCompiler.of("/templates", ".html"))
         );
     }
 

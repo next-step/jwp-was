@@ -1,8 +1,8 @@
 package domain.user;
 
-import webserver.HttpResponse;
-import webserver.http.HttpRequest;
-import webserver.http.handler.Handler;
+import webserver.http.response.HttpResponse;
+import webserver.http.request.HttpRequest;
+import webserver.handler.Handler;
 
 public class LoginFailHandler implements Handler {
 
