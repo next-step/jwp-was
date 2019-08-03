@@ -1,32 +1,47 @@
 package webserver.http;
 
-public class RequestLine {
+import java.util.Map;
 
-    private String method;
-    private String path;
+public class RequestLine {
+    private static final int METHOD_INDEX = 0;
+    private static final int METHOD_URL = 1;
+    private static final int METHOD_PROTOCOL = 2;
+
+    private HttpMethod method;
+    private RequestURL requestURL;
     private String protocol;
 
-    private RequestLine(String method, String path, String protocol) {
+    public RequestLine(HttpMethod method, RequestURL requestURL, String protocol) {
         this.method = method;
-        this.path = path;
+        this.requestURL = requestURL;
         this.protocol = protocol;
     }
 
     public static RequestLine parse(String requestLine) {
         String[] requestLineSplit = requestLine.split(" ");
+        HttpMethod method = HttpMethod.find(requestLineSplit[METHOD_INDEX]);
+        RequestURL requestURL = RequestURL.parse(requestLineSplit[METHOD_URL]);
 
-        return new RequestLine(requestLineSplit[0], requestLineSplit[1], requestLineSplit[2]);
+        return new RequestLine(method, requestURL, requestLineSplit[METHOD_PROTOCOL]);
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
-    }
-
-    public String getPath() {
-        return path;
     }
 
     public String getProtocol() {
         return protocol;
+    }
+
+    public String getQueryValue(String key) {
+        return requestURL.getParameter(key);
+    }
+
+    public String getPath() {
+        return requestURL.getPath();
+    }
+
+    public Map<String, String> getParameters() {
+        return requestURL.getParameters();
     }
 }
