@@ -1,5 +1,6 @@
 package webserver.http;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import javafx.util.Pair;
 import utils.IOUtils;
 import utils.StringDecoder;
@@ -25,6 +26,7 @@ public class RequestBody {
     private static Map<String, String> getRequestBody(BufferedReader bufferedReader, HttpHeaders httpHeaders) throws IOException {
         String requestBodyString = IOUtils.readData(bufferedReader, Integer.parseInt(httpHeaders.get("Content-Length")));
         return Stream.of(StringDecoder.decode(requestBodyString).split("&"))
+                .filter(StringUtils::isNotBlank)
                 .map(value -> StringParseUtils.makeKeyValuePair(value, "="))
                 .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
     }

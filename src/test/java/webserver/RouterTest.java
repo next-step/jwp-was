@@ -13,6 +13,8 @@ import java.io.StringReader;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RouterTest {
+    private String CREATE_USER_URL = "/user/create";
+    private String LOGIN_URL = "/user/login";
 
     @Test
     @Disabled
@@ -26,22 +28,56 @@ public class RouterTest {
 
     @Test
     void postRequestCreateUserTest() throws IOException {
-        BufferedReader bufferedReader = makePostRequestBufferedReader();
+        BufferedReader bufferedReader = makePostBufferedReader(CREATE_USER_URL, "userId=javajigi&password=password&name=박재성&email=javajigi%40slipp.net");
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
 
         assertThat(Router.route(httpRequest).apply(httpRequest).orElse("").toString())
                 .isEqualTo("redirect:/index.html");
     }
 
-    private BufferedReader makePostRequestBufferedReader() {
-        String requestString = "POST /user/create HTTP/1.1\n" +
+    @Test
+    void userLoginSuccessTest() throws IOException {
+        createUser();
+        BufferedReader bufferedReader = makeLoginSuccessBufferedReader();
+        HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+
+        assertThat(Router.route(httpRequest).apply(httpRequest).orElse("").toString())
+                .isEqualTo("redirect:/index.html");
+    }
+
+    @Test
+    void userLoginFailTest() throws IOException {
+        createUser();
+        BufferedReader bufferedReader = makeLoginFailBufferedReader();
+        HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+
+        assertThat(Router.route(httpRequest).apply(httpRequest).orElse("").toString())
+                .isEqualTo("redirect:/user/login_failed.html");
+    }
+
+    private void createUser() throws IOException {
+        BufferedReader bufferedReader = makePostBufferedReader(CREATE_USER_URL, "userId=javajigi&password=password&name=박재성&email=javajigi%40slipp.net");
+        HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+        Router.route(httpRequest).apply(httpRequest);
+    }
+
+    private BufferedReader makeLoginSuccessBufferedReader() {
+        return makePostBufferedReader(LOGIN_URL, "userId=javajigi&password=password");
+    }
+
+    private BufferedReader makeLoginFailBufferedReader() {
+        return makePostBufferedReader(LOGIN_URL, "userId=javajigi&password=pas");
+    }
+
+    private BufferedReader makePostBufferedReader(String url, String data) {
+        String requestString = "POST " + url + " HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
-                "Content-Length: 69\n" +
+                "Content-Length: " + data.length() + "\n" +
                 "Content-Type: application/x-www-form-urlencoded\n" +
                 "Accept: */*\n" +
                 "\n" +
-                "userId=javajigi&password=password&name=박재성&email=javajigi%40slipp.net";
+                data;
 
         return new BufferedReader(new StringReader(requestString));
     }

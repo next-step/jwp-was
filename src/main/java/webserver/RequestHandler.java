@@ -30,7 +30,7 @@ public class RequestHandler implements Runnable {
             logger.debug("Request {}", httpRequest.getRequestLine());
 
             HttpResponse httpResponse = getHttpResponse(httpRequest);
-            httpResponse.response(dos, httpRequest);
+            response(dos, httpRequest, httpResponse);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
@@ -38,10 +38,26 @@ public class RequestHandler implements Runnable {
 
     HttpResponse getHttpResponse(HttpRequest request) throws IOException, URISyntaxException {
         String requestPath = request.getUri().getPath();
+
         if (requestPath.endsWith(".html"))
             return new HttpResponse(FileIoUtils.loadFileFromClasspath(TEMPLATES_PREFIX + requestPath));
 
-        byte[] body = Router.route(request).apply(request).orElse("").toString().getBytes();
-        return new HttpResponse(body);
+        HttpResponse response = new HttpResponse();
+        response.setBody(Router.route(request, response).orElse("").toString().getBytes());
+        return response;
+    }
+
+    private void response(DataOutputStream dos, HttpRequest httpRequest, HttpResponse httpResponse) {
+        byte[] body = httpResponse.getBody();
+        String bodyString = new String(httpResponse.getBody());
+
+        if (bodyString.startsWith("redirect:")) {
+            String redirectPath = String.format("http://%s%s", httpRequest.getHeaders().get("Host"), bodyString.substring(bodyString.indexOf(":") + 1));
+            httpResponse.response302Header(dos, redirectPath);
+            return;
+        }
+
+        httpResponse.response200Header(dos);
+        httpResponse.responseBody(dos, body);
     }
 }

@@ -1,5 +1,6 @@
 package webserver.http;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import javafx.util.Pair;
 import utils.StringParseUtils;
 
@@ -21,6 +22,7 @@ public class QueryString {
 
     public static QueryString parse(String url) {
         Map<String, String> parameterMap = getParameterStrings(url).stream()
+                .filter(StringUtils::isNotBlank)
                 .map(value -> StringParseUtils.makeKeyValuePair(value, KEY_VALUE_SEPARATOR))
                 .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
