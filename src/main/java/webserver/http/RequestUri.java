@@ -35,7 +35,7 @@ public class RequestUri {
         return path;
     }
 
-    public QueryParameter getQueryParameter() {
-        return queryParameter;
+    public String getParameter(String key) {
+        return queryParameter.getParameter(key);
     }
 }

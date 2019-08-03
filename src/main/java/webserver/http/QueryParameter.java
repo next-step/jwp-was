@@ -3,6 +3,7 @@ package webserver.http;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class QueryParameter {
@@ -37,7 +38,8 @@ public class QueryParameter {
         return values.length == QUERY_STRING_PAIR_COUNT;
     }
 
-    public Map<String, String> getQueryParameters() {
-        return Collections.unmodifiableMap(queryParameters);
+    public String getParameter(String key) {
+        return Optional.ofNullable(this.queryParameters.get(key))
+                .orElseThrow(() -> new IllegalArgumentException("key not exists."));
     }
 }
