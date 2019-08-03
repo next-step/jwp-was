@@ -1,5 +1,8 @@
 package webserver;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum HttpVersion {
     HTTP1_1("HTTP/1.1");
 
@@ -11,5 +14,15 @@ public enum HttpVersion {
 
     public String getVersion() {
         return version;
+    }
+
+    public static HttpVersion of(String version) {
+        return find(version).orElseThrow(() -> new IllegalArgumentException("wrong http version"));
+    }
+
+    public static Optional<HttpVersion> find(String version) {
+        return Arrays.stream(values())
+                .filter(httpVersion -> httpVersion.getVersion().equals(version))
+                .findFirst();
     }
 }
