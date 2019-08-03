@@ -92,13 +92,6 @@ public class RequestHeader {
                 this.bodyMap = RequestLine.makeQueryString(body);
             }
         }
-        /*String body;
-        while ((body = bufferedReader.readLine()) != null && !StringUtils.isEmpty(line)) {
-            if (!StringUtils.isEmpty(body)) {
-                this.body = body;
-                this.bodyMap = RequestLine.makeQueryString(body);
-            }
-        }*/
     }
 
     public RequestLine getRequestLine() {
