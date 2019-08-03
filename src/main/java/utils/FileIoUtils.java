@@ -2,6 +2,8 @@ package utils;
 
 import exceptions.ResourceLoadException;
 import exceptions.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,6 +15,8 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 public class FileIoUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(FileIoUtils.class);
 
     public static Optional<URL> getResourceUrl(String filePath) {
         return Optional.ofNullable(FileIoUtils.class.getClassLoader().getResource(filePath));
