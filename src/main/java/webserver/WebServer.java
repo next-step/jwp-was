@@ -38,6 +38,7 @@ public class WebServer {
         }
     }
 
+    // TODO: 추후 RequestMapping / DI 전환될 로직들
     private static List<HandlerProvider> getHandlerProviders() {
         final HandlerProvider templatesResourceProvider = new PatternMatchHandlerProvider("(.)*.html$",
                 new ResourceHandler("templates"));

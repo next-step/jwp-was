@@ -15,6 +15,11 @@ public class ResourceHandler implements Handler {
     @Override
     public void handle(final HttpRequest request,
                        final HttpResponse response) throws Exception {
+        final String accept = request.getHeader("Accept");
+        final String contentType = accept.split(",")[0];
+
+        response.addHeader("Content-Type", contentType);
+
         response.ok(FileIoUtils.loadFileFromClasspath(prefix + request.getPath()));
     }
 }

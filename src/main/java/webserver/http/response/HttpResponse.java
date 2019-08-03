@@ -40,8 +40,8 @@ public class HttpResponse implements AutoCloseable {
 
     public void ok(final byte[] body) {
         responseLine = ResponseLine.of(HttpStatus.OK);
-        headers.setContentType(ContentType.TEXT_HTML_UTF_8);
         headers.setContentLength(body.length);
+
         this.body = body;
     }
 
