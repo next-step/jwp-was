@@ -2,28 +2,24 @@ package webserver.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 
-import java.util.AbstractMap;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 /**
  * Created by hspark on 2019-08-01.
  */
 public class URI {
 	public static final String QUERY_STRING_DELIMETER = "\\?";
-	public static final String EQUALS = "=";
-	public static final String AMPERSAND = "&";
+
 	public static final int QUERY_STRING_INDEX = 2;
 
 	private String path;
 	private String queryString;
-	private Map<String, String> parameters;
+	private RequestParameters requestParameters;
 
 	public URI(String path, String queryString) {
 		this.path = path;
 		this.queryString = queryString;
-		this.parameters = parseQueryString(queryString);
+		this.requestParameters = RequestParameters.parse(queryString);
 	}
 
 	public static URI parse(String uri) {
@@ -31,19 +27,6 @@ public class URI {
 		String path = parsedUri[0];
 		String queryString = parsedUri.length < QUERY_STRING_INDEX ? StringUtils.EMPTY : parsedUri[1];
 		return new URI(path, queryString);
-	}
-
-	private Map<String, String> parseQueryString(String queryString) {
-		String[] queries = queryString.split(AMPERSAND);
-		return Arrays.stream(queries)
-			.filter(it -> StringUtils.isNotBlank(it))
-			.map(this::parseQuery)
-			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-	}
-
-	private AbstractMap.SimpleEntry<String, String> parseQuery(String strs) {
-		String[] query = strs.split(EQUALS);
-		return new AbstractMap.SimpleEntry<>(query[0], query[1]);
 	}
 
 	public String getPath() {
@@ -54,7 +37,32 @@ public class URI {
 		return queryString;
 	}
 
-	public Map<String, String> getParameters() {
-		return parameters;
+	public <T> T get(String key, Class<T> clazz) {
+		return requestParameters.get(key, clazz);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		URI uri = (URI) o;
+
+		if (!Objects.equals(path, uri.path))
+			return false;
+		if (!Objects.equals(queryString, uri.queryString))
+			return false;
+		return Objects.equals(requestParameters, uri.requestParameters);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = path != null ? path.hashCode() : 0;
+		result = 31 * result + (queryString != null ? queryString.hashCode() : 0);
+		result = 31 * result + (requestParameters != null ? requestParameters.hashCode() : 0);
+		return result;
 	}
 }
