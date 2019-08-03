@@ -8,6 +8,11 @@
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
 
+### commit message
+- add : 신규기능 추가
+- modify : 기능 수정
+- fix : 오류 개선
+
 
 ### step1
 
@@ -29,3 +34,16 @@
  #### 요구사항 3 - if문 제거 연습
  * FigureCreatorFactory 생성 + 도형별 생성객체 Map으로 저장
  * FigureCreator 상속받아 도형별 생성객체 생성
+
+### step2
+
+* step1 피드백 반영
+- [x] QueryString 파라미터 1급 컬랙션변경
+    - Parameters객체 생성
+    - 입력받은 queryString 패턴 검사
+    - Parameters에서 queryString 분리. Parameter객체 생성
+    - Parameters -> Path객체에 반영
+ 
+- [ ] @CsvSource 테스트케이스 적용해보기
+    - 참고 : [4.4. CSV Literals](https://www.baeldung.com/parameterized-tests-junit-5)
+    -

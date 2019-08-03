@@ -23,7 +23,7 @@ public class HttpStringUtilsTest {
         String inputData = "a/b/c";
 
         //when
-        String result = HttpStringUtils.splitAndGetDataByIndex(inputData, "/", 2);
+        String result = HttpStringUtils.splitAndFindByIndex(inputData, "/", 2);
 
         //then
         assertThat(result).isEqualTo(inputData.split("/")[2]);

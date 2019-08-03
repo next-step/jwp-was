@@ -7,11 +7,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ParameterTest {
     @Test
     void parameter생성() {
-        String key = "userId";
-        String value = "testUser";
-        Parameter parameter = Parameter.newInstance(key, value);
+        String input = "userId=testUser";
+        Parameter parameter = Parameter.newInstance(input);
 
-        assertThat(parameter.getKey()).isEqualTo(key);
-        assertThat(parameter.getValue()).isEqualTo(value);
+        //then
+        String[] result = input.split("=");
+
+        assertThat(parameter.getKey()).isEqualTo(result[0]);
+        assertThat(parameter.getValue()).isEqualTo(result[1]);
     }
 }

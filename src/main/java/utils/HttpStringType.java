@@ -1,11 +1,12 @@
 package utils;
 
 public enum HttpStringType {
-    QUERYSTRING_PATTERN("^/([a-zA-Z0-9]+)[?]([a-zA-Z0-9]+=.+)+$"),
-    REQUESTLINE_DELIMITER(" "),
-    QUERYSTRING_DELIMITER("[?]"),
-    PARAMETER_DELIMITER("&"),
-    VALUE_DELIMITER("=");
+    PATH_PATTERN("^/([a-zA-Z0-9]+)([?].+)$"),
+    QUERYSTRING_PATTERN("^(.+=.+)+$"),
+    DELIMITER_AMPERSAND("&"),
+    DELIMITER_EQUAL_SIGN("="),
+    DELIMITER_QUESTION_MARK("[?]"),
+    DELIMITER_SPACE(" ");
 
     private String type;
 

@@ -11,10 +11,11 @@ public class RequestLine {
         this.method = method;
         this.path = path;
     }
+
     public static RequestLine parse(String requestLine) {
         validate(requestLine);
 
-        String[] requestLineTokens = HttpStringUtils.split(requestLine, HttpStringType.REQUESTLINE_DELIMITER.getType());
+        String[] requestLineTokens = HttpStringUtils.split(requestLine, HttpStringType.DELIMITER_SPACE.getType());
         return new RequestLine(requestLineTokens[0], Path.newInstance(requestLineTokens[1]));
     }
 
