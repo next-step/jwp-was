@@ -14,7 +14,7 @@ public abstract class SecureHandler implements Handler {
                        final HttpResponse response) throws Exception {
         final Cookie cookie = request.getCookie();
         if (!cookie.getBoolean("logined")) {
-            response.redirect("/login.html");
+            response.redirect("/user/login.html");
             return;
         }
 
