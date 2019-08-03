@@ -10,3 +10,17 @@
 
 ## 참고 문서
 * https://tools.ietf.org/html/rfc2616
+
+## TODO
+* 0단계 - TDD로 RequestLine 파싱
+    * [o] HTTP Request Header의 첫번째 라인(Request Line) 파싱
+        * [o] RequestLine 클래스 추가
+* 1단계 - Header 파싱, if문 제거
+    * [o] Query String 파싱
+        * [o] HTTP 요청(request)의 Query String으로 전달되는 데이터 파싱
+            * [o] RequestURI, Query 클래스 추가하여 파싱하도록 처리
+    * [o] JUnit5 학습
+        * [o] QueryTest에 @ParameterizedTest를 적용
+    * [o] if문 제거 연습
+        * [o] FigureFactory 클래스의 getInstance() 메소드에서 if절 없이 객체 생성하도록 구현
+        * [o] Map Collection을 활용하여 구현
