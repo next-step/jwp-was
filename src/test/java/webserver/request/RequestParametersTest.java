@@ -1,5 +1,6 @@
 package webserver.request;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,7 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -20,10 +21,10 @@ class RequestParametersTest {
 	void test_parse_same_queryString() {
 		String queryString = "password=password&name=JaeSung&name=JaeSung1";
 		RequestParameters parameters = RequestParameters.parse(queryString);
-		Assertions.assertThat(parameters.get("password", String.class)).isEqualTo("password");
-		Assertions.assertThat(parameters.get("name", List.class)).hasSize(2);
-		Assertions.assertThat(parameters.get("name", List.class)).contains("JaeSung", "JaeSung1");
-		Assertions.assertThat(parameters.get("userId", String.class)).isNull();
+		Assertions.assertThat(parameters.getOne("password").get()).isEqualTo("password");
+		Assertions.assertThat(parameters.getAll("name")).hasSize(2);
+		Assertions.assertThat(parameters.getAll("name")).contains("JaeSung", "JaeSung1");
+		Assertions.assertThat(parameters.getOne("userId").isPresent()).isFalse();
 	}
 
 	@ParameterizedTest(name = "queryString {0}, parsing result : [ password : {1}, name : {2}, userId : {3} ]")
@@ -31,9 +32,18 @@ class RequestParametersTest {
 	@MethodSource("parsingQueryString")
 	void test_parse_partitial_queryString(String queryString, String password, String userId, String name) {
 		RequestParameters parameters = RequestParameters.parse(queryString);
-		Assertions.assertThat(parameters.get("password", String.class)).isEqualTo(password);
-		Assertions.assertThat(parameters.get("name", String.class)).isEqualTo(name);
-		Assertions.assertThat(parameters.get("userId", String.class)).isEqualTo(userId);
+		checkParameter(parameters.getOne("password"), password);
+		checkParameter(parameters.getOne("userId"), userId);
+		checkParameter(parameters.getOne("name"), name);
+	}
+
+	private void checkParameter(Optional<String> valueOptional, String value) {
+		if (StringUtils.isNotEmpty(value)) {
+			Assertions.assertThat(valueOptional.isPresent()).isTrue();
+			Assertions.assertThat(valueOptional.get()).isEqualTo(value);
+		} else {
+			Assertions.assertThat(valueOptional.isPresent()).isFalse();
+		}
 	}
 
 	private static Stream<Arguments> parsingQueryString() {

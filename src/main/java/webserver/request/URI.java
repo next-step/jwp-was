@@ -2,7 +2,9 @@ package webserver.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Created by hspark on 2019-08-01.
@@ -37,8 +39,12 @@ public class URI {
 		return queryString;
 	}
 
-	public <T> T get(String key, Class<T> clazz) {
-		return requestParameters.get(key, clazz);
+	public Optional<String> get(String key) {
+		return requestParameters.getOne(key);
+	}
+
+	public List<String> getAll(String key) {
+		return requestParameters.getAll(key);
 	}
 
 	@Override

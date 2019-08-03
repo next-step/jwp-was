@@ -10,22 +10,28 @@ import java.util.stream.Collectors;
  */
 
 public class RequestParameters {
-	private Map<String, Object> parameters;
+	private List<Parameter> parameters;
 
-	public RequestParameters(Map<String, Object> parameters) {
+	public RequestParameters(List<Parameter> parameters) {
 		this.parameters = parameters;
 	}
 
 	public static RequestParameters parse(String queryString) {
-		return new RequestParameters(QueryStringParser.parse(queryString));
+		return new RequestParameters(QueryStringParser.parseQueryString(queryString));
 	}
 
-	public <T> T get(String key, Class<T> clazz) {
-		return clazz.cast(parameters.get(key));
+	public Optional<String> getOne(String key) {
+		return parameters.stream().
+			filter(it -> it.equalsKey(key))
+			.map(Parameter::getValue).findAny();
 	}
 
-	public Object getObject(String key) {
-		return parameters.get(key);
+	public List getAll(String key) {
+		return parameters.stream().
+			filter(it -> it.equalsKey(key))
+			.map(Parameter::getValue)
+			.distinct()
+			.collect(Collectors.toList());
 	}
 
 	@Override
@@ -46,37 +52,59 @@ public class RequestParameters {
 		return parameters != null ? parameters.hashCode() : 0;
 	}
 
+	private static class Parameter {
+		private String key;
+		private String value;
+
+		public String getValue() {
+			return value;
+		}
+
+		public Parameter(String key, String value) {
+			this.key = key;
+			this.value = value;
+		}
+
+		public boolean equalsKey(String key) {
+			return this.key.equals(key);
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+
+			Parameter parameter = (Parameter) o;
+
+			if (!Objects.equals(key, parameter.key))
+				return false;
+			return Objects.equals(value, parameter.value);
+
+		}
+
+		@Override
+		public int hashCode() {
+			int result = key != null ? key.hashCode() : 0;
+			result = 31 * result + (value != null ? value.hashCode() : 0);
+			return result;
+		}
+	}
+
 	private static class QueryStringParser {
 		public static final String EQUALS = "=";
 		public static final String AMPERSAND = "&";
 		public static final int QUERY_MIN_SIZE = 2;
 		public static final int QUERY_LIST_PREDICATE = 1;
 
-		/**
-		 * QueryString에서 값이 하나인 객체일 경우는 하나로, 여러개일 경우에는 List를 가지도록 한다.
-		 * @param queryString
-		 * @return
-		 */
-		private static Map<String, Object> parse(String queryString) {
-			return parseQueryString(queryString)
-				.entrySet()
-				.stream()
-				.map(QueryStringParser::getObjectOrList)
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-		}
-
-		/**
-		 * QueryString을 List로 파싱한다.
-		 * @param queryString
-		 * @return
-		 */
-		private static Map<String, List<Object>> parseQueryString(String queryString) {
+		private static List<Parameter> parseQueryString(String queryString) {
 			return Arrays.stream(queryString.split(AMPERSAND))
 				.filter(StringUtils::isNotBlank)
 				.map(QueryStringParser::parsingQuery)
 				.filter(QueryStringParser::hasNotValue)
-				.map(it -> new AbstractMap.SimpleImmutableEntry<String, Object>(it[0], it[1]))
-				.collect(Collectors.groupingBy(Map.Entry::getKey, Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
+				.map(it -> new Parameter(it[0], it[1]))
+				.collect(Collectors.toList());
 		}
 
 		private static Map.Entry<String, ?> getObjectOrList(Map.Entry<String, List<Object>> it) {
