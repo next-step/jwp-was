@@ -9,7 +9,7 @@ import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HttpRequestTest {
+public class HttpBaseRequestTest {
 
 
     private final static String HTTP_PLAIN_GET = "GET /index.html HTTP/1.1\n" +
@@ -46,11 +46,11 @@ public class HttpRequestTest {
         inputStreamPost = new ByteArrayInputStream(HTTP_PLAIN_POST.getBytes());
     }
 
-    @DisplayName("Get Http Request 테스트")
+    @DisplayName("Get Http HttpRequest 테스트")
     @Test
     public void httpRequestParse(){
         try{
-            HttpRequest httpRequest = HttpRequest.parse(inputStreamGet);
+            HttpBaseRequest httpRequest = HttpBaseRequest.parse(inputStreamGet);
             assertThat(httpRequest).isNotNull();
             assertThat(httpRequest.getPath()).isEqualTo("/index.html");
         } catch (Exception e) {
@@ -59,11 +59,11 @@ public class HttpRequestTest {
 
     }
 
-    @DisplayName("Get Http Request 테스트 : queryString")
+    @DisplayName("Get Http HttpRequest 테스트 : queryString")
     @Test
     public void httpRequestParse2(){
         try{
-            HttpRequest httpRequest = HttpRequest.parse(inputStreamGetQueryString);
+            HttpBaseRequest httpRequest = HttpBaseRequest.parse(inputStreamGetQueryString);
             assertThat(httpRequest).isNotNull();
             assertThat(httpRequest.getPath()).isEqualTo("http://localhost:8080/index.html?userId=circlee");
             assertThat(httpRequest.getRequestURI()).isEqualTo("/index.html");
@@ -74,11 +74,11 @@ public class HttpRequestTest {
 
     }
 
-    @DisplayName("Post Http Request 테스트")
+    @DisplayName("Post Http HttpRequest 테스트")
     @Test
     public void httpRequestParsePost(){
         try{
-            HttpRequest httpRequest = HttpRequest.parse(inputStreamPost);
+            HttpBaseRequest httpRequest = HttpBaseRequest.parse(inputStreamPost);
             assertThat(httpRequest).isNotNull();
             assertThat(httpRequest.getPath()).isEqualTo("/user/create");
             assertThat(httpRequest.getBody()).isEqualTo("userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net");
