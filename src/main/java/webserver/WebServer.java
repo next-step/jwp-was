@@ -35,9 +35,14 @@ public class WebServer {
     }
 
     private static List<HandlerProvider> getHandlerProviders() {
+        final HandlerProvider templatesResourceProvider = new PatternMatchHandlerProvider("(.)*.html",
+                new ResourceHandler("templates"));
+        final HandlerProvider staticResourceProvider = new PatternMatchHandlerProvider(
+                "(.)*.(css|fonts|images|js)$", new ResourceHandler("static"));
+
         return List.of(
-                new PatternMatchHandlerProvider("(.)*.html", new ResourceHandler("templates")),
-                new PatternMatchHandlerProvider("(.)*.(css|fonts|images|js)$", new ResourceHandler("static"))
+                templatesResourceProvider,
+                staticResourceProvider
         );
     }
 
