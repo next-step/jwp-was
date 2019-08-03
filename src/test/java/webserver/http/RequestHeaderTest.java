@@ -12,11 +12,12 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created by youngjae.havi on 2019-08-02
  */
-public class RequestMappingHeaderTest {
+public class RequestHeaderTest {
 
     @Test
     void read_header() throws Exception {
@@ -30,5 +31,15 @@ public class RequestMappingHeaderTest {
 
         assertThat(requestHeader.getRequestLine().getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestHeader.getHost()).isEqualTo(" www.nowhere123.com");
+        assertThat(requestHeader.getAccept()).isEqualTo(" image/gif, image/jpeg, */*");
+        assertThat(requestHeader.getAcceptLanguage()).isEqualTo(" en-us");
+        assertThat(requestHeader.getAcceptEncoding()).isEqualTo(" gzip, deflate");
+        assertThat(requestHeader.getUserAgent()).isEqualTo(" Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+    }
+
+    @Test
+    void invalid_header() {
+        BufferedReader bufferedReader = new BufferedReader(new StringReader("GIT /index.html HTTP/1.1\n"));
+        assertThrows(IllegalArgumentException.class, () -> new RequestHeader(bufferedReader));
     }
 }
