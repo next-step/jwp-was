@@ -1,19 +1,22 @@
 package webserver.http;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ParameterTest {
-    @Test
-    void parameter생성() {
-        String input = "userId=testUser";
-        Parameter parameter = Parameter.newInstance(input);
+    @ParameterizedTest
+    @CsvSource({"userId=testUser,userId,testUser"
+            , "password=!!password,password,!!password"
+            , "name=JaeSung,name,JaeSung"})
+    void parameter생성(ArgumentsAccessor argumentsAccessor) {
+        Parameter parameter = Parameter.newInstance(argumentsAccessor.getString(0));
 
         //then
-        String[] result = input.split("=");
-
-        assertThat(parameter.getKey()).isEqualTo(result[0]);
-        assertThat(parameter.getValue()).isEqualTo(result[1]);
+        assertThat(parameter.getKey()).isEqualTo(argumentsAccessor.getString(1));
+        assertThat(parameter.getValue()).isEqualTo(argumentsAccessor.getString(2));
     }
 }

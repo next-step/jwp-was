@@ -2,6 +2,8 @@ package webserver.http;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -9,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ParametersTest {
     @ParameterizedTest
-    @ValueSource(strings = {"field1=value1&field2=value2"})
-    void 객체생성(String queryString) {
+    @CsvSource({"field1=value1,1","field1=value1&field2=value2,2"})
+    void 객체생성2(ArgumentsAccessor argumentsAccessor) {
         //when
-        Parameters parameters = Parameters.newInstance(queryString);
+        Parameters parameters = Parameters.newInstance(argumentsAccessor.getString(0));
 
         //then
-        assertThat(parameters.getParameters().size()).isEqualTo(2);
+        assertThat(parameters.getParameters().size()).isEqualTo(argumentsAccessor.getInteger(1));
     }
 
     @ParameterizedTest

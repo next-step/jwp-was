@@ -44,6 +44,6 @@
     - Parameters에서 queryString 분리. Parameter객체 생성
     - Parameters -> Path객체에 반영
  
-- [ ] @CsvSource 테스트케이스 적용해보기
+- [x] @CsvSource 테스트케이스 적용해보기
     - 참고 : [4.4. CSV Literals](https://www.baeldung.com/parameterized-tests-junit-5)
-    -
+    - ArgumentsAccessor 적용 (여러개의 assertThat 결과 확인 가능)
