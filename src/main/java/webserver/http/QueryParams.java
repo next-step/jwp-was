@@ -2,10 +2,13 @@ package webserver.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.StringUtils;
+import org.springframework.util.MultiValueMap;
+import utils.QueryStringUtils;
 
-import java.net.URLDecoder;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class QueryParams {
@@ -24,65 +27,20 @@ public class QueryParams {
 
     private static final Pattern QUERY_PARAM_PATTERN = Pattern.compile("^[^=\\s]+(=(\\S+)?)?");
 
-    private final Map<String, List<String>> parameterValuesByName;
+    private final MultiValueMap<String, String> parameterValuesByName;
 
-    private QueryParams(String[] queryParamKeyVaues){
-        this.parameterValuesByName = new HashMap<>();
-
-        for(String queryKeyValue : queryParamKeyVaues) {
-            setQueryParam(this.parameterValuesByName, queryKeyValue);
-        }
+    private QueryParams(MultiValueMap<String, String> parameterValuesByName){
+        this.parameterValuesByName = parameterValuesByName;
     }
 
     public static QueryParams parseByPath(String path) {
 
-        String[] queryParamKeyVaues = splitPathToQueryParamKeyValues(path);
-
-        return new QueryParams(queryParamKeyVaues);
+        String queryStringLine= pathToQueryStringLine(path);
+        return new QueryParams(QueryStringUtils.parseToParameters(queryStringLine));
     };
 
-    private static String[] splitPathToQueryParamKeyValues(String path) {
-        return path.replaceAll(PATH_QUERY_STRING_IGNORE_REGEX, EMPTY_STRING)
-                .split(QUERY_STRING_SPLIT_SIGN);
-    }
-
-    private void setQueryParam(Map<String, List<String>> parameterMap, String queryKeyValue) {
-
-        if(!isValidQueryParamPattern(queryKeyValue)) {
-            throw new IllegalArgumentException("queryString 형식이아닙니다.");
-        }
-
-        String[] keyAndValue = splitQueryKeyValue(queryKeyValue);
-
-        if(keyAndValue.length != QUERY_KEY_VALUE_SPLIT_LIMIT) {
-            return;
-        }
-
-        String key = keyAndValue[0];
-        String value = urlDecodeValue(keyAndValue[1]);
-        this.parameterValuesByName.computeIfAbsent(key, (k) -> new ArrayList<>()).add(value);
-    }
-
-    private String urlDecodeValue(String value){
-        try {
-            return URLDecoder.decode(value, System.getProperty("file.encoding"));
-        } catch (Exception e) {
-            logger.error("{}" , e);
-        }
-
-        return value;
-    }
-
-    private boolean isValidQueryParamPattern(String queryKeyValue) {
-
-        if(StringUtils.isEmpty(queryKeyValue)) {
-            return false;
-        }
-
-        if(!QUERY_PARAM_PATTERN.matcher(queryKeyValue).find()) {
-            return false;
-        }
-        return true;
+    private static String pathToQueryStringLine(String path) {
+        return path.replaceAll(PATH_QUERY_STRING_IGNORE_REGEX, EMPTY_STRING);
     }
 
     private String[] splitQueryKeyValue(String queryKeyValue) {
