@@ -6,7 +6,6 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import utils.FileIoUtilsTest;
 import webserver.http.HttpRequest;
 
 import java.io.BufferedReader;
@@ -39,7 +38,7 @@ public class RequestHandlerTest {
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
         RequestHandler requestHandler = new RequestHandler(null);
 
-        byte[] responseBody = requestHandler.doGet(httpRequest).getBody();
+        byte[] responseBody = requestHandler.getHttpResponse(httpRequest).getBody();
         log.debug("response body : {}", new String(responseBody));
         assertThat(responseBody).isEqualTo(FileIoUtils.loadFileFromClasspath(filePath));
     }

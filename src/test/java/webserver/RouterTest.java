@@ -28,9 +28,9 @@ public class RouterTest {
     void postRequestCreateUserTest() throws IOException {
         BufferedReader bufferedReader = makePostRequestBufferedReader();
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
-        User user = new User("javajigi", "password", "박재성", "javajigi@slipp.net");
 
-        assertThat(Router.route(httpRequest).apply(httpRequest).orElse("").toString()).isEqualTo(user.toString());
+        assertThat(Router.route(httpRequest).apply(httpRequest).orElse("").toString())
+                .isEqualTo("redirect:/index.html");
     }
 
     private BufferedReader makePostRequestBufferedReader() {

@@ -19,6 +19,6 @@ public class UserController {
         );
 
         DataBase.addUser(user);
-        return Optional.of(user);
+        return Optional.of("redirect:/index.html");
     }
 }

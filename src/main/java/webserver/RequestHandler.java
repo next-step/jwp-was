@@ -29,44 +29,19 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = HttpRequest.parse(new BufferedReader(new InputStreamReader(in)));
             logger.debug("Request {}", httpRequest.getRequestLine());
 
-            byte[] body = doGet(httpRequest).getBody();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            HttpResponse httpResponse = getHttpResponse(httpRequest);
+            httpResponse.response(dos, httpRequest);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
-    HttpResponse doGet(HttpRequest request) throws IOException, URISyntaxException {
+    HttpResponse getHttpResponse(HttpRequest request) throws IOException, URISyntaxException {
         String requestPath = request.getUri().getPath();
         if (requestPath.endsWith(".html"))
             return new HttpResponse(FileIoUtils.loadFileFromClasspath(TEMPLATES_PREFIX + requestPath));
 
-        return getResponse(request);
-    }
-
-    private HttpResponse getResponse(HttpRequest request) {
         byte[] body = Router.route(request).apply(request).orElse("").toString().getBytes();
         return new HttpResponse(body);
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
     }
 }
