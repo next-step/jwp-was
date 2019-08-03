@@ -1,10 +1,8 @@
 package webserver.http.request;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.request.RequestLine;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -47,6 +45,6 @@ class RequestLineTest {
         final String userId = requestLine.getParameter("userId");
 
         // then
-        Assertions.assertThat(userId).isEqualTo("jaeyeonling");
+        assertThat(userId).isEqualTo("jaeyeonling");
     }
 }

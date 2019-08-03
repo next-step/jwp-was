@@ -6,7 +6,7 @@ import utils.StringUtils;
 // TODO: 중복을 제거하자.
 public class CookieValue {
 
-    private static final String SEPARATOR = "=";
+    static final String SEPARATOR = "=";
 
     private static final int SEPARATOR_NOT_FOUND_INDEX = -1;
     private static final int START_INDEX = 0;

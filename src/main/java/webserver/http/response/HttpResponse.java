@@ -1,6 +1,5 @@
 package webserver.http.response;
 
-import webserver.http.ContentType;
 import webserver.http.header.HttpHeader;
 import webserver.http.header.HttpHeaders;
 import webserver.http.HttpStatus;

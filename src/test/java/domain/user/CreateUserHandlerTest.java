@@ -1,7 +1,6 @@
-package webserver.handler;
+package domain.user;
 
 import db.DataBase;
-import domain.user.CreateUserHandler;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

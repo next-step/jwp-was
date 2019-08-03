@@ -38,4 +38,8 @@ public class Cookie {
     public boolean getBoolean(final String key) {
         return Boolean.valueOf(getString(key));
     }
+
+    public boolean isEmpty() {
+        return cookie.isEmpty();
+    }
 }

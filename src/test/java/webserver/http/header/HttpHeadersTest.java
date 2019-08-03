@@ -1,13 +1,11 @@
 package webserver.http.header;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import webserver.http.header.HttpHeaders;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class HttpHeadersTest {
 
@@ -37,7 +35,7 @@ class HttpHeadersTest {
         final HttpHeaders httpHeaders = HttpHeaders.of(rawHttpHeaders);
 
         // then
-        Assertions.assertThat(httpHeaders.isEmpty()).isTrue();
+        assertThat(httpHeaders.isEmpty()).isTrue();
     }
 
     @DisplayName("헤더의 값을 가져온다.")
@@ -55,7 +53,7 @@ class HttpHeadersTest {
         final String value = httpHeaders.getString(key);
 
         // then
-        Assertions.assertThat(value).isEqualTo(key);
+        assertThat(value).isEqualTo(key);
     }
 
     @DisplayName("헤더의 값이 없으면 null을 반환한다.")
@@ -74,6 +72,6 @@ class HttpHeadersTest {
         final String value = httpHeaders.getString(key + padding);
 
         // then
-        Assertions.assertThat(value).isNull();
+        assertThat(value).isNull();
     }
 }
