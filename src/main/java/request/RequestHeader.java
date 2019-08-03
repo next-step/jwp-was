@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Objects;
@@ -62,8 +63,13 @@ public class RequestHeader {
     }
 
     public RequestHeader(BufferedReader bufferedReader) throws Exception {
-        boolean isRequestLine = true;
+        setHeaders(bufferedReader);
+        setBodyIfNotGet(bufferedReader);
+    }
+
+    private void setHeaders(BufferedReader bufferedReader) throws IOException, IllegalAccessException {
         String line;
+        boolean isRequestLine = true;
         while ((line = bufferedReader.readLine()) != null && !StringUtils.isEmpty(line)) {
             if (isRequestLine) {
                 this.requestLine = RequestLine.parse(line);
@@ -84,7 +90,9 @@ public class RequestHeader {
             field.setAccessible(true);
             field.set(this, keyValue[1]);
         }
+    }
 
+    private void setBodyIfNotGet(BufferedReader bufferedReader) throws IOException {
         if (HttpMethod.GET != requestLine.getMethod()) {
             String body = IOUtils.readData(bufferedReader, Integer.parseInt(Objects.requireNonNull(this.contentLength).trim()));
             if (!StringUtils.isEmpty(body)) {

@@ -33,30 +33,18 @@ public class Controller {
     }
 
     @RequestMapping(method = GET, path = "/index.html")
-    public Response index(RequestHeader requestHeader) {
-        try {
-            return Response.of(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
-        } catch (Exception e) {
-            throw new RuntimeException("read index file exception: ", e);
-        }
+    public Response index(RequestHeader requestHeader) throws IOException, URISyntaxException {
+        return Response.of(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
     }
 
     @RequestMapping(method = GET, path = "/user/form.html")
-    public Response userForm(RequestHeader requestHeader) {
-        try {
-            return Response.of(FileIoUtils.loadFileFromClasspath("./templates/user/form.html"));
-        } catch (Exception e) {
-            throw new RuntimeException("read index file exception: ", e);
-        }
+    public Response userForm(RequestHeader requestHeader) throws IOException, URISyntaxException {
+        return Response.of(FileIoUtils.loadFileFromClasspath("./templates/user/form.html"));
     }
 
     @RequestMapping(method = GET, path = "/user/login.html")
-    public Response userLoginForm(RequestHeader requestHeader) {
-        try {
-            return Response.of(FileIoUtils.loadFileFromClasspath("./templates/user/login.html"));
-        } catch (Exception e) {
-            throw new RuntimeException("read index file exception: ", e);
-        }
+    public Response userLoginForm(RequestHeader requestHeader) throws IOException, URISyntaxException {
+        return Response.of(FileIoUtils.loadFileFromClasspath("./templates/user/login.html"));
     }
 
     @RequestMapping(method = POST, path = "/user/create")
