@@ -3,9 +3,11 @@ package webserver;
 import enums.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.HttpBaseRequest;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.mapper.RequestMappers;
+import webserver.resolvers.body.BodyResolvers;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,10 +25,12 @@ public class RequestHandler implements Runnable {
 
     private Socket connection;
     private RequestMappers requestMappers;
+    private BodyResolvers bodyResolvers;
 
-    public RequestHandler(Socket connectionSocket, RequestMappers requestMappers) {
+    public RequestHandler(Socket connectionSocket, RequestMappers requestMappers, BodyResolvers bodyResolvers) {
         this.connection = connectionSocket;
         this.requestMappers = requestMappers;
+        this.bodyResolvers = bodyResolvers;
     }
 
     public void run() {
@@ -36,7 +40,7 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
-            HttpRequest httpRequest = HttpRequest.parse(in);
+            HttpRequest httpRequest = bodyResolvers.resoveByMatchResolver(HttpBaseRequest.parse(in));
             HttpResponse httpResponse = new HttpResponse();
 
             requestMappers.matchHandle(httpRequest, httpResponse);

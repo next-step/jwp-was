@@ -31,6 +31,8 @@ public class WebServer {
 
         RequestMappers requestMappers = RequestMappers.of(resourceRequestMapper, templateRequestMapper);
 
+        BodyResolvers bodyResolvers = BodyResolvers.of(new FormBodyResolver());
+
 
         // 서버소켓을 생성한다. 웹서버는 기본적으로 8080번 포트를 사용한다.
         try (ServerSocket listenSocket = new ServerSocket(port)) {
