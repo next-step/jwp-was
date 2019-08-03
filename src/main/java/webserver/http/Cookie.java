@@ -1,13 +1,11 @@
 package webserver.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
-import javafx.util.Pair;
-import utils.StringParseUtils;
+import utils.MapUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Cookie {
@@ -27,10 +25,7 @@ public class Cookie {
         if (StringUtils.isBlank(cookieString))
             return new Cookie(new HashMap<>());
 
-        Map<String, String> cookieMap = Stream.of(cookieString.split(COOKIE_SEPARATOR))
-                .filter(StringUtils::isNotBlank)
-                .map(headerLine -> StringParseUtils.makeKeyValuePair(headerLine, KEY_VALUE_SEPARATOR))
-                .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+        Map<String, String> cookieMap = MapUtils.keyValueMap(Stream.of(cookieString.split(COOKIE_SEPARATOR)), KEY_VALUE_SEPARATOR);
         return new Cookie(cookieMap);
     }
 

@@ -1,13 +1,10 @@
 package webserver.http;
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
-import javafx.util.Pair;
-import utils.StringParseUtils;
+import utils.MapUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class HttpHeaders {
     private static final String HEADER_LINE_SEPARATOR = ": ";
@@ -23,11 +20,7 @@ public class HttpHeaders {
     }
 
     public static HttpHeaders parse(BufferedReader bufferedReader) throws IOException {
-        Map<String, String> headerMap = parseHeaderLines(bufferedReader).stream()
-                .filter(StringUtils::isNotBlank)
-                .map(headerLine -> StringParseUtils.makeKeyValuePair(headerLine, HEADER_LINE_SEPARATOR))
-                .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
-
+        Map<String, String> headerMap = MapUtils.keyValueMap(parseHeaderLines(bufferedReader).stream(), HEADER_LINE_SEPARATOR);
         return new HttpHeaders(headerMap);
     }
 
