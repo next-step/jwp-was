@@ -38,4 +38,12 @@ public class RequestUri {
     public String getParameter(String key) {
         return queryParameter.getParameter(key);
     }
+
+    @Override
+    public String toString() {
+        return "RequestUri{" +
+                "path='" + path + '\'' +
+                ", queryParameter=" + queryParameter +
+                '}';
+    }
 }

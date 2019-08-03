@@ -31,4 +31,13 @@ public class RequestLine {
     public String getVersion() {
         return version;
     }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method='" + method + '\'' +
+                ", uri=" + uri +
+                ", version='" + version + '\'' +
+                '}';
+    }
 }

@@ -42,4 +42,11 @@ public class QueryParameter {
         return Optional.ofNullable(this.queryParameters.get(key))
                 .orElseThrow(() -> new IllegalArgumentException("key not exists."));
     }
+
+    @Override
+    public String toString() {
+        return "QueryParameter{" +
+                "queryParameters=" + queryParameters +
+                '}';
+    }
 }
