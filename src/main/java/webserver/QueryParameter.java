@@ -6,9 +6,9 @@ import java.util.regex.Pattern;
 
 public class QueryParameter {
     public static final String KEY_VALUE_SPLITTER = "=";
-    public static final Pattern keyPattern = Pattern.compile("[a-zA-Z0-9\\-_]+");
-    public static final Pattern valuePattern = Pattern.compile("[a-zA-Z0-9\\-._~%!$'()*+,;=@]+");
-    public static final Pattern pattern = Pattern.compile(keyPattern + KEY_VALUE_SPLITTER + valuePattern);
+    public static final Pattern KEY_PATTERN = Pattern.compile("[a-zA-Z0-9\\-_]+");
+    public static final Pattern VALUE_PATTERN = Pattern.compile("[a-zA-Z0-9\\-._~%!$'()*+,;=@]+");
+    public static final Pattern PATTERN = Pattern.compile(KEY_PATTERN + KEY_VALUE_SPLITTER + VALUE_PATTERN);
 
     private String key;
     private String value;
@@ -30,8 +30,8 @@ public class QueryParameter {
     }
 
     private static boolean validatePattern(String key, String value) {
-        Matcher keyMatcher = keyPattern.matcher(key);
-        Matcher valueMatcher = valuePattern.matcher(value);
+        Matcher keyMatcher = KEY_PATTERN.matcher(key);
+        Matcher valueMatcher = VALUE_PATTERN.matcher(value);
 
         return keyMatcher.find()
                 && key.length() == keyMatcher.group().length()
@@ -40,7 +40,7 @@ public class QueryParameter {
     }
 
     private static boolean validatePattern(String queryString) {
-        Matcher matcher = pattern.matcher(queryString);
+        Matcher matcher = PATTERN.matcher(queryString);
         return matcher.find() && queryString.length() == matcher.group().length();
     }
 

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class RequestUri {
     public static final String PATH_QUERY_SPLITTER_CHAR = "?";
     public static final String PATH_QUERY_SPLITTER = "\\" + PATH_QUERY_SPLITTER_CHAR;
-    public static final Pattern pattern = Pattern.compile("(" + Path.pattern + ")" + PATH_QUERY_SPLITTER + "?" + Query.pattern);
+    public static final Pattern PATTERN = Pattern.compile("(" + Path.PATTERN + ")" + PATH_QUERY_SPLITTER + "?" + Query.PATTERN);
 
     private Path path;
     private Query query;
@@ -42,7 +42,7 @@ public class RequestUri {
     }
 
     private static boolean validatePattern(String requestUri) {
-        Matcher matcher = pattern.matcher(requestUri);
+        Matcher matcher = PATTERN.matcher(requestUri);
         return matcher.find() && requestUri.length() == matcher.group().length();
     }
 

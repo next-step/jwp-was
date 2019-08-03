@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Path {
-    public static final Pattern pattern = Pattern.compile("/?[a-zA-Z0-9\\-._~%!$&'()*+,;=@]+(/[a-zA-Z0-9\\-._~%!$&'()*+,;=:@]+)*/?|/");
+    public static final Pattern PATTERN = Pattern.compile("/?[a-zA-Z0-9\\-._~%!$&'()*+,;=@]+(/[a-zA-Z0-9\\-._~%!$&'()*+,;=:@]+)*/?|/");
 
     private String path;
 
@@ -19,7 +19,7 @@ public class Path {
     }
 
     private static boolean validatePattern(String path) {
-        Matcher matcher = pattern.matcher(path);
+        Matcher matcher = PATTERN.matcher(path);
         return matcher.find() && path.length() == matcher.group().length();
     }
 

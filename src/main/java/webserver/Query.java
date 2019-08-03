@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class Query {
     public static final String PARAMETER_SPLITTER = "&";
-    public static final Pattern pattern = Pattern.compile("(" + QueryParameter.pattern + PARAMETER_SPLITTER + ")*(" + QueryParameter.pattern + ")?");
+    public static final Pattern PATTERN = Pattern.compile("(" + QueryParameter.PATTERN + PARAMETER_SPLITTER + ")*(" + QueryParameter.PATTERN + ")?");
 
     private List<QueryParameter> parameters;
 
@@ -32,7 +32,7 @@ public class Query {
     }
 
     private static boolean validatePattern(String queryString) {
-        Matcher matcher = pattern.matcher(queryString);
+        Matcher matcher = PATTERN.matcher(queryString);
         return matcher.find() && queryString.length() == matcher.group().length();
     }
 
