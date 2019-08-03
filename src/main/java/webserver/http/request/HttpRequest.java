@@ -2,6 +2,7 @@ package webserver.http.request;
 
 import utils.IOUtils;
 import utils.StringUtils;
+import webserver.http.HeaderKey;
 import webserver.http.RequestMethod;
 import webserver.http.cookie.Cookie;
 import webserver.http.header.HttpHeaders;
@@ -61,6 +62,11 @@ public class HttpRequest implements Request {
     @Override
     public String getHeader(final String key) {
         return httpHeaders.getString(key);
+    }
+
+    @Override
+    public String getHeader(final HeaderKey key) {
+        return getHeader(key.toString());
     }
 
     @Override

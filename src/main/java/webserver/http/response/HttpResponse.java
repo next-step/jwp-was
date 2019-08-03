@@ -1,8 +1,9 @@
 package webserver.http.response;
 
+import webserver.http.HeaderKey;
+import webserver.http.HttpStatus;
 import webserver.http.header.HttpHeader;
 import webserver.http.header.HttpHeaders;
-import webserver.http.HttpStatus;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -28,6 +29,12 @@ public class HttpResponse implements Response {
     public void addHeader(final String key,
                           final String value) {
         headers.add(key, value);
+    }
+
+    @Override
+    public void addHeader(final HeaderKey key,
+                          final String value) {
+        addHeader(key.toString(), value);
     }
 
     @Override

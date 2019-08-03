@@ -7,8 +7,8 @@ public class ConditionHandlerProvider implements HandlerProvider {
     private final Condition condition;
     private final Handler handler;
 
-    public ConditionHandlerProvider(final Condition condition,
-                                    final Handler handler) {
+    ConditionHandlerProvider(final Condition condition,
+                             final Handler handler) {
         this.condition = condition;
         this.handler = handler;
     }

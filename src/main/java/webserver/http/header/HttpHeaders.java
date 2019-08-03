@@ -1,7 +1,7 @@
 package webserver.http.header;
 
 import utils.StringUtils;
-import webserver.http.ContentType;
+import webserver.http.HeaderKey;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,6 +15,8 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toMap;
 
 public class HttpHeaders {
+
+    private static final int DEFAULT_CONTENT_LENGTH = 0;
 
     private final Map<String, String> headers;
 
@@ -42,21 +44,22 @@ public class HttpHeaders {
         headers.put(key, value);
     }
 
-    public void add(final String key,
+    public void add(final HeaderKey key,
+                    final String value) {
+        add(key.toString(), value);
+    }
+
+    public void add(final HeaderKey key,
                     final int value) {
         add(key, String.valueOf(value));
     }
 
     public void setLocation(final String redirectPath) {
-        add("Location", redirectPath);
-    }
-
-    public void setContentType(final ContentType contentType) {
-        add("Content-Type", contentType.toString());
+        add(HeaderKey.LOCATION, redirectPath);
     }
 
     public void setContentLength(final int contentLength) {
-        add("Content-Length", contentLength);
+        add(HeaderKey.CONTENT_LENGTH, contentLength);
     }
 
     public String getString(final String key) {
@@ -67,17 +70,17 @@ public class HttpHeaders {
         return Integer.parseInt(getString(key));
     }
 
-    public int getInt(final String key,
+    public int getInt(final HeaderKey key,
                       final int defaultValue) {
         try {
-            return getInt(key);
+            return getInt(key.toString());
         } catch (final NumberFormatException ignore) { }
 
         return defaultValue;
     }
 
     public int getContentLength() {
-        return getInt("Content-Length", 0);
+        return getInt(HeaderKey.CONTENT_LENGTH, DEFAULT_CONTENT_LENGTH);
     }
 
     public boolean isEmpty() {
