@@ -1,24 +1,14 @@
 package webserver.http.handler;
 
-import webserver.http.HttpRequest;
+public class PatternMatchHandlerProvider extends ConditionHandlerProvider {
 
-public class PatternMatchHandlerProvider implements HandlerProvider {
-
-    private final String pathPattern;
-    private final Handler handler;
-
-    public PatternMatchHandlerProvider(String pathPattern, Handler handler) {
-        this.pathPattern = pathPattern;
-        this.handler = handler;
+    public PatternMatchHandlerProvider(final String pathPattern,
+                                       final Handler handler) {
+        this(request -> request.matchPath(pathPattern), handler);
     }
 
-    @Override
-    public boolean support(final HttpRequest request) {
-        return request.matchPath(pathPattern);
-    }
-
-    @Override
-    public Handler provide() {
-        return handler;
+    public PatternMatchHandlerProvider(final Condition condition,
+                                       final Handler handler) {
+        super(condition, handler);
     }
 }

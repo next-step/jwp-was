@@ -31,6 +31,10 @@ public class RequestLine {
         return url.getPath();
     }
 
+    boolean matchMethod(final RequestMethod other) {
+        return method == other;
+    }
+
     public String getParameter(final String key) {
         return url.getParameter(key);
     }

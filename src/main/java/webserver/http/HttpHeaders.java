@@ -35,6 +35,23 @@ public class HttpHeaders {
         return headers.get(key);
     }
 
+    public int getInt(final String key) {
+        return Integer.parseInt(getString(key));
+    }
+
+    public int getInt(final String key,
+                      final int defaultValue) {
+        try {
+            return getInt(key);
+        } catch (final NumberFormatException ignore) { }
+
+        return defaultValue;
+    }
+
+    public int getContentLength() {
+        return getInt("Content-Length", 0);
+    }
+
     @Override
     public String toString() {
         return "HttpHeaders{" +

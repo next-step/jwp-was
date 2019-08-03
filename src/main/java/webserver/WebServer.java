@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.handler.CreateUserHandler;
+import webserver.http.handler.CreateUserHandlerProvider;
 import webserver.http.handler.PatternMatchHandlerProvider;
 import webserver.http.handler.ResourceHandler;
 import webserver.http.handler.HandlerProvider;
@@ -40,13 +40,11 @@ public class WebServer {
                 new ResourceHandler("templates"));
         final HandlerProvider staticResourceProvider = new PatternMatchHandlerProvider(
                 "(.)*.(css|fonts|images|js)$", new ResourceHandler("static"));
-        final HandlerProvider createUserHandlerProvider = new PatternMatchHandlerProvider("/user/create",
-                new CreateUserHandler());
 
         return List.of(
                 templatesResourceProvider,
                 staticResourceProvider,
-                createUserHandlerProvider
+                new CreateUserHandlerProvider()
         );
     }
 

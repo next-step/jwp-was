@@ -1,5 +1,6 @@
 package webserver.http;
 
+import utils.IOUtils;
 import utils.StringUtils;
 
 import java.io.BufferedReader;
@@ -14,11 +15,14 @@ public class HttpRequest {
 
     private final RequestLine requestLine;
     private final HttpHeaders httpHeaders;
+    private final String body;
 
     private HttpRequest(final RequestLine requestLine,
-                        final HttpHeaders httpHeaders) {
+                        final HttpHeaders httpHeaders,
+                        final String body) {
         this.requestLine = requestLine;
         this.httpHeaders = httpHeaders;
+        this.body = body;
     }
 
     public static HttpRequest of(final InputStream in) throws IOException {
@@ -26,8 +30,9 @@ public class HttpRequest {
 
         final RequestLine requestLine = RequestLine.parse(requestReader.readLine());
         final HttpHeaders httpHeaders = readHeaders(requestReader);
+        final String body = readBody(requestReader, httpHeaders.getContentLength());
 
-        return new HttpRequest(requestLine, httpHeaders);
+        return new HttpRequest(requestLine, httpHeaders, body);
     }
 
     public String getPath() {
@@ -42,6 +47,14 @@ public class HttpRequest {
         return requestLine.getParameter(key);
     }
 
+    public boolean matchMethod(final RequestMethod method) {
+        return requestLine.matchMethod(method);
+    }
+
+    public String getBody() {
+        return body;
+    }
+
     private static HttpHeaders readHeaders(final BufferedReader requestReader) throws IOException {
         final StringBuilder rawHeadersBuilder = new StringBuilder();
 
@@ -53,6 +66,11 @@ public class HttpRequest {
         }
 
         return HttpHeaders.of(rawHeadersBuilder.toString());
+    }
+
+    private static String readBody(final BufferedReader requestReader,
+                                   final int contentLength) throws IOException {
+        return IOUtils.readData(requestReader, contentLength);
     }
 
     @Override
