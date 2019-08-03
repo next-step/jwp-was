@@ -1,6 +1,7 @@
 package webserver.http;
 
 import javafx.util.Pair;
+import utils.StringParseUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class QueryString {
 
     public static QueryString parse(String path) {
         Map<String, String> parameterMap = getParameterStrings(path).stream()
-                .map(QueryString::makeKeyValuePair)
+                .map(value -> StringParseUtils.makeKeyValuePair(value, KEY_VALUE_SEPARATOR))
                 .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
         return new QueryString(parameterMap);
@@ -31,11 +32,6 @@ public class QueryString {
         return Stream.of(queryString.split(PARAMETER_SEPARATOR))
                 .filter(value -> value.contains(KEY_VALUE_SEPARATOR))
                 .collect(Collectors.toList());
-    }
-
-    private static Pair<String, String> makeKeyValuePair(String v) {
-        String[] param = v.split(KEY_VALUE_SEPARATOR);
-        return new Pair<>(param[0], param[1]);
     }
 
     public int parameterSize() {

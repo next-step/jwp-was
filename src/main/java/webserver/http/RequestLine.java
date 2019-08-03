@@ -2,13 +2,11 @@ package webserver.http;
 
 public class RequestLine {
     private String method;
-    private String path;
-    private QueryString queryString;
+    private URI uri;
 
     private RequestLine(String method, String path) {
         this.method = method;
-        this.path = path;
-        this.queryString = QueryString.parse(path);
+        this.uri = URI.parse(path);
     }
 
     public static RequestLine parse(String path) {
@@ -20,11 +18,7 @@ public class RequestLine {
         return this.method;
     }
 
-    public String getPath() {
-        return this.path;
-    }
-
-    public QueryString getQueryString() {
-        return this.queryString;
+    public URI getUri() {
+        return this.uri;
     }
 }

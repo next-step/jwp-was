@@ -32,7 +32,7 @@ public class QueryStringTest {
 
     private QueryString getQueryString(String path) {
         RequestLine requestLine = RequestLine.parse(path);
-        return requestLine.getQueryString();
+        return requestLine.getUri().getQueryString();
     }
 
     private static Stream<Arguments> providePaths() {
