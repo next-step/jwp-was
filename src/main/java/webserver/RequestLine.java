@@ -88,12 +88,8 @@ public class RequestLine {
         return path;
     }
 
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public Map<String, String> getQueryMap() {
-        return queryMap;
+    public String getSpec() {
+        return spec;
     }
 
 }
