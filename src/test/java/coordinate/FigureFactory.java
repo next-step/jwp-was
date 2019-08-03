@@ -1,21 +1,28 @@
 package coordinate;
 
-import java.util.List;
+import java.util.*;
 
 public class FigureFactory {
-    static Figure getInstance(List<Point> points) {
-        if (points.size() == 2) {
-            return new Line(points);
-        }
+	private static final Map<Integer, Class> FIGURE_MAP;
 
-        if (points.size() == 3) {
-            return new Triangle(points);
-        }
+	static {
+		Map<Integer, Class<? extends Figure>> initialMap = new HashMap<>();
+		initialMap.put(Line.POINT_SIZE, Line.class);
+		initialMap.put(Triangle.POINT_SIZE, Triangle.class);
+		initialMap.put(Rectangle.POINT_SIZE, Rectangle.class);
+		FIGURE_MAP = Collections.unmodifiableMap(initialMap);
+	}
 
-        if (points.size() == 4) {
-            return new Rectangle(points);
-        }
+	static Figure getInstance(List<Point> points) {
+		try {
+			Class<? extends Figure> clazz = FIGURE_MAP.get(points.size());
+			if (Objects.isNull(clazz)) {
+				throw new IllegalArgumentException("유효하지 않은 도형입니다.");
+			}
+			return clazz.getDeclaredConstructor(List.class).newInstance(points);
+		} catch (Exception e) {
+			throw new IllegalArgumentException("객체를 생성 할 수 없습니다. " + e.getMessage());
+		}
 
-        throw new IllegalArgumentException("유효하지 않은 도형입니다.");
-    }
+	}
 }
