@@ -16,7 +16,7 @@ import java.net.URISyntaxException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RequestHandlerTest {
-    private static final Logger log = LoggerFactory.getLogger(FileIoUtilsTest.class);
+    private static final Logger log = LoggerFactory.getLogger(RequestHandlerTest.class);
 
     private static BufferedReader bufferedReader;
 

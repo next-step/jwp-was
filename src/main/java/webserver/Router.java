@@ -14,7 +14,7 @@ public class Router {
     private static final String POST_METHOD = "POST ";
     private static final Map<String, Function<HttpRequest, Optional<Object>>> routerMap = new HashMap<>();
     static {
-        routerMap.put(GET_METHOD + "/create", UserController::createUser);
+        routerMap.put(POST_METHOD + "/user/create", UserController::createUser);
     }
 
     public static Function<HttpRequest, Optional<Object>> route(HttpRequest httpRequest) {

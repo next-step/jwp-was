@@ -6,8 +6,15 @@ import java.io.IOException;
 public class HttpRequest {
     private RequestLine requestLine;
     private HttpHeaders httpHeaders;
+    private RequestBody requestBody;
 
-    private HttpRequest(RequestLine requestLine, HttpHeaders httpHeaders) {
+    private HttpRequest(RequestLine requestLine, HttpHeaders httpHeaders, RequestBody requestBody) {
+        this.requestLine = requestLine;
+        this.httpHeaders = httpHeaders;
+        this.requestBody = requestBody;
+    }
+
+    public HttpRequest(RequestLine requestLine, HttpHeaders httpHeaders) {
         this.requestLine = requestLine;
         this.httpHeaders = httpHeaders;
     }
@@ -15,6 +22,11 @@ public class HttpRequest {
     public static HttpRequest parse(BufferedReader bufferedReader) throws IOException {
         RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
         HttpHeaders httpHeaders = HttpHeaders.parse(bufferedReader);
+
+        if ("POST".equals(requestLine.getMethod())) {
+            RequestBody requestBody = RequestBody.parse(bufferedReader, httpHeaders);
+            return new HttpRequest(requestLine, httpHeaders, requestBody);
+        }
 
         return new HttpRequest(requestLine, httpHeaders);
     }
@@ -32,6 +44,10 @@ public class HttpRequest {
     }
 
     public RequestLine getRequestLine() {
-        return requestLine;
+        return this.requestLine;
+    }
+
+    public RequestBody getRequestBody() {
+        return this.requestBody;
     }
 }

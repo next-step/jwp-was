@@ -1,22 +1,24 @@
 package controller;
 
+import db.DataBase;
 import model.User;
 import webserver.http.HttpRequest;
-import webserver.http.QueryString;
+import webserver.http.RequestBody;
 
 import java.util.Optional;
 
 public class UserController {
 
     public static Optional createUser(HttpRequest httpRequest) {
-        QueryString queryString = httpRequest.getUri().getQueryString();
+        RequestBody requestBody = httpRequest.getRequestBody();
         User user = new User(
-                queryString.get("userId"),
-                queryString.get("password"),
-                queryString.get("name"),
-                queryString.get("email")
+                requestBody.get("userId"),
+                requestBody.get("password"),
+                requestBody.get("name"),
+                requestBody.get("email")
         );
 
+        DataBase.addUser(user);
         return Optional.of(user);
     }
 }

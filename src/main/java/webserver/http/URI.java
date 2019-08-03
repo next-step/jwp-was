@@ -1,16 +1,8 @@
 package webserver.http;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import webserver.RequestHandler;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import utils.StringDecoder;
 
 public class URI {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final String URL_DECODE_ERROR_MESSAGE = "Url 디코딩에 실패 하였습니다.";
-
     private String path;
     private String url;
     private QueryString queryString;
@@ -22,7 +14,7 @@ public class URI {
     }
 
     public static URI parse(String uriString) {
-        String decodedUrl = getDecodedUrl(uriString);
+        String decodedUrl = StringDecoder.decode(uriString);
         return new URI(decodedUrl, QueryString.parse(decodedUrl));
     }
 
@@ -41,16 +33,6 @@ public class URI {
     private String parsePath(String url) {
         int lastIndex = url.contains("?") ? url.indexOf("?") : url.length();
         return url.substring(0, lastIndex);
-    }
-
-    private static String getDecodedUrl(String url){
-        try {
-            return URLDecoder.decode(url, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            logger.warn(URL_DECODE_ERROR_MESSAGE);
-        }
-
-        return url;
     }
 
     @Override
