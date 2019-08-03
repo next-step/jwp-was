@@ -1,15 +1,18 @@
 package webserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import webserver.http.HttpRequest;
-
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final String TEMPLATES_PREFIX = "./templates";
 
     private Socket connection;
 
@@ -24,12 +27,22 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
             HttpRequest httpRequest = HttpRequest.parse(new BufferedReader(new InputStreamReader(in)));
-            byte[] body = httpRequest.doGet().getBody();
+
+            byte[] body = doGet(httpRequest).getBody();
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private HttpResponse doGet(HttpRequest request) throws IOException, URISyntaxException {
+        byte[] body = "Hello World".getBytes();
+        String requestPath = request.getUri().getPath();
+        if (requestPath.endsWith(".html"))
+            body = FileIoUtils.loadFileFromClasspath(TEMPLATES_PREFIX + requestPath);
+
+        return new HttpResponse(body);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
