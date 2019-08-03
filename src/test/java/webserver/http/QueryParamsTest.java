@@ -47,4 +47,12 @@ public class QueryParamsTest {
         QueryParams queryParams = QueryParams.parseByPath(path);
         assertThat(queryParams.getParameterValues("userId")).containsExactly("javajigi", "JaeSung");
     }
+
+    @DisplayName("path QueryString parse: QueryString url encoding 테스트")
+    @ParameterizedTest
+    @ValueSource(strings = {"/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net"})
+    public void parsebyPathUrlEncoded(String path){
+        QueryParams queryParams = QueryParams.parseByPath(path);
+        assertThat(queryParams.getParameter("name")).isEqualTo("박재성");
+    }
 }

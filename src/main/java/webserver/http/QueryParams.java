@@ -1,11 +1,16 @@
 package webserver.http;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.StringUtils;
 
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class QueryParams {
+
+    private static final Logger logger = LoggerFactory.getLogger(QueryParams.class);
 
     private static final int QUERY_KEY_VALUE_SPLIT_LIMIT = 2;
 
@@ -54,8 +59,18 @@ public class QueryParams {
         }
 
         String key = keyAndValue[0];
-        String value = keyAndValue[1];
+        String value = urlDecodeValue(keyAndValue[1]);
         this.parameterValuesByName.computeIfAbsent(key, (k) -> new ArrayList<>()).add(value);
+    }
+
+    private String urlDecodeValue(String value){
+        try {
+            return URLDecoder.decode(value, System.getProperty("file.encoding"));
+        } catch (Exception e) {
+            logger.error("{}" , e);
+        }
+
+        return value;
     }
 
     private boolean isValidQueryParamPattern(String queryKeyValue) {
@@ -72,6 +87,10 @@ public class QueryParams {
 
     private String[] splitQueryKeyValue(String queryKeyValue) {
         return queryKeyValue.split(QUERY_KEY_VALUE_SPLIT_SIGN, QUERY_KEY_VALUE_SPLIT_LIMIT);
+    }
+
+    public Map<String, List<String>> getParameters(){
+        return Collections.unmodifiableMap(this.parameterValuesByName);
     }
 
 
