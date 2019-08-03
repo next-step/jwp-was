@@ -2,12 +2,12 @@ package webserver.mapper;
 
 import enums.HttpMethod;
 import utils.FileIoUtils;
+import utils.MimeTypeUtils;
 import webserver.http.HttpHeaders;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -54,7 +54,7 @@ public class ResourceRequestMapper implements RequestMapper{
         byte[] body = FileIoUtils.loadFileFromURL(resourceUrl);
         httpResponse.setResponseBody(body);
 
-        String mimeType = URLConnection.guessContentTypeFromName(resourceUrl.getPath());
+        String mimeType = MimeTypeUtils.guessContentTypeFromName(resourceUrl.getFile(), httpRequest.getHeader(HttpHeaders.ACCEPT));
         httpResponse.setHttpHeader(HttpHeaders.CONTENT_TYPE, mimeType);
     }
 
