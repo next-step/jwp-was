@@ -1,7 +1,10 @@
 package webserver;
 
+import webserver.http.ContentType;
 import webserver.http.HttpHeader;
 import webserver.http.HttpHeaders;
+import webserver.http.HttpStatus;
+import webserver.http.ResponseLine;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,6 +14,8 @@ public class HttpResponse implements AutoCloseable {
 
     private final OutputStream out;
 
+    private ResponseLine responseLine;
+    private byte[] body = {};
     private final HttpHeaders headers = HttpHeaders.empty();
 
     private HttpResponse(final OutputStream out) {
@@ -27,50 +32,50 @@ public class HttpResponse implements AutoCloseable {
     }
 
     public void notFound() {
-        try (final DataOutputStream responseWriter = new DataOutputStream(out)) {
-            responseWriter.writeBytes("HTTP/1.1 404 Not Found \r\n\r\n");
-            responseWriter.flush();
-        } catch (final IOException e) {
-            // TODO: error handling??
-            e.printStackTrace();
-        }
+        responseLine = ResponseLine.of(HttpStatus.NOT_FOUND);
     }
 
     public void ok(final byte[] body) {
-        try (final DataOutputStream responseWriter = new DataOutputStream(out)) {
-            responseWriter.writeBytes("HTTP/1.1 200 OK \r\n");
-            responseWriter.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            responseWriter.writeBytes("Content-Length: " + body.length + "\r\n");
-            writeHeaders(responseWriter);
-            responseWriter.writeBytes("\r\n");
-            responseWriter.write(body, 0, body.length);
-            responseWriter.flush();
-        } catch (final IOException e) {
-            // TODO: error handling??
-            e.printStackTrace();
-        }
+        responseLine = ResponseLine.of(HttpStatus.OK);
+        headers.setContentType(ContentType.TEXT_HTML_UTF_8);
+        headers.setContentLength(body.length);
+        this.body = body;
     }
 
     public void redirect(final String redirectPath) {
-        try (final DataOutputStream responseWriter = new DataOutputStream(out)) {
-            responseWriter.writeBytes("HTTP/1.1 302 Found \r\n");
-            writeHeaders(responseWriter);
-            responseWriter.writeBytes("Location: " + redirectPath + "\r\n\r\n");
-            responseWriter.flush();
-        } catch (final IOException e) {
-            // TODO: error handling??
-            e.printStackTrace();
-        }
+        responseLine = ResponseLine.of(HttpStatus.FOUND);
+        headers.setLocation(redirectPath);
     }
 
     @Override
     public void close() throws Exception {
-        out.close();
+        try (out;
+             final DataOutputStream responseWriter = new DataOutputStream(out)) {
+            writeStatusLine(responseWriter);
+            writeHeaders(responseWriter);
+            writeBody(responseWriter);
+            responseWriter.flush();
+        }
+    }
+
+    private void writeStatusLine(final DataOutputStream responseWriter) throws IOException {
+        responseWriter.writeBytes(responseLine.toString());
+        newLine(responseWriter);
     }
 
     private void writeHeaders(final DataOutputStream responseWriter) throws IOException {
         for (final HttpHeader header : headers.toList()) {
-            responseWriter.writeBytes(header + "\r\n");
+            responseWriter.writeBytes(header.toString());
+            newLine(responseWriter);
         }
+    }
+
+    private void writeBody(final DataOutputStream responseWriter) throws IOException {
+        newLine(responseWriter);
+        responseWriter.write(body);
+    }
+
+    private void newLine(final DataOutputStream responseWriter) throws IOException {
+        responseWriter.writeBytes(System.lineSeparator());
     }
 }

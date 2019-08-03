@@ -1,10 +1,11 @@
-package webserver.http.handler;
+package domain.user;
 
 import db.DataBase;
 import model.User;
 import webserver.HttpResponse;
 import webserver.http.HttpRequest;
 import webserver.http.RequestQuery;
+import webserver.http.handler.Handler;
 
 public class CreateUserHandler implements Handler {
 

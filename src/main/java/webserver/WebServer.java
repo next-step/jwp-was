@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.handler.CreateUserHandlerProvider;
-import webserver.http.handler.LoginHandlerProvider;
+import domain.user.CreateUserHandlerProvider;
+import domain.user.LoginHandlerProvider;
 import webserver.http.handler.PatternMatchHandlerProvider;
 import webserver.http.handler.ResourceHandler;
 import webserver.http.handler.HandlerProvider;

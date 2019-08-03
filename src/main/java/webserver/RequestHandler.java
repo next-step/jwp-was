@@ -33,6 +33,7 @@ public class RequestHandler implements Runnable {
              final InputStream in = connection.getInputStream();
              final OutputStream out = connection.getOutputStream();
              final HttpResponse response = HttpResponse.of(out)) {
+
              final HttpRequest request = HttpRequest.of(in);
              logger.debug("In request [request={}]", request);
 
@@ -42,6 +43,7 @@ public class RequestHandler implements Runnable {
                     .map(HandlerProvider::provide)
                     .orElse(NOT_FOUND)
                     .handle(request, response);
+
         } catch (final Exception e) {
             logger.error("Error ", e);
         }

@@ -41,6 +41,23 @@ public class HttpHeaders {
         headers.put(key, value);
     }
 
+    public void add(final String key,
+                    final int value) {
+        add(key, String.valueOf(value));
+    }
+
+    public void setLocation(final String redirectPath) {
+        add("Location", redirectPath);
+    }
+
+    public void setContentType(final ContentType contentType) {
+        add("Content-Type", contentType.toString());
+    }
+
+    public void setContentLength(final int contentLength) {
+        add("Content-Length", contentLength);
+    }
+
     public String getString(final String key) {
         return headers.get(key);
     }

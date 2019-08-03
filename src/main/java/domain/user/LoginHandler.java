@@ -1,10 +1,11 @@
-package webserver.http.handler;
+package domain.user;
 
 import db.DataBase;
 import model.User;
 import webserver.HttpResponse;
 import webserver.http.HttpRequest;
 import webserver.http.RequestQuery;
+import webserver.http.handler.Handler;
 
 import java.util.Optional;
 
@@ -13,8 +14,8 @@ public class LoginHandler implements Handler {
     private final Handler successHandler;
     private final Handler failHandler;
 
-    public LoginHandler(final Handler successHandler,
-                        final Handler failHandler) {
+    LoginHandler(final Handler successHandler,
+                 final Handler failHandler) {
         this.successHandler = successHandler;
         this.failHandler = failHandler;
     }
