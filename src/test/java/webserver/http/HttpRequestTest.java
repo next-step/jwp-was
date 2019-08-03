@@ -67,6 +67,7 @@ public class HttpRequestTest {
             assertThat(httpRequest).isNotNull();
             assertThat(httpRequest.getPath()).isEqualTo("http://localhost:8080/index.html?userId=circlee");
             assertThat(httpRequest.getRequestURI()).isEqualTo("/index.html");
+            assertThat(httpRequest.getParameter("userId")).isEqualTo("circlee");
         } catch (Exception e) {
             assertThat(e).hasNoCause();
         }

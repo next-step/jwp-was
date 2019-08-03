@@ -1,6 +1,8 @@
 package webserver.http;
 
 import enums.HttpMethod;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import utils.IOUtils;
 import utils.StringUtils;
 
@@ -8,22 +10,23 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Optional;
 
 public class HttpRequest {
 
     private final RequestLine requestLine;
-    private final QueryParams queryParams;
+    private final String requestUri;
     private final HttpHeaders httpHeaders;
     private final String body;
-    private final String requestUri;
+    private final MultiValueMap<String, String> params;
+
 
     private HttpRequest(RequestLine requestLine, HttpHeaders httpHeaders, String body){
         this.requestLine = requestLine;
-        this.queryParams = QueryParams.parseByPath(requestLine.getPath());
+        this.requestUri = parseRequestUri(requestLine.getPath());
         this.httpHeaders = httpHeaders;
         this.body = body;
-        this.requestUri = parseRequestUri(requestLine.getPath());
-
+        this.params = new LinkedMultiValueMap<>(QueryParams.parseByPath(requestLine.getPath()).getParameters());
     }
 
     public static String parseRequestUri(String path) {
@@ -58,11 +61,16 @@ public class HttpRequest {
     }
 
     public String getParameter(String name) {
-        return this.queryParams.getParameter(name);
+        return Optional.ofNullable(getParameterValues(name))
+                .filter(values -> values.length > 0)
+                .map(values -> values[0])
+                .orElse(null);
     }
 
     public String[] getParameterValues(String name) {
-        return this.queryParams.getParameterValues(name);
+        return Optional.ofNullable(this.params.get(name))
+                .map(values -> values.toArray(new String[values.size()]))
+                .orElse(null);
     }
 
     public String getHeader(String name) {
