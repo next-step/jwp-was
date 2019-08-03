@@ -6,7 +6,7 @@ import webserver.http.HttpResponse;
 
 public interface RequestMapper {
 
-    boolean isMatchedRequest(HttpMethod method, String path);
+    boolean isMatchedRequest(HttpMethod method, String requestUri);
 
     void handle(HttpRequest httpRequest, HttpResponse httpResponse);
 }
