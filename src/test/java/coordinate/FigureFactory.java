@@ -7,10 +7,10 @@ import java.util.Optional;
 
 public class FigureFactory {
 
-    private static Map<Integer, SpecificFigureCreator> figureCache = new HashMap<>();
+    private static Map<Integer, FigureType> figureCache = new HashMap<>();
 
     static {
-        for (SpecificFigureCreator feature : SpecificFigureCreator.values()) {
+        for (FigureType feature : FigureType.values()) {
             figureCache.put(feature.getSize(), feature);
         }
     }

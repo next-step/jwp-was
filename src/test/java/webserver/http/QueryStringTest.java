@@ -5,22 +5,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author : yusik
  * @date : 2019-08-03
  */
 public class QueryStringTest {
-
-    @Test
-    void name() {
-        String[] test = "235=124=".split("=");
-        System.out.println(test.length);
-    }
 
     @ParameterizedTest(name = "{index} {0}")
     @ValueSource(strings = {
@@ -39,5 +33,13 @@ public class QueryStringTest {
         QueryString queryString = QueryString.parse(requestURI);
         Map paramMap = queryString.getParameterMap();
         assertEquals("", paramMap.get("noValue"));
+    }
+
+    @ParameterizedTest(name = "{index} {0}")
+    @ValueSource(strings = {
+            "/users?name=&noValue",
+            "/users?=213"})
+    void 쿼리스트링_유효하지않은파라미터(String requestURI) {
+        assertThrows(IllegalArgumentException.class, () -> QueryString.parse(requestURI));
     }
 }

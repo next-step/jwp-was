@@ -2,7 +2,7 @@ package coordinate;
 
 import java.util.List;
 
-public enum SpecificFigureCreator implements FigureCreator {
+public enum FigureType implements FigureCreator {
 
     LINE(2) {
         @Override
@@ -27,7 +27,7 @@ public enum SpecificFigureCreator implements FigureCreator {
 
     private final int size;
 
-    SpecificFigureCreator(int size) {
+    FigureType(int size) {
         this.size = size;
     }
 
