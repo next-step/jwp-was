@@ -1,21 +1,38 @@
 package coordinate;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class FigureFactory {
-    static Figure getInstance(List<Point> points) {
-        if (points.size() == 2) {
-            return new Line(points);
-        }
+public enum FigureFactory {
 
-        if (points.size() == 3) {
-            return new Triangle(points);
-        }
+    LINE(2, Line::new),
+    TRIANGLE(3, Triangle::new),
+    RECTANGLE(4, Rectangle::new);
 
-        if (points.size() == 4) {
-            return new Rectangle(points);
-        }
+    private int typeSize;
+    private FigureCreator creator;
 
-        throw new IllegalArgumentException("유효하지 않은 도형입니다.");
+    FigureFactory(int typeSize, FigureCreator creator) {
+        this.typeSize = typeSize;
+        this.creator = creator;
     }
+
+    private static Map<Integer, FigureFactory> figureFactoryByType = new HashMap<>();
+
+    static {
+        for (FigureFactory factory : values()) {
+            figureFactoryByType.put(factory.typeSize, factory);
+        }
+    }
+
+    public static Figure getInstance(List<Point> points) {
+
+        if (!figureFactoryByType.containsKey(points.size())) {
+            throw new IllegalArgumentException("유효하지 않은 도형입니다.");
+        }
+
+        return figureFactoryByType.get(points.size()).creator.create(points);
+    }
+
 }
