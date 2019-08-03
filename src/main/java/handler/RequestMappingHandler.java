@@ -2,7 +2,7 @@
  * Copyright (c) 2019 LINE Corporation. All rights reserved.
  * LINE Corporation PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
-package webserver.handler;
+package handler;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -10,8 +10,8 @@ import request.HttpMethod;
 import request.RequestHeader;
 import request.RequestLine;
 import response.Response;
-import webserver.Controller;
-import webserver.RequestMapping;
+import controller.Controller;
+import controller.RequestMapping;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

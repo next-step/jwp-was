@@ -2,7 +2,7 @@
  * Copyright (c) 2019 LINE Corporation. All rights reserved.
  * LINE Corporation PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
-package webserver;
+package controller;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
@@ -17,8 +17,6 @@ import utils.FileIoUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 import static request.HttpMethod.GET;

@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import request.RequestHeader;
 import request.RequestLine;
 import response.Response;
-import webserver.Controller;
-import webserver.handler.RequestMappingHandler;
+import controller.Controller;
+import handler.RequestMappingHandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

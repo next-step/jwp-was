@@ -1,8 +1,8 @@
-package webserver.handler;
+package handler;
 
 import request.RequestHeader;
 import response.Response;
-import webserver.Controller;
+import controller.Controller;
 
 import java.util.Arrays;
 import java.util.List;

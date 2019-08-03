@@ -3,7 +3,7 @@ package webserver.http;
 import org.junit.jupiter.api.Test;
 import request.RequestHeader;
 import response.Response;
-import webserver.handler.StaticMappingHandler;
+import handler.StaticMappingHandler;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
