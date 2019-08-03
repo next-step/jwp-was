@@ -45,11 +45,7 @@ public class FigureFactory {
     static Figure getInstance(List<Point> points) {
         Optional<Figure> maybeFigure = DefaultFigureCreator.figureBy(points);
 
-        if (maybeFigure.isPresent()) {
-            return maybeFigure
-                    .get();
-        }
-
-        throw new IllegalArgumentException("유효하지 않은 도형입니다.");
+        return maybeFigure
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 도형입니다."));
     }
 }

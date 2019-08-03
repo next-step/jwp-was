@@ -3,11 +3,11 @@ package webserver.http;
 public class RequestLine {
     private final String version;
     private final String method;
-    private final Parts parts;
+    private final RequestURL requestURL;
 
-    public RequestLine(String method, Parts parts, String version) {
+    public RequestLine(String method, RequestURL requestURL, String version) {
         this.method = method;
-        this.parts = parts;
+        this.requestURL = requestURL;
         this.version = version;
     }
 
@@ -20,11 +20,11 @@ public class RequestLine {
     }
 
     public String getPath() {
-        return parts.getPath();
+        return requestURL.getPath();
     }
 
     public String getParameters(String key) {
-        return parts.getQuery(key);
+        return requestURL.getQuery(key);
     }
 
     public static RequestLine parse(String requestLine) {
@@ -32,7 +32,7 @@ public class RequestLine {
         String method = splitedRequestLine[0];
         String path = splitedRequestLine[1];
         String version = splitedRequestLine[2];
-        return new RequestLine(method, Parts.parse(path), version);
+        return new RequestLine(method, RequestURL.parse(path), version);
     }
 
 }

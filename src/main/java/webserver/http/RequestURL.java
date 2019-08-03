@@ -1,10 +1,9 @@
 package webserver.http;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Parts {
+public class RequestURL {
     public static final String QUERY_DELIMETER = "&";
     public static final String KEY_VALUE_DELIMETER = "=";
     public static final String QUERY_START = "?";
@@ -12,12 +11,12 @@ public class Parts {
     private final String path;
     private final Map<String, String> queries;
 
-    private Parts(String path, Map<String, String> queries) {
+    private RequestURL(String path, Map<String, String> queries) {
         this.path = path;
-        this.queries = new HashMap<>(queries);
+        this.queries = queries;
     }
 
-    public static Parts parse(String path) {
+    public static RequestURL parse(String path) {
         Map<String, String> query = new HashMap<>();
 
         int ind = path.lastIndexOf(QUERY_START);
@@ -25,7 +24,7 @@ public class Parts {
             query = createParams(path.substring(ind+1));
             path = path.substring(0, ind);
         }
-        return new Parts(path, query);
+        return new RequestURL(path, query);
     }
 
     private static Map<String, String> createParams(String queryString) {
