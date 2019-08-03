@@ -35,7 +35,7 @@ public class StringUtils {
             return returnEmptyBlank ? "" : string;
         }
 
-        return front ? string.substring(0, index) : string.substring(index + 1);
+        return front ? string.substring(0, index).trim() : string.substring(index + 1).trim();
     }
 
 }

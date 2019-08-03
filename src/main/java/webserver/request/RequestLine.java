@@ -1,7 +1,8 @@
-package webserver;
+package webserver.request;
 
 import utils.MapUtils;
 import utils.StringUtils;
+import webserver.HttpMethod;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -74,8 +75,9 @@ public class RequestLine {
 
         Map<String, String> queryMap = new HashMap<>(parameters.length);
         for (String parameter : parameters) {
-            String key = frontSplitWithOrigin(parameter, '=');
-            MapUtils.putIfKeyNotBlank(queryMap, key, endSplit(parameter, '='));
+            MapUtils.putIfKeyNotBlank(queryMap,
+                    frontSplitWithOrigin(parameter, '='),
+                    endSplit(parameter, '='));
         }
         return queryMap;
     }
