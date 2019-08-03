@@ -30,9 +30,12 @@ public class UserController {
         String password = requestBody.get("password");
 
         User user = DataBase.findUserById(userId);
-        if (Objects.isNull(user) || !user.getPassword().equals(password))
+        if (Objects.isNull(user) || !user.getPassword().equals(password)) {
+            httpResponse.getCookie().set("logined", "false");
             return Optional.of("redirect:/user/login_failed.html");
+        }
 
+        httpResponse.getCookie().set("logined", "true");
         return Optional.of("redirect:/index.html");
     }
 }

@@ -6,17 +6,20 @@ import java.io.IOException;
 public class HttpRequest {
     private RequestLine requestLine;
     private HttpHeaders httpHeaders;
+    private Cookie cookie;
     private RequestBody requestBody;
 
     private HttpRequest(RequestLine requestLine, HttpHeaders httpHeaders, RequestBody requestBody) {
         this.requestLine = requestLine;
         this.httpHeaders = httpHeaders;
         this.requestBody = requestBody;
+        this.cookie = Cookie.parse(httpHeaders.get("Cookie"));
     }
 
     public HttpRequest(RequestLine requestLine, HttpHeaders httpHeaders) {
         this.requestLine = requestLine;
         this.httpHeaders = httpHeaders;
+        this.cookie = Cookie.parse(httpHeaders.get("Cookie"));
     }
 
     public static HttpRequest parse(BufferedReader bufferedReader) throws IOException {
@@ -49,5 +52,9 @@ public class HttpRequest {
 
     public RequestBody getRequestBody() {
         return this.requestBody;
+    }
+
+    public Cookie getCookie() {
+        return this.cookie;
     }
 }
