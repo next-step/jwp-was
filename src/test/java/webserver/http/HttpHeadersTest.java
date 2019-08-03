@@ -36,7 +36,7 @@ class HttpHeadersTest {
         final HttpHeaders httpHeaders = HttpHeaders.of(rawHttpHeaders);
 
         // then
-        Assertions.assertThat(httpHeaders).isEqualTo(HttpHeaders.EMPTY);
+        Assertions.assertThat(httpHeaders.isEmpty()).isTrue();
     }
 
     @DisplayName("헤더의 값을 가져온다.")

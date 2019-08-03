@@ -2,7 +2,7 @@ package webserver.http;
 
 import utils.StringUtils;
 
-class HttpHeader {
+public class HttpHeader {
 
     static final String SEPARATOR = ": ";
 
@@ -28,6 +28,11 @@ class HttpHeader {
         final String key = parseKey(rawHttpHeader, separatorIndex);
         final String value = parseValue(rawHttpHeader, separatorIndex);
 
+        return new HttpHeader(key, value);
+    }
+
+    public static HttpHeader of(final String key,
+                                final String value) {
         return new HttpHeader(key, value);
     }
 
@@ -61,5 +66,10 @@ class HttpHeader {
     private static String parseValue(final String rawHttpHeader,
                                      final int separatorIndex) {
         return rawHttpHeader.substring(separatorIndex + SEPARATOR.length());
+    }
+
+    @Override
+    public String toString() {
+        return key + SEPARATOR + value;
     }
 }

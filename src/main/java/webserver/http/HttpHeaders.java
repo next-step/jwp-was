@@ -3,16 +3,17 @@ package webserver.http;
 import utils.StringUtils;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.lang.System.lineSeparator;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toMap;
 
 public class HttpHeaders {
-
-    public static final HttpHeaders EMPTY = new HttpHeaders(Collections.emptyMap());
 
     private final Map<String, String> headers;
 
@@ -22,13 +23,22 @@ public class HttpHeaders {
 
     public static HttpHeaders of(final String rawHttpHeaders) {
         if (StringUtils.isBlank(rawHttpHeaders)) {
-            return EMPTY;
+            return empty();
         }
 
         return Arrays.stream(rawHttpHeaders.split(lineSeparator()))
                 .map(HttpHeader::of)
                 .collect(collectingAndThen(toMap(HttpHeader::getKey, HttpHeader::getValue),
                         HttpHeaders::new));
+    }
+
+    public static HttpHeaders empty() {
+        return new HttpHeaders(new HashMap<>());
+    }
+
+    public void add(final String key,
+                    final String value) {
+        headers.put(key, value);
     }
 
     public String getString(final String key) {
@@ -50,6 +60,20 @@ public class HttpHeaders {
 
     public int getContentLength() {
         return getInt("Content-Length", 0);
+    }
+
+    public boolean isEmpty() {
+        return headers.isEmpty();
+    }
+
+    public Set<Map.Entry<String, String>> entrySet() {
+        return headers.entrySet();
+    }
+
+    public List<HttpHeader> toList() {
+        return entrySet().stream()
+                .map(entry -> HttpHeader.of(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
     }
 
     @Override
