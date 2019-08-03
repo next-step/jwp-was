@@ -9,14 +9,14 @@ import request.RequestHeader;
 import request.RequestLine;
 import response.Response;
 import webserver.Controller;
-import webserver.RequestMappingHandler;
+import webserver.handler.RequestMappingHandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by youngjae.havi on 2019-08-02
  */
-public class RequestMappingTest {
+public class RequestStrategyMappingTest {
 
     @Test
     void index_request_mapping_test() {

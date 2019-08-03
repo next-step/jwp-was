@@ -4,8 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import request.RequestHeader;
 import response.Response;
+import webserver.handler.RequestEngine;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.Socket;
 
 public class RequestHandler implements Runnable {
@@ -25,24 +29,12 @@ public class RequestHandler implements Runnable {
             RequestHeader requestHeader = new RequestHeader(bufferedReader);
             logger.debug(requestHeader.toString());
 
-            Controller controller = new Controller();
-            RequestMappingHandler requestMappingHandler = new RequestMappingHandler(controller);
-            Response response = requestMappingHandler.request(requestHeader);
-
-            DataOutputStream dos = new DataOutputStream(out);
-            response.writeWithDos(dos);
-            responseBody(dos, response.getBody());
+            RequestEngine requestEngine = new RequestEngine();
+            Response response = requestEngine.run(requestHeader);
+            response.write(out);
         } catch (Exception e) {
             logger.error("main error", e);
         }
     }
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
 }
