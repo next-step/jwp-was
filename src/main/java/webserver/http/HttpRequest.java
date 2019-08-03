@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RequestHeader {
+public class HttpRequest {
     private static final String END_OF_LINE = "";
     private static final String HEADER_DELIMITER = ": ";
     private static final int HEADER_PAIR_COUNT = 2;
@@ -13,12 +13,12 @@ public class RequestHeader {
     private RequestLine requestLine;
     private Map<String, String> headers;
 
-    private RequestHeader(RequestLine requestLine, Map<String, String> headers) {
+    private HttpRequest(RequestLine requestLine, Map<String, String> headers) {
         this.requestLine = requestLine;
         this.headers = headers;
     }
 
-    public static RequestHeader parse(BufferedReader bufferedReader) throws IOException {
+    public static HttpRequest parse(BufferedReader bufferedReader) throws IOException {
         String line = bufferedReader.readLine();
         RequestLine requestLine = RequestLine.parse(line);
 
@@ -33,7 +33,7 @@ public class RequestHeader {
             }
         }
 
-        return new RequestHeader(requestLine, headers);
+        return new HttpRequest(requestLine, headers);
     }
 
     private static boolean hasValues(String[] values) {

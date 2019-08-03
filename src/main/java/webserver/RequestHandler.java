@@ -1,18 +1,26 @@
 package webserver;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
+import com.google.common.base.Charsets;
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
+import webserver.http.HttpRequest;
 import webserver.http.RequestBody;
-import webserver.http.RequestHeader;
 import webserver.http.RequestUri;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -30,13 +38,14 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
-            RequestHeader header = RequestHeader.parse(bufferedReader);
-            logger.debug("request header : {}", header);
+            HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+            logger.debug("request header : {}", httpRequest);
 
-            RequestUri uri = header.getRequestLine().getUri();
+            RequestUri uri = httpRequest.getRequestLine().getUri();
+            DataOutputStream dos = new DataOutputStream(out);
 
             if ("/user/create".equals(uri.getPath())) {
-                String body = IOUtils.readData(bufferedReader, Integer.parseInt(header.getHeader("Content-Length")));
+                String body = IOUtils.readData(bufferedReader, Integer.parseInt(httpRequest.getHeader("Content-Length")));
                 RequestBody requestBody = RequestBody.parse(body);
 
                 User user = new User(requestBody.getValue("userId"), requestBody.getValue("password"),
@@ -44,26 +53,45 @@ public class RequestHandler implements Runnable {
                 DataBase.addUser(user);
                 logger.debug("User : {}", user);
 
-                DataOutputStream dos = new DataOutputStream(out);
-                response302Header(dos, "/index.html", "logined=false");
+                response302Header(dos, "/index.html", "logined=false; Path=/");
             } else if("/user/login".equals(uri.getPath())) {
-                String body = IOUtils.readData(bufferedReader, Integer.parseInt(header.getHeader("Content-Length")));
+                String body = IOUtils.readData(bufferedReader, Integer.parseInt(httpRequest.getHeader("Content-Length")));
                 RequestBody requestBody = RequestBody.parse(body);
 
                 User user = DataBase.findUserById(requestBody.getValue("userId"));
 
-
-                DataOutputStream dos = new DataOutputStream(out);
-                if(user.isPasswordMatch(requestBody.getValue("password"))) {
-                    response302Header(dos, "/index.html", "logined=true");
+                if(user == null || !user.isPasswordMatch(requestBody.getValue("password"))) {
+                    response302Header(dos, "/user/login_failed.html", "logined=false; Path=/");
                 } else {
-                    response302Header(dos, "/user/login_failed.html", "logined=false");
+                    response302Header(dos, "/index.html", "logined=true; Path=/");
                 }
+            } else if("/user/list".equals(uri.getPath())){
+                if(httpRequest.getHeader("Cookie").equals("logined=true")) {
+                    TemplateLoader loader = new ClassPathTemplateLoader();
+                    loader.setPrefix("/templates");
+                    loader.setSuffix(".html");
+                    loader.setCharset(Charsets.UTF_8);
+                    Handlebars handlebars = new Handlebars(loader);
+
+                    Template template = handlebars.compile("user/profile");
+                    Collection<User> users = DataBase.findAll();
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("users", users);
+
+                    String usersPage = template.apply(data);
+                    byte[] body = usersPage.getBytes();
+
+                    response200Header(dos, body.length, "text/html;");
+                    responseBody(dos, body);
+
+                } else {
+                    response302Header(dos, "/user/login.html", "logined=false; Path=/");
+                }
+
             } else {
                 String resourcePath = ResourceHandler.getResourcePath(uri);
                 byte[] body = ResourceHandler.loadResource(resourcePath);
 
-                DataOutputStream dos = new DataOutputStream(out);
                 response200Header(dos, body.length, ResourceHandler.resourceContentType(uri));
                 responseBody(dos, body);
             }

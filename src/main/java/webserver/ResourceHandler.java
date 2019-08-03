@@ -23,7 +23,6 @@ public class ResourceHandler {
     }
 
     public static byte[] loadResource(String path) throws IOException, URISyntaxException {
-        System.out.println("wpw" + path);
         return FileIoUtils.loadFileFromClasspath(path);
     }
 
