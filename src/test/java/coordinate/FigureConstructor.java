@@ -1,30 +1,41 @@
 package coordinate;
 
-import java.lang.reflect.Constructor;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 
-public class FigureConstructor implements FigureCreator{
+public enum FigureConstructor implements FigureCreator{
 
-    public static HashMap<Integer, Class> figureHashMap = new HashMap<>();
+    LINE(2){
+        @Override
+        public Figure create(List<Point> points) {
+            return new Line(points);
+        }
+    },
+    TRIANGLE(3){
+        @Override
+        public Figure create(List<Point> points) {
+            return new Triangle(points);
+        }
+    },
+    RECTANGLE(4){
+        @Override
+        public Figure create(List<Point> points) {
+            return new Rectangle(points);
+        }
+    };
 
-    public FigureConstructor(){
-        figureHashMap.put(2, Line.class);
-        figureHashMap.put(3, Triangle.class);
-        figureHashMap.put(4, Rectangle.class);
+
+    private final int pointSize;
+
+    FigureConstructor(int pointSize) {
+        this.pointSize = pointSize;
     }
 
-    @Override
-    public Figure create(List<Point> points){
-        try {
-            Class figureClass = figureHashMap.get(points.size());
-            Constructor cs = figureClass.getConstructor(new Class[]{List.class});
-
-            Figure figure = (Figure) cs.newInstance(points);
-            return figure;
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
+    public static Figure getFigureConstructor(List<Point> points){
+        return Arrays.stream(FigureConstructor.values())
+                .filter(filter -> filter.pointSize == points.size())
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 도형입니다."))
+                .create(points);
     }
 }

@@ -1,17 +1,16 @@
 package webserver.http;
 
 import utils.FileIoUtils;
-import utils.IOUtils;
 import webserver.domain.HttpParseVO;
-import webserver.domain.MethodHandlerVO;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class RequestLine {
+    public HttpRequest httpRequest;
+    public String httpMsg;
 
     public HttpParseVO httpParseVO;
     public List<MethodHandlerVO> methodHandlerVOList;
@@ -19,6 +18,7 @@ public class RequestLine {
     public RequestLine(String httpStr){
         httpParseVO = new HttpParseVO();
         methodHandlerVOList = new ArrayList<>();
+        httpRequest = new HttpRequest(httpMsg);
         parseHeader(httpStr);
     }
 

@@ -36,9 +36,9 @@ public class RequestLineTest {
     })
     void parseParameter(String url, String value){
         RequestLine requestLine = RequestLine.parse(url);
-        assertThat(requestLine.getParam("userId")).isEqualTo("javajigi");
-        assertThat(requestLine.getParam("password")).isEqualTo(value);
-        assertThat(requestLine.getParam("name")).isEqualTo("JaeSung");
+        assertThat(requestLine.getParameter("userId")).isEqualTo("javajigi");
+        assertThat(requestLine.getParameter("password")).isEqualTo(value);
+        assertThat(requestLine.getParameter("name")).isEqualTo("JaeSung");
     }
 
     @ParameterizedTest
