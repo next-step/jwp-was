@@ -1,9 +1,11 @@
-package webserver.http;
+package webserver.http.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import webserver.http.request.InvalidRequestPathException;
+import webserver.http.request.RequestPath;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

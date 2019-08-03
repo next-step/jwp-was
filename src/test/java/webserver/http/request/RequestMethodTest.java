@@ -1,8 +1,9 @@
-package webserver.http;
+package webserver.http.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import webserver.http.RequestMethod;
 
 import java.util.NoSuchElementException;
 

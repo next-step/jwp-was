@@ -1,4 +1,6 @@
-package webserver.http;
+package webserver.http.request;
+
+import webserver.http.RequestMethod;
 
 public class RequestLine {
 
@@ -29,5 +31,21 @@ public class RequestLine {
 
     public String getPath() {
         return url.getPath();
+    }
+
+    boolean matchMethod(final RequestMethod other) {
+        return method == other;
+    }
+
+    public String getParameter(final String key) {
+        return url.getParameter(key);
+    }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method=" + method +
+                ", url=" + url +
+                '}';
     }
 }

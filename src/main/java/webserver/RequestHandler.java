@@ -1,62 +1,52 @@
 package webserver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.request.HttpRequest;
+import webserver.handler.Handler;
+import webserver.handler.HandlerProvider;
+import webserver.http.response.HttpResponse;
 
 public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Handler NOT_FOUND = (ignore, response) -> response.notFound();
 
-    private Socket connection;
+    private final Socket connection;
+    private final List<HandlerProvider> handlerProviders;
 
-    RequestHandler(final Socket connection) {
+    RequestHandler(final Socket connection,
+                   final List<HandlerProvider> handlerProviders) {
         this.connection = connection;
+        this.handlerProviders = handlerProviders;
     }
 
     @Override
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
+        logger.debug("New Client Connect! [ConnectedIP={}, Port={}]",
+                connection.getInetAddress(), connection.getPort());
 
-        try (final InputStream in = connection.getInputStream();
-             final OutputStream out = connection.getOutputStream()) {
+        try (connection;
+             final InputStream in = connection.getInputStream();
+             final OutputStream out = connection.getOutputStream();
+             final HttpResponse response = HttpResponse.of(out)) {
 
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            final DataOutputStream dos = new DataOutputStream(out);
-            final byte[] body = "Hello World".getBytes();
+             final HttpRequest request = HttpRequest.of(in);
+             logger.debug("In request [request={}]", request);
 
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
+            handlerProviders.stream()
+                    .filter(handlerProvider -> handlerProvider.support(request))
+                    .findFirst()
+                    .map(HandlerProvider::provide)
+                    .orElse(NOT_FOUND)
+                    .handle(request, response);
 
-    private void response200Header(final DataOutputStream dos,
-                                   final int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(final DataOutputStream dos,
-                              final byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+        } catch (final Exception e) {
+            logger.error("Error ", e);
         }
     }
 }

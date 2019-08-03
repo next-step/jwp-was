@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request;
 
 import utils.StringUtils;
 
@@ -13,26 +13,33 @@ public class RequestQuery {
 
     static final RequestQuery EMPTY = new RequestQuery(Collections.emptyMap());
 
-    private static final String AMPERSAND = "&";
+    private static final String SEPARATOR = "&";
 
-    private final Map<String, String> queryString;
+    private final Map<String, String> requestQuery;
 
-    private RequestQuery(final Map<String, String> queryString) {
-        this.queryString = queryString;
+    private RequestQuery(final Map<String, String> requestQuery) {
+        this.requestQuery = requestQuery;
     }
 
-    public static RequestQuery of(final String rawQueryString) {
-        if (StringUtils.isBlank(rawQueryString)) {
+    public static RequestQuery of(final String rawRequestQuery) {
+        if (StringUtils.isBlank(rawRequestQuery)) {
             return EMPTY;
         }
 
-        return Arrays.stream(rawQueryString.split(AMPERSAND))
+        return Arrays.stream(rawRequestQuery.split(SEPARATOR))
                 .map(RequestQueryValue::of)
                 .collect(collectingAndThen(toMap(RequestQueryValue::getKey, RequestQueryValue::getValue),
                         RequestQuery::new));
     }
 
     public String getString(final String key) {
-        return queryString.get(key);
+        return requestQuery.get(key);
+    }
+
+    @Override
+    public String toString() {
+        return "RequestQuery{" +
+                "requestQuery=" + requestQuery +
+                '}';
     }
 }

@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request;
 
 import utils.StringUtils;
 
@@ -51,5 +51,12 @@ class RequestPath {
     @Override
     public int hashCode() {
         return Objects.hash(requestPath);
+    }
+
+    @Override
+    public String toString() {
+        return "RequestPath{" +
+                "requestPath='" + requestPath + '\'' +
+                '}';
     }
 }
