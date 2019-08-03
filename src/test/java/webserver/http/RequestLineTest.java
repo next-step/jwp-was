@@ -1,26 +1,30 @@
 package webserver.http;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RequestLineTest {
-    @Test
-    void parse() {
+    @ParameterizedTest
+    @ValueSource(strings = {"GET /user HTTP/1.1"})
+    void parse(String input) {
         //when
-        RequestLine requestLine = RequestLine.parse("GET /user HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse(input);
 
         //then
         assertThat(requestLine.getMethod()).isEqualTo("GET");
-        assertThat(requestLine.getPath()).isEqualTo("/user");
+        assertThat(requestLine.getPath().getPath()).isEqualTo("/user");
     }
 
-    @Test
-    void 잘못된RequestLine_오류발생() {
+    @ParameterizedTest
+    @NullAndEmptySource
+    void 공백requestLine_예외처리(String input) {
         //then
         assertThrows(IllegalArgumentException.class, () -> {
-            RequestLine requestLine = RequestLine.parse("");
+            RequestLine.parse(input);
         });
     }
 }
