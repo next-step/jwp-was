@@ -1,19 +1,21 @@
 package webserver.http;
 
+import utils.HttpStringType;
+import utils.HttpStringUtils;
+
 public class RequestLine {
     private String method;
-    private String path;
+    private Path path;
 
-    private RequestLine(String method, String path) {
+    private RequestLine(String method, Path path) {
         this.method = method;
         this.path = path;
     }
-
     public static RequestLine parse(String requestLine) {
         validate(requestLine);
 
-        String[] parsedRequestLine = requestLine.split(" ");
-        return new RequestLine(parsedRequestLine[0], parsedRequestLine[1]);
+        String[] requestLineTokens = HttpStringUtils.split(requestLine, HttpStringType.REQUESTLINE_DELIMITER.getType());
+        return new RequestLine(requestLineTokens[0], Path.newInstance(requestLineTokens[1]));
     }
 
     private static void validate(String requestLine) {
@@ -26,7 +28,7 @@ public class RequestLine {
         return method;
     }
 
-    public String getPath() {
+    public Path getPath() {
         return path;
     }
 }
