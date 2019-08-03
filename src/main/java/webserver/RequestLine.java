@@ -1,32 +1,35 @@
 package webserver;
 
 public class RequestLine {
-
     private static final String DELEMETER = " ";
-    private String method;
-    private String requestUri;
-    private String httpVersion;
 
-    public String getMethod() {
+    private HttpMethod method;
+    private RequestUri requestUri;
+    private HttpVersion httpVersion;
+
+    public HttpMethod getMethod() {
         return method;
     }
 
-    public String getRequestUri() {
+    public RequestUri getRequestUri() {
         return requestUri;
     }
 
-    public String getHttpVersion() {
+    public HttpVersion getHttpVersion() {
         return httpVersion;
     }
 
-    public RequestLine(String method, String requestUri, String httpVersion) {
+    private RequestLine(HttpMethod method, RequestUri requestUri, HttpVersion httpVersion) {
         this.method = method;
         this.requestUri = requestUri;
         this.httpVersion = httpVersion;
     }
 
-    public static RequestLine parse(String requestLineString) {
-        String[] piece = requestLineString.split(DELEMETER);
-        return new RequestLine(piece[0], piece[1], piece[2]);
+    public static RequestLine of(String requestLine) {
+        String[] parts = requestLine.split(DELEMETER);
+        HttpMethod method = HttpMethod.valueOf(parts[0]);
+        RequestUri requestUri = RequestUri.of(parts[1]);
+        HttpVersion version = HttpVersion.of(parts[2]);
+        return new RequestLine(method, requestUri, version);
     }
 }
