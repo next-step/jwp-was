@@ -16,7 +16,7 @@ class MapUtilsTest {
     @DisplayName("does not put if blank key")
     @ParameterizedTest(name = "case : {0} -> key : {1}, value : {2}")
     @MethodSource("sampleKeyValues")
-    void endSplitTest(String key, Object value) {
+    void putIfKeyNotBlankTest(String key, Object value) {
         Map<String, Object> map = new HashMap<>();
         MapUtils.putIfKeyNotBlank(map, key, value);
         assertTrue(map.isEmpty());
