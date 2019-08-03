@@ -1,22 +1,27 @@
 package webserver.http;
 
+import java.util.Map;
+
 public class RequestLine {
 
-    private static final String DELIMITER = " ";
+    private static final String REQUEST_LINE_SEPARATOR = " ";
 
     private String httpMethod;
-    private String path;
+    private RequestUri requestUri;
     private String httpVersion;
 
-    private RequestLine(String httpMethod, String path, String httpVersion) {
+    private RequestLine(String httpMethod, RequestUri requestUri, String httpVersion) {
         this.httpMethod = httpMethod;
-        this.path = path;
+        this.requestUri = requestUri;
         this.httpVersion = httpVersion;
     }
 
     public static RequestLine parse(String line) {
-        String[] values = line.split(DELIMITER);
-        return new RequestLine(values[0], values[1], values[2]);
+        String[] values = line.split(REQUEST_LINE_SEPARATOR);
+
+        RequestUri requestUri = RequestUriFactory.parse(values[1]);
+
+        return new RequestLine(values[0], requestUri, values[2]);
     }
 
     public String getHttpMethod() {
@@ -24,7 +29,11 @@ public class RequestLine {
     }
 
     public String getPath() {
-        return path;
+        return requestUri.getPath();
+    }
+
+    public Map<String, String> getQueryParams() {
+        return requestUri.getQueryParams();
     }
 
     public String getHttpVersion() {
