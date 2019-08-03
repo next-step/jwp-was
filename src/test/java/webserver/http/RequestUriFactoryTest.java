@@ -45,4 +45,16 @@ class RequestUriFactoryTest {
         assertThat(requestUri.getPath()).isEqualTo("/users");
         assertThat(requestUri.getQueryParams()).isEqualTo(queryStrings);
     }
+
+    @DisplayName("query string 같은 key가 두 개 일 경우 첫 번째 값을 사용한다")
+    @Test
+    void queryStringDuplicateKey() {
+        RequestUri requestUri = RequestUriFactory.parse("/users?userId=javajigi&userId=JaeSung");
+
+        Map<String, String> queryStrings = new HashMap<>();
+        queryStrings.put("userId", "javajigi");
+
+        assertThat(requestUri.getPath()).isEqualTo("/users");
+        assertThat(requestUri.getQueryParams()).isEqualTo(queryStrings);
+    }
 }

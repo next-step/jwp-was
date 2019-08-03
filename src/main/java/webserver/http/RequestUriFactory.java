@@ -25,7 +25,7 @@ public class RequestUriFactory {
                 .map(RequestUriFactory::getKeyValue)
                 .filter(RequestUriFactory::isNotEmpty)
                 .filter(RequestUriFactory::isPair)
-                .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1]));
+                .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1], (value1, value2) -> value1));
     }
 
     private static String[] getKeyValue(String queryString) {
