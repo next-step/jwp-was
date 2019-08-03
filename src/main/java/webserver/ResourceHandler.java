@@ -19,11 +19,20 @@ public class ResourceHandler {
     }
 
     private static boolean isStaticResource(String path) {
-        return path.contains("css") || path.contains("js");
+        return path.contains("css") || path.contains("js") || path.contains("fonts");
     }
 
     public static byte[] loadResource(String path) throws IOException, URISyntaxException {
-
+        System.out.println("wpw" + path);
         return FileIoUtils.loadFileFromClasspath(path);
+    }
+
+    public static String resourceContentType(RequestUri uri) {
+        if(uri.getPath().contains("js"))
+            return "text/javascript;";
+        if(uri.getPath().contains("css"))
+            return "text/css;";
+
+        return "text/html;";
     }
 }

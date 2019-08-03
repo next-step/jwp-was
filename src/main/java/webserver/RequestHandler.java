@@ -1,16 +1,18 @@
 package webserver;
 
+import db.DataBase;
+import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.IOUtils;
+import webserver.http.RequestBody;
+import webserver.http.RequestHeader;
+import webserver.http.RequestUri;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
-import webserver.http.RequestHeader;
-import webserver.http.RequestLine;
-import webserver.http.RequestUri;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -31,12 +33,40 @@ public class RequestHandler implements Runnable {
             RequestHeader header = RequestHeader.parse(bufferedReader);
             logger.debug("request header : {}", header);
 
-            String resourcePath = ResourceHandler.getResourcePath(header.getRequestLine().getUri());
-            byte[] body = ResourceHandler.loadResource(resourcePath);
+            RequestUri uri = header.getRequestLine().getUri();
 
-            DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            if ("/user/create".equals(uri.getPath())) {
+                String body = IOUtils.readData(bufferedReader, Integer.parseInt(header.getHeader("Content-Length")));
+                RequestBody requestBody = RequestBody.parse(body);
+
+                User user = new User(requestBody.getValue("userId"), requestBody.getValue("password"),
+                        requestBody.getValue("name"), requestBody.getValue("email"));
+                DataBase.addUser(user);
+                logger.debug("User : {}", user);
+
+                DataOutputStream dos = new DataOutputStream(out);
+                response302Header(dos, "/index.html", "logined=false");
+            } else if("/user/login".equals(uri.getPath())) {
+                String body = IOUtils.readData(bufferedReader, Integer.parseInt(header.getHeader("Content-Length")));
+                RequestBody requestBody = RequestBody.parse(body);
+
+                User user = DataBase.findUserById(requestBody.getValue("userId"));
+
+
+                DataOutputStream dos = new DataOutputStream(out);
+                if(user.isPasswordMatch(requestBody.getValue("password"))) {
+                    response302Header(dos, "/index.html", "logined=true");
+                } else {
+                    response302Header(dos, "/user/login_failed.html", "logined=false");
+                }
+            } else {
+                String resourcePath = ResourceHandler.getResourcePath(uri);
+                byte[] body = ResourceHandler.loadResource(resourcePath);
+
+                DataOutputStream dos = new DataOutputStream(out);
+                response200Header(dos, body.length, ResourceHandler.resourceContentType(uri));
+                responseBody(dos, body);
+            }
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (URISyntaxException e) {
@@ -44,11 +74,22 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dos, int lengthOfBodyContent, String contentType) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("HTTP/1.1 200  \r\n");
+            dos.writeBytes("Content-Type: " + contentType + "charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(DataOutputStream dos, String location, String cookie) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Location: " + location + "\r\n");
+            dos.writeBytes("Set-Cookie: " + cookie + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());

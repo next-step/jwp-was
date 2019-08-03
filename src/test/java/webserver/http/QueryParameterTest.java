@@ -19,12 +19,11 @@ class QueryParameterTest {
         assertThat(queryParameter.getParameter("name")).isEqualTo("JaeSung");
     }
 
-    @DisplayName("query string parse test query string의 value 값이 없는 경우 exception")
+    @DisplayName("query string parse test query string의 value 값이 없는 경우 null 반환")
     @Test
     void querystring_parse_test_without_value() {
         QueryParameter queryParameter = QueryParameter.parse("userId=");
 
-        assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> queryParameter.getParameter("userId"));
+        assertThat(queryParameter.getParameter("userId")).isEqualTo(null);
     }
 }

@@ -39,8 +39,7 @@ public class QueryParameter {
     }
 
     public String getParameter(String key) {
-        return Optional.ofNullable(this.queryParameters.get(key))
-                .orElseThrow(() -> new IllegalArgumentException("key not exists."));
+        return queryParameters.get(key);
     }
 
     @Override
