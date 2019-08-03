@@ -1,10 +1,14 @@
 package webserver;
 
+import actions.user.UserCreatAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.mapper.ActionRequestMapper;
 import webserver.mapper.RequestMappers;
 import webserver.mapper.ResourceRequestMapper;
 import webserver.mapper.TemplateRequestMapper;
+import webserver.resolvers.body.BodyResolvers;
+import webserver.resolvers.body.FormBodyResolver;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -29,7 +33,9 @@ public class WebServer {
 
         TemplateRequestMapper templateRequestMapper = new TemplateRequestMapper("./templates");
 
-        RequestMappers requestMappers = RequestMappers.of(resourceRequestMapper, templateRequestMapper);
+        ActionRequestMapper userActionRequestMapper = new ActionRequestMapper("/user/create", new UserCreatAction());
+
+        RequestMappers requestMappers = RequestMappers.of(resourceRequestMapper, templateRequestMapper, userActionRequestMapper);
 
         BodyResolvers bodyResolvers = BodyResolvers.of(new FormBodyResolver());
 
@@ -41,7 +47,7 @@ public class WebServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection, requestMappers));
+                Thread thread = new Thread(new RequestHandler(connection, requestMappers, bodyResolvers));
                 thread.start();
             }
         }

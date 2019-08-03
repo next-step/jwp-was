@@ -1,4 +1,4 @@
-package webserver.mapper;
+package webserver.handler;
 
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;

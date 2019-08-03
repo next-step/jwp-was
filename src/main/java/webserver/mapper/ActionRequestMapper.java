@@ -1,6 +1,7 @@
 package webserver.mapper;
 
 import enums.HttpMethod;
+import webserver.handler.ActionHandler;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
@@ -8,7 +9,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class ActionRequestMapper implements RequestMapper {
+public class ActionRequestMapper implements RequestMapper {
 
 
     private final String mappedRequestUri;
