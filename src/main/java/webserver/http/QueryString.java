@@ -2,13 +2,16 @@ package webserver.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 
-import java.util.HashMap;
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class QueryString {
 
+    private static final SimpleImmutableEntry<String, String> EMPTY_ENTRY = new SimpleImmutableEntry<>("", "");
     private final Map<String, String> map;
     private final String origin;
 
@@ -23,23 +26,26 @@ public class QueryString {
     }
 
     private static Map<String, String> convertToMap(String queryString) {
-        Map<String, String> map = new HashMap<>();
         String[] split = queryString.split("&");
-        for (String item : split) {
-            if (StringUtils.isBlank(item)) {
-                continue;
-            }
+        return Arrays.stream(split)
+                .map(QueryString::parseKeyValue)
+                .filter(item -> item != QueryString.EMPTY_ENTRY)
+                .collect(Collectors.toMap(SimpleImmutableEntry::getKey, SimpleImmutableEntry::getValue));
+    }
 
-            int startIndex = item.indexOf("=");
-            if (startIndex == -1) {
-                map.put(item, item);
-                continue;
-            }
-            String key = item.substring(0, startIndex);
-            String value = item.substring(startIndex + 1);
-            map.put(key, value);
+    private static SimpleImmutableEntry<String, String> parseKeyValue(String item) {
+        if (StringUtils.isBlank(item)) {
+            return QueryString.EMPTY_ENTRY;
         }
-        return map;
+
+        int startIndex = item.indexOf("=");
+        if (startIndex == -1) {
+            return new SimpleImmutableEntry<>(item, item);
+        }
+
+        String key = item.substring(0, startIndex);
+        String value = item.substring(startIndex + 1);
+        return new SimpleImmutableEntry<>(key, value);
     }
 
     boolean containsKey(String key) {
