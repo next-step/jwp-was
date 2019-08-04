@@ -3,7 +3,6 @@ package webserver.http;
 import webserver.domain.HttpParseVO;
 
 public class RequestLine {
-
     public HttpRequest httpRequest;
 
     public RequestLine(String httpStr){
@@ -21,6 +20,4 @@ public class RequestLine {
     public String getParam(String param) {
         return httpRequest.getParameterQuery(param);
     }
-
-
 }
