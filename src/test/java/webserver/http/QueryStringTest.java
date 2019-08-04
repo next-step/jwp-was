@@ -6,7 +6,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class QueryStringTest {
+class QueryStringTest {
     @Test
     void should_ContainsKey() {
         QueryString qs = QueryString.parse("id=myId");

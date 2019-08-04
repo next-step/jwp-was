@@ -1,9 +1,10 @@
 package webserver.http;
 
 import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RequestLineTest {
+class RequestLineTest {
     @Test
     void parseMethod() {
         RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
@@ -41,13 +42,13 @@ public class RequestLineTest {
     }
 
     @Test
-    void parseQueryString(){
+    void parseQueryString() {
         RequestLine requestLine = RequestLine.parse("GET /users?id=myId HTTP/1.1");
         assertThat(requestLine.getQueryString()).isEqualTo(QueryString.parse("id=myId"));
     }
 
     @Test
-    void parseOtherQueryString(){
+    void parseOtherQueryString() {
         RequestLine requestLine = RequestLine.parse("GET /users?id=myId&name=myName HTTP/1.1");
         assertThat(requestLine.getQueryString()).isEqualTo(QueryString.parse("id=myId&name=myName"));
     }
