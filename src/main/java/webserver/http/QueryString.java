@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class QueryString {
 
-    private static final SimpleImmutableEntry<String, String> EMPTY_ENTRY = new SimpleImmutableEntry<>("", "");
+
     private final Map<String, String> map;
     private final String origin;
 
@@ -21,31 +21,7 @@ public class QueryString {
     }
 
     static QueryString parse(String queryString) {
-        Map<String, String> map = QueryString.convertToMap(queryString);
-        return new QueryString(queryString, map);
-    }
-
-    private static Map<String, String> convertToMap(String queryString) {
-        String[] split = queryString.split("&");
-        return Arrays.stream(split)
-                .map(QueryString::parseKeyValue)
-                .filter(item -> item != QueryString.EMPTY_ENTRY)
-                .collect(Collectors.toMap(SimpleImmutableEntry::getKey, SimpleImmutableEntry::getValue));
-    }
-
-    private static SimpleImmutableEntry<String, String> parseKeyValue(String item) {
-        if (StringUtils.isBlank(item)) {
-            return QueryString.EMPTY_ENTRY;
-        }
-
-        int startIndex = item.indexOf("=");
-        if (startIndex == -1) {
-            return new SimpleImmutableEntry<>(item, item);
-        }
-
-        String key = item.substring(0, startIndex);
-        String value = item.substring(startIndex + 1);
-        return new SimpleImmutableEntry<>(key, value);
+        return QueryStringParser.parse(queryString);
     }
 
     boolean containsKey(String key) {
@@ -80,5 +56,36 @@ public class QueryString {
     @Override
     public int hashCode() {
         return Objects.hash(map, origin);
+    }
+
+    private static class QueryStringParser {
+        private static final SimpleImmutableEntry<String, String> EMPTY_ENTRY = new SimpleImmutableEntry<>("", "");
+
+        static QueryString parse(String queryString) {
+            return new QueryString(queryString, QueryStringParser.convertToMap(queryString));
+        }
+
+        private static Map<String, String> convertToMap(String queryString) {
+            String[] split = queryString.split("&");
+            return Arrays.stream(split)
+                    .map(QueryStringParser::parseKeyValue)
+                    .filter(item -> item != QueryStringParser.EMPTY_ENTRY)
+                    .collect(Collectors.toMap(SimpleImmutableEntry::getKey, SimpleImmutableEntry::getValue));
+        }
+
+        private static SimpleImmutableEntry<String, String> parseKeyValue(String item) {
+            if (StringUtils.isBlank(item)) {
+                return QueryStringParser.EMPTY_ENTRY;
+            }
+
+            int startIndex = item.indexOf("=");
+            if (startIndex == -1) {
+                return new SimpleImmutableEntry<>(item, item);
+            }
+
+            String key = item.substring(0, startIndex);
+            String value = item.substring(startIndex + 1);
+            return new SimpleImmutableEntry<>(key, value);
+        }
     }
 }
