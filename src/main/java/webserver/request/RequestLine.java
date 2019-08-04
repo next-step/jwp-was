@@ -1,12 +1,18 @@
-package webserver;
+package webserver.request;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.StringUtils;
+import webserver.HttpMethod;
+import webserver.URLQuery;
 
 import static utils.StringUtils.endSplit;
 import static utils.StringUtils.frontSplitWithOrigin;
 import static webserver.URLQuery.createUrlQuery;
 
 public class RequestLine {
+
+    private static final Logger logger = LoggerFactory.getLogger(RequestLine.class);
 
     private HttpMethod method;
     private String path;
@@ -44,6 +50,7 @@ public class RequestLine {
     }
 
     public static RequestLine parse(String requestLine) {
+        logger.debug("## " + requestLine);
         StringUtils.requireNotBlank(requestLine, "requestLine must be not null");
         String[] requests = requestLine.split(REQUEST_LINE_DELIMITER);
 
