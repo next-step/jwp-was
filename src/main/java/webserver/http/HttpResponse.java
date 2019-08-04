@@ -4,8 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.Optional;
 
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
@@ -13,21 +11,21 @@ public class HttpResponse {
     private Cookie cookie;
     private HttpHeaders httpHeaders;
     private Model model;
-    private int statusCode;
+    private HttpStatus httpStatus;
     private String redirectPath;
 
     public HttpResponse() {
         this.cookie = new Cookie();
         this.model = new Model();
-        this.statusCode = 200;
+        this.httpStatus = HttpStatus.OK;
         this.httpHeaders = new HttpHeaders();
     }
 
-    public HttpResponse(int statusCode, byte[] body) {
+    public HttpResponse(HttpStatus httpStatus, byte[] body) {
         this.body = body;
         this.cookie = new Cookie();
         this.model = new Model();
-        this.statusCode = statusCode;
+        this.httpStatus = httpStatus;
         this.httpHeaders = new HttpHeaders();
     }
 
@@ -51,21 +49,12 @@ public class HttpResponse {
         return cookie;
     }
 
-    private void setCookies(DataOutputStream dos) {
-        if (cookie.isEmpty()) return;
-
-        String setCookieFormat = "Set-Cookie: %s=%s; Path=/\r\n";
-        cookie.keySet().forEach(key -> {
-            try {
-                dos.writeBytes(String.format(setCookieFormat, key, cookie.get(key)));
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-            }
-        });
+    public void setHttpStatus(HttpStatus httpStatus) {
+        this.httpStatus = httpStatus;
     }
 
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
+    public String getRedirectPath() {
+        return redirectPath;
     }
 
     public void setRedirectPath(String redirectPath) {
@@ -73,52 +62,6 @@ public class HttpResponse {
     }
 
     public void responseByStatus(DataOutputStream dos) {
-        if (statusCode == 200) {
-            response200Header(dos);
-            responseBody(dos);
-        }
-
-        if (statusCode == 302) {
-            response302Header(dos);
-        }
-    }
-
-    private void response200Header(DataOutputStream dos) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Length: " + body.length + "\r\n");
-            setContentType(dos);
-            setCookies(dos);
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void setContentType(DataOutputStream dos) throws IOException {
-        String contentType = Optional.ofNullable(httpHeaders.get("Content-Type"))
-                .orElse("text/html");
-
-        dos.writeBytes("Content-Type: " + contentType + ";charset=utf-8\r\n");
-    }
-
-    private void response302Header(DataOutputStream dos) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: " + redirectPath + "\r\n");
-            setCookies(dos);
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+        this.httpStatus.getResponseConsumer().accept(this, dos);
     }
 }

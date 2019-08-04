@@ -2,6 +2,7 @@ package webserver;
 
 import utils.FileIoUtils;
 import webserver.http.HttpResponse;
+import webserver.http.HttpStatus;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -10,9 +11,9 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public enum  FileResponseEnum {
-    HTML(FileResponseEnum.HTML_FILE_SUFFIX, requestPath -> new HttpResponse(200, getBody(requestPath, FileResponseEnum.TEMPLATE_FILE_PREFIX))),
+    HTML(FileResponseEnum.HTML_FILE_SUFFIX, requestPath -> new HttpResponse(HttpStatus.OK, getBody(requestPath, FileResponseEnum.TEMPLATE_FILE_PREFIX))),
     CSS(FileResponseEnum.CSS_FILE_SUFFIX, requestPath -> {
-        HttpResponse httpResponse = new HttpResponse(200, getBody(requestPath, FileResponseEnum.STATIC_FILE_PREFIX));
+        HttpResponse httpResponse = new HttpResponse(HttpStatus.OK, getBody(requestPath, FileResponseEnum.STATIC_FILE_PREFIX));
         httpResponse.getHttpHeaders().set(FileResponseEnum.CONTENT_TYPE_HEADER, FileResponseEnum.CSS_CONTENT_TYPE);
         return httpResponse;
     });

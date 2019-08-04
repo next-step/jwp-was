@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.HttpStatus;
 
 import java.io.*;
 import java.net.Socket;
@@ -65,7 +66,7 @@ public class RequestHandler implements Runnable {
     private HttpResponse getRedirectHttpResponse(HttpRequest httpRequest, HttpResponse httpResponse, String viewName) {
         String redirectPath = String.format("http://%s%s", httpRequest.getHeaders().get("Host"), viewName.substring(viewName.indexOf(":") + 1));
         httpResponse.setRedirectPath(redirectPath);
-        httpResponse.setStatusCode(302);
+        httpResponse.setHttpStatus(HttpStatus.REDIRECT);
         return httpResponse;
     }
 
