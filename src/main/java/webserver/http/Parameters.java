@@ -7,15 +7,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Parameters {
-    private List<Parameter> parameters;
+    private Map<String, Parameter> parameters;
 
     private Parameters() {
-        parameters = new ArrayList<>();
+        parameters = new HashMap<>();
     }
 
     private Parameters(String queryString) {
         parameters = Arrays.stream(HttpStringUtils.split(queryString, HttpStringType.DELIMITER_AMPERSAND.getType()))
-                .map(Parameter::newInstance).collect(Collectors.toList());
+                .map(Parameter::newInstance).collect(Collectors.toMap(p -> p.getKey(), p -> p));
     }
 
     public static Parameters newInstance(String queryString) {
@@ -29,11 +29,15 @@ public class Parameters {
         return new Parameters();
     }
 
-    public List<Parameter> getParameters() {
-        return Collections.unmodifiableList(parameters);
-    }
-
     public boolean isEmpty() {
         return parameters.size() == 0;
+    }
+
+    public String findByKey (String key) {
+        return parameters.get(key).getValue();
+    }
+
+    public Map<String, Parameter> getParameters() {
+        return Collections.unmodifiableMap(parameters);
     }
 }

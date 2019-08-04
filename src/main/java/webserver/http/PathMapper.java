@@ -1,0 +1,35 @@
+package webserver.http;
+
+import utils.HttpStringType;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+public class PathMapper {
+    private final static Map<String, String> pathMapper;
+
+    static {
+        pathMapper = new HashMap<>();
+        pathMapper.put("/", "/index.html");
+        pathMapper.put("/user/create", "/index.html");
+    }
+
+    private static boolean isMatchPath(String path) {
+        return pathMapper.containsKey(path);
+    }
+
+    public static String getResponsePath(String path) {
+        if (isMatchPath(path)) {
+            return HttpStringType.FILE_PATH_PREFIX.getType() + pathMapper.get(path);
+        }
+
+        String filePath = HttpStringType.FILE_PATH_PREFIX.getType() + path;
+
+        if (!Pattern.matches("^.+(.html)$", path)) {
+            filePath = filePath + HttpStringType.FILE_PATH_EXT.getType();
+        }
+
+        return filePath;
+    }
+}

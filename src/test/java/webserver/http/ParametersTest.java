@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class ParametersTest {
     @ParameterizedTest
     @CsvSource({"field1=value1,1","field1=value1&field2=value2,2"})
-    void 객체생성2(ArgumentsAccessor argumentsAccessor) {
+    void 객체생성(ArgumentsAccessor argumentsAccessor) {
         //when
         Parameters parameters = Parameters.newInstance(argumentsAccessor.getString(0));
 
@@ -35,5 +35,16 @@ public class ParametersTest {
 
         //then
         assertThat(parameters.isEmpty()).isTrue();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"field1=value1,field1,value1","field1=value1&field2=value2,field2,value2"})
+    void findByKey(ArgumentsAccessor argumentsAccessor) {
+        //when
+        Parameters parameters = Parameters.newInstance(argumentsAccessor.getString(0));
+        String value = parameters.findByKey(argumentsAccessor.getString(1));
+
+        //then
+        assertThat(value).isEqualTo(argumentsAccessor.getString(2));
     }
 }

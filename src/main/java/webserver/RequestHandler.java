@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import utils.HttpStringUtils;
 import webserver.http.RequestLine;
+import webserver.service.WebService;
+import webserver.service.WebServiceFactory;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -30,6 +32,11 @@ public class RequestHandler implements Runnable {
             }
 
             RequestLine requestLine = readRequestLine(in);
+            WebService webService = WebServiceFactory.create(requestLine.getPath().getPath());
+            if (webService != null) {
+                webService.process(requestLine);
+            }
+
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = FileIoUtils.loadFileFromClasspath(requestLine.getFilePath());
             response200Header(dos, body.length);
@@ -70,6 +77,7 @@ public class RequestHandler implements Runnable {
                 break;
             }
             sb.append(line);
+            sb.append("\n");
             logger.info("RequestHeader : {}", line);
         };
 

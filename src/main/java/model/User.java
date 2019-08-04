@@ -1,5 +1,7 @@
 package model;
 
+import webserver.http.Parameters;
+
 public class User {
     private String userId;
     private String password;
@@ -11,6 +13,13 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public static User newInstance(Parameters parameters) {
+        return new User(parameters.findByKey("userId")
+                , parameters.findByKey("password")
+                , parameters.findByKey("name")
+                , parameters.findByKey("email"));
     }
 
     public String getUserId() {

@@ -51,7 +51,15 @@
 * step2 요구사항
 - [x] 요구사항 1 : http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
     - 테스트를 위한 참고자료 [string to inputstream](https://www.baeldung.com/convert-string-to-input-stream)
-- [ ] 요구사항 2 : 회원가입 / 결과 -> model.User클래스에 저장
+    
+- [x] 요구사항 2 : 회원가입 / 결과 -> model.User클래스에 저장
+    - [x] 요청 path별로 필요한 서비스 호출 기능 추가하기
+    - [x] webService 인터페이스를 만들고, 상속받아 사용
+    - [x] Map으로 해당 서비스들 미리 만들어두고 Mapper에서 불러와서 사용하도록 설정
+      (step1 요구사항3 참고해서 진행하기)
+    - Parameters : List -> Map으로 변경하기 <String, Parameter>
+      그래야 User객체 저장할때 순서에 구애받지 않고 할 수 있어
+    
 - [ ] 요구사항 3 : form 태그 method를 get에서 post로 수정 / 회원가입 기능 정상 동작하도록 구현
 - [ ] 요구사항 4 : 회원가입 후 index.html로 이동
 - [ ] 요구사항 5 : 로그인 기능 구현 ( 성공,실패 case) / 쿠키사용

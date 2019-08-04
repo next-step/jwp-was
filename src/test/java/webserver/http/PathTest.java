@@ -11,7 +11,8 @@ public class PathTest {
     @ParameterizedTest
     @CsvSource({"/user,/user,true"
             , "/users?userId=javajigi&password=password&name=JaeSung,/users,false"
-            , "/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1,/create,false"})
+            , "/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1,/create,false"
+            , "/user/create?userId=a&password=b&name=c&email=d%40d.com,/user/create,false"})
     void path저장확인(ArgumentsAccessor argumentsAccessor) {
         //when
         Path path = Path.newInstance(argumentsAccessor.getString(0));

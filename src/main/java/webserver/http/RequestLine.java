@@ -3,8 +3,6 @@ package webserver.http;
 import utils.HttpStringType;
 import utils.HttpStringUtils;
 
-import java.util.regex.Pattern;
-
 public class RequestLine {
     private String method;
     private Path path;
@@ -36,18 +34,6 @@ public class RequestLine {
     }
 
     public String getFilePath() {
-        String filePath;
-
-        if ("/".equals(path.getPath())) {
-            return HttpStringType.FILE_PATH_PREFIX.getType() + "/index.html";
-        }
-
-        filePath = HttpStringType.FILE_PATH_PREFIX.getType() + path.getPath();
-
-        if ( !Pattern.matches("^+(.html)$", path.getPath())) {
-            filePath = filePath + HttpStringType.FILE_PATH_EXT.getType();
-        }
-
-        return filePath;
+        return PathMapper.getResponsePath(path.getPath());
     }
 }

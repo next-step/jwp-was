@@ -1,8 +1,8 @@
 package utils;
 
 public enum HttpStringType {
-    PATH_PATTERN("^/([a-zA-Z0-9]+)([?].+)$"),
-    QUERYSTRING_PATTERN("^(.+=.+)+$"),
+    PATH_PATTERN("^(/[a-zA-Z0-9]+)+[?](.+)$"),
+    QUERYSTRING_PATTERN("^([^=&]+=[^=&]+)+(&[^&]+=[^=&]+)*$"),
     DELIMITER_AMPERSAND("&"),
     DELIMITER_EQUAL_SIGN("="),
     DELIMITER_QUESTION_MARK("[?]"),
