@@ -17,7 +17,9 @@ class QueryStringTest {
         return Stream.of(
                 Arguments.of("id=myId", "id", "myId"),
                 Arguments.of("name=myName", "name", "myName"),
-                Arguments.of("pid=5", "pid", "5")
+                Arguments.of("pid=5", "pid", "5"),
+                Arguments.of("title=%EB%88%84%EA%B0%80%20%EB%82%B4%20%EC%B9%98%EC%A6%88%EB%A5%BC%20%EC%98%AE%EA%B2%BC%EC%9D%84%EA%B9%8C%3F", "title", "누가 내 치즈를 옮겼을까?"),
+                Arguments.of("search=%EA%B2%80%EC%83%89%EC%96%B41%2B%EA%B2%80%EC%83%89%EC%96%B42", "search", "검색어1+검색어2")
         );
     }
 
@@ -32,6 +34,13 @@ class QueryStringTest {
         return Stream.of(
                 Arguments.of("checked"),
                 Arguments.of("isConfirm")
+        );
+    }
+
+    private static Stream encodedQueryStringProvider() {
+        return Stream.of(
+                Arguments.of("search=%EB%88%84%EA%B0%80%20%EB%82%B4%20%EC%B9%98%EC%A6%88%EB%A5%BC%20%EC%98%AE%EA%B2%BC%EC%9D%84%EA%B9%8C%3F", ""),
+                Arguments.of("", "")
         );
     }
 

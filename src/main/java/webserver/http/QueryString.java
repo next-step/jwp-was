@@ -2,6 +2,9 @@ package webserver.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Arrays;
 import java.util.Map;
@@ -84,8 +87,16 @@ public class QueryString {
             }
 
             String key = item.substring(0, startIndex);
-            String value = item.substring(startIndex + 1);
+            String value = QueryStringParser.decodeValue(item.substring(startIndex + 1));
             return new SimpleImmutableEntry<>(key, value);
+        }
+
+        private static String decodeValue(String value) {
+            try {
+                return URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
+            } catch (UnsupportedEncodingException ex) {
+                return value;
+            }
         }
     }
 }
