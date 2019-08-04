@@ -6,7 +6,7 @@ import webserver.http.request.RequestUri;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-class ResourceHandlerTest {
+class ResourceLoaderTest {
 
     /**
      * /css/bootstrap.min.css
@@ -17,7 +17,7 @@ class ResourceHandlerTest {
     void static_resource_css() {
         RequestUri requestUri = RequestUri.parse("/css/bootstrap.min.css");
 
-        assertThat(ResourceHandler.getResourcePath(requestUri)).contains("./static");
+        assertThat(ResourceLoader.getResourcePath(requestUri.getPath())).contains("./static");
     }
 
     @DisplayName("uri path에 js가 포함되는 경우, path에 static을 포함하는지")
@@ -25,7 +25,7 @@ class ResourceHandlerTest {
     void static_resource_js() {
         RequestUri requestUri = RequestUri.parse("/css/bootstrap.min.css");
 
-        assertThat(ResourceHandler.getResourcePath(requestUri)).contains("./static");
+        assertThat(ResourceLoader.getResourcePath(requestUri.getPath())).contains("./static");
     }
 
     @DisplayName("template을 load해야하는 경우, path에 template을 포함하는지")
@@ -33,6 +33,6 @@ class ResourceHandlerTest {
     public void template_resource() {
         RequestUri requestUri = RequestUri.parse("/index.html");
 
-        assertThat(ResourceHandler.getResourcePath(requestUri)).contains("./templates");
+        assertThat(ResourceLoader.getResourcePath(requestUri.getPath())).contains("./templates");
     }
 }

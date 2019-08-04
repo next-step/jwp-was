@@ -51,20 +51,8 @@ public class HttpRequest {
         return values.length == HEADER_PAIR_COUNT;
     }
 
-    public RequestLine getRequestLine() {
-        return requestLine;
-    }
-
     public String getRequestUriPath() {
         return requestLine.getRequestUriPath();
-    }
-
-    public boolean isGet() {
-        return requestLine.getMethod().equals(HttpMethod.GET);
-    }
-
-    public boolean isPost() {
-        return requestLine.getMethod().equals(HttpMethod.POST);
     }
 
     public String getHeader(String key) {

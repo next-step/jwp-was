@@ -24,10 +24,6 @@ public class RequestLine {
         return method;
     }
 
-    public RequestUri getUri() {
-        return uri;
-    }
-
     public String getRequestUriPath() {
         return uri.getPath();
     }

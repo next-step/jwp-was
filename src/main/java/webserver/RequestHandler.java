@@ -30,7 +30,7 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
             HttpResponse httpResponse = new HttpResponse(dos);
 
-            RequestDispatcher.process(httpRequest, httpResponse);
+            RequestDispatcher.processRequest(httpRequest, httpResponse);
 
         } catch (IOException e) {
             logger.error(e.getMessage());

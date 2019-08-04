@@ -5,7 +5,7 @@ import utils.FileIoUtils;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class ResourceHandler {
+public class ResourceLoader {
 
     public static String getResourcePath(String path) {
         String prefix = "./templates";
