@@ -25,6 +25,8 @@ public class HttpRequest {
 
     public static final String HTML_FILE_NAMING = ".html";
     public static final String CSS_FILE_NAMING = ".css";
+    public static final String ICO_FILE_NAMING = ".ico";
+    public static final String JS_FILE_NAMING = ".js";
 
     public static final String BASIC_TEMPLATE_PATH = "./templates/";
     public static final String BASIC_RESOURCE_PATH = "./static/";
@@ -51,19 +53,24 @@ public class HttpRequest {
 
     private void setHtmlHeaderMsgParsing(String[] httpSplit){
         String[] separatorMethodPath = httpSplit[0].split(SEPARATOR);
+        if(separatorMethodPath.length == 1){
+            return;
+        }
 
         httpParseVO.setMethod(separatorMethodPath[0]);
         httpParseVO.setUrlPath(setSeparatorUrlParameter(separatorMethodPath[1]));
         httpParseVO.setVersion(separatorMethodPath[2]);
         HttpMethodParameter.HttpParameterParse(httpParseVO, httpSplit);
 
-        if(httpParseVO.getUrlPath().indexOf(HTML_FILE_NAMING) != -1) {
+        if(httpParseVO.getUrlPath().indexOf(HTML_FILE_NAMING) != -1 ||
+                httpParseVO.getUrlPath().indexOf(ICO_FILE_NAMING) != -1) {
             try {
                 readFileHtml();
             } catch (Exception e) {
                 HttpStatus.setPageNotFond(httpParseVO);
             }
-        }else if(httpParseVO.getUrlPath().indexOf(CSS_FILE_NAMING) != -1){
+        }else if(httpParseVO.getUrlPath().indexOf(CSS_FILE_NAMING) != -1 ||
+                httpParseVO.getUrlPath().indexOf(JS_FILE_NAMING) != -1){
             try {
                 readFileCSS();
             } catch (Exception e) {

@@ -2,6 +2,8 @@ package webserver.http;
 
 import webserver.domain.HttpParseVO;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 
 public class HttpMethodParameter {
@@ -53,7 +55,16 @@ public class HttpMethodParameter {
     }
 
     private static String setNullCheck(String[] keyValue){
-        return keyValue.length == 1 ? null : keyValue[1];
+        if(keyValue.length == 1){
+            return null;
+        }else{
+            try {
+                String decodeText = URLDecoder.decode(keyValue[1], "UTF-8");
+                return decodeText;
+            }catch (UnsupportedEncodingException e){
+                return null;
+            }
+        }
     }
 
 }
