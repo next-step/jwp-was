@@ -44,7 +44,7 @@ public class TemplateRequestMapper implements RequestMapper{
     }
 
     @Override
-    public void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public Object handle(HttpRequest httpRequest, HttpResponse httpResponse) {
 
         URL resourceUrl = this.urlCache.get(httpRequest.getRequestURI());
         byte[] body = FileIoUtils.loadFileFromURL(resourceUrl);
@@ -52,6 +52,7 @@ public class TemplateRequestMapper implements RequestMapper{
 
         String mimeType = MimeTypeUtils.guessContentTypeFromName(resourceUrl.getFile(), httpRequest.getHeader(HttpHeaders.ACCEPT));
         httpResponse.setHttpHeader(HttpHeaders.CONTENT_TYPE, mimeType);
+        return null;
     }
 
     public TemplateRequestMapper addResourceMapping(String regex, String destination) {

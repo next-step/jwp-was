@@ -1,5 +1,7 @@
 package webserver.http;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import org.springframework.util.MultiValueMap;
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 
 public class HttpHeaders {
 
+    private static final Logger logger = LoggerFactory.getLogger(HttpHeaders.class);
 
     public static final String ACCEPT = "Accept";
 

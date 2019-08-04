@@ -3,7 +3,7 @@ package webserver.handler;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-public interface ActionHandler {
+public interface ActionHandler<T> {
 
-    void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse);
+    T actionHandle(HttpRequest httpRequest, HttpResponse httpResponse);
 }

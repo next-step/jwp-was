@@ -10,9 +10,9 @@ import webserver.http.HttpResponse;
 
 import java.util.Optional;
 
-public class UserLoginAction implements ActionHandler {
+public class UserLoginAction implements ActionHandler<Void> {
     @Override
-    public void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public Void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
 
         String userId = httpRequest.getParameter("userId");
         String password = httpRequest.getParameter("password");
@@ -21,16 +21,17 @@ public class UserLoginAction implements ActionHandler {
                 .filter(user -> user.getPassword().equals(password));
 
         if(!matchedUser.isPresent()) {
-            httpResponse.setHttpStatus(HttpStatus.PERMANENT_REDIRECT);
+            httpResponse.setHttpStatus(HttpStatus.FOUND);
             httpResponse.setHttpHeader(HttpHeaders.LOCATION, "/user/login_failed.html");
             httpResponse.setHttpHeader(HttpHeaders.SET_COOKIE, "logined=false; Path=/");
-            return ;
+            return null;
         }
 
-
-        httpResponse.setHttpStatus(HttpStatus.PERMANENT_REDIRECT);
+        httpResponse.setHttpStatus(HttpStatus.FOUND);
         httpResponse.setHttpHeader(HttpHeaders.LOCATION, "/index.html");
         httpResponse.setHttpHeader(HttpHeaders.SET_COOKIE, "logined=true; Path=/");
+
+        return null;
     }
 
 }

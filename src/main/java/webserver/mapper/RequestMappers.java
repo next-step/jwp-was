@@ -1,6 +1,8 @@
 package webserver.mapper;
 
 import exceptions.MappingNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
@@ -8,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RequestMappers {
+
+    private static final Logger logger = LoggerFactory.getLogger(RequestMappers.class);
 
     List<RequestMapper> requestMappers;
 
@@ -20,7 +24,11 @@ public class RequestMappers {
     }
 
     public void matchHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
-        getMatchedRequestMapper(httpRequest).handle(httpRequest, httpResponse);
+        RequestMapper matchedRequestMapper = getMatchedRequestMapper(httpRequest);
+
+        logger.debug("matchedRequestMapper : {}", matchedRequestMapper.getClass());
+        matchedRequestMapper.handle(httpRequest, httpResponse);
+
     }
 
     private RequestMapper getMatchedRequestMapper(HttpRequest httpRequest){

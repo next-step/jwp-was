@@ -48,7 +48,7 @@ public class ResourceRequestMapper implements RequestMapper{
     }
 
     @Override
-    public void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public Void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
 
         URL resourceUrl = this.urlCache.get(httpRequest.getRequestURI());
         byte[] body = FileIoUtils.loadFileFromURL(resourceUrl);
@@ -56,6 +56,7 @@ public class ResourceRequestMapper implements RequestMapper{
 
         String mimeType = MimeTypeUtils.guessContentTypeFromName(resourceUrl.getFile(), httpRequest.getHeader(HttpHeaders.ACCEPT));
         httpResponse.setHttpHeader(HttpHeaders.CONTENT_TYPE, mimeType);
+        return null;
     }
 
     public ResourceRequestMapper addResourceMapping(String regex, String destination) {

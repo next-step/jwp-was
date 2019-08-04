@@ -8,9 +8,9 @@ import webserver.http.HttpHeaders;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-public class UserCreatAction implements ActionHandler {
+public class UserCreatAction implements ActionHandler<Void> {
     @Override
-    public void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public Void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
 
         String userId = httpRequest.getParameter("userId");
         String password = httpRequest.getParameter("password");
@@ -22,7 +22,7 @@ public class UserCreatAction implements ActionHandler {
 
         httpResponse.setHttpStatus(HttpStatus.FOUND);
         httpResponse.setHttpHeader(HttpHeaders.LOCATION, "/index.html");
-
+        return null;
     }
 
 }

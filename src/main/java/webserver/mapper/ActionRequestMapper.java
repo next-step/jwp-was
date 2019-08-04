@@ -33,7 +33,7 @@ public class ActionRequestMapper implements RequestMapper {
     }
 
     @Override
-    public void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
-        actionHandler.actionHandle(httpRequest, httpResponse);
+    public Object handle(HttpRequest httpRequest, HttpResponse httpResponse) {
+        return actionHandler.actionHandle(httpRequest, httpResponse);
     }
 }

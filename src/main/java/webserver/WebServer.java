@@ -1,14 +1,14 @@
 package webserver;
 
 import actions.user.UserCreatAction;
+import actions.user.UserListAction;
+import actions.user.UserLoginAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.mapper.ActionRequestMapper;
-import webserver.mapper.RequestMappers;
-import webserver.mapper.ResourceRequestMapper;
-import webserver.mapper.TemplateRequestMapper;
+import webserver.mapper.*;
 import webserver.resolvers.body.BodyResolvers;
 import webserver.resolvers.body.FormBodyResolver;
+import webserver.resolvers.view.HandlebarViewResolver;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -33,9 +33,19 @@ public class WebServer {
 
         TemplateRequestMapper templateRequestMapper = new TemplateRequestMapper("./templates");
 
-        ActionRequestMapper userActionRequestMapper = new ActionRequestMapper("/user/create", new UserCreatAction());
+        ActionRequestMapper userCreatectionRequestMapper = new ActionRequestMapper("/user/create", new UserCreatAction());
+        ActionRequestMapper userLoginActionRequestMapper = new ActionRequestMapper("/user/login", new UserLoginAction());
 
-        RequestMappers requestMappers = RequestMappers.of(resourceRequestMapper, templateRequestMapper, userActionRequestMapper);
+
+        HandlebarViewResolver handlebarViewResolver = HandlebarViewResolver.of("/templates", ".html");
+        ViewActionRequestMapper viewActionRequestMapper = new ViewActionRequestMapper(handlebarViewResolver, new ActionRequestMapper("/user/list", new UserListAction()));
+
+        RequestMappers requestMappers = RequestMappers.of(resourceRequestMapper
+                , templateRequestMapper
+                , userCreatectionRequestMapper
+                , userLoginActionRequestMapper
+                , viewActionRequestMapper
+        );
 
         BodyResolvers bodyResolvers = BodyResolvers.of(new FormBodyResolver());
 
