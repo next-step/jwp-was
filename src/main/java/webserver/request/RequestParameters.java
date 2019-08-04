@@ -100,7 +100,7 @@ public class RequestParameters {
 		private static List<Parameter> parseQueryString(String queryString) {
 			return Arrays.stream(queryString.split(AMPERSAND))
 				.filter(StringUtils::isNotBlank)
-				.map(QueryStringParser::parsingQuery)
+				.map(QueryStringParser::parseQuery)
 				.filter(QueryStringParser::hasNotValue)
 				.map(it -> new Parameter(it[0], it[1]))
 				.collect(Collectors.toList());
@@ -114,7 +114,7 @@ public class RequestParameters {
 			return it.length == QUERY_MIN_SIZE;
 		}
 
-		private static String[] parsingQuery(String it) {
+		private static String[] parseQuery(String it) {
 			return it.split(EQUALS);
 		}
 	}
