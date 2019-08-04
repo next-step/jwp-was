@@ -1,8 +1,8 @@
 package webserver.http;
 
 import org.junit.jupiter.api.Test;
-import request.RequestHeader;
-import response.Response;
+import request.HttpRequest;
+import response.HttpResponse;
 import handler.RequestEngine;
 
 import java.io.BufferedReader;
@@ -23,11 +23,11 @@ public class RequestStrategyTest {
                 "Accept-Language: en-us\n" +
                 "Accept-Encoding: gzip, deflate\n" +
                 "User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)"));
-        RequestHeader requestHeader = new RequestHeader(bufferedReader);
+        HttpRequest httpRequest = new HttpRequest(bufferedReader);
 
         RequestEngine requestEngine = new RequestEngine();
-        Response response = requestEngine.run(requestHeader);
+        HttpResponse httpResponse = requestEngine.run(httpRequest);
 
-        assertThat(response.getBody()).isNotEmpty();
+        assertThat(httpResponse.getBody()).isNotEmpty();
     }
 }

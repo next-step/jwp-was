@@ -2,8 +2,8 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import request.RequestHeader;
-import response.Response;
+import request.HttpRequest;
+import response.HttpResponse;
 import handler.RequestEngine;
 
 import java.io.BufferedReader;
@@ -26,12 +26,12 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-            RequestHeader requestHeader = new RequestHeader(bufferedReader);
-            logger.debug(requestHeader.toString());
+            HttpRequest httpRequest = new HttpRequest(bufferedReader);
+            logger.debug(httpRequest.toString());
 
             RequestEngine requestEngine = new RequestEngine();
-            Response response = requestEngine.run(requestHeader);
-            response.write(out);
+            HttpResponse httpResponse = requestEngine.run(httpRequest);
+            httpResponse.write(out);
         } catch (Exception e) {
             logger.error("main error", e);
         }

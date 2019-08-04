@@ -11,8 +11,8 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.User;
 import org.springframework.util.MultiValueMap;
-import request.RequestHeader;
-import response.Response;
+import request.HttpRequest;
+import response.HttpResponse;
 import utils.FileIoUtils;
 
 import java.io.IOException;
@@ -28,63 +28,51 @@ import static request.HttpMethod.POST;
 public class Controller {
 
     @RequestMapping(method = GET, path = {"", "/"})
-    public Response main(RequestHeader requestHeader) {
-        return Response.of("Hello World".getBytes());
+    public HttpResponse main(HttpRequest httpRequest) {
+        return HttpResponse.success("Hello World".getBytes());
     }
 
     @RequestMapping(method = GET, path = "/index.html")
-    public Response index(RequestHeader requestHeader) {
-        try {
-            return Response.of(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
-        } catch (Exception e) {
-            throw new RuntimeException("read index file exception: ", e);
-        }
+    public HttpResponse index(HttpRequest httpRequest) throws IOException, URISyntaxException {
+        return HttpResponse.success(createOutputStream("./templates/index.html"));
     }
 
     @RequestMapping(method = GET, path = "/user/form.html")
-    public Response userForm(RequestHeader requestHeader) {
-        try {
-            return Response.of(FileIoUtils.loadFileFromClasspath("./templates/user/form.html"));
-        } catch (Exception e) {
-            throw new RuntimeException("read index file exception: ", e);
-        }
+    public HttpResponse userForm(HttpRequest httpRequest) throws IOException, URISyntaxException {
+        return HttpResponse.success(createOutputStream("./templates/user/form.html"));
     }
 
     @RequestMapping(method = GET, path = "/user/login.html")
-    public Response userLoginForm(RequestHeader requestHeader) {
-        try {
-            return Response.of(FileIoUtils.loadFileFromClasspath("./templates/user/login.html"));
-        } catch (Exception e) {
-            throw new RuntimeException("read index file exception: ", e);
-        }
+    public HttpResponse userLoginForm(HttpRequest httpRequest) throws IOException, URISyntaxException {
+        return HttpResponse.success(createOutputStream("./templates/user/login.html"));
     }
 
     @RequestMapping(method = POST, path = "/user/create")
-    public Response userCreate(RequestHeader requestHeader) throws IOException, URISyntaxException {
-        MultiValueMap<String, String> bodyMap = requestHeader.getBodyMap();
+    public HttpResponse userCreate(HttpRequest httpRequest) throws IOException, URISyntaxException {
+        MultiValueMap<String, String> bodyMap = httpRequest.getBodyMap();
         User user = new User(bodyMap.getFirst("userId"), bodyMap.getFirst("password"), bodyMap.getFirst("name"), bodyMap.getFirst("email"));
         DataBase.addUser(user);
-        return Response.redirect(FileIoUtils.loadFileFromClasspath("./templates/index.html"), requestHeader.getHost());
+        return HttpResponse.redirect(createOutputStream("./templates/index.html"), "http://localhost:8080/index.html");
     }
 
     @RequestMapping(method = POST, path = "/user/login")
-    public Response userLogin(RequestHeader requestHeader) {
-        MultiValueMap<String, String> bodyMap = requestHeader.getBodyMap();
+    public HttpResponse userLogin(HttpRequest httpRequest) {
+        MultiValueMap<String, String> bodyMap = httpRequest.getBodyMap();
         User user = DataBase.findUserById(bodyMap.getFirst("userId"));
 
         if (user == null ) {
-            return Response.loginFail("user not exist".getBytes());
+            return HttpResponse.loginFail("user not exist".getBytes());
         } else if (Objects.equals(bodyMap.getFirst("password"), bodyMap.getFirst("password"))) {
-            return Response.loginFail("password not matched".getBytes());
+            return HttpResponse.loginFail("password not matched".getBytes());
         }
 
-        return Response.loginSuccess("login success".getBytes());
+        return HttpResponse.loginSuccess("login success".getBytes());
     }
 
     @RequestMapping(method = GET, path = "/user/list.html")
-    public Response userList(RequestHeader requestHeader) throws IOException, URISyntaxException {
-        if ("logined=false".equals(requestHeader.getCookie())) {
-            return Response.redirect(FileIoUtils.loadFileFromClasspath("./templates/index.html"), requestHeader.getHost());
+    public HttpResponse userList(HttpRequest httpRequest) throws IOException, URISyntaxException {
+        if (!httpRequest.getCookie().isLogined()) {
+            return HttpResponse.redirect(createOutputStream("./templates/index.html"), "http://localhost:8080/index.html");
         }
 
         TemplateLoader loader = new ClassPathTemplateLoader();
@@ -95,6 +83,10 @@ public class Controller {
         Template template = handlebars.compile("user/list");
         String profilePage = template.apply(DataBase.findAll());
 
-        return Response.of(profilePage.getBytes());
+        return HttpResponse.success(profilePage.getBytes());
+    }
+
+    private byte[] createOutputStream(String path) throws IOException, URISyntaxException {
+        return FileIoUtils.loadFileFromClasspath(path);
     }
 }

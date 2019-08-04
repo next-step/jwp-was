@@ -5,11 +5,15 @@
 package webserver.http;
 
 import org.junit.jupiter.api.Test;
-import request.RequestHeader;
+import request.HttpRequest;
 import request.RequestLine;
-import response.Response;
+import response.HttpResponse;
 import controller.Controller;
 import handler.RequestMappingHandler;
+import response.HttpStatus;
+
+import java.io.BufferedReader;
+import java.io.StringReader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,9 +25,9 @@ public class RequestStrategyMappingTest {
     @Test
     void index_request_mapping_test() {
         RequestLine requestLine = RequestLine.parse("GET /index.html HTTP/1.1");
-        RequestHeader requestHeader = new RequestHeader(requestLine);
-        Response response = new RequestMappingHandler(new Controller()).request(requestHeader);
-        String stringBody = new String(response.getBody());
+        HttpRequest httpRequest = new HttpRequest(requestLine);
+        HttpResponse httpResponse = new RequestMappingHandler(new Controller()).request(httpRequest);
+        String stringBody = new String(httpResponse.getBody());
 
         assertThat(stringBody).isNotEmpty();
     }
@@ -31,10 +35,22 @@ public class RequestStrategyMappingTest {
     @Test
     void main_request_mapping_test() {
         RequestLine requestLine = RequestLine.parse("GET / HTTP/1.1");
-        RequestHeader requestHeader = new RequestHeader(requestLine);
-        Response response = new RequestMappingHandler(new Controller()).request(requestHeader);
-        String stringBody = new String(response.getBody());
+        HttpRequest httpRequest = new HttpRequest(requestLine);
+        HttpResponse httpResponse = new RequestMappingHandler(new Controller()).request(httpRequest);
+        String stringBody = new String(httpResponse.getBody());
 
+        assertThat(stringBody).isNotEmpty();
+    }
+
+    @Test
+    void login_failed_mapping_test() throws Exception {
+        BufferedReader bufferedReader = new BufferedReader(new StringReader("GET /user/list.html HTTP/1.1\n" +
+                "Cookie: logined=false\n"));
+        HttpRequest httpRequest = new HttpRequest(bufferedReader);
+        HttpResponse httpResponse = new RequestMappingHandler(new Controller()).request(httpRequest);
+        String stringBody = new String(httpResponse.getBody());
+
+        assertThat(httpResponse.getHttpStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(stringBody).isNotEmpty();
     }
 }

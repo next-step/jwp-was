@@ -1,7 +1,7 @@
 package handler;
 
-import request.RequestHeader;
-import response.Response;
+import request.HttpRequest;
+import response.HttpResponse;
 import controller.Controller;
 
 import java.util.Arrays;
@@ -13,11 +13,11 @@ import java.util.List;
 public class RequestEngine {
     private List<RequestStrategy> requestStrategies = Arrays.asList(new RequestMappingHandler(new Controller()), new StaticMappingHandler());
 
-    public Response run(RequestHeader requestHeader) {
+    public HttpResponse run(HttpRequest httpRequest) {
         return requestStrategies.stream()
-                .filter(requestStrategy -> requestStrategy.isSupport(requestHeader))
+                .filter(requestStrategy -> requestStrategy.isSupport(httpRequest))
                 .findAny()
                 .orElseThrow(() -> new RuntimeException("It's not supported request."))
-                .request(requestHeader);
+                .request(httpRequest);
     }
 }

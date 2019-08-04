@@ -4,21 +4,26 @@
  */
 package request;
 
+import header.Cookie;
+import header.setter.HeaderSetter;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
+import static response.HeaderResponse.KEY_VALUE_SPLITER;
+
 /**
  * Created by youngjae.havi on 2019-08-02
  */
-public class RequestHeader {
-    @RequestHeaderProperty("RequestLine")
+public class HttpRequest {
+    @RequestHeaderProperty(converter = RequestLine.class)
     private RequestLine requestLine;
 
     @RequestHeaderProperty("HOST")
@@ -42,8 +47,8 @@ public class RequestHeader {
     @RequestHeaderProperty("Cache-Control")
     private String cacheControl;
 
-    @RequestHeaderProperty("Cookie")
-    private String cookie;
+    @RequestHeaderProperty(value = "Cookie", converter = Cookie.class)
+    private Cookie cookie = new Cookie();
 
     @RequestHeaderProperty("Content-Type")
     private String contentType;
@@ -54,26 +59,28 @@ public class RequestHeader {
     @RequestHeaderProperty
     private String body;
 
-    @RequestHeaderProperty
     private MultiValueMap<String, String> bodyMap;
 
-    public RequestHeader(RequestLine requestLine) {
+    public HttpRequest(RequestLine requestLine) {
         this.requestLine = requestLine;
     }
 
-    public RequestHeader(BufferedReader bufferedReader) throws Exception {
-        boolean isRequestLine = true;
-        String line;
-        while ((line = bufferedReader.readLine()) != null && !StringUtils.isEmpty(line)) {
-            if (isRequestLine) {
-                this.requestLine = RequestLine.parse(line);
-                isRequestLine = false;
-                continue;
-            }
+    public HttpRequest(BufferedReader bufferedReader) throws Exception {
+        setHeaders(bufferedReader);
+        setBodyIfNotGet(bufferedReader);
+    }
 
-            String[] keyValue = line.split(":");
+    private void setHeaders(BufferedReader bufferedReader) throws IOException, IllegalAccessException, InstantiationException {
+        String line;
+        boolean isRequestLine = true;
+        while ((line = bufferedReader.readLine()) != null && !StringUtils.isEmpty(line)) {
+            String[] keyValue = line.split(KEY_VALUE_SPLITER);
+            boolean finalIsRequestLine = isRequestLine;
             Optional<Field> optionalField = Arrays.stream(this.getClass().getDeclaredFields())
-                    .filter(f -> f.getAnnotationsByType(RequestHeaderProperty.class)[0].value().equalsIgnoreCase(keyValue[0]))
+                    .filter(f -> {
+                        RequestHeaderProperty[] propertys = f.getAnnotationsByType(RequestHeaderProperty.class);
+                        return finalIsRequestLine || (propertys.length > 0 && propertys[0].value().equalsIgnoreCase(keyValue[0]));
+                    })
                     .findAny();
 
             if (!optionalField.isPresent()) {
@@ -82,9 +89,13 @@ public class RequestHeader {
 
             Field field = optionalField.get();
             field.setAccessible(true);
-            field.set(this, keyValue[1]);
+            HeaderSetter headerSetter = field.getAnnotationsByType(RequestHeaderProperty.class)[0].converter().newInstance();
+            field.set(this, headerSetter.setEliment(keyValue));
+            isRequestLine = false;
         }
+    }
 
+    private void setBodyIfNotGet(BufferedReader bufferedReader) throws IOException {
         if (HttpMethod.GET != requestLine.getMethod()) {
             String body = IOUtils.readData(bufferedReader, Integer.parseInt(Objects.requireNonNull(this.contentLength).trim()));
             if (!StringUtils.isEmpty(body)) {
@@ -126,7 +137,7 @@ public class RequestHeader {
         return cacheControl;
     }
 
-    public String getCookie() {
+    public Cookie getCookie() {
         return cookie;
     }
 
