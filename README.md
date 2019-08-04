@@ -47,3 +47,13 @@
 - [x] @CsvSource 테스트케이스 적용해보기
     - 참고 : [4.4. CSV Literals](https://www.baeldung.com/parameterized-tests-junit-5)
     - ArgumentsAccessor 적용 (여러개의 assertThat 결과 확인 가능)
+
+* step2 요구사항
+- [x] 요구사항 1 : http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
+    - 테스트를 위한 참고자료 [string to inputstream](https://www.baeldung.com/convert-string-to-input-stream)
+- [ ] 요구사항 2 : 회원가입 / 결과 -> model.User클래스에 저장
+- [ ] 요구사항 3 : form 태그 method를 get에서 post로 수정 / 회원가입 기능 정상 동작하도록 구현
+- [ ] 요구사항 4 : 회원가입 후 index.html로 이동
+- [ ] 요구사항 5 : 로그인 기능 구현 ( 성공,실패 case) / 쿠키사용
+- [ ] 요구사항 6 : 로그인상태인 경우 user/list보여주기 / 아닌경우 로그인페이지
+- [ ] 요구사항 7 : stylesheet 지원하도록 구현

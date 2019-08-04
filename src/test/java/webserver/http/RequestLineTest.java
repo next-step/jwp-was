@@ -28,4 +28,16 @@ class RequestLineTest {
             RequestLine.parse(input);
         });
     }
+
+    @ParameterizedTest
+    @CsvSource({"GET / HTTP/1.1,./templates/index.html"
+            , "GET /user HTTP/1.1,./templates/user.html"})
+    void getFilePath(ArgumentsAccessor argumentAccessor) {
+        //when
+        RequestLine requestLine = RequestLine.parse(argumentAccessor.getString(0));
+        String filePath = requestLine.getFilePath();
+
+        //then
+        assertThat(filePath).isEqualTo(argumentAccessor.getString(1));
+    }
 }

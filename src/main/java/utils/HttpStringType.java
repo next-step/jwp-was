@@ -6,7 +6,9 @@ public enum HttpStringType {
     DELIMITER_AMPERSAND("&"),
     DELIMITER_EQUAL_SIGN("="),
     DELIMITER_QUESTION_MARK("[?]"),
-    DELIMITER_SPACE(" ");
+    DELIMITER_SPACE(" "),
+    FILE_PATH_PREFIX("./templates"),
+    FILE_PATH_EXT(".html");
 
     private String type;
 
