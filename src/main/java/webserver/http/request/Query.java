@@ -8,6 +8,9 @@ import java.util.*;
 
 public class Query {
 
+    private static final String AMPERSAND = "&";
+    private static final String EQUALS = "=";
+
     private final Map<Key, Value> query = new HashMap<>();
 
     public Query() {}
@@ -17,13 +20,13 @@ public class Query {
             return;
         }
 
-        final List<String> queries = Arrays.asList(queryString.split("&"));
+        final List<String> queries = Arrays.asList(queryString.split(AMPERSAND));
         queries.forEach(query -> {
-            if (!StringUtils.contains(query, '=')) {
+            if (!StringUtils.contains(query, EQUALS)) {
                 return;
             }
 
-            final String[] splitQuery = query.split("=");
+            final String[] splitQuery = query.split(EQUALS);
             final int INDEX_OF_KEY = 0;
             final int INDEX_OF_VALUE = 1;
 

@@ -14,11 +14,13 @@ dependencies {
     implementation 'com.github.jknack:handlebars:4.1.2'
     implementation 'org.springframework:spring-core:5.1.8.RELEASE'
     implementation 'org.apache.commons:commons-lang3:3.9'
+    implementation 'org.apache.commons:commons-collections4:4.4'
     implementation 'org.projectlombok:lombok:1.18.8'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.5.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.5.1'
     testImplementation 'org.assertj:assertj-core:3.12.2'
+    testImplementation 'org.mockito:mockito-all:1.10.19'
 
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
 }

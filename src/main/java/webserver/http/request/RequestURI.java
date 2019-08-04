@@ -15,7 +15,7 @@ public class RequestURI {
         this.query = new Query(uri.getQuery());
     }
 
-    public String getPath() {
+    public String path() {
         return uri.getPath();
     }
 }

@@ -13,6 +13,6 @@ class RequestURITest {
         RequestURI requestURI = new RequestURI("/users?userId=javajigi&password=password&name=JaeSung");
 
         // then
-        assertThat(requestURI.getPath()).isEqualTo("/users");
+        assertThat(requestURI.path()).isEqualTo("/users");
     }
 }
