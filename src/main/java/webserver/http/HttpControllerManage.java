@@ -10,9 +10,11 @@ public class HttpControllerManage {
 
         if(UserController.getUserControllerUrl(httpParseVO.getUrlPath())){
             if(method.equals("GET")){
-                UserController.newInstance(httpParseVO).doGet();
+                UserController.newInstance().doGet(httpParseVO);
+                //new UserController(httpParseVO).doGet();
             }else if(method.equals("POST")){
-                UserController.newInstance(httpParseVO).doPost();
+                UserController.newInstance().doPost(httpParseVO);
+                //new UserController(httpParseVO).doPost();
             }
         }
     }

@@ -11,6 +11,7 @@ public class DataBase {
     private static Map<String, User> users = Maps.newHashMap();
 
     public static void addUser(User user) {
+        user.setIndex(users.size() + 1);
         users.put(user.getUserId(), user);
     }
 

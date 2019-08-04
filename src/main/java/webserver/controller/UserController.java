@@ -22,15 +22,10 @@ public class UserController implements ControllerCreator {
             Arrays.asList("/user/create", "/user/login", "/user/list");
 
     private static UserController userController;
-    private HttpParseVO httpParseVO;
 
-    public UserController(HttpParseVO httpParseVO) {
-        this.httpParseVO = httpParseVO;
-    }
-
-    public static UserController newInstance(HttpParseVO httpParseVO){
+    public static UserController newInstance(){
         if(userController == null){
-            userController = new UserController(httpParseVO);
+            userController = new UserController();
         }
 
         return userController;
@@ -45,7 +40,7 @@ public class UserController implements ControllerCreator {
     }
 
     @Override
-    public void doPost() {
+    public void doPost(HttpParseVO httpParseVO) {
         if(httpParseVO.getUrlPath().equals("/user/create")){
             User user = new User(httpParseVO.getParameter().get("userId"),
                     httpParseVO.getParameter().get("password"),
@@ -73,11 +68,11 @@ public class UserController implements ControllerCreator {
     }
 
     @Override
-    public void doGet() {
+    public void doGet(HttpParseVO httpParseVO) {
         if(httpParseVO.getUrlPath().equals("/user/list")){
             try {
                 httpParseVO.setUrlPath(httpParseVO.getUrlPath() + HttpRequest.HTML_FILE_NAMING);
-                readFileHtml();
+                readFileHtml(httpParseVO);
 
                 Handlebars handlebars = new Handlebars();
                 Template template = handlebars.
@@ -92,7 +87,7 @@ public class UserController implements ControllerCreator {
         }
     }
 
-    private void readFileHtml() throws IOException, URISyntaxException {
+    private void readFileHtml(HttpParseVO httpParseVO) throws IOException, URISyntaxException {
         httpParseVO.setReturnContent(
                 new String(FileIoUtils.loadFileFromClasspath(
                     HttpRequest.BASIC_TEMPLATE_PATH +
