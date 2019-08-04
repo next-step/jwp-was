@@ -29,22 +29,22 @@ public class Controller {
 
     @RequestMapping(method = GET, path = {"", "/"})
     public HttpResponse main(HttpRequest httpRequest) {
-        return HttpResponse.of("Hello World".getBytes());
+        return HttpResponse.success("Hello World".getBytes());
     }
 
     @RequestMapping(method = GET, path = "/index.html")
     public HttpResponse index(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        return HttpResponse.of(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
+        return HttpResponse.success(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
     }
 
     @RequestMapping(method = GET, path = "/user/form.html")
     public HttpResponse userForm(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        return HttpResponse.of(FileIoUtils.loadFileFromClasspath("./templates/user/form.html"));
+        return HttpResponse.success(FileIoUtils.loadFileFromClasspath("./templates/user/form.html"));
     }
 
     @RequestMapping(method = GET, path = "/user/login.html")
     public HttpResponse userLoginForm(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        return HttpResponse.of(FileIoUtils.loadFileFromClasspath("./templates/user/login.html"));
+        return HttpResponse.success(FileIoUtils.loadFileFromClasspath("./templates/user/login.html"));
     }
 
     @RequestMapping(method = POST, path = "/user/create")
@@ -52,7 +52,7 @@ public class Controller {
         MultiValueMap<String, String> bodyMap = httpRequest.getBodyMap();
         User user = new User(bodyMap.getFirst("userId"), bodyMap.getFirst("password"), bodyMap.getFirst("name"), bodyMap.getFirst("email"));
         DataBase.addUser(user);
-        return HttpResponse.redirect(FileIoUtils.loadFileFromClasspath("./templates/index.html"), httpRequest.getHost());
+        return HttpResponse.redirect(FileIoUtils.loadFileFromClasspath("./templates/index.html"), "http://localhost:8080/index.html");
     }
 
     @RequestMapping(method = POST, path = "/user/login")
@@ -71,8 +71,8 @@ public class Controller {
 
     @RequestMapping(method = GET, path = "/user/list.html")
     public HttpResponse userList(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        if ("logined=false".equals(httpRequest.getCookie())) {
-            return HttpResponse.redirect(FileIoUtils.loadFileFromClasspath("./templates/index.html"), httpRequest.getHost());
+        if (!httpRequest.getCookie().isLogined()) {
+            return HttpResponse.redirect(FileIoUtils.loadFileFromClasspath("./templates/index.html"), "http://localhost:8080/index.html");
         }
 
         TemplateLoader loader = new ClassPathTemplateLoader();
@@ -83,6 +83,6 @@ public class Controller {
         Template template = handlebars.compile("user/list");
         String profilePage = template.apply(DataBase.findAll());
 
-        return HttpResponse.of(profilePage.getBytes());
+        return HttpResponse.success(profilePage.getBytes());
     }
 }

@@ -10,6 +10,10 @@ import request.RequestLine;
 import response.HttpResponse;
 import controller.Controller;
 import handler.RequestMappingHandler;
+import response.HttpStatus;
+
+import java.io.BufferedReader;
+import java.io.StringReader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,6 +39,18 @@ public class RequestStrategyMappingTest {
         HttpResponse httpResponse = new RequestMappingHandler(new Controller()).request(httpRequest);
         String stringBody = new String(httpResponse.getBody());
 
+        assertThat(stringBody).isNotEmpty();
+    }
+
+    @Test
+    void login_failed_mapping_test() throws Exception {
+        BufferedReader bufferedReader = new BufferedReader(new StringReader("GET /user/list.html HTTP/1.1\n" +
+                "Cookie: logined=false\n"));
+        HttpRequest httpRequest = new HttpRequest(bufferedReader);
+        HttpResponse httpResponse = new RequestMappingHandler(new Controller()).request(httpRequest);
+        String stringBody = new String(httpResponse.getBody());
+
+        assertThat(httpResponse.getHttpStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(stringBody).isNotEmpty();
     }
 }

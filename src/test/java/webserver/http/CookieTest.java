@@ -7,6 +7,7 @@ import request.HttpRequest;
 import java.io.BufferedReader;
 import java.io.StringReader;
 
+import static header.Cookie.LOGIN_KEY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -21,6 +22,6 @@ public class CookieTest {
         HttpRequest httpRequest = new HttpRequest(bufferedReader);
 
         assertThat(httpRequest.getRequestLine().getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(httpRequest.getCookie().get("logined")).isEqualTo("false");
+        assertThat(httpRequest.getCookie().get(LOGIN_KEY)).isEqualTo("false");
     }
 }

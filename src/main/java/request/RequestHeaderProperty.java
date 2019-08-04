@@ -4,8 +4,8 @@
  */
 package request;
 
-import header.HeaderSetter;
-import header.StringSetter;
+import header.setter.HeaderSetter;
+import header.setter.StringSetter;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
