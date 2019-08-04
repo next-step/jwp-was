@@ -1,5 +1,8 @@
 package webserver.http.request;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import utils.IOUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,10 +15,12 @@ public class HttpRequest {
 
     private RequestLine requestLine;
     private Map<String, String> headers;
+    private RequestBody requestBody;
 
-    private HttpRequest(RequestLine requestLine, Map<String, String> headers) {
+    private HttpRequest(RequestLine requestLine, Map<String, String> headers, RequestBody requestBody) {
         this.requestLine = requestLine;
         this.headers = headers;
+        this.requestBody = requestBody;
     }
 
     public static HttpRequest parse(BufferedReader bufferedReader) throws IOException {
@@ -33,7 +38,12 @@ public class HttpRequest {
             }
         }
 
-        return new HttpRequest(requestLine, headers);
+        String requestBody = StringUtils.EMPTY;
+        if (headers.get("Content-Length") != null) {
+            requestBody = IOUtils.readData(bufferedReader, Integer.parseInt(headers.get("Content-Length")));
+        }
+
+        return new HttpRequest(requestLine, headers, RequestBody.parse(requestBody));
     }
 
     private static boolean hasValues(String[] values) {
@@ -45,8 +55,20 @@ public class HttpRequest {
         return requestLine;
     }
 
+    public boolean isPost() {
+        return requestLine.getMethod().equals(HttpMethod.POST);
+    }
+
+    public boolean isGet() {
+        return requestLine.getMethod().equals(HttpMethod.GET);
+    }
+
     public String getHeader(String key) {
         return headers.get(key);
+    }
+
+    public RequestBody getRequestBody() {
+        return requestBody;
     }
 
     @Override

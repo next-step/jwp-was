@@ -4,11 +4,11 @@ public class RequestLine {
 
     private static final String REQUEST_DELIMITER =" ";
 
-    private String method;
+    private HttpMethod method;
     private RequestUri uri;
     private String version;
 
-    private RequestLine(String method, RequestUri uri, String version) {
+    private RequestLine(HttpMethod method, RequestUri uri, String version) {
         this.method = method;
         this.uri = uri;
         this.version = version;
@@ -17,10 +17,10 @@ public class RequestLine {
     public static RequestLine parse(String requestLineValue) {
         String[] values = requestLineValue.split(REQUEST_DELIMITER);
 
-        return new RequestLine(values[0], RequestUri.parse(values[1]), values[2]);
+        return new RequestLine(HttpMethod.find(values[0]), RequestUri.parse(values[1]), values[2]);
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
