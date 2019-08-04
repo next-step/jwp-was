@@ -15,7 +15,7 @@ class RequestHandlerTest {
 
     @DisplayName("uri에 슬래시(/)만 입력해도 /index.html 경로로 설정한다")
     @Test
-    void 잘못된_경로는_로그를_남긴다() throws IOException {
+    void uri에_슬래시만_입력해도_index_html로_설정() throws IOException {
         // given
         final String requestHeader = String.join("\r\n",
                 "GET / HTTP/1.1",

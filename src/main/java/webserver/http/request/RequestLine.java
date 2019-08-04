@@ -75,4 +75,8 @@ public class RequestLine {
     public String path() {
         return requestURI.path();
     }
+
+    public Query query() {
+        return requestURI.getQuery();
+    }
 }

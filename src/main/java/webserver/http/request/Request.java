@@ -38,13 +38,11 @@ public class Request {
         this.requestLine = RequestLine.parse(requestLine);
     }
 
-    public String path(final String defaultPath) {
-        final String SLASH = "/";
-
-        if (requestLine == null || SLASH.equals(requestLine.path())) {
-            return SLASH + defaultPath;
-        }
-
+    public String path() {
         return requestLine.path();
+    }
+
+    public Query query() {
+        return requestLine.query();
     }
 }

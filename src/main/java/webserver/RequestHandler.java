@@ -1,8 +1,11 @@
 package webserver;
 
+import controller.Controller;
+import controller.UserController;
+import exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
+import view.ResourceViewResolver;
 import webserver.http.request.Request;
 
 import java.io.*;
@@ -16,7 +19,7 @@ public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private Socket connection;
+    private final Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -37,23 +40,26 @@ public class RequestHandler implements Runnable {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
             List<String> httpRequestHeaders = new ArrayList<>();
-            while (bufferedReader.ready()) {
+            do {
                 httpRequestHeaders.add(bufferedReader.readLine());
-            }
+            } while (bufferedReader.ready());
 
             Request request = new Request(httpRequestHeaders);
 
-            final String defaultPath = "index.html";
-            byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + request.path(defaultPath));
+            Controller userController = UserController.getInstance();
+            String path = userController.get(request);
+            ResourceViewResolver resourceView = new ResourceViewResolver(path);
 
             DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            response200Header(dos, resourceView.getResponse().length);
+            responseBody(dos, resourceView.getResponse());
         } catch (FileNotFoundException e) {
-            logger.error(e.getMessage());
+            logger.error("File not found : " + e.getMessage());
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
             e.printStackTrace();
+        } catch (NotFoundException e) {
+            logger.error(e.getMessage());
         }
     }
 
