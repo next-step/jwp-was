@@ -34,17 +34,17 @@ public class Controller {
 
     @RequestMapping(method = GET, path = "/index.html")
     public HttpResponse index(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        return HttpResponse.success(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
+        return HttpResponse.success(createOutputStream("./templates/index.html"));
     }
 
     @RequestMapping(method = GET, path = "/user/form.html")
     public HttpResponse userForm(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        return HttpResponse.success(FileIoUtils.loadFileFromClasspath("./templates/user/form.html"));
+        return HttpResponse.success(createOutputStream("./templates/user/form.html"));
     }
 
     @RequestMapping(method = GET, path = "/user/login.html")
     public HttpResponse userLoginForm(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        return HttpResponse.success(FileIoUtils.loadFileFromClasspath("./templates/user/login.html"));
+        return HttpResponse.success(createOutputStream("./templates/user/login.html"));
     }
 
     @RequestMapping(method = POST, path = "/user/create")
@@ -52,7 +52,7 @@ public class Controller {
         MultiValueMap<String, String> bodyMap = httpRequest.getBodyMap();
         User user = new User(bodyMap.getFirst("userId"), bodyMap.getFirst("password"), bodyMap.getFirst("name"), bodyMap.getFirst("email"));
         DataBase.addUser(user);
-        return HttpResponse.redirect(FileIoUtils.loadFileFromClasspath("./templates/index.html"), "http://localhost:8080/index.html");
+        return HttpResponse.redirect(createOutputStream("./templates/index.html"), "http://localhost:8080/index.html");
     }
 
     @RequestMapping(method = POST, path = "/user/login")
@@ -72,7 +72,7 @@ public class Controller {
     @RequestMapping(method = GET, path = "/user/list.html")
     public HttpResponse userList(HttpRequest httpRequest) throws IOException, URISyntaxException {
         if (!httpRequest.getCookie().isLogined()) {
-            return HttpResponse.redirect(FileIoUtils.loadFileFromClasspath("./templates/index.html"), "http://localhost:8080/index.html");
+            return HttpResponse.redirect(createOutputStream("./templates/index.html"), "http://localhost:8080/index.html");
         }
 
         TemplateLoader loader = new ClassPathTemplateLoader();
@@ -84,5 +84,9 @@ public class Controller {
         String profilePage = template.apply(DataBase.findAll());
 
         return HttpResponse.success(profilePage.getBytes());
+    }
+
+    private byte[] createOutputStream(String path) throws IOException, URISyntaxException {
+        return FileIoUtils.loadFileFromClasspath(path);
     }
 }
