@@ -2,17 +2,17 @@ package webserver.view;
 
 import db.DataBase;
 import model.User;
-import webserver.RequestMappingHandler;
+import webserver.AbstractRequestMappingHandler;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
 
-public class LoginHandler implements RequestMappingHandler {
+public class LoginHandler extends AbstractRequestMappingHandler {
 
     @Override
-    public void handleRequest(HttpRequest request, HttpResponse response) throws IOException {
+    public void process(HttpRequest request, HttpResponse response) throws IOException {
         RequestBody requestBody = request.getRequestBody();
 
         User user = DataBase.findUserById(requestBody.getValue("userId"));

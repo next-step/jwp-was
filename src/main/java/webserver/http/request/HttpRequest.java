@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static webserver.http.HttpHeaders.CONTENT_LENGTH;
+
 public class HttpRequest {
     private static final String END_OF_LINE = "";
     private static final String HEADER_DELIMITER = ": ";
@@ -39,7 +41,7 @@ public class HttpRequest {
         }
 
         String requestBody = StringUtils.EMPTY;
-        if (headers.get("Content-Length") != null) {
+        if (headers.get(CONTENT_LENGTH) != null) {
             requestBody = IOUtils.readData(bufferedReader, Integer.parseInt(headers.get("Content-Length")));
         }
 
@@ -57,6 +59,14 @@ public class HttpRequest {
 
     public String getHeader(String key) {
         return headers.get(key);
+    }
+
+    public boolean isPostRequest() {
+        return HttpMethod.POST == requestLine.getMethod();
+    }
+
+    public boolean isGetRequest() {
+        return HttpMethod.GET == requestLine.getMethod();
     }
 
     public RequestBody getRequestBody() {

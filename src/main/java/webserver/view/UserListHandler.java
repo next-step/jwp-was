@@ -7,7 +7,7 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import com.google.common.base.Charsets;
 import db.DataBase;
 import model.User;
-import webserver.RequestMappingHandler;
+import webserver.AbstractRequestMappingHandler;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
@@ -16,12 +16,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserListHandler implements RequestMappingHandler {
+import static webserver.http.HttpHeaders.COOKIE;
+
+public class UserListHandler extends AbstractRequestMappingHandler {
+
+    public static final String LOGIN_TRUE_COOKIE = "logined=true";
 
     @Override
-    public void handleRequest(HttpRequest request, HttpResponse response) throws IOException {
+    public void process(HttpRequest request, HttpResponse response) throws IOException {
         if("/user/list".equals(request.getRequestUriPath())) {
-            if ("logined=true".equals(request.getHeader("Cookie"))) {
+            if (LOGIN_TRUE_COOKIE.equals(request.getHeader(COOKIE))) {
                 byte[] body = loadTemplate();
 
                 response.response200Header(body.length, "text/html;");
