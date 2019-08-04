@@ -6,20 +6,16 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.URISyntaxException;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private static final String TEMPLATE_FILE_PREFIX = "/templates";
     private static final String HTML_FILE_SUFFIX = ".html";
-    private static final String STATIC_FILE_PREFIX = "/static";
-    private static final String CSS_FILE_SUFFIX = ".css";
     private static final String ERROR_TEMPLATES_PREFIX = "error";
 
     private Socket connection;
@@ -39,34 +35,37 @@ public class RequestHandler implements Runnable {
 
             HttpResponse httpResponse = getResponse(httpRequest);
             httpResponse.responseByStatus(dos);
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    HttpResponse getResponse(HttpRequest httpRequest) throws IOException, URISyntaxException {
+    HttpResponse getResponse(HttpRequest httpRequest) {
         String requestPath = httpRequest.getUri().getPath();
         HttpResponse httpResponse = new HttpResponse();
-        if (requestPath.endsWith(HTML_FILE_SUFFIX)) {
-            return new HttpResponse(200, FileIoUtils.loadFileFromClasspath("." + TEMPLATE_FILE_PREFIX + requestPath));
-        }
 
-        if (requestPath.endsWith(CSS_FILE_SUFFIX)) {
-            httpResponse = new HttpResponse(200, FileIoUtils.loadFileFromClasspath("." + STATIC_FILE_PREFIX + requestPath));
-            httpResponse.getHttpHeaders().set("Content-Type", "text/css");
-            return httpResponse;
-        }
+        return FileResponseEnum.getFileResponse(requestPath)
+                .orElse(getViewMappingResponse(httpRequest, httpResponse));
+    }
 
+    private HttpResponse getViewMappingResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
         String viewName = getViewName(httpRequest, httpResponse);
         if (viewName.startsWith("redirect:")) {
-            String redirectPath = String.format("http://%s%s", httpRequest.getHeaders().get("Host"), viewName.substring(viewName.indexOf(":") + 1));
-            httpResponse.setRedirectPath(redirectPath);
-            httpResponse.setStatusCode(302);
-            return httpResponse;
+            return getRedirectHttpResponse(httpRequest, httpResponse, viewName);
         }
 
-        byte[] body = viewMapping(httpRequest, httpResponse).getBytes();
-        httpResponse.setBody(body);
+        try {
+            httpResponse.setBody(viewMapping(httpRequest, httpResponse).getBytes());
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+        return httpResponse;
+    }
+
+    private HttpResponse getRedirectHttpResponse(HttpRequest httpRequest, HttpResponse httpResponse, String viewName) {
+        String redirectPath = String.format("http://%s%s", httpRequest.getHeaders().get("Host"), viewName.substring(viewName.indexOf(":") + 1));
+        httpResponse.setRedirectPath(redirectPath);
+        httpResponse.setStatusCode(302);
         return httpResponse;
     }
 
