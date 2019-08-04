@@ -21,6 +21,8 @@ public abstract class RequestMappingHandler implements Handler {
         switch (httpRequest.getMethod()) {
             case GET:
                 return doGet(httpRequest);
+            case POST:
+                return doPost(httpRequest);
             default:
                  throw new UnsupportedOperationException();
         }
@@ -32,6 +34,10 @@ public abstract class RequestMappingHandler implements Handler {
     }
 
     protected HttpResponse doGet(HttpRequest httpRequest) throws Exception {
+        throw new UnsupportedOperationException();
+    }
+
+    protected HttpResponse doPost(HttpRequest httpRequest) throws Exception {
         throw new UnsupportedOperationException();
     }
 

@@ -35,6 +35,30 @@ public class HttpRequestTest {
     }
 
     @Test
+    @DisplayName("Parse POST request with body")
+    void parsePostRequest() throws IOException {
+        BufferedReader br = createInputStream(
+                "POST /user/create HTTP/1.1",
+                "Host: localhost:8080",
+                "Connection: keep-alive",
+                "Content-Length: 93",
+                "Content-Type: application/x-www-form-urlencoded",
+                "Accept: */*",
+                "",
+                "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net"
+        );
+
+        HttpRequest request = HttpRequest.parse(br);
+
+        assertThat(request.getBody())
+                .hasSize(4)
+                .containsEntry("userId", "javajigi")
+                .containsEntry("password", "password")
+                .containsEntry("name", "박재성")
+                .containsEntry("email", "javajigi@slipp.net");
+    }
+
+    @Test
     @DisplayName("If first line is not Request-Line, should fail to parse")
     void parseFromInvalidRequest_fail() {
         BufferedReader br = createInputStream(

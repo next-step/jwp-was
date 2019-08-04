@@ -2,7 +2,8 @@ package webserver.http;
 
 public enum HttpStatusCode {
 
-    OK(200);
+    OK(200),
+    FOUND(302);
 
     private int statusCode;
 

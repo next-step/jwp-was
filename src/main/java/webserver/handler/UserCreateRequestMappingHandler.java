@@ -22,6 +22,14 @@ public class UserCreateRequestMappingHandler extends RequestMappingHandler {
     }
 
     @Override
+    protected HttpResponse doPost(HttpRequest httpRequest) throws Exception {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", viewResolver.getContentType());
+        byte[] body = viewResolver.resolve("/index.html");
+        return HttpResponse.redirect(headers, body);
+    }
+
+    @Override
     protected String getRequestMapping() {
         return "/user/create";
     }

@@ -3,7 +3,7 @@ package webserver.http;
 import java.util.Arrays;
 
 public enum HttpMethod {
-    GET;
+    GET, POST;
 
     public static HttpMethod of(String method) {
         return Arrays.stream(values())

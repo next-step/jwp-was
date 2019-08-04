@@ -21,6 +21,10 @@ public class HttpResponse {
         return new HttpResponse(HttpStatusCode.OK, headers, body);
     }
 
+    public static HttpResponse redirect(Map<String, String> headers, byte[] body) {
+        return new HttpResponse(HttpStatusCode.FOUND, headers, body);
+    }
+
     public void write (DataOutputStream dos) throws Exception {
         dos.writeBytes("HTTP/1.1 " + httpStatusCode.getStatusCode() + " " + httpStatusCode.getDescription() + NEW_LINE);
         dos.writeBytes("Content-Type: " + headers.get("Content-Type") + NEW_LINE);

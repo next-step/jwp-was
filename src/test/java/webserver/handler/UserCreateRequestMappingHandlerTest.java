@@ -23,8 +23,8 @@ public class UserCreateRequestMappingHandlerTest {
     }
 
     @Test
-    @DisplayName("Redirect to index page")
-    void doHandle() throws Exception {
+    @DisplayName("Move user create page")
+    void doGet() throws Exception {
         HttpRequest httpRequest = HttpRequest.parse(HttpRequestTest.createInputStream(
                 "GET /user/create HTTP/1.1",
                 "Host: www.nowhere123.com",
@@ -38,6 +38,27 @@ public class UserCreateRequestMappingHandlerTest {
 
         assertThat(httpResponse).isNotNull();
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatusCode.OK);
+        assertThat(httpResponse.getBody()).isNotEmpty();
+    }
+
+    @Test
+    @DisplayName("Move user create page")
+    void doPost() throws Exception {
+        HttpRequest httpRequest = HttpRequest.parse(HttpRequestTest.createInputStream(
+                "POST /user/create HTTP/1.1",
+                "Host: localhost:8080",
+                "Connection: keep-alive",
+                "Content-Length: 59",
+                "Content-Type: application/x-www-form-urlencoded",
+                "Accept: */*",
+                "",
+                "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net"
+        ));
+
+        HttpResponse httpResponse = handler.doHandle(httpRequest);
+
+        assertThat(httpResponse).isNotNull();
+        assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatusCode.FOUND);
         assertThat(httpResponse.getBody()).isNotEmpty();
     }
 
