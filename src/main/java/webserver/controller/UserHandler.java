@@ -1,4 +1,4 @@
-package webserver;
+package webserver.controller;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
@@ -7,8 +7,11 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import com.google.common.base.Charsets;
 import db.DataBase;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.RequestMappingHandler;
 import webserver.http.request.HttpRequest;
-import webserver.http.request.RequestUri;
+import webserver.http.request.RequestBody;
 import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
@@ -17,13 +20,24 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GetRequestHandler implements MethodRequestHandler {
+public class UserHandler implements RequestMappingHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserHandler.class);
 
     @Override
     public void handleRequest(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-        RequestUri uri = request.getRequestLine().getUri();
+        RequestBody requestBody = request.getRequestBody();
 
-        if(uri.getPath().contains("/user/list")) {
+        if ("/user/create".equals(request.getRequestUriPath())) {
+            User user = new User(requestBody.getValue("userId"), requestBody.getValue("password"),
+                    requestBody.getValue("name"), requestBody.getValue("email"));
+            DataBase.addUser(user);
+            logger.debug("User : {}", user);
+
+            response.response302Header("/index.html", false);
+        }
+
+        if("/user/list".equals(request.getRequestUriPath()) || "/user/list.html".equals(request.getRequestUriPath())) {
             if ("logined=true".equals(request.getHeader("Cookie"))) {
                 byte[] body = loadTemplate();
 
@@ -33,12 +47,6 @@ public class GetRequestHandler implements MethodRequestHandler {
             } else {
                 response.response302Header("/user/login.html", false);
             }
-        } else {
-            String resourcePath = ResourceHandler.getResourcePath(uri);
-            byte [] body = ResourceHandler.loadResource(resourcePath);
-
-            response.response200Header(body.length,ResourceHandler.resourceContentType(uri));
-            response.responseBody(body);
         }
     }
 

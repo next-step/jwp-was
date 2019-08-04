@@ -55,12 +55,16 @@ public class HttpRequest {
         return requestLine;
     }
 
-    public boolean isPost() {
-        return requestLine.getMethod().equals(HttpMethod.POST);
+    public String getRequestUriPath() {
+        return requestLine.getRequestUriPath();
     }
 
     public boolean isGet() {
         return requestLine.getMethod().equals(HttpMethod.GET);
+    }
+
+    public boolean isPost() {
+        return requestLine.getMethod().equals(HttpMethod.POST);
     }
 
     public String getHeader(String key) {

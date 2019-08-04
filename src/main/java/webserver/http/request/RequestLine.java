@@ -28,6 +28,10 @@ public class RequestLine {
         return uri;
     }
 
+    public String getRequestUriPath() {
+        return uri.getPath();
+    }
+
     public String getVersion() {
         return version;
     }

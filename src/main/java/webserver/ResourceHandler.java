@@ -1,21 +1,20 @@
 package webserver;
 
 import utils.FileIoUtils;
-import webserver.http.request.RequestUri;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 public class ResourceHandler {
 
-    public static String getResourcePath(RequestUri uri) {
+    public static String getResourcePath(String path) {
         String prefix = "./templates";
 
-        if (isStaticResource(uri.getPath())) {
+        if (isStaticResource(path)) {
             prefix = "./static";
         }
 
-        return prefix + uri.getPath();
+        return prefix + path;
     }
 
     private static boolean isStaticResource(String path) {
@@ -26,10 +25,11 @@ public class ResourceHandler {
         return FileIoUtils.loadFileFromClasspath(path);
     }
 
-    public static String resourceContentType(RequestUri uri) {
-        if(uri.getPath().contains("js"))
+    public static String resourceContentType(String path) {
+        if(path.contains("js"))
             return "text/javascript;";
-        if(uri.getPath().contains("css"))
+
+        if(path.contains("css"))
             return "text/css;";
 
         return "text/html;";
