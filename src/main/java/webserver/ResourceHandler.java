@@ -27,9 +27,6 @@ public class ResourceHandler {
         String name = resourceNameResolver.resolveName(path);
         URL resource = classLoader.getResource(name);
 
-        System.out.println(name);
-        System.out.println(resource.getFile());
-
         if (resource == null) {
             throw new HttpException(StatusCode.NOT_FOUND);
         }

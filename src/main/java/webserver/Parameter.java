@@ -4,33 +4,33 @@ import utils.MapUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.toMap;
 import static utils.StringUtils.endSplit;
 import static utils.StringUtils.frontSplitWithOrigin;
 
-public class URLQuery {
+public class Parameter {
 
     private static final String QUERY_FIELD_DELIMITER = "&";
     private static final char KEY_VALUE_DELIMITER = '=';
 
-    private Map<String, String> queryMap;
+    private Map<String, String> parameterMap;
 
-    public URLQuery(Map<String, String> queryMap) {
-        this.queryMap = queryMap;
+    public Parameter(Map<String, String> parameterMap) {
+        this.parameterMap = parameterMap;
     }
 
     /**
      * @param query is key=value string split '&'
      * @return key/value query map
      */
-    public static URLQuery createUrlQuery(String query) {
+    public static Parameter parseParameter(String query) {
         String[] parameters = query.split(QUERY_FIELD_DELIMITER);
 
         if (parameters.length == 0) {
-            return new URLQuery(emptyMap());
+            return new Parameter(emptyMap());
         }
 
         Map<String, String> queryMap = new HashMap<>(parameters.length);
@@ -38,23 +38,35 @@ public class URLQuery {
             String key = frontSplitWithOrigin(parameter, KEY_VALUE_DELIMITER);
             MapUtils.putIfKeyNotBlank(queryMap, key, endSplit(parameter, KEY_VALUE_DELIMITER));
         }
-        return new URLQuery(queryMap);
+        return new Parameter(queryMap);
     }
 
-    public Map<String, String> getQueryMap() {
-        return queryMap;
+    /**
+     * parameter merge policy is sequential
+     * duplicate key is overwritten
+     */
+    public static Parameter of(List<Parameter> parameters) {
+        return new Parameter(parameters.stream()
+                .filter(Objects::nonNull)
+                .map(Parameter::getParameterMap)
+                .flatMap(map -> map.entrySet().stream())
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (p1, p2) -> p2)));
+    }
+
+    public Map<String, String> getParameterMap() {
+        return parameterMap;
     }
 
     /**
      * @return if parameter is empty or decoding fail, return null
      */
     public String getParameter(String key) {
-        if (! queryMap.containsKey(key)) {
+        if (! parameterMap.containsKey(key)) {
             return null;
         }
 
         try {
-            return URLDecoder.decode(queryMap.get(key), "UTF-8");
+            return URLDecoder.decode(parameterMap.get(key), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             return null;
         }

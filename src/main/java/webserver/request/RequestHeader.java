@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.MapUtils;
 import utils.StringUtils;
-import webserver.RequestHandler;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,14 +17,10 @@ public class RequestHeader {
 
     private static final char HEADER_DELIMITER = ':';
 
-    private String host;
-    private String accept;
     private Map<String, String> headers;
 
     public RequestHeader(Map<String, String> headers) {
         this.headers = headers;
-        this.host = headers.get("Host");
-        this.accept = headers.get("Accept");
     }
 
     public static RequestHeader parse(List<String> requestHeaders) {
@@ -41,11 +36,19 @@ public class RequestHeader {
     }
 
     public String getHost() {
-        return host;
+        return headers.get("Host");
     }
 
     public String getAccept() {
-        return accept;
+        return headers.get("Accept");
+    }
+
+    public String getContentType() {
+        return headers.get("Content-Type");
+    }
+
+    public Integer getContentLength() {
+        return Integer.valueOf(headers.get("Content-Length"));
     }
 
     public Map<String, String> getHeaders() {

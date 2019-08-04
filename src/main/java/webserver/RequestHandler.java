@@ -2,7 +2,7 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.StringUtils;
+import webserver.request.RequestBody;
 import webserver.request.RequestHeader;
 import webserver.request.RequestHolder;
 import webserver.request.RequestLine;
@@ -10,10 +10,9 @@ import webserver.servlet.RegistrationServlet;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.google.common.collect.ImmutableList.of;
+import static utils.IOUtils.readLines;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -44,15 +43,11 @@ public class RequestHandler implements Runnable {
 
     private RequestHolder createRequestHolder(InputStream in) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        List<String> requestHeaders = new ArrayList<>();
         RequestLine requestLine = RequestLine.parse(reader.readLine());
+        RequestHeader requestHeader = RequestHeader.parse(readLines(reader));
+        RequestBody requestBody = RequestBody.parse(reader, requestHeader);
 
-        String header;
-        while (StringUtils.isNotBlank(header = reader.readLine())) {
-            requestHeaders.add(header);
-        }
-
-        return new RequestHolder(requestLine, RequestHeader.parse(requestHeaders));
+        return new RequestHolder(requestLine, requestHeader, requestBody);
     }
 
 
