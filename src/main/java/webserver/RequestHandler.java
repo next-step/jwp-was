@@ -32,10 +32,8 @@ public class RequestHandler implements Runnable {
 
             RequestDispatcher.processRequest(httpRequest, httpResponse);
 
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
     }
 }
