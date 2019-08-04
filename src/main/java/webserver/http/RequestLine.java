@@ -23,7 +23,7 @@ public class RequestLine {
         return requestURL.getPath();
     }
 
-    public String getParameters(String key) {
+    public String getParameter(String key) {
         return requestURL.getQuery(key);
     }
 

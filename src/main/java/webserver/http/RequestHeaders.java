@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class RequestHeaders {
-    private Map<String, Object> headers = new HashMap<>();
+    private Map<String, String> headers = new HashMap<>();
 
     public void add(String key, String value) {
         if (StringUtils.isBlank(value)) return;
@@ -24,7 +24,7 @@ public class RequestHeaders {
         }
     }
 
-    public Object get(String key) {
+    public String get(String key) {
         return headers.getOrDefault(key, "");
     }
 

@@ -22,7 +22,7 @@ public class RequestLineTest {
         assertThat(GET_QUERYSTRING.getMethod()).isEqualTo("GET");
         assertThat(GET_QUERYSTRING.getPath()).isEqualTo("/users");
         assertThat(GET_QUERYSTRING.getVersion()).isEqualTo("HTTP/1.1");
-        assertThat(GET_QUERYSTRING.getParameters("userId")).isEqualTo("javajigi");
+        assertThat(GET_QUERYSTRING.getParameter("userId")).isEqualTo("javajigi");
     }
 
     @Test

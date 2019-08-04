@@ -1,15 +1,17 @@
 package webserver;
 
+import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
+import utils.StringUtils;
+import webserver.http.RequestHeaders;
+import webserver.http.RequestLine;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
-import webserver.http.RequestHeaders;
-import webserver.http.RequestLine;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -33,6 +35,20 @@ public class RequestHandler implements Runnable {
             while (!"".equals(line = br.readLine())) {
                 if (null == line) break;
                 requestHeaders.add(line);
+            }
+
+            if ("GET".equals(requestLine.getMethod()) && requestLine.getPath().indexOf("/user/create") > -1) {
+                    User newUser = new User(
+                            requestLine.getParameter("userId"),
+                            requestLine.getParameter("password"),
+                            StringUtils.unescape(requestLine.getParameter("name")),
+                            StringUtils.unescape(requestLine.getParameter("email"))
+                    );
+
+                    DataOutputStream dos = new DataOutputStream(out);
+                    byte[] body = newUser.toString().getBytes();
+                    response200Header(dos, body.length);
+                    responseBody(dos, body);
             }
 
             DataOutputStream dos = new DataOutputStream(out);
