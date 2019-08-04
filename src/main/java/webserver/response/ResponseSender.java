@@ -9,8 +9,11 @@ import webserver.request.RequestHolder;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
+import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.joining;
 
 public class ResponseSender {
 
@@ -45,6 +48,16 @@ public class ResponseSender {
         if (lengthOfBodyContent > 0) {
             dos.writeBytes("Content-Type: " + contentType + ";charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+        }
+
+        if (responseHolder.hasCookie()) {
+            String cookies = of(responseHolder.getCookies())
+                    .map(Map::entrySet)
+                    .map(entires -> entires.stream()
+                            .map(entry -> entry.getKey() + "=" + entry.getValue())
+                            .collect(joining(",")))
+                    .orElse("");
+            dos.writeBytes("Cookie: " + cookies);
         }
 
         dos.writeBytes("\r\n");

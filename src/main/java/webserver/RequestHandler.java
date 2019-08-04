@@ -7,6 +7,7 @@ import webserver.request.RequestHeader;
 import webserver.request.RequestHolder;
 import webserver.request.RequestLine;
 import webserver.response.ResponseHolder;
+import webserver.servlet.LoginServlet;
 import webserver.servlet.RegistrationServlet;
 
 import java.io.*;
@@ -23,7 +24,7 @@ public class RequestHandler implements Runnable {
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
-        this.httpProcessor = new HttpProcessor(of(new RegistrationServlet()));
+        this.httpProcessor = new HttpProcessor(of(new RegistrationServlet(), new LoginServlet()));
     }
 
     public void run() {
