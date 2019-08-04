@@ -1,9 +1,8 @@
-package webserver.service;
+package service;
 
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.RequestHeader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +32,10 @@ public class UserService {
 
         logger.debug("add user into user registry, user: {}", user);
         return users.put(user.getUserId(), user);
+    }
+
+    public User get(final String userId) {
+        return users.get(userId);
     }
 
 }

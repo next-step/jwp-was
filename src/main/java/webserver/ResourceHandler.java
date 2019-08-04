@@ -12,17 +12,23 @@ public class ResourceHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHeader.class);
 
-    private ResourceNameResolver resourceNameResolver;
+    private ResourceNameResolver resourceNameResolver = new ResourceNameResolver();
     private ClassLoader classLoader;
 
     public ResourceHandler() {
-        this.resourceNameResolver = new ResourceNameResolver();
         this.classLoader = Thread.currentThread().getContextClassLoader();
+    }
+
+    public ResourceHandler(ClassLoader classLoader) {
+        this.classLoader = classLoader;
     }
 
     public String getContents(String path) {
         String name = resourceNameResolver.resolveName(path);
         URL resource = classLoader.getResource(name);
+
+        System.out.println(name);
+        System.out.println(resource.getFile());
 
         if (resource == null) {
             throw new HttpException(StatusCode.NOT_FOUND);

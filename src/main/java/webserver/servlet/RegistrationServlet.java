@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import webserver.URLQuery;
 import webserver.request.RequestHeader;
 import webserver.request.RequestHolder;
-import webserver.service.UserService;
+import service.UserService;
 
 public class RegistrationServlet implements Servlet{
 
