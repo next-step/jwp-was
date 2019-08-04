@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class QueryStringTest {
     private static Stream oneKeyValueQueryStringProvider() {
@@ -55,17 +56,21 @@ class QueryStringTest {
     @MethodSource("twoKeyValueQueryStringProvider")
     void should_ContainsTwoKeys_When_ParseTwoKeyValues(String queryString, String key1, String value1, String key2) {
         QueryString qs = QueryString.parse(queryString);
-        assertThat(qs.containsKey(key1)).isTrue();
-        assertThat(qs.containsKey(key2)).isTrue();
+        assertAll(
+                () -> assertThat(qs.containsKey(key1)).isTrue(),
+                () -> assertThat(qs.containsKey(key2)).isTrue()
+        );
     }
 
     @Test
     @DisplayName("세개의 항목을 갖는 쿼리스트링의 키 추출")
     void should_ContainsThreeKeys_When_ParseThreeKeyValues() {
         QueryString qs = QueryString.parse("cate=15&from=10&to=30");
-        assertThat(qs.containsKey("cate")).isTrue();
-        assertThat(qs.containsKey("from")).isTrue();
-        assertThat(qs.containsKey("to")).isTrue();
+        assertAll(
+                () -> assertThat(qs.containsKey("cate")).isTrue(),
+                () -> assertThat(qs.containsKey("from")).isTrue(),
+                () -> assertThat(qs.containsKey("to")).isTrue()
+        );
     }
 
     @Test
@@ -74,9 +79,11 @@ class QueryStringTest {
         QueryString qs = QueryString.parse("id=myId&name=myName");
         Set<String> keys = qs.keys();
 
-        assertThat(keys.size()).isEqualTo(2);
-        assertThat(keys.contains("id")).isTrue();
-        assertThat(keys.contains("name")).isTrue();
+        assertAll(
+                () -> assertThat(keys.size()).isEqualTo(2),
+                () -> assertThat(keys.contains("id")).isTrue(),
+                () -> assertThat(keys.contains("name")).isTrue()
+        );
     }
 
     @Test
@@ -100,8 +107,10 @@ class QueryStringTest {
     @MethodSource("twoKeyValueQueryStringProvider")
     void should_ReturnTwoValues(String queryString, String key1, String value1, String key2, String value2) {
         QueryString qs = QueryString.parse(queryString);
-        assertThat(qs.get(key1)).isEqualTo(value1);
-        assertThat(qs.get(key2)).isEqualTo(value2);
+        assertAll(
+                () -> assertThat(qs.get(key1)).isEqualTo(value1),
+                () -> assertThat(qs.get(key2)).isEqualTo(value2)
+        );
     }
 
     @DisplayName("키만 존재하고 값이 없을 때 키를 값으로 사용")
