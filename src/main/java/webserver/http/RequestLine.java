@@ -42,15 +42,18 @@ class RequestLine {
             HttpMethod method = HttpMethod.valueOf(lineSplit[0]);
             String path = lineSplit[1];
             HttpVersion httpVersion = HttpVersion.of(lineSplit[2]);
-
-            int queryStringStartIndex = path.indexOf("?");
-            String queryStringSource = queryStringStartIndex > -1 ? path.substring(queryStringStartIndex + 1) : "";
-            QueryString queryString = QueryString.parse(queryStringSource);
+            QueryString queryString = RequestLineParser.parseQueryString(path);
             return new RequestLine(method, path, httpVersion, queryString);
         }
 
         private static boolean validate(String[] lineSplit) {
             return lineSplit != null && lineSplit.length > 2;
+        }
+
+        private static QueryString parseQueryString(String path) {
+            int queryStringStartIndex = path.indexOf("?");
+            String queryStringSource = queryStringStartIndex > -1 ? path.substring(queryStringStartIndex + 1) : "";
+            return QueryString.parse(queryStringSource);
         }
     }
 }
