@@ -9,6 +9,9 @@ import java.util.Map;
 public class Headers {
     private static final String HEADER_DELIMITER = ":";
     private static final int BEGIN_INDEX = 0;
+    public static final String COMMA = ",";
+    public static final String ACCEPT_NAME = "Accept";
+    public static final String LOCATION = "Location";
 
     private Map<String, String> headers = new HashMap<>();
 
@@ -21,5 +24,21 @@ public class Headers {
         String name = rawHeader.substring(BEGIN_INDEX, delimiterIndex);
         String value = rawHeader.substring(delimiterIndex + 1);
         headers.put(name.trim(), value.trim());
+    }
+
+    public void addLocation(String value) {
+        headers.put(LOCATION, value);
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public String getAccept() {
+        return headers.get(ACCEPT_NAME);
+    }
+
+    public String getContentTypeByAccept() {
+        return getAccept().split(COMMA)[0];
     }
 }

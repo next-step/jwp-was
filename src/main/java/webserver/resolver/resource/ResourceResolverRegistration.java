@@ -1,4 +1,4 @@
-package webserver;
+package webserver.resolver.resource;
 
 import utils.FileUtils;
 import webserver.request.HttpRequest;
@@ -8,11 +8,11 @@ import java.util.Set;
 /**
  * Created by hspark on 2019-08-05.
  */
-public class FileResolverRegistration {
+public class ResourceResolverRegistration {
     private Set<String> suffixSet;
     private String resourcePath;
 
-    public FileResolverRegistration(Set<String> suffixSet, String resourcePath) {
+    public ResourceResolverRegistration(Set<String> suffixSet, String resourcePath) {
         this.suffixSet = suffixSet;
         this.resourcePath = resourcePath;
     }

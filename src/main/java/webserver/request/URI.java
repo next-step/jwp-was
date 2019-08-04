@@ -5,7 +5,6 @@ import utils.FileUtils;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Created by hspark on 2019-08-01.
@@ -40,8 +39,8 @@ public class URI {
 		return queryString;
 	}
 
-	public Optional<String> get(String key) {
-		return requestParameters.getOne(key);
+	public String get(String key) {
+		return requestParameters.getOne(key).get();
 	}
 
 	public List<String> getAll(String key) {

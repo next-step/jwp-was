@@ -26,6 +26,11 @@ public class HttpRequest {
         return requestLine.getRequestUrl().getPath();
     }
 
+    public String getAttribute(String name) {
+        return requestLine.getRequestUrl().get(name);
+    }
+
+
     public static HttpRequestBuilder builder() {
         return new HttpRequestBuilder();
     }

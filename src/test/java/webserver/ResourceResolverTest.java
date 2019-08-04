@@ -7,6 +7,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.request.HttpRequest;
+import webserver.resolver.resource.ResourceResolver;
+import webserver.response.HttpResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -15,15 +17,15 @@ import java.util.stream.Stream;
 /**
  * Created by hspark on 2019-08-05.
  */
-class FileResolverTest {
-    private static final Logger log = LoggerFactory.getLogger(FileResolverTest.class);
-    public FileResolver fileResolver = new FileResolver();
+class ResourceResolverTest {
+    private static final Logger log = LoggerFactory.getLogger(ResourceResolverTest.class);
+    public ResourceResolver resourceResolver = new ResourceResolver();
 
     @ParameterizedTest(name = "httpRequest : {0}")
     @MethodSource("getTestSources")
     void test_file_resolve(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        byte[] body = fileResolver.resolve(httpRequest);
-        log.debug("file : {}", new String(body));
+        HttpResponse httpResponse = resourceResolver.resolve(httpRequest);
+        log.debug("file : {}", new String(httpResponse.getBody()));
     }
 
     private static Stream<Arguments> getTestSources() {

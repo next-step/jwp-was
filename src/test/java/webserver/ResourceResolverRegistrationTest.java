@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import webserver.request.HttpRequest;
+import webserver.resolver.resource.ResourceResolverRegistration;
 
 import java.util.Set;
 import java.util.stream.Stream;
@@ -15,17 +16,17 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 /**
  * Created by hspark on 2019-08-05.
  */
-class FileResolverRegistrationTest {
+class ResourceResolverRegistrationTest {
 
     @ParameterizedTest(name = "suffixSet : {0}, classPath : {1}, successHttpRequest : {2}, failHttpRequest : {3}")
     @MethodSource("getTestSources")
     void test_resolve(Set<String> suffixSet, String classPath, HttpRequest httpRequest, HttpRequest faultHttpRequest) {
-        FileResolverRegistration fileResolverRegistration = new FileResolverRegistration(suffixSet, classPath);
-        assertThat(fileResolverRegistration.isTarget(httpRequest.getPath())).isTrue();
-        assertThat(fileResolverRegistration.resolve(httpRequest)).isEqualTo(classPath + httpRequest.getPath());
+        ResourceResolverRegistration resourceResolverRegistration = new ResourceResolverRegistration(suffixSet, classPath);
+        assertThat(resourceResolverRegistration.isTarget(httpRequest.getPath())).isTrue();
+        assertThat(resourceResolverRegistration.resolve(httpRequest)).isEqualTo(classPath + httpRequest.getPath());
 
-        assertThat(fileResolverRegistration.isTarget(faultHttpRequest.getPath())).isFalse();
-        assertThatThrownBy(() -> fileResolverRegistration.resolve(faultHttpRequest));
+        assertThat(resourceResolverRegistration.isTarget(faultHttpRequest.getPath())).isFalse();
+        assertThatThrownBy(() -> resourceResolverRegistration.resolve(faultHttpRequest));
 
     }
 
