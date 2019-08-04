@@ -3,64 +3,53 @@ package webserver.http;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class RequestLineTest {
-    @Test
-    @DisplayName("메서드 추출")
-    void parseMethod() {
-        RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
+    private static Stream requestLineProvider() {
+        return Stream.of(
+                Arguments.of("GET /users HTTP/1.1", "GET", "/users", "HTTP/1.1"),
+                Arguments.of("POST /users HTTP/1.1", "POST", "/users", "HTTP/1.1"),
+                Arguments.of("GET /products HTTP/1.1", "GET", "/products", "HTTP/1.1"),
+                Arguments.of("GET /users HTTP/2", "GET", "/users", "HTTP/2"),
+                Arguments.of("GET /users?id=myId HTTP/1.1", "GET", "/users?id=myId", "HTTP/1.1"),
+                Arguments.of("GET /users?id=myId&name=myName HTTP/1.1", "GET", "/users?id=myId&name=myName", "HTTP/1.1")
+        );
     }
 
-    @Test
-    @DisplayName("메서드 추출2")
-    void parseOtherMethod() {
-        RequestLine requestLine = RequestLine.parse("POST /users HTTP/1.1");
-        assertThat(requestLine.getMethod()).isEqualTo("POST");
+    private static Stream queryStringProvider() {
+        return Stream.of(
+                Arguments.of("GET /users?id=myId HTTP/1.1", "id=myId"),
+                Arguments.of("GET /users?uid=myUserId&name=myName HTTP/1.1", "uid=myUserId&name=myName"),
+                Arguments.of("GET /users HTTP/1.1", "")
+        );
     }
 
-    @Test
-    @DisplayName("경로 추출")
-    void parsePath() {
-        RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
-        assertThat(requestLine.getPath()).isEqualTo("/users");
+    @DisplayName("RequestLine 파싱")
+    @ParameterizedTest(name = "입력: {0}")
+    @MethodSource("requestLineProvider")
+    void parse(String rawRequestLine, String method, String path, String version) {
+        RequestLine requestLine = RequestLine.parse(rawRequestLine);
+        assertAll(
+                () -> assertThat(requestLine.getMethod()).isEqualTo(method),
+                () -> assertThat(requestLine.getPath()).isEqualTo(path),
+                () -> assertThat(requestLine.getHttpVersion()).isEqualTo(version)
+        );
     }
 
-    @Test
-    @DisplayName("경로 추출2")
-    void parseOtherPath() {
-        RequestLine requestLine = RequestLine.parse("GET /products HTTP/1.1");
-        assertThat(requestLine.getPath()).isEqualTo("/products");
-    }
-
-    @Test
-    @DisplayName("HTTP 버전 추출")
-    void parseHttpVersion() {
-        RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
-        assertThat(requestLine.getHttpVersion()).isEqualTo("HTTP/1.1");
-    }
-
-    @Test
-    @DisplayName("HTTP 버전 추출2")
-    void parseOtherHttpVersion() {
-        RequestLine requestLine = RequestLine.parse("GET /users HTTP/2");
-        assertThat(requestLine.getHttpVersion()).isEqualTo("HTTP/2");
-    }
-
-    @Test
     @DisplayName("쿼리스트링 추출")
-    void parseQueryString() {
-        RequestLine requestLine = RequestLine.parse("GET /users?id=myId HTTP/1.1");
-        assertThat(requestLine.getQueryString()).isEqualTo(QueryString.parse("id=myId"));
-    }
-
-    @Test
-    @DisplayName("쿼리스트링 추출2")
-    void parseOtherQueryString() {
-        RequestLine requestLine = RequestLine.parse("GET /users?id=myId&name=myName HTTP/1.1");
-        assertThat(requestLine.getQueryString()).isEqualTo(QueryString.parse("id=myId&name=myName"));
+    @ParameterizedTest(name = "입력: {0}")
+    @MethodSource("queryStringProvider")
+    void parseQueryString(String rawRequestLine, String rawQueryString) {
+        RequestLine requestLine = RequestLine.parse(rawRequestLine);
+        assertThat(requestLine.getQueryString()).isEqualTo(QueryString.parse(rawQueryString));
     }
 
     @Test

@@ -2,24 +2,44 @@ package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class QueryStringTest {
-    @Test
-    @DisplayName("키 추출")
-    void should_ContainsKey() {
-        QueryString qs = QueryString.parse("id=myId");
-        assertThat(qs.containsKey("id")).isTrue();
+    private static Stream oneKeyValueQueryStringProvider() {
+        return Stream.of(
+                Arguments.of("id=myId", "id", "myId"),
+                Arguments.of("name=myName", "name", "myName"),
+                Arguments.of("pid=5", "pid", "5")
+        );
     }
 
-    @Test
-    @DisplayName("키 추출2")
-    void should_ContainsOtherKey() {
-        QueryString qs = QueryString.parse("name=myName");
-        assertThat(qs.containsKey("name")).isTrue();
+    private static Stream twoKeyValueQueryStringProvider() {
+        return Stream.of(
+                Arguments.of("id=myId&name=myName", "id", "myId", "name", "myName"),
+                Arguments.of("pid=5&cid=10", "pid", "5", "cid", "10")
+        );
+    }
+
+    private static Stream oneKeyOnlyQueryStringProvider() {
+        return Stream.of(
+                Arguments.of("checked"),
+                Arguments.of("isConfirm")
+        );
+    }
+
+    @DisplayName("키 추출")
+    @ParameterizedTest(name = "입력: {0}")
+    @MethodSource("oneKeyValueQueryStringProvider")
+    void should_ContainsKey(String queryString, String key) {
+        QueryString qs = QueryString.parse(queryString);
+        assertThat(qs.containsKey(key));
     }
 
     @Test
@@ -29,12 +49,23 @@ class QueryStringTest {
         assertThat(qs.containsKey("id")).isFalse();
     }
 
+
+    @DisplayName("두개의 키 추출")
+    @ParameterizedTest(name = "입력: {0}")
+    @MethodSource("twoKeyValueQueryStringProvider")
+    void should_ContainsTwoKeys_When_ParseTwoKeyValues(String queryString, String key1, String value1, String key2) {
+        QueryString qs = QueryString.parse(queryString);
+        assertThat(qs.containsKey(key1)).isTrue();
+        assertThat(qs.containsKey(key2)).isTrue();
+    }
+
     @Test
-    @DisplayName("두개의 항목을 갖는 쿼리스트링의 키 추출")
-    void should_ContainsTwoKeys_When_ParseTwoKeyValues() {
-        QueryString qs = QueryString.parse("id=myId&name=myName");
-        assertThat(qs.containsKey("id")).isTrue();
-        assertThat(qs.containsKey("name")).isTrue();
+    @DisplayName("세개의 항목을 갖는 쿼리스트링의 키 추출")
+    void should_ContainsThreeKeys_When_ParseThreeKeyValues() {
+        QueryString qs = QueryString.parse("cate=15&from=10&to=30");
+        assertThat(qs.containsKey("cate")).isTrue();
+        assertThat(qs.containsKey("from")).isTrue();
+        assertThat(qs.containsKey("to")).isTrue();
     }
 
     @Test
@@ -56,40 +87,29 @@ class QueryStringTest {
         assertThat(keys.size()).isZero();
     }
 
-    @Test
-    @DisplayName("값 추출")
-    void should_ReturnValue() {
-        QueryString qs = QueryString.parse("id=myId");
-        assertThat(qs.get("id")).isEqualTo("myId");
+    @DisplayName("키 추출")
+    @ParameterizedTest(name = "입력: {0}")
+    @MethodSource("oneKeyValueQueryStringProvider")
+    void should_ReturnValue(String queryString, String key, String value) {
+        QueryString qs = QueryString.parse(queryString);
+        assertThat(qs.get(key)).isEqualTo(value);
     }
 
-    @Test
-    @DisplayName("값 추출2")
-    void should_ReturnOtherValue() {
-        QueryString qs = QueryString.parse("name=myName");
-        assertThat(qs.get("name")).isEqualTo("myName");
-    }
-
-    @Test
     @DisplayName("두개의 값 추출")
-    void should_ReturnTwoValues() {
-        QueryString qs = QueryString.parse("id=myId&name=myName");
-        assertThat(qs.get("id")).isEqualTo("myId");
-        assertThat(qs.get("name")).isEqualTo("myName");
+    @ParameterizedTest(name = "입력: {0}")
+    @MethodSource("twoKeyValueQueryStringProvider")
+    void should_ReturnTwoValues(String queryString, String key1, String value1, String key2, String value2) {
+        QueryString qs = QueryString.parse(queryString);
+        assertThat(qs.get(key1)).isEqualTo(value1);
+        assertThat(qs.get(key2)).isEqualTo(value2);
     }
 
-    @Test
-    @DisplayName("입력에 키만 존재하고 값이 없을 때 키를 값으로 사용")
-    void should_ReturnSameKeyValue_When_ParseOnlyKey() {
-        QueryString qs = QueryString.parse("key1");
-        assertThat(qs.get("key1")).isEqualTo("key1");
-    }
-
-    @Test
-    @DisplayName("입력에 키만 존재하고 값이 없을 때 키를 값으로 사용2")
-    void should_ReturnOtherSameKeyValue_When_ParseOnlyKey() {
-        QueryString qs = QueryString.parse("key2");
-        assertThat(qs.get("key2")).isEqualTo("key2");
+    @DisplayName("키만 존재하고 값이 없을 때 키를 값으로 사용")
+    @ParameterizedTest(name = "입력: {0}")
+    @MethodSource("oneKeyOnlyQueryStringProvider")
+    void should_ReturnSameKeyValue_When_ParseOnlyKey(String queryString) {
+        QueryString qs = QueryString.parse(queryString);
+        assertThat(qs.get(queryString)).isEqualTo(queryString);
     }
 
     @Test
@@ -99,17 +119,11 @@ class QueryStringTest {
         assertThat(qs.get("myName")).isNull();
     }
 
-    @Test
     @DisplayName("입력을 보관")
-    void should_ReturnOriginalQueryString() {
-        QueryString qs = QueryString.parse("id=myId&name=myName");
-        assertThat(qs.origin()).isEqualTo("id=myId&name=myName");
-    }
-
-    @Test
-    @DisplayName("입력을 보관2")
-    void should_ReturnOtherOriginalQueryString() {
-        QueryString qs = QueryString.parse("id=myId");
-        assertThat(qs.origin()).isEqualTo("id=myId");
+    @ParameterizedTest(name = "입력: {0}")
+    @MethodSource({"oneKeyValueQueryStringProvider", "twoKeyValueQueryStringProvider", "oneKeyOnlyQueryStringProvider"})
+    void should_ReturnOriginalQueryString(String queryString) {
+        QueryString qs = QueryString.parse(queryString);
+        assertThat(qs.origin()).isEqualTo(queryString);
     }
 }
