@@ -53,7 +53,7 @@ public class ResponseSender {
         if (responseHolder.hasCookie()) {
             String cookies = of(responseHolder.getCookies())
                     .map(Map::entrySet)
-                    .map(entires -> entires.stream()
+                    .map(entries -> entries.stream()
                             .map(entry -> entry.getKey() + "=" + entry.getValue())
                             .collect(joining(",")))
                     .orElse("");

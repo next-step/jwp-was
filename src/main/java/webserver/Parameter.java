@@ -22,12 +22,8 @@ public class Parameter {
         this.parameterMap = parameterMap;
     }
 
-    /**
-     * @param query is key=value string split '&'
-     * @return key/value query map
-     */
-    public static Parameter parseParameter(String query) {
-        String[] parameters = query.split(QUERY_FIELD_DELIMITER);
+    public static Parameter parseParameter(String query, String queryDelimiter) {
+        String[] parameters = query.split(queryDelimiter);
 
         if (parameters.length == 0) {
             return new Parameter(emptyMap());
@@ -39,6 +35,14 @@ public class Parameter {
             MapUtils.putIfKeyNotBlank(queryMap, key, endSplit(parameter, KEY_VALUE_DELIMITER));
         }
         return new Parameter(queryMap);
+    }
+
+    /**
+     * @param query is key=value string split '&'
+     * @return key/value query map
+     */
+    public static Parameter parseParameter(String query) {
+        return parseParameter(query, QUERY_FIELD_DELIMITER);
     }
 
     /**

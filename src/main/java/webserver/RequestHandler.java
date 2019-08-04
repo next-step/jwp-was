@@ -9,6 +9,7 @@ import webserver.request.RequestLine;
 import webserver.response.ResponseHolder;
 import webserver.servlet.LoginServlet;
 import webserver.servlet.RegistrationServlet;
+import webserver.servlet.UserListServlet;
 
 import java.io.*;
 import java.net.Socket;
@@ -21,10 +22,12 @@ public class RequestHandler implements Runnable {
 
     private Socket connection;
     private HttpProcessor httpProcessor;
+    public static final String WELCOME_PAGE = "/index.html";
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
-        this.httpProcessor = new HttpProcessor(of(new RegistrationServlet(), new LoginServlet()));
+        this.httpProcessor = new HttpProcessor(of(
+                new RegistrationServlet(), new LoginServlet(), new UserListServlet()));
     }
 
     public void run() {

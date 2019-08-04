@@ -21,9 +21,9 @@ public class ResponseHandler {
 
     public void handleStaticResource(ResponseHolder responseHolder) {
         try {
-            String contents = resourceHandler.getContents(responseHolder.getPath());
-            byte[] body = contents.getBytes();
-            responseSender.sendResponse(StatusCode.OK, responseHolder, body);
+            ModelAndView mav = new ModelAndView(responseHolder.getPath(), responseHolder.getAttributes());
+            String contents = resourceHandler.getContents(mav);
+            responseSender.sendResponse(StatusCode.OK, responseHolder, contents.getBytes());
         } catch (HttpException e) {
             logger.error("Http Exception " + e.getStatusCode());
             byte[] errorMessage = e.getMessage().getBytes();
@@ -33,9 +33,15 @@ public class ResponseHandler {
 
     public void handle(ResponseHolder responseHolder) {
         try {
-            if (StringUtils.isNotBlank(responseHolder.getViewName())) {
+            if (responseHolder.isRedirect()) {
                 responseSender.sendResponse(StatusCode.FOUND, responseHolder);
                 return;
+            }
+
+            if (StringUtils.isNotBlank(responseHolder.getViewName())) {
+                ModelAndView mav = new ModelAndView(responseHolder.getViewName(), responseHolder.getAttributes());
+                String contents = resourceHandler.getContents(mav);
+                responseSender.sendResponse(StatusCode.OK, responseHolder, contents.getBytes());
             }
 
             responseSender.sendResponse(StatusCode.OK, responseHolder);

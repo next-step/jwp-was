@@ -9,10 +9,13 @@ import webserver.Parameter;
 import static utils.StringUtils.endSplit;
 import static utils.StringUtils.frontSplitWithOrigin;
 import static webserver.Parameter.parseParameter;
+import static webserver.RequestHandler.WELCOME_PAGE;
 
 public class RequestLine {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestLine.class);
+
+    private static final String ROOT = "/";
 
     private HttpMethod method;
     private String path;
@@ -59,13 +62,22 @@ public class RequestLine {
         }
 
         HttpMethod httpMethod = HttpMethod.valueOf(requests[0]);
-        String path = frontSplitWithOrigin(requests[1], URL_QUERY_DELIMITER);
+        String path = getPath(frontSplitWithOrigin(requests[1], URL_QUERY_DELIMITER));
         String protocol = requests[2];
         Parameter parameter = parseParameter(endSplit(requests[1], URL_QUERY_DELIMITER));
 
         return new Builder(httpMethod, path, protocol)
                 .parameter(parameter)
                 .build();
+    }
+
+    private static String getPath(String path) {
+        logger.info("## " + path);
+        return ROOT.equals(path) ? WELCOME_PAGE : path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public HttpMethod getMethod() {

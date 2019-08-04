@@ -12,6 +12,7 @@ public class ResponseHolder {
     private RequestHolder requestHolder;
     private String viewName;
     private Map<String, String> cookies;
+    private boolean redirect;
 
     public ResponseHolder(DataOutputStream dos, RequestHolder requestHolder) {
         this.dos = dos;
@@ -49,5 +50,17 @@ public class ResponseHolder {
 
     public RequestHolder getRequestHolder() {
         return requestHolder;
+    }
+
+    public boolean isRedirect() {
+        return redirect;
+    }
+
+    public void setRedirect(boolean redirect) {
+        this.redirect = redirect;
+    }
+
+    public Map<String, Object> getAttributes() {
+        return this.requestHolder.getAttributes();
     }
 }

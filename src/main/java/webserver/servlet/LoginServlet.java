@@ -22,6 +22,7 @@ public class LoginServlet implements Servlet {
         logger.debug("login process.");
         UserService userService = UserService.getInstance();
 
+
         Parameter parameter = requestHolder.getMergedParameter();
         String userId = parameter.getParameter("userId");
         String password = parameter.getParameter("password");
@@ -33,10 +34,12 @@ public class LoginServlet implements Servlet {
         if (user != null && user.getPassword().equals(password)) {
             responseHolder.addCookie("logined", "true");
             responseHolder.setViewName("/index.html");
+            responseHolder.setRedirect(true);
             return;
         }
 
         responseHolder.addCookie("logined", "false");
         responseHolder.setViewName("/user/login_failed.html");
+        responseHolder.setRedirect(true);
     }
 }

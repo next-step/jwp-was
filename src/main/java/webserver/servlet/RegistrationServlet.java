@@ -30,6 +30,8 @@ public class RegistrationServlet implements Servlet{
         String email = parameter.getParameter("email");
 
         userService.add(new User(userId, password, name, email));
+
+        responseHolder.setRedirect(true);
         responseHolder.setViewName("/index.html");
     }
 }

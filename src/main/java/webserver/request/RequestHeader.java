@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.MapUtils;
 import utils.StringUtils;
+import webserver.Parameter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +25,7 @@ public class RequestHeader {
     }
 
     public static RequestHeader parse(List<String> requestHeaders) {
-        logger.debug("## header: \n{}", requestHeaders.stream().collect(joining("\n")));
+        logger.debug("## header: \n{}", String.join("\n", requestHeaders));
         Map<String, String> headerMap = new HashMap<>();
         for (String requestHeader : requestHeaders) {
             MapUtils.putIfKeyNotBlank(headerMap,
@@ -49,6 +50,12 @@ public class RequestHeader {
 
     public Integer getContentLength() {
         return Integer.valueOf(headers.get("Content-Length"));
+    }
+
+    public String getCookie(String key) {
+        String cookies = headers.get("Cookie");
+        Parameter parameter = Parameter.parseParameter(cookies, ";");
+        return parameter.getParameter(key);
     }
 
     public Map<String, String> getHeaders() {

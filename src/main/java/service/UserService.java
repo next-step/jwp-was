@@ -1,17 +1,21 @@
 package service;
 
+import com.google.common.collect.Lists;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    private Map<String, User> users = new HashMap<>();
+    private Map<String, User> users = new HashMap<String, User>(){{
+        put("root", new User("root", "1234", "관리자", "admin@test.com"));
+    }};
 
     private UserService() {}
 
@@ -38,4 +42,8 @@ public class UserService {
         return users.get(userId);
     }
 
+    public List<User> getAll() {
+        logger.debug("get all user, {}", users.values());
+        return Lists.newArrayList(users.values());
+    }
 }

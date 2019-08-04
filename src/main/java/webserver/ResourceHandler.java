@@ -4,57 +4,42 @@ import exception.HttpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.request.RequestHeader;
+import webserver.request.RequestHolder;
+import webserver.resource.HandlebarsResourceLoader;
+import webserver.resource.ResourceLoader;
+import webserver.resource.StaticResourceLoader;
 
-import java.io.*;
-import java.net.URL;
+import java.io.IOException;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class ResourceHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHeader.class);
 
-    private ResourceNameResolver resourceNameResolver = new ResourceNameResolver();
-    private ClassLoader classLoader;
+    private List<ResourceLoader> resourceLoaders;
 
     public ResourceHandler() {
-        this.classLoader = Thread.currentThread().getContextClassLoader();
+        resourceLoaders = asList(new StaticResourceLoader(), new HandlebarsResourceLoader());
     }
 
-    public ResourceHandler(ClassLoader classLoader) {
-        this.classLoader = classLoader;
-    }
-
-    public String getContents(String path) {
-        String name = resourceNameResolver.resolveName(path);
-        URL resource = classLoader.getResource(name);
-
-        if (resource == null) {
-            throw new HttpException(StatusCode.NOT_FOUND);
-        }
-
-        File file = new File(resource.getFile());
-
-        if (!file.isFile()) {
-            throw new HttpException(StatusCode.NOT_FOUND);
-        }
-
-        try (InputStream in = classLoader.getResourceAsStream(name)) {
-            return getContentsInternal(in);
+    public String getContents(ModelAndView mav) {
+        try {
+            return getContentsInternal(mav);
         } catch (IOException e) {
             throw new HttpException(StatusCode.NOT_FOUND);
         }
     }
 
-    private String getContentsInternal(InputStream in) throws IOException {
-        if (in == null) {
-            throw new HttpException(StatusCode.NOT_FOUND);
+    private String getContentsInternal(ModelAndView mav) throws IOException {
+        for (ResourceLoader resourceLoader : resourceLoaders) {
+            if (resourceLoader.support(mav.getViewName())) {
+                return resourceLoader.getResource(mav);
+            }
         }
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        StringBuilder content = new StringBuilder();
-        String read;
-        while ((read = reader.readLine()) != null) {
-            content.append(read);
-        }
-        return content.toString();
+        throw new UnsupportedOperationException("available ResourceLoader is empty");
     }
+
 }
