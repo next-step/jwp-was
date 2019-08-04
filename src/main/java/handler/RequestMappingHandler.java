@@ -28,8 +28,11 @@ public class RequestMappingHandler implements RequestStrategy {
     public RequestMappingHandler(Controller controller) {
         this.controller = controller;
         for (Method method : controller.getClass().getDeclaredMethods()) {
-            RequestMapping requestMapping = method.getAnnotationsByType(RequestMapping.class)[0];
-            Arrays.stream(requestMapping.path()).forEach(path -> controllerBean.put(requestMapping.method(), path, method));
+            RequestMapping[] requestMappings = method.getAnnotationsByType(RequestMapping.class);
+            if (requestMappings.length > 0) {
+                RequestMapping requestMapping = requestMappings[0];
+                Arrays.stream(requestMapping.path()).forEach(path -> controllerBean.put(requestMapping.method(), path, method));
+            }
         }
     }
 
