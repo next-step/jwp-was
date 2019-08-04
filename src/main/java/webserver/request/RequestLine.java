@@ -25,7 +25,7 @@ public class RequestLine {
         );
     }
 
-    public HttpMethod getMethod() {
+    HttpMethod getMethod() {
         return method;
     }
 

@@ -22,7 +22,7 @@ class HttpURITest {
         assertThat(httpURI.getPath()).isEqualTo("/users");
     }
 
-    @DisplayName("query 속성의 값을 구하는데 성꽁한다")
+    @DisplayName("query 속성의 값을 구하는데 성공한다")
     @ParameterizedTest
     @CsvSource({
             "'userId', 'javajigi'",

@@ -2,12 +2,18 @@ package webserver;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.HttpHeaders.Parameter;
+import webserver.request.Cookie;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static webserver.HttpHeaders.SET_COOKIE;
 
 class HttpHeadersTest {
 
@@ -33,5 +39,33 @@ class HttpHeadersTest {
         // when && then
         Assertions.assertThatIllegalArgumentException()
                 .isThrownBy(() -> Parameter.of(wrongInput));
+    }
+
+    @DisplayName("헤더 정보를 반환한다")
+    @Test
+    void getHeader_success() {
+        // given
+        String valueOfCookie = "logined=true";
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setCookie(valueOfCookie);
+
+        // when
+        String result = httpHeaders.get(SET_COOKIE);
+
+        // then
+        assertThat(result).isEqualTo(valueOfCookie);
+    }
+
+    @DisplayName("헤더에 찾는 정보가 없을 경우 return null")
+    @Test
+    void getHeader_notExistValue_thenNull() {
+        // given
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        // when
+        String result = httpHeaders.get("noValue");
+
+        // then
+        assertThat(result).isNull();
     }
 }

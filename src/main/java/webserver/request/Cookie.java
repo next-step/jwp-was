@@ -1,4 +1,4 @@
-package webserver;
+package webserver.request;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,6 +9,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class Cookie {
 
+    private static final String SEPARATOR = "; ";
     private Map<String, String> cookies;
 
     private Cookie(Map<String, String> cookies) {
@@ -20,11 +21,10 @@ public class Cookie {
             return new Cookie(Collections.emptyMap());
         }
 
-        return Arrays.stream(token.split("; "))
+        return Arrays.stream(token.split(SEPARATOR))
                 .map(Parameter::of)
                 .collect(collectingAndThen(toMap(Parameter::getAttribute, Parameter::getValue), Cookie::new));
     }
-
 
     public String get(String key) {
         return cookies.get(key);

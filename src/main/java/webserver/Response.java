@@ -1,6 +1,6 @@
 package webserver;
 
-import com.sun.net.httpserver.Headers;
+import webserver.request.Cookie;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,48 +8,34 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static webserver.HttpStatus.REDIRECT;
-import static webserver.HttpStatus.SUCCESS;
+import static webserver.HttpHeaders.COOKIE;
+import static webserver.HttpHeaders.TEXT_HTML_CHARSET_UTF_8;
+import static webserver.HttpStatus.*;
 
 public class Response {
 
     private static final String CRLF = "\r\n";
 
     private HttpStatus httpStatus;
-    private HttpHeaders httpHeaders;
-    private byte[] responseBody;
+    private HttpHeaders httpHeaders = new HttpHeaders();
+    private byte[] responseBody = {};
 
-    private Response(HttpStatus httpStatus, HttpHeaders httpHeaders, byte[] requestBody) {
+    private Response(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
-        this.httpHeaders = httpHeaders;
-        this.responseBody = requestBody;
     }
 
-    static Response of(HttpStatus httpStatus) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Content-Type: text/html;charset=utf-8");
-
-        return new Response(httpStatus, httpHeaders, new byte[]{});
+    public static Response ok(String responseBody) {
+        return ok(responseBody.getBytes());
     }
 
-    static Response ok(String responseBody) {
-        byte[] responseBodyBytes = responseBody.getBytes();
-        Response response = of(SUCCESS);
-        response.setContentLength(responseBodyBytes.length);
-        response.responseBody = responseBodyBytes;
-        return response;
+    public static Response ok(byte[] responseBody) {
+        return ok(responseBody, TEXT_HTML_CHARSET_UTF_8);
     }
 
-    static Response ok(byte[] responseBody) {
-        Response response = of(SUCCESS);
-        response.setContentLength(responseBody.length);
-        response.responseBody = responseBody;
-        return response;
-    }
+    public static Response ok(byte[] responseBody, String contentType) {
+        Response response = new Response(SUCCESS);
 
-    static Response okWithHeaders(byte[] responseBody, HttpHeaders headers) {
-        Response response = of(SUCCESS);
-        response.httpHeaders = headers;
+        response.httpHeaders.setContentType(contentType);
         response.setContentLength(responseBody.length);
         response.responseBody = responseBody;
 
@@ -60,15 +46,8 @@ public class Response {
         httpHeaders.setContentLength(contentLength);
     }
 
-    static Response redirect(String location) {
-        Response response = of(REDIRECT);
-        response.setLocation(location);
-        return response;
-    }
-
-    static Response redirectWithHeaders(String location, HttpHeaders headers) {
-        Response response = of(REDIRECT);
-        response.httpHeaders = headers;
+    public static Response redirect(String location) {
+        Response response = new Response(REDIRECT);
         response.setLocation(location);
         return response;
     }
@@ -77,9 +56,21 @@ public class Response {
         httpHeaders.setLocation(location);
     }
 
+    static Response notFound() {
+        return new Response(NOT_FOUND);
+    }
+
+    static Response internalServerError() {
+        return new Response(INTERNAL_SERVER_ERROR);
+    }
+
+    public HttpStatus getStatus() {
+        return httpStatus;
+    }
+
     void send(OutputStream out) throws IOException {
         DataOutputStream dos = new DataOutputStream(out);
-        dos.writeBytes(httpStatus.output().concat(CRLF));
+        dos.writeBytes(httpStatus.getStatusLine().concat(CRLF));
         writeHeaders(dos);
         dos.writeBytes(CRLF);
         writeReposeBody(dos);
@@ -87,8 +78,7 @@ public class Response {
 
     private void writeHeaders(DataOutputStream dos) throws IOException {
         List<String> output = httpHeaders.output();
-        String headers = output.stream()
-                .collect(Collectors.joining(CRLF));
+        String headers = String.join(CRLF, output);
         dos.writeBytes(headers.concat(CRLF));
     }
 

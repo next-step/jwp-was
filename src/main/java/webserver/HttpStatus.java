@@ -1,11 +1,11 @@
 package webserver;
 
-import com.sun.javafx.binding.StringFormatter;
-
 public enum HttpStatus {
+
     SUCCESS(200, "OK"),
     REDIRECT(302, "Found"),
-    NOT_FOUND(404, "Not Found");
+    NOT_FOUND(404, "Not Found"),
+    INTERNAL_SERVER_ERROR(500, "Internal Server Error");
 
     private int statusCode;
     private String reason;
@@ -15,7 +15,7 @@ public enum HttpStatus {
         this.reason = reason;
     }
 
-    public String output() {
+    public String getStatusLine() {
         return "HTTP/1.1 " + this.statusCode + " " + this.reason;
     }
 }

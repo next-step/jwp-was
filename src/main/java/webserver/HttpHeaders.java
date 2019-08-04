@@ -9,16 +9,18 @@ public class HttpHeaders {
 
     static final String CONTENT_LENGTH = "Content-Length";
     static final String LOCATION = "Location";
+    static final String CONTENT_TYPE = "Content-Type";
+    static final String TEXT_HTML_CHARSET_UTF_8 = "text/html;charset=utf-8";
+    static final String SET_COOKIE = "Set-Cookie";
+
+    public static final String ACCEPT = "Accept";
+    public static final String COOKIE = "Cookie";
 
     private Map<String, String> headerInfo = new HashMap<>();
 
     void add(String token) {
         Parameter parameter = Parameter.of(token);
         headerInfo.put(parameter.getField(), parameter.getValue());
-    }
-
-    public String get(String field) {
-        return headerInfo.get(field);
     }
 
     int getContentLength() {
@@ -33,6 +35,14 @@ public class HttpHeaders {
         headerInfo.put(CONTENT_LENGTH, String.valueOf(contentLength));
     }
 
+    void setContentType(String value) {
+        headerInfo.put(CONTENT_TYPE, value);
+    }
+
+    public String get(String field) {
+        return headerInfo.get(field);
+    }
+
     List<String> output() {
         return headerInfo.entrySet()
                 .stream()
@@ -41,19 +51,15 @@ public class HttpHeaders {
                 .collect(Collectors.toList());
     }
 
+    public void setCookie(String value) {
+        headerInfo.put(SET_COOKIE, value);
+    }
+
     @Override
     public String toString() {
         return "HttpHeaders{" +
                 "headerInfo=" + headerInfo +
                 '}';
-    }
-
-    public void add(String s, String s1) {
-        headerInfo.put(s, s1);
-    }
-
-    void setContentType(String value) {
-        headerInfo.put("Content-Type", value);
     }
 
     static class Parameter {
