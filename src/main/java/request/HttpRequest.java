@@ -4,6 +4,8 @@
  */
 package request;
 
+import header.Cookie;
+import header.HeaderSetter;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import utils.IOUtils;
@@ -19,7 +21,7 @@ import java.util.Optional;
  * Created by youngjae.havi on 2019-08-02
  */
 public class HttpRequest {
-    @RequestHeaderProperty("RequestLine")
+    @RequestHeaderProperty(converter = RequestLine.class)
     private RequestLine requestLine;
 
     @RequestHeaderProperty("HOST")
@@ -43,8 +45,8 @@ public class HttpRequest {
     @RequestHeaderProperty("Cache-Control")
     private String cacheControl;
 
-    @RequestHeaderProperty("Cookie")
-    private String cookie;
+    @RequestHeaderProperty(value = "Cookie", converter = Cookie.class)
+    private Cookie cookie = new Cookie();
 
     @RequestHeaderProperty("Content-Type")
     private String contentType;
@@ -55,7 +57,6 @@ public class HttpRequest {
     @RequestHeaderProperty
     private String body;
 
-    @RequestHeaderProperty
     private MultiValueMap<String, String> bodyMap;
 
     public HttpRequest(RequestLine requestLine) {
@@ -67,19 +68,14 @@ public class HttpRequest {
         setBodyIfNotGet(bufferedReader);
     }
 
-    private void setHeaders(BufferedReader bufferedReader) throws IOException, IllegalAccessException {
+    private void setHeaders(BufferedReader bufferedReader) throws IOException, IllegalAccessException, InstantiationException {
         String line;
         boolean isRequestLine = true;
         while ((line = bufferedReader.readLine()) != null && !StringUtils.isEmpty(line)) {
-            if (isRequestLine) {
-                this.requestLine = RequestLine.parse(line);
-                isRequestLine = false;
-                continue;
-            }
-
             String[] keyValue = line.split(":");
+            boolean finalIsRequestLine = isRequestLine;
             Optional<Field> optionalField = Arrays.stream(this.getClass().getDeclaredFields())
-                    .filter(f -> f.getAnnotationsByType(RequestHeaderProperty.class)[0].value().equalsIgnoreCase(keyValue[0]))
+                    .filter(f -> finalIsRequestLine || f.getAnnotationsByType(RequestHeaderProperty.class)[0].value().equalsIgnoreCase(keyValue[0]))
                     .findAny();
 
             if (!optionalField.isPresent()) {
@@ -88,7 +84,9 @@ public class HttpRequest {
 
             Field field = optionalField.get();
             field.setAccessible(true);
-            field.set(this, keyValue[1]);
+            HeaderSetter headerSetter = field.getAnnotationsByType(RequestHeaderProperty.class)[0].converter().newInstance();
+            field.set(this, headerSetter.setEliment(keyValue));
+            isRequestLine = false;
         }
     }
 
@@ -134,7 +132,7 @@ public class HttpRequest {
         return cacheControl;
     }
 
-    public String getCookie() {
+    public Cookie getCookie() {
         return cookie;
     }
 

@@ -1,5 +1,6 @@
 package request;
 
+import header.HeaderSetter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -11,11 +12,13 @@ import static request.UriSplitter.*;
 /**
  * Created by youngjae.havi on 2019-08-01
  */
-public class RequestLine {
+public class RequestLine implements HeaderSetter<RequestLine> {
     private HttpMethod method;
     private String path;
     private MultiValueMap<String, String> queryStringMap;
     private String httpVersion;
+
+    public RequestLine() {}
 
     public RequestLine(HttpMethod method, String path, MultiValueMap<String, String> queryStringMap, String httpVersion) {
         this.method = method;
@@ -63,6 +66,11 @@ public class RequestLine {
 
     public MultiValueMap<String, String> getQueryString() {
         return this.queryStringMap;
+    }
+
+    @Override
+    public RequestLine setEliment(String[] keyValue) {
+        return RequestLine.parse(keyValue[0]);
     }
 
     @Override
