@@ -64,6 +64,14 @@ public class Request {
         return requestLine.getPath();
     }
 
+    Cookie getCookie() {
+        return Cookie.of(httpHeaders.get("Cookie"));
+    }
+
+    String getHeader(String key) {
+        return httpHeaders.get(key);
+    }
+
     @Override
     public String toString() {
         return "Request{" +

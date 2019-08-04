@@ -47,6 +47,15 @@ public class Response {
         return response;
     }
 
+    static Response okWithHeaders(byte[] responseBody, HttpHeaders headers) {
+        Response response = of(SUCCESS);
+        response.httpHeaders = headers;
+        response.setContentLength(responseBody.length);
+        response.responseBody = responseBody;
+
+        return response;
+    }
+
     private void setContentLength(int contentLength) {
         httpHeaders.setContentLength(contentLength);
     }

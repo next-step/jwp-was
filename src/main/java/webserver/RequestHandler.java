@@ -1,5 +1,9 @@
 package webserver;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import com.sun.net.httpserver.HttpPrincipal;
 import db.DataBase;
 import model.User;
@@ -10,6 +14,7 @@ import utils.FileIoUtils;
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class RequestHandler implements Runnable {
@@ -63,6 +68,32 @@ public class RequestHandler implements Runnable {
                 new Servlet() {
                     @Override
                     public boolean isMapping(Request request) {
+                        return request.matchPath("/user/list");
+                    }
+
+                    @Override
+                    public Response supply(Request request) throws IOException {
+                        Cookie cookie = request.getCookie();
+                        boolean checkLogin = Boolean.valueOf(cookie.get("logined"));
+                        if(checkLogin){
+                            TemplateLoader loader = new ClassPathTemplateLoader();
+                            loader.setPrefix("/templates");
+                            loader.setSuffix(".html");
+                            Handlebars handlebars = new Handlebars(loader);
+
+                            Template template = handlebars.compile("user/list");
+
+                            String listPage = template.apply(DataBase.findAll());
+                            logger.debug("listPage : {}", listPage);
+
+                            return Response.ok(listPage);
+                        }
+                        return Response.redirect("/user/login.html");
+                    }
+                },
+                new Servlet() {
+                    @Override
+                    public boolean isMapping(Request request) {
                         return request.isGet();
                     }
 
@@ -75,11 +106,17 @@ public class RequestHandler implements Runnable {
                         if (suffix.equals("html") || suffix.equals("ico")) {
                             body = FileIoUtils.loadFileFromClasspath("./templates" + request.getPath());
                         } else {
+                            logger.info(request.getHeader("Accept"));
+                            String accept = request.getHeader("Accept").split(",")[0];
+                            HttpHeaders headers = new HttpHeaders();
+                            headers.setContentType(accept);
                             body = FileIoUtils.loadFileFromClasspath("./static" + request.getPath());
+                            return Response.okWithHeaders(body, headers);
                         }
                         return Response.ok(body);
                     }
-                });
+                }
+                );
     }
 
     public void run() {
@@ -99,6 +136,7 @@ public class RequestHandler implements Runnable {
             Response response = servlet.supply(request);
             response.send(out);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
         }
     }

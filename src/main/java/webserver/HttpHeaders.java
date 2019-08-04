@@ -52,6 +52,10 @@ public class HttpHeaders {
         headerInfo.put(s, s1);
     }
 
+    void setContentType(String value) {
+        headerInfo.put("Content-Type", value);
+    }
+
     static class Parameter {
 
         private static final int INDEX_OF_ATTRIBUTE = 0;
