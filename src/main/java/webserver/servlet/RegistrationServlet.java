@@ -4,6 +4,7 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.Parameter;
+import webserver.response.ResponseHolder;
 import webserver.request.RequestHeader;
 import webserver.request.RequestHolder;
 import service.UserService;
@@ -18,7 +19,7 @@ public class RegistrationServlet implements Servlet{
     }
 
     @Override
-    public void service(RequestHolder requestHolder) {
+    public void service(RequestHolder requestHolder, ResponseHolder responseHolder) {
         logger.debug("{} service process, registration user ", getName());
 
         UserService userService = UserService.getInstance();
@@ -29,5 +30,6 @@ public class RegistrationServlet implements Servlet{
         String email = parameter.getParameter("email");
 
         userService.add(new User(userId, password, name, email));
+        responseHolder.setViewName("/index.html");
     }
 }

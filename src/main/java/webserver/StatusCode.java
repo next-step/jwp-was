@@ -1,8 +1,23 @@
 package webserver;
 
+import webserver.response.ResponseHolder;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public enum StatusCode {
 
     OK(200, "OK"),
+    FOUND(302, "Found") {
+        @Override
+        public void handleResponse(ResponseHolder responseHolder) throws IOException {
+            super.handleResponse(responseHolder);
+            if (responseHolder.getViewName() != null) {
+                responseHolder.getDos()
+                        .writeBytes("Location: " + responseHolder.getViewName() + "\r\n");
+            }
+        }
+    },
     NOT_FOUND(404, "Not Found"),
     ;
 
@@ -12,6 +27,11 @@ public enum StatusCode {
     StatusCode(int code, String message) {
         this.code = code;
         this.message = message;
+    }
+
+    public void handleResponse(ResponseHolder responseHolder) throws IOException {
+        responseHolder.getDos()
+                .writeBytes("HTTP/1.1 " + this.code + " " + this.message + " \r\n");
     }
 
     public int getCode() {
