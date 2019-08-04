@@ -1,12 +1,12 @@
 package webserver.http;
 
 class RequestLine {
-    private final String method;
+    private final HttpMethod method;
     private final String path;
-    private final String httpVersion;
+    private final HttpVersion httpVersion;
     private final QueryString queryString;
 
-    private RequestLine(String method, String path, String httpVersion, QueryString queryString) {
+    private RequestLine(HttpMethod method, String path, HttpVersion httpVersion, QueryString queryString) {
         this.method = method;
         this.path = path;
         this.httpVersion = httpVersion;
@@ -17,7 +17,7 @@ class RequestLine {
         return RequestLineParser.parse(requestString);
     }
 
-    String getMethod() {
+    HttpMethod getMethod() {
         return method;
     }
 
@@ -29,7 +29,7 @@ class RequestLine {
         return queryString;
     }
 
-    String getHttpVersion() {
+    HttpVersion getHttpVersion() {
         return httpVersion;
     }
 
@@ -39,9 +39,9 @@ class RequestLine {
             if (!RequestLineParser.validate(lineSplit)) {
                 throw new IllegalArgumentException("요청 헤더에서 RequestLine 항목을 얻지 못했습니다.");
             }
-            String method = lineSplit[0];
+            HttpMethod method = HttpMethod.valueOf(lineSplit[0]);
             String path = lineSplit[1];
-            String httpVersion = lineSplit[2];
+            HttpVersion httpVersion = HttpVersion.of(lineSplit[2]);
 
             int queryStringStartIndex = path.indexOf("?");
             String queryStringSource = queryStringStartIndex > -1 ? path.substring(queryStringStartIndex + 1) : "";

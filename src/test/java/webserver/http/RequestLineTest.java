@@ -15,12 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class RequestLineTest {
     private static Stream requestLineProvider() {
         return Stream.of(
-                Arguments.of("GET /users HTTP/1.1", "GET", "/users", "HTTP/1.1"),
-                Arguments.of("POST /users HTTP/1.1", "POST", "/users", "HTTP/1.1"),
-                Arguments.of("GET /products HTTP/1.1", "GET", "/products", "HTTP/1.1"),
-                Arguments.of("GET /users HTTP/2", "GET", "/users", "HTTP/2"),
-                Arguments.of("GET /users?id=myId HTTP/1.1", "GET", "/users?id=myId", "HTTP/1.1"),
-                Arguments.of("GET /users?id=myId&name=myName HTTP/1.1", "GET", "/users?id=myId&name=myName", "HTTP/1.1")
+                Arguments.of("GET /users HTTP/1.1", HttpMethod.GET, "/users", HttpVersion.HTTP_1_1),
+                Arguments.of("POST /users HTTP/1.1", HttpMethod.POST, "/users", HttpVersion.HTTP_1_1),
+                Arguments.of("GET /products HTTP/1.1", HttpMethod.GET, "/products", HttpVersion.HTTP_1_1),
+                Arguments.of("GET /users HTTP/2", HttpMethod.GET, "/users", HttpVersion.HTTP_2_0),
+                Arguments.of("GET /users?id=myId HTTP/1.1", HttpMethod.GET, "/users?id=myId", HttpVersion.HTTP_1_1),
+                Arguments.of("GET /users?id=myId&name=myName HTTP/1.1", HttpMethod.GET, "/users?id=myId&name=myName", HttpVersion.HTTP_1_1)
         );
     }
 
@@ -35,7 +35,7 @@ class RequestLineTest {
     @DisplayName("RequestLine 파싱")
     @ParameterizedTest(name = "입력: {0}")
     @MethodSource("requestLineProvider")
-    void parse(String rawRequestLine, String method, String path, String version) {
+    void parse(String rawRequestLine, HttpMethod method, String path, HttpVersion version) {
         RequestLine requestLine = RequestLine.parse(rawRequestLine);
         assertAll(
                 () -> assertThat(requestLine.getMethod()).isEqualTo(method),
