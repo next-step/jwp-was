@@ -11,11 +11,11 @@ public class MimeTypeUtils {
                 .orElseGet(() -> {
 
                     if(fileName.matches(".*?\\.js")) {
-                        return "application/javascript;";
+                        return "application/javascript";
                     }
 
                     if(fileName.matches(".*?\\.css")) {
-                        return "text/css;";
+                        return "text/css";
                     }
 
                     return accept;
