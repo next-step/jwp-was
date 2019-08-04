@@ -7,11 +7,11 @@ public class RequestLine {
     private static final String SEPARATOR = " ";
     private static final String ESCAPED_QUERY_PREFIX = "\\?";
 
-    private String method;
+    private HttpMethod method;
     private String path;
     private RequestParameter parameter;
 
-    private RequestLine(String method, String path, RequestParameter parameter) {
+    private RequestLine(HttpMethod method, String path, RequestParameter parameter) {
         this.method = method;
         this.path = path;
         this.parameter = parameter;
@@ -20,7 +20,7 @@ public class RequestLine {
     public static RequestLine parse(String rawRequestLine) {
         String[] requestLine = rawRequestLine.split(SEPARATOR);
         String[] requestUri = requestLine[1].split(ESCAPED_QUERY_PREFIX);
-        return new RequestLine(requestLine[0], requestUri[0], parseQueryString(requestUri));
+        return new RequestLine(HttpMethod.of(requestLine[0]), requestUri[0], parseQueryString(requestUri));
     }
 
     private static RequestParameter parseQueryString(String[] requestUri) {
@@ -30,7 +30,7 @@ public class RequestLine {
         return RequestParameter.parse(requestUri[1]);
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 

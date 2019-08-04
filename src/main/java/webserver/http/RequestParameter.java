@@ -1,5 +1,7 @@
 package webserver.http;
 
+import utils.StringUtils;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -11,7 +13,6 @@ public class RequestParameter {
     private static final String QUERY_PREFIX = "?";
     private static final String QUERY_DELIMITER = "&";
     private static final String QUERY_KEY_VALUE_DELIMITER = "=";
-    private static final String EMPTY_PARAMETER = "";
 
     private Map<String, String> parameters;
 
@@ -20,7 +21,7 @@ public class RequestParameter {
     }
 
     public static RequestParameter parse(String queryString) {
-        if (queryString == null || queryString.isEmpty()) {
+        if (StringUtils.isEmpty(queryString)) {
             return EMPTY;
         }
 
@@ -36,18 +37,8 @@ public class RequestParameter {
 
     private static Map<String, String> parseParameters(String queryString) {
         return Arrays.stream(queryString.split(QUERY_DELIMITER))
-                .map(param -> param.split(QUERY_KEY_VALUE_DELIMITER))
-                .collect(Collectors.toMap(
-                        param -> param[0],
-                        RequestParameter::getParamValueOrDefault
-                ));
-    }
-
-    private static String getParamValueOrDefault(String[] entry) {
-        if (entry.length <= 1) {
-            return EMPTY_PARAMETER;
-        }
-        return entry[1];
+                .map(param -> StringPair.split(param, QUERY_KEY_VALUE_DELIMITER))
+                .collect(Collectors.toMap(StringPair::getKey, StringPair::getValue));
     }
 
     public Map<String, String> getParameters() {
