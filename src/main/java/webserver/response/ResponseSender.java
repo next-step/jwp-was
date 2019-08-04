@@ -57,7 +57,7 @@ public class ResponseSender {
                             .map(entry -> entry.getKey() + "=" + entry.getValue())
                             .collect(joining(",")))
                     .orElse("");
-            dos.writeBytes("Cookie: " + cookies);
+            dos.writeBytes("Set-Cookie: " + cookies + "; Path=/");
         }
 
         dos.writeBytes("\r\n");
