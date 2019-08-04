@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class RequestHeaders {
+public class HttpHeaders {
     private Map<String, String> headers = new HashMap<>();
 
     public void add(String key, String value) {
@@ -34,7 +34,7 @@ public class RequestHeaders {
 
     @Override
     public String toString() {
-        return "RequestHeaders{" +
+        return "HttpHeaders{" +
                 "headers=" + headers +
                 '}';
     }

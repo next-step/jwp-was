@@ -18,11 +18,11 @@ public class RequestLineTest {
     }
 
     @Test
-    void get_with_querystring_parse() {
+    void get_with_querystring_parse2() {
         assertThat(GET_QUERYSTRING.getMethod()).isEqualTo("GET");
         assertThat(GET_QUERYSTRING.getPath()).isEqualTo("/users");
         assertThat(GET_QUERYSTRING.getVersion()).isEqualTo("HTTP/1.1");
-        assertThat(GET_QUERYSTRING.getParameter("userId")).isEqualTo("javajigi");
+        assertThat(GET_QUERYSTRING.getQueryString()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
     }
 
     @Test

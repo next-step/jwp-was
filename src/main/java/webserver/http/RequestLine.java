@@ -23,8 +23,8 @@ public class RequestLine {
         return requestURL.getPath();
     }
 
-    public String getParameter(String key) {
-        return requestURL.getQuery(key);
+    public String getQueryString() {
+        return requestURL.getQueryString();
     }
 
     public static RequestLine parse(String requestLine) {
@@ -34,5 +34,4 @@ public class RequestLine {
         String version = splitedRequestLine[2];
         return new RequestLine(method, RequestURL.parse(path), version);
     }
-
 }
