@@ -3,8 +3,12 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
+import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +21,8 @@ import webserver.http.RequestLine;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    public static final String INDEX_HTML = "/index.html";
+    public static final String TEMPLATES_PATH = "templates";
 
     private Socket connection;
 
@@ -45,42 +51,48 @@ public class RequestHandler implements Runnable {
                 requestBody = RequestBody.parse(IOUtils.readData(br, contentLength));
             }
 
-            if ("POST".equals(requestLine.getMethod()) && requestLine.getPath().indexOf("/user/create") > -1) {
-                User newUser = new User(
-                        requestBody.getParameter("userId"),
-                        requestBody.getParameter("password"),
-                        StringUtils.unescape(requestBody.getParameter("name")),
-                        StringUtils.unescape(requestBody.getParameter("email"))
-                );
+            if ("POST".equals(requestLine.getMethod())
+                    && "/user/create".equals(requestLine.getPath())) {
+                logger.debug("Create new user");
+
+                User newUser = Optional.ofNullable(requestBody)
+                        .map(parameters -> newUser(parameters))
+                        .orElseThrow(IllegalArgumentException::new);
+
+                DataBase.addUser(newUser);
 
                 DataOutputStream dos = new DataOutputStream(out);
-                byte[] body = newUser.toString().getBytes();
-                response200Header(dos, body.length);
-                responseBody(dos, body);
-            } else if ("GET".equals(requestLine.getMethod()) && requestLine.getPath().indexOf("/user/create") > -1) {
-                User newUser = new User(
-                        requestLine.getParameter("userId"),
-                        requestLine.getParameter("password"),
-                        StringUtils.unescape(requestLine.getParameter("name")),
-                        StringUtils.unescape(requestLine.getParameter("email"))
-                );
-
-                DataOutputStream dos = new DataOutputStream(out);
-                byte[] body = newUser.toString().getBytes();
-                response200Header(dos, body.length);
-                responseBody(dos, body);
-            } else {
-                DataOutputStream dos = new DataOutputStream(out);
-                final String TEMPLATES_PATH = "templates";
-                String template = Paths.get(".", TEMPLATES_PATH, requestLine.getPath()).toString();
-                byte[] body = FileIoUtils.loadFileFromClasspath(template);
-                response200Header(dos, body.length);
-                responseBody(dos, body);
+                response302Header(dos, INDEX_HTML);
+                responseBody(dos, null);
+                return;
             }
+
+            DataOutputStream dos = new DataOutputStream(out);
+            byte[] body = getContentBy(requestLine.getPath());
+            response200Header(dos, body.length);
+            responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         } catch (URISyntaxException e) {
             logger.error(e.getMessage(), e);
+        }
+    }
+
+    private User newUser(RequestBody requestBody) {
+        return new User(
+                requestBody.getParameter("userId"),
+                requestBody.getParameter("password"),
+                StringUtils.unescape(requestBody.getParameter("name")),
+                StringUtils.unescape(requestBody.getParameter("email"))
+        );
+    }
+
+    private byte[] getContentBy(String path) throws IOException, URISyntaxException {
+        Path templatePath = Paths.get(".", TEMPLATES_PATH, path);
+        try {
+            return FileIoUtils.loadFileFromClasspath(templatePath.toString());
+        } catch (NullPointerException e) {
+            throw new FileNotFoundException(path);
         }
     }
 
@@ -89,6 +101,16 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(DataOutputStream dos, String location) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes(String.format("Location: %s \r\n", location));
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
