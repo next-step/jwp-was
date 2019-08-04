@@ -30,6 +30,8 @@ public class HttpUtils {
         return queryParameters;
     }
 
+
+
     public static Map<String, Cookie> parserCookie(String string) {
         Map<String, Cookie> cookies = new HashMap<>();
 
