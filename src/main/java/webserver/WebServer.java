@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import webserver.handler.Handler;
 import webserver.handler.HomeRequestMappingHandler;
 import webserver.handler.TemplateResourceHandler;
+import webserver.handler.UserCreateRequestMappingHandler;
 import webserver.resolver.HtmlViewResolver;
 import webserver.resolver.ViewResolver;
 
@@ -33,6 +34,7 @@ public class WebServer {
             ViewResolver viewResolver = new HtmlViewResolver();
             List<Handler> handlers = Arrays.asList(
                     new HomeRequestMappingHandler(viewResolver),
+                    new UserCreateRequestMappingHandler(viewResolver),
                     new TemplateResourceHandler(viewResolver)
             );
 

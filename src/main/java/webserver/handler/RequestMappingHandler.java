@@ -14,6 +14,10 @@ public abstract class RequestMappingHandler implements Handler {
 
     @Override
     public HttpResponse doHandle(HttpRequest httpRequest) throws Exception {
+        if (!canHandle(httpRequest)) {
+            throw new IllegalArgumentException("잘못된 요청입니다.");
+        }
+
         switch (httpRequest.getMethod()) {
             case GET:
                 return doGet(httpRequest);
