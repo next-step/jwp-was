@@ -2,8 +2,6 @@ package webserver.http;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +12,6 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpRequestTest {
-    private static final Logger logger = LoggerFactory.getLogger(HttpRequestTest.class);
     private static BufferedReader bufferedReader;
 
     @BeforeAll

@@ -20,9 +20,9 @@ public enum  FileResponseEnum {
     private String fileSuffix;
     private Function<String, HttpResponse> responseFunction;
 
-    private static final String STATIC_FILE_PREFIX = "/static";
+    private static final String STATIC_FILE_PREFIX = "./static";
     private static final String CSS_FILE_SUFFIX = ".css";
-    private static final String TEMPLATE_FILE_PREFIX = "/templates";
+    private static final String TEMPLATE_FILE_PREFIX = "./templates";
     private static final String HTML_FILE_SUFFIX = ".html";
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
     private static final String CSS_CONTENT_TYPE = "text/css";
