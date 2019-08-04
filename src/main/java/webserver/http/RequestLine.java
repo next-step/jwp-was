@@ -36,7 +36,20 @@ public class RequestLine {
         return requestUri.getQueryParams();
     }
 
+    public String getParameter(String key) {
+        return requestUri.getParameter(key);
+    }
+
     public String getHttpVersion() {
         return httpVersion;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "httpMethod='" + httpMethod + '\'' +
+                ", requestUri=" + requestUri +
+                ", httpVersion='" + httpVersion + '\'' +
+                '}';
     }
 }
