@@ -11,4 +11,8 @@ public class StringUtils {
     public static boolean isNotEmpty(String value) {
         return !isEmpty(value);
     }
+
+    public static String removeWhiteSpace(String value) {
+        return value.replaceAll("\\s", "");
+    }
 }

@@ -2,20 +2,22 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
+import webserver.handler.Handler;
 import webserver.http.HttpRequest;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.URISyntaxException;
+import java.util.List;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private List<Handler> handlers;
 
-    public RequestHandler(Socket connectionSocket) {
+    public RequestHandler(Socket connectionSocket, List<Handler> handlers) {
         this.connection = connectionSocket;
+        this.handlers = handlers;
     }
 
     @Override
@@ -26,32 +28,14 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             HttpRequest httpRequest = HttpRequest.parse(br);
-            byte[] body = FileIoUtils.loadFileFromClasspath("./templates/" + httpRequest.getPath());
 
-            DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-        } catch (URISyntaxException | IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
+            handlers.stream()
+                    .filter(handler -> handler.canHandle(httpRequest))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("잘못된 요청입니다."))
+                    .doHandle(httpRequest)
+                    .write(new DataOutputStream(out));
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }

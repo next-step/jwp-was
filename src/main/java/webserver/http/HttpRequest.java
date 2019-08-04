@@ -33,13 +33,16 @@ public class HttpRequest {
         for (String line = br.readLine(); StringUtils.isNotEmpty(line); line = br.readLine()) {
             StringPair pair = StringPair.split(line, HEADER_KEY_VALUE_DELIMITER, HEADER_SPLIT_LIMIT);
             headers.put(pair.getKey(), pair.getValue());
-            headers.put(pair.getKey(), pair.getValue());
         }
         return headers;
     }
 
     public String getPath() {
         return requestLine.getPath();
+    }
+
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
     }
 
     public Map<String, String> getHeaders() {

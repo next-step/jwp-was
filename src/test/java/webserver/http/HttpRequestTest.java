@@ -46,7 +46,7 @@ public class HttpRequestTest {
         assertThatIllegalArgumentException().isThrownBy(() -> HttpRequest.parse(br));
     }
 
-    private static BufferedReader createInputStream(String... strings) {
+    public static BufferedReader createInputStream(String... strings) {
         String input = Arrays.stream(strings).collect(Collectors.joining(System.lineSeparator()));
         return new BufferedReader(new StringReader(input));
     }
