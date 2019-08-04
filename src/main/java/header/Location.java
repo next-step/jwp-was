@@ -18,7 +18,7 @@ public class Location implements HeaderResponse {
     }
 
     @Override
-    public String value() {
+    public String valueAll() {
         return location;
     }
 }

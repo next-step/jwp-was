@@ -8,13 +8,13 @@ import response.HeaderResponse;
 public enum ContentType implements HeaderResponse {
     TEXT_HTML("text/html;charset=utf-8"){
         @Override
-        public String value() {
+        public String valueAll() {
             return text();
         }
     },
     CSS("text/css;charset=utf-8"){
         @Override
-        public String value() {
+        public String valueAll() {
             return text();
         }
     };

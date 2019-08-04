@@ -63,15 +63,15 @@ public class HttpResponse {
         }
     }
 
+    private void writeResponseStatus(DataOutputStream dos) throws IOException {
+        dos.writeBytes("HTTP/1.1 " + httpStatus.toString());
+        dos.writeBytes(System.lineSeparator());
+    }
+
     private void writeHeader(DataOutputStream dos) throws IOException {
         for (HeaderResponse headerResponse : httpHeaders.toList()) {
             dos.writeBytes(headerResponse.keyValue());
-            dos.writeBytes(System.lineSeparator());
         }
-    }
-
-    private void writeResponseStatus(DataOutputStream dos) throws IOException {
-        dos.writeBytes(httpStatus.toString());
         dos.writeBytes(System.lineSeparator());
     }
 

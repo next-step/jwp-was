@@ -18,7 +18,7 @@ public class ContentLength implements HeaderResponse {
     }
 
     @Override
-    public String value() {
+    public String valueAll() {
         return String.valueOf(contentLength);
     }
 }

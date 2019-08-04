@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
+import static response.HeaderResponse.KEY_VALUE_SPLITER;
+
 /**
  * Created by youngjae.havi on 2019-08-02
  */
@@ -72,10 +74,13 @@ public class HttpRequest {
         String line;
         boolean isRequestLine = true;
         while ((line = bufferedReader.readLine()) != null && !StringUtils.isEmpty(line)) {
-            String[] keyValue = line.split(":");
+            String[] keyValue = line.split(KEY_VALUE_SPLITER);
             boolean finalIsRequestLine = isRequestLine;
             Optional<Field> optionalField = Arrays.stream(this.getClass().getDeclaredFields())
-                    .filter(f -> finalIsRequestLine || f.getAnnotationsByType(RequestHeaderProperty.class)[0].value().equalsIgnoreCase(keyValue[0]))
+                    .filter(f -> {
+                        RequestHeaderProperty[] propertys = f.getAnnotationsByType(RequestHeaderProperty.class);
+                        return finalIsRequestLine || (propertys.length > 0 && propertys[0].value().equalsIgnoreCase(keyValue[0]));
+                    })
                     .findAny();
 
             if (!optionalField.isPresent()) {

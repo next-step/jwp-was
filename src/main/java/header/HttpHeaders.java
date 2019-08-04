@@ -2,10 +2,7 @@ package header;
 
 import response.HeaderResponse;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -20,7 +17,13 @@ public class HttpHeaders {
 
     public static HttpHeaders of(HeaderResponse... headerResponses) {
         return new HttpHeaders(Arrays.stream(headerResponses)
-                .collect(Collectors.toMap(HeaderResponse::key, o -> o))
+                .collect(Collectors.toMap(
+                        HeaderResponse::key,
+                        o -> o,
+                        (u, v) -> {
+                            throw new IllegalStateException(String.format("Duplicate key %s", u));
+                        },
+                        LinkedHashMap::new))
         );
     }
 

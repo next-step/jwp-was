@@ -55,7 +55,7 @@ public class Cookie implements HeaderSetter<Cookie>, HeaderResponse {
     }
 
     @Override
-    public String value() {
+    public String valueAll() {
         return cookieMap.keySet().stream()
                 .map(key -> key + SPLIT_KEY_VALUE.getSplitter() + cookieMap.get(key))
                 .collect(Collectors.joining("; "));
