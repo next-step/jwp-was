@@ -1,4 +1,4 @@
-package webserver;
+package webserver.request;
 
 public class RequestLine {
 
@@ -7,41 +7,45 @@ public class RequestLine {
     static final int INDEX_OF_VERSION = 2;
 
     private HttpMethod method;
-    private HttpURL url;
+    private HttpURI uri;
     private String version;
 
-    private RequestLine(HttpMethod method, HttpURL url, String version) {
+    private RequestLine(HttpMethod method, HttpURI uri, String version) {
         this.method = method;
-        this.url = url;
+        this.uri = uri;
         this.version = version;
     }
 
-    static RequestLine parse(String request) {
+    public static RequestLine parse(String request) {
         String[] requests = request.split(" ");
         return new RequestLine(
                 HttpMethod.valueOf(requests[INDEX_OF_METHOD]),
-                HttpURL.of(requests[INDEX_OF_URL]),
+                HttpURI.of(requests[INDEX_OF_URL]),
                 requests[INDEX_OF_VERSION]
         );
     }
 
-    HttpMethod getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
-    HttpURL getUrl() {
-        return url;
+    public HttpURI getUri() {
+        return uri;
     }
 
-    String getVersion() {
-        return version;
+    public boolean matchPath(String path) {
+        return uri.matchPath(path);
+    }
+
+    public String getPath() {
+        return uri.getPath();
     }
 
     @Override
     public String toString() {
         return "RequestLine{" +
                 "method=" + method +
-                ", url=" + url +
+                ", uri=" + uri +
                 ", version='" + version + '\'' +
                 '}';
     }

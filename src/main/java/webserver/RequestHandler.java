@@ -1,26 +1,85 @@
 package webserver;
 
+import com.sun.net.httpserver.HttpPrincipal;
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import utils.IOUtils;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private List<Servlet> servlets;
 
     RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
+        this.servlets = Arrays.asList(
+                new Servlet() {
+                    @Override
+                    public boolean isMapping(Request request) {
+                        return request.matchPath("/user/create");
+                    }
+
+                    @Override
+                    public Response supply(Request request) {
+                        String userId = request.getParameter("userId");
+                        String password = request.getParameter("password");
+                        String name = request.getParameter("name");
+                        String email = request.getParameter("email");
+                        DataBase.addUser(new User(userId, password, name, email));
+                        logger.info("allUsers {}", DataBase.findAll());
+
+                        return Response.redirect("/index.html");
+                    }
+                },
+                new Servlet() {
+                    @Override
+                    public boolean isMapping(Request request) {
+                        return request.matchPath("/user/login");
+                    }
+
+                    @Override
+                    public Response supply(Request request) {
+                        String userId = request.getParameter("userId");
+                        String password = request.getParameter("password");
+                        User userById = DataBase.findUserById(userId);
+
+                        HttpHeaders httpHeaders = new HttpHeaders();
+                        if (userById == null || !userById.checkPassword(password)) {
+                            httpHeaders.add("Set-Cookie: logined=false; Path=/");
+                            return Response.redirect("/user/login_failed.html");
+                        }
+                        httpHeaders.add("Set-Cookie: logined=true; Path=/");
+                        return Response.redirectWithHeaders("/index.html", httpHeaders);
+                    }
+                },
+                new Servlet() {
+                    @Override
+                    public boolean isMapping(Request request) {
+                        return request.isGet();
+                    }
+
+                    @Override
+                    public Response supply(Request request) throws Exception {
+                        String path = request.getPath();
+                        String suffix = path.substring(path.lastIndexOf(".") + 1);
+
+                        byte[] body = null;
+                        if (suffix.equals("html") || suffix.equals("ico")) {
+                            body = FileIoUtils.loadFileFromClasspath("./templates" + request.getPath());
+                        } else {
+                            body = FileIoUtils.loadFileFromClasspath("./static" + request.getPath());
+                        }
+                        return Response.ok(body);
+                    }
+                });
     }
 
     public void run() {
@@ -29,70 +88,19 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
-            HttpHeader httpHeader = parseHeaders(bufferedReader);
+            Request request = Request.of(in);
+            logger.info("IN request: {}", request);
 
-            logger.info("IN RequestLine: {}, Headers: {}", requestLine, httpHeader);
+            Servlet servlet = this.servlets.stream()
+                    .filter(it -> it.isMapping(request))
+                    .findFirst()
+                    .get();
 
-            DataOutputStream dos = new DataOutputStream(out);
-            if (requestLine.getUrl().getPath().equals("/user/create")) {
-                String requestBody = IOUtils.readData(bufferedReader, Integer.parseInt(httpHeader.get("Content-Length")));
-                logger.info("RequestBody {}", requestBody);
-
-                String[] splitRequestBody = requestBody.split("&");
-                Map<String, String> parameters = Arrays.stream(splitRequestBody)
-                        .collect(Collectors.toMap((data) -> data.split("=")[0], (data) -> data.split("=")[1]));
-
-                String userId = parameters.get("userId");
-                String password = parameters.get("password");
-                String name = parameters.get("name");
-                String email = parameters.get("email");
-                DataBase.addUser(new User(userId, password, name, email));
-                logger.info("allUsers {}", DataBase.findAll());
-
-                byte[] body = FileIoUtils.loadFileFromClasspath("templates/index.html");
-                response200Header(dos, body.length);
-                responseBody(dos, body);
-            } else {
-                byte[] body = FileIoUtils.loadFileFromClasspath("templates" + requestLine.getUrl().getPath());
-                response200Header(dos, body.length);
-                responseBody(dos, body);
-            }
-        } catch (IOException | URISyntaxException e) {
+            Response response = servlet.supply(request);
+            response.send(out);
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
 
-    private HttpHeader parseHeaders(BufferedReader bufferedReader) throws IOException {
-        HttpHeader httpHeader = new HttpHeader();
-        String headerInfo;
-        while ((headerInfo = bufferedReader.readLine()) != null) {
-            if(headerInfo.isEmpty()){
-                break;
-            }
-            httpHeader.add(headerInfo);
-        }
-        return httpHeader;
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
 }

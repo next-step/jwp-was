@@ -1,9 +1,14 @@
 package webserver;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class HttpHeader {
+public class HttpHeaders {
+
+    static final String CONTENT_LENGTH = "Content-Length";
+    static final String LOCATION = "Location";
 
     private Map<String, String> headerInfo = new HashMap<>();
 
@@ -12,15 +17,39 @@ public class HttpHeader {
         headerInfo.put(parameter.getField(), parameter.getValue());
     }
 
-    String get(String field) {
+    public String get(String field) {
         return headerInfo.get(field);
+    }
+
+    int getContentLength() {
+        return Integer.parseInt(headerInfo.getOrDefault(CONTENT_LENGTH, "-1"));
+    }
+
+    void setLocation(String path) {
+        headerInfo.put(LOCATION, path);
+    }
+
+    void setContentLength(int contentLength) {
+        headerInfo.put(CONTENT_LENGTH, String.valueOf(contentLength));
+    }
+
+    List<String> output() {
+        return headerInfo.entrySet()
+                .stream()
+                .map(entry -> new Parameter(entry.getKey(), entry.getValue()))
+                .map(Parameter::toString)
+                .collect(Collectors.toList());
     }
 
     @Override
     public String toString() {
-        return "HttpHeader{" +
+        return "HttpHeaders{" +
                 "headerInfo=" + headerInfo +
                 '}';
+    }
+
+    public void add(String s, String s1) {
+        headerInfo.put(s, s1);
     }
 
     static class Parameter {
@@ -33,7 +62,7 @@ public class HttpHeader {
         private String field;
         private String value;
 
-        private Parameter(String field, String value) {
+        Parameter(String field, String value) {
             this.field = field;
             this.value = value;
         }
@@ -52,6 +81,11 @@ public class HttpHeader {
 
         String getValue() {
             return value;
+        }
+
+        @Override
+        public String toString() {
+            return field + SEPARATOR + value;
         }
     }
 }

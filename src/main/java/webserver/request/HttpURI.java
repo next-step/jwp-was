@@ -1,8 +1,8 @@
-package webserver;
+package webserver.request;
 
 import java.util.regex.Pattern;
 
-public class HttpURL {
+public class HttpURI {
 
     private static final String SEPARATOR = "?";
     private static final int INDEX_OF_PATH = 0;
@@ -11,17 +11,17 @@ public class HttpURL {
     private QueryString queryString;
     private String path;
 
-    private HttpURL(String path, QueryString queryString) {
+    private HttpURI(String path, QueryString queryString) {
         this.path = path;
         this.queryString = queryString;
     }
 
-    static HttpURL of(String url) {
+    static HttpURI of(String url) {
         if (url.contains(SEPARATOR)) {
             String[] content = url.split(Pattern.quote(SEPARATOR));
-            return new HttpURL(content[INDEX_OF_PATH], QueryString.of(content[INDEX_OF_QUERY]));
+            return new HttpURI(content[INDEX_OF_PATH], QueryString.of(content[INDEX_OF_QUERY]));
         }
-        return new HttpURL(url, QueryString.EMPTY);
+        return new HttpURI(url, QueryString.EMPTY);
     }
 
     String getPath() {
@@ -32,9 +32,13 @@ public class HttpURL {
         return queryString.get(attribute);
     }
 
+    boolean matchPath(String path) {
+        return this.path.equals(path);
+    }
+
     @Override
     public String toString() {
-        return "HttpURL{" +
+        return "HttpURI{" +
                 "queryString=" + queryString +
                 ", path='" + path + '\'' +
                 '}';

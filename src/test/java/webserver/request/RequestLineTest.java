@@ -1,13 +1,12 @@
-package webserver;
+package webserver.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static webserver.RequestLine.INDEX_OF_METHOD;
-import static webserver.RequestLine.INDEX_OF_URL;
-import static webserver.RequestLine.INDEX_OF_VERSION;
+import static webserver.request.RequestLine.INDEX_OF_METHOD;
+import static webserver.request.RequestLine.INDEX_OF_URL;
 
 class RequestLineTest {
 
@@ -24,8 +23,7 @@ class RequestLineTest {
 
         // then
         assertThat(requestLine.getMethod()).isEqualTo(method);
-        assertThat(requestLine.getUrl().getPath()).isEqualTo(expectedResult[INDEX_OF_URL]);
-        assertThat(requestLine.getVersion()).isEqualTo(expectedResult[INDEX_OF_VERSION]);
+        assertThat(requestLine.getUri().getPath()).isEqualTo(expectedResult[INDEX_OF_URL]);
     }
 
     @DisplayName("GET 메소드 요청 시 requestLine을 생성한다")
@@ -35,12 +33,12 @@ class RequestLineTest {
             "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1",
             "GET /users?userId=javajigi HTTP/1.1"
     })
-    void requesetLine_GET_thenSuccess(String request) {
+    void requestLine_GET_thenSuccess(String request) {
         // when
         RequestLine requestLine = RequestLine.parse(request);
 
         // then
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(requestLine.getUrl().getPath()).isEqualTo("/users");
+        assertThat(requestLine.getUri().getPath()).isEqualTo("/users");
     }
 }
