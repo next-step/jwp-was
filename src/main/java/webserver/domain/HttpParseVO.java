@@ -4,19 +4,37 @@ import java.util.HashMap;
 
 public class HttpParseVO {
 
-    private String resultCode = "200";
+    private int resultCode = 200;
     private String method;
     private String urlPath;
     private String version;
     private HashMap<String, String> parameter;
     private HashMap<String, String> etcHeader;
     private String returnContent;
+    private String location;
+    private String cookie;
 
-    public String getResultCode() {
+    public String getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public int getResultCode() {
         return resultCode;
     }
 
-    public void setResultCode(String resultCode) {
+    public void setResultCode(int resultCode) {
         this.resultCode = resultCode;
     }
 

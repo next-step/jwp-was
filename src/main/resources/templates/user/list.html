@@ -89,6 +89,11 @@
                 <tr>
                     <th scope="row">2</th> <td>slipp</td> <td>슬립</td> <td>slipp@sample.net</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
                 </tr>
+                {{#each}}
+                    <tr>
+                        <th scope="row">2</th> <td>{{userId}}</td> <td>{{name}}</td> <td>{{email}}</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
+                    </tr>
+                {{/each}}
               </tbody>
           </table>
         </div>

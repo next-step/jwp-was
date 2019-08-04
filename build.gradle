@@ -9,6 +9,7 @@ repositories {
 }
 
 dependencies {
+    compile group: 'com.github.jknack', name: 'handlebars', version: '4.1.2'
     implementation 'com.google.guava:guava:28.0-jre'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
     implementation 'com.github.jknack:handlebars:4.1.2'
