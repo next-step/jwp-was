@@ -1,4 +1,4 @@
-package webserver;
+package webserver.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class HttpURLTest {
+class HttpURITest {
 
     @DisplayName("path를 구하는데 성공한다")
     @ParameterizedTest
@@ -16,13 +16,13 @@ class HttpURLTest {
             "/users?userId=javajigi&password=password&name=JaeSung"})
     void createPath_success(String path) {
         // when
-        HttpURL httpURL = HttpURL.of(path);
+        HttpURI httpURI = HttpURI.of(path);
 
         // then
-        assertThat(httpURL.getPath()).isEqualTo("/users");
+        assertThat(httpURI.getPath()).isEqualTo("/users");
     }
 
-    @DisplayName("query 속성의 값을 구하는데 성꽁한다")
+    @DisplayName("query 속성의 값을 구하는데 성공한다")
     @ParameterizedTest
     @CsvSource({
             "'userId', 'javajigi'",
@@ -34,8 +34,8 @@ class HttpURLTest {
         String url = "/users?userId=javajigi&password=password&name=JaeSung";
 
         // when
-        HttpURL httpURL = HttpURL.of(url);
-        String result = httpURL.getRequestParam(attribute);
+        HttpURI httpURI = HttpURI.of(url);
+        String result = httpURI.getRequestParam(attribute);
 
         // then
         assertThat(result).isEqualTo(value);

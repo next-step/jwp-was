@@ -1,45 +1,33 @@
-package webserver;
-
-import org.springframework.util.StringUtils;
+package webserver.request;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
-import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toMap;
 
-public class QueryString {
+public class Cookie {
 
-    static final QueryString EMPTY = new QueryString(emptyMap());
+    private static final String SEPARATOR = "; ";
+    private Map<String, String> cookies;
 
-    private static final String SEPARATOR = "&";
-
-    private Map<String, String> parameters;
-
-    private QueryString(Map<String, String> parameters) {
-        this.parameters = parameters;
+    private Cookie(Map<String, String> cookies) {
+        this.cookies = cookies;
     }
 
-    static QueryString of(String queryString) {
-        if (queryString == null || StringUtils.isEmpty(queryString.trim())) {
-            return EMPTY;
+    public static Cookie of(String token) {
+        if (token == null || token.isEmpty()) {
+            return new Cookie(Collections.emptyMap());
         }
-        String[] parameters = queryString.split(SEPARATOR);
 
-        return Arrays.stream(parameters)
+        return Arrays.stream(token.split(SEPARATOR))
                 .map(Parameter::of)
-                .collect(collectingAndThen(toMap(Parameter::getAttribute, Parameter::getValue),
-                        QueryString::new));
+                .collect(collectingAndThen(toMap(Parameter::getAttribute, Parameter::getValue), Cookie::new));
     }
 
-    String get(String attribute) {
-        return parameters.get(attribute);
-    }
-
-    Map<String, String> getParameters() {
-        return Collections.unmodifiableMap(parameters);
+    public String get(String key) {
+        return cookies.get(key);
     }
 
     static class Parameter {
