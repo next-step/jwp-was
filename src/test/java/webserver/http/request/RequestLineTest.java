@@ -1,7 +1,9 @@
-package webserver.http;
+package webserver.http.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.request.RequestLine;
+import webserver.http.request.RequestUri;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

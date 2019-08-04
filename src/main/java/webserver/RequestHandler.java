@@ -10,9 +10,9 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
-import webserver.http.HttpRequest;
-import webserver.http.RequestBody;
-import webserver.http.RequestUri;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestBody;
+import webserver.http.request.RequestUri;
 
 import java.io.*;
 import java.net.Socket;

@@ -1,9 +1,8 @@
-package webserver.http;
+package webserver.http.request;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class QueryParameter {

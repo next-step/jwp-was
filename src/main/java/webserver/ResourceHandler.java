@@ -1,7 +1,7 @@
 package webserver;
 
 import utils.FileIoUtils;
-import webserver.http.RequestUri;
+import webserver.http.request.RequestUri;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

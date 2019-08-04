@@ -2,7 +2,7 @@ package webserver;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.RequestUri;
+import webserver.http.request.RequestUri;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
