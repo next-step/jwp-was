@@ -2,6 +2,8 @@ package webserver;
 
 import utils.MapUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,4 +44,20 @@ public class URLQuery {
     public Map<String, String> getQueryMap() {
         return queryMap;
     }
+
+    /**
+     * @return if parameter is empty or decoding fail, return null
+     */
+    public String getParameter(String key) {
+        if (! queryMap.containsKey(key)) {
+            return null;
+        }
+
+        try {
+            return URLDecoder.decode(queryMap.get(key), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+
 }

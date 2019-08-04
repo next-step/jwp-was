@@ -1,5 +1,7 @@
 package webserver.request;
 
+import webserver.URLQuery;
+
 public class RequestHolder {
     private RequestLine requestLine;
     private RequestHeader requestHeader;
@@ -16,4 +18,9 @@ public class RequestHolder {
     public RequestHeader getRequestHeader() {
         return requestHeader;
     }
+
+    public URLQuery getUrlQuery() {
+        return requestLine.getUrlQuery();
+    }
+
 }
