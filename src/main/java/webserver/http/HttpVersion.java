@@ -3,8 +3,11 @@ package webserver.http;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HttpVersion {
-    private static final Pattern HTTP_VERSION_PATTERN = Pattern.compile("^HTTP\\/(\\d+).(\\d+)$");
+public class HttpVersion implements Comparable<HttpVersion> {
+    private static final String HTTP = "HTTP";
+    private static final Pattern HTTP_VERSION_PATTERN = Pattern.compile(
+            "^" + HTTP + "\\/(\\d+).(\\d+)$"
+    );
 
     private final int major;
     private final int minor;
@@ -16,8 +19,14 @@ public class HttpVersion {
 
     static HttpVersion parse(final String field) {
         final Matcher matcher = HTTP_VERSION_PATTERN.matcher(field);
-        matcher.matches();
-        return new HttpVersion(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+        if (matcher.matches()) {
+            return new HttpVersion(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+        }
+        throw new ParseException();
+    }
+
+    boolean lowerThan(final HttpVersion that) {
+        return compareTo(that) < 0;
     }
 
     int getMajor() {
@@ -29,10 +38,23 @@ public class HttpVersion {
     }
 
     @Override
+    public int compareTo(final HttpVersion o) {
+        int delta = this.major - o.major;
+        if (delta == 0) {
+            delta = this.minor - o.minor;
+        }
+        return delta;
+    }
+
+    @Override
     public String toString() {
-        return "HttpVersion{" +
-                "major=" + major +
-                ", minor=" + minor +
-                '}';
+        return new StringBuilder()
+                .append(HTTP)
+                .append('/')
+                .append(major)
+                .append('.')
+                .append(minor)
+                .toString()
+                ;
     }
 }
