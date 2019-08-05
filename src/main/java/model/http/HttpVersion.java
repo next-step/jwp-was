@@ -25,4 +25,11 @@ public enum HttpVersion {
                 .filter(httpVersion -> httpVersion.getVersion().equals(version))
                 .findFirst();
     }
+
+    @Override
+    public String toString() {
+        return "HttpVersion{" +
+                "version='" + version + '\'' +
+                '}';
+    }
 }

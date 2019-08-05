@@ -48,4 +48,11 @@ public class Query {
     public int hashCode() {
         return Objects.hash(parameters);
     }
+
+    @Override
+    public String toString() {
+        return "Query{" +
+                "parameters=" + parameters +
+                '}';
+    }
 }

@@ -57,4 +57,12 @@ public class QueryParameter {
     public int hashCode() {
         return Objects.hash(key, value);
     }
+
+    @Override
+    public String toString() {
+        return "QueryParameter{" +
+                "key='" + key + '\'' +
+                ", value='" + value + '\'' +
+                '}';
+    }
 }

@@ -35,4 +35,11 @@ public class Path {
     public int hashCode() {
         return Objects.hash(path);
     }
+
+    @Override
+    public String toString() {
+        return "Path{" +
+                "path='" + path + '\'' +
+                '}';
+    }
 }

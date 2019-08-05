@@ -32,4 +32,13 @@ public class RequestLine {
         HttpVersion version = HttpVersion.of(parts[2]);
         return new RequestLine(method, requestUri, version);
     }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method=" + method +
+                ", requestUri=" + requestUri +
+                ", httpVersion=" + httpVersion +
+                '}';
+    }
 }

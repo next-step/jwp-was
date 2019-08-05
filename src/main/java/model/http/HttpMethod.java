@@ -15,4 +15,11 @@ public enum HttpMethod {
     public String getMethod() {
         return method;
     }
+
+    @Override
+    public String toString() {
+        return "HttpMethod{" +
+                "method='" + method + '\'' +
+                '}';
+    }
 }

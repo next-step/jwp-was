@@ -57,4 +57,12 @@ public class RequestUri {
     public int hashCode() {
         return Objects.hash(path, query);
     }
+
+    @Override
+    public String toString() {
+        return "RequestUri{" +
+                "path=" + path +
+                ", query=" + query +
+                '}';
+    }
 }
