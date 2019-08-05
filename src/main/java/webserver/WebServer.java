@@ -1,18 +1,18 @@
 package webserver;
 
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.List;
-
-import domain.user.UserListHandlerProvider;
+import domain.user.CreateUserHandler;
+import domain.user.LoginHandler;
+import domain.user.UserListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import domain.user.CreateUserHandlerProvider;
-import domain.user.LoginHandlerProvider;
 import view.HandlebarsCompiler;
-import webserver.handler.PatternMatchHandlerProvider;
-import webserver.handler.ResourceHandler;
+import webserver.handler.HandlerMapper;
 import webserver.handler.HandlerProvider;
+import webserver.handler.ResourceHandler;
+import webserver.http.RequestMethod;
+
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class WebServer {
 
@@ -21,7 +21,7 @@ public class WebServer {
 
     public static void main(final String... args) throws Exception {
         final int port = getPort(args);
-        final List<HandlerProvider> handlerProviders = getHandlerProviders();
+        final HandlerProvider handlerProviders = getHandlerProvider();
 
         // 서버소켓을 생성한다. 웹서버는 기본적으로 8080번 포트를 사용한다.
         try (final ServerSocket listenSocket = new ServerSocket(port)) {
@@ -38,20 +38,18 @@ public class WebServer {
         }
     }
 
-    // TODO: 추후 RequestMapping / DI 전환될 로직들
-    private static List<HandlerProvider> getHandlerProviders() {
-        final HandlerProvider templatesResourceProvider = new PatternMatchHandlerProvider("(.)*.html$",
-                new ResourceHandler("templates"));
-        final HandlerProvider staticResourceProvider = new PatternMatchHandlerProvider(
-                "(.)*.(css|fonts|images|js)$", new ResourceHandler("static"));
+    private static HandlerProvider getHandlerProvider() {
+        final HandlerMapper handlerMapper = new HandlerMapper();
 
-        return List.of(
-                templatesResourceProvider,
-                staticResourceProvider,
-                new CreateUserHandlerProvider(),
-                new LoginHandlerProvider(),
-                new UserListHandlerProvider(HandlebarsCompiler.of("/templates", ".html"))
-        );
+        handlerMapper.register("^\\/(css|fonts|images|js)\\/(.)*", RequestMethod.GET,
+                new ResourceHandler("static"));
+        handlerMapper.register("(.)*.html$", RequestMethod.GET, new ResourceHandler("templates"));
+        handlerMapper.register("/user/create", RequestMethod.POST, new CreateUserHandler());
+        handlerMapper.register("/user/login", RequestMethod.POST, new LoginHandler());
+        handlerMapper.register("/user/list", RequestMethod.GET,
+                new UserListHandler(HandlebarsCompiler.of("/templates", ".html")));
+
+        return handlerMapper;
     }
 
     private static int getPort(final String... args) {

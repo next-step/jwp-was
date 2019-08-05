@@ -2,8 +2,8 @@ package webserver.handler;
 
 import webserver.http.request.Request;
 
+@FunctionalInterface
 public interface HandlerProvider {
 
-    boolean support(final Request request);
-    Handler provide();
+    Handler provide(final Request request);
 }

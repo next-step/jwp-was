@@ -1,28 +1,26 @@
 package webserver;
 
-import java.io.*;
-import java.net.Socket;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.request.HttpRequest;
-import webserver.handler.Handler;
 import webserver.handler.HandlerProvider;
+import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 
 public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final Handler NOT_FOUND = (ignore, response) -> response.notFound();
 
     private final Socket connection;
-    private final List<HandlerProvider> handlerProviders;
+    private final HandlerProvider handlerProvider;
 
     RequestHandler(final Socket connection,
-                   final List<HandlerProvider> handlerProviders) {
+                   final HandlerProvider handlerProvider) {
         this.connection = connection;
-        this.handlerProviders = handlerProviders;
+        this.handlerProvider = handlerProvider;
     }
 
     @Override
@@ -38,13 +36,8 @@ public class RequestHandler implements Runnable {
              final HttpRequest request = HttpRequest.of(in);
              logger.debug("In request [request={}]", request);
 
-            handlerProviders.stream()
-                    .filter(handlerProvider -> handlerProvider.support(request))
-                    .findFirst()
-                    .map(HandlerProvider::provide)
-                    .orElse(NOT_FOUND)
+            handlerProvider.provide(request)
                     .handle(request, response);
-
         } catch (final Exception e) {
             logger.error("Error ", e);
         }
