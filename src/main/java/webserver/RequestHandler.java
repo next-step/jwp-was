@@ -6,7 +6,7 @@ import exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import view.ResourceViewResolver;
-import webserver.http.request.Request;
+import webserver.http.request.HttpRequest;
 
 import java.io.*;
 import java.net.Socket;
@@ -23,9 +23,6 @@ public class RequestHandler implements Runnable {
         this.connection = connectionSocket;
     }
 
-    /**
-     * http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
-     */
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}",
                 connection.getInetAddress(),
@@ -37,8 +34,9 @@ public class RequestHandler implements Runnable {
             InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-            Request request = new Request(bufferedReader);
+            HttpRequest request = new HttpRequest(bufferedReader);
 
+            // servlet에서 request, response 파라미터로 받아서 컨트롤러, 뷰에 매핑해주도록 만들자
             Controller userController = UserController.getInstance();
             String path = userController.get(request);
             ResourceViewResolver resourceView = new ResourceViewResolver(path);

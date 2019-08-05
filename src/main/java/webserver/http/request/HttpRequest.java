@@ -27,7 +27,7 @@ import java.util.List;
  * https://tools.ietf.org/html/rfc2616#section-5
  */
 @Getter
-public class Request {
+public class HttpRequest {
 
     private RequestLine requestLine;
     private GeneralHeader generalHeader;
@@ -35,7 +35,7 @@ public class Request {
     private EntityHeader entityHeader;
     private MessageBody messageBody;
 
-    public Request(final BufferedReader bufferedReader) throws IOException {
+    public HttpRequest(final BufferedReader bufferedReader) throws IOException {
         String requestLine = bufferedReader.readLine();
         if (StringUtils.isBlank(requestLine)) {
             return;

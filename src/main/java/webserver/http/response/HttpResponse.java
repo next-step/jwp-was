@@ -1,4 +1,4 @@
 package webserver.http.response;
 
-public class Response {
+public class HttpResponse {
 }

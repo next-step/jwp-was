@@ -4,7 +4,7 @@ import exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import model.User;
 import webserver.http.request.Query;
-import webserver.http.request.Request;
+import webserver.http.request.HttpRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +48,7 @@ public class UserController implements Controller {
     }
 
     @Override
-    public String get(Request request) {
+    public String get(HttpRequest request) {
         try {
             return controller.get(request.removeExtensionPath())
                              .apply(request.query());

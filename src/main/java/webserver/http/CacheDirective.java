@@ -1,4 +1,4 @@
-package webserver.http.request;
+package webserver.http;
 
 public interface CacheDirective {
 }

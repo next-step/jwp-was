@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RequestTest {
+class HttpRequestTest {
 
     @DisplayName("http request header 마지막 줄이 null일 때 무한루프에 빠지면 안된다.")
     @Test
@@ -21,7 +21,7 @@ class RequestTest {
         final BufferedReader reader = bufferedReader(requestHeader);
 
         // when
-        Request request = new Request(reader);
+        HttpRequest request = new HttpRequest(reader);
 
         // then
         assertThat(request.getRequestLine().getMethod()).isEqualTo(HttpMethod.GET);
@@ -41,7 +41,7 @@ class RequestTest {
         final BufferedReader reader = bufferedReader(requestHeader);
 
         // when
-        Request request = new Request(reader);
+        HttpRequest request = new HttpRequest(reader);
 
         // then
         assertThat(request.getRequestLine().getMethod()).isEqualTo(HttpMethod.GET);
@@ -66,7 +66,7 @@ class RequestTest {
         final BufferedReader reader = bufferedReader(requestHeader);
 
         // when
-        Request request = new Request(reader);
+        HttpRequest request = new HttpRequest(reader);
 
         // then
         assertThat(request.getRequestLine().getMethod()).isEqualTo(HttpMethod.POST);
