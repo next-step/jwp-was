@@ -8,7 +8,7 @@ import webserver.http.HttpHeaders;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-public class UserCreatAction implements ActionHandler<Void> {
+public class UserCreateAction implements ActionHandler<Void> {
     @Override
     public Void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
 
@@ -18,7 +18,6 @@ public class UserCreatAction implements ActionHandler<Void> {
         String email = httpRequest.getParameter("email");
 
         DataBase.addUser(new User(userId, password, name, email));
-
 
         httpResponse.setHttpStatus(HttpStatus.FOUND);
         httpResponse.setHttpHeader(HttpHeaders.LOCATION, "/index.html");

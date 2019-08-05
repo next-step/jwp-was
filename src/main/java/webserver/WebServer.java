@@ -1,6 +1,6 @@
 package webserver;
 
-import actions.user.UserCreatAction;
+import actions.user.UserCreateAction;
 import actions.user.UserListAction;
 import actions.user.UserLoginAction;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class WebServer {
 
         TemplateRequestMapper templateRequestMapper = new TemplateRequestMapper("./templates");
 
-        ActionRequestMapper userCreatectionRequestMapper = new ActionRequestMapper("/user/create", new UserCreatAction());
+        ActionRequestMapper userCreatectionRequestMapper = new ActionRequestMapper("/user/create", new UserCreateAction());
         ActionRequestMapper userLoginActionRequestMapper = new ActionRequestMapper("/user/login", new UserLoginAction());
 
 
