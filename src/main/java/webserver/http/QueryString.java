@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 public class QueryString {
     private final static String PATH_SEPARATOR = "?";
-    private final static String PARAMETER_SEPARATOR = "&";
+    private final static String PARAMETER_SEPARATOR = "&|;";
     private final static String KEY_VALUE_SEPARATOR = "=";
 
     private Map<String, String> parameterMap;

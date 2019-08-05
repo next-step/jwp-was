@@ -38,6 +38,7 @@ public class QueryStringTest {
     private static Stream<Arguments> providePaths() {
         return Stream.of(
                 Arguments.of("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1", 3),
+                Arguments.of("GET /users?userId=javajigi;password=password;name=JaeSung HTTP/1.1", 3),
                 Arguments.of("GET /users HTTP/1.1", 0)
         );
     }
