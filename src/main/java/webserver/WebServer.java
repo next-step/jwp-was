@@ -2,10 +2,7 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.handler.Handler;
-import webserver.handler.HomeRequestMappingHandler;
-import webserver.handler.TemplateResourceHandler;
-import webserver.handler.UserCreateRequestMappingHandler;
+import webserver.handler.*;
 import webserver.resolver.HtmlViewResolver;
 import webserver.resolver.ViewResolver;
 
@@ -30,11 +27,11 @@ public class WebServer {
         try (ServerSocket listenSocket = new ServerSocket(port)) {
             logger.info("Web Application Server started {} port.", port);
 
-
             ViewResolver viewResolver = new HtmlViewResolver();
             List<Handler> handlers = Arrays.asList(
                     new HomeRequestMappingHandler(viewResolver),
                     new UserCreateRequestMappingHandler(viewResolver),
+                    new LoginRequestMappingHandler(viewResolver),
                     new TemplateResourceHandler(viewResolver)
             );
 

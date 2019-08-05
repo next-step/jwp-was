@@ -29,6 +29,10 @@ public class HttpResponse {
         dos.writeBytes("HTTP/1.1 " + httpStatusCode.getStatusCode() + " " + httpStatusCode.getDescription() + NEW_LINE);
         dos.writeBytes("Content-Type: " + headers.get("Content-Type") + NEW_LINE);
         dos.writeBytes("Content-Length: " + body.length + NEW_LINE);
+        dos.writeBytes("Location: " + headers.get("Location") + NEW_LINE);
+        if (headers.containsKey("Set-Cookie")) {
+            dos.writeBytes("Set-Cookie: " + headers.get("Set-Cookie") + NEW_LINE);
+        }
         dos.writeBytes(NEW_LINE);
         dos.write(body, 0, body.length);
         dos.flush();
@@ -36,6 +40,10 @@ public class HttpResponse {
 
     public HttpStatusCode getStatusCode() {
         return httpStatusCode;
+    }
+
+    public String getHeader(String key) {
+        return headers.get(key);
     }
 
     public byte[] getBody() {

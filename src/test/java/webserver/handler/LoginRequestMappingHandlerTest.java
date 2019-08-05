@@ -1,5 +1,7 @@
 package webserver.handler;
 
+import db.DataBase;
+import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,22 +15,21 @@ import webserver.resolver.HtmlViewResolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserCreateRequestMappingHandlerTest {
+public class LoginRequestMappingHandlerTest {
 
     private RequestMappingHandler handler;
 
     @BeforeEach
     void setUp() {
-        handler = new UserCreateRequestMappingHandler(new HtmlViewResolver());
+        handler = new LoginRequestMappingHandler(new HtmlViewResolver());
     }
 
     @Test
-    @DisplayName("Move user create page")
+    @DisplayName("Move login page")
     void doGet() throws Exception {
         HttpRequest httpRequest = HttpRequest.parse(HttpRequestTest.createInputStream(
-                "GET /user/create HTTP/1.1",
+                "GET /user/login.html HTTP/1.1",
                 "Host: www.nowhere123.com",
-                "Accept: image/gif, image/jpeg, */*",
                 "Accept-Language: en-us",
                 "Accept-Encoding: gzip, deflate",
                 "User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)"
@@ -41,32 +42,41 @@ public class UserCreateRequestMappingHandlerTest {
         assertThat(httpResponse.getBody()).isNotEmpty();
     }
 
-    @Test
-    @DisplayName("Move user create page")
-    void doPost() throws Exception {
+    @DisplayName("Login and redirect")
+    @ParameterizedTest(name = "body : {0} | Location : {1} | logined : {2}")
+    @CsvSource(value = {
+            "userId=javajigi&password=password | /index.html             | true",
+            "userId=javajigi&password=failed   | /user/login_failed.html | false"
+    }, delimiter = '|')
+    void doPost(String body, String expectedLocation, boolean expectedLogined) throws Exception {
+        DataBase.addUser(new User("javajigi", "password", "Name", "abc@google.com"));
+
         HttpRequest httpRequest = HttpRequest.parse(HttpRequestTest.createInputStream(
-                "POST /user/create HTTP/1.1",
+                "POST /user/login HTTP/1.1",
                 "Host: localhost:8080",
                 "Connection: keep-alive",
-                "Content-Length: 93",
+                "Content-Length: 33",
                 "Content-Type: application/x-www-form-urlencoded",
                 "Accept: */*",
                 "",
-                "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net"
+                body
         ));
 
         HttpResponse httpResponse = handler.doHandle(httpRequest);
 
         assertThat(httpResponse).isNotNull();
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatusCode.FOUND);
+        assertThat(httpResponse.getHeader("Location")).isEqualTo(expectedLocation);
+        assertThat(httpResponse.getHeader("Set-Cookie")).contains("logined=" + expectedLogined);
         assertThat(httpResponse.getBody()).isNotEmpty();
     }
 
     @DisplayName("Check to handle url")
     @ParameterizedTest
     @CsvSource(value = {
-            "/user/create | true",
-            "/user        | false"
+            "/user/login      | true",
+            "/user/login.html | true",
+            "/user/login_1    | false"
     }, delimiter = '|')
     void canHandle(String path, boolean expected) throws Exception {
         HttpRequest httpRequest = HttpRequest.parse(HttpRequestTest.createInputStream(
