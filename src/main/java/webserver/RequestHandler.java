@@ -1,5 +1,6 @@
 package webserver;
 
+import http.HttpRequest;
 import http.RequestHeader;
 import http.RequestLine;
 import java.io.BufferedReader;
@@ -12,7 +13,6 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import http.HttpRequest;
 import servlet.HttpServlet;
 import servlet.ResourceViewRevolver;
 import servlet.ServletMapping;
@@ -43,13 +43,17 @@ public class RequestHandler implements Runnable {
         requestBody = IOUtils.readData(bufferedReader, requestHeader.getContentLength());
       }
 
-      HttpRequest httpRequest = new HttpRequest(requestLine,requestHeader,requestBody);
+      HttpRequest httpRequest = new HttpRequest(requestLine, requestHeader, requestBody);
 
       HttpServlet servlet = ServletMapping.getServlet(httpRequest.getPath());
       String view = servlet.service(httpRequest);
 
       DataOutputStream dos = new DataOutputStream(out);
 
+      if(view.contains("redirect:")){
+        response302Header(dos,view.replaceAll("redirect:",""));
+        return;
+      }
       byte[] body = ResourceViewRevolver.resolve(view);
       response200Header(dos, body.length);
       responseBody(dos, body);
@@ -70,6 +74,17 @@ public class RequestHandler implements Runnable {
       logger.error(e.getMessage());
     }
   }
+
+  private void response302Header(DataOutputStream dos, String url) {
+    try {
+      dos.writeBytes("HTTP/1.1 302 Found \r\n");
+      dos.writeBytes("Location: " + url);
+      dos.writeBytes("\r\n");
+    } catch (IOException e) {
+      logger.error(e.getMessage());
+    }
+  }
+
 
   private void responseBody(DataOutputStream dos, byte[] body) {
     try {
