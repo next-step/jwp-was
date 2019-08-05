@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.HttpMethod;
-import webserver.RequestLine;
+import webserver.request.RequestLine;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +31,7 @@ class RequestLineTest {
         assertThat(requestLine.getMethod()).isEqualTo(expectedHttpMethod);
         assertThat(requestLine.getPath()).isEqualTo(expectedPath);
         assertThat(requestLine.getProtocol()).isEqualTo(expectedProtocol);
-        assertThat(requestLine.getUrlQuery().getQueryMap()).containsAllEntriesOf(expectedQueryMap);
+        assertThat(requestLine.getParameter().getParameterMap()).containsAllEntriesOf(expectedQueryMap);
     }
 
     @DisplayName("invalid request arguments")

@@ -24,6 +24,10 @@ public class StringUtils {
         return splitCharacter(string, regex, false, true);
     }
 
+    public static String endLastSplit(String string, char regex) {
+        return splitLastCharacter(string, regex, false, true);
+    }
+
     /**
      * @return string split by character and choice front or end according to flag
      */
@@ -35,7 +39,18 @@ public class StringUtils {
             return returnEmptyBlank ? "" : string;
         }
 
-        return front ? string.substring(0, index) : string.substring(index + 1);
+        return front ? string.substring(0, index).trim() : string.substring(index + 1).trim();
+    }
+
+    private static String splitLastCharacter(String string, char character, boolean front, boolean returnEmptyBlank) {
+        int index = Objects.requireNonNull(string, "split string must be not null")
+                .lastIndexOf(character);
+
+        if (index < 0) {
+            return returnEmptyBlank ? "" : string;
+        }
+
+        return front ? string.substring(0, index).trim() : string.substring(index + 1).trim();
     }
 
 }
