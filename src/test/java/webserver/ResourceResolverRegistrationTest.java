@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import webserver.request.HttpRequest;
+import webserver.request.RequestLine;
 import webserver.resolver.resource.ResourceResolverRegistration;
 
 import java.util.Set;
@@ -32,9 +33,9 @@ class ResourceResolverRegistrationTest {
 
     private static Stream<Arguments> getTestSources() {
         return Stream.of(
-                Arguments.of(Sets.newHashSet(".css"), "/static", HttpRequest.builder().requestLine("GET /css/bootstrap.min.css HTTP/1.1").build(), HttpRequest.builder().requestLine("GET /css/bootstrap.js HTTP/1.1").build()),
-                Arguments.of(Sets.newHashSet(".js"), "/static", HttpRequest.builder().requestLine("GET /js/bootstrap.js HTTP/1.1").build(), HttpRequest.builder().requestLine("GET /index.html HTTP/1.1").build()),
-                Arguments.of(Sets.newHashSet(".html"), "/templates", HttpRequest.builder().requestLine("GET /index.html HTTP/1.1").build(), HttpRequest.builder().requestLine("GET /css/bootstrap.js HTTP/1.1").build())
+                Arguments.of(Sets.newHashSet(".css"), "/static", HttpRequest.builder().requestLine(RequestLine.parse("GET /css/bootstrap.min.css HTTP/1.1")).build(), HttpRequest.builder().requestLine(RequestLine.parse("GET /css/bootstrap.js HTTP/1.1")).build()),
+                Arguments.of(Sets.newHashSet(".js"), "/static", HttpRequest.builder().requestLine(RequestLine.parse("GET /js/bootstrap.js HTTP/1.1")).build(), HttpRequest.builder().requestLine(RequestLine.parse("GET /index.html HTTP/1.1")).build()),
+                Arguments.of(Sets.newHashSet(".html"), "/templates", HttpRequest.builder().requestLine(RequestLine.parse("GET /index.html HTTP/1.1")).build(), HttpRequest.builder().requestLine(RequestLine.parse("GET /css/bootstrap.js HTTP/1.1")).build())
         );
     }
 }

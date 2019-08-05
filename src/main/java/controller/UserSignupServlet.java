@@ -2,19 +2,19 @@ package controller;
 
 import db.DataBase;
 import model.User;
-import webserver.controller.Controller;
+import webserver.controller.Servlet;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
 /**
  * Created by hspark on 2019-08-05.
  */
-public class UserController implements Controller {
+public class UserSignupServlet implements Servlet {
     public static final String URL = "/user/create";
 
 
     @Override
-    public HttpResponse action(HttpRequest httpRequest) {
+    public void action(HttpRequest httpRequest, HttpResponse httpResponse) {
         String userId = httpRequest.getAttribute("userId");
         String password = httpRequest.getAttribute("password");
         String name = httpRequest.getAttribute("name");
@@ -22,7 +22,8 @@ public class UserController implements Controller {
 
         User user = new User(userId, password, name, email);
         DataBase.addUser(user);
-        return HttpResponse.redirect("/index.html");
+
+        httpResponse.redirect("/index.html");
     }
 
     @Override

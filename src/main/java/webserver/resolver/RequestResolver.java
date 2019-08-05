@@ -13,12 +13,11 @@ public class RequestResolver {
     private Resolver controllerResolver = new ControllerResolver();
 
 
-
-    public HttpResponse resolve(HttpRequest httpRequest) {
+    public void resolve(HttpRequest httpRequest, HttpResponse httpResponse) {
         if (httpRequest.getRequestLine().getRequestUrl().isFile()) {
-            return resourceResolver.resolve(httpRequest);
+            resourceResolver.resolve(httpRequest, httpResponse);
+            return;
         }
-        return controllerResolver.resolve(httpRequest);
+        controllerResolver.resolve(httpRequest, httpResponse);
     }
-
 }

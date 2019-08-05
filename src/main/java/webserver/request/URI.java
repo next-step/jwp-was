@@ -40,7 +40,7 @@ public class URI {
 	}
 
 	public String get(String key) {
-		return requestParameters.getOne(key).get();
+		return requestParameters.getOne(key);
 	}
 
 	public List<String> getAll(String key) {

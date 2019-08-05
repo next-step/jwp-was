@@ -36,20 +36,20 @@ public class ResourceResolver implements Resolver {
         resourceResolverRegistrations.add(resourceResolver);
     }
 
-    public HttpResponse resolve(HttpRequest httpRequest) {
+    public void resolve(HttpRequest httpRequest, HttpResponse httpResponse) {
         String fileExtension = FileUtils.getExtension(httpRequest.getPath());
         ResourceResolverRegistration resourceResolverRegistration = resourceResolverRegistrations.stream()
                 .filter(it -> it.isTarget(fileExtension)).findAny()
                 .orElseThrow(() -> new IllegalArgumentException("Not Found Resolver, extension : " + fileExtension));
         try {
             byte[] body = FileIoUtils.loadFileFromClasspath(resourceResolverRegistration.resolve(httpRequest));
-            return HttpResponse.ok(body);
+            httpResponse.ok(body);
         } catch (IOException e) {
             logger.error(e.getMessage());
-            return HttpResponse.notFound(e);
+            httpResponse.notFound(e);
         } catch (URISyntaxException e) {
             logger.error(e.getMessage());
-            return HttpResponse.internalServerError(e);
+            httpResponse.internalServerError(e);
         }
     }
 }

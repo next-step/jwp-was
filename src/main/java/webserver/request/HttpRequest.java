@@ -7,19 +7,25 @@ import java.util.Objects;
  */
 public class HttpRequest {
     private RequestLine requestLine;
-    private Headers headers;
+    private RequestHeaders requestHeaders;
+    private RequestBody requestBody;
 
-    private HttpRequest(RequestLine requestLine, Headers headers) {
+    private HttpRequest(RequestLine requestLine, RequestHeaders requestHeaders, RequestBody requestBody) {
         this.requestLine = requestLine;
-        this.headers = headers;
+        this.requestHeaders = requestHeaders;
+        this.requestBody = requestBody;
     }
 
     public RequestLine getRequestLine() {
         return requestLine;
     }
 
-    public Headers getHeaders() {
-        return headers;
+    public RequestHeaders getRequestHeaders() {
+        return requestHeaders;
+    }
+
+    public RequestBody getRequestBody() {
+        return requestBody;
     }
 
     public String getPath() {
@@ -30,6 +36,9 @@ public class HttpRequest {
         return requestLine.getRequestUrl().get(name);
     }
 
+    public String getHeader(String name) {
+        return getRequestHeaders().getHeader(name);
+    }
 
     public static HttpRequestBuilder builder() {
         return new HttpRequestBuilder();
@@ -37,26 +46,32 @@ public class HttpRequest {
 
     public static class HttpRequestBuilder {
         private RequestLine requestLine;
-        private Headers headers;
+        private RequestHeaders requestHeaders;
+        private RequestBody requestBody;
 
 
         HttpRequestBuilder() {
-            headers = new Headers();
+            requestHeaders = new RequestHeaders();
         }
 
-        public HttpRequestBuilder requestLine(String rawRequestLine) {
-            this.requestLine = RequestLine.parse(rawRequestLine);
+        public HttpRequestBuilder requestLine(RequestLine requestLine) {
+            this.requestLine = requestLine;
             return this;
         }
 
-        public HttpRequestBuilder addHeader(String rawHeader) {
-            this.headers.add(rawHeader);
+        public HttpRequestBuilder headers(RequestHeaders headers) {
+            this.requestHeaders = headers;
+            return this;
+        }
+
+        public HttpRequestBuilder requestBody(RequestBody requestBody) {
+            this.requestBody = requestBody;
             return this;
         }
 
         public HttpRequest build() {
             Objects.requireNonNull(requestLine);
-            return new HttpRequest(requestLine, headers);
+            return new HttpRequest(requestLine, requestHeaders, requestBody);
         }
     }
 
@@ -64,7 +79,7 @@ public class HttpRequest {
     public String toString() {
         return "HttpRequest{" +
                 "requestLine=" + requestLine +
-                ", headers=" + headers +
+                ", requestHeaders=" + requestHeaders +
                 '}';
     }
 }

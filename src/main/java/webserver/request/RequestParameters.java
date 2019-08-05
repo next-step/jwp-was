@@ -16,14 +16,14 @@ public class RequestParameters {
 		this.parameters = parameters;
 	}
 
-	public static RequestParameters parse(String queryString) {
-		return new RequestParameters(QueryStringParser.parseQueryString(queryString));
+	public static RequestParameters parse(String rawParameter) {
+		return new RequestParameters(ParameterParser.parseParameter(rawParameter));
 	}
 
-	public Optional<String> getOne(String key) {
+	public String getOne(String key) {
 		return parameters.stream().
 			filter(it -> it.equalsKey(key))
-			.map(Parameter::getValue).findAny();
+			.map(Parameter::getValue).findAny().orElse(null);
 	}
 
 	public List<String> getAll(String key) {
@@ -91,17 +91,17 @@ public class RequestParameters {
 		}
 	}
 
-	private static class QueryStringParser {
+	private static class ParameterParser {
 		public static final String EQUALS = "=";
 		public static final String AMPERSAND = "&";
 		public static final int QUERY_MIN_SIZE = 2;
 		public static final int QUERY_LIST_PREDICATE = 1;
 
-		private static List<Parameter> parseQueryString(String queryString) {
+		private static List<Parameter> parseParameter(String queryString) {
 			return Arrays.stream(queryString.split(AMPERSAND))
 				.filter(StringUtils::isNotBlank)
-				.map(QueryStringParser::parseQuery)
-				.filter(QueryStringParser::hasNotValue)
+				.map(ParameterParser::parseQuery)
+				.filter(ParameterParser::hasNotValue)
 				.map(it -> new Parameter(it[0], it[1]))
 				.collect(Collectors.toList());
 		}

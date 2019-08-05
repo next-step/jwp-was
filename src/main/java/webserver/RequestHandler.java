@@ -29,9 +29,10 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = HttpRequestFactory.create(in);
+            HttpResponse httpResponse = new HttpResponse();
 
             DataOutputStream dos = new DataOutputStream(out);
-            HttpResponse httpResponse = resolver.resolve(httpRequest);
+            resolver.resolve(httpRequest, httpResponse);
 
             response(dos, httpResponse, httpRequest);
         } catch (IOException e) {
@@ -41,7 +42,9 @@ public class RequestHandler implements Runnable {
 
     private void response(DataOutputStream dos, HttpResponse httpResponse, HttpRequest httpRequest) {
         try {
-            dos.writeBytes(httpResponse.getResponseHeader(httpRequest));
+            String header = httpResponse.getResponseHeader(httpRequest);
+            dos.writeBytes(header);
+            logger.info(header);
             dos.write(httpResponse.getBody(), 0, httpResponse.getBody().length);
             dos.flush();
         } catch (IOException e) {
