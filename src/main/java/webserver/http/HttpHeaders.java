@@ -1,11 +1,10 @@
 package webserver.http;
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import utils.MapUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HttpHeaders {
     private static final String HEADER_LINE_SEPARATOR = ": ";
@@ -20,8 +19,8 @@ public class HttpHeaders {
         this.headerMap = headerMap;
     }
 
-    public static HttpHeaders parse(BufferedReader bufferedReader) throws IOException {
-        Map<String, String> headerMap = MapUtils.keyValueMap(parseHeaderLines(bufferedReader).stream(), HEADER_LINE_SEPARATOR);
+    public static HttpHeaders parse(List<String> headerLines) {
+        Map<String, String> headerMap = MapUtils.keyValueMap(headerLines.stream(), HEADER_LINE_SEPARATOR);
         return new HttpHeaders(headerMap);
     }
 
@@ -31,15 +30,5 @@ public class HttpHeaders {
 
     public void set(String key, String value) {
         this.headerMap.put(key, value);
-    }
-
-    private static List<String> parseHeaderLines(BufferedReader bufferedReader) throws IOException {
-        String line;
-        List<String> headerLines = new ArrayList<>();
-        while (!StringUtils.EMPTY.equals(line = bufferedReader.readLine())) {
-            if (Objects.isNull(line)) break;
-            headerLines.add(line);
-        }
-        return headerLines;
     }
 }

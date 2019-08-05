@@ -1,10 +1,11 @@
 package webserver.http;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 public class HttpRequest {
     private static final String HEADER_COOKIE_KEY = "Cookie";
+    private static final String HEADER_CONTENT_LENGTH_KEY = "Content-Length";
+
     private RequestLine requestLine;
     private HttpHeaders httpHeaders;
     private Cookie cookie;
@@ -23,12 +24,13 @@ public class HttpRequest {
         this.cookie = Cookie.parse(httpHeaders.get(HEADER_COOKIE_KEY));
     }
 
-    public static HttpRequest parse(BufferedReader bufferedReader) throws IOException {
-        RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
-        HttpHeaders httpHeaders = HttpHeaders.parse(bufferedReader);
+    public static HttpRequest parse(RequestStream requestStream) throws IOException {
+        RequestLine requestLine = RequestLine.parse(requestStream.requestLine());
+        HttpHeaders httpHeaders = HttpHeaders.parse(requestStream.header());
 
         if (HttpMethod.POST.equals(requestLine.getMethod())) {
-            RequestBody requestBody = RequestBody.parse(bufferedReader, httpHeaders);
+            int contentLength = Integer.parseInt(httpHeaders.get(HEADER_CONTENT_LENGTH_KEY));
+            RequestBody requestBody = RequestBody.parse(requestStream.body(contentLength));
             return new HttpRequest(requestLine, httpHeaders, requestBody);
         }
 

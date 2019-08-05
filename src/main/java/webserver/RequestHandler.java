@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.HttpStatus;
+import webserver.http.RequestStream;
 
 import java.io.*;
 import java.net.Socket;
@@ -28,7 +29,8 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
-            HttpRequest httpRequest = HttpRequest.parse(new BufferedReader(new InputStreamReader(in)));
+            RequestStream requestStream = new RequestStream(in);
+            HttpRequest httpRequest = HttpRequest.parse(requestStream);
             logger.debug("Request {}", httpRequest.getRequestLine());
 
             HttpResponse httpResponse = getResponse(httpRequest);

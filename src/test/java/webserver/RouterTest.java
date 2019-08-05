@@ -3,13 +3,11 @@ package webserver;
 import model.User;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.RequestStream;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,8 +18,9 @@ public class RouterTest {
     @Test
     @Disabled
     void route() throws IOException {
-        BufferedReader bufferedReader = makeGetRequestBufferedReader();
-        HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+        InputStream inputStream = makeGetRequestInputStream();
+        RequestStream requestStream = new RequestStream(inputStream);
+        HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
         User user = new User("javajigi", "password", "박재성", "javajigi@slipp.net");
 
@@ -30,8 +29,9 @@ public class RouterTest {
 
     @Test
     void postRequestCreateUserTest() throws IOException {
-        BufferedReader bufferedReader = makePostBufferedReader(CREATE_USER_URL, "userId=javajigi&password=password&name=박재성&email=javajigi%40slipp.net");
-        HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+        InputStream inputStream =  makePostInputStream(CREATE_USER_URL, "userId=javajigi&password=password&name=박재성&email=javajigi%40slipp.net");
+        RequestStream requestStream = new RequestStream(inputStream);
+        HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
 
@@ -42,8 +42,9 @@ public class RouterTest {
     @Test
     void userLoginSuccessTest() throws IOException {
         createUser();
-        BufferedReader bufferedReader = makeLoginSuccessBufferedReader();
-        HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+        InputStream inputStream = makeLoginSuccessBufferedReader();
+        RequestStream requestStream = new RequestStream(inputStream);
+        HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
         assertThat(Router.route(httpRequest, httpResponse).orElse(""))
@@ -53,8 +54,9 @@ public class RouterTest {
     @Test
     void userLoginFailTest() throws IOException {
         createUser();
-        BufferedReader bufferedReader = makeLoginFailBufferedReader();
-        HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+        InputStream inputStream = makeLoginFailBufferedReader();
+        RequestStream requestStream = new RequestStream(inputStream);
+        HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
         assertThat(Router.route(httpRequest, httpResponse).orElse(""))
@@ -62,23 +64,24 @@ public class RouterTest {
     }
 
     private void createUser() throws IOException {
-        BufferedReader bufferedReader = makePostBufferedReader(CREATE_USER_URL, "userId=javajigi&password=password&name=박재성&email=javajigi%40slipp.net");
-        HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+        InputStream inputStream = makePostInputStream(CREATE_USER_URL, "userId=javajigi&password=password&name=박재성&email=javajigi%40slipp.net");
+        RequestStream requestStream = new RequestStream(inputStream);
+        HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
         Router.route(httpRequest, httpResponse);
     }
 
-    private BufferedReader makeLoginSuccessBufferedReader() {
-        return makePostBufferedReader(LOGIN_URL, "userId=javajigi&password=password");
+    private InputStream makeLoginSuccessBufferedReader() {
+        return makePostInputStream(LOGIN_URL, "userId=javajigi&password=password");
     }
 
-    private BufferedReader makeLoginFailBufferedReader() {
-        return makePostBufferedReader(LOGIN_URL, "userId=javajigi&password=pas");
+    private InputStream makeLoginFailBufferedReader() {
+        return makePostInputStream(LOGIN_URL, "userId=javajigi&password=pas");
     }
 
-    private BufferedReader makePostBufferedReader(String url, String data) {
-        String requestString = "POST " + url + " HTTP/1.1\n" +
+    private InputStream makePostInputStream(String url, String data) {
+        String request = "POST " + url + " HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
                 "Content-Length: " + data.length() + "\n" +
@@ -87,20 +90,16 @@ public class RouterTest {
                 "\n" +
                 data;
 
-        return new BufferedReader(new StringReader(requestString));
+        return new ByteArrayInputStream(request.getBytes());
     }
 
-    private BufferedReader makeGetRequestBufferedReader() throws IOException {
-        BufferedReader bufferedReader = Mockito.mock(BufferedReader.class);
-        Mockito.when(bufferedReader.readLine())
-                .thenReturn(
-                        "GET /create?userId=javajigi&password=password&name=박재성&email=javajigi%40slipp.net HTTP/1.1",
-                        "Host: localhost:8080",
-                        "Connection: keep-alive",
-                        "Accept: */*",
-                        ""
-                );
+    private InputStream makeGetRequestInputStream() {
+        String request = "GET /create?userId=javajigi&password=password&name=박재성&email=javajigi%40slipp.net HTTP/1.1\n" +
+                "Host: localhost:8080\n" +
+                "Connection: keep-alive\n" +
+                "Accept: */*\n" +
+                "\n";
 
-        return bufferedReader;
+        return new ByteArrayInputStream(request.getBytes());
     }
 }
