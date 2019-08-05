@@ -6,13 +6,14 @@ package webserver.http.request;
  */
 public class RequestURI {
 
+    private static final String START_OF_QUERY = "?";
     private String path;
     private QueryString queryString;
 
     public static RequestURI parse(String requestURI) {
         String path = requestURI;
         QueryString queryString = null;
-        int queryIndex = requestURI.indexOf("?");
+        int queryIndex = requestURI.indexOf(START_OF_QUERY);
         if (queryIndex >= 0) {
             path = requestURI.substring(0, queryIndex);
             queryString = QueryString.parse(requestURI.substring(queryIndex + 1));
