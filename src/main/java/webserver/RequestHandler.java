@@ -1,5 +1,6 @@
 package webserver;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.HttpRequest;
@@ -11,6 +12,9 @@ import java.net.Socket;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final String REDIRECT_START_WITH = "redirect:";
+    private static final String HEADER_HOST_KEY = "Host";
+    private static final String REDIRECT_URL_FORMAT = "http://%s%s";
 
     private Socket connection;
 
@@ -44,7 +48,7 @@ public class RequestHandler implements Runnable {
 
     private HttpResponse getViewMappingResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
         String viewName = getViewName(httpRequest, httpResponse);
-        if (viewName.startsWith("redirect:")) {
+        if (viewName.startsWith(REDIRECT_START_WITH)) {
             return getRedirectHttpResponse(httpRequest, httpResponse, viewName);
         }
 
@@ -57,13 +61,14 @@ public class RequestHandler implements Runnable {
     }
 
     private HttpResponse getRedirectHttpResponse(HttpRequest httpRequest, HttpResponse httpResponse, String viewName) {
-        String redirectPath = String.format("http://%s%s", httpRequest.getHeaders().get("Host"), viewName.substring(viewName.indexOf(":") + 1));
-        httpResponse.setRedirectPath(redirectPath);
+        String redirectPath = viewName.replace(REDIRECT_START_WITH, StringUtils.EMPTY);
+        String redirectUrl = String.format(REDIRECT_URL_FORMAT, httpRequest.getHeaderValue(HEADER_HOST_KEY), redirectPath);
+        httpResponse.setRedirectPath(redirectUrl);
         httpResponse.setHttpStatus(HttpStatus.REDIRECT);
         return httpResponse;
     }
 
     private String getViewName(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return Router.route(httpRequest, httpResponse).orElse("");
+        return Router.route(httpRequest, httpResponse).orElse(StringUtils.EMPTY);
     }
 }

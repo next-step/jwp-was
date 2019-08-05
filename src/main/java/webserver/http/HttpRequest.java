@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public class HttpRequest {
+    private static final String HEADER_COOKIE_KEY = "Cookie";
     private RequestLine requestLine;
     private HttpHeaders httpHeaders;
     private Cookie cookie;
@@ -13,20 +14,20 @@ public class HttpRequest {
         this.requestLine = requestLine;
         this.httpHeaders = httpHeaders;
         this.requestBody = requestBody;
-        this.cookie = Cookie.parse(httpHeaders.get("Cookie"));
+        this.cookie = Cookie.parse(httpHeaders.get(HEADER_COOKIE_KEY));
     }
 
     public HttpRequest(RequestLine requestLine, HttpHeaders httpHeaders) {
         this.requestLine = requestLine;
         this.httpHeaders = httpHeaders;
-        this.cookie = Cookie.parse(httpHeaders.get("Cookie"));
+        this.cookie = Cookie.parse(httpHeaders.get(HEADER_COOKIE_KEY));
     }
 
     public static HttpRequest parse(BufferedReader bufferedReader) throws IOException {
         RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
         HttpHeaders httpHeaders = HttpHeaders.parse(bufferedReader);
 
-        if ("POST".equals(requestLine.getMethod())) {
+        if (HttpMethod.POST.equals(requestLine.getMethod())) {
             RequestBody requestBody = RequestBody.parse(bufferedReader, httpHeaders);
             return new HttpRequest(requestLine, httpHeaders, requestBody);
         }
@@ -34,7 +35,7 @@ public class HttpRequest {
         return new HttpRequest(requestLine, httpHeaders);
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return this.requestLine.getMethod();
     }
 
@@ -42,8 +43,8 @@ public class HttpRequest {
         return this.requestLine.getUri();
     }
 
-    public HttpHeaders getHeaders() {
-        return this.httpHeaders;
+    public String getHeaderValue(String key) {
+        return this.httpHeaders.get(key);
     }
 
     public RequestLine getRequestLine() {

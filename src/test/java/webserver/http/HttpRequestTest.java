@@ -1,6 +1,7 @@
 package webserver.http;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -14,8 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class HttpRequestTest {
     private static BufferedReader bufferedReader;
 
-    @BeforeAll
-    static void mockingBufferedReader() throws IOException {
+    @BeforeEach
+    void mockingBufferedReader() throws IOException {
         String requestString = "POST /user/create HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
@@ -32,10 +33,9 @@ public class HttpRequestTest {
     void httpHeadersTest() throws IOException {
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
 
-        HttpHeaders httpHeaders = httpRequest.getHeaders();
-        assertThat(httpHeaders.get("Host")).isEqualTo("localhost:8080");
-        assertThat(httpHeaders.get("Connection")).isEqualTo("keep-alive");
-        assertThat(httpHeaders.get("Accept")).isEqualTo("*/*");
+        assertThat(httpRequest.getHeaderValue("Host")).isEqualTo("localhost:8080");
+        assertThat(httpRequest.getHeaderValue("Connection")).isEqualTo("keep-alive");
+        assertThat(httpRequest.getHeaderValue("Accept")).isEqualTo("*/*");
     }
 
     @Test

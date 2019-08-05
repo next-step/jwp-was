@@ -13,6 +13,10 @@ import java.util.Optional;
 
 public class UserController {
 
+    private static final String COOKIE_LOGINED_KEY = "logined";
+    private static final String COOKIE_LOGINED_SUCCESS_VALUE = "true";
+    private static final String COOKIE_LOGINED_FAIL_VALUE = "true";
+
     public static Optional createUser(HttpRequest httpRequest, HttpResponse httpResponse) {
         RequestBody requestBody = httpRequest.getRequestBody();
         User user = new User(
@@ -33,16 +37,16 @@ public class UserController {
 
         User user = DataBase.findUserById(userId);
         if (Objects.isNull(user) || !user.getPassword().equals(password)) {
-            httpResponse.getCookie().set("logined", "false");
+            httpResponse.getCookie().set(COOKIE_LOGINED_KEY, COOKIE_LOGINED_FAIL_VALUE);
             return Optional.of("redirect:/user/login_failed.html");
         }
 
-        httpResponse.getCookie().set("logined", "true");
+        httpResponse.getCookie().set(COOKIE_LOGINED_KEY, COOKIE_LOGINED_SUCCESS_VALUE);
         return Optional.of("redirect:/index.html");
     }
 
     public static Optional list(HttpRequest httpRequest, HttpResponse httpResponse) {
-        String logined = httpRequest.getCookie().get("logined");
+        String logined = httpRequest.getCookie().get(COOKIE_LOGINED_KEY);
         if (StringUtils.isBlank(logined) || !Boolean.parseBoolean(logined)) {
             return Optional.of("redirect:/user/login.html");
         }

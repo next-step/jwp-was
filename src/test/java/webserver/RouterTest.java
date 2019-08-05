@@ -25,7 +25,7 @@ public class RouterTest {
         HttpResponse httpResponse = new HttpResponse();
         User user = new User("javajigi", "password", "박재성", "javajigi@slipp.net");
 
-        assertThat(Router.route(httpRequest, httpResponse).orElse("").toString()).isEqualTo(user.toString());
+        assertThat(Router.route(httpRequest, httpResponse).orElse("")).isEqualTo(user.toString());
     }
 
     @Test
@@ -46,8 +46,7 @@ public class RouterTest {
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
         HttpResponse httpResponse = new HttpResponse();
 
-
-        assertThat(Router.route(httpRequest, httpResponse).orElse("").toString())
+        assertThat(Router.route(httpRequest, httpResponse).orElse(""))
                 .isEqualTo("redirect:/index.html");
     }
 
@@ -58,8 +57,7 @@ public class RouterTest {
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
         HttpResponse httpResponse = new HttpResponse();
 
-
-        assertThat(Router.route(httpRequest, httpResponse).orElse("").toString())
+        assertThat(Router.route(httpRequest, httpResponse).orElse(""))
                 .isEqualTo("redirect:/user/login_failed.html");
     }
 

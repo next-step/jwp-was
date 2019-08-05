@@ -3,6 +3,8 @@ package webserver.http;
 import utils.StringDecoder;
 
 public class URI {
+    private static final String PATH_QUERY_STRING_SEPARATOR = "?";
+
     private String path;
     private String url;
     private QueryString queryString;
@@ -31,7 +33,7 @@ public class URI {
     }
 
     private String parsePath(String url) {
-        int lastIndex = url.contains("?") ? url.indexOf("?") : url.length();
+        int lastIndex = url.contains(PATH_QUERY_STRING_SEPARATOR) ? url.indexOf(PATH_QUERY_STRING_SEPARATOR) : url.length();
         return url.substring(0, lastIndex);
     }
 

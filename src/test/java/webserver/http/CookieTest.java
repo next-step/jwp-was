@@ -1,6 +1,6 @@
 package webserver.http;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -12,8 +12,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CookieTest {
     private static BufferedReader bufferedReader;
 
-    @BeforeAll
-    private static void makeGetRequestBufferedReader() throws IOException {
+    @BeforeEach
+    private void makeGetRequestBufferedReader() throws IOException {
         bufferedReader = Mockito.mock(BufferedReader.class);
         Mockito.when(bufferedReader.readLine())
                 .thenReturn(

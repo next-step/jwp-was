@@ -15,10 +15,13 @@ public enum HttpStatus {
     }),
     REDIRECT(302, "Found", HttpStatus::response302Header);
 
+    private static final Logger logger = LoggerFactory.getLogger(HttpStatus.class);
+    private static final String HEADER_CONTENT_TYPE_KEY = "Content-Type";
+    private static final String CONTENT_TYPE_HTML_TEXT = "text/html";
+
     private int code;
     private String message;
-    private BiConsumer<HttpResponse, DataOutputStream> responseConsumer;
-    private static final Logger logger = LoggerFactory.getLogger(HttpStatus.class);
+    private BiConsumer<HttpResponse, DataOutputStream> responseConsumer;;
 
 
     HttpStatus(int code, String message, BiConsumer<HttpResponse, DataOutputStream> responseConsumer) {
@@ -60,8 +63,8 @@ public enum HttpStatus {
 
     private static void setContentType(HttpResponse response, DataOutputStream dos) throws IOException {
         HttpHeaders httpHeaders = response.getHttpHeaders();
-        String contentType = Optional.ofNullable(httpHeaders.get("Content-Type"))
-                .orElse("text/html");
+        String contentType = Optional.ofNullable(httpHeaders.get(HEADER_CONTENT_TYPE_KEY))
+                .orElse(CONTENT_TYPE_HTML_TEXT);
 
         dos.writeBytes("Content-Type: " + contentType + ";charset=utf-8\r\n");
     }
