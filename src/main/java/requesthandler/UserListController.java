@@ -18,7 +18,7 @@ public class UserListController implements Controller {
     @Override
     public void action(HttpRequest httpRequest, HttpResponse httpResponse) {
         String logined = httpRequest.getRequestHeaders().getCookies().getCookie("logined");
-        if (!"true".equals(logined)) {
+        if (isLogined(logined)) {
             httpResponse.redirect("/index.html");
             return;
         }
@@ -26,6 +26,10 @@ public class UserListController implements Controller {
         HandlebarsLoader handlebarsLoader = new HandlebarsLoader();
         String template = handlebarsLoader.load("/user/list", Collections.singletonMap("users", DataBase.findAll()));
         httpResponse.ok(template.getBytes());
+    }
+
+    private boolean isLogined(String logined) {
+        return !"true".equals(logined);
     }
 
     @Override
