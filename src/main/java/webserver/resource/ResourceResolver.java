@@ -8,7 +8,7 @@ import java.net.URISyntaxException;
 public class ResourceResolver {
     private static final String PREFIX = "./static";
 
-    public static byte[] getResource(String path) throws IOException, URISyntaxException {
+    public byte[] getResource(String path) throws IOException, URISyntaxException {
         return FileIoUtils.loadFileFromClasspath(PREFIX + path);
     }
 }

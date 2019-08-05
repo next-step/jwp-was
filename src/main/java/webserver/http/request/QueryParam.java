@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,10 +36,6 @@ public class QueryParam {
 
     private static String[] getKeyValue(String queryString) {
         return queryString.split(KEY_VALUE_SEPARATOR);
-    }
-
-    private static boolean hasQueryParams(String[] split) {
-        return split.length > 1;
     }
 
     private static boolean isNotEmpty(String[] target) {
