@@ -12,7 +12,7 @@ class PathMapperTest {
     @CsvSource({"/,/index.html", "/user/create,/index.html", "/test,/test.html"})
     void filePath구하기(ArgumentsAccessor argumentsAccessor) {
         //when
-        String path = PathMapper.getResponsePath(argumentsAccessor.getString(0));
+        String path = PathMapper.getFilePath(argumentsAccessor.getString(0));
 
         //then
         assertThat(path).isEqualTo(HttpStringType.FILE_PATH_PREFIX.getType() + argumentsAccessor.getString(1));

@@ -19,7 +19,7 @@ public class PathMapper {
         return pathMapper.containsKey(path);
     }
 
-    public static String getResponsePath(String path) {
+    public static String getFilePath(String path) {
         if (isMatchPath(path)) {
             return HttpStringType.FILE_PATH_PREFIX.getType() + pathMapper.get(path);
         }
@@ -31,5 +31,9 @@ public class PathMapper {
         }
 
         return filePath;
+    }
+
+    public static String findByKey(String key) {
+        return pathMapper.get(key);
     }
 }

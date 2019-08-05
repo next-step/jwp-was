@@ -39,10 +39,7 @@ public class RequestHandler implements Runnable {
             handleRequestBody(requestLine, br, requestHeader.findByKey("Content-Length"));
             handlerWebService(requestLine);
 
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = FileIoUtils.loadFileFromClasspath(requestLine.getFilePath());
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            ResponseHandler.response(out, requestLine);
         } catch (IOException| URISyntaxException e) {
             logger.error(e.getMessage());
         }
@@ -61,26 +58,6 @@ public class RequestHandler implements Runnable {
         WebService webService = WebServiceFactory.create(requestLine.getPath().getPath());
         if (webService != null) {
             webService.process(requestLine);
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
         }
     }
 

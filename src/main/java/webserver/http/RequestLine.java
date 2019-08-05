@@ -34,6 +34,6 @@ public class RequestLine {
     }
 
     public String getFilePath() {
-        return PathMapper.getResponsePath(path.getPath());
+        return PathMapper.getFilePath(path.getPath());
     }
 }

@@ -32,6 +32,6 @@ public class RequestHeader {
 
     public String findByKey(String key) {
         return Optional.ofNullable(headerInfo.get(key))
-                .orElseThrow(IllegalArgumentException::new);
+                .orElse("0");
     }
 }
