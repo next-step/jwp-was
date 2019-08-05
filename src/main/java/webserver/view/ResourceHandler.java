@@ -8,6 +8,9 @@ import webserver.http.response.HttpResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import static webserver.http.HttpHeaders.CONTENT_LENGTH;
+import static webserver.http.HttpHeaders.CONTENT_TYPE;
+
 public class ResourceHandler extends AbstractRequestMappingHandler {
 
     @Override
@@ -17,7 +20,10 @@ public class ResourceHandler extends AbstractRequestMappingHandler {
         String resourcePath = ResourceLoader.getResourcePath(path);
         byte [] body = ResourceLoader.loadResource(resourcePath);
 
-        response.response200Header(body.length, ResourceLoader.resourceContentType(path));
+        response.addHeader(CONTENT_LENGTH, body.length);
+        response.addHeader(CONTENT_TYPE, ResourceLoader.resourceContentType(path));
+
+        response.response200Header();
         response.responseBody(body);
     }
 }

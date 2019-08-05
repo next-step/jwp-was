@@ -3,6 +3,7 @@ package webserver.view;
 import db.DataBase;
 import model.User;
 import webserver.AbstractRequestMappingHandler;
+import webserver.ResourceLoader;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.template.HandleBarTemplateLoader;
@@ -12,7 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static webserver.http.HttpHeaders.COOKIE;
+import static webserver.http.HttpHeaders.*;
 
 public class UserListHandler extends AbstractRequestMappingHandler {
 
@@ -24,11 +25,15 @@ public class UserListHandler extends AbstractRequestMappingHandler {
                 Map<String, Object> data = findAllUsers();
                 byte[] body = HandleBarTemplateLoader.loadTemplate("/user/list", data);
 
-                response.response200Header(body.length, "text/html;");
+                response.addHeader(CONTENT_LENGTH, body.length);
+                response.addHeader(CONTENT_TYPE, ResourceLoader.resourceContentType("text/html;"));
+                response.response200Header();
                 response.responseBody(body);
 
             } else {
-                response.response302Header("/user/login.html", false);
+                response.addHeader(LOCATION, "/user/login.html");
+                response.addHeader(SET_COOKIE, "logined=false; Path=/");
+                response.response302Header();
             }
     }
 
