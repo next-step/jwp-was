@@ -1,5 +1,7 @@
 package webserver.http;
 
+import java.util.Map;
+
 public class RequestLine {
     private static final String SP_CHARACTERS = "\\s";
 
@@ -30,12 +32,16 @@ public class RequestLine {
         return requestUri.toString();
     }
 
-    String getPath() {
+    public String getPath() {
         return requestUri.getPath();
     }
 
-    String getQuery() {
+    public String getQuery() {
         return requestUri.getQuery();
+    }
+
+    public Map<String, String> getQueryParams() {
+        return requestUri.getQueryParams();
     }
 
     public String getHttpVersion() {

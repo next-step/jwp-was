@@ -1,5 +1,6 @@
 package webserver.http;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,9 +18,9 @@ public class Uri {
     private final String host;
     private final String port;
     private final String path;
-    private final String query;
+    private final Query query;
 
-    public Uri(final String scheme, final String host, final String port, final String path, final String query) {
+    private Uri(final String scheme, final String host, final String port, final String path, final Query query) {
         this.scheme = scheme;
         this.host = host;
         this.port = port;
@@ -30,7 +31,13 @@ public class Uri {
     static Uri parse(final String field) {
         final Matcher matcher = URI_PATTERN.matcher(field);
         if (matcher.matches()) {
-            return new Uri(matcher.group(1), matcher.group(2), matcher.group(3), matcher.group(4), matcher.group(5));
+            return new Uri(
+                    matcher.group(1),
+                    matcher.group(2),
+                    matcher.group(3),
+                    matcher.group(4),
+                    getQuery(matcher.group(5))
+            );
         }
         throw new ParseException();
     }
@@ -40,7 +47,21 @@ public class Uri {
     }
 
     String getQuery() {
-        return query;
+        if (query == null) {
+            return null;
+        }
+        return query.toString();
+    }
+
+    Map<String, String> getQueryParams() {
+        return query.getQueryParams();
+    }
+
+    private static Query getQuery(final String queryString) {
+        if (queryString == null) {
+            return null;
+        }
+        return Query.parse(queryString);
     }
 
     @Override
