@@ -29,6 +29,12 @@ public class Parameters {
         return new Parameters();
     }
 
+    public void addAll(String requestBody) {
+        Arrays.stream(HttpStringUtils.split(requestBody, HttpStringType.DELIMITER_AMPERSAND.getType()))
+                .map(Parameter::newInstance)
+                .forEach(parameter -> parameters.put(parameter.getKey(), parameter));
+    }
+
     public boolean isEmpty() {
         return parameters.size() == 0;
     }

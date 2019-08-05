@@ -41,4 +41,8 @@ public class Path {
     public Parameters getParameters() {
         return parameters;
     }
+
+    public void addParameters(String requestBody) {
+        parameters.addAll(requestBody);
+    }
 }

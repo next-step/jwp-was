@@ -7,8 +7,9 @@ import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import utils.HttpStringUtils;
+import utils.IOUtils;
 import webserver.http.RequestLine;
+import webserver.http.RequestHeader;
 import webserver.service.WebService;
 import webserver.service.WebServiceFactory;
 
@@ -31,11 +32,12 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
-            RequestLine requestLine = readRequestLine(in);
-            WebService webService = WebServiceFactory.create(requestLine.getPath().getPath());
-            if (webService != null) {
-                webService.process(requestLine);
-            }
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            RequestLine requestLine = readRequestLine(br);
+            RequestHeader requestHeader = readRequestHeader(br);
+
+            handleRequestBody(requestLine, br, requestHeader.findByKey("Content-Length"));
+            handlerWebService(requestLine);
 
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = FileIoUtils.loadFileFromClasspath(requestLine.getFilePath());
@@ -43,6 +45,22 @@ public class RequestHandler implements Runnable {
             responseBody(dos, body);
         } catch (IOException| URISyntaxException e) {
             logger.error(e.getMessage());
+        }
+    }
+
+    private void handleRequestBody(RequestLine requestLine, BufferedReader br, String contentLength) throws IOException {
+        if ("GET".equals(requestLine.getMethod())) {
+            return ;
+        }
+
+        String reqBody = IOUtils.readData(br, Integer.parseInt(contentLength));
+        requestLine.getPath().addParameters(reqBody);
+    }
+
+    private void handlerWebService(RequestLine requestLine) {
+        WebService webService = WebServiceFactory.create(requestLine.getPath().getPath());
+        if (webService != null) {
+            webService.process(requestLine);
         }
     }
 
@@ -66,21 +84,11 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    public RequestLine readRequestLine(InputStream inputStream) throws IOException {
-        InputStreamReader isr = new InputStreamReader(inputStream);
-        BufferedReader br = new BufferedReader(isr);
-        StringBuilder sb = new StringBuilder();
-        String line;
+    public RequestLine readRequestLine(BufferedReader br) throws IOException {
+        return RequestLine.parse(br.readLine());
+    }
 
-        while (!"".equals(line = br.readLine())) {
-            if (line == null) {
-                break;
-            }
-            sb.append(line);
-            sb.append("\n");
-            logger.info("RequestHeader : {}", line);
-        };
-
-        return RequestLine.parse(HttpStringUtils.splitAndFindByIndex(sb.toString(), "\n", 0));
+    public RequestHeader readRequestHeader(BufferedReader br) throws IOException {
+        return RequestHeader.newInstance(br);
     }
 }

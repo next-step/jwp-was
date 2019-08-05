@@ -47,4 +47,16 @@ public class ParametersTest {
         //then
         assertThat(value).isEqualTo(argumentsAccessor.getString(2));
     }
+
+    @ParameterizedTest
+    @CsvSource({"field1=value1,field1,value1","field1=value1&field2=value2,field2,value2"})
+    void addAll(ArgumentsAccessor argumentsAccessor) {
+        //when
+        Parameters parameters = Parameters.emptyInstance();
+        parameters.addAll(argumentsAccessor.getString(0));
+
+        //then
+        assertThat(parameters.findByKey(argumentsAccessor.getString(1)))
+                .isEqualTo(argumentsAccessor.getString(2));
+    }
 }
