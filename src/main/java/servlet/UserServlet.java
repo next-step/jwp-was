@@ -27,7 +27,7 @@ public class UserServlet implements HttpServlet {
       System.out.println(user.toString());
       DataBase.addUser(user);
     }
-    return "/index.html";
+    return "redirect:/index.html";
   }
 
   User createUser(Parameters parameters) {
