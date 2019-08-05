@@ -12,7 +12,5 @@ public interface Request {
     boolean matchMethod(final RequestMethod method);
     String getHeader(final String key);
     String getHeader(final HeaderKey key);
-    String getBody();
-    String getBody(final String key);
     Cookie getCookie();
 }

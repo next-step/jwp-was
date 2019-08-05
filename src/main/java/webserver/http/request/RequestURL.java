@@ -42,6 +42,10 @@ public class RequestURL {
         return requestQuery.getString(key);
     }
 
+    RequestQuery getParameters() {
+        return requestQuery;
+    }
+
     private static int parseSeparatorIndex(final String rawRequestURL) {
         return rawRequestURL.indexOf(SEPARATOR);
     }

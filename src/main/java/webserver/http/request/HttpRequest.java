@@ -14,19 +14,25 @@ import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
 import static java.lang.System.lineSeparator;
+import static webserver.http.RequestMethod.POST;
 
 public class HttpRequest implements Request {
 
     private final RequestLine requestLine;
     private final HttpHeaders httpHeaders;
-    private final String body;
+    private final RequestQuery requestQuery;
 
     private HttpRequest(final RequestLine requestLine,
                         final HttpHeaders httpHeaders,
-                        final String body) {
+                        final RequestQuery re) {
         this.requestLine = requestLine;
         this.httpHeaders = httpHeaders;
-        this.body = body;
+        this.requestQuery = re;
+    }
+
+    private HttpRequest(final RequestLine requestLine,
+                        final HttpHeaders httpHeaders) {
+        this(requestLine, httpHeaders, requestLine.getParameters());
     }
 
     public static HttpRequest of(final InputStream in) throws IOException {
@@ -34,9 +40,13 @@ public class HttpRequest implements Request {
 
         final RequestLine requestLine = RequestLine.parse(requestReader.readLine());
         final HttpHeaders httpHeaders = readHeaders(requestReader);
-        final String body = readBody(requestReader, httpHeaders.getContentLength());
 
-        return new HttpRequest(requestLine, httpHeaders, body);
+        if (requestLine.matchMethod(POST)) {
+            final String body = readBody(requestReader, httpHeaders.getContentLength());
+            return new HttpRequest(requestLine, httpHeaders, RequestQuery.of(body));
+        }
+
+        return new HttpRequest(requestLine, httpHeaders);
     }
 
     @Override
@@ -51,7 +61,7 @@ public class HttpRequest implements Request {
 
     @Override
     public String getParameter(final String key) {
-        return requestLine.getParameter(key);
+        return requestQuery.getString(key);
     }
 
     @Override
@@ -67,17 +77,6 @@ public class HttpRequest implements Request {
     @Override
     public String getHeader(final HeaderKey key) {
         return getHeader(key.toString());
-    }
-
-    @Override
-    public String getBody() {
-        return body;
-    }
-
-    @Override
-    public String getBody(final String key) {
-        // TODO: content-type에 따라 다르게 처리?
-        return RequestQuery.of(body).getString(key);
     }
 
     @Override
@@ -108,7 +107,7 @@ public class HttpRequest implements Request {
         return "HttpRequest{" +
                 "requestLine=" + requestLine +
                 ", httpHeaders=" + httpHeaders +
-                ", body='" + body + '\'' +
+                ", requestQuery=" + requestQuery +
                 '}';
     }
 }

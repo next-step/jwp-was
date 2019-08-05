@@ -11,10 +11,10 @@ public class CreateUserHandler implements Handler {
     @Override
     public void handle(final Request request,
                        final Response response) {
-        final String userId = request.getBody("userId");
-        final String password = request.getBody("password");
-        final String name = request.getBody("name");
-        final String email = request.getBody("email");
+        final String userId = request.getParameter("userId");
+        final String password = request.getParameter("password");
+        final String name = request.getParameter("name");
+        final String email = request.getParameter("email");
 
         final User user = new User(userId, password, name, email);
         DataBase.addUser(user);

@@ -41,6 +41,10 @@ public class RequestLine {
         return url.getParameter(key);
     }
 
+    RequestQuery getParameters() {
+        return url.getParameters();
+    }
+
     @Override
     public String toString() {
         return "RequestLine{" +

@@ -4,7 +4,6 @@ import db.DataBase;
 import model.User;
 import webserver.handler.Handler;
 import webserver.http.request.Request;
-import webserver.http.request.RequestQuery;
 import webserver.http.response.Response;
 
 import java.util.Optional;
@@ -14,10 +13,8 @@ public class LoginHandler implements Handler {
     @Override
     public void handle(final Request request,
                        final Response response) throws Exception {
-        final RequestQuery requestQuery = RequestQuery.of(request.getBody());
-        
-        final String userId = requestQuery.getString("userId");
-        final String password = requestQuery.getString("password");
+        final String userId = request.getParameter("userId");
+        final String password = request.getParameter("password");
 
         Optional.ofNullable(DataBase.findUserById(userId))
                 .filter(user -> user.matchPassword(password))
