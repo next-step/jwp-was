@@ -64,6 +64,10 @@ public class QueryString {
         }
 
         static Parameter of(String parameter) {
+            if (parameter == null || parameter.isEmpty()) {
+                throw new IllegalArgumentException("Input value should not be null");
+            }
+
             String[] pair = parameter.split(SEPARATOR);
             return new Parameter(pair[INDEX_OF_ATTRIBUTE], pair[INDEX_OF_VALUE]);
         }

@@ -2,10 +2,9 @@ package servlet;
 
 import db.DataBase;
 import model.User;
-import webserver.HttpHeaders;
+import webserver.HttpServlet;
 import webserver.Request;
 import webserver.Response;
-import webserver.HttpServlet;
 
 public class UserLoginServlet implements HttpServlet {
 
@@ -22,22 +21,21 @@ public class UserLoginServlet implements HttpServlet {
         String password = request.getParameter("password");
         User userById = DataBase.findUserById(userId);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
         if (userById == null || !userById.checkPassword(password)) {
-            return loginFail(httpHeaders);
+            return loginFail();
         }
-        return loginSuccess(httpHeaders);
+        return loginSuccess();
     }
 
-    private Response loginFail(HttpHeaders httpHeaders) {
-        Response response = Response.redirect("/user/login_failed.html");
-        httpHeaders.setCookie(COOKIE_OF_LOGIN + "=false; Path=/");
+    private Response loginSuccess() {
+        Response response = Response.redirect("/index.html");
+        response.setCookie(COOKIE_OF_LOGIN + "=true; Path=/");
         return response;
     }
 
-    private Response loginSuccess(HttpHeaders httpHeaders) {
-        Response response = Response.redirect("/index.html");
-        httpHeaders.setCookie(COOKIE_OF_LOGIN + "=true; Path=/");
+    private Response loginFail() {
+        Response response = Response.redirect("/user/login_failed.html");
+        response.setCookie(COOKIE_OF_LOGIN + "=false; Path=/");
         return response;
     }
 }

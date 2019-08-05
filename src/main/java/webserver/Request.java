@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import static webserver.HttpHeaders.ACCEPT;
 import static webserver.HttpHeaders.COOKIE;
 
 public class Request {
@@ -55,10 +56,6 @@ public class Request {
         return requestBody.get(field);
     }
 
-    public boolean matchPath(String path) {
-        return requestLine.matchPath(path);
-    }
-
     public String getPath() {
         return requestLine.getPath();
     }
@@ -67,8 +64,16 @@ public class Request {
         return Cookie.of(httpHeaders.get(COOKIE));
     }
 
-    public String getHeader(String key) {
-        return httpHeaders.get(key);
+    public String getAccept() {
+        return httpHeaders.get(ACCEPT).split(",")[0];
+    }
+
+    public boolean matchPath(String path) {
+        return requestLine.matchPath(path);
+    }
+
+    public boolean containPath(String path) {
+        return requestLine.containPath(path);
     }
 
     @Override

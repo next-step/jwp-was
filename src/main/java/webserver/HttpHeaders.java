@@ -14,7 +14,7 @@ public class HttpHeaders {
     static final String SET_COOKIE = "Set-Cookie";
 
     public static final String ACCEPT = "Accept";
-    public static final String COOKIE = "Cookie";
+    static final String COOKIE = "Cookie";
 
     private Map<String, String> headerInfo = new HashMap<>();
 
@@ -39,10 +39,6 @@ public class HttpHeaders {
         headerInfo.put(CONTENT_TYPE, value);
     }
 
-    public String get(String field) {
-        return headerInfo.get(field);
-    }
-
     List<String> output() {
         return headerInfo.entrySet()
                 .stream()
@@ -51,7 +47,11 @@ public class HttpHeaders {
                 .collect(Collectors.toList());
     }
 
-    public void setCookie(String value) {
+    public String get(String field) {
+        return headerInfo.get(field);
+    }
+
+    void setCookie(String value) {
         headerInfo.put(SET_COOKIE, value);
     }
 
@@ -78,6 +78,10 @@ public class HttpHeaders {
         }
 
         static Parameter of(String parameter) {
+            if (parameter == null) {
+                throw new IllegalArgumentException("Input value should not be null");
+            }
+
             String[] pair = parameter.split(SEPARATOR);
             if (pair.length < SIZE) {
                 throw new IllegalArgumentException(String.format("헤더 정보값이 잘못 입력하였습니다. 입력값: %s", parameter));

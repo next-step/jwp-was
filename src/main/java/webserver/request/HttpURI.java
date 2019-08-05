@@ -36,6 +36,10 @@ public class HttpURI {
         return this.path.equals(path);
     }
 
+    boolean containPath(String path) {
+        return this.path.contains(path);
+    }
+
     @Override
     public String toString() {
         return "HttpURI{" +

@@ -10,8 +10,6 @@ import webserver.Response;
 import java.util.Arrays;
 import java.util.List;
 
-import static webserver.HttpHeaders.ACCEPT;
-
 public class StaticResourceServlet implements HttpServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(StaticResourceServlet.class);
@@ -22,14 +20,13 @@ public class StaticResourceServlet implements HttpServlet {
     @Override
     public boolean isMapping(Request request) {
         return staticResources.stream()
-                .anyMatch(path -> request.getPath().contains(path));
+                .anyMatch(request::containPath);
     }
 
     @Override
     public Response service(Request request) throws Exception {
-        logger.info(request.getHeader(ACCEPT));
-
-        String contentType = request.getHeader(ACCEPT).split(",")[0];
+        logger.info(request.getAccept());
+        String contentType = request.getAccept();
 
         byte[] body = FileIoUtils.loadFileFromClasspath(STATIC_PATH + request.getPath());
         return Response.ok(body, contentType);

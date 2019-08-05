@@ -7,10 +7,13 @@ import org.junit.jupiter.api.Test;
 import webserver.Request;
 import webserver.RequestTest;
 import webserver.Response;
+import webserver.request.Cookie;
 
 import java.io.IOException;
 
+import static com.google.common.net.HttpHeaders.SET_COOKIE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static servlet.UserLoginServlet.COOKIE_OF_LOGIN;
 import static webserver.HttpStatus.REDIRECT;
 
 class UserLoginServletTest {
@@ -38,11 +41,12 @@ class UserLoginServletTest {
         Request request = RequestTest.requestOfLogin();
 
         // when
-        DataBase.addUser(getUser());
+        DataBase.addUser(getUser(userId));
         Response service = userLoginServlet.service(request);
+        Boolean checkedLogin = getCheckedLogin(service);
 
         // then
-        assertThat(DataBase.findUserById(userId)).isNotNull();
+        assertThat(checkedLogin).isTrue();
         assertThat(service.getStatus()).isEqualTo(REDIRECT);
     }
 
@@ -61,7 +65,15 @@ class UserLoginServletTest {
         assertThat(service.getStatus()).isEqualTo(REDIRECT);
     }
 
-    private User getUser() {
-        return new User("javajigi", "password", "name", "email");
+    private User getUser(String userId) {
+        return new User(userId, "password", "name", "email");
+    }
+
+    private Boolean getCheckedLogin(Response response) {
+        String cookieOfLogin = response.getHeaderOf(SET_COOKIE);
+
+        String checkedLogin = cookieOfLogin.split(";")[0]
+                                       .split("=")[1];
+        return Boolean.valueOf(checkedLogin);
     }
 }

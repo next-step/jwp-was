@@ -15,11 +15,7 @@ public class RequestHandler implements Runnable {
 
     private Socket connection;
 
-    private List<HttpServlet> httpServlets = Arrays.asList(new StaticResourceServlet(),
-            new TemplateResourceServlet(),
-            new UserCreateServlet(),
-            new UserListServlet(),
-            new UserLoginServlet());
+    private ServletContext servletContext = new ServletContext();
 
     RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -34,9 +30,7 @@ public class RequestHandler implements Runnable {
             Request request = Request.of(in);
             logger.info("IN request: {}", request);
 
-            httpServlets.stream()
-                    .filter(it -> it.isMapping(request))
-                    .findFirst()
+            servletContext.mapping(request)
                     .map(serve(request))
                     .orElseGet(Response::notFound)
                     .send(out);

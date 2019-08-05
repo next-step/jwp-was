@@ -29,12 +29,16 @@ public class RequestLine {
         return method;
     }
 
-    public HttpURI getUri() {
+    HttpURI getUri() {
         return uri;
     }
 
     public boolean matchPath(String path) {
         return uri.matchPath(path);
+    }
+
+    public boolean containPath(String path) {
+        return uri.containPath(path);
     }
 
     public String getPath() {

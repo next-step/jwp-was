@@ -68,6 +68,14 @@ public class Response {
         return httpStatus;
     }
 
+    public String getHeaderOf(String key) {
+        return httpHeaders.get(key);
+    }
+
+    public void setCookie(String value) {
+        httpHeaders.setCookie(value);
+    }
+
     void send(OutputStream out) throws IOException {
         DataOutputStream dos = new DataOutputStream(out);
         dos.writeBytes(httpStatus.getStatusLine().concat(CRLF));
