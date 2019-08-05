@@ -19,11 +19,17 @@ public class UserController implements Controller {
 
     static {
         controller.put("/", index());
+        controller.put("/index", index());
+        controller.put("/user/form", createForm());
         controller.put("/user/create", createUser());
     }
 
     private static Function<Query, String> index() {
-        return query -> "index.html";
+        return query -> "index";
+    }
+
+    private static Function<Query, String> createForm() {
+        return query -> "/user/form";
     }
 
     private static Function<Query, String> createUser() {
@@ -37,15 +43,15 @@ public class UserController implements Controller {
 
             log.info("user object : {}", user);
 
-            return "/user/create";
+            return "redirect:/index";
         };
     }
 
     @Override
     public String get(Request request) {
         try {
-            return controller.get(request.path())
-                             .apply(request.query()); // 차후 query 또는 request body 둘다 처리 가능하도록 변경하자
+            return controller.get(request.removeExtensionPath())
+                             .apply(request.query());
         } catch (NullPointerException e) {
             throw new NotFoundException(String.format("경로를 찾을 수 없습니다. 입력값 : %s", request.path()));
         }

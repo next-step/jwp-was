@@ -12,8 +12,6 @@ import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RequestHandler implements Runnable {
 
@@ -39,26 +37,36 @@ public class RequestHandler implements Runnable {
             InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-            List<String> httpRequestHeaders = new ArrayList<>();
-            do {
-                httpRequestHeaders.add(bufferedReader.readLine());
-            } while (bufferedReader.ready());
-
-            Request request = new Request(httpRequestHeaders);
+            Request request = new Request(bufferedReader);
 
             Controller userController = UserController.getInstance();
             String path = userController.get(request);
             ResourceViewResolver resourceView = new ResourceViewResolver(path);
 
             DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, resourceView.getResponse().length);
-            responseBody(dos, resourceView.getResponse());
+
+            if (resourceView.isRedirect()) {
+                response302Header(dos, resourceView.getPath());
+            } else {
+                response200Header(dos, resourceView.getResponseBody().length);
+                responseBody(dos, resourceView.getResponseBody());
+            }
         } catch (FileNotFoundException e) {
             logger.error("File not found : " + e.getMessage());
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
             e.printStackTrace();
         } catch (NotFoundException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(DataOutputStream dos, final String location) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Location: " + location + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
