@@ -24,7 +24,6 @@ public class UserListHandler extends AbstractRequestMappingHandler {
 
     @Override
     public void process(HttpRequest request, HttpResponse response) throws IOException {
-        if("/user/list".equals(request.getRequestUriPath())) {
             if (LOGIN_TRUE_COOKIE.equals(request.getHeader(COOKIE))) {
                 byte[] body = loadTemplate();
 
@@ -34,7 +33,6 @@ public class UserListHandler extends AbstractRequestMappingHandler {
             } else {
                 response.response302Header("/user/login.html", false);
             }
-        }
     }
 
     private byte[] loadTemplate() throws IOException {

@@ -20,8 +20,12 @@ public class RequestLine {
         return new RequestLine(HttpMethod.find(values[0]), RequestUri.parse(values[1]), values[2]);
     }
 
-    public HttpMethod getMethod() {
-        return method;
+    public boolean isPost() {
+        return method == HttpMethod.POST;
+    }
+
+    public boolean isGet() {
+        return method == HttpMethod.GET;
     }
 
     public String getRequestUriPath() {

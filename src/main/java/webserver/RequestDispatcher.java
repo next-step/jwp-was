@@ -12,7 +12,7 @@ public class RequestDispatcher {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestDispatcher.class);
 
-    public static void processRequest(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+    public void processRequest(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
         logger.debug("request header : {}", request);
 
         RequestMappingHandler handler = RequestMapper.find(request.getRequestUriPath());

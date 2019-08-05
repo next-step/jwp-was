@@ -62,11 +62,11 @@ public class HttpRequest {
     }
 
     public boolean isPostRequest() {
-        return HttpMethod.POST == requestLine.getMethod();
+        return requestLine.isPost();
     }
 
     public boolean isGetRequest() {
-        return HttpMethod.GET == requestLine.getMethod();
+        return requestLine.isGet();
     }
 
     public RequestBody getRequestBody() {

@@ -14,9 +14,11 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private RequestDispatcher dispatcher;
 
-    public RequestHandler(Socket connectionSocket) {
+    public RequestHandler(Socket connectionSocket, RequestDispatcher dispatcher) {
         this.connection = connectionSocket;
+        this.dispatcher = dispatcher;
     }
 
     public void run() {
@@ -30,7 +32,7 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
             HttpResponse httpResponse = new HttpResponse(dos);
 
-            RequestDispatcher.processRequest(httpRequest, httpResponse);
+            dispatcher.processRequest(httpRequest, httpResponse);
 
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
