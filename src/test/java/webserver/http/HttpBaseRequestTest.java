@@ -54,6 +54,7 @@ public class HttpBaseRequestTest {
             assertThat(httpRequest).isNotNull();
             assertThat(httpRequest.getPath()).isEqualTo("/index.html");
         } catch (Exception e) {
+            assertThat(e).doesNotThrowAnyException();
             assertThat(e).hasNoCause();
         }
 
@@ -69,6 +70,7 @@ public class HttpBaseRequestTest {
             assertThat(httpRequest.getRequestURI()).isEqualTo("/index.html");
             assertThat(httpRequest.getParameter("userId")).isEqualTo("circlee");
         } catch (Exception e) {
+            assertThat(e).doesNotThrowAnyException();
             assertThat(e).hasNoCause();
         }
 
@@ -83,6 +85,7 @@ public class HttpBaseRequestTest {
             assertThat(httpRequest.getPath()).isEqualTo("/user/create");
             assertThat(httpRequest.getBody()).isEqualTo("userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net");
         } catch (Exception e) {
+            assertThat(e).doesNotThrowAnyException();
             assertThat(e).hasNoCause();
         }
 
