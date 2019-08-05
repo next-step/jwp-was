@@ -19,7 +19,6 @@ public class ResourceHandler implements Handler {
     @Override
     public void handle(final Request request,
                        final Response response) throws Exception {
-        System.out.println("@@@@@@@@@@@@@@@");
         final String accept = request.getHeader(HeaderKey.ACCEPT);
         final String contentType = accept.split(COMMA)[INDEX_OF_FIRST];
 
