@@ -4,9 +4,14 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.UserService;
-import webserver.Parameter;
+import webserver.HttpParameter;
+import webserver.ModelAndView;
+import webserver.StatusCode;
 import webserver.request.RequestHolder;
 import webserver.response.ResponseHolder;
+
+import java.util.Collections;
+import java.util.HashMap;
 
 public class LoginServlet implements Servlet {
 
@@ -18,28 +23,30 @@ public class LoginServlet implements Servlet {
     }
 
     @Override
-    public void service(RequestHolder requestHolder, ResponseHolder responseHolder) {
+    public ModelAndView service(RequestHolder requestHolder, ResponseHolder responseHolder) {
         logger.debug("login process.");
         UserService userService = UserService.getInstance();
 
 
-        Parameter parameter = requestHolder.getMergedParameter();
-        String userId = parameter.getParameter("userId");
-        String password = parameter.getParameter("password");
+        HttpParameter httpParameter = requestHolder.getMergedHttpParameter();
+        String userId = httpParameter.getParameter("userId");
+        String password = httpParameter.getParameter("password");
 
         User user = userService.get(userId);
 
         logger.debug(user + " " + userId + "/" + password);
 
         if (user != null && user.getPassword().equals(password)) {
-            responseHolder.addCookie("logined", "true");
-            responseHolder.setViewName("/index.html");
-            responseHolder.setRedirect(true);
-            return;
+            return new ModelAndView.Builder("/index.html")
+                    .addCookie("logined", "true")
+                    .redirect(true)
+                    .build();
         }
 
-        responseHolder.addCookie("logined", "false");
-        responseHolder.setViewName("/user/login_failed.html");
-        responseHolder.setRedirect(true);
+        return new ModelAndView.Builder("/user/login_failed.html")
+                .addCookie("logined", "false")
+                .redirect(true)
+                .build();
+
     }
 }

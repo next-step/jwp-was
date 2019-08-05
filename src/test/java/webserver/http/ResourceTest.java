@@ -5,17 +5,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.ModelAndView;
-import webserver.Parameter;
-import webserver.request.RequestBody;
-import webserver.request.RequestHeader;
-import webserver.request.RequestHolder;
-import webserver.request.RequestLine;
 import webserver.resource.HandlebarsResourceLoader;
 import webserver.resource.ResourceLoader;
 import webserver.resource.StaticResourceLoader;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,7 +23,7 @@ public class ResourceTest {
     @ValueSource(strings = {"/test.js", "/test.css"})
     void loadStaticResource(String viewName) throws IOException {
         ResourceLoader resourceHandler = new StaticResourceLoader(getClass().getClassLoader());
-        ModelAndView mav = new ModelAndView(viewName, Collections.emptyMap());
+        ModelAndView mav = new ModelAndView(viewName);
         assertThat(resourceHandler.getResource(mav)).contains("hello test");
     }
 
@@ -38,7 +32,7 @@ public class ResourceTest {
     @ValueSource(strings = {"/index.html", "/registration.html"})
     void loadHandlebarsResource(String viewName) throws IOException {
         ResourceLoader resourceHandler = new HandlebarsResourceLoader();
-        ModelAndView mav = new ModelAndView(viewName, Collections.emptyMap());
+        ModelAndView mav = new ModelAndView(viewName);
         assertThat(resourceHandler.getResource(mav)).contains("hello test");
     }
 
@@ -47,7 +41,7 @@ public class ResourceTest {
     @ValueSource(strings = {"/profile.html"})
     void loadHandlebarsResourceWithAttribute(String viewName) throws IOException {
         ResourceLoader resourceHandler = new HandlebarsResourceLoader();
-        ModelAndView mav = new ModelAndView(viewName, Collections.emptyMap());
+        ModelAndView mav = new ModelAndView(viewName);
         mav.setModel(new HashMap<String, Object>(){{
             put("user", new User("jun", "password", "hyunjun", "test@test.com"));
         }});
@@ -59,7 +53,7 @@ public class ResourceTest {
     @ValueSource(strings = {"/list.html"})
     void loadHandlebarsResourceWithListAttribute(String viewName) throws IOException {
         ResourceLoader resourceHandler = new HandlebarsResourceLoader();
-        ModelAndView mav = new ModelAndView(viewName, Collections.emptyMap());
+        ModelAndView mav = new ModelAndView(viewName);
         List<User> users = asList(
                 new User("jun", "password", "hyunjun", "jun@test.com"),
                 new User("min", "password", "sangmin", "min@test.com")

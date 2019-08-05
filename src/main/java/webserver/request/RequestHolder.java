@@ -1,25 +1,26 @@
 package webserver.request;
 
-import webserver.Parameter;
+import webserver.HttpParameter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static webserver.Parameter.of;
+import static webserver.HttpParameter.of;
 
 public class RequestHolder {
     private RequestLine requestLine;
     private RequestHeader requestHeader;
     private RequestBody requestBody;
-    private Parameter mergedParameter;
+    private HttpParameter mergedHttpParameter;
     private Map<String, Object> attributes;
 
     public RequestHolder(RequestLine requestLine, RequestHeader requestHeader, RequestBody requestBody) {
         this.requestLine = requestLine;
         this.requestHeader = requestHeader;
         this.requestBody = requestBody;
-        this.mergedParameter = of(asList(requestLine.getParameter(), requestBody.getParameter()));
+        this.mergedHttpParameter = of(asList(requestLine.getHttpParameter(), requestBody.getHttpParameter()));
         this.attributes = new HashMap<>();
     }
 
@@ -31,8 +32,8 @@ public class RequestHolder {
         return requestHeader;
     }
 
-    public Parameter getMergedParameter() {
-        return mergedParameter;
+    public HttpParameter getMergedHttpParameter() {
+        return mergedHttpParameter;
     }
 
     public void addAttributes(String key, Object attribute) {
@@ -41,6 +42,13 @@ public class RequestHolder {
 
     public Map<String, Object> getAttributes() {
         return attributes;
+    }
+
+    public String getResponseContentType() {
+        return Optional.of(requestHeader)
+                .map(RequestHeader::getAccept)
+                .map(accepts -> accepts.split(",")[0])
+                .orElse("text/html");
     }
 
 }

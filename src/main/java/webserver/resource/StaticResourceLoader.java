@@ -1,9 +1,12 @@
 package webserver.resource;
 
 import exception.HttpException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.StringUtils;
 import webserver.ModelAndView;
 import webserver.StatusCode;
+import webserver.response.ResponseSender;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,6 +18,7 @@ import static java.util.Arrays.asList;
 
 public class StaticResourceLoader extends AbstractResourceLoader {
 
+    private static final Logger logger = LoggerFactory.getLogger(StaticResourceLoader.class);
     private static final List<String> AVAILABLE_RESOURCE = asList("js", "css", "woff", "svg", "ttf", "eot", "svg", "png");
 
     public StaticResourceLoader() {
@@ -32,6 +36,7 @@ public class StaticResourceLoader extends AbstractResourceLoader {
     public String getResource(ModelAndView mav) {
         String name = "static" + mav.getViewName();
         validate(name);
+        logger.info("## resource retrieve: " + name);
         try (InputStream in = classLoader.getResourceAsStream(name)) {
             if (in == null) {
                 throw new HttpException(StatusCode.NOT_FOUND);

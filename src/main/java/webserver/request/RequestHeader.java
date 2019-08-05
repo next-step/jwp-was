@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.MapUtils;
 import utils.StringUtils;
-import webserver.Parameter;
+import webserver.HttpParameter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,8 +54,8 @@ public class RequestHeader {
 
     public String getCookie(String key) {
         String cookies = headers.get("Cookie");
-        Parameter parameter = Parameter.parseParameter(cookies, ";");
-        return parameter.getParameter(key);
+        HttpParameter httpParameter = HttpParameter.parseParameter(cookies, ";");
+        return httpParameter.getParameter(key);
     }
 
     public Map<String, String> getHeaders() {

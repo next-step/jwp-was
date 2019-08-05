@@ -7,14 +7,10 @@ import webserver.request.RequestHeader;
 import webserver.request.RequestHolder;
 import webserver.request.RequestLine;
 import webserver.response.ResponseHolder;
-import webserver.servlet.LoginServlet;
-import webserver.servlet.RegistrationServlet;
-import webserver.servlet.UserListServlet;
 
 import java.io.*;
 import java.net.Socket;
 
-import static com.google.common.collect.ImmutableList.of;
 import static utils.IOUtils.readLines;
 
 public class RequestHandler implements Runnable {
@@ -26,8 +22,7 @@ public class RequestHandler implements Runnable {
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
-        this.httpProcessor = new HttpProcessor(of(
-                new RegistrationServlet(), new LoginServlet(), new UserListServlet()));
+        this.httpProcessor = new HttpProcessor();
     }
 
     public void run() {
@@ -37,7 +32,7 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
             RequestHolder requestHolder = createRequestHolder(in);
-            httpProcessor.process(requestHolder, new ResponseHolder(dos, requestHolder));
+            httpProcessor.process(requestHolder, new ResponseHolder(dos));
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

@@ -12,10 +12,7 @@ public enum StatusCode {
         @Override
         public void handleResponse(ResponseHolder responseHolder) throws IOException {
             super.handleResponse(responseHolder);
-            if (responseHolder.getViewName() != null) {
-                responseHolder.getDos()
-                        .writeBytes("Location: " + responseHolder.getViewName() + "\r\n");
-            }
+
         }
     },
     NOT_FOUND(404, "Not Found"),

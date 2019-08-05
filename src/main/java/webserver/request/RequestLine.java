@@ -4,11 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.StringUtils;
 import webserver.HttpMethod;
-import webserver.Parameter;
+import webserver.HttpParameter;
 
 import static utils.StringUtils.endSplit;
 import static utils.StringUtils.frontSplitWithOrigin;
-import static webserver.Parameter.parseParameter;
+import static webserver.HttpParameter.parseParameter;
 import static webserver.RequestHandler.WELCOME_PAGE;
 
 public class RequestLine {
@@ -20,7 +20,7 @@ public class RequestLine {
     private HttpMethod method;
     private String path;
     private String protocol;
-    private Parameter parameter;
+    private HttpParameter httpParameter;
 
     private static final char URL_QUERY_DELIMITER = '?';
     private static final String REQUEST_LINE_DELIMITER = " ";
@@ -29,7 +29,7 @@ public class RequestLine {
         private final HttpMethod method;
         private final String path;
         private final String protocol;
-        private Parameter parameter;
+        private HttpParameter httpParameter;
 
         Builder(HttpMethod method, String path, String protocol) {
             this.method = method;
@@ -37,8 +37,8 @@ public class RequestLine {
             this.protocol = protocol;
         }
 
-        Builder parameter(Parameter parameter) {
-            this.parameter = parameter;
+        Builder parameter(HttpParameter httpParameter) {
+            this.httpParameter = httpParameter;
             return this;
         }
 
@@ -47,7 +47,7 @@ public class RequestLine {
             requestLine.method = this.method;
             requestLine.path = this.path;
             requestLine.protocol = this.protocol;
-            requestLine.parameter = this.parameter;
+            requestLine.httpParameter = this.httpParameter;
             return requestLine;
         }
     }
@@ -64,10 +64,10 @@ public class RequestLine {
         HttpMethod httpMethod = HttpMethod.valueOf(requests[0]);
         String path = getPath(frontSplitWithOrigin(requests[1], URL_QUERY_DELIMITER));
         String protocol = requests[2];
-        Parameter parameter = parseParameter(endSplit(requests[1], URL_QUERY_DELIMITER));
+        HttpParameter httpParameter = parseParameter(endSplit(requests[1], URL_QUERY_DELIMITER));
 
         return new Builder(httpMethod, path, protocol)
-                .parameter(parameter)
+                .parameter(httpParameter)
                 .build();
     }
 
@@ -92,8 +92,8 @@ public class RequestLine {
         return protocol;
     }
 
-    public Parameter getParameter() {
-        return parameter;
+    public HttpParameter getHttpParameter() {
+        return httpParameter;
     }
 
 }

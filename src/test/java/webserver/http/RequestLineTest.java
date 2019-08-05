@@ -31,7 +31,7 @@ class RequestLineTest {
         assertThat(requestLine.getMethod()).isEqualTo(expectedHttpMethod);
         assertThat(requestLine.getPath()).isEqualTo(expectedPath);
         assertThat(requestLine.getProtocol()).isEqualTo(expectedProtocol);
-        assertThat(requestLine.getParameter().getParameterMap()).containsAllEntriesOf(expectedQueryMap);
+        assertThat(requestLine.getHttpParameter().getParameters()).containsAllEntriesOf(expectedQueryMap);
     }
 
     @DisplayName("invalid request arguments")

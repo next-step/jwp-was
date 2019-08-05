@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import webserver.Parameter;
+import webserver.HttpParameter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,25 +14,25 @@ import java.util.stream.Stream;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ParameterTest {
+class HttpParameterTest {
 
     @DisplayName("parse query with parameter")
     @ParameterizedTest(name = "query: {0}")
     @MethodSource("sampleQuery")
     void parseQuery(String sampleQuery, Map<String, String> parameterMap) {
-        assertThat(Parameter.parseParameter(sampleQuery).getParameterMap())
+        assertThat(HttpParameter.parseParameter(sampleQuery).getParameters())
                 .containsAllEntriesOf(parameterMap);
     }
 
     @DisplayName("merge parameter list")
     @Test
     void mergeParameters() {
-        Parameter parameter1 = new Parameter(new HashMap<String, String>() {{
+        HttpParameter httpParameter1 = new HttpParameter(new HashMap<String, String>() {{
             put("userId", "beforeId");
             put("name", "beforeName");
         }});
 
-        Parameter parameter2 = new Parameter(new HashMap<String, String>() {{
+        HttpParameter httpParameter2 = new HttpParameter(new HashMap<String, String>() {{
             put("userId", "afterId");
             put("addr", "afterAddr");
         }});
@@ -43,7 +43,7 @@ class ParameterTest {
             put("addr", "afterAddr");
         }};
 
-        assertThat(Parameter.of(asList(parameter1, parameter2)).getParameterMap())
+        assertThat(HttpParameter.of(asList(httpParameter1, httpParameter2)).getParameters())
             .containsAllEntriesOf(result);
     }
 

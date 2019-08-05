@@ -3,11 +3,12 @@ package webserver.servlet;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.Parameter;
-import webserver.response.ResponseHolder;
+import service.UserService;
+import webserver.HttpParameter;
+import webserver.ModelAndView;
 import webserver.request.RequestHeader;
 import webserver.request.RequestHolder;
-import service.UserService;
+import webserver.response.ResponseHolder;
 
 public class RegistrationServlet implements Servlet{
 
@@ -19,19 +20,20 @@ public class RegistrationServlet implements Servlet{
     }
 
     @Override
-    public void service(RequestHolder requestHolder, ResponseHolder responseHolder) {
+    public ModelAndView service(RequestHolder requestHolder, ResponseHolder responseHolder) {
         logger.debug("{} service process, registration user ", getName());
 
         UserService userService = UserService.getInstance();
-        Parameter parameter = requestHolder.getMergedParameter();
-        String userId = parameter.getParameter("userId");
-        String password = parameter.getParameter("password");
-        String name = parameter.getParameter("name");
-        String email = parameter.getParameter("email");
+        HttpParameter httpParameter = requestHolder.getMergedHttpParameter();
+        String userId = httpParameter.getParameter("userId");
+        String password = httpParameter.getParameter("password");
+        String name = httpParameter.getParameter("name");
+        String email = httpParameter.getParameter("email");
 
         userService.add(new User(userId, password, name, email));
 
-        responseHolder.setRedirect(true);
-        responseHolder.setViewName("/index.html");
+        return new ModelAndView.Builder("/index.html")
+                .redirect(true)
+                .build();
     }
 }
