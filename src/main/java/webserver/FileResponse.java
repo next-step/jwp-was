@@ -10,11 +10,11 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
 
-public enum  FileResponseEnum {
-    HTML(FileResponseEnum.HTML_FILE_SUFFIX, requestPath -> new HttpResponse(HttpStatus.OK, getBody(requestPath, FileResponseEnum.TEMPLATE_FILE_PREFIX))),
-    CSS(FileResponseEnum.CSS_FILE_SUFFIX, requestPath -> {
-        HttpResponse httpResponse = new HttpResponse(HttpStatus.OK, getBody(requestPath, FileResponseEnum.STATIC_FILE_PREFIX));
-        httpResponse.getHttpHeaders().set(FileResponseEnum.CONTENT_TYPE_HEADER, FileResponseEnum.CSS_CONTENT_TYPE);
+public enum FileResponse {
+    HTML(FileResponse.HTML_FILE_SUFFIX, requestPath -> new HttpResponse(HttpStatus.OK, getBody(requestPath, FileResponse.TEMPLATE_FILE_PREFIX))),
+    CSS(FileResponse.CSS_FILE_SUFFIX, requestPath -> {
+        HttpResponse httpResponse = new HttpResponse(HttpStatus.OK, getBody(requestPath, FileResponse.STATIC_FILE_PREFIX));
+        httpResponse.getHttpHeaders().set(FileResponse.CONTENT_TYPE_HEADER, FileResponse.CSS_CONTENT_TYPE);
         return httpResponse;
     });
 
@@ -28,7 +28,7 @@ public enum  FileResponseEnum {
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
     private static final String CSS_CONTENT_TYPE = "text/css";
 
-    FileResponseEnum(String fileSuffix, Function<String, HttpResponse> responseFunction) {
+    FileResponse(String fileSuffix, Function<String, HttpResponse> responseFunction) {
         this.fileSuffix = fileSuffix;
         this.responseFunction = responseFunction;
     }
@@ -43,7 +43,7 @@ public enum  FileResponseEnum {
     }
 
     public static Optional<HttpResponse> getFileResponse(String requestPath) {
-        return Arrays.stream(FileResponseEnum.values())
+        return Arrays.stream(FileResponse.values())
                 .filter(value -> requestPath.endsWith(value.fileSuffix))
                 .map(value -> value.responseFunction.apply(requestPath))
                 .findAny();

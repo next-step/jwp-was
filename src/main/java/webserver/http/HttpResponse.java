@@ -62,7 +62,8 @@ public class HttpResponse {
     }
 
     public void responseByStatus(DataOutputStream dos) {
-        this.httpStatus.getResponseConsumer().accept(this, dos);
+        ResponseWriter.valueByHttpStatus(this.httpStatus)
+                .ifPresent(responseWriter -> responseWriter.write(this, dos));
     }
 
     public void setCookie(String key, String value) {

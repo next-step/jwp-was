@@ -44,7 +44,7 @@ public class RequestHandler implements Runnable {
         String requestPath = httpRequest.getUri().getPath();
         HttpResponse httpResponse = new HttpResponse();
 
-        return FileResponseEnum.getFileResponse(requestPath)
+        return FileResponse.getFileResponse(requestPath)
                 .orElse(getViewMappingResponse(httpRequest, httpResponse));
     }
 
