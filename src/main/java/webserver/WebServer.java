@@ -9,15 +9,21 @@ import view.HandlebarsCompiler;
 import webserver.handler.HandlerMapper;
 import webserver.handler.HandlerProvider;
 import webserver.handler.ResourceHandler;
-import webserver.http.RequestMethod;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import static webserver.http.RequestMethod.GET;
+import static webserver.http.RequestMethod.POST;
 
 public class WebServer {
 
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
+
+    private static final Executor threadPool = Executors.newFixedThreadPool(100);
 
     public static void main(final String... args) throws Exception {
         final int port = getPort(args);
@@ -31,9 +37,8 @@ public class WebServer {
             while (true) {
                 final Socket connection = listenSocket.accept();
                 final Runnable requestHandler = new RequestHandler(connection, handlerProviders);
-                final Thread thread = new Thread(requestHandler);
 
-                thread.start();
+                threadPool.execute(requestHandler);
             }
         }
     }
@@ -41,12 +46,11 @@ public class WebServer {
     private static HandlerProvider getHandlerProvider() {
         final HandlerMapper handlerMapper = new HandlerMapper();
 
-        handlerMapper.register("^\\/(css|fonts|images|js)\\/(.)*", RequestMethod.GET,
-                new ResourceHandler("static"));
-        handlerMapper.register("(.)*.html$", RequestMethod.GET, new ResourceHandler("templates"));
-        handlerMapper.register("/user/create", RequestMethod.POST, new CreateUserHandler());
-        handlerMapper.register("/user/login", RequestMethod.POST, new LoginHandler());
-        handlerMapper.register("/user/list", RequestMethod.GET,
+        handlerMapper.register("^\\/(css|fonts|images|js)\\/(.)*", GET, new ResourceHandler("static"));
+        handlerMapper.register("(.)*.html$", GET, new ResourceHandler("templates"));
+        handlerMapper.register("/user/create", POST, new CreateUserHandler());
+        handlerMapper.register("/user/login", POST, new LoginHandler());
+        handlerMapper.register("/user/list", GET,
                 new UserListHandler(HandlebarsCompiler.of("/templates", ".html")));
 
         return handlerMapper;
