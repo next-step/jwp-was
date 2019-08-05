@@ -1,8 +1,8 @@
-package controller;
+package requesthandler;
 
 import db.DataBase;
 import model.User;
-import webserver.controller.Servlet;
+import webserver.controller.Controller;
 import webserver.request.Cookie;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
@@ -10,7 +10,7 @@ import webserver.response.HttpResponse;
 /**
  * Created by hspark on 2019-08-05.
  */
-public class UserLoginServlet implements Servlet {
+public class UserLoginController implements Controller {
     public static final String URL = "/user/login";
 
 
@@ -26,6 +26,7 @@ public class UserLoginServlet implements Servlet {
             return;
         }
         httpResponse.redirect("/user/login_failed.html");
+        httpResponse.addCookie(new Cookie("logined", "false"));
     }
 
     @Override

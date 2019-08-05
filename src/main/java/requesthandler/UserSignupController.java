@@ -1,15 +1,15 @@
-package controller;
+package requesthandler;
 
 import db.DataBase;
 import model.User;
-import webserver.controller.Servlet;
+import webserver.controller.Controller;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
 /**
  * Created by hspark on 2019-08-05.
  */
-public class UserSignupServlet implements Servlet {
+public class UserSignupController implements Controller {
     public static final String URL = "/user/create";
 
 
