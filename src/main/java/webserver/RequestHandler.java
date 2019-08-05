@@ -1,5 +1,6 @@
 package webserver;
 
+import http.RequestHeader;
 import http.RequestLine;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -11,6 +12,9 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import servlet.HttpServlet;
+import servlet.ResourceViewRevolver;
+import servlet.ServletMapping;
 import utils.FileIoUtils;
 
 public class RequestHandler implements Runnable {
@@ -31,13 +35,13 @@ public class RequestHandler implements Runnable {
         .getOutputStream()) {
       BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
       RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
+      RequestHeader requestHeader = RequestHeader.parse(bufferedReader);
+      HttpServlet servlet = ServletMapping.getServlet(requestLine);
+      String view = servlet.service(requestLine);
 
       DataOutputStream dos = new DataOutputStream(out);
 
-      byte[] body = "Hello World".getBytes();
-      if ("/index.html".equals(requestLine.getPath())) {
-        body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
-      }
+      byte[] body = ResourceViewRevolver.resolve(view);
       response200Header(dos, body.length);
       responseBody(dos, body);
     } catch (IOException e) {
