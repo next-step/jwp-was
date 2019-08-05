@@ -24,10 +24,10 @@ public class HttpRequest implements Request {
 
     private HttpRequest(final RequestLine requestLine,
                         final HttpHeaders httpHeaders,
-                        final RequestQuery re) {
+                        final RequestQuery requestQuery) {
         this.requestLine = requestLine;
         this.httpHeaders = httpHeaders;
-        this.requestQuery = re;
+        this.requestQuery = requestQuery;
     }
 
     private HttpRequest(final RequestLine requestLine,
