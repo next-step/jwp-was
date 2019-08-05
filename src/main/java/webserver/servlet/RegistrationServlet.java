@@ -4,11 +4,10 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.UserService;
-import webserver.HttpParameter;
-import webserver.ModelAndView;
-import webserver.request.RequestHeader;
-import webserver.request.RequestHolder;
-import webserver.response.ResponseHolder;
+import webserver.http.HttpParameter;
+import webserver.http.request.RequestHeader;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 public class RegistrationServlet implements Servlet{
 
@@ -20,11 +19,11 @@ public class RegistrationServlet implements Servlet{
     }
 
     @Override
-    public ModelAndView service(RequestHolder requestHolder, ResponseHolder responseHolder) {
+    public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
         logger.debug("{} service process, registration user ", getName());
 
         UserService userService = UserService.getInstance();
-        HttpParameter httpParameter = requestHolder.getMergedHttpParameter();
+        HttpParameter httpParameter = httpRequest.getMergedHttpParameter();
         String userId = httpParameter.getParameter("userId");
         String password = httpParameter.getParameter("password");
         String name = httpParameter.getParameter("name");
@@ -32,8 +31,6 @@ public class RegistrationServlet implements Servlet{
 
         userService.add(new User(userId, password, name, email));
 
-        return new ModelAndView.Builder("/index.html")
-                .redirect(true)
-                .build();
+        httpResponse.sendRedirect("/index.html");
     }
 }

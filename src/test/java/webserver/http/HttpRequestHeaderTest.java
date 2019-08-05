@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import webserver.request.RequestHeader;
+import webserver.http.request.RequestHeader;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RequestHolderHeaderTest {
+public class HttpRequestHeaderTest {
 
     @DisplayName("parse request header")
     @ParameterizedTest(name = "test: {0} -> result: {1}")

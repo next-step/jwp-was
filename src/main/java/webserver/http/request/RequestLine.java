@@ -1,14 +1,14 @@
-package webserver.request;
+package webserver.http.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.StringUtils;
-import webserver.HttpMethod;
-import webserver.HttpParameter;
+import webserver.http.HttpMethod;
+import webserver.http.HttpParameter;
 
 import static utils.StringUtils.endSplit;
 import static utils.StringUtils.frontSplitWithOrigin;
-import static webserver.HttpParameter.parseParameter;
+import static webserver.http.HttpParameter.parseParameter;
 import static webserver.RequestHandler.WELCOME_PAGE;
 
 public class RequestLine {

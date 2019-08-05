@@ -1,22 +1,25 @@
-package webserver.request;
+package webserver.http;
 
-import webserver.HttpParameter;
+import webserver.http.HttpParameter;
+import webserver.http.request.RequestBody;
+import webserver.http.request.RequestHeader;
+import webserver.http.request.RequestLine;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static webserver.HttpParameter.of;
+import static webserver.http.HttpParameter.of;
 
-public class RequestHolder {
+public class HttpRequest {
     private RequestLine requestLine;
     private RequestHeader requestHeader;
     private RequestBody requestBody;
     private HttpParameter mergedHttpParameter;
     private Map<String, Object> attributes;
 
-    public RequestHolder(RequestLine requestLine, RequestHeader requestHeader, RequestBody requestBody) {
+    public HttpRequest(RequestLine requestLine, RequestHeader requestHeader, RequestBody requestBody) {
         this.requestLine = requestLine;
         this.requestHeader = requestHeader;
         this.requestBody = requestBody;

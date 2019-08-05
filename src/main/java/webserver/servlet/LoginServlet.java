@@ -4,18 +4,15 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.UserService;
-import webserver.HttpParameter;
-import webserver.ModelAndView;
-import webserver.StatusCode;
-import webserver.request.RequestHolder;
-import webserver.response.ResponseHolder;
-
-import java.util.Collections;
-import java.util.HashMap;
+import webserver.http.HttpParameter;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 public class LoginServlet implements Servlet {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginServlet.class);
+
+    private static final String LOGINED = "logined";
 
     @Override
     public String getName() {
@@ -23,12 +20,11 @@ public class LoginServlet implements Servlet {
     }
 
     @Override
-    public ModelAndView service(RequestHolder requestHolder, ResponseHolder responseHolder) {
+    public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
         logger.debug("login process.");
         UserService userService = UserService.getInstance();
 
-
-        HttpParameter httpParameter = requestHolder.getMergedHttpParameter();
+        HttpParameter httpParameter = httpRequest.getMergedHttpParameter();
         String userId = httpParameter.getParameter("userId");
         String password = httpParameter.getParameter("password");
 
@@ -37,16 +33,11 @@ public class LoginServlet implements Servlet {
         logger.debug(user + " " + userId + "/" + password);
 
         if (user != null && user.getPassword().equals(password)) {
-            return new ModelAndView.Builder("/index.html")
-                    .addCookie("logined", "true")
-                    .redirect(true)
-                    .build();
+            httpResponse.addCookie(LOGINED, "true");
+            httpResponse.sendRedirect("/index.html");
         }
 
-        return new ModelAndView.Builder("/user/login_failed.html")
-                .addCookie("logined", "false")
-                .redirect(true)
-                .build();
-
+        httpResponse.addCookie(LOGINED, "false");
+        httpResponse.sendRedirect("/user/login_failed.html");
     }
 }

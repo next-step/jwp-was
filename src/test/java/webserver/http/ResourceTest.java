@@ -41,10 +41,9 @@ public class ResourceTest {
     @ValueSource(strings = {"/profile.html"})
     void loadHandlebarsResourceWithAttribute(String viewName) throws IOException {
         ResourceLoader resourceHandler = new HandlebarsResourceLoader();
-        ModelAndView mav = new ModelAndView(viewName);
-        mav.setModel(new HashMap<String, Object>(){{
+        ModelAndView mav = new ModelAndView(new HashMap<String, Object>(){{
             put("user", new User("jun", "password", "hyunjun", "test@test.com"));
-        }});
+        }}, viewName);
         assertThat(resourceHandler.getResource(mav)).contains("hyunjun");
     }
 
@@ -53,14 +52,13 @@ public class ResourceTest {
     @ValueSource(strings = {"/list.html"})
     void loadHandlebarsResourceWithListAttribute(String viewName) throws IOException {
         ResourceLoader resourceHandler = new HandlebarsResourceLoader();
-        ModelAndView mav = new ModelAndView(viewName);
         List<User> users = asList(
                 new User("jun", "password", "hyunjun", "jun@test.com"),
                 new User("min", "password", "sangmin", "min@test.com")
         );
-        mav.setModel(new HashMap<String, Object>(){{
+        ModelAndView mav = new ModelAndView(new HashMap<String, Object>(){{
             put("users", users);
-        }});
+        }}, viewName);
         assertThat(resourceHandler.getResource(mav)).contains("hyunjun", "sangmin");
     }
 

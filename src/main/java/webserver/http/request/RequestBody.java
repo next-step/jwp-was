@@ -1,14 +1,14 @@
-package webserver.request;
+package webserver.http.request;
 
-import webserver.ContentType;
-import webserver.HttpParameter;
+import webserver.http.ContentType;
+import webserver.http.HttpParameter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
 import static utils.IOUtils.readData;
-import static webserver.ContentType.X_WWW_FORM_URLENCODED;
-import static webserver.HttpParameter.parseParameter;
+import static webserver.http.ContentType.X_WWW_FORM_URLENCODED;
+import static webserver.http.HttpParameter.parseParameter;
 
 public class RequestBody {
 

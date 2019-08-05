@@ -4,9 +4,9 @@ import webserver.Ordered;
 import webserver.resource.HandlebarsResourceLoader;
 import webserver.resource.ResourceLoader;
 import webserver.resource.StaticResourceLoader;
-import webserver.response.ResponseHandler;
-import webserver.response.ServletResponseHandler;
-import webserver.response.StaticResponseHandler;
+import webserver.http.HttpHandler;
+import webserver.http.HttpServletHandler;
+import webserver.http.HttpStaticHandler;
 import webserver.servlet.LoginServlet;
 import webserver.servlet.RegistrationServlet;
 import webserver.servlet.Servlet;
@@ -25,10 +25,10 @@ import static java.util.Arrays.asList;
  */
 public class ServiceInstanceProvider {
 
-    public static List<ResponseHandler> getDefaultResponseHandlers() {
-        List<ResponseHandler> responseHandlers = asList(new ServletResponseHandler(), new StaticResponseHandler());
-        responseHandlers.sort(Comparator.comparingInt(Ordered::getOrder));
-        return responseHandlers;
+    public static List<HttpHandler> getDefaultResponseHandlers() {
+        List<HttpHandler> httpHandlers = asList(new HttpServletHandler(), new HttpStaticHandler());
+        httpHandlers.sort(Comparator.comparingInt(Ordered::getOrder));
+        return httpHandlers;
     }
 
     public static Map<String, Servlet> getDefaultServlets() {

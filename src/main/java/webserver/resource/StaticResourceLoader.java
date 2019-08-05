@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.StringUtils;
 import webserver.ModelAndView;
-import webserver.StatusCode;
-import webserver.response.ResponseSender;
+import webserver.http.HttpStatusCode;
+import webserver.http.response.ResponseSender;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class StaticResourceLoader extends AbstractResourceLoader {
         logger.info("## resource retrieve: " + name);
         try (InputStream in = classLoader.getResourceAsStream(name)) {
             if (in == null) {
-                throw new HttpException(StatusCode.NOT_FOUND);
+                throw new HttpException(HttpStatusCode.NOT_FOUND);
             }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -50,7 +50,7 @@ public class StaticResourceLoader extends AbstractResourceLoader {
             }
             return content.toString();
         } catch (IOException e) {
-            throw new HttpException(StatusCode.NOT_FOUND);
+            throw new HttpException(HttpStatusCode.NOT_FOUND);
         }
     }
 

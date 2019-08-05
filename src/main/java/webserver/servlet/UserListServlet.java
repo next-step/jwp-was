@@ -1,10 +1,10 @@
 package webserver.servlet;
 
 import service.UserService;
-import webserver.ModelAndView;
-import webserver.request.RequestHeader;
-import webserver.request.RequestHolder;
-import webserver.response.ResponseHolder;
+import utils.StringUtils;
+import webserver.http.HttpRequest;
+import webserver.http.request.RequestHeader;
+import webserver.http.HttpResponse;
 
 public class UserListServlet implements Servlet {
 
@@ -14,18 +14,16 @@ public class UserListServlet implements Servlet {
     }
 
     @Override
-    public ModelAndView service(RequestHolder requestHolder, ResponseHolder responseHolder) {
+    public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
         UserService userService = UserService.getInstance();
-        RequestHeader requestHeader = requestHolder.getRequestHeader();
+        RequestHeader requestHeader = httpRequest.getRequestHeader();
         String logined = requestHeader.getCookie("logined");
 
-        if (Boolean.parseBoolean(logined)) {
-            return new ModelAndView.Builder("/user/list.html")
-                    .addAttributes("users", userService.getAll())
-                    .build();
+        if (StringUtils.isNotBlank(logined) && Boolean.parseBoolean(logined)) {
+            httpRequest.addAttributes("users", userService.getAll());
+            httpResponse.forward(httpRequest, "/user/list.html");
         }
 
-        return new ModelAndView.Builder("/user/login.html")
-                .build();
+        httpResponse.sendRedirect("/user/login.html");
     }
 }

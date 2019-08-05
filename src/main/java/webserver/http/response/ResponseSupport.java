@@ -1,29 +1,25 @@
-package webserver.response;
+package webserver.http.response;
 
-import webserver.ModelAndView;
-import webserver.StatusCode;
-import webserver.request.RequestHolder;
+import webserver.http.HttpResponse;
+import webserver.http.HttpStatusCode;
 
 import java.util.Map;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
-import static webserver.StatusCode.FOUND;
 
 public class ResponseSupport {
 
-    String getStatusLine(ModelAndView mav) {
-        StatusCode statusCode = mav.getStatusCode();
-        return "HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getMessage() + " \r\n";
+    String getStatusLine(HttpStatusCode httpStatusCode) {
+        return "HTTP/1.1 " + httpStatusCode.getCode() + " " + httpStatusCode.getMessage() + " \r\n";
     }
 
-    String getLocationLine(ModelAndView mav) {
-        return mav.getStatusCode() == FOUND && mav.getViewName() != null ?
-                "Location: " + mav.getViewName() + "\r\n" : "";
+    String getLocationLine(String location) {
+        return "Location: " + location + "\r\n";
     }
 
-    String getContentTypeLine(RequestHolder requestHolder) {
-        return "Content-Type: " + requestHolder.getResponseContentType() + ";charset=utf-8\r\n";
+    String getContentTypeLine(HttpResponse httpResponse) {
+        return "Content-Type: " + httpResponse.getContentType() + ";charset=utf-8\r\n";
     }
 
     String getContentLengthLine(int lengthOfBodyContent) {

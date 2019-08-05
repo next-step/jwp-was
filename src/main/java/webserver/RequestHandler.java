@@ -2,11 +2,12 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.RequestBody;
-import webserver.request.RequestHeader;
-import webserver.request.RequestHolder;
-import webserver.request.RequestLine;
-import webserver.response.ResponseHolder;
+import webserver.http.HttpProcessor;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.request.RequestBody;
+import webserver.http.request.RequestHeader;
+import webserver.http.request.RequestLine;
 
 import java.io.*;
 import java.net.Socket;
@@ -31,20 +32,20 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
-            RequestHolder requestHolder = createRequestHolder(in);
-            httpProcessor.process(requestHolder, new ResponseHolder(dos));
+            HttpRequest httpRequest = createRequestHolder(in);
+            httpProcessor.process(httpRequest, new HttpResponse(dos, httpRequest));
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private RequestHolder createRequestHolder(InputStream in) throws IOException {
+    private HttpRequest createRequestHolder(InputStream in) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         RequestLine requestLine = RequestLine.parse(reader.readLine());
         RequestHeader requestHeader = RequestHeader.parse(readLines(reader));
         RequestBody requestBody = RequestBody.parse(reader, requestHeader);
 
-        return new RequestHolder(requestLine, requestHeader, requestBody);
+        return new HttpRequest(requestLine, requestHeader, requestBody);
     }
 
 

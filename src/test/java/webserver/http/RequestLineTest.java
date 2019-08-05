@@ -7,8 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import webserver.HttpMethod;
-import webserver.request.RequestLine;
+import webserver.http.request.RequestLine;
 
 import java.util.HashMap;
 import java.util.Map;

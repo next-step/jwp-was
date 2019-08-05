@@ -1,10 +1,10 @@
-package webserver.request;
+package webserver.http.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.MapUtils;
 import utils.StringUtils;
-import webserver.HttpParameter;
+import webserver.http.HttpParameter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +17,7 @@ public class RequestHeader {
     private static final Logger logger = LoggerFactory.getLogger(RequestHeader.class);
 
     private static final char HEADER_DELIMITER = ':';
+    private static final String COOKIE = "Cookie";
 
     private Map<String, String> headers;
 
@@ -53,7 +54,11 @@ public class RequestHeader {
     }
 
     public String getCookie(String key) {
-        String cookies = headers.get("Cookie");
+        if (!headers.containsKey(COOKIE)) {
+            return null;
+        }
+
+        String cookies = headers.get(COOKIE);
         HttpParameter httpParameter = HttpParameter.parseParameter(cookies, ";");
         return httpParameter.getParameter(key);
     }
