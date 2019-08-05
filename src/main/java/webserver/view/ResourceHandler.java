@@ -8,9 +8,6 @@ import webserver.http.response.HttpResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static webserver.http.HttpHeaders.CONTENT_LENGTH;
-import static webserver.http.HttpHeaders.CONTENT_TYPE;
-
 public class ResourceHandler extends AbstractRequestMappingHandler {
 
     @Override
