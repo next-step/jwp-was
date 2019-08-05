@@ -1,5 +1,6 @@
 package webserver.http;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import utils.MapUtils;
 
 import java.io.BufferedReader;
@@ -35,7 +36,7 @@ public class HttpHeaders {
     private static List<String> parseHeaderLines(BufferedReader bufferedReader) throws IOException {
         String line;
         List<String> headerLines = new ArrayList<>();
-        while (!"".equals(line = bufferedReader.readLine())) {
+        while (!StringUtils.EMPTY.equals(line = bufferedReader.readLine())) {
             if (Objects.isNull(line)) break;
             headerLines.add(line);
         }

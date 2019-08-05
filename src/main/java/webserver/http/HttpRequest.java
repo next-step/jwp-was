@@ -55,7 +55,11 @@ public class HttpRequest {
         return this.requestBody;
     }
 
-    public Cookie getCookie() {
-        return this.cookie;
+    public String cookieValue(String key) {
+        return this.cookie.get(key);
+    }
+
+    public String bodyValue(String key) {
+        return this.requestBody.get(key);
     }
 }

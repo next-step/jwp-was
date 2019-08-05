@@ -30,7 +30,6 @@ public class CookieTest {
     void parse() throws IOException {
         HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
 
-        Cookie cookie = httpRequest.getCookie();
-        assertThat(Boolean.parseBoolean(cookie.get("logined")));
+        assertThat(Boolean.parseBoolean(httpRequest.cookieValue("logined")));
     }
 }

@@ -33,4 +33,8 @@ public class User {
     public String toString() {
         return "{ userId:" + userId + ", password:" + password + ", name:" + name + ", email:" + email + "}";
     }
+
+    public boolean isEqualsPassword(String password) {
+        return password.equals(this.password);
+    }
 }
