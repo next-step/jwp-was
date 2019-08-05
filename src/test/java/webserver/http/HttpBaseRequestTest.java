@@ -12,19 +12,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class HttpBaseRequestTest {
 
 
-    private final static String HTTP_PLAIN_GET = "GET /index.html HTTP/1.1\n" +
+    private static final String HTTP_PLAIN_GET = "GET /index.html HTTP/1.1\n" +
             "Host: localhost:8080\n" +
             "Connection: keep-alive\n" +
             "Accept: */*\n";
 
 
-    private final static String HTTP_PLAIN_GET_QUERY_STRING = "GET http://localhost:8080/index.html?userId=circlee HTTP/1.1\n" +
+    private static final String HTTP_PLAIN_GET_QUERY_STRING = "GET http://localhost:8080/index.html?userId=circlee HTTP/1.1\n" +
             "Host: localhost:8080\n" +
             "Connection: keep-alive\n" +
             "Accept: */*\n";
 
 
-    private final static String HTTP_PLAIN_POST = "POST /user/create HTTP/1.1\n" +
+    private static final String HTTP_PLAIN_POST = "POST /user/create HTTP/1.1\n" +
             "Host: localhost:8080\n" +
             "Connection: keep-alive\n" +
             "Content-Length: 93\n" +
