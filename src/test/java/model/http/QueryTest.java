@@ -1,4 +1,4 @@
-package webserver;
+package model.http;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;

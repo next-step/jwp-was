@@ -1,6 +1,4 @@
-package webserver;
-
-import org.springframework.util.StringUtils;
+package model.http;
 
 import java.util.Objects;
 import java.util.Optional;

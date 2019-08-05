@@ -1,4 +1,4 @@
-package webserver;
+package model.http;
 
 public class RequestLine {
     private static final String DELEMETER = " ";
