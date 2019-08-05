@@ -26,12 +26,11 @@ public enum FigureType {
   }
 
   public static Figure from(List<Point> points) {
-    return figureCreators.keySet().stream()
-        .filter(key -> key == points.size())
-        .map(key -> figureCreators.get(key))
-        .findFirst()
-        .map(figureCreator -> figureCreator.create(points))
-        .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 도형입니다."));
+    int pointCount = points.size();
+    if(!figureCreators.containsKey(pointCount)) {
+      throw new IllegalArgumentException("유효하지 않은 도형입니다.");
+    }
+    return figureCreators.get(pointCount).create(points);
   }
 
 }
