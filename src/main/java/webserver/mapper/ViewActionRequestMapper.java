@@ -27,7 +27,7 @@ public class ViewActionRequestMapper implements RequestMapper {
     public Object handle(HttpRequest httpRequest, HttpResponse httpResponse) {
         Object object = this.actionRequestMapper.handle(httpRequest, httpResponse);
         if(object != null && object instanceof ModelView) {
-            this.viewResolver.resove((ModelView)object, httpRequest, httpResponse);
+            this.viewResolver.resolve((ModelView)object, httpRequest, httpResponse);
         }
         return object;
     }

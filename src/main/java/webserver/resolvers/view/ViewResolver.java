@@ -5,5 +5,5 @@ import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
 public interface ViewResolver {
-    void resove(ModelView modelView, HttpRequest httpRequest, HttpResponse httpResponse) ;
+    void resolve(ModelView modelView, HttpRequest httpRequest, HttpResponse httpResponse) ;
 }
