@@ -1,15 +1,31 @@
 package servlet;
 
+import db.DataBase;
+import http.HttpRequest;
 import http.Parameters;
-import http.RequestLine;
 import model.User;
 
 public class UserServlet implements HttpServlet {
 
   @Override
-  public String service(RequestLine requestLine) {
-    if ("/create/user".equals(requestLine.getPath())) {
-      createUser(requestLine.getParameters());
+  public String service(HttpRequest httpRequest) {
+    if (httpRequest.isPost()) {
+      return doPost(httpRequest);
+    }
+    return doGet(httpRequest);
+  }
+
+  @Override
+  public String doGet(HttpRequest httpRequest) {
+    return null;
+  }
+
+  @Override
+  public String doPost(HttpRequest httpRequest) {
+    if ("/user/create".equals(httpRequest.getPath())) {
+      User user = createUser(httpRequest.getParameters());
+      System.out.println(user.toString());
+      DataBase.addUser(user);
     }
     return "/index.html";
   }
