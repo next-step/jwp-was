@@ -35,4 +35,8 @@ public class HttpRequest {
     public Map<String, String> getHeaders() {
         return headers;
     }
+
+    public String getPath() {
+        return this.getRequestLine().getRequestURI().getPath();
+    }
 }

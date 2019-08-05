@@ -10,13 +10,13 @@ import java.net.URISyntaxException;
  * @author : yusik
  * @date : 2019-08-06
  */
-public class StaticResourceViewRenderer extends AbstractViewRenderer {
+public class TemplateResourceViewRenderer extends AbstractViewRenderer {
 
-    private static final String STATIC_RESOURCE_PATH_BASE = "./static";
+    private static final String TEMPLATE_RESOURCE_PATH_BASE = "./templates";
 
     private String path;
 
-    public StaticResourceViewRenderer(HttpResponse httpResponse, String path) {
+    public TemplateResourceViewRenderer(HttpResponse httpResponse, String path) {
         super(httpResponse);
         this.path = path;
     }
@@ -24,12 +24,13 @@ public class StaticResourceViewRenderer extends AbstractViewRenderer {
     @Override
     public void render() {
 
+        byte[] body = new byte[0];
         try {
-            byte[] body = FileIoUtils.loadFileFromClasspath(STATIC_RESOURCE_PATH_BASE + path);
-            responseHeader(body.length);
-            responseBody(body);
+            body = FileIoUtils.loadFileFromClasspath(TEMPLATE_RESOURCE_PATH_BASE + path);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
+        responseHeader(body.length);
+        responseBody(body);
     }
 }

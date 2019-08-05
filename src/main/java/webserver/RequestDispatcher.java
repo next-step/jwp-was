@@ -4,16 +4,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.handler.RequestHandler;
-import webserver.http.request.handler.StaticResourceRequestHandler;
+import webserver.http.request.handler.RequestHandlerType;
+import webserver.http.request.handler.DefaultRequestHandler;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.view.ViewRenderer;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.regex.Matcher;
 
 public class RequestDispatcher implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestDispatcher.class);
-
     private Socket connection;
 
     public RequestDispatcher(Socket connectionSocket) {
@@ -29,11 +30,10 @@ public class RequestDispatcher implements Runnable {
             HttpRequest httpRequest = new HttpRequest(new BufferedReader(new InputStreamReader(in)));
             HttpResponse httpResponse = new HttpResponse(new DataOutputStream(out));
 
-
             // get handler
             RequestHandler handler = getHandler(httpRequest);
 
-//            // view: static resource, template engine, json
+            // view: static resource, template engine, json
             ViewRenderer viewRenderer = handler.handle(httpRequest, httpResponse);
             viewRenderer.render();
 
@@ -43,27 +43,14 @@ public class RequestDispatcher implements Runnable {
     }
 
     private RequestHandler getHandler(HttpRequest httpRequest) {
-        httpRequest.getRequestLine().getRequestURI().getPath();
-        return new StaticResourceRequestHandler();
-    }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+        String requestPath = httpRequest.getPath();
+        for (RequestHandlerType handlerType: RequestHandlerType.values()) {
+            Matcher matcher = handlerType.getPattern().matcher(requestPath);
+            if (matcher.find()) {
+                return handlerType.getHandler();
+            }
         }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+        return new DefaultRequestHandler();
     }
 }
