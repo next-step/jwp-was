@@ -1,46 +1,55 @@
 package webserver.http;
 
-import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.MultiValueMap;
+import utils.QueryStringUtils;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class QueryParams {
 
-    private final static Pattern QUERY_PARAM_PATTERN = Pattern.compile("^[^=\\s]+(=(\\S+)?)?");
+    private static final Logger logger = LoggerFactory.getLogger(QueryParams.class);
 
-    private final Map<String, List<String>> parameterMap;
+    private static final int QUERY_KEY_VALUE_SPLIT_LIMIT = 2;
 
-    private QueryParams(String[] queryParamKeyVaues){
-        this.parameterMap = new HashMap<>();
+    private static final String QUERY_KEY_VALUE_SPLIT_SIGN = "=";
+    
+    private static final String PATH_QUERY_STRING_IGNORE_REGEX = "^.*\\?";
 
-        for(String queryKeyValue : queryParamKeyVaues) {
-            setQueryParam(this.parameterMap, queryKeyValue);
-        }
-    }
+    private static final String QUERY_STRING_SPLIT_SIGN = "&";
 
-    private void setQueryParam(Map<String, List<String>> parameterMap, String queryKeyValue) {
+    private static final String EMPTY_STRING = "";
 
-        if(!QUERY_PARAM_PATTERN.matcher(queryKeyValue).find()) {
-            throw new IllegalArgumentException("queryString 형식이아닙니다.");
-        }
+    private static final Pattern QUERY_PARAM_PATTERN = Pattern.compile("^[^=\\s]+(=(\\S+)?)?");
 
-        String[] keyAndValue = queryKeyValue.split("=", 2);
+    private final MultiValueMap<String, String> parameterValuesByName;
 
-        if(keyAndValue.length != 2) {
-            return;
-        }
-
-        String key = keyAndValue[0];
-        String value = keyAndValue[1];
-        this.parameterMap.computeIfAbsent(key, (k) -> new ArrayList<>()).add(value);
+    private QueryParams(MultiValueMap<String, String> parameterValuesByName){
+        this.parameterValuesByName = parameterValuesByName;
     }
 
     public static QueryParams parseByPath(String path) {
 
-        String[] queryParamKeyVaues = path.replaceAll("^.*\\?", "")
-                .split("&");
-
-        return new QueryParams(queryParamKeyVaues);
+        String queryStringLine= pathToQueryStringLine(path);
+        return new QueryParams(QueryStringUtils.parseToParameters(queryStringLine));
     };
+
+    private static String pathToQueryStringLine(String path) {
+        return path.replaceAll(PATH_QUERY_STRING_IGNORE_REGEX, EMPTY_STRING);
+    }
+
+    private String[] splitQueryKeyValue(String queryKeyValue) {
+        return queryKeyValue.split(QUERY_KEY_VALUE_SPLIT_SIGN, QUERY_KEY_VALUE_SPLIT_LIMIT);
+    }
+
+    public Map<String, List<String>> getParameters(){
+        return Collections.unmodifiableMap(this.parameterValuesByName);
+    }
 
 
     public String getParameter(String name) {
@@ -51,8 +60,8 @@ public class QueryParams {
     }
 
     public String[] getParameterValues(String name) {
-        return Optional.ofNullable(this.parameterMap.get(name))
-                .map(valueList -> valueList.toArray(new String[valueList.size()]))
+        return Optional.ofNullable(this.parameterValuesByName.get(name))
+                .map(values -> values.toArray(new String[values.size()]))
                 .orElse(null);
     }
 

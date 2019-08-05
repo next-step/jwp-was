@@ -1,13 +1,15 @@
 package webserver.http;
 
+import enums.HttpMethod;
+
 public class RequestLine {
 
-    private final String method;
+    private final HttpMethod method;
     private final String path;
     private final String version;
 
     private RequestLine(String method, String path, String version) {
-        this.method = method;
+        this.method = HttpMethod.parse(method);
         this.path = path;
         this.version = version;
     }
@@ -29,7 +31,7 @@ public class RequestLine {
     }
 
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
