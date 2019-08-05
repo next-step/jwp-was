@@ -1,6 +1,7 @@
 package webserver;
 
 import http.HttpRequest;
+import http.HttpResponse;
 import http.RequestHeader;
 import http.RequestLine;
 import java.io.BufferedReader;
@@ -10,11 +11,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import servlet.HttpServlet;
-import servlet.ResourceViewRevolver;
 import servlet.ServletMapping;
 import utils.IOUtils;
 
@@ -44,54 +43,15 @@ public class RequestHandler implements Runnable {
       }
 
       HttpRequest httpRequest = new HttpRequest(requestLine, requestHeader, requestBody);
+      HttpResponse httpResponse = new HttpResponse(new DataOutputStream(out));
 
       HttpServlet servlet = ServletMapping.getServlet(httpRequest.getPath());
-      String view = servlet.service(httpRequest);
+      servlet.service(httpRequest, httpResponse);
 
-      DataOutputStream dos = new DataOutputStream(out);
-
-      if(view.contains("redirect:")){
-        response302Header(dos,view.replaceAll("redirect:",""));
-        return;
-      }
-      byte[] body = ResourceViewRevolver.resolve(view);
-      response200Header(dos, body.length);
-      responseBody(dos, body);
-    } catch (IOException e) {
-      logger.error(e.getMessage());
-    } catch (URISyntaxException e) {
-      logger.error(e.getMessage());
-    }
-  }
-
-  private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-    try {
-      dos.writeBytes("HTTP/1.1 200 OK \r\n");
-      dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-      dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-      dos.writeBytes("\r\n");
-    } catch (IOException e) {
-      logger.error(e.getMessage());
-    }
-  }
-
-  private void response302Header(DataOutputStream dos, String url) {
-    try {
-      dos.writeBytes("HTTP/1.1 302 Found \r\n");
-      dos.writeBytes("Location: " + url);
-      dos.writeBytes("\r\n");
     } catch (IOException e) {
       logger.error(e.getMessage());
     }
   }
 
 
-  private void responseBody(DataOutputStream dos, byte[] body) {
-    try {
-      dos.write(body, 0, body.length);
-      dos.flush();
-    } catch (IOException e) {
-      logger.error(e.getMessage());
-    }
-  }
 }

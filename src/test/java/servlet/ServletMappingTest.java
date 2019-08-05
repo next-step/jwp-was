@@ -2,7 +2,6 @@ package servlet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import http.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +12,7 @@ class ServletMappingTest {
   void urlPathServletMapping() {
     String path ="/user/create";
 
-    assertThat(ServletMapping.getServlet(path)).isInstanceOf(UserServlet.class);
+    assertThat(ServletMapping.getServlet(path)).isInstanceOf(UserCreateServlet.class);
   }
 
   @Test

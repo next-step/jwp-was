@@ -7,7 +7,7 @@ import model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class UserServletTest {
+class UserCreateServletTest {
 
   @Test
   @DisplayName("유저 생성")

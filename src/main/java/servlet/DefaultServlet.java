@@ -1,22 +1,20 @@
 package servlet;
 
 import http.HttpRequest;
+import http.HttpResponse;
 
 public class DefaultServlet implements HttpServlet {
 
   @Override
-  public String service(HttpRequest httpRequest) {
-    return httpRequest.getPath();
+  public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
+    httpResponse.forward(httpRequest.getPath());
   }
 
   @Override
-  public String doGet(HttpRequest httpRequest) {
-    return null;
+  public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
   }
 
   @Override
-  public String doPost(HttpRequest httpRequest) {
-    return null;
+  public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
   }
-
 }

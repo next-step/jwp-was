@@ -1,13 +1,14 @@
 package servlet;
 
 import http.HttpRequest;
+import http.HttpResponse;
 
 public interface HttpServlet {
 
-  String service(HttpRequest httpRequest);
+  void service(HttpRequest httpRequest, HttpResponse httpResponse);
 
-  String doGet(HttpRequest httpRequest);
+  void doGet(HttpRequest httpRequest, HttpResponse httpResponse);
 
-  String doPost(HttpRequest httpRequest);
+  void doPost(HttpRequest httpRequest, HttpResponse httpResponse);
 
 }
