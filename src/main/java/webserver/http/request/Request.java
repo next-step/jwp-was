@@ -2,7 +2,7 @@ package webserver.http.request;
 
 import webserver.http.HeaderKey;
 import webserver.http.RequestMethod;
-import webserver.http.cookie.Cookie;
+import webserver.http.cookie.Cookies;
 
 public interface Request {
 
@@ -12,5 +12,5 @@ public interface Request {
     boolean matchMethod(final RequestMethod method);
     String getHeader(final String key);
     String getHeader(final HeaderKey key);
-    Cookie getCookie();
+    Cookies getCookies();
 }

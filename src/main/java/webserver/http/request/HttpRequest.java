@@ -4,7 +4,7 @@ import utils.IOUtils;
 import utils.StringUtils;
 import webserver.http.HeaderKey;
 import webserver.http.RequestMethod;
-import webserver.http.cookie.Cookie;
+import webserver.http.cookie.Cookies;
 import webserver.http.header.HttpHeaders;
 
 import java.io.BufferedReader;
@@ -80,8 +80,8 @@ public class HttpRequest implements Request {
     }
 
     @Override
-    public Cookie getCookie() {
-        return Cookie.of(getHeader("Cookie"));
+    public Cookies getCookies() {
+        return Cookies.of(getHeader("Cookie"));
     }
 
     private static HttpHeaders readHeaders(final BufferedReader requestReader) throws IOException {
