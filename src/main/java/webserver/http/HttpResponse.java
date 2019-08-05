@@ -40,4 +40,9 @@ public class HttpResponse {
         setHttpHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(responseBody.length));
         this.responseBody = responseBody;
     }
+
+    public void redirect(String redirectUrl) {
+        this.setHttpStatus(HttpStatus.FOUND);
+        this.setHttpHeader(HttpHeaders.LOCATION, redirectUrl);
+    }
 }
