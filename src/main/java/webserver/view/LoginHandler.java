@@ -13,11 +13,9 @@ public class LoginHandler extends AbstractRequestMappingHandler {
 
     @Override
     public void process(HttpRequest request, HttpResponse response) throws IOException {
-        RequestBody requestBody = request.getRequestBody();
+        User user = DataBase.findUserById(request.getParameter("userId"));
 
-        User user = DataBase.findUserById(requestBody.getValue("userId"));
-
-        if (isLoginSuccess(user, requestBody.getValue("password"))) {
+        if (isLoginSuccess(user, request.getParameter("password"))) {
             response.response302Header("/user/login_failed.html", false);
         } else {
             response.response302Header( "/index.html", true);

@@ -17,10 +17,8 @@ public class UserCreateHandler extends AbstractRequestMappingHandler {
 
     @Override
     public void process(HttpRequest request, HttpResponse response) throws IOException {
-        RequestBody requestBody = request.getRequestBody();
-
-        User user = new User(requestBody.getValue("userId"), requestBody.getValue("password"),
-                requestBody.getValue("name"), requestBody.getValue("email"));
+        User user = new User(request.getParameter("userId"), request.getParameter("password"),
+                request.getParameter("name"), request.getParameter("email"));
         DataBase.addUser(user);
         logger.debug("User : {}", user);
 

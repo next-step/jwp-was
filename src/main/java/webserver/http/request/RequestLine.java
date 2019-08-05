@@ -32,6 +32,10 @@ public class RequestLine {
         return uri.getPath();
     }
 
+    public String getParameter(String key) {
+        return uri.getParameter(key);
+    }
+
     public String getVersion() {
         return version;
     }

@@ -49,7 +49,6 @@ public class HttpRequest {
     }
 
     private static boolean hasValues(String[] values) {
-
         return values.length == HEADER_PAIR_COUNT;
     }
 
@@ -69,8 +68,20 @@ public class HttpRequest {
         return requestLine.isGet();
     }
 
-    public RequestBody getRequestBody() {
-        return requestBody;
+    public String getParameter(String key) {
+        if (isPostRequest()) {
+            return getRequestBodyParameter(key);
+        }
+
+        return getQueryStringParameter(key);
+    }
+
+    private String getRequestBodyParameter(String key) {
+        return requestBody.getValue(key);
+    }
+
+    private String getQueryStringParameter(String key) {
+        return requestLine.getParameter(key);
     }
 
     @Override
