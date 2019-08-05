@@ -8,7 +8,7 @@
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
 
-## servlet 참고 링크
-* [링크](https://loco-motive.tistory.com/2)
+## servlet 학습 링크
+* [servlet 동작](https://loco-motive.tistory.com/2)
 
 
