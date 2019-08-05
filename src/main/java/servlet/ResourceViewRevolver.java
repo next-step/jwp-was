@@ -17,6 +17,9 @@ public class ResourceViewRevolver {
   }
 
   private static boolean isStaticResource(String path) {
+    if (path == null) {
+      return false;
+    }
     return path.contains(".css") || path.contains(".js");
   }
 }
