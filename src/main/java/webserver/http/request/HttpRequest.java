@@ -75,6 +75,12 @@ public class HttpRequest implements Request {
     }
 
     @Override
+    public String getBody(final String key) {
+        // TODO: content-type에 따라 다르게 처리?
+        return RequestQuery.of(body).getString(key);
+    }
+
+    @Override
     public Cookie getCookie() {
         return Cookie.of(getHeader("Cookie"));
     }
