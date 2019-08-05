@@ -3,6 +3,7 @@ package webserver.http.request;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import webserver.http.HttpMethod;
+import webserver.http.HttpVersion;
 
 import java.util.Objects;
 
@@ -23,11 +24,9 @@ public class RequestLine {
 
     private static final String TOKEN = " ";
 
-    public static final int INDEX_OF_REQUEST_LINE = 0;
-
     private HttpMethod method;
     private RequestURI requestURI;
-    private String httpVersion;
+    private HttpVersion httpVersion;
 
     public static RequestLine parse(final String requestLine) {
         if (StringUtils.isBlank(requestLine)) {
@@ -47,7 +46,7 @@ public class RequestLine {
     private RequestLine(final String method, final String requestURI, final String httpVersion) {
         setMethod(HttpMethod.valueOf(method));
         setRequestURI(requestURI);
-        setHttpVersion(httpVersion);
+        setHttpVersion(HttpVersion.valueOfVersion(httpVersion));
     }
 
     private void setMethod(HttpMethod method) {
@@ -64,10 +63,8 @@ public class RequestLine {
         this.requestURI = new RequestURI(requestURI);
     }
 
-    private void setHttpVersion(String httpVersion) {
-        if (StringUtils.isBlank(httpVersion)) {
-            throw new IllegalArgumentException("HTTP-Version은 필수입니다.");
-        }
+    private void setHttpVersion(HttpVersion httpVersion) {
+        Objects.requireNonNull(httpVersion, "HTTP-Version은 필수입니다.");
 
         this.httpVersion = httpVersion;
     }

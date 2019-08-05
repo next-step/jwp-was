@@ -3,29 +3,16 @@ package webserver.http.request;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import utils.IOUtils;
+import webserver.http.HttpMethod;
+import webserver.http.EntityHeader;
+import webserver.http.EntityHeaderFields;
+import webserver.http.GeneralHeader;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 5 Request
- *
- * A request message from a client to a server includes, within the
- * first line of that message, the method to be applied to the resource,
- * the identifier of the resource, and the protocol version in use.
- *
- *      Request = Request-Line              ; Section 5.1
- *                *(( general-header        ; Section 4.5
- *                 | request-header         ; Section 5.3
- *                 | entity-header ) CRLF)  ; Section 7.1
- *                CRLF
- *                [ message-body ]          ; Section 4.3
- *
- * https://tools.ietf.org/html/rfc2616#section-5
- */
 @Getter
 public class HttpRequest {
 
@@ -35,20 +22,17 @@ public class HttpRequest {
     private EntityHeader entityHeader;
     private MessageBody messageBody;
 
-    public HttpRequest(final BufferedReader bufferedReader) throws IOException {
-        String requestLine = bufferedReader.readLine();
-        if (StringUtils.isBlank(requestLine)) {
-            return;
-        }
-        setRequestLine(requestLine);
+    public HttpRequest(final InputStream inputStream) throws IOException {
+        final BufferedReader bufferedReader = bufferedReader(inputStream);
 
-        List<String> httpRequestHeaders = readHttpRequestHeaders(bufferedReader);
+        setRequestLine(bufferedReader.readLine());
+
+        final List<String> httpRequestHeaders = readHttpRequestHeaders(bufferedReader);
         setGeneralHeader(httpRequestHeaders);
         setRequestHeader(httpRequestHeaders);
         setEntityHeader(httpRequestHeaders);
 
-        final String messageBody = readMessageBody(bufferedReader);
-        setMessageBody(messageBody);
+        setMessageBody(readMessageBody(bufferedReader));
     }
 
     public String path() {
@@ -71,6 +55,15 @@ public class HttpRequest {
         }
 
         return query;
+    }
+
+    public HttpMethod httpMethod() {
+        return requestLine.getMethod();
+    }
+
+    private BufferedReader bufferedReader(InputStream inputStream) {
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+        return new BufferedReader(inputStreamReader);
     }
 
     private List<String> readHttpRequestHeaders(BufferedReader bufferedReader) throws IOException {

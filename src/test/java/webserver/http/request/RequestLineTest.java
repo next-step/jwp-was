@@ -3,6 +3,7 @@ package webserver.http.request;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.HttpMethod;
+import webserver.http.HttpVersion;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -22,7 +23,7 @@ class RequestLineTest {
         // then
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.path()).isEqualTo("/users");
-        assertThat(requestLine.getHttpVersion()).isEqualTo("HTTP/1.1");
+        assertThat(requestLine.getHttpVersion()).isEqualTo(HttpVersion.HTTP_1_1);
     }
 
     @DisplayName("RequestLine POST 파싱")
@@ -35,7 +36,7 @@ class RequestLineTest {
         // then
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(requestLine.path()).isEqualTo("/users");
-        assertThat(requestLine.getHttpVersion()).isEqualTo("HTTP/1.1");
+        assertThat(requestLine.getHttpVersion()).isEqualTo(HttpVersion.HTTP_1_1);
     }
 
     @DisplayName("QueryString이 존재해도 path만 파싱")
@@ -48,7 +49,7 @@ class RequestLineTest {
         // then
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.path()).isEqualTo("/users");
-        assertThat(requestLine.getHttpVersion()).isEqualTo("HTTP/1.1");
+        assertThat(requestLine.getHttpVersion()).isEqualTo(HttpVersion.HTTP_1_1);
     }
 
     @DisplayName("QueryString이 url encoding 되어도 정상 파싱")

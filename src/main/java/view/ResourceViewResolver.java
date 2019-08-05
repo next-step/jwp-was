@@ -2,7 +2,10 @@ package view;
 
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import utils.FileIoUtils;
+import webserver.http.EntityHeaderFields;
+import webserver.http.HttpStatus;
+import webserver.http.response.HttpResponse;
+import webserver.http.response.ResponseHeaderFields;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -10,53 +13,39 @@ import java.net.URISyntaxException;
 @Getter
 public class ResourceViewResolver implements ViewResolver {
 
-    private final static String SLASH = "/";
     private final static String REDIRECT = "redirect:";
-    private final static String DEFAULT_FILE_PATH = "index.html";
-    private final static String DEFAULT_VIEW_PREFIX = "templates";
-    private final static String DEFAULT_VIEW_SUFFIX = ".html";
 
-    private String path;
-    private byte[] responseBody;
-    private boolean isRedirect = false; // Response로 분리할 때 제거할 것
-
-    public ResourceViewResolver(final String path) throws IOException, URISyntaxException {
-        setPath(path);
-        setResponseBody(path);
+    public ResourceViewResolver() {
     }
 
-    private void setPath(final String path) {
-        String convertedPath = path;
-        if (StringUtils.isBlank(path) || StringUtils.equals(path, SLASH)) {
-            convertedPath = SLASH + DEFAULT_FILE_PATH;
-        }
-
+    public View toView(final HttpResponse response, final String path) throws IOException, URISyntaxException {
         if (startsWithRedirect(path)) {
-            this.isRedirect = true;
-            convertedPath = StringUtils.removeStart(path, REDIRECT);
+            return redirect(response, path);
         }
 
-        if (!StringUtils.startsWith(convertedPath, SLASH)) {
-            convertedPath = SLASH + convertedPath;
-        }
-
-        if (!StringUtils.endsWith(convertedPath, DEFAULT_VIEW_SUFFIX)) {
-            convertedPath = convertedPath + DEFAULT_VIEW_SUFFIX;
-        }
-
-        this.path = convertedPath;
-    }
-
-    private void setResponseBody(final String path) throws IOException, URISyntaxException {
-        if (startsWithRedirect(path)) {
-            this.responseBody = new byte[0];
-            return;
-        }
-
-        this.responseBody = FileIoUtils.loadFileFromClasspath(DEFAULT_VIEW_PREFIX + this.path);
+        return html(response, path);
     }
 
     private boolean startsWithRedirect(final String path) {
         return StringUtils.startsWith(path, REDIRECT);
+    }
+
+    private View redirect(final HttpResponse response, final String path) throws IOException, URISyntaxException {
+        final String convertedPath = StringUtils.removeStart(path, REDIRECT);
+
+        response.selectHttpStatus(HttpStatus.FOUND);
+        response.put(ResponseHeaderFields.LOCATION, convertedPath);
+
+        return new ResourceView(convertedPath);
+    }
+
+    private View html(final HttpResponse response, final String path) throws IOException, URISyntaxException {
+        ResourceView resourceView = new ResourceView(path);
+
+        response.selectHttpStatus(HttpStatus.OK);
+        response.put(EntityHeaderFields.CONTENT_LENGTH, String.valueOf(resourceView.contentLength()));
+        response.put(EntityHeaderFields.CONTENT_TYPE, "text/html;charset=utf-8");
+
+        return resourceView;
     }
 }
