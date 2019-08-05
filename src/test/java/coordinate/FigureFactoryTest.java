@@ -3,9 +3,11 @@ package coordinate;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class FigureFactoryTest {
     @Test
@@ -42,5 +44,11 @@ public class FigureFactoryTest {
         Figure figure = FigureFactory.getInstance(points);
         assertThat(figure).isInstanceOfAny(Rectangle.class);
         assertThat(figure.getName()).isEqualTo("사각형");
+    }
+
+    @Test
+    void invalidFigure() {
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> FigureFactory.getInstance(Collections.emptyList()));
     }
 }
