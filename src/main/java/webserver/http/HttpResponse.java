@@ -1,19 +1,29 @@
 package webserver.http;
 
 import enums.HttpStatus;
+import utils.FileIoUtils;
+import utils.MimeTypeUtils;
 
+import java.net.URL;
 import java.util.List;
 
 public class HttpResponse {
 
-    private HttpStatus httpStatus = HttpStatus.OK;
+    private final HttpRequest httpRequest;
 
     private final HttpHeaders httpHeaders;
 
+    private HttpStatus httpStatus = HttpStatus.OK;
+
     private byte[] responseBody;
 
-    public HttpResponse(){
-        httpHeaders = new HttpHeaders();
+    private HttpResponse(HttpRequest httpRequest){
+        this.httpRequest = httpRequest;
+        this.httpHeaders = new HttpHeaders();
+    }
+
+    public static HttpResponse of(HttpRequest httpRequest) {
+        return new HttpResponse(httpRequest);
     }
 
     public HttpStatus getHttpStatus() {
@@ -44,5 +54,13 @@ public class HttpResponse {
     public void redirect(String redirectUrl) {
         this.setHttpStatus(HttpStatus.FOUND);
         this.setHttpHeader(HttpHeaders.LOCATION, redirectUrl);
+    }
+
+    public void sendResource(URL resourceUrl){
+        byte[] body = FileIoUtils.loadFileFromURL(resourceUrl);
+        this.setResponseBody(body);
+
+        String mimeType = MimeTypeUtils.guessContentTypeFromName(resourceUrl.getFile(), httpRequest.getHeader(HttpHeaders.ACCEPT));
+        this.setHttpHeader(HttpHeaders.CONTENT_TYPE, mimeType);
     }
 }

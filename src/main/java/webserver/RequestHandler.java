@@ -39,7 +39,7 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = bodyResolvers.resoveByMatchResolver(HttpBaseRequest.parse(in));
-            HttpResponse httpResponse = new HttpResponse();
+            HttpResponse httpResponse = HttpResponse.of(httpRequest);
             requestMappers.matchHandle(httpRequest, httpResponse);
             writeResponse(new DataOutputStream(out), httpResponse);
         } catch (IOException e) {

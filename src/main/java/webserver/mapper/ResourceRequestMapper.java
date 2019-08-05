@@ -2,8 +2,6 @@ package webserver.mapper;
 
 import enums.HttpMethod;
 import utils.FileIoUtils;
-import utils.MimeTypeUtils;
-import webserver.http.HttpHeaders;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
@@ -49,13 +47,8 @@ public class ResourceRequestMapper implements RequestMapper{
 
     @Override
     public Void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
-
         URL resourceUrl = this.urlCache.get(httpRequest.getRequestURI());
-        byte[] body = FileIoUtils.loadFileFromURL(resourceUrl);
-        httpResponse.setResponseBody(body);
-
-        String mimeType = MimeTypeUtils.guessContentTypeFromName(resourceUrl.getFile(), httpRequest.getHeader(HttpHeaders.ACCEPT));
-        httpResponse.setHttpHeader(HttpHeaders.CONTENT_TYPE, mimeType);
+        httpResponse.sendResource(resourceUrl);
         return null;
     }
 
