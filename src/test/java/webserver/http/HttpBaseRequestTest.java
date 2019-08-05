@@ -3,6 +3,8 @@ package webserver.http;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -60,8 +62,8 @@ public class HttpBaseRequestTest {
 
     }
 
-    @DisplayName("Get Http HttpRequest 테스트 : queryString")
-    @Test
+    @ParameterizedTest(name = "{index} {0} is 30 days long")
+    @MethodSource("provideStringsForIsBlank")
     public void httpRequestParse2(){
         try{
             HttpBaseRequest httpRequest = HttpBaseRequest.parse(inputStreamGetQueryString);
