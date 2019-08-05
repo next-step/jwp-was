@@ -28,6 +28,10 @@ public class HttpResponse {
         headers.put(key, value);
     }
 
+    public String getHeader(String key) {
+        return headers.get(key);
+    }
+
     public String getHeaders() {
         StringBuilder builder = new StringBuilder();
         for (Map.Entry<String, String> header : headers.entrySet()) {
@@ -51,6 +55,10 @@ public class HttpResponse {
 
     public void setHttpStatus(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
+    }
+
+    public void setContentType(ContentType contentType) {
+        addHeader(ContentType.getHeaderFieldName(), contentType.getMediaType());
     }
 
     public String getMessageBody() {

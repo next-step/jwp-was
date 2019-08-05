@@ -1,6 +1,7 @@
 package webserver.http.response.view;
 
 import utils.FileIoUtils;
+import webserver.http.response.ContentType;
 import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
@@ -23,14 +24,13 @@ public class TemplateResourceViewRenderer extends AbstractViewRenderer {
 
     @Override
     public void render() {
-
-        byte[] body = new byte[0];
         try {
-            body = FileIoUtils.loadFileFromClasspath(TEMPLATE_RESOURCE_PATH_BASE + path);
+            byte[] body = FileIoUtils.loadFileFromClasspath(TEMPLATE_RESOURCE_PATH_BASE + path);
+            httpResponse.setContentType(ContentType.HTML_UTF_8);
+            responseHeader(body.length);
+            responseBody(body);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
-        responseHeader(body.length);
-        responseBody(body);
     }
 }

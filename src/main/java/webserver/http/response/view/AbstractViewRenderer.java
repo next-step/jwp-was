@@ -15,7 +15,7 @@ import java.io.IOException;
 public abstract class AbstractViewRenderer implements ViewRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractViewRenderer.class);
-    private final HttpResponse httpResponse;
+    final HttpResponse httpResponse;
     private final DataOutputStream outputStream;
 
     public AbstractViewRenderer(HttpResponse httpResponse) {
@@ -26,7 +26,6 @@ public abstract class AbstractViewRenderer implements ViewRenderer {
     void responseHeader(int lengthOfBodyContent) {
 
         httpResponse.setHttpStatus(HttpStatus.OK);
-        httpResponse.addHeader("Content-Type", "text/html;charset=utf-8");
         httpResponse.addHeader("Content-Length", String.valueOf(lengthOfBodyContent));
         try {
             this.outputStream.writeBytes(httpResponse.getStatusLine());

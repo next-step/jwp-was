@@ -1,6 +1,7 @@
 package webserver.http.response.view;
 
 import utils.FileIoUtils;
+import webserver.http.response.ContentType;
 import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
@@ -23,9 +24,11 @@ public class StaticResourceViewRenderer extends AbstractViewRenderer {
 
     @Override
     public void render() {
-
         try {
             byte[] body = FileIoUtils.loadFileFromClasspath(STATIC_RESOURCE_PATH_BASE + path);
+            if (path.contains(".css")) {
+                httpResponse.setContentType(ContentType.CSS);
+            }
             responseHeader(body.length);
             responseBody(body);
         } catch (IOException | URISyntaxException e) {
