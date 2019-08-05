@@ -1,7 +1,8 @@
-package webserver.http;
+package webserver.http.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.request.RequestUri;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,9 +12,10 @@ class RequestUriTest {
     @Test
     void request_path_query_string_parse() {
         RequestUri requestUri = RequestUri.parse("/users?userId=javajigi&password=password&name=JaeSung");
-        QueryParameter queryParameter = requestUri.getQueryParameter();
 
         assertThat(requestUri.getPath()).isEqualTo("/users");
-        assertThat(queryParameter.getQueryParameters().size()).isEqualTo(3);
+        assertThat(requestUri.getParameter("userId")).isEqualTo("javajigi");
+        assertThat(requestUri.getParameter("password")).isEqualTo("password");
+        assertThat(requestUri.getParameter("name")).isEqualTo("JaeSung");
     }
 }

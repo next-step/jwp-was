@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 
@@ -35,7 +35,15 @@ public class RequestUri {
         return path;
     }
 
-    public QueryParameter getQueryParameter() {
-        return queryParameter;
+    public String getParameter(String key) {
+        return queryParameter.getParameter(key);
+    }
+
+    @Override
+    public String toString() {
+        return "RequestUri{" +
+                "path='" + path + '\'' +
+                ", queryParameter=" + queryParameter +
+                '}';
     }
 }

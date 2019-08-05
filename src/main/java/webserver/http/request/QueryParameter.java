@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,7 +37,14 @@ public class QueryParameter {
         return values.length == QUERY_STRING_PAIR_COUNT;
     }
 
-    public Map<String, String> getQueryParameters() {
-        return Collections.unmodifiableMap(queryParameters);
+    public String getParameter(String key) {
+        return queryParameters.get(key);
+    }
+
+    @Override
+    public String toString() {
+        return "QueryParameter{" +
+                "queryParameters=" + queryParameters +
+                '}';
     }
 }
