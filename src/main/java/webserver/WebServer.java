@@ -47,7 +47,7 @@ public class WebServer {
                 , viewActionRequestMapper
         );
 
-        BodyResolvers bodyResolvers = BodyResolvers.of(new FormBodyResolver());
+        BodyResolvers bodyResolvers = BodyResolvers.of(FormBodyResolver.getInstance());
 
 
         // 서버소켓을 생성한다. 웹서버는 기본적으로 8080번 포트를 사용한다.
