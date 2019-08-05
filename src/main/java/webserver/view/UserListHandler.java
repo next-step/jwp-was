@@ -1,15 +1,11 @@
 package webserver.view;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
-import com.google.common.base.Charsets;
 import db.DataBase;
 import model.User;
 import webserver.AbstractRequestMappingHandler;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.template.HandleBarTemplateLoader;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -25,7 +21,8 @@ public class UserListHandler extends AbstractRequestMappingHandler {
     @Override
     public void process(HttpRequest request, HttpResponse response) throws IOException {
             if (LOGIN_TRUE_COOKIE.equals(request.getHeader(COOKIE))) {
-                byte[] body = loadTemplate();
+                Map<String, Object> data = findAllUsers();
+                byte[] body = HandleBarTemplateLoader.loadTemplate("/user/list", data);
 
                 response.response200Header(body.length, "text/html;");
                 response.responseBody(body);
@@ -35,20 +32,11 @@ public class UserListHandler extends AbstractRequestMappingHandler {
             }
     }
 
-    private byte[] loadTemplate() throws IOException {
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".html");
-        loader.setCharset(Charsets.UTF_8);
-        Handlebars handlebars = new Handlebars(loader);
-
-        Template template = handlebars.compile("user/list");
+    private Map<String, Object> findAllUsers() {
         Collection<User> users = DataBase.findAll();
         Map<String, Object> data = new HashMap<>();
         data.put("users", users);
 
-        String usersPage = template.apply(data);
-
-        return usersPage.getBytes();
+        return data;
     }
 }
