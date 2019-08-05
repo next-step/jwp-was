@@ -10,7 +10,6 @@ import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
 
-import static webserver.http.HttpHeaders.LOCATION;
 import static webserver.http.HttpHeaders.SET_COOKIE;
 
 public class UserCreateHandler extends AbstractRequestMappingHandler {
@@ -24,8 +23,7 @@ public class UserCreateHandler extends AbstractRequestMappingHandler {
         DataBase.addUser(user);
         logger.debug("User : {}", user);
 
-        response.addHeader(LOCATION, "/index.html");
         response.addHeader(SET_COOKIE, "logined=false; Path=/");
-        response.response302Header();
+        response.response302Header("/index.html");
     }
 }

@@ -25,15 +25,12 @@ public class UserListHandler extends AbstractRequestMappingHandler {
                 Map<String, Object> data = findAllUsers();
                 byte[] body = HandleBarTemplateLoader.loadTemplate("/user/list", data);
 
-                response.addHeader(CONTENT_LENGTH, body.length);
-                response.addHeader(CONTENT_TYPE, ResourceLoader.resourceContentType("text/html;"));
-                response.response200Header();
+                response.response200Header(body.length, ResourceLoader.resourceContentType("text/html;"));
                 response.responseBody(body);
 
             } else {
-                response.addHeader(LOCATION, "/user/login.html");
                 response.addHeader(SET_COOKIE, "logined=false; Path=/");
-                response.response302Header();
+                response.response302Header("/user/login.html");
             }
     }
 

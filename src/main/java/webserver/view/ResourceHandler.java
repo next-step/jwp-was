@@ -20,10 +20,7 @@ public class ResourceHandler extends AbstractRequestMappingHandler {
         String resourcePath = ResourceLoader.getResourcePath(path);
         byte [] body = ResourceLoader.loadResource(resourcePath);
 
-        response.addHeader(CONTENT_LENGTH, body.length);
-        response.addHeader(CONTENT_TYPE, ResourceLoader.resourceContentType(path));
-
-        response.response200Header();
+        response.response200Header(body.length, ResourceLoader.resourceContentType(path));
         response.responseBody(body);
     }
 }

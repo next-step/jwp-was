@@ -8,7 +8,6 @@ import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
 
-import static webserver.http.HttpHeaders.LOCATION;
 import static webserver.http.HttpHeaders.SET_COOKIE;
 
 public class LoginHandler extends AbstractRequestMappingHandler {
@@ -18,14 +17,12 @@ public class LoginHandler extends AbstractRequestMappingHandler {
         User user = DataBase.findUserById(request.getParameter("userId"));
 
         if (isLoginSuccess(user, request.getParameter("password"))) {
-            response.addHeader(LOCATION, "/user/login_failed.html");
             response.addHeader(SET_COOKIE, "logined=false; Path=/");
+            response.response302Header("/user/login_failed.html");
         } else {
-            response.addHeader(LOCATION, "/index.html");
             response.addHeader(SET_COOKIE, "logined=true; Path=/");
+            response.response302Header("/index.html");
         }
-
-        response.response302Header();
     }
 
     private boolean isLoginSuccess(User user, String password) {
