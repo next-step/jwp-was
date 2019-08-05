@@ -1,5 +1,7 @@
 package http;
 
+import java.util.Objects;
+
 public class RequestLine {
 
   private static final String SPACE_DELIMITER = " ";
@@ -11,14 +13,14 @@ public class RequestLine {
   private static final int QUERYSTRING_INDEX = 1;
   private static final int HAS_QUERYSTRING_CONDITION_LENGTH = 1;
 
-  private String method;
+  private HttpMethod method;
   private String path;
   private String version;
   private Parameters parameters;
 
 
   private RequestLine(String method, String path, String version, Parameters parameters) {
-    this.method = method;
+    this.method = HttpMethod.valueOf(method);
     this.path = path;
     this.version = version;
     this.parameters = parameters;
@@ -37,7 +39,7 @@ public class RequestLine {
         .parse(urlToken[QUERYSTRING_INDEX]) : Parameters.EMPTY;
   }
 
-  public String getMethod() {
+  public HttpMethod getMethod() {
     return method;
   }
 
@@ -51,5 +53,29 @@ public class RequestLine {
 
   public Parameters getParameters() {
     return parameters;
+  }
+
+  public boolean isPost() {
+    return method.isPost();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    RequestLine that = (RequestLine) o;
+    return Objects.equals(method, that.method) &&
+        Objects.equals(path, that.path) &&
+        Objects.equals(version, that.version) &&
+        Objects.equals(parameters, that.parameters);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(method, path, version, parameters);
   }
 }

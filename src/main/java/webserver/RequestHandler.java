@@ -12,10 +12,11 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import http.HttpRequest;
 import servlet.HttpServlet;
 import servlet.ResourceViewRevolver;
 import servlet.ServletMapping;
-import utils.FileIoUtils;
+import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
 
@@ -34,10 +35,18 @@ public class RequestHandler implements Runnable {
     try (InputStream in = connection.getInputStream(); OutputStream out = connection
         .getOutputStream()) {
       BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+
       RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
       RequestHeader requestHeader = RequestHeader.parse(bufferedReader);
-      HttpServlet servlet = ServletMapping.getServlet(requestLine);
-      String view = servlet.service(requestLine);
+      String requestBody = null;
+      if (requestLine.isPost()) {
+        requestBody = IOUtils.readData(bufferedReader, requestHeader.getContentLength());
+      }
+
+      HttpRequest httpRequest = new HttpRequest(requestLine,requestHeader,requestBody);
+
+      HttpServlet servlet = ServletMapping.getServlet(httpRequest.getPath());
+      String view = servlet.service(httpRequest);
 
       DataOutputStream dos = new DataOutputStream(out);
 

@@ -1,6 +1,5 @@
 package servlet;
 
-import http.RequestLine;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,10 +13,10 @@ public class ServletMapping {
         .collect(Collectors.toMap(mapping -> mapping.getPath(), mapping -> mapping.getCreator()));
   }
 
-  public static HttpServlet getServlet(RequestLine requestLine) {
-    if (!servlets.containsKey(requestLine.getPath())) {
+  public static HttpServlet getServlet(String path) {
+    if (!servlets.containsKey(path)) {
       return new DefaultServlet();
     }
-    return servlets.get(requestLine.getPath()).create();
+    return servlets.get(path).create();
   }
 }

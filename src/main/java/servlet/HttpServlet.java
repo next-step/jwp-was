@@ -1,9 +1,13 @@
 package servlet;
 
-import http.RequestLine;
+import http.HttpRequest;
 
 public interface HttpServlet {
 
-  String service(RequestLine requestLine);
+  String service(HttpRequest httpRequest);
+
+  String doGet(HttpRequest httpRequest);
+
+  String doPost(HttpRequest httpRequest);
 
 }
