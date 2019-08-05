@@ -37,21 +37,17 @@ public class RequestHandler implements Runnable {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
-
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-
             HttpRequest httpRequest = bodyResolvers.resoveByMatchResolver(HttpBaseRequest.parse(in));
             HttpResponse httpResponse = new HttpResponse();
-
             requestMappers.matchHandle(httpRequest, httpResponse);
-
             writeResponse(new DataOutputStream(out), httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void writeResponse(DataOutputStream dos, HttpResponse httpResponse){
+    private void writeResponse(DataOutputStream dos, HttpResponse httpResponse) {
         writeStatusLine(dos, httpResponse.getHttpStatus());
         writeHeaderLines(dos, httpResponse.getHttpHeaderLines());
         writeBody(dos, httpResponse.getResponseBody());
@@ -59,7 +55,6 @@ public class RequestHandler implements Runnable {
     }
 
     private void writeStatusLine(DataOutputStream dos, HttpStatus httpStatus) {
-
         try {
             dos.writeBytes("HTTP/1.1 " + httpStatus.getValue() + " " + httpStatus.getReasonPhrase() + " \r\n");
         } catch (IOException e) {
@@ -68,9 +63,8 @@ public class RequestHandler implements Runnable {
     }
 
     private void writeHeaderLines(DataOutputStream dos, List<String> headerLines) {
-
         try {
-            for(String headerLine : headerLines) {
+            for (String headerLine : headerLines) {
                 dos.writeBytes(headerLine + " \r\n");
             }
             dos.writeBytes("\r\n");
@@ -80,8 +74,7 @@ public class RequestHandler implements Runnable {
     }
 
     private void writeBody(DataOutputStream dos, byte[] body) {
-
-        if(body == null) {
+        if (body == null) {
             return;
         }
 

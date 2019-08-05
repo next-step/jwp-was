@@ -21,7 +21,7 @@ public class HttpBaseRequest implements HttpRequest {
     private final MultiValueMap<String, String> params;
 
 
-    private HttpBaseRequest(RequestLine requestLine, HttpHeaders httpHeaders, String body){
+    private HttpBaseRequest(RequestLine requestLine, HttpHeaders httpHeaders, String body) {
         this.requestLine = requestLine;
         this.requestUri = parseRequestUri(requestLine.getPath());
         this.httpHeaders = httpHeaders;
@@ -44,17 +44,18 @@ public class HttpBaseRequest implements HttpRequest {
             httpHeaders.addHeaderLine(headerLine);
         }
 
-
         String body = null;
-        int contentLength = (int)httpHeaders.getContentLength();
-        if(contentLength != -1) {
+        int contentLength = (int) httpHeaders.getContentLength();
+        if (contentLength != -1) {
             body = IOUtils.readData(bufferedReader, contentLength);
         }
 
         return new HttpBaseRequest(requestLine, httpHeaders, body);
     }
 
-    public HttpMethod getMethod() {return this.requestLine.getMethod();}
+    public HttpMethod getMethod() {
+        return this.requestLine.getMethod();
+    }
 
     public String getPath() {
         return this.requestLine.getPath();
@@ -77,7 +78,7 @@ public class HttpBaseRequest implements HttpRequest {
         return this.httpHeaders.getHeaderValueFirst(name);
     }
 
-    public String getBody(){
+    public String getBody() {
         return this.body;
     }
 
