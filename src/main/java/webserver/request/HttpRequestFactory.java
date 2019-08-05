@@ -36,10 +36,11 @@ public class HttpRequestFactory {
             requestHeaders.add(line);
             logger.debug("RequestHeaders : {}", line);
         }
-        builder.headers(requestHeaders);
+        builder.requestHeaders(requestHeaders);
 
         if (requestHeaders.hasContentLength()) {
             String body = IOUtils.readData(reader, Integer.parseInt(requestHeaders.getHeader(CONTENT_LENGTH)));
+            logger.debug("Request Body : {}", body);
             RequestBody requestBody = RequestBody.parse(body);
             builder.requestBody(requestBody);
         }

@@ -39,6 +39,10 @@ public class HttpResponse {
         return body;
     }
 
+    public ResponseHeaders getResponseHeaders() {
+        return responseHeaders;
+    }
+
     public String getResponseHeader(HttpRequest httpRequest) {
         StringBuilder stringBuilder = new StringBuilder();
         appendStatusHeader(httpRequest, stringBuilder);

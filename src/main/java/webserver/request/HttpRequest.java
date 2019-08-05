@@ -59,7 +59,7 @@ public class HttpRequest {
             return this;
         }
 
-        public HttpRequestBuilder headers(RequestHeaders headers) {
+        public HttpRequestBuilder requestHeaders(RequestHeaders headers) {
             this.requestHeaders = headers;
             return this;
         }
