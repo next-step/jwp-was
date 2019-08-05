@@ -11,44 +11,34 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public enum RequestMapper {
-
-    USER_CREATE("/user/create") {
-        RequestMappingHandler createHandler() {
-            return new UserCreateHandler();
-        }
-    },
-    USER_LOGIN("/user/login") {
-        RequestMappingHandler createHandler() {
-            return new LoginHandler();
-        }
-    },
-    USER_LIST("/user/list") {
-        RequestMappingHandler createHandler() {
-            return new UserListHandler();
-        }
-    },
-    RESOURCE("resource") {
-        RequestMappingHandler createHandler() {
-            return new ResourceHandler();
-        }
-    };
+    USER_CREATE("/user/create", UserCreateHandler::new),
+    USER_LOGIN("/user/login", LoginHandler::new),
+    USER_LIST("/user/list", UserListHandler::new),
+    RESOURCE("resource", ResourceHandler::new);
 
     private String path;
+    private HandlerCreator handlerCreator;
+
     private static Map<String, RequestMapper> uris;
     static {
         uris = Arrays.stream(values())
                 .collect(Collectors.toMap(requestMapper -> requestMapper.path, requestMapper -> requestMapper, (requestMapper1, requestMapper2) -> requestMapper1));
     }
 
-    RequestMapper(String path) {
+    RequestMapper(String path, HandlerCreator creator) {
         this.path = path;
+        this.handlerCreator = creator;
     }
-
-    abstract RequestMappingHandler createHandler();
 
     public static RequestMappingHandler find(String path) {
         return Optional.ofNullable(uris.get(path))
-                .orElse(uris.get("resource"))
-                .createHandler();
+                .map(mapper -> mapper.handlerCreator)
+                .map(HandlerCreator::createHandler)
+                .orElse(getResourceHadlerCreator().createHandler());
+    }
+
+    private static HandlerCreator getResourceHadlerCreator() {
+        return uris.get("resource")
+                .handlerCreator;
     }
 }
