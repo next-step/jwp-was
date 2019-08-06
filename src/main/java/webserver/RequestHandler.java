@@ -2,6 +2,8 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import exceptions.MappingNotFoundException;
 import webserver.http.HttpBaseRequest;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
@@ -38,7 +40,18 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = bodyResolvers.resoveByMatchResolver(HttpBaseRequest.parse(in));
             HttpResponse httpResponse = HttpResponse.of(httpRequest, out);
-            requestMappers.matchHandle(httpRequest, httpResponse);
+            
+            if("/".equals(httpRequest.getPath())) {
+            	httpResponse.sendRedirect("/index.html");
+            	httpResponse.writeResponse();
+            	return;
+            }
+            
+            try {
+            	requestMappers.matchHandle(httpRequest, httpResponse);	
+            } catch(MappingNotFoundException e) {
+            	httpResponse.send404();	
+            }
             httpResponse.writeResponse();
         } catch (IOException e) {
             logger.error(e.getMessage());
