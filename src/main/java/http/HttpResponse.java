@@ -44,10 +44,18 @@ public class HttpResponse {
     }
   }
 
-  private void response200Header(int lengthOfBodyContent) {
+  private static boolean isStaticResource(String path) {
+    if (path == null) {
+      return false;
+    }
+    return path.contains(".css") || path.contains(".js") || path.contains(".eot") || path
+        .contains(".svg") || path.contains(".woff") || path.contains(".ttf");
+  }
+
+  private void response200Header(int lengthOfBodyContent, boolean isStaticResource) {
     try {
       dos.writeBytes("HTTP/1.1 200 OK \r\n");
-      dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+      dos.writeBytes(getContentType(isStaticResource));
       dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
       setCookies();
       dos.writeBytes("\r\n");
@@ -76,18 +84,11 @@ public class HttpResponse {
     }
   }
 
-  public void forward(String url) {
-    try {
-      url = urlConvert(url);
-      byte[] body = FileIoUtils.loadFileFromClasspath(url);
-
-      response200Header(body.length);
-      responseBody(body);
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
+  private String getContentType(boolean isStaticResource) {
+    if (isStaticResource) {
+      return "Content-Type: text/css;charset=utf-8\r\n";
     }
+    return "Content-Type: text/html;charset=utf-8\r\n";
   }
 
   private String urlConvert(String url) {
@@ -97,18 +98,23 @@ public class HttpResponse {
     return NON_STATIC_RESOURCE_PATH_PREFIX + url;
   }
 
-  private static boolean isStaticResource(String path) {
-    if (path == null) {
-      return false;
+  public void forward(String url) {
+    try {
+      byte[] body = FileIoUtils.loadFileFromClasspath(urlConvert(url));
+      response200Header(body.length, isStaticResource(url));
+      responseBody(body);
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
     }
-    return path.contains(".css") || path.contains(".js");
   }
 
   public void handleBarView(String url) {
     try {
       String renderView = HandleBarsRender.render(url);
       byte[] view = renderView.getBytes();
-      response200Header(view.length);
+      response200Header(view.length, isStaticResource(url));
       responseBody(view);
     } catch (IOException e) {
       e.printStackTrace();
