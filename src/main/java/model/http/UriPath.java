@@ -41,6 +41,10 @@ public class UriPath {
         return Optional.ofNullable(extension);
     }
 
+    public boolean isSamePath(String path) {
+        return this.path.equals(path);
+    }
+
     public UriPath prepend(String pathPrepended) {
         path = trimLastRightSlash(pathPrepended) + path;
         return this;

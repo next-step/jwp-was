@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -19,23 +21,19 @@ public class ResourceFinder {
 
     public static Optional<byte[]> find(UriPath resourcePath) {
         return resourcePath.getExtension()
-                .filter(ResourceFinder::isResource)
-                .flatMap(extension -> {
-                    try {
-                        return Optional.of(FileIoUtils.loadFileFromClasspath(getResourcePath(resourcePath, extension)));
-                    } catch (Exception e) {
-                        return Optional.empty();
-                    }
-                });
+                .flatMap(extension -> getResourcePath(resourcePath, extension)
+                        .flatMap(path -> {
+                            try {
+                                return Optional.of(FileIoUtils.loadFileFromClasspath(path));
+                            } catch (Exception e) {
+                                return Optional.empty();
+                            }
+                        }));
     }
 
-    private static boolean isResource(String extension) {
-        return STATIC_RESOURCE_EXTENSION.contains(extension) || TEMPLATE_RESOURCE_EXTENSION.contains(extension);
-    }
-
-    private static String getResourcePath(UriPath resourcePath, String extension) {
-        if (STATIC_RESOURCE_EXTENSION.contains(extension)) return STATIC_RESOURCE_BASE_PATH + resourcePath.getPath();
-        if (TEMPLATE_RESOURCE_EXTENSION.contains(extension)) return TEMPLATE_RESOURCE_BASE_PATH + resourcePath.getPath();
-        throw new IllegalArgumentException("wrong resource path");
+    private static Optional<String> getResourcePath(UriPath resourcePath, String extension) {
+        if (STATIC_RESOURCE_EXTENSION.contains(extension)) return Optional.of(STATIC_RESOURCE_BASE_PATH + resourcePath.getPath());
+        if (TEMPLATE_RESOURCE_EXTENSION.contains(extension)) return Optional.of(TEMPLATE_RESOURCE_BASE_PATH + resourcePath.getPath());
+        return Optional.empty();
     }
 }

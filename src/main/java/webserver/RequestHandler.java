@@ -1,13 +1,15 @@
 package webserver;
 
 import model.http.RequestLine;
+import model.http.UriPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.Socket;
-import java.util.Objects;
 import java.util.Optional;
 
 public class RequestHandler implements Runnable {
@@ -44,7 +46,28 @@ public class RequestHandler implements Runnable {
             }
         }
 
-        return ResourceFinder.find(Objects.requireNonNull(requestLine).getRequestUri().getUriPath());
+        if (requestLine == null) {
+            return Optional.empty();
+        }
+
+        UriPath path = requestLine.getRequestUri().getUriPath();
+
+        Optional<byte[]> result = ResourceFinder.find(path);
+
+        if (!result.isPresent()) {
+            Optional<Method> method = ControllerFinder.findController(path);
+
+            if (method.isPresent()) {
+                Method methodFound = method.get();
+                try {
+                    result = ResourceFinder.find(UriPath.of(methodFound.invoke(methodFound.getDeclaringClass().newInstance()).toString() + ".html"));
+                } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return result;
     }
 
     private void response(OutputStream out, byte[] body) {
