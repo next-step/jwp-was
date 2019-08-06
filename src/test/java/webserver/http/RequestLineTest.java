@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+
 import utils.FileIoUtils;
 
 import java.io.*;
@@ -103,5 +104,4 @@ public class RequestLineTest {
         assertThat(httpRequest.getParameter().get("userId")).isEqualTo("javajigi");
         assertThat(httpRequest.getParameter().get("password")).isEqualTo("password");
     }
-
 }

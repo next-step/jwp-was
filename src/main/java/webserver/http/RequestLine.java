@@ -1,7 +1,6 @@
 package webserver.http;
 
 public class RequestLine {
-
     public HttpRequest httpRequest;
 
     public RequestLine(HttpController httpController, String httpStr){
@@ -15,5 +14,4 @@ public class RequestLine {
     public HttpRequest getHttpRequest(){
         return httpRequest;
     }
-
 }
