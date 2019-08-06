@@ -1,6 +1,7 @@
 package webserver.handler;
 
 import db.DataBase;
+import webserver.http.CustomCookie;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.ModelAndView;
@@ -17,8 +18,8 @@ public class UserListRequestMappingHandler extends RequestMappingHandler {
 
     @Override
     protected HttpResponse doGet(HttpRequest httpRequest) throws Exception {
-        Boolean isLogined = Boolean.valueOf(httpRequest.getCookie("logined"));
-        if (!isLogined) {
+        Boolean logined = Boolean.valueOf(httpRequest.getCookie(CustomCookie.LOGINED));
+        if (!logined) {
             Map<String, String> headers = new HashMap<>();
             headers.put("Content-Type", viewResolver.getContentType());
             headers.put("Location", "/user/login.html");

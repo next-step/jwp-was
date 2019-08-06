@@ -4,10 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import webserver.http.HttpRequest;
-import webserver.http.HttpRequestTest;
-import webserver.http.HttpResponse;
-import webserver.http.HttpStatusCode;
+import webserver.http.*;
 import webserver.resolver.HandlebarsViewResolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +27,7 @@ public class UserListRequestMappingHandlerTest {
     void doGet(boolean logined, HttpStatusCode expectedStatusCode) throws Exception {
         HttpRequest httpRequest = HttpRequest.parse(HttpRequestTest.createInputStream(
                 "GET /user/list HTTP/1.1",
-                "Cookie: logined=" + logined
+                "Cookie: " + CustomCookie.LOGINED + "=" + logined
         ));
 
         HttpResponse httpResponse = handler.doHandle(httpRequest);

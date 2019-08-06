@@ -1,12 +1,17 @@
 package webserver.handler;
 
 import db.DataBase;
+import model.User;
+import webserver.http.Cookies;
+import webserver.http.CustomCookie;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.resolver.ViewResolver;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LoginRequestMappingHandler extends RequestMappingHandler {
 
@@ -31,27 +36,21 @@ public class LoginRequestMappingHandler extends RequestMappingHandler {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", viewResolver.getContentType());
 
-        boolean logined = isLogined(httpRequest.getBody());
+        Boolean logined = isLogined(httpRequest.getBody());
         String viewName = getViewName(logined);
 
-        Map<String, Object> cookie = new LinkedHashMap<>();
-        cookie.put("logined", logined);
-        cookie.put("Path", "/");
-        String responseCookie = cookie.entrySet().stream()
-                .map(entry -> String.format("%s=%s", entry.getKey(), entry.getValue()))
-                .collect(Collectors.joining("; "));
-        headers.put("Set-Cookie", responseCookie);
+        Cookies cookies = Cookies.newInstance();
+        cookies.add(CustomCookie.LOGINED, logined.toString());
+        cookies.add(Cookies.PATH, "/");
+        headers.put("Set-Cookie", cookies.joinToString());
         headers.put("Location", viewName);
         byte[] body = viewResolver.resolve(viewName);
         return HttpResponse.redirect(headers, body);
     }
 
-    private boolean isLogined(Map<String, String> requestBody) {
-        return DataBase.findAll().stream()
-                .anyMatch(user -> user.login(
-                        requestBody.get("userId"),
-                        requestBody.get("password")
-                ));
+    private Boolean isLogined(Map<String, String> requestBody) {
+        User user = DataBase.findUserById(requestBody.get("userId"));
+        return user.matchPassword(requestBody.get("password"));
     }
 
     private String getViewName(boolean logined) {
