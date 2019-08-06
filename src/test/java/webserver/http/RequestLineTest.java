@@ -11,28 +11,37 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static webserver.http.HttpMethod.GET;
 
 public class RequestLineTest {
 
     @DisplayName("Parse Request-Line")
     @ParameterizedTest(name = "case : {0} -> method : {1}, path : {2}, params : {3}")
     @MethodSource("parseRequestLine")
-    void parse(String rawRequestLine, String expectedMethod, String expectedPath, Map<String, String> expectedParams) {
+    void parse(String rawRequestLine, HttpMethod expectedMethod, String expectedPath, Map<String, String> expectedParams) {
         RequestLine requestLine = RequestLine.parse(rawRequestLine);
 
         assertThat(requestLine.getMethod()).isEqualTo(expectedMethod);
         assertThat(requestLine.getPath()).isEqualTo(expectedPath);
-        assertThat(requestLine.getParams()).containsAllEntriesOf(expectedParams);
+        assertThat(requestLine.getParameters()).containsAllEntriesOf(expectedParams);
     }
 
     private static Stream<Arguments> parseRequestLine() {
         return Stream.of(
-                Arguments.of("GET /users HTTP/1.1", "GET", "/users", Collections.emptyMap()),
-                Arguments.of("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1", "GET", "/users",
+                Arguments.of("GET /users HTTP/1.1", GET, "/users", Collections.emptyMap()),
+                Arguments.of("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1", HttpMethod.GET, "/users",
                         new HashMap<String, String>() {{
                             put("userId", "javajigi");
                             put("password", "password");
                             put("name", "JaeSung");
+                        }}),
+                Arguments.of("GET /users?userId= HTTP/1.1", HttpMethod.GET, "/users",
+                        new HashMap<String, String>() {{
+                            put("userId", "");
+                        }}),
+                Arguments.of("GET /users?userId HTTP/1.1", HttpMethod.GET, "/users",
+                        new HashMap<String, String>() {{
+                            put("userId", "");
                         }})
         );
     }
