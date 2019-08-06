@@ -14,7 +14,7 @@ public class WebServer {
     private static final int DEFAULT_PORT = 8080;
 
     public static void main(String args[]) throws Exception {
-        ExecutorService executorService = Executors.newFixedThreadPool(100);
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
 
         int port;
         if (args == null || args.length == 0) {

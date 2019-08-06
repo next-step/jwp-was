@@ -17,7 +17,7 @@ public class RequestHandler implements Runnable {
 
     private Socket connection;
 
-    public RequestHandler(Socket connectionSocket) {
+    RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
     }
 
