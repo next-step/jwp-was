@@ -35,7 +35,8 @@ public class WebServer {
                     new UserCreateRequestMappingHandler(htmlViewResolver),
                     new LoginRequestMappingHandler(htmlViewResolver),
                     new UserListRequestMappingHandler(handlebarsViewResolver),
-                    new TemplateResourceHandler(htmlViewResolver)
+                    new TemplateResourceHandler(htmlViewResolver),
+                    new StaticResourceHandler()
             );
 
             // 클라이언트가 연결될때까지 대기한다.

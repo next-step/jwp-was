@@ -7,6 +7,7 @@ import static utils.StringUtils.removeWhiteSpace;
 public enum ContentType {
 
     TEXT_CSS("text/css"),
+    TEXT_JAVASCRIPT("text/javascript"),
     TEXT_HTML_UTF_8("text/html;charset=utf-8"),
     APPLICATION_X_WWW_FORM_URLENCODED("application/x-www-form-urlencoded");
 
