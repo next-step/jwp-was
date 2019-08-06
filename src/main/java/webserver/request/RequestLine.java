@@ -16,7 +16,7 @@ public class RequestLine {
         this.version = version;
     }
 
-    public static RequestLine parse(String request) {
+    static RequestLine parse(String request) {
         String[] requests = request.split(" ");
         return new RequestLine(
                 HttpMethod.valueOf(requests[INDEX_OF_METHOD]),
@@ -33,16 +33,20 @@ public class RequestLine {
         return uri;
     }
 
-    public boolean matchPath(String path) {
+    boolean matchPath(String path) {
         return uri.matchPath(path);
     }
 
-    public boolean containPath(String path) {
+    boolean containPath(String path) {
         return uri.containPath(path);
     }
 
     public String getPath() {
         return uri.getPath();
+    }
+
+    String getRequestParam(String field) {
+        return uri.getRequestParam(field);
     }
 
     @Override

@@ -7,6 +7,7 @@ public enum HeaderProperty {
     CONTENT_LENGTH("Content-Length"),
     SET_COOKIE("Set-Cookie"),
     COOKIE("Cookie"),
+    CONNECTION("Connection"),
     CONTENT_TYPE("Content-Type");
 
     private String headerName;

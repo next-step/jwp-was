@@ -3,8 +3,8 @@ package servlet;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.Request;
-import webserver.request.RequestTest;
 import webserver.Response;
+import webserver.request.RequestTest;
 
 import java.io.IOException;
 
@@ -14,16 +14,17 @@ import static webserver.response.HttpStatus.SUCCESS;
 
 class UserListServletTest {
 
+    private Request request;
     private final UserListServlet userListServlet = new UserListServlet();
 
     @DisplayName("리스트 uri 맞는지 확인")
     @Test
     void isMapping_success() throws IOException {
         // given
-        Request httpRequest = RequestTest.requestOfList();
+        request = RequestTest.getRequest("Request_List.txt");
 
         // when
-        boolean mappingResult = userListServlet.isMapping(httpRequest);
+        boolean mappingResult = userListServlet.isMapping(request);
 
         // then
         assertThat(mappingResult).isTrue();
@@ -33,10 +34,10 @@ class UserListServletTest {
     @Test
     void service_success() throws IOException {
         // given
-        Request httpRequest = RequestTest.requestOfList();
+        request = RequestTest.getRequest("Request_List.txt");
 
         // when
-        Response service = userListServlet.service(httpRequest);
+        Response service = userListServlet.service(request);
 
         // thene
         assertThat(service.getStatus()).isEqualTo(SUCCESS);
@@ -46,10 +47,10 @@ class UserListServletTest {
     @Test
     void service_fail() throws IOException {
         // given
-        Request httpRequest = RequestTest.requestOfList_notLogin();
+        request = RequestTest.getRequest("Request_List_Fail.txt");
 
         // when
-        Response service = userListServlet.service(httpRequest);
+        Response service = userListServlet.service(request);
 
         // then
         assertThat(service.getStatus()).isEqualTo(REDIRECT);

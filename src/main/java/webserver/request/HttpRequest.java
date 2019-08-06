@@ -3,6 +3,7 @@ package webserver.request;
 import utils.IOUtils;
 import webserver.HttpHeaders;
 import webserver.Request;
+import webserver.response.HeaderProperty;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,7 +53,15 @@ public class HttpRequest implements Request {
     }
 
     @Override
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
+    }
+
+    @Override
     public String getParameter(String field) {
+        if (HttpMethod.GET.equals(getMethod())) {
+           return requestLine.getRequestParam(field);
+        }
         return requestBody.get(field);
     }
 
@@ -79,6 +88,11 @@ public class HttpRequest implements Request {
     @Override
     public boolean containPath(String path) {
         return requestLine.containPath(path);
+    }
+
+    @Override
+    public String getHeader(HeaderProperty headerProperty) {
+        return httpHeaders.get(headerProperty);
     }
 
     @Override

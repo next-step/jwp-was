@@ -2,11 +2,12 @@ package servlet;
 
 import db.DataBase;
 import model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.Request;
-import webserver.request.RequestTest;
 import webserver.Response;
+import webserver.request.RequestTest;
 import webserver.response.HeaderProperty;
 
 import java.io.IOException;
@@ -16,16 +17,19 @@ import static webserver.response.HttpStatus.REDIRECT;
 
 class UserLoginServletTest {
 
+    private Request request;
     private final UserLoginServlet userLoginServlet = new UserLoginServlet();
+
+    @BeforeEach
+    void setUp() throws IOException {
+        request = RequestTest.getRequest("Request_Login.txt");
+    }
 
     @DisplayName("로그인 uri 맞는지 확인")
     @Test
-    void isMapping_success() throws IOException {
-        // given
-        Request httpRequest = RequestTest.requestOfLogin();
-
+    void isMapping_success() {
         // when
-        boolean mappingResult = userLoginServlet.isMapping(httpRequest);
+        boolean mappingResult = userLoginServlet.isMapping(request);
 
         // then
         assertThat(mappingResult).isTrue();
@@ -33,10 +37,9 @@ class UserLoginServletTest {
 
     @DisplayName("로그인 성공")
     @Test
-    void service_success() throws IOException {
+    void service_success() {
         // given
         String userId = "javajigi";
-        Request request = RequestTest.requestOfLogin();
 
         // when
         DataBase.addUser(getUser(userId));
@@ -50,10 +53,9 @@ class UserLoginServletTest {
 
     @DisplayName("로그인 실패")
     @Test
-    void service_fail() throws IOException {
+    void service_fail() {
         // given
         String userId = "noUser";
-        Request request = RequestTest.requestOfLogin();
 
         // when
         Response service = userLoginServlet.service(request);

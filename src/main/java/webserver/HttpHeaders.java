@@ -40,6 +40,10 @@ public class HttpHeaders {
         headerInfo.put(key, value);
     }
 
+    public String get(HeaderProperty headerProperty) {
+        return get(headerProperty.getHeaderName());
+    }
+
     public String get(String headerName) {
         return headerInfo.get(headerName);
     }
