@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import request.HttpRequest;
 import response.HttpResponse;
 import handler.RequestEngine;
+import session.SessionManager;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -16,9 +17,11 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private SessionManager sessionManager;
 
-    public RequestHandler(Socket connectionSocket) {
+    RequestHandler(Socket connectionSocket, SessionManager sessionManager) {
         this.connection = connectionSocket;
+        this.sessionManager = sessionManager;
     }
 
     public void run() {
@@ -26,7 +29,8 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-            HttpRequest httpRequest = new HttpRequest(bufferedReader);
+            HttpRequest httpRequest = new HttpRequest(bufferedReader)
+                    .setIfExistSession(sessionManager);
             logger.debug(httpRequest.toString());
 
             RequestEngine requestEngine = new RequestEngine();

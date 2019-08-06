@@ -60,4 +60,8 @@ public class Cookie implements HeaderSetter<Cookie>, HeaderResponse {
                 .map(key -> key + SPLIT_KEY_VALUE.getSplitter() + cookieMap.get(key))
                 .collect(Collectors.joining("; "));
     }
+
+    public void setCookie(String key, String value) {
+        cookieMap.put(key, value);
+    }
 }
