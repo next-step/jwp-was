@@ -5,88 +5,87 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 class CookieTest {
 
-    @DisplayName("쿠키를 생성한다.")
+    @DisplayName("쿠키의 값을 생성한다.")
     @ParameterizedTest
     @ValueSource(strings = {
             "a=1",
-            "a=1; aa=2",
-            "a=asdasd; sadf=34g3; dfsgdfgd=g34342",
+            "asadfsad=100",
+            "a=asdasd",
+            "fdsgfds=32rf32",
+            "sadas= ",
+            "a=1",
     })
     void create(final String rawCookie) {
         // when
         final Cookie cookie = Cookie.of(rawCookie);
 
-        // thenco
+        // then
         assertThat(cookie).isNotNull();
     }
 
-    @DisplayName("빈값의 쿠키를 생성하면 빈값이다.")
+    @DisplayName("쿠키의 값을 생성 시 올바르지 않으면 예외처리한다.")
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {
+            "aasd",
+            "aa:sd",
+            "aa;sd",
+            ":",
             " "
     })
-    void empty(final String rawCookie) {
-        // when
+    void throwInvalidCookieException(final String rawCookie) {
+        // when / then
+        assertThatExceptionOfType(InvalidCookieException.class)
+                .isThrownBy(() -> Cookie.of(rawCookie));
+    }
+
+    @DisplayName("쿠키의 키를 가져온다.")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "a=1",
+            "asadfsad=100",
+            "a=asdasd",
+            "fdsgfds=32rf32",
+            "sadas= ",
+            "a=1",
+    })
+    void getKey(final String rawCookie) {
+        // given
         final Cookie cookie = Cookie.of(rawCookie);
 
+        // when
+        final String key = cookie.getKey();
+        final String expected = rawCookie.split(Cookie.SEPARATOR)[0];
+
         // then
-        assertThat(cookie.isEmpty()).isTrue();
+        assertThat(key).isEqualTo(expected);
     }
 
-    @DisplayName("쿠키의 스트링 값을 가져온다.")
+    @DisplayName("쿠키의 값을 가져온다.")
     @ParameterizedTest
     @ValueSource(strings = {
-            "a",
-            "b",
-            "c"
+            "a=1",
+            "asadfsad=100",
+            "a=asdasd",
+            "fdsgfds=32rf32",
+            "sadas= ",
+            "a=1",
     })
-    void getString(final String key) {
+    void getValue(final String rawCookie) {
         // given
-        final Cookie cookie = Cookie.of("a=a; b=b; c=c");
+        final Cookie cookie = Cookie.of(rawCookie);
 
         // when
-        final String value = cookie.getString(key);
+        final String value = cookie.getValue();
+        final String expected = rawCookie.split(Cookie.SEPARATOR)[1];
 
         // then
-        assertThat(value).isEqualTo(key);
-    }
-
-    @DisplayName("쿠키의 Boolean 값을 가져온다.")
-    @ParameterizedTest
-    @ValueSource(booleans = {true, false})
-    void getBoolean(final boolean aBoolean) {
-        // given
-        final String key = "test";
-        final Cookie cookie = Cookie.of(key + "=" + aBoolean);
-
-        // when
-        final boolean value = cookie.getBoolean(key);
-
-        // then
-        assertThat(value).isEqualTo(aBoolean);
-    }
-
-    @DisplayName("쿠키의 값이 없으면 null을 반환한다.")
-    @ParameterizedTest
-    @ValueSource(strings = {
-            "a",
-            "b",
-            "c"
-    })
-    void notFound(final String key) {
-        // given
-        final Cookie cookie = Cookie.of("a=a; b=b; c=c");
-        final String padding = "!!";
-
-        // when
-        final String value = cookie.getString(key + padding);
-
-        // then
-        assertThat(value).isNull();
+        assertThat(value).isEqualTo(expected);
     }
 }
+

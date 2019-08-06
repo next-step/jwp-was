@@ -2,31 +2,35 @@ package webserver.http.request;
 
 import utils.IOUtils;
 import utils.StringUtils;
-import webserver.http.HeaderKey;
-import webserver.http.RequestMethod;
-import webserver.http.cookie.Cookie;
+import webserver.http.HeaderName;
+import webserver.http.HttpMethod;
+import webserver.http.cookie.Cookies;
 import webserver.http.header.HttpHeaders;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static java.lang.System.lineSeparator;
+import static webserver.http.HttpMethod.POST;
 
 public class HttpRequest implements Request {
 
+    private static final String BLANK = "";
+
     private final RequestLine requestLine;
     private final HttpHeaders httpHeaders;
-    private final String body;
+    private final RequestQuery requestQuery;
 
     private HttpRequest(final RequestLine requestLine,
                         final HttpHeaders httpHeaders,
-                        final String body) {
+                        final RequestQuery requestQuery) {
         this.requestLine = requestLine;
         this.httpHeaders = httpHeaders;
-        this.body = body;
+        this.requestQuery = requestQuery;
     }
 
     public static HttpRequest of(final InputStream in) throws IOException {
@@ -34,9 +38,14 @@ public class HttpRequest implements Request {
 
         final RequestLine requestLine = RequestLine.parse(requestReader.readLine());
         final HttpHeaders httpHeaders = readHeaders(requestReader);
-        final String body = readBody(requestReader, httpHeaders.getContentLength());
+        final RequestQuery requestQuery = requestLine.getParameters();
 
-        return new HttpRequest(requestLine, httpHeaders, body);
+        if (requestLine.matchMethod(POST)) {
+            final String body = readBody(requestReader, httpHeaders.getContentLength());
+            requestQuery.join(RequestQuery.of(body));
+        }
+
+        return new HttpRequest(requestLine, httpHeaders, requestQuery);
     }
 
     @Override
@@ -51,32 +60,27 @@ public class HttpRequest implements Request {
 
     @Override
     public String getParameter(final String key) {
-        return requestLine.getParameter(key);
+        return requestQuery.getString(key);
     }
 
     @Override
-    public boolean matchMethod(final RequestMethod method) {
+    public boolean matchMethod(final HttpMethod method) {
         return requestLine.matchMethod(method);
     }
 
     @Override
-    public String getHeader(final String key) {
-        return httpHeaders.getString(key);
+    public Optional<String> getHeader(final String key) {
+        return Optional.ofNullable(httpHeaders.getString(key));
     }
 
     @Override
-    public String getHeader(final HeaderKey key) {
+    public Optional<String> getHeader(final HeaderName key) {
         return getHeader(key.toString());
     }
 
     @Override
-    public String getBody() {
-        return body;
-    }
-
-    @Override
-    public Cookie getCookie() {
-        return Cookie.of(getHeader("Cookie"));
+    public Cookies getCookies() {
+        return Cookies.of(getHeader("Cookie").orElse(BLANK));
     }
 
     private static HttpHeaders readHeaders(final BufferedReader requestReader) throws IOException {
@@ -102,7 +106,7 @@ public class HttpRequest implements Request {
         return "HttpRequest{" +
                 "requestLine=" + requestLine +
                 ", httpHeaders=" + httpHeaders +
-                ", body='" + body + '\'' +
+                ", requestQuery=" + requestQuery +
                 '}';
     }
 }

@@ -1,17 +1,18 @@
 package webserver.http.request;
 
-import webserver.http.HeaderKey;
-import webserver.http.RequestMethod;
-import webserver.http.cookie.Cookie;
+import webserver.http.HeaderName;
+import webserver.http.HttpMethod;
+import webserver.http.cookie.Cookies;
+
+import java.util.Optional;
 
 public interface Request {
 
     String getPath();
     boolean matchPath(final String regex);
     String getParameter(final String key);
-    boolean matchMethod(final RequestMethod method);
-    String getHeader(final String key);
-    String getHeader(final HeaderKey key);
-    String getBody();
-    Cookie getCookie();
+    boolean matchMethod(final HttpMethod method);
+    Optional<String> getHeader(final String key);
+    Optional<String> getHeader(final HeaderName key);
+    Cookies getCookies();
 }

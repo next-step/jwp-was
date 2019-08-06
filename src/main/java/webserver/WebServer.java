@@ -1,27 +1,32 @@
 package webserver;
 
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.List;
-
-import domain.user.UserListHandlerProvider;
+import domain.user.CreateUserController;
+import domain.user.LoginController;
+import domain.user.UserListController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import domain.user.CreateUserHandlerProvider;
-import domain.user.LoginHandlerProvider;
 import view.HandlebarsCompiler;
-import webserver.handler.PatternMatchHandlerProvider;
-import webserver.handler.ResourceHandler;
-import webserver.handler.HandlerProvider;
+import webserver.controller.ControllerMapper;
+import webserver.controller.ControllerProvider;
+import webserver.controller.ResourceController;
+
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import static webserver.controller.SecureController.secure;
 
 public class WebServer {
 
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
 
+    private static final Executor threadPool = Executors.newFixedThreadPool(100);
+
     public static void main(final String... args) throws Exception {
         final int port = getPort(args);
-        final List<HandlerProvider> handlerProviders = getHandlerProviders();
+        final ControllerProvider controllerProviders = getHandlerProvider();
 
         // 서버소켓을 생성한다. 웹서버는 기본적으로 8080번 포트를 사용한다.
         try (final ServerSocket listenSocket = new ServerSocket(port)) {
@@ -30,28 +35,24 @@ public class WebServer {
             // 클라이언트가 연결될때까지 대기한다.
             while (true) {
                 final Socket connection = listenSocket.accept();
-                final Runnable requestHandler = new RequestHandler(connection, handlerProviders);
-                final Thread thread = new Thread(requestHandler);
+                final Runnable requestHandler = new RequestHandler(connection, controllerProviders);
 
-                thread.start();
+                threadPool.execute(requestHandler);
             }
         }
     }
 
-    // TODO: 추후 RequestMapping / DI 전환될 로직들
-    private static List<HandlerProvider> getHandlerProviders() {
-        final HandlerProvider templatesResourceProvider = new PatternMatchHandlerProvider("(.)*.html$",
-                new ResourceHandler("templates"));
-        final HandlerProvider staticResourceProvider = new PatternMatchHandlerProvider(
-                "(.)*.(css|fonts|images|js)$", new ResourceHandler("static"));
+    private static ControllerProvider getHandlerProvider() {
+        final ControllerMapper handlerMapper = new ControllerMapper();
 
-        return List.of(
-                templatesResourceProvider,
-                staticResourceProvider,
-                new CreateUserHandlerProvider(),
-                new LoginHandlerProvider(),
-                new UserListHandlerProvider(HandlebarsCompiler.of("/templates", ".html"))
-        );
+        handlerMapper.register("^\\/(css|fonts|images|js)\\/(.)*", new ResourceController("static"));
+        handlerMapper.register("(.)*.html$", new ResourceController("templates"));
+        handlerMapper.register(CreateUserController.PATH, new CreateUserController());
+        handlerMapper.register(LoginController.PATH, new LoginController());
+        handlerMapper.register(UserListController.PATH,
+                secure(new UserListController(HandlebarsCompiler.of("/templates", ".html"))));
+
+        return handlerMapper;
     }
 
     private static int getPort(final String... args) {

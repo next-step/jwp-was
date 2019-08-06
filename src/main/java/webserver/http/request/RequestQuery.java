@@ -3,15 +3,13 @@ package webserver.http.request;
 import utils.StringUtils;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toMap;
 
 public class RequestQuery {
-
-    static final RequestQuery EMPTY = new RequestQuery(Collections.emptyMap());
 
     private static final String SEPARATOR = "&";
 
@@ -23,7 +21,7 @@ public class RequestQuery {
 
     public static RequestQuery of(final String rawRequestQuery) {
         if (StringUtils.isBlank(rawRequestQuery)) {
-            return EMPTY;
+            return empty();
         }
 
         return Arrays.stream(rawRequestQuery.split(SEPARATOR))
@@ -32,8 +30,20 @@ public class RequestQuery {
                         RequestQuery::new));
     }
 
+    public static RequestQuery empty() {
+        return new RequestQuery(new HashMap<>());
+    }
+
     public String getString(final String key) {
         return requestQuery.get(key);
+    }
+
+    public boolean isEmpty() {
+        return requestQuery.isEmpty();
+    }
+
+    void join(final RequestQuery other) {
+        requestQuery.putAll(other.requestQuery);
     }
 
     @Override

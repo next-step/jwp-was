@@ -1,7 +1,7 @@
 package webserver.http.header;
 
 import utils.StringUtils;
-import webserver.http.HeaderKey;
+import webserver.http.HeaderName;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,22 +44,22 @@ public class HttpHeaders {
         headers.put(key, value);
     }
 
-    public void add(final HeaderKey key,
+    public void add(final HeaderName key,
                     final String value) {
         add(key.toString(), value);
     }
 
-    public void add(final HeaderKey key,
+    public void add(final HeaderName key,
                     final int value) {
         add(key, String.valueOf(value));
     }
 
     public void setLocation(final String redirectPath) {
-        add(HeaderKey.LOCATION, redirectPath);
+        add(HeaderName.LOCATION, redirectPath);
     }
 
     public void setContentLength(final int contentLength) {
-        add(HeaderKey.CONTENT_LENGTH, contentLength);
+        add(HeaderName.CONTENT_LENGTH, contentLength);
     }
 
     public String getString(final String key) {
@@ -70,7 +70,7 @@ public class HttpHeaders {
         return Integer.parseInt(getString(key));
     }
 
-    public int getInt(final HeaderKey key,
+    public int getInt(final HeaderName key,
                       final int defaultValue) {
         try {
             return getInt(key.toString());
@@ -80,7 +80,7 @@ public class HttpHeaders {
     }
 
     public int getContentLength() {
-        return getInt(HeaderKey.CONTENT_LENGTH, DEFAULT_CONTENT_LENGTH);
+        return getInt(HeaderName.CONTENT_LENGTH, DEFAULT_CONTENT_LENGTH);
     }
 
     public boolean isEmpty() {

@@ -1,6 +1,7 @@
 package webserver.http.response;
 
-import webserver.http.HeaderKey;
+import utils.FileIoUtils;
+import webserver.http.HeaderName;
 import webserver.http.HttpStatus;
 import webserver.http.header.HttpHeader;
 import webserver.http.header.HttpHeaders;
@@ -26,15 +27,15 @@ public class HttpResponse implements Response {
     }
 
     @Override
-    public void addHeader(final String key,
+    public void addHeader(final HeaderName key,
                           final String value) {
-        headers.add(key, value);
+        addHeader(key.toString(), value);
     }
 
     @Override
-    public void addHeader(final HeaderKey key,
+    public void addHeader(final String key,
                           final String value) {
-        addHeader(key.toString(), value);
+        headers.add(key, value);
     }
 
     @Override
@@ -56,7 +57,14 @@ public class HttpResponse implements Response {
     }
 
     @Override
-    public void redirect(final String redirectPath) {
+    public void forward(final String forwardPath,
+                        final String contentType) throws Exception {
+        addHeader(HeaderName.CONTENT_TYPE, contentType);
+        ok(FileIoUtils.loadFileFromClasspath(forwardPath));
+    }
+
+    @Override
+    public void sendRedirect(final String redirectPath) {
         responseLine = ResponseLine.of(HttpStatus.FOUND);
         headers.setLocation(redirectPath);
     }

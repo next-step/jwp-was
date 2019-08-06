@@ -1,6 +1,6 @@
 package webserver.http;
 
-public enum HeaderKey {
+public enum HeaderName {
 
     ACCEPT("Accept"),
     CONTENT_TYPE("Content-Type"),
@@ -8,14 +8,14 @@ public enum HeaderKey {
     LOCATION("Location")
     ;
 
-    private final String headerKey;
+    private final String headerName;
 
-    HeaderKey(final String headerKey) {
-        this.headerKey = headerKey;
+    HeaderName(final String headerName) {
+        this.headerName = headerName;
     }
 
     @Override
     public String toString() {
-        return headerKey;
+        return headerName;
     }
 }
