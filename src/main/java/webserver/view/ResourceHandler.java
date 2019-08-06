@@ -11,7 +11,7 @@ import java.net.URISyntaxException;
 public class ResourceHandler extends AbstractRequestMappingHandler {
 
     @Override
-    public void process(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+    public void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
         String path = request.getRequestUriPath();
 
         String resourcePath = ResourceLoader.getResourcePath(path);

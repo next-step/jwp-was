@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RequestLineTest {
 
@@ -12,7 +13,7 @@ public class RequestLineTest {
     void parse_request_type_get() {
         RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
+        assertTrue(requestLine.isGet());
         assertThat(requestLine.getRequestUriPath()).isEqualTo("/users");
         assertThat(requestLine.getVersion()).isEqualTo("HTTP/1.1");
     }
@@ -22,7 +23,7 @@ public class RequestLineTest {
     void parse_request_type_post() {
         RequestLine requestLine = RequestLine.parse("POST /users HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
+        assertTrue(requestLine.isPost());
         assertThat(requestLine.getRequestUriPath()).isEqualTo("/users");
         assertThat(requestLine.getVersion()).isEqualTo("HTTP/1.1");
     }

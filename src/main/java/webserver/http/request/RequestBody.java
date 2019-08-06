@@ -12,7 +12,7 @@ public class RequestBody {
         return new RequestBody(QueryParameter.parse(value));
     }
 
-    public String getValue(String key) {
+    public String getParameter(String key) {
         return queryParameter.getParameter(key);
     }
 }

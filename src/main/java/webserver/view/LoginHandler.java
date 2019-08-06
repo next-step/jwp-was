@@ -4,23 +4,24 @@ import db.DataBase;
 import model.User;
 import webserver.AbstractRequestMappingHandler;
 import webserver.http.request.HttpRequest;
-import webserver.http.request.RequestBody;
 import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
 
+import static webserver.http.HttpHeaders.SET_COOKIE;
+
 public class LoginHandler extends AbstractRequestMappingHandler {
 
     @Override
-    public void process(HttpRequest request, HttpResponse response) throws IOException {
-        RequestBody requestBody = request.getRequestBody();
+    public void doPost(HttpRequest request, HttpResponse response) throws IOException {
+        User user = DataBase.findUserById(request.getRequestBodyParameter("userId"));
 
-        User user = DataBase.findUserById(requestBody.getValue("userId"));
-
-        if (isLoginSuccess(user, requestBody.getValue("password"))) {
-            response.response302Header("/user/login_failed.html", false);
+        if (isLoginSuccess(user, request.getRequestBodyParameter("password"))) {
+            response.addHeader(SET_COOKIE, "logined=false; Path=/");
+            response.response302Header("/user/login_failed.html");
         } else {
-            response.response302Header( "/index.html", true);
+            response.addHeader(SET_COOKIE, "logined=true; Path=/");
+            response.response302Header("/index.html");
         }
     }
 
