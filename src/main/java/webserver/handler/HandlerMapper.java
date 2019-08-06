@@ -15,12 +15,7 @@ public class HandlerMapper implements HandlerProvider {
     public void register(final String path,
                          final RequestMethod requestMethod,
                          final Handler handler) {
-        register(request -> request.matchPath(path) && request.matchMethod(requestMethod), handler);
-    }
-
-    private void register(final Condition condition,
-                          final Handler handler) {
-        handlerMapper.put(condition, handler);
+        handlerMapper.put(createCondition(path, requestMethod), handler);
     }
 
     public Handler provide(final Request request) {
@@ -30,5 +25,10 @@ public class HandlerMapper implements HandlerProvider {
                 .findFirst()
                 .map(Map.Entry::getValue)
                 .orElse(NOT_FOUND);
+    }
+
+    private Condition createCondition(final String path,
+                                      final RequestMethod requestMethod) {
+        return request -> request.matchPath(path) && request.matchMethod(requestMethod);
     }
 }

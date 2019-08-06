@@ -2,41 +2,35 @@ package domain.user;
 
 import db.DataBase;
 import model.User;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.response.HttpResponse;
+import webserver.handler.Handler;
 import webserver.http.request.HttpRequest;
-
-import java.io.ByteArrayInputStream;
-import java.io.OutputStream;
+import webserver.http.response.HttpResponse;
+import webserver.http.response.Response;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static support.FileSupporter.read;
+import static support.FileSupporter.write;
 
 class CreateUserHandlerTest {
 
-    private CreateUserHandler createUserHandler;
+    private static final Handler createUserHandler = new CreateUserHandler();
 
-    @BeforeEach
-    void setUp() {
-        createUserHandler = new CreateUserHandler();
-    }
-
+    @DisplayName("유저 생성에 성공한다.")
     @Test
-    void createUser() throws Exception {
-        // given
-        final HttpRequest request = HttpRequest.of(new ByteArrayInputStream(("POST /user/create HTTP/1.1 \r\n" +
-                "Content-Length: 77\r\n\r\n" +
-                "userId=jaeyeonling&password=password&name=jaeyeon&email=jaeyeonling@gmail.com").getBytes()));
-
+    void createUserSuccess() throws Exception {
         // when
-        createUserHandler.handle(request, HttpResponse.of(new OutputStream() {
-            @Override
-            public void write(int ignore) { }
-        }));
-
+        createUser();
         final User user = DataBase.findUserById("jaeyeonling");
 
         // then
         assertThat(user.getUserId()).isEqualTo("jaeyeonling");
+    }
+
+    public static void createUser() throws Exception {
+        try (final Response response = HttpResponse.of(write("CreateUser_Response.txt"))) {
+            createUserHandler.handle(HttpRequest.of(read("CreateUser_Request.txt")), response);
+        }
     }
 }

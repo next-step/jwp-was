@@ -25,7 +25,7 @@ public class LoginHandler implements Handler {
 
     private Handler failHandler() {
         return (request, response) -> {
-            response.addHeader("Cookie", "logined=false");
+            response.addHeader("Set-Cookie", "logined=false; Path=/");
             response.redirect("/user/login_failed.html");
         };
     }
