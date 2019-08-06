@@ -10,6 +10,8 @@ import webserver.request.Cookie;
 import java.io.IOException;
 
 import static servlet.UserLoginServlet.COOKIE_OF_LOGIN;
+import static webserver.response.ResponseFactory.ok;
+import static webserver.response.ResponseFactory.redirect;
 
 public class UserListServlet implements HttpServlet {
 
@@ -26,9 +28,9 @@ public class UserListServlet implements HttpServlet {
 
         boolean checkLogin = Boolean.valueOf(cookie.get(COOKIE_OF_LOGIN));
         if (!checkLogin) {
-            return Response.redirect("/user/login.html");
+            return redirect("/user/login.html");
         }
 
-        return Response.ok(viewResolver.resolve("user/list", DataBase.findAll()));
+        return ok(viewResolver.resolve("user/list", DataBase.findAll()));
     }
 }

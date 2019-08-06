@@ -6,6 +6,8 @@ import webserver.HttpServlet;
 import webserver.Request;
 import webserver.Response;
 
+import static webserver.response.ResponseFactory.redirect;
+
 public class UserLoginServlet implements HttpServlet {
 
     static final String COOKIE_OF_LOGIN = "logined";
@@ -28,13 +30,13 @@ public class UserLoginServlet implements HttpServlet {
     }
 
     private Response loginSuccess() {
-        Response response = Response.redirect("/index.html");
+        Response response = redirect("/index.html");
         response.setCookie(COOKIE_OF_LOGIN + "=true; Path=/");
         return response;
     }
 
     private Response loginFail() {
-        Response response = Response.redirect("/user/login_failed.html");
+        Response response = redirect("/user/login_failed.html");
         response.setCookie(COOKIE_OF_LOGIN + "=false; Path=/");
         return response;
     }

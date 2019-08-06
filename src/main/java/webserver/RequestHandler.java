@@ -2,13 +2,15 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import servlet.*;
+import webserver.request.HttpRequest;
+import webserver.response.ResponseFactory;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
+
+import static webserver.response.ResponseFactory.internalServerError;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -27,12 +29,13 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            Request request = Request.of(in);
+            Request request = HttpRequest.newInstance(in);
+
             logger.info("IN request: {}", request);
 
             servletContext.mapping(request)
                     .map(serve(request))
-                    .orElseGet(Response::notFound)
+                    .orElseGet(ResponseFactory::notFound)
                     .send(out);
 
         } catch (Exception e) {
@@ -46,7 +49,7 @@ public class RequestHandler implements Runnable {
                 return servlet.service(request);
             } catch (Exception e) {
                 logger.error("servlet error", e);
-                return Response.internalServerError();
+                return internalServerError();
             }
         };
     }

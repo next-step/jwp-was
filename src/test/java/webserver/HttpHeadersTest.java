@@ -8,15 +8,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.HttpHeaders.Parameter;
-import webserver.request.Cookie;
-import webserver.request.RequestBody;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static webserver.HttpHeaders.SET_COOKIE;
+import static webserver.response.HeaderProperty.SET_COOKIE;
 
 class HttpHeadersTest {
 
@@ -53,7 +48,7 @@ class HttpHeadersTest {
         httpHeaders.setCookie(valueOfCookie);
 
         // when
-        String result = httpHeaders.get(SET_COOKIE);
+        String result = httpHeaders.get(SET_COOKIE.getHeaderName());
 
         // then
         assertThat(result).isEqualTo(valueOfCookie);

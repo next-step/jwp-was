@@ -10,6 +10,8 @@ import webserver.Response;
 import java.util.Arrays;
 import java.util.List;
 
+import static webserver.response.ResponseFactory.ok;
+
 public class StaticResourceServlet implements HttpServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(StaticResourceServlet.class);
@@ -29,6 +31,6 @@ public class StaticResourceServlet implements HttpServlet {
         String contentType = request.getAccept();
 
         byte[] body = FileIoUtils.loadFileFromClasspath(STATIC_PATH + request.getPath());
-        return Response.ok(body, contentType);
+        return ok(body, contentType);
     }
 }

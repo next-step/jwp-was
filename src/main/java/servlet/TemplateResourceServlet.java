@@ -1,9 +1,10 @@
 package servlet;
 
 import utils.FileIoUtils;
+import webserver.HttpServlet;
 import webserver.Request;
 import webserver.Response;
-import webserver.HttpServlet;
+import webserver.response.ResponseFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +24,7 @@ public class TemplateResourceServlet implements HttpServlet {
     @Override
     public Response service(Request request) throws Exception {
         byte[] body = FileIoUtils.loadFileFromClasspath(TEMPLATES_PATH + request.getPath());
-        return Response.ok(body);
+        return ResponseFactory.ok(body);
     }
 
     private String getSuffix(Request request) {

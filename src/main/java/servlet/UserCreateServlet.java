@@ -2,9 +2,11 @@ package servlet;
 
 import db.DataBase;
 import model.User;
+import webserver.HttpServlet;
 import webserver.Request;
 import webserver.Response;
-import webserver.HttpServlet;
+
+import static webserver.response.ResponseFactory.redirect;
 
 public class UserCreateServlet implements HttpServlet {
 
@@ -23,6 +25,6 @@ public class UserCreateServlet implements HttpServlet {
         String email = request.getParameter("email");
         DataBase.addUser(new User(userId, password, name, email));
 
-        return Response.redirect("/index.html");
+        return redirect("/index.html");
     }
 }

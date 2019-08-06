@@ -5,16 +5,14 @@ import model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.Request;
-import webserver.RequestTest;
+import webserver.request.RequestTest;
 import webserver.Response;
-import webserver.request.Cookie;
+import webserver.response.HeaderProperty;
 
 import java.io.IOException;
 
-import static com.google.common.net.HttpHeaders.SET_COOKIE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static servlet.UserLoginServlet.COOKIE_OF_LOGIN;
-import static webserver.HttpStatus.REDIRECT;
+import static webserver.response.HttpStatus.REDIRECT;
 
 class UserLoginServletTest {
 
@@ -24,10 +22,10 @@ class UserLoginServletTest {
     @Test
     void isMapping_success() throws IOException {
         // given
-        Request request = RequestTest.requestOfLogin();
+        Request httpRequest = RequestTest.requestOfLogin();
 
         // when
-        boolean mappingResult = userLoginServlet.isMapping(request);
+        boolean mappingResult = userLoginServlet.isMapping(httpRequest);
 
         // then
         assertThat(mappingResult).isTrue();
@@ -54,7 +52,7 @@ class UserLoginServletTest {
     @Test
     void service_fail() throws IOException {
         // given
-        String userId = "javajigi";
+        String userId = "noUser";
         Request request = RequestTest.requestOfLogin();
 
         // when
@@ -70,7 +68,7 @@ class UserLoginServletTest {
     }
 
     private Boolean getCheckedLogin(Response response) {
-        String cookieOfLogin = response.getHeaderOf(SET_COOKIE);
+        String cookieOfLogin = response.getHeader(HeaderProperty.SET_COOKIE);
 
         String checkedLogin = cookieOfLogin.split(";")[0]
                                        .split("=")[1];

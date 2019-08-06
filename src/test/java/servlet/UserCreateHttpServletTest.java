@@ -3,15 +3,14 @@ package servlet;
 import db.DataBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.HttpStatus;
 import webserver.Request;
-import webserver.RequestTest;
 import webserver.Response;
+import webserver.request.RequestTest;
 
 import java.io.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static webserver.HttpStatus.REDIRECT;
+import static webserver.response.HttpStatus.REDIRECT;
 
 class UserCreateHttpServletTest {
 
@@ -21,10 +20,10 @@ class UserCreateHttpServletTest {
     @Test
     void isMapping_success() throws IOException {
         // given
-        Request request = RequestTest.requestOfCreateUser();
+        Request httpRequest = RequestTest.requestOfCreateUser();
 
         // when
-        boolean mappingResult = userCreateServlet.isMapping(request);
+        boolean mappingResult = userCreateServlet.isMapping(httpRequest);
 
         // then
         assertThat(mappingResult).isTrue();
@@ -35,10 +34,10 @@ class UserCreateHttpServletTest {
     void service_success() throws IOException {
         // given
         String userId = "javajigi";
-        Request request = RequestTest.requestOfCreateUser();
+        Request httpRequest = RequestTest.requestOfCreateUser();
 
         // when
-        Response service = userCreateServlet.service(request);
+        Response service = userCreateServlet.service(httpRequest);
 
         // then
         assertThat(service.getStatus()).isEqualTo(REDIRECT);

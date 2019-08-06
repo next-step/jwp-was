@@ -3,14 +3,14 @@ package servlet;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.Request;
-import webserver.RequestTest;
+import webserver.request.RequestTest;
 import webserver.Response;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static webserver.HttpStatus.REDIRECT;
-import static webserver.HttpStatus.SUCCESS;
+import static webserver.response.HttpStatus.REDIRECT;
+import static webserver.response.HttpStatus.SUCCESS;
 
 class UserListServletTest {
 
@@ -20,10 +20,10 @@ class UserListServletTest {
     @Test
     void isMapping_success() throws IOException {
         // given
-        Request request = RequestTest.requestOfList();
+        Request httpRequest = RequestTest.requestOfList();
 
         // when
-        boolean mappingResult = userListServlet.isMapping(request);
+        boolean mappingResult = userListServlet.isMapping(httpRequest);
 
         // then
         assertThat(mappingResult).isTrue();
@@ -33,11 +33,10 @@ class UserListServletTest {
     @Test
     void service_success() throws IOException {
         // given
-        String userId = "javajigi";
-        Request request = RequestTest.requestOfList();
+        Request httpRequest = RequestTest.requestOfList();
 
         // when
-        Response service = userListServlet.service(request);
+        Response service = userListServlet.service(httpRequest);
 
         // thene
         assertThat(service.getStatus()).isEqualTo(SUCCESS);
@@ -47,11 +46,10 @@ class UserListServletTest {
     @Test
     void service_fail() throws IOException {
         // given
-        String userId = "javajigi";
-        Request request = RequestTest.requestOfList_notLogin();
+        Request httpRequest = RequestTest.requestOfList_notLogin();
 
         // when
-        Response service = userListServlet.service(request);
+        Response service = userListServlet.service(httpRequest);
 
         // then
         assertThat(service.getStatus()).isEqualTo(REDIRECT);

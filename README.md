@@ -21,7 +21,7 @@
 - [x] 회원가입 (action: /user/create, method: post)
 - [x] 회원가입 성공 시 메인 페이지로 이동
     * redirect
-    - [x] response status 302
+    - [x] httpResponse status 302
     - [x] header Location (index.html) 
 
 * `로그인` /user/login.html        
@@ -37,14 +37,14 @@
 
 ---
 ### Step3 웹 서버 리팩토링
-#### WAS 기능 요구사항
-다수의 사용자 요청에 대해 Queue 에 저장한 후 순차적으로 처리가 가능하도록 해야 한다.     
-서버가 모든 요청에 대해 Thread를 매번 생성하는 경우 성능상 문제가 발생할 수 있다. Thread Pool을 적용해 일정 수의 사용자 동시에 처리가 가능하도록 한다.   
-
+* WAS 기능 요구사항
 - [x] Thread pool 구현
+ 
+* HTTP 요청/응답 처리 기능
+- [x] Http Request Header/Body 분리
+- [x] Http Response Header/Body 분리
+- [x] HttpHeaderProperty 분리
 
-- [ ] Http Request Header/Body 분리
-- [ ] Http Response Header/Body 분리
 
    
 
