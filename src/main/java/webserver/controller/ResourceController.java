@@ -18,8 +18,9 @@ public class ResourceController extends AbstractController {
     @Override
     protected void doGet(final Request request,
                          final Response response) throws Exception {
-        final String accept = request.getHeader(HeaderName.ACCEPT);
-        final String contentType = accept.split(COMMA)[INDEX_OF_FIRST];
+        final String contentType = request.getHeader(HeaderName.ACCEPT)
+                .map(accept -> accept.split(COMMA)[INDEX_OF_FIRST])
+                .orElse("*/*");
 
         response.forward(prefix + request.getPath(), contentType);
     }

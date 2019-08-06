@@ -25,7 +25,7 @@ public class RequestURL {
 
         final int separatorIndex = parseSeparatorIndex(rawRequestURL);
         if (separatorIndex == SEPARATOR_NOT_FOUND_INDEX) {
-            return new RequestURL(RequestPath.of(rawRequestURL), RequestQuery.EMPTY);
+            return new RequestURL(RequestPath.of(rawRequestURL), RequestQuery.empty());
         }
 
         final RequestPath requestPath = parseRequestPath(rawRequestURL, separatorIndex);

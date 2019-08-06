@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public class LoginController extends AbstractController {
 
+    public static final String PATH = "/user/login";
+
     @Override
     protected void doPost(final Request request,
                           final Response response) {

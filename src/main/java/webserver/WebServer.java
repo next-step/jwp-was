@@ -47,9 +47,9 @@ public class WebServer {
 
         handlerMapper.register("^\\/(css|fonts|images|js)\\/(.)*", new ResourceController("static"));
         handlerMapper.register("(.)*.html$", new ResourceController("templates"));
-        handlerMapper.register("/user/create", new CreateUserController());
-        handlerMapper.register("/user/login", new LoginController());
-        handlerMapper.register("/user/list",
+        handlerMapper.register(CreateUserController.PATH, new CreateUserController());
+        handlerMapper.register(LoginController.PATH, new LoginController());
+        handlerMapper.register(UserListController.PATH,
                 secure(new UserListController(HandlebarsCompiler.of("/templates", ".html"))));
 
         return handlerMapper;

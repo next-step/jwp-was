@@ -8,6 +8,8 @@ import webserver.http.response.Response;
 
 public class CreateUserController extends AbstractController {
 
+    public static final String PATH = "/user/create";
+
     @Override
     protected void doPost(final Request request,
                           final Response response) {

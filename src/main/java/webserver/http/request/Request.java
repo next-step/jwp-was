@@ -4,14 +4,15 @@ import webserver.http.HeaderName;
 import webserver.http.HttpMethod;
 import webserver.http.cookie.Cookies;
 
+import java.util.Optional;
+
 public interface Request {
 
-    HttpMethod getMethod();
     String getPath();
     boolean matchPath(final String regex);
     String getParameter(final String key);
     boolean matchMethod(final HttpMethod method);
-    String getHeader(final String key);
-    String getHeader(final HeaderName key);
+    Optional<String> getHeader(final String key);
+    Optional<String> getHeader(final HeaderName key);
     Cookies getCookies();
 }

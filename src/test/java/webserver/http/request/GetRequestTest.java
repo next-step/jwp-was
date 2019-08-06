@@ -39,34 +39,34 @@ class GetRequestTest {
         assertThat(value).isEqualTo(null);
     }
 
-    @DisplayName("경로를 가져온다.")
+    @DisplayName("경로 매칭을 확인한다.")
     @Test
-    void getPath() {
+    void matchPath() {
         // when
-        final String path = request.getPath();
+        final boolean isMatch = request.matchPath("/get-test");
 
         // then
-        assertThat(path).isEqualTo("/get-test");
+        assertThat(isMatch).isTrue();
     }
 
     @DisplayName("헤더를 가져온다.")
     @Test
     void getHeader() {
         // when
-        final String value = request.getHeader("HEADER_KEY");
+        final String value = request.getHeader("HEADER_KEY").get();
 
         // then
         assertThat(value).isEqualTo("HEADER_VALUE");
     }
 
-    @DisplayName("헤더가 없으면 null을 반환한다.")
+    @DisplayName("헤더가 없다.")
     @Test
-    void getHeaderNull() {
+    void getHeaderEmpty() {
         // when
-        final String value = request.getHeader("sdfasdfdasf");
+        final boolean notExists = request.getHeader("sdfasdfdasf").isEmpty();
 
         // then
-        assertThat(value).isEqualTo(null);
+        assertThat(notExists).isTrue();
     }
 
     @DisplayName("파라미터를 가져온다.")

@@ -4,7 +4,6 @@ import webserver.http.request.Request;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 public class ControllerMapper implements ControllerProvider {
 
@@ -20,13 +19,9 @@ public class ControllerMapper implements ControllerProvider {
     public Controller provide(final Request request) {
         return pathOfController.entrySet()
                 .stream()
-                .filter(matchPath(request))
+                .filter(entry -> request.matchPath(entry.getKey()))
                 .findFirst()
                 .map(Map.Entry::getValue)
                 .orElse(NOT_FOUND);
-    }
-
-    private Predicate<Map.Entry<String, Controller>> matchPath(final Request request) {
-        return entry -> entry.getKey().matches(request.getPath());
     }
 }

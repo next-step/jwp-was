@@ -53,20 +53,20 @@ class PostRequestTest {
     @Test
     void getHeader() {
         // when
-        final String value = request.getHeader("HEADER_KEY");
+        final String value = request.getHeader("HEADER_KEY").get();
 
         // then
         assertThat(value).isEqualTo("HEADER_VALUE");
     }
 
-    @DisplayName("헤더가 없으면 null을 반환한다.")
+    @DisplayName("헤더가 없다.")
     @Test
     void getHeaderNull() {
         // when
-        final String value = request.getHeader("sdfasdfdasf");
+        final boolean notExists = request.getHeader("sdfasdfdasf").isEmpty();
 
         // then
-        assertThat(value).isEqualTo(null);
+        assertThat(notExists).isTrue();
     }
 
     @DisplayName("바디를 가져온다.")

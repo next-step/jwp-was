@@ -8,6 +8,8 @@ import webserver.http.response.Response;
 
 public class UserListController extends AbstractController {
 
+    public static final String PATH = "/user/list";
+
     private final ViewCompiler viewCompiler;
 
     public UserListController(final ViewCompiler viewCompiler) {

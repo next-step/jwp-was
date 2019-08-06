@@ -11,12 +11,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static java.lang.System.lineSeparator;
 import static webserver.http.HttpMethod.POST;
 
 public class HttpRequest implements Request {
+
+    private static final String BLANK = "";
 
     private final RequestLine requestLine;
     private final HttpHeaders httpHeaders;
@@ -46,11 +49,6 @@ public class HttpRequest implements Request {
     }
 
     @Override
-    public HttpMethod getMethod() {
-        return requestLine.getMethod();
-    }
-
-    @Override
     public String getPath() {
         return requestLine.getPath();
     }
@@ -71,18 +69,18 @@ public class HttpRequest implements Request {
     }
 
     @Override
-    public String getHeader(final String key) {
-        return httpHeaders.getString(key);
+    public Optional<String> getHeader(final String key) {
+        return Optional.ofNullable(httpHeaders.getString(key));
     }
 
     @Override
-    public String getHeader(final HeaderName key) {
+    public Optional<String> getHeader(final HeaderName key) {
         return getHeader(key.toString());
     }
 
     @Override
     public Cookies getCookies() {
-        return Cookies.of(getHeader("Cookie"));
+        return Cookies.of(getHeader("Cookie").orElse(BLANK));
     }
 
     private static HttpHeaders readHeaders(final BufferedReader requestReader) throws IOException {

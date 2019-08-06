@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import webserver.http.request.RequestQuery;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,7 +20,7 @@ class RequestQueryTest {
         final RequestQuery requestQuery = RequestQuery.of(rawRequestQuery);
 
         // then
-        assertThat(requestQuery).isEqualTo(RequestQuery.EMPTY);
+        assertThat(requestQuery.isEmpty()).isTrue();
     }
 
     @DisplayName("요청 쿼리의 값을 가져온다.")
