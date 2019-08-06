@@ -3,7 +3,9 @@ package http;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -16,7 +18,26 @@ public class HttpResponse {
   private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
   private static final String NON_STATIC_RESOURCE_PATH_PREFIX = "./templates";
   private static final String STATIC_RESOURCE_PATH_PREFIX = "./static";
+  private static final String CSS_CONTENT_TYPE = "Content-Type: text/css;charset=utf-8";
+  private static final String TEXT_CONTENT_TYPE = "Content-Type: text/html;charset=utf-8";
+  private static final String NEW_LINE_SYMBOL = "\r\n";
+  private static final String COOKIES_JOINING_SYMBOL = "; ";
+  private static final String EQUALS_SYMBOL = "=";
+  private static final String SET_COOKIE_KEY = "Set-Cookie: ";
+  private static final String LOGIN_COOKIE_KEY = "logined";
+
   private DataOutputStream dos;
+
+  private static final List<String> STATIC_RESOURCE_EXTENSION = new ArrayList<>();
+
+  static {
+    STATIC_RESOURCE_EXTENSION.add(".css");
+    STATIC_RESOURCE_EXTENSION.add(".js");
+    STATIC_RESOURCE_EXTENSION.add(".eot");
+    STATIC_RESOURCE_EXTENSION.add(".svg");
+    STATIC_RESOURCE_EXTENSION.add(".woff");
+    STATIC_RESOURCE_EXTENSION.add(".ttf");
+  }
 
   private Map<String, String> cookies = new HashMap<>();
 
@@ -28,28 +49,31 @@ public class HttpResponse {
     cookies.put(cookieName, cookieValue);
   }
 
+  private static boolean isStaticResource(String path) {
+    if (path == null) {
+      return false;
+    }
+    return STATIC_RESOURCE_EXTENSION.stream()
+        .filter(extension -> path.contains(extension))
+        .findAny()
+        .isPresent();
+  }
+
   private void setCookies() {
     if (cookies.isEmpty()) {
       return;
     }
     StringBuffer cookiesString = new StringBuffer();
-    cookiesString.append("Set-Cookie: ");
+    cookiesString.append(SET_COOKIE_KEY);
     cookiesString.append(this.cookies.keySet().stream()
-        .map(key -> key + "=" + cookies.get(key))
-        .collect(Collectors.joining("; ")));
+        .map(key -> key + EQUALS_SYMBOL + cookies.get(key))
+        .collect(Collectors.joining(COOKIES_JOINING_SYMBOL)));
+
     try {
       dos.writeBytes(cookiesString.toString() + ";\r\n");
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
-
-  private static boolean isStaticResource(String path) {
-    if (path == null) {
-      return false;
-    }
-    return path.contains(".css") || path.contains(".js") || path.contains(".eot") || path
-        .contains(".svg") || path.contains(".woff") || path.contains(".ttf");
   }
 
   private void response200Header(int lengthOfBodyContent, boolean isStaticResource) {
@@ -86,9 +110,9 @@ public class HttpResponse {
 
   private String getContentType(boolean isStaticResource) {
     if (isStaticResource) {
-      return "Content-Type: text/css;charset=utf-8\r\n";
+      return CSS_CONTENT_TYPE + NEW_LINE_SYMBOL;
     }
-    return "Content-Type: text/html;charset=utf-8\r\n";
+    return TEXT_CONTENT_TYPE + NEW_LINE_SYMBOL;
   }
 
   private String urlConvert(String url) {
@@ -119,5 +143,9 @@ public class HttpResponse {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public void addLoginCookie() {
+    addCookie(LOGIN_COOKIE_KEY, "true");
   }
 }

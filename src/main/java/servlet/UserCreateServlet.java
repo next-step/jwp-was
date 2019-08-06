@@ -6,24 +6,10 @@ import http.HttpResponse;
 import http.Parameters;
 import model.User;
 
-public class UserCreateServlet implements HttpServlet {
+public class UserCreateServlet extends AbstractHttpServlet {
 
   @Override
-  public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
-    if (httpRequest.isPost()) {
-      doPost(httpRequest, httpResponse);
-      return;
-    }
-    doGet(httpRequest, httpResponse);
-  }
-
-  @Override
-  public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-
-  }
-
-  @Override
-  public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+  public void action(HttpRequest httpRequest, HttpResponse httpResponse) {
     User user = createUser(httpRequest.getParameters());
     System.out.println(user.toString());
     DataBase.addUser(user);

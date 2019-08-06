@@ -3,18 +3,10 @@ package servlet;
 import http.HttpRequest;
 import http.HttpResponse;
 
-public class DefaultServlet implements HttpServlet {
+public class DefaultServlet extends AbstractHttpServlet {
 
   @Override
-  public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
+  public void action(HttpRequest httpRequest, HttpResponse httpResponse) {
     httpResponse.forward(httpRequest.getPath());
-  }
-
-  @Override
-  public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-  }
-
-  @Override
-  public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
   }
 }

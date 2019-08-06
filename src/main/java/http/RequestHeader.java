@@ -14,6 +14,9 @@ public class RequestHeader {
 
   private static final int ATTRIBUTE_KEY_INDEX = 0;
   private static final int ATTRIBUTE_VALUE_INDEX = 1;
+  private static final int DEFAULTS_CONTENT_LENGTH = 0;
+  private static final int COOKIE_KEY_INDEX = 0;
+  private static final int COOKIE_VALUE_INDEX = 1;
   private static final String ATTRIBUTE_DELIMITER = ": ";
   private static final String COOKIES_DELIMITER = "; ";
   private static final String HOST_KEY = "Host";
@@ -25,6 +28,9 @@ public class RequestHeader {
   private static final String ACCEPT_LANGUAGE_KEY = "Accept-Language";
   private static final String CONTENT_LENGTH_KEY = "Content-Length";
   private static final String COOKIE_KEY = "Cookie";
+  private static final String EQUALS_SYMBOL = "=";
+  private static final String LOGIN_COOKIE_KEY = "logined";
+
 
 
   private String host;
@@ -58,7 +64,7 @@ public class RequestHeader {
         attributes.get(USER_AGENT_KEY), attributes.get(ACCEPT_KEY), attributes.get(REFERER_KEY),
         attributes.get(ACCEPT_ENCODING_KEY), attributes.get(ACCEPT_LANGUAGE_KEY),
         attributes.get(CONTENT_LENGTH_KEY) != null ? Integer
-            .parseInt(attributes.get(CONTENT_LENGTH_KEY)) : 0
+            .parseInt(attributes.get(CONTENT_LENGTH_KEY)) : DEFAULTS_CONTENT_LENGTH
         , cookieParse(attributes));
   }
 
@@ -68,8 +74,8 @@ public class RequestHeader {
       return Collections.EMPTY_MAP;
     }
     return Arrays.stream(cookies.split(COOKIES_DELIMITER))
-        .map(cookie -> cookie.split("="))
-        .collect(toMap(cookie -> cookie[0], cookie -> cookie[1]));
+        .map(cookie -> cookie.split(EQUALS_SYMBOL))
+        .collect(toMap(cookie -> cookie[COOKIE_KEY_INDEX], cookie -> cookie[COOKIE_VALUE_INDEX]));
   }
 
   private static Map<String, String> parseAttributes(BufferedReader request) throws IOException {
@@ -79,7 +85,6 @@ public class RequestHeader {
       if ("".equals(line)) {
         break;
       }
-      System.out.println("line " + line);
       attributes.put(line.split(ATTRIBUTE_DELIMITER)[ATTRIBUTE_KEY_INDEX],
           line.split(ATTRIBUTE_DELIMITER)[ATTRIBUTE_VALUE_INDEX]);
     }
@@ -123,7 +128,7 @@ public class RequestHeader {
   }
 
   public boolean isLogin() {
-    String logined = cookies.get("logined");
+    String logined = cookies.get(LOGIN_COOKIE_KEY);
     return logined != null && "true".equals(logined);
   }
 

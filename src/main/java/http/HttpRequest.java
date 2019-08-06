@@ -16,7 +16,7 @@ public class HttpRequest {
   public Parameters getParameters() {
     return parameters;
   }
-  
+
   public RequestLine getRequestLine() {
     return requestLine;
   }

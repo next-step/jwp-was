@@ -19,6 +19,7 @@ public class HttpRequestTest {
   void getParsing() throws IOException {
     StringBuffer queryString = new StringBuffer();
     queryString.append("GET /users?userId=javajigi&password=password&name=JaeSung&noValue= HTTP/1.1\n");
+
     StringBuffer header = new StringBuffer();
     header.append("Host: localhost:8080\n");
     header.append("Connection: keep-alive\n");
@@ -39,4 +40,34 @@ public class HttpRequestTest {
     assertThat(httpRequest.getRequestLine()).isEqualTo(RequestLine.parse("GET /users?userId=javajigi&password=password&name=JaeSung&noValue= HTTP/1.1\n"));
     assertThat(httpRequest.getRequestHeader()).isEqualTo(requestHeader);
   }
+
+  @Test
+  @DisplayName("post 방식 요청 파싱")
+  void postParsing() throws IOException {
+    StringBuffer queryString = new StringBuffer();
+    queryString.append("POST /user/create HTTP/1.1");
+
+    StringBuffer header = new StringBuffer();
+    header.append("Host: localhost:8080\n");
+    header.append("Connection: keep-alive\n");
+    header.append("Content-Length: 59\n");
+    header.append("Content-Type: application/x-www-form-urlencoded\n");
+    header.append("Accept: */*\n");
+    header.append("\n");
+
+    String requestBody = "userId=javajigi&password=password&name=jaesung&email=javajigi@slipp.net";
+
+    BufferedReader headerStream = new BufferedReader(new StringReader(header.toString()));
+
+    RequestLine requestLine = RequestLine.parse(queryString.toString());
+    RequestHeader requestHeader = RequestHeader.parse(headerStream);
+    HttpRequest httpRequest = new HttpRequest(requestLine, requestHeader, requestBody);
+
+    assertThat(httpRequest.getParameters()).isEqualTo(Parameters
+        .parse("userId=javajigi&password=password&name=jaesung&email=javajigi@slipp.net"));
+    assertThat(httpRequest.getRequestLine())
+        .isEqualTo(RequestLine.parse("POST /user/create HTTP/1.1"));
+    assertThat(httpRequest.getRequestHeader()).isEqualTo(requestHeader);
+  }
+
 }
