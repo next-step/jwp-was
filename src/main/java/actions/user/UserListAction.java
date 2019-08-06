@@ -30,7 +30,7 @@ public class UserListAction implements ActionHandler {
     }
 
     private boolean isLogin(HttpRequest httpRequest) {
-        return !StringUtils.nvl(httpRequest.getHeader(HttpHeaders.COOKIE)).contains("logined=true");
+        return StringUtils.nvl(httpRequest.getHeader(HttpHeaders.COOKIE)).contains("logined=true");
     }
 
     private void getUserList(HttpRequest httpRequest, HttpResponse httpResponse) {
@@ -40,8 +40,6 @@ public class UserListAction implements ActionHandler {
         ModelView modelView = httpRequest.getModelView();
         modelView.setView("user/list");
         modelView.addObject("users", users);
-        
-        
     }
 
 }

@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public class UserLoginAction implements ActionHandler {
 
-    private static final String LOGIN_FAIL_REDIRECT_URL = "/user/login_failed.htm";
-    private static final String LOGIN_SUCCESS_REDIRECT_URL = "/index.htm";
+    private static final String LOGIN_FAIL_REDIRECT_URL = "/user/login_failed.html";
+    private static final String LOGIN_SUCCESS_REDIRECT_URL = "/index.html";
     private static final String LOGIN_FAIL_COOKIE = "logined=false; Path=/";
     private static final String LOGIN_SUCCESS_COOKIE = "logined=true; Path=/";
 
