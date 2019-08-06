@@ -49,6 +49,10 @@ public class HttpResponse {
         this.httpHeaders.setHeader(name, value);
     }
 
+    public HttpHeaders getHttpHeaders(){
+        return this.httpHeaders;
+    }
+    
     public List<String> getHttpHeaderLines(){
         return this.httpHeaders.getHeaderLines();
     }
