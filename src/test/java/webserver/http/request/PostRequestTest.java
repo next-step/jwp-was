@@ -69,14 +69,24 @@ class PostRequestTest {
         assertThat(value).isEqualTo(null);
     }
 
-    @DisplayName("파라미터를 가져온다.")
+    @DisplayName("바디를 가져온다.")
     @Test
-    void getParameter() {
+    void getBody() {
         // when
         final String value = request.getParameter("bodyKey");
 
         // then
         assertThat(value).isEqualTo("bodyValue");
+    }
+
+    @DisplayName("파라미터를 가져온다.")
+    @Test
+    void getParameter() {
+        // when
+        final String value = request.getParameter("queryKey");
+
+        // then
+        assertThat(value).isEqualTo("queryValue");
     }
 
     @DisplayName("파라미터가 없으면 null을 반환한다.")

@@ -36,6 +36,10 @@ public class RequestQuery {
         return requestQuery.get(key);
     }
 
+    void join(final RequestQuery other) {
+        requestQuery.putAll(other.requestQuery);
+    }
+
     @Override
     public String toString() {
         return "RequestQuery{" +

@@ -30,23 +30,19 @@ public class HttpRequest implements Request {
         this.requestQuery = requestQuery;
     }
 
-    private HttpRequest(final RequestLine requestLine,
-                        final HttpHeaders httpHeaders) {
-        this(requestLine, httpHeaders, requestLine.getParameters());
-    }
-
     public static HttpRequest of(final InputStream in) throws IOException {
         final BufferedReader requestReader = new BufferedReader(new InputStreamReader(in));
 
         final RequestLine requestLine = RequestLine.parse(requestReader.readLine());
         final HttpHeaders httpHeaders = readHeaders(requestReader);
+        final RequestQuery requestQuery = requestLine.getParameters();
 
         if (requestLine.matchMethod(POST)) {
             final String body = readBody(requestReader, httpHeaders.getContentLength());
-            return new HttpRequest(requestLine, httpHeaders, RequestQuery.of(body));
+            requestQuery.join(RequestQuery.of(body));
         }
 
-        return new HttpRequest(requestLine, httpHeaders);
+        return new HttpRequest(requestLine, httpHeaders, requestQuery);
     }
 
     @Override
