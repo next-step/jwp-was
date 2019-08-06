@@ -11,14 +11,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-public class Router {
+/**
+ * 기본 라우터
+ */
+public class WebServerRouter {
+    protected static final Map<String, BiFunction<HttpRequest, HttpResponse, Optional<String>>> routerMap = new HashMap<>();
     private static final String ROUTING_KEY_FORMAT = "%s%s";
-    private static final Map<String, BiFunction<HttpRequest, HttpResponse, Optional<String>>> routerMap = new HashMap<>();
-    static {
-        routerMap.put(HttpMethod.POST + "/user/create", UserController::createUser);
-        routerMap.put(HttpMethod.POST + "/user/login", UserController::login);
-        routerMap.put(HttpMethod.GET + "/user/list", UserController::list);
-    }
 
     public static Optional<String> route(HttpRequest httpRequest, HttpResponse httpResponse) {
         String routeKey = String.format(ROUTING_KEY_FORMAT, httpRequest.getMethod(), httpRequest.getUri().getPath());
@@ -27,5 +25,9 @@ public class Router {
                 .map(routerMap::get)
                 .findAny().orElse(ErrorController::notFound)
                 .apply(httpRequest, httpResponse);
+    }
+
+    public static void add(String path, BiFunction<HttpRequest, HttpResponse, Optional<String>> controllerFunction) {
+        routerMap.put(path, controllerFunction);
     }
 }

@@ -71,6 +71,6 @@ public class RequestHandler implements Runnable {
     }
 
     private String getViewName(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return Router.route(httpRequest, httpResponse).orElse(StringUtils.EMPTY);
+        return WebServerRouter.route(httpRequest, httpResponse).orElse(StringUtils.EMPTY);
     }
 }

@@ -16,7 +16,7 @@ public class ViewResolver {
     private static final String ERROR_TEMPLATES_PREFIX = "error";
 
     public static String mapping(HttpRequest request, HttpResponse response) throws IOException {
-        String path = Router.route(request, response).orElse(StringUtils.EMPTY);
+        String path = WebServerRouter.route(request, response).orElse(StringUtils.EMPTY);
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix(TEMPLATE_FILE_PREFIX);
         loader.setSuffix(HTML_FILE_SUFFIX);

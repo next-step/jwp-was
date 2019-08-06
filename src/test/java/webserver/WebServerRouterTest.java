@@ -11,7 +11,7 @@ import java.io.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RouterTest {
+public class WebServerRouterTest {
     private String CREATE_USER_URL = "/user/create";
     private String LOGIN_URL = "/user/login";
 
@@ -24,7 +24,7 @@ public class RouterTest {
         HttpResponse httpResponse = new HttpResponse();
         User user = new User("javajigi", "password", "박재성", "javajigi@slipp.net");
 
-        assertThat(Router.route(httpRequest, httpResponse).orElse("")).isEqualTo(user.toString());
+        assertThat(WebServerRouter.route(httpRequest, httpResponse).orElse("")).isEqualTo(user.toString());
     }
 
     @Test
@@ -35,7 +35,7 @@ public class RouterTest {
         HttpResponse httpResponse = new HttpResponse();
 
 
-        assertThat(Router.route(httpRequest, httpResponse).orElse("").toString())
+        assertThat(WebServerRouter.route(httpRequest, httpResponse).orElse("").toString())
                 .isEqualTo("redirect:/index.html");
     }
 
@@ -47,7 +47,7 @@ public class RouterTest {
         HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
-        assertThat(Router.route(httpRequest, httpResponse).orElse(""))
+        assertThat(WebServerRouter.route(httpRequest, httpResponse).orElse(""))
                 .isEqualTo("redirect:/index.html");
     }
 
@@ -59,7 +59,7 @@ public class RouterTest {
         HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
-        assertThat(Router.route(httpRequest, httpResponse).orElse(""))
+        assertThat(WebServerRouter.route(httpRequest, httpResponse).orElse(""))
                 .isEqualTo("redirect:/user/login_failed.html");
     }
 
@@ -69,7 +69,7 @@ public class RouterTest {
         HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
-        Router.route(httpRequest, httpResponse);
+        WebServerRouter.route(httpRequest, httpResponse);
     }
 
     private InputStream makeLoginSuccessBufferedReader() {
