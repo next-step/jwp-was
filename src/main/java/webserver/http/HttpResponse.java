@@ -10,13 +10,13 @@ public class HttpResponse {
     private byte[] body;
     private Cookie cookie;
     private HttpHeaders httpHeaders;
-    private Model model;
+    private ModelAndView model;
     private HttpStatus httpStatus;
     private String redirectPath;
 
     public HttpResponse() {
         this.cookie = new Cookie();
-        this.model = new Model();
+        this.model = new ModelAndView();
         this.httpStatus = HttpStatus.OK;
         this.httpHeaders = new HttpHeaders();
     }
@@ -24,7 +24,7 @@ public class HttpResponse {
     public HttpResponse(HttpStatus httpStatus, byte[] body) {
         this.body = body;
         this.cookie = new Cookie();
-        this.model = new Model();
+        this.model = new ModelAndView();
         this.httpStatus = httpStatus;
         this.httpHeaders = new HttpHeaders();
     }
@@ -41,7 +41,7 @@ public class HttpResponse {
         this.body = body;
     }
 
-    public Model getModel() {
+    public ModelAndView getModelAndView() {
         return model;
     }
 

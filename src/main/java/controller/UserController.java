@@ -5,7 +5,7 @@ import db.DataBase;
 import model.User;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
-import webserver.http.Model;
+import webserver.http.ModelAndView;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -48,8 +48,8 @@ public class UserController {
             return Optional.of("redirect:/user/login.html");
         }
 
-        Model model = httpResponse.getModel();
-        model.set("users", DataBase.findAll());
+        ModelAndView model = httpResponse.getModelAndView();
+        model.setAttribute("users", DataBase.findAll());
         return Optional.of("/user/list");
     }
 }

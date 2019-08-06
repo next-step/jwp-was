@@ -3,10 +3,7 @@ package webserver;
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.HttpRequest;
-import webserver.http.HttpResponse;
-import webserver.http.HttpStatus;
-import webserver.http.RequestStream;
+import webserver.http.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -49,13 +46,15 @@ public class RequestHandler implements Runnable {
     }
 
     private HttpResponse getViewMappingResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
+        ModelAndView modelAndView = httpResponse.getModelAndView();
         String viewName = getViewName(httpRequest, httpResponse);
+        modelAndView.setView(viewName);
         if (viewName.startsWith(REDIRECT_START_WITH)) {
             return getRedirectHttpResponse(httpRequest, httpResponse, viewName);
         }
 
         try {
-            httpResponse.setBody(ViewResolver.mapping(httpRequest, httpResponse).getBytes());
+            httpResponse.setBody(ViewResolver.mapping(modelAndView).getBytes());
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
