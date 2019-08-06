@@ -1,14 +1,15 @@
-package servlet;
+package controller;
 
 import db.DataBase;
 import model.User;
-import webserver.HttpServlet;
+import webserver.Controller;
 import webserver.Request;
 import webserver.Response;
 
+import javax.swing.*;
 import java.io.IOException;
 
-public class UserLoginServlet implements HttpServlet {
+public class UserLoginController extends AbstractController {
 
     static final String COOKIE_OF_LOGIN = "logined";
 
@@ -19,7 +20,12 @@ public class UserLoginServlet implements HttpServlet {
     }
 
     @Override
-    public void service(Request request, Response response) throws Exception {
+    void doGet(Request request, Response response) throws Exception {
+        response.notFound();
+    }
+
+    @Override
+    void doPost(Request request, Response response) throws Exception {
         String userId = request.getParameter("userId");
         String password = request.getParameter("password");
         User userById = DataBase.findUserById(userId);

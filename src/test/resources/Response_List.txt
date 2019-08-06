@@ -1,5 +1,5 @@
 HTTP/1.1 200 OK
-Content-Length: 4872
+Content-Length: 4870
 Content-Type: text/html;charset=utf-8
 
 <!DOCTYPE html>
@@ -100,8 +100,8 @@ Content-Type: text/html;charset=utf-8
                 <tr>
                     <th scope="row">0</th>
                     <td>javajigi</td>
-                    <td>%EB%B0%95%EC%9E%AC%E</td>
-                    <td></td>
+                    <td>java</td>
+                    <td>java@email.com</td>
                     <td><a href="#" class="btn btn-success" role="button">수정</a></td>
                 </tr>
                 

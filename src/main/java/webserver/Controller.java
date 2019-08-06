@@ -1,7 +1,7 @@
 package webserver;
 
 @FunctionalInterface
-public interface HttpServlet {
+public interface Controller {
 
     void service(Request request, Response response) throws Exception;
 }

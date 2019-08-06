@@ -1,26 +1,27 @@
 package webserver;
 
-import servlet.*;
+import controller.*;
 
 import java.util.*;
 
 public class ServletContext {
 
-    private static Map<Condition, HttpServlet> httpServletMap = new HashMap<>();
+    private static Map<Condition, Controller> controllers = new HashMap<>();
+    private static Controller NOT_FOUND = (ignore, response) -> response.notFound();
 
     static {
-        httpServletMap.put(UserCreateServlet::isMapping, new UserCreateServlet());
-        httpServletMap.put(UserListServlet::isMapping, new UserListServlet());
-        httpServletMap.put(UserLoginServlet::isMapping, new UserLoginServlet());
-        httpServletMap.put(StaticResourceServlet::isMapping, new StaticResourceServlet());
-        httpServletMap.put(TemplateResourceServlet::isMapping, new TemplateResourceServlet());
+        controllers.put(UserCreateController::isMapping, new UserCreateController());
+        controllers.put(UserListController::isMapping, new UserListController());
+        controllers.put(UserLoginController::isMapping, new UserLoginController());
+        controllers.put(StaticResourceController::isMapping, new StaticResourceController());
+        controllers.put(TemplateResourceController::isMapping, new TemplateResourceController());
     }
 
-    HttpServlet mapping(Request request) {
-        return httpServletMap.entrySet().stream()
+    Controller mapping(Request request) {
+        return controllers.entrySet().stream()
                 .filter(it -> it.getKey().isMapping(request))
                 .map(Map.Entry::getValue)
                 .findFirst()
-                .orElse((ignore, response) -> response.notFound());
+                .orElse(NOT_FOUND);
     }
 }

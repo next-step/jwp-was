@@ -1,14 +1,13 @@
-package servlet;
+package controller;
 
 import utils.FileIoUtils;
-import webserver.HttpServlet;
 import webserver.Request;
 import webserver.Response;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class TemplateResourceServlet implements HttpServlet {
+public class TemplateResourceController extends AbstractController {
 
     private static final String TEMPLATES_PATH = "./templates";
     private static final List<String> templateResources = Arrays.asList("html", "ico");
@@ -20,9 +19,14 @@ public class TemplateResourceServlet implements HttpServlet {
     }
 
     @Override
-    public void service(Request request, Response response) throws Exception {
+    void doGet(Request request, Response response) throws Exception {
         byte[] body = FileIoUtils.loadFileFromClasspath(TEMPLATES_PATH + request.getPath());
         response.ok(body);
+    }
+
+    @Override
+    void doPost(Request request, Response response) throws Exception {
+        response.notFound();
     }
 
     private static String getSuffix(Request request) {

@@ -14,8 +14,7 @@ public class HttpResponse implements Response {
 
     private static final String CRLF = "\r\n";
 
-    private OutputStream out;
-    private HttpStatus httpStatus = HttpStatus.NOT_FOUND;
+    private final OutputStream out;
     private HttpHeaders httpHeaders = new HttpHeaders();
     private byte[] responseBody = {};
 
@@ -27,18 +26,6 @@ public class HttpResponse implements Response {
         httpHeaders.setCookie(value);
     }
 
-    void setContentType(String contentType) {
-        httpHeaders.setContentType(contentType);
-    }
-
-    void setLocation(String location) {
-        httpHeaders.setLocation(location);
-    }
-
-    void setContentLength(int contentLength) {
-        httpHeaders.setContentLength(contentLength);
-    }
-
     @Override
     public void ok(byte[] responseBody) throws IOException {
         ok(responseBody, TEXT_HTML_CHARSET_UTF_8);
@@ -47,31 +34,28 @@ public class HttpResponse implements Response {
     @Override
     public void ok(byte[] responseBody, String contentType) throws IOException {
         this.responseBody = responseBody;
-        httpStatus = HttpStatus.SUCCESS;
-        setContentLength(this.responseBody.length);
-        setContentType(contentType);
-        send();
+        httpHeaders.setContentLength(this.responseBody.length);
+        httpHeaders.setContentType(contentType);
+        send(HttpStatus.SUCCESS);
     }
 
     @Override
     public void notFound() throws IOException {
-        send();
+        send(HttpStatus.NOT_FOUND);
     }
 
     @Override
     public void internalServerError() throws IOException {
-        httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        send();
+        send(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
     public void redirect(String location) throws IOException {
-        httpStatus = HttpStatus.REDIRECT;
-        setLocation(location);
-        send();
+        httpHeaders.setLocation(location);
+        send(HttpStatus.REDIRECT);
     }
 
-    private void send() throws IOException {
+    private void send(HttpStatus httpStatus) throws IOException {
         DataOutputStream dos = new DataOutputStream(out);
         dos.writeBytes(httpStatus.getStatusLine().concat(CRLF));
         writeHeaders(dos);

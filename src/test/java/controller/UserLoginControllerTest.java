@@ -1,4 +1,4 @@
-package servlet;
+package controller;
 
 import db.DataBase;
 import model.User;
@@ -11,12 +11,12 @@ import webserver.request.RequestTest;
 import java.io.IOException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static servlet.UserCreateHttpServletTest.createResponse;
+import static controller.UserCreateControllerTest.createResponse;
 
-class UserLoginServletTest {
+class UserLoginControllerTest {
 
     private Request request;
-    private final UserLoginServlet userLoginServlet = new UserLoginServlet();
+    private final UserLoginController userLoginController = new UserLoginController();
 
     @BeforeEach
     void setUp() throws IOException {
@@ -27,7 +27,7 @@ class UserLoginServletTest {
     @Test
     void isMapping_success() {
         // when
-        boolean mappingResult = userLoginServlet.isMapping(request);
+        boolean mappingResult = userLoginController.isMapping(request);
 
         // then
         assertThat(mappingResult).isTrue();
@@ -40,7 +40,7 @@ class UserLoginServletTest {
         DataBase.addUser( new User("javajigi", "password", "java", "java@email.com"));
 
         // when
-        userLoginServlet.service(request, createResponse("Response_Login_Success.txt"));
+        userLoginController.service(request, createResponse("Response_Login_Success.txt"));
     }
 
     @DisplayName("로그인 실패")
@@ -49,6 +49,6 @@ class UserLoginServletTest {
         DataBase.deleteAll();
 
         // when
-        userLoginServlet.service(request, createResponse("Response_Login_Fail.txt"));
+        userLoginController.service(request, createResponse("Response_Login_Fail.txt"));
     }
 }

@@ -1,4 +1,4 @@
-package servlet;
+package controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,10 +12,10 @@ import java.io.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class UserCreateHttpServletTest {
+class UserCreateControllerTest {
 
     private Request request;
-    private final UserCreateServlet userCreateServlet = new UserCreateServlet();
+    private final UserCreateController userCreateController = new UserCreateController();
 
     private static final String FILE_PATH_OF_RESPONSE = "./src/test/resources/";
 
@@ -28,7 +28,7 @@ class UserCreateHttpServletTest {
     @Test
     void isMapping_success() {
         // when
-        boolean mappingResult = userCreateServlet.isMapping(request);
+        boolean mappingResult = userCreateController.isMapping(request);
 
         // then
         assertThat(mappingResult).isTrue();
@@ -36,9 +36,9 @@ class UserCreateHttpServletTest {
 
     @DisplayName("회원가입에 성공 후 main 페이지로 이동")
     @Test
-    void service_success() throws IOException {
+    void service_success() throws Exception {
         // when
-        userCreateServlet.service(request, createResponse("Response_CreateUser.txt"));
+        userCreateController.service(request, createResponse("Response_CreateUser.txt"));
     }
 
     static Response createResponse(String fileName) throws FileNotFoundException {
