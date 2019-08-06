@@ -1,13 +1,13 @@
 package webserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
@@ -15,6 +15,7 @@ public class WebServer {
 
     public static void main(String args[]) throws Exception {
         ExecutorService executorService = Executors.newFixedThreadPool(10);
+
 
         int port;
         if (args == null || args.length == 0) {
@@ -34,7 +35,7 @@ public class WebServer {
                     executorService.shutdown();
                     executorService.awaitTermination(100, TimeUnit.SECONDS);
                 }
-                executorService.execute(new RequestHandler(connection));
+                executorService.execute(new RequestHandler(connection, ServletContextImpl.getSessionManager()));
             }
         }
     }

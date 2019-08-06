@@ -13,7 +13,9 @@ import model.User;
 import org.springframework.util.MultiValueMap;
 import request.HttpRequest;
 import response.HttpResponse;
+import session.HttpSession;
 import utils.FileIoUtils;
+import webserver.ServletContextImpl;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -21,6 +23,7 @@ import java.util.Objects;
 
 import static request.HttpMethod.GET;
 import static request.HttpMethod.POST;
+import static session.SessionIdGenerator.SESSION_ID_NAME;
 
 /**
  * Created by youngjae.havi on 2019-08-02
@@ -52,6 +55,11 @@ public class Controller {
         MultiValueMap<String, String> bodyMap = httpRequest.getBodyMap();
         User user = new User(bodyMap.getFirst("userId"), bodyMap.getFirst("password"), bodyMap.getFirst("name"), bodyMap.getFirst("email"));
         DataBase.addUser(user);
+
+        HttpSession session = ServletContextImpl.getSessionManager()
+                .createSession();
+        session.setAttribute("user", user);
+        httpRequest.getCookie().setCookie(SESSION_ID_NAME, session.getId());
         return HttpResponse.redirect(createOutputStream("./templates/index.html"), "http://localhost:8080/index.html");
     }
 

@@ -10,6 +10,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import session.HttpSession;
+import session.SessionManager;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -20,6 +21,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static response.HeaderResponse.KEY_VALUE_SPLITER;
+import static session.SessionIdGenerator.SESSION_ID_NAME;
 
 /**
  * Created by youngjae.havi on 2019-08-02
@@ -160,6 +162,14 @@ public class HttpRequest {
 
     public MultiValueMap<String, String> getBodyMap() {
         return bodyMap;
+    }
+
+    public HttpRequest setIfExistSession(SessionManager sessionManager) {
+        if (cookie.isLogined()) {
+            String sessionId = cookie.get(SESSION_ID_NAME);
+            session = sessionManager.getSession(sessionId);
+        }
+        return this;
     }
 
     @Override

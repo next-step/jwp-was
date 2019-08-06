@@ -8,5 +8,7 @@ package session;
  * Created by youngjae.havi on 2019-08-06
  */
 public interface SessionIdGenerator {
+    String SESSION_ID_NAME = "uuid";
+
     String generateId();
 }
