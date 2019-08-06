@@ -4,6 +4,7 @@ import exception.AlreadyExistsException;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import webserver.http.request.RequestHeaderFields;
 
 import java.util.HashMap;
 import java.util.List;
@@ -83,7 +84,9 @@ public class EntityHeader {
 
     private void setExtensionHeaders(final List<String> httpRequestHeaders) {
         httpRequestHeaders.stream()
-                .filter(header -> !EntityHeaderFields.contains(header))
+                .filter(header -> !GeneralHeaderFields.anyMatch(header))
+                .filter(header -> !RequestHeaderFields.anyMatch(header))
+                .filter(header -> !EntityHeaderFields.anyMatch(header))
                 .forEach(field -> {
                     final String[] splitFields = splitField(field);
                     if (splitFields == null) {

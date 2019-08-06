@@ -1,8 +1,9 @@
 package controller;
 
+import view.ModelAndView;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
 public interface Controller {
-    String get(HttpRequest request, HttpResponse response);
+    ModelAndView get(HttpRequest request, HttpResponse response);
 }

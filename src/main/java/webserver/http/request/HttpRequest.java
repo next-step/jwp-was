@@ -3,10 +3,12 @@ package webserver.http.request;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import utils.IOUtils;
-import webserver.http.HttpMethod;
 import webserver.http.EntityHeader;
 import webserver.http.EntityHeaderFields;
 import webserver.http.GeneralHeader;
+import webserver.http.HttpMethod;
+import webserver.http.cookie.Cookie;
+import webserver.http.cookie.SimpleCookie;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -59,6 +61,10 @@ public class HttpRequest {
 
     public HttpMethod httpMethod() {
         return requestLine.getMethod();
+    }
+
+    public Cookie getCookie() {
+        return new SimpleCookie(entityHeader.get(Cookie.COOKIE));
     }
 
     private BufferedReader bufferedReader(InputStream inputStream) {

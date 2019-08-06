@@ -18,4 +18,10 @@ public class FileIoUtils {
         Path path = Paths.get(resource.toURI());
         return Files.readAllBytes(path);
     }
+
+    public static boolean existsFileFromClasspath(String filePath) {
+        URL resource = FileIoUtils.class.getClassLoader().getResource(filePath);
+
+        return resource != null;
+    }
 }

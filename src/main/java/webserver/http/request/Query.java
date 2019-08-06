@@ -2,10 +2,12 @@ package webserver.http.request;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
+@ToString
 public class Query {
 
     private static final String AMPERSAND = "&";

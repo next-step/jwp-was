@@ -7,40 +7,39 @@ import utils.FileIoUtils;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class ResourceView implements View {
+public class StaticView implements View {
 
-    private final static String DEFAULT_VIEW_PREFIX = "templates";
-    private final static String DEFAULT_VIEW_SUFFIX = ".html";
+    private final static String STATIC_VIEW_PREFIX = "static";
+    private final static String TEMPLATES_VIEW_PREFIX = "templates";
 
     @Getter
     private String path;
 
     private byte[] responseBody;
 
-    public ResourceView(final String path) throws IOException, URISyntaxException {
+    public StaticView(String path) throws IOException, URISyntaxException {
         setPath(path);
         setResponseBody();
     }
 
     private void setPath(final String path) {
         String convertedPath = path;
-        if (StringUtils.isBlank(path) || StringUtils.equals(path, SLASH)) {
-            convertedPath = SLASH + DEFAULT_FILE_PATH;
-        }
 
         if (!StringUtils.startsWith(convertedPath, SLASH)) {
             convertedPath = SLASH + convertedPath;
-        }
-
-        if (!StringUtils.endsWith(convertedPath, DEFAULT_VIEW_SUFFIX)) {
-            convertedPath = convertedPath + DEFAULT_VIEW_SUFFIX;
         }
 
         this.path = convertedPath;
     }
 
     private void setResponseBody() throws IOException, URISyntaxException {
-        this.responseBody = FileIoUtils.loadFileFromClasspath(DEFAULT_VIEW_PREFIX + this.path);
+        final String staticFilePath = STATIC_VIEW_PREFIX + this.path;
+        if (FileIoUtils.existsFileFromClasspath(staticFilePath)) {
+            this.responseBody = FileIoUtils.loadFileFromClasspath(staticFilePath);
+            return;
+        }
+
+        this.responseBody = FileIoUtils.loadFileFromClasspath(TEMPLATES_VIEW_PREFIX + this.path);
     }
 
     @Override

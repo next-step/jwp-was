@@ -26,7 +26,12 @@ public enum GeneralHeaderFields {
 
     public static boolean contains(final String name) {
         return Arrays.stream(values())
-                .anyMatch(field -> StringUtils.startsWith(name, field.getName()));
+                .anyMatch(field -> StringUtils.contains(name, field.getName()));
+    }
+
+    public static boolean anyMatch(final String name) {
+        return Arrays.stream(values())
+                .anyMatch(field -> StringUtils.equals(name, field.getName()));
     }
 
     public static GeneralHeaderFields valueOfName(final String name) {
