@@ -2,8 +2,7 @@ package webserver.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.domain.HttpParseVO;
-import webserver.domain.HttpStatus;
+import webserver.converter.HttpConverter;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,34 +12,34 @@ import java.util.Optional;
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
-    public void sendResponse(DataOutputStream dos, HttpParseVO httpParseVO){
+    public void sendResponse(DataOutputStream dos, HttpRequest httpRequest){
         try {
-            byte[] returnContent = Optional.ofNullable(httpParseVO.getReturnContent())
+            byte[] returnContent = Optional.ofNullable(httpRequest.getReturnContent())
                     .orElse("").getBytes();
 
-            dos.writeBytes(httpParseVO.getVersion() +
-                    HttpRequest.SEPARATOR +
-                    httpParseVO.getResultCode() +
-                    HttpRequest.SEPARATOR +
-                    HttpStatus.getHttpStatusMessage(httpParseVO.getResultCode()) +
-                    HttpRequest.SEPARATOR +
-                    HttpRequest.QUERY_NEW_LINE
+            dos.writeBytes(httpRequest.getVersion() +
+                    HttpConverter.SEPARATOR +
+                    httpRequest.getResultCode() +
+                    HttpConverter.SEPARATOR +
+                    HttpStatus.getHttpStatusMessage(httpRequest.getResultCode()) +
+                    HttpConverter.SEPARATOR +
+                    HttpConverter.QUERY_NEW_LINE
             );
 
-            if(httpParseVO.getUrlPath().indexOf(HttpRequest.CSS_FILE_NAMING) != -1){
+            if(isCssFile(httpRequest)){
                 dos.writeBytes("Accept: text/css,*/*;q=0.1\r\n");
                 dos.writeBytes("Connection: keep-alive\r\n");
             }else{
-                dos.writeBytes("Content-Type: text/html;charset=utf-8" + HttpRequest.QUERY_NEW_LINE);
+                dos.writeBytes("Content-Type: text/html;charset=utf-8" + HttpConverter.QUERY_NEW_LINE);
                 dos.writeBytes("Content-Length: " + returnContent.length + "\r\n");
             }
 
-            if(httpParseVO.getResultCode() == HttpStatus.REDIRECT.getHttpStatusCode()){
-                dos.writeBytes("Location: " + httpParseVO.getLocation() + "\r\n");
+            if(httpRequest.getResultCode() == HttpStatus.REDIRECT.getHttpStatusCode()){
+                dos.writeBytes("Location: " + httpRequest.getLocation() + "\r\n");
             }
 
-            if(httpParseVO.getCookie() != null){
-                dos.writeBytes("Set-Cookie: " + httpParseVO.getCookie() + "\r\n");
+            if(httpRequest.getCookie() != null){
+                dos.writeBytes("Set-Cookie: " + httpRequest.getCookie() + "\r\n");
             }
 
             dos.writeBytes("\r\n");
@@ -51,5 +50,23 @@ public class HttpResponse {
         }
     }
 
+    public static void setRedirect(HttpRequest httpRequest, String location){
+        httpRequest.setResultCode(HttpStatus.REDIRECT.getHttpStatusCode());
+        httpRequest.setReturnContent(HttpStatus.REDIRECT.getHttpStatusMessage());
+        httpRequest.setLocation(location);
+    }
 
+    public static void setPageNotFond(HttpRequest httpRequest){
+        httpRequest.setResultCode(HttpStatus.NOT_FOUND.getHttpStatusCode());
+        httpRequest.setReturnContent(HttpStatus.NOT_FOUND.getHttpStatusMessage());
+    }
+
+    public static void setPageError(HttpRequest httpRequest){
+        httpRequest.setResultCode(HttpStatus.SERVER_ERROR.getHttpStatusCode());
+        httpRequest.setReturnContent(HttpStatus.SERVER_ERROR.getHttpStatusMessage());
+    }
+
+    public boolean isCssFile(HttpRequest httpRequest){
+        return (httpRequest.getUrlPath().indexOf(HttpConverter.CSS_FILE_NAMING) != -1) ? true : false;
+    }
 }

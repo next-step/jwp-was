@@ -2,17 +2,20 @@ package webserver.domain;
 
 import java.util.HashMap;
 
-public class HttpParseVO {
+public class HttpEntity {
 
-    private int resultCode = 200;
-    private String method;
-    private String urlPath;
-    private String version;
+    private final HttpHeader httpHeader;
+
     private HashMap<String, String> parameter;
-    private HashMap<String, String> etcHeader;
     private String returnContent;
     private String location;
     private String cookie;
+
+    public HttpEntity() {
+        this.httpHeader = new HttpHeader();
+    }
+
+    public HttpHeader getHttpHeader() { return this.httpHeader; }
 
     public String getCookie() {
         return cookie;
@@ -30,44 +33,12 @@ public class HttpParseVO {
         this.location = location;
     }
 
-    public int getResultCode() {
-        return resultCode;
-    }
-
-    public void setResultCode(int resultCode) {
-        this.resultCode = resultCode;
-    }
-
     public String getReturnContent() {
         return returnContent;
     }
 
     public void setReturnContent(String returnContent) {
         this.returnContent = returnContent;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public String getUrlPath() {
-        return urlPath;
-    }
-
-    public void setUrlPath(String urlPath) {
-        this.urlPath = urlPath;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
     }
 
     public HashMap<String, String> getParameter() {
@@ -78,11 +49,45 @@ public class HttpParseVO {
         this.parameter = parameter;
     }
 
+    public int getResultCode() {
+        return httpHeader.getResultCode();
+    }
+
+    public void setResultCode(int resultCode) {
+        this.httpHeader.setResultCode(resultCode);
+    }
+
+    public String getMethod() {
+        return this.httpHeader.getMethod();
+    }
+
+    public void setMethod(String method) {
+        this.httpHeader.setMethod(method);
+    }
+
+    public String getUrlPath() {
+        return this.httpHeader.getUrlPath();
+    }
+
+    public void setUrlPath(String urlPath) {
+        this.httpHeader.setUrlPath(urlPath);
+    }
+
+    public String getVersion() {
+        return this.httpHeader.getVersion();
+    }
+
+    public void setVersion(String version) {
+        this.httpHeader.setVersion(version);
+    }
+
     public HashMap<String, String> getEtcHeader() {
-        return etcHeader;
+        return this.httpHeader.getEtcHeader();
     }
 
     public void setEtcHeader(HashMap<String, String> etcHeader) {
-        this.etcHeader = etcHeader;
+        this.httpHeader.setEtcHeader(etcHeader);
     }
+
+
 }

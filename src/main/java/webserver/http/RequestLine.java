@@ -1,26 +1,19 @@
 package webserver.http;
 
-import webserver.domain.HttpParseVO;
-
 public class RequestLine {
 
     public HttpRequest httpRequest;
 
-    public RequestLine(String httpStr){
-        httpRequest = new HttpRequest(httpStr);
+    public RequestLine(HttpController httpController, String httpStr){
+        httpRequest = new HttpRequest(httpController, httpStr);
     }
 
-    public static RequestLine parse(String url){
-        return new RequestLine(url);
+    public static RequestLine parse(HttpController httpController, String url){
+        return new RequestLine(httpController, url);
     }
 
-    public HttpParseVO getParseResult(){
-        return httpRequest.getHttpParseVO();
+    public HttpRequest getHttpRequest(){
+        return httpRequest;
     }
-
-    public String getParam(String param) {
-        return httpRequest.getParameterQuery(param);
-    }
-
 
 }

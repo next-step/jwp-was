@@ -1,24 +1,14 @@
 package webserver.http;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.google.gson.Gson;
-import db.DataBase;
-import model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import utils.FileIoUtils;
-import utils.IOUtils;
-import webserver.domain.HttpParseVO;
 
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,9 +22,10 @@ public class RequestLineTest {
     @Test
     @DisplayName("Step0 기본 헤더 파싱")
     void parse(){
-        RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
-        assertThat(requestLine.getParseResult().getMethod()).isEqualTo("GET");
-        assertThat(requestLine.getParseResult().getUrlPath()).isEqualTo("/users");
+        HttpController httpController = new HttpController();
+        RequestLine requestLine = RequestLine.parse(httpController, "GET /users HTTP/1.1");
+        assertThat(requestLine.getHttpRequest().getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getHttpRequest().getUrlPath()).isEqualTo("/users");
     }
 
     @DisplayName("Step1-1 파라미터 파싱 및 null 값 체크")
@@ -43,10 +34,12 @@ public class RequestLineTest {
             "GET /users?userId=javajigi&password=&name=JaeSung HTTP/1.1, "
     })
     void parseParameter(String url, String value){
-        RequestLine requestLine = RequestLine.parse(url);
-        assertThat(requestLine.getParam("userId")).isEqualTo("javajigi");
-        assertThat(requestLine.getParam("password")).isEqualTo(value);
-        assertThat(requestLine.getParam("name")).isEqualTo("JaeSung");
+        HttpController httpController = new HttpController();
+        RequestLine requestLine = RequestLine.parse(httpController, url);
+        HttpRequest httpRequest = requestLine.getHttpRequest();
+        assertThat(httpRequest.getParameter().get("userId")).isEqualTo("javajigi");
+        assertThat(httpRequest.getParameter().get("password")).isEqualTo(value);
+        assertThat(httpRequest.getParameter().get("name")).isEqualTo("JaeSung");
     }
 
     @ParameterizedTest
@@ -56,14 +49,15 @@ public class RequestLineTest {
             "Accept: */*"})
     @DisplayName("Step2 헤더 파싱")
     void parseHeader(String httpFormStr){
-        RequestLine requestLine = RequestLine.parse(httpFormStr);
-        HttpParseVO httpParseVO = requestLine.getParseResult();
-        assertThat(httpParseVO.getMethod()).isEqualTo("GET");
-        assertThat(httpParseVO.getUrlPath()).isEqualTo("/index.html");
-        assertThat(httpParseVO.getVersion()).isEqualTo("HTTP/1.1");
-        assertThat(httpParseVO.getEtcHeader().get("Host")).isEqualTo("localhost:8080");
-        assertThat(httpParseVO.getEtcHeader().get("Connection")).isEqualTo("keep-alive");
-        assertThat(httpParseVO.getEtcHeader().get("Accept")).isEqualTo("*/*");
+        HttpController httpController = new HttpController();
+        RequestLine requestLine = RequestLine.parse(httpController, httpFormStr);
+        HttpRequest httpRequest = requestLine.getHttpRequest();
+        assertThat(httpRequest.getMethod()).isEqualTo("GET");
+        assertThat(httpRequest.getUrlPath()).isEqualTo("/index.html");
+        assertThat(httpRequest.getVersion()).isEqualTo("HTTP/1.1");
+        assertThat(httpRequest.getEtcHeader().get("Host")).isEqualTo("localhost:8080");
+        assertThat(httpRequest.getEtcHeader().get("Connection")).isEqualTo("keep-alive");
+        assertThat(httpRequest.getEtcHeader().get("Accept")).isEqualTo("*/*");
     }
 
     @ParameterizedTest
@@ -73,12 +67,13 @@ public class RequestLineTest {
             "Accept: */*"})
     @DisplayName("Step2 헤더 파싱 및 파일 조회")
     void FileRead(String httpFormStr) throws URISyntaxException, IOException {
-        RequestLine requestLine = RequestLine.parse(httpFormStr);
-        HttpParseVO httpParseVO = requestLine.getParseResult();
+        HttpController httpController = new HttpController();
+        RequestLine requestLine = RequestLine.parse(httpController, httpFormStr);
+        HttpRequest httpRequest = requestLine.getHttpRequest();
 
         byte[] contentByte = FileIoUtils.loadFileFromClasspath("./templates/index.html");
         String content = new String(contentByte);
-        assertThat(httpParseVO.getReturnContent()).isEqualTo(content);
+        assertThat(httpRequest.getReturnContent()).isEqualTo(content);
     }
 
     @ParameterizedTest
@@ -99,32 +94,14 @@ public class RequestLineTest {
     })
     @DisplayName("유저 회원 가입")
     void UserCreate(String httpFormStr){
-        RequestLine requestLine = RequestLine.parse(httpFormStr);
-        HttpParseVO httpParseVO = requestLine.getParseResult();
+        HttpController httpController = new HttpController();
+        RequestLine requestLine = RequestLine.parse(httpController, httpFormStr);
+        HttpRequest httpRequest = requestLine.getHttpRequest();
 
-        assertThat(httpParseVO.getUrlPath()).isEqualTo("/user/create");
-        assertThat(httpParseVO.getResultCode()).isEqualTo("302");
-        assertThat(requestLine.getParam("userId")).isEqualTo("javajigi");
-        assertThat(requestLine.getParam("password")).isEqualTo("password");
+        assertThat(httpRequest.getUrlPath()).isEqualTo("/user/create");
+        assertThat(httpRequest.getResultCode()).isEqualTo("302");
+        assertThat(httpRequest.getParameter().get("userId")).isEqualTo("javajigi");
+        assertThat(httpRequest.getParameter().get("password")).isEqualTo("password");
     }
 
-    @Test
-    @DisplayName("HandleBars 라이브러리 테스트")
-    void TestHandlebars() throws IOException {
-        Handlebars handlebars = new Handlebars();
-        Template template = handlebars.compileInline("Hellow {{this}}!!");
-        assertThat(template.apply("JAVASSSSSS")).isEqualTo("Hellow JAVASSSSSS!!");
-
-        Template objectTemplate = handlebars.compileInline("OBJECT !!  {{userId}},{{name}},{{email}}");
-        User ccc = new User("aaa", "bbb", "ccc", "ddd");
-        System.out.println(objectTemplate.apply(ccc));
-
-        DataBase.addUser(new User("aaa", "bbb", "ccc", "ddd"));
-        DataBase.addUser(new User("111", "222", "333", "444"));
-        List<User> userList = DataBase.findAll().stream().collect(Collectors.toList());
-        Template listTemplate = handlebars.compileInline("TESTSSSS !!!! {{#each}}{{userId}},{{name}},{{email}}{{/each}}");
-
-
-        System.out.println(listTemplate.apply(userList));
-    }
 }
