@@ -31,6 +31,10 @@ public class User {
 
     @Override
     public String toString() {
-        return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
+        return "{ userId:" + userId + ", password:" + password + ", name:" + name + ", email:" + email + "}";
+    }
+
+    public boolean isEqualsPassword(String password) {
+        return password.equals(this.password);
     }
 }
