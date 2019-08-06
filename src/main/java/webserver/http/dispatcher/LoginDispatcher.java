@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.view.View;
 import webserver.view.ViewResolver;
 
 import java.io.IOException;
@@ -24,27 +25,27 @@ public class LoginDispatcher<V extends ViewResolver> extends AbstractDispatcher<
     @Override
     protected void doGet(HttpRequest request, HttpResponse response) {
         try {
-            byte[] view = viewResolver.render(request.getPath());
-            response.writeHeader(request.getAccept(), view.length);
-            response.writeBody(view);
+            View view = viewResolver.render(request.getPath());
+            response.writeHeader(request.getAccept(), view.getLength());
+            response.writeBody(view.getBody());
         } catch (IOException | URISyntaxException e) {
-            logger.error("[PROCESS][HTML] failed. {}", e);
+            logger.error("[PROCESS][LOGIN] failed. {}", e);
         }
     }
 
     @Override
     protected void doPost(HttpRequest request, HttpResponse response) {
-        String userId = request.getBodyRequest("userId");
-        String password = request.getBodyRequest("password");
+        String userId = request.getBodyParameter("userId");
+        String password = request.getBodyParameter("password");
 
         User user = DataBase.findUserById(userId);
 
         try {
             if (user == null || !user.isOwner(password)) {
                 logger.error("[PROCESS][LOGIN] password not match. {}", userId);
-                byte[] view = viewResolver.render("/user/login_failed");
-                response.writeHeader(request.getAccept(), view.length);
-                response.writeBody(view);
+                View view = viewResolver.render("/user/login_failed");
+                response.writeHeader(request.getAccept(), view.getLength());
+                response.writeBody(view.getBody());
             } else {
                 response.redirect("/index", true);
             }

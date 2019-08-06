@@ -19,10 +19,10 @@ public class CreateUserDispatcher extends AbstractDispatcher<HttpRequest, HttpRe
     @Override
     protected void doPost(HttpRequest request, HttpResponse response) {
         try {
-            String userId = request.getBodyRequest("userId");
-            String password = request.getBodyRequest("password");
-            String name = request.getBodyRequest("name");
-            String email = request.getBodyRequest("email");
+            String userId = request.getBodyParameter("userId");
+            String password = request.getBodyParameter("password");
+            String name = request.getBodyParameter("name");
+            String email = request.getBodyParameter("email");
 
             User user = new User(userId, password, name, email);
             DataBase.addUser(user);

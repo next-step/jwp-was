@@ -22,9 +22,9 @@ public class ResourceDispatcher extends AbstractDispatcher<HttpRequest, HttpResp
     @Override
     protected void doGet(HttpRequest request, HttpResponse response) {
         try {
-            byte[] view = resourceResolver.getResource(request.getPath());
-            response.writeHeader(request.getAccept(), view.length);
-            response.writeBody(view);
+            byte[] resource = resourceResolver.getResource(request.getPath());
+            response.writeHeader(request.getAccept(), resource.length);
+            response.writeBody(resource);
         } catch (IOException | URISyntaxException e) {
             logger.error("[PROCESS][RESOURCE] failed. {}", e);
         }

@@ -82,7 +82,7 @@ public class HttpRequest implements Request {
         return cookies.get(key);
     }
 
-    public String getBodyRequest(String key) {
+    public String getBodyParameter(String key) {
         return body.getParameter(key);
     }
 

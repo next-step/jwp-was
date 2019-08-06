@@ -1,7 +1,5 @@
 package webserver.http.response;
 
-import webserver.view.View;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -32,12 +30,6 @@ public class HttpResponse implements Response {
     @Override
     public void writeBody(byte[] body) throws IOException {
         dos.write(body, 0, body.length);
-        dos.flush();
-    }
-
-    @Override
-    public void writeBody(View view) throws IOException {
-        dos.write(view.getBody(), 0, view.getLength());
         dos.flush();
     }
 }

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.view.View;
 import webserver.view.ViewResolver;
 
 import java.io.IOException;
@@ -22,11 +23,11 @@ public class RegisterFormDispatcher<V extends ViewResolver> extends AbstractDisp
     @Override
     protected void doGet(HttpRequest request, HttpResponse response) {
         try {
-            byte[] view = viewResolver.render(request.getPath());
-            response.writeHeader(request.getAccept(), view.length);
-            response.writeBody(view);
+            View view = viewResolver.render(request.getPath());
+            response.writeHeader(request.getAccept(), view.getLength());
+            response.writeBody(view.getBody());
         } catch (IOException | URISyntaxException e) {
-            logger.error("[PROCESS][HTML] failed. {}", e);
+            logger.error("[PROCESS][REGISTER FORM] failed. {}", e);
         }
     }
 
