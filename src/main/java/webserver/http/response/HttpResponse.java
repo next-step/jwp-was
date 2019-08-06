@@ -1,5 +1,6 @@
 package webserver.http.response;
 
+import utils.FileIoUtils;
 import webserver.http.HeaderKey;
 import webserver.http.HttpStatus;
 import webserver.http.header.HttpHeader;
@@ -53,6 +54,13 @@ public class HttpResponse implements Response {
         headers.setContentLength(body.length);
 
         this.body = body;
+    }
+
+    @Override
+    public void forward(final String forwardPath,
+                        final String contentType) throws Exception {
+        addHeader(HeaderKey.CONTENT_TYPE, contentType);
+        ok(FileIoUtils.loadFileFromClasspath(forwardPath));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package webserver.handler;
 
-import utils.FileIoUtils;
 import webserver.http.HeaderKey;
 import webserver.http.request.Request;
 import webserver.http.response.Response;
@@ -22,8 +21,6 @@ public class ResourceHandler implements Handler {
         final String accept = request.getHeader(HeaderKey.ACCEPT);
         final String contentType = accept.split(COMMA)[INDEX_OF_FIRST];
 
-        response.addHeader(HeaderKey.CONTENT_TYPE, contentType);
-
-        response.ok(FileIoUtils.loadFileFromClasspath(prefix + request.getPath()));
+        response.forward(prefix + request.getPath(), contentType);
     }
 }

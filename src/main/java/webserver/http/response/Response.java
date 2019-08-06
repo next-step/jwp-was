@@ -9,5 +9,6 @@ public interface Response extends AutoCloseable {
     void notFound();
     void ok(final String body);
     void ok(final byte[] body);
+    void forward(final String forwardPath, final String contentType) throws Exception;
     void sendRedirect(final String redirectPath);
 }
