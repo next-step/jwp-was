@@ -42,7 +42,7 @@ public class MappedRequestHandler implements RequestHandler {
         // check login
         ControllerType controllerType = mappingControllerCache.get(url);
         Controller controller = controllerType.getController();
-        if (controllerType.isAllowAll() || isLogined(httpRequest)) {
+        if (controllerType.isAllowAll() || isLogin(httpRequest)) {
 
             // service logic
             if (HttpMethod.GET == method) {
@@ -60,7 +60,7 @@ public class MappedRequestHandler implements RequestHandler {
         return new TemplateResourceViewRenderer(httpResponse, modelAndView);
     }
 
-    private boolean isLogined(HttpRequest httpRequest) {
+    private boolean isLogin(HttpRequest httpRequest) {
         return Optional.ofNullable(httpRequest.getCookie())
                 .map(cookie -> cookie.contains("logined=true"))
                 .orElse(false);
