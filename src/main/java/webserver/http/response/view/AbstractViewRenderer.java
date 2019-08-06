@@ -3,6 +3,7 @@ package webserver.http.response.view;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpStatus;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -47,6 +48,13 @@ public abstract class AbstractViewRenderer implements ViewRenderer {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    void witeErrorPage(Exception e) {
+        logger.error("{}", e.getMessage(), e);
+        httpResponse.setHttpStatus(HttpStatus.SERVICE_UNAVAILABLE);
+        writeHeader(0);
+        flush();
     }
 
     public abstract void render();

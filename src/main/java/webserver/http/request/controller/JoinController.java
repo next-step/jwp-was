@@ -5,6 +5,7 @@ import model.User;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.ParameterMap;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.view.ModelAndView;
 
 /**
  * @author : yusik
@@ -12,7 +13,7 @@ import webserver.http.response.HttpResponse;
  */
 public class JoinController implements Controller {
     @Override
-    public String postProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public ModelAndView postProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
         ParameterMap parameters = httpRequest.getParameters();
         User user = new User(
                 (String) parameters.get("userId"),
@@ -22,11 +23,11 @@ public class JoinController implements Controller {
         );
 
         DataBase.addUser(user);
-        return "redirect::/index.html";
+        return new ModelAndView("redirect::/index.html");
     }
 
     @Override
-    public String getProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return "";
+    public ModelAndView getProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
+        return null;
     }
 }

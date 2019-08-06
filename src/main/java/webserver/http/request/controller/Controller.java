@@ -2,6 +2,7 @@ package webserver.http.request.controller;
 
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.view.ModelAndView;
 
 /**
  * @author : yusik
@@ -9,7 +10,7 @@ import webserver.http.response.HttpResponse;
  */
 public interface Controller {
 
-    String postProcess(HttpRequest httpRequest, HttpResponse httpResponse);
+    ModelAndView postProcess(HttpRequest httpRequest, HttpResponse httpResponse);
 
-    String getProcess(HttpRequest httpRequest, HttpResponse httpResponse);
+    ModelAndView getProcess(HttpRequest httpRequest, HttpResponse httpResponse);
 }

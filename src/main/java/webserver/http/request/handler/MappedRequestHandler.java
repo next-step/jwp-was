@@ -5,11 +5,13 @@ import webserver.http.request.HttpRequest;
 import webserver.http.request.controller.Controller;
 import webserver.http.request.controller.ControllerType;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.view.ModelAndView;
 import webserver.http.response.view.TemplateResourceViewRenderer;
 import webserver.http.response.view.ViewRenderer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author : yusik
@@ -17,12 +19,12 @@ import java.util.Map;
  */
 public class MappedRequestHandler implements RequestHandler {
 
-    private static final String PREFIX_REDIRECT = "redirect::";
     private final String prefix;
-    private static Map<String, Controller> mappingControllerCache = new HashMap<>();
+    private static Map<String, ControllerType> mappingControllerCache = new HashMap<>();
+
     static {
         for (ControllerType type : ControllerType.values()) {
-            mappingControllerCache.put(type.getUrl(), type.getController());
+            mappingControllerCache.put(type.getUrl(), type);
         }
     }
 
@@ -35,21 +37,32 @@ public class MappedRequestHandler implements RequestHandler {
 
         HttpMethod method = httpRequest.getHttpMethod();
         String url = httpRequest.getPath();
-        String viewName = "";
+        ModelAndView modelAndView = new ModelAndView("redirect::/user/login.html");
 
-        Controller controller = mappingControllerCache.get(url);
+        // check login
+        ControllerType controllerType = mappingControllerCache.get(url);
+        Controller controller = controllerType.getController();
+        if (controllerType.isAllowAll() || isLogined(httpRequest)) {
 
-        if (HttpMethod.GET == method) {
-            viewName = controller.getProcess(httpRequest, httpResponse);
-        } else if (HttpMethod.POST == method) {
-            viewName = controller.postProcess(httpRequest, httpResponse);
+            // service logic
+            if (HttpMethod.GET == method) {
+                modelAndView = controller.getProcess(httpRequest, httpResponse);
+            } else if (HttpMethod.POST == method) {
+                modelAndView = controller.postProcess(httpRequest, httpResponse);
+            }
         }
 
-        if (viewName.contains(PREFIX_REDIRECT)) {
-            String redirectUrl = viewName.substring(PREFIX_REDIRECT.length());
-            httpResponse.sendRedirect(redirectUrl);
+        // redirect
+        if (modelAndView.isRedirect()) {
+            httpResponse.sendRedirect(modelAndView.getRedirectUrl());
         }
 
-        return new TemplateResourceViewRenderer(httpResponse, httpRequest.getPath());
+        return new TemplateResourceViewRenderer(httpResponse, modelAndView);
+    }
+
+    private boolean isLogined(HttpRequest httpRequest) {
+        return Optional.ofNullable(httpRequest.getCookie())
+                .map(cookie -> cookie.contains("logined=true"))
+                .orElse(false);
     }
 }

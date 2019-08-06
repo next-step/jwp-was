@@ -35,7 +35,7 @@ public class StaticResourceViewRenderer extends AbstractViewRenderer {
             writeBody(body);
             flush();
         } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
+            witeErrorPage(e);
         }
     }
 }

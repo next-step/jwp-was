@@ -16,6 +16,8 @@ public class HttpRequest {
 
     private static final String END_OF_LINE = "";
     private static final String REQUEST_HEADER_DELIMITER = ": ";
+    private static final String COOKIE_FIELD_NAME = "Cookie";
+
     private RequestLine requestLine;
     private Map<String, String> headers;
 
@@ -42,6 +44,10 @@ public class HttpRequest {
 
     public Map<String, String> getHeaders() {
         return headers;
+    }
+
+    public String getCookie() {
+        return headers.get(COOKIE_FIELD_NAME);
     }
 
     public String getPath() {
