@@ -22,7 +22,7 @@ public class UserListAction implements ActionHandler {
     public void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
 
         if (!isLogin(httpRequest)) {
-            httpResponse.redirect("/user/login.html");
+            httpResponse.sendRedirect("/user/login.html");
             return;
         }
 

@@ -62,7 +62,7 @@ public class HttpResponse {
         this.responseBody = responseBody;
     }
 
-    public void redirect(String redirectUrl) {
+    public void sendRedirect(String redirectUrl) {
         this.setHttpStatus(HttpStatus.FOUND);
         this.setHttpHeader(HttpHeaders.LOCATION, redirectUrl);
     }

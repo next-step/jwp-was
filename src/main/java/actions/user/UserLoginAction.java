@@ -27,12 +27,12 @@ public class UserLoginAction implements ActionHandler {
         boolean isUserLoginSuccess = isUserLoginSuccess(userId, password);
 
         if (!isUserLoginSuccess) {
-            httpResponse.redirect(LOGIN_FAIL_REDIRECT_URL);
+            httpResponse.sendRedirect(LOGIN_FAIL_REDIRECT_URL);
             httpResponse.setHttpHeader(HttpHeaders.SET_COOKIE, LOGIN_FAIL_COOKIE);
             return;
         }
 
-        httpResponse.redirect(LOGIN_SUCCESS_REDIRECT_URL);
+        httpResponse.sendRedirect(LOGIN_SUCCESS_REDIRECT_URL);
         httpResponse.setHttpHeader(HttpHeaders.SET_COOKIE, LOGIN_SUCCESS_COOKIE);
 
     }

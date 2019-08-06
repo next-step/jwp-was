@@ -13,7 +13,7 @@ public class UserCreateAction implements ActionHandler {
     @Override
     public void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
         userCreate(httpRequest, httpResponse);
-        httpResponse.redirect(COMPLETE_REDIRECT_URL);
+        httpResponse.sendRedirect(COMPLETE_REDIRECT_URL);
     }
 
     private void userCreate(HttpRequest httpRequest, HttpResponse httpResponse){
