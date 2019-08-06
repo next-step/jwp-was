@@ -29,7 +29,9 @@ public class HttpResponse {
         dos.writeBytes("HTTP/1.1 " + httpStatusCode.getStatusCode() + " " + httpStatusCode.getDescription() + NEW_LINE);
         dos.writeBytes("Content-Type: " + headers.get("Content-Type") + NEW_LINE);
         dos.writeBytes("Content-Length: " + body.length + NEW_LINE);
-        dos.writeBytes("Location: " + headers.get("Location") + NEW_LINE);
+        if (headers.containsKey("Location")) {
+            dos.writeBytes("Location: " + headers.get("Location") + NEW_LINE);
+        }
         if (headers.containsKey("Set-Cookie")) {
             dos.writeBytes("Set-Cookie: " + headers.get("Set-Cookie") + NEW_LINE);
         }
