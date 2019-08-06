@@ -13,10 +13,11 @@ public class HttpResponse {
     private static final String SP = " ";
     public static final String CRLF = "\r\n";
     private static final String RESPONSE_HEADER_DELIMITER = ": ";
+    private static final String COOKIE_FIELD_NAME = "Set-Cookie";
     private HttpStatus httpStatus;
     private Map<String, String> headers;
     private String messageBody;
-
+    private String redirectUrl;
     private DataOutputStream outputStream;
 
     public HttpResponse(DataOutputStream outputStream) {
@@ -69,4 +70,15 @@ public class HttpResponse {
         return outputStream;
     }
 
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    public void sendRedirect(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
+    }
+
+    public void setCookie(String cookie) {
+        headers.put(COOKIE_FIELD_NAME, cookie);
+    }
 }

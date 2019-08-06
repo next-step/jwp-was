@@ -9,10 +9,16 @@ import webserver.http.response.view.ViewRenderer;
  * @author : yusik
  * @date : 2019-08-06
  */
-public class DefaultRequestHandler implements RequestHandler {
+public class StaticResourceRequestHandler implements RequestHandler {
+
+    private final String prefix;
+
+    public StaticResourceRequestHandler(String prefix) {
+        this.prefix = prefix;
+    }
 
     @Override
     public ViewRenderer handle(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return new StaticResourceViewRenderer(httpResponse, httpRequest.getPath());
+        return new StaticResourceViewRenderer(httpResponse, httpRequest.getPath(), prefix);
     }
 }

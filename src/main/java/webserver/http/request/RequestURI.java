@@ -33,4 +33,8 @@ public class RequestURI {
     public QueryString getQueryString() {
         return queryString;
     }
+
+    public void setQueryString(QueryString queryString) {
+        this.queryString = queryString;
+    }
 }

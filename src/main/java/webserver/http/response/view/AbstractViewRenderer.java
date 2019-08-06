@@ -3,7 +3,6 @@ package webserver.http.response.view;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.response.HttpResponse;
-import webserver.http.response.HttpStatus;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,23 +22,28 @@ public abstract class AbstractViewRenderer implements ViewRenderer {
         this.outputStream = httpResponse.getOutputStream();
     }
 
-    void responseHeader(int lengthOfBodyContent) {
-
-        httpResponse.setHttpStatus(HttpStatus.OK);
-        httpResponse.addHeader("Content-Length", String.valueOf(lengthOfBodyContent));
+    void writeHeader(int lengthOfBodyContent) {
         try {
-            this.outputStream.writeBytes(httpResponse.getStatusLine());
-            this.outputStream.writeBytes(httpResponse.getHeaders());
-            this.outputStream.writeBytes(HttpResponse.CRLF);
+            httpResponse.addHeader("Content-Length", String.valueOf(lengthOfBodyContent));
+            outputStream.writeBytes(httpResponse.getStatusLine());
+            outputStream.writeBytes(httpResponse.getHeaders());
+            outputStream.writeBytes(HttpResponse.CRLF);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    void responseBody(byte[] body) {
+    void writeBody(byte[] body) {
         try {
-            this.outputStream.write(body, 0, body.length);
-            this.outputStream.flush();
+            outputStream.write(body, 0, body.length);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    void flush() {
+        try {
+            outputStream.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

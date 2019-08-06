@@ -6,6 +6,7 @@ package webserver.http.response;
  */
 public enum HttpStatus {
     OK(200, "OK"),
+    REDIRECT(302, "Found"),
     BAD_REQUEST(400, "Bad Request"),
     SERVICE_UNAVAILABLE(503, "Service Unavailable"),
     ;

@@ -3,6 +3,7 @@ package webserver.http.response.view;
 import utils.FileIoUtils;
 import webserver.http.response.ContentType;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpStatus;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -13,24 +14,26 @@ import java.net.URISyntaxException;
  */
 public class StaticResourceViewRenderer extends AbstractViewRenderer {
 
-    private static final String STATIC_RESOURCE_PATH_BASE = "./static";
-
     private String path;
+    private String prefix;
 
-    public StaticResourceViewRenderer(HttpResponse httpResponse, String path) {
+    public StaticResourceViewRenderer(HttpResponse httpResponse, String path, String prefix) {
         super(httpResponse);
         this.path = path;
+        this.prefix = prefix;
     }
 
     @Override
     public void render() {
         try {
-            byte[] body = FileIoUtils.loadFileFromClasspath(STATIC_RESOURCE_PATH_BASE + path);
+            byte[] body = FileIoUtils.loadFileFromClasspath("." + prefix + path);
             if (path.contains(".css")) {
                 httpResponse.setContentType(ContentType.CSS);
             }
-            responseHeader(body.length);
-            responseBody(body);
+            httpResponse.setHttpStatus(HttpStatus.OK);
+            writeHeader(body.length);
+            writeBody(body);
+            flush();
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }

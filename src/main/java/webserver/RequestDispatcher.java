@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.handler.RequestHandler;
 import webserver.http.request.handler.RequestHandlerType;
-import webserver.http.request.handler.DefaultRequestHandler;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.view.ViewRenderer;
 
@@ -51,6 +50,6 @@ public class RequestDispatcher implements Runnable {
                 return handlerType.getHandler();
             }
         }
-        return new DefaultRequestHandler();
+        return RequestHandlerType.STATIC_RESOURCE.getHandler();
     }
 }

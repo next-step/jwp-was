@@ -8,16 +8,18 @@ import java.util.regex.Pattern;
  */
 public enum RequestHandlerType {
 
-    LOGIN("([^\\s]+(\\/login)$)", DefaultRequestHandler::new),
-    TEMPLATE_RESOURCE("([^\\s]+(\\.(?i)(html|ico))$)", TemplateRequestHandler::new),
-    STATIC_RESOURCE("([^\\s]+(\\.(?i)(jpg|gif|png|css|js))$)", DefaultRequestHandler::new),
+    TEMPLATE_RESOURCE("([^\\s]+(\\.(?i)(html))$)", "/templates", StaticResourceRequestHandler::new),
+    STATIC_RESOURCE("([^\\s]+(\\.(?i)(jpg|gif|png|css|js|ico|woff|ttf))$)", "/static", StaticResourceRequestHandler::new),
+    NOT_RESOURCE("/([^.#\\s?]*)", "/templates", MappedRequestHandler::new),
     ;
 
-    Pattern pattern;
-    HandlerCreator handlerCreator;
+    private final String prefix;
+    private final Pattern pattern;
+    private final HandlerCreator handlerCreator;
 
-    RequestHandlerType(String regex, HandlerCreator handlerCreator) {
+    RequestHandlerType(String regex, String prefix, HandlerCreator handlerCreator) {
         this.pattern = Pattern.compile(regex);
+        this.prefix = prefix;
         this.handlerCreator = handlerCreator;
     }
 
@@ -26,11 +28,11 @@ public enum RequestHandlerType {
     }
 
     public RequestHandler getHandler() {
-        return handlerCreator.getHandler();
+        return handlerCreator.createHandler(this.prefix);
     }
 
     @FunctionalInterface
     public interface HandlerCreator {
-        RequestHandler getHandler();
+        RequestHandler createHandler(String prefix);
     }
 }

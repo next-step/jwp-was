@@ -21,6 +21,10 @@ public class User {
         return password;
     }
 
+    public boolean matchPassword(String password) {
+        return password.equals(this.password);
+    }
+
     public String getName() {
         return name;
     }

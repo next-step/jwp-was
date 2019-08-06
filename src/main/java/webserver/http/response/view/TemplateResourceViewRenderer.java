@@ -3,6 +3,7 @@ package webserver.http.response.view;
 import utils.FileIoUtils;
 import webserver.http.response.ContentType;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpStatus;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -24,11 +25,21 @@ public class TemplateResourceViewRenderer extends AbstractViewRenderer {
 
     @Override
     public void render() {
+
         try {
-            byte[] body = FileIoUtils.loadFileFromClasspath(TEMPLATE_RESOURCE_PATH_BASE + path);
-            httpResponse.setContentType(ContentType.HTML_UTF_8);
-            responseHeader(body.length);
-            responseBody(body);
+            if (httpResponse.getRedirectUrl() != null) {
+                httpResponse.setHttpStatus(HttpStatus.REDIRECT);
+                httpResponse.addHeader("Location", httpResponse.getRedirectUrl());
+                writeHeader(0);
+                writeBody(new byte[0]);
+            } else {
+                httpResponse.setHttpStatus(HttpStatus.OK);
+                byte[] body = FileIoUtils.loadFileFromClasspath(TEMPLATE_RESOURCE_PATH_BASE + path);
+                httpResponse.setContentType(ContentType.HTML_UTF_8);
+                writeHeader(body.length);
+                writeBody(body);
+                flush();
+            }
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
