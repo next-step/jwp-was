@@ -25,7 +25,7 @@ public class LoginServlet implements HttpServlet {
   @Override
   public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
     if (login(httpRequest.getParameters())) {
-      httpResponse.addCookie("logined", "ture");
+      httpResponse.addCookie("logined", "true");
       httpResponse.forward("/index.html");
     }
     httpResponse.sendRedirect("/user/login_failed.html");

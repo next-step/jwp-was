@@ -122,6 +122,11 @@ public class RequestHeader {
     return cookies.get(cookieName);
   }
 
+  public boolean isLogin() {
+    String logined = cookies.get("logined");
+    return logined != null && "true".equals(logined);
+  }
+
   @Override
   public String toString() {
     return "RequestHeader{" +

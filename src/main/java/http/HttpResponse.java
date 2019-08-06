@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import utils.HandleBarsRender;
 
 public class HttpResponse {
 
@@ -101,5 +102,16 @@ public class HttpResponse {
       return false;
     }
     return path.contains(".css") || path.contains(".js");
+  }
+
+  public void handleBarView(String url) {
+    try {
+      String renderView = HandleBarsRender.render(url);
+      byte[] view = renderView.getBytes();
+      response200Header(view.length);
+      responseBody(view);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }
