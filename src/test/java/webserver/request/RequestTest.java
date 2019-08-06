@@ -47,6 +47,7 @@ public class RequestTest {
         assertThat(request.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(request.getPath()).isEqualTo("/user/create");
         assertThat(request.getHeader(HeaderProperty.CONTENT_LENGTH)).isEqualTo("46");
+        assertThat(request.getParameter("id")).isEqualTo("1");
         assertThat(request.getParameter("userId")).isEqualTo("javajigi");
     }
 }

@@ -1,5 +1,6 @@
 package webserver.request;
 
+import com.google.common.collect.Maps;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
@@ -12,7 +13,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class QueryString {
 
-    static final QueryString EMPTY = new QueryString(emptyMap());
+    static final QueryString EMPTY = new QueryString(Maps.newHashMap());
 
     private static final String SEPARATOR = "&";
 

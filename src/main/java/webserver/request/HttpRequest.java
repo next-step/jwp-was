@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Optional;
 
 import static webserver.response.HeaderProperty.ACCEPT;
 import static webserver.response.HeaderProperty.COOKIE;
@@ -59,10 +60,8 @@ public class HttpRequest implements Request {
 
     @Override
     public String getParameter(String field) {
-        if (HttpMethod.GET.equals(getMethod())) {
-           return requestLine.getRequestParam(field);
-        }
-        return requestBody.get(field);
+        return Optional.ofNullable(requestLine.getRequestParam(field))
+                .orElse(requestBody.get(field));
     }
 
     @Override
