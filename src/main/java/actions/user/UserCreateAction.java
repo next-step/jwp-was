@@ -6,17 +6,14 @@ import webserver.handler.ActionHandler;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-public class UserCreateAction implements ActionHandler<Void> {
+public class UserCreateAction implements ActionHandler {
 
     private static final String COMPLETE_REDIRECT_URL = "/index.html";
 
-
-
     @Override
-    public Void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
         userCreate(httpRequest, httpResponse);
         httpResponse.redirect(COMPLETE_REDIRECT_URL);
-        return null;
     }
 
     private void userCreate(HttpRequest httpRequest, HttpResponse httpResponse){

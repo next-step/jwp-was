@@ -13,7 +13,9 @@ public class ActionRequestMapper implements RequestMapper {
 
 
     private final String mappedRequestUri;
+    
     private final ActionHandler actionHandler;
+    
     private final Set<HttpMethod> httpMethods;
 
 
@@ -33,7 +35,7 @@ public class ActionRequestMapper implements RequestMapper {
     }
 
     @Override
-    public Object handle(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return actionHandler.actionHandle(httpRequest, httpResponse);
+    public void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
+        actionHandler.actionHandle(httpRequest, httpResponse);
     }
 }

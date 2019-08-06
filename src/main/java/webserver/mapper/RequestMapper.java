@@ -8,5 +8,5 @@ public interface RequestMapper {
 
     boolean isMatchedRequest(HttpMethod method, String requestUri);
 
-    Object handle(HttpRequest httpRequest, HttpResponse httpResponse);
+    void handle(HttpRequest httpRequest, HttpResponse httpResponse);
 }

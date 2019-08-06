@@ -1,12 +1,16 @@
 package webserver.resolvers.view;
 
+import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import webserver.handler.ModelView;
 import webserver.http.HttpHeaders;
 import webserver.http.HttpRequest;
@@ -35,13 +39,26 @@ public class HandlebarViewResolver implements ViewResolver {
     }
 
     @Override
-    public void resolve(ModelView modelView, HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void resolve(HttpRequest httpRequest, HttpResponse httpResponse) {
+        render(httpRequest, httpResponse);
+    }
+    
+    private void render(HttpRequest httpRequest, HttpResponse httpResponse) {
         try {
-            Template template = handlebars.compile(modelView.getView());
+        	
+        	ModelView modelView = httpRequest.getModelView();
+        	
+        	Template template;
+            try {
+            	template = handlebars.compile(modelView.getView());
+            } catch(IOException e) {
+            	httpResponse.send404();
+            	return; 
+            }
+            
             String appliedPage = template.apply(modelView.getModel());
             httpResponse.setHttpHeader(HttpHeaders.CONTENT_TYPE, "text/html");
             httpResponse.setResponseBody(appliedPage.getBytes());
-            logger.debug("template : {}", appliedPage);
         } catch (Exception e) {
             logger.error("{}", e);
         }

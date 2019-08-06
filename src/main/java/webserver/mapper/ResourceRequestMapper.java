@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 public class ResourceRequestMapper implements RequestMapper{
 
     private final Map<String, URL> urlCache;
+    
     private final Map<Pattern, String> resources;
 
     public ResourceRequestMapper() {
@@ -46,10 +47,9 @@ public class ResourceRequestMapper implements RequestMapper{
     }
 
     @Override
-    public Void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
         URL resourceUrl = this.urlCache.get(httpRequest.getRequestURI());
         httpResponse.sendResource(resourceUrl);
-        return null;
     }
 
     public ResourceRequestMapper addResourceMapping(String regex, String destination) {

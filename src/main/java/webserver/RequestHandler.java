@@ -15,13 +15,14 @@ import java.net.Socket;
 
 public class RequestHandler implements Runnable {
 
-
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private static final String TEMPLATE_ROOT = "./templates";
 
     private Socket connection;
+    
     private RequestMappers requestMappers;
+    
     private BodyResolvers bodyResolvers;
 
     public RequestHandler(Socket connectionSocket, RequestMappers requestMappers, BodyResolvers bodyResolvers) {

@@ -1,14 +1,17 @@
 package webserver.http;
 
-import enums.HttpMethod;
+import java.util.Optional;
+
 import org.springframework.util.MultiValueMap;
 
-import java.util.Optional;
+import enums.HttpMethod;
+import webserver.handler.ModelView;
 
 public class HttpBodyRequest implements HttpRequest {
 
 
     private final HttpRequest wrapedRequest;
+    
     private final MultiValueMap<String, String> bodyParams;
 
     public HttpBodyRequest(HttpRequest httpRequest, MultiValueMap<String, String> bodyParams) {
@@ -58,4 +61,10 @@ public class HttpBodyRequest implements HttpRequest {
     public String getRequestURI() {
         return wrapedRequest.getRequestURI();
     }
+
+
+	@Override
+	public ModelView getModelView() {
+		return wrapedRequest.getModelView();
+	}
 }

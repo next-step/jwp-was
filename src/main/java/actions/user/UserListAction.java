@@ -1,44 +1,47 @@
 package actions.user;
 
-import db.DataBase;
-import model.User;
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import db.DataBase;
+import model.User;
 import utils.StringUtils;
+import webserver.handler.ActionHandler;
 import webserver.handler.ModelView;
-import webserver.handler.ModelViewActionHandler;
 import webserver.http.HttpHeaders;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-import java.util.Collection;
-
-public class UserListAction implements ModelViewActionHandler {
+public class UserListAction implements ActionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(UserListAction.class);
 
     @Override
-    public ModelView actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
 
         if (!isLogin(httpRequest)) {
             httpResponse.redirect("/user/login.html");
-            return null;
+            return;
         }
 
-        return getUserList();
+        getUserList(httpRequest, httpResponse);
     }
 
     private boolean isLogin(HttpRequest httpRequest) {
         return !StringUtils.nvl(httpRequest.getHeader(HttpHeaders.COOKIE)).contains("logined=true");
     }
 
-    private ModelView getUserList() {
+    private void getUserList(HttpRequest httpRequest, HttpResponse httpResponse) {
 
         Collection<User> users = DataBase.findAll();
 
-        ModelView modelView = new ModelView("user/list");
+        ModelView modelView = httpRequest.getModelView();
+        modelView.setView("user/list");
         modelView.addObject("users", users);
-        return modelView;
+        
+        
     }
 
 }

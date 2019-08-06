@@ -5,6 +5,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import utils.IOUtils;
 import utils.StringUtils;
+import webserver.handler.ModelView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,14 +15,21 @@ import java.util.Optional;
 
 public class HttpBaseRequest implements HttpRequest {
 
+	private final ModelView modelView;
+	
     private final RequestLine requestLine;
+    
     private final String requestUri;
+    
     private final HttpHeaders httpHeaders;
+    
     private final String body;
+    
     private final MultiValueMap<String, String> params;
 
 
     private HttpBaseRequest(RequestLine requestLine, HttpHeaders httpHeaders, String body) {
+    	this.modelView = new ModelView();
         this.requestLine = requestLine;
         this.requestUri = parseRequestUri(requestLine.getPath());
         this.httpHeaders = httpHeaders;
@@ -85,5 +93,9 @@ public class HttpBaseRequest implements HttpRequest {
     public String getRequestURI() {
         return this.requestUri;
     }
+
+	public ModelView getModelView() {
+		return this.modelView;
+	}
 
 }

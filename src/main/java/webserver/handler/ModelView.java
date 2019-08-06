@@ -5,9 +5,14 @@ import java.util.Map;
 
 public class ModelView {
 
-    private final String view;
     private final Map<String, Object> model;
-
+    
+    private String view;
+    
+    public ModelView() {
+    	this(null);
+    }
+    
     public ModelView(String view) {
         this.view = view;
         this.model = new HashMap<>();
@@ -31,4 +36,8 @@ public class ModelView {
     public Map<String, Object> getModel() {
         return model;
     }
+
+	public void setView(String view) {
+		this.view = view;
+	}
 }

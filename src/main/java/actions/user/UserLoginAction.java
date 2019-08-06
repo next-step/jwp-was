@@ -8,7 +8,7 @@ import webserver.http.HttpResponse;
 
 import java.util.Optional;
 
-public class UserLoginAction implements ActionHandler<Void> {
+public class UserLoginAction implements ActionHandler {
 
     private static final String LOGIN_FAIL_REDIRECT_URL = "/user/login_failed.htm";
     private static final String LOGIN_SUCCESS_REDIRECT_URL = "/index.htm";
@@ -16,9 +16,8 @@ public class UserLoginAction implements ActionHandler<Void> {
     private static final String LOGIN_SUCCESS_COOKIE = "logined=true; Path=/";
 
     @Override
-    public Void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
         userLogin(httpRequest, httpResponse);
-        return null;
     }
 
     private void userLogin(HttpRequest httpRequest, HttpResponse httpResponse){
