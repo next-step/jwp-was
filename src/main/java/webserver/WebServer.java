@@ -3,6 +3,7 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.handler.*;
+import webserver.resolver.HandlebarsViewResolver;
 import webserver.resolver.HtmlViewResolver;
 import webserver.resolver.ViewResolver;
 
@@ -27,12 +28,14 @@ public class WebServer {
         try (ServerSocket listenSocket = new ServerSocket(port)) {
             logger.info("Web Application Server started {} port.", port);
 
-            ViewResolver viewResolver = new HtmlViewResolver();
+            ViewResolver htmlViewResolver = new HtmlViewResolver();
+            ViewResolver handlebarsViewResolver = new HandlebarsViewResolver();
             List<Handler> handlers = Arrays.asList(
-                    new HomeRequestMappingHandler(viewResolver),
-                    new UserCreateRequestMappingHandler(viewResolver),
-                    new LoginRequestMappingHandler(viewResolver),
-                    new TemplateResourceHandler(viewResolver)
+                    new HomeRequestMappingHandler(htmlViewResolver),
+                    new UserCreateRequestMappingHandler(htmlViewResolver),
+                    new LoginRequestMappingHandler(htmlViewResolver),
+                    new UserListRequestMappingHandler(handlebarsViewResolver),
+                    new TemplateResourceHandler(htmlViewResolver)
             );
 
             // 클라이언트가 연결될때까지 대기한다.
