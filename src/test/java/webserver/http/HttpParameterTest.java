@@ -46,6 +46,17 @@ class HttpParameterTest {
             .containsAllEntriesOf(result);
     }
 
+    @Test
+    void getParameterWithNull() {
+        HttpParameter httpParameter = new HttpParameter(new HashMap<String, String>() {{
+            put("userId", "homelus");
+            put("name", "jun");
+        }});
+
+        assertThat(httpParameter.getParameter("userId")).isEqualTo("homelus");
+        assertThat(httpParameter.getParameter("none")).isEqualTo(null);
+    }
+
     private static Stream<Arguments> sampleQuery() {
         return Stream.of(
                 Arguments.of("userId=jun&password=password&name=hyunjun",

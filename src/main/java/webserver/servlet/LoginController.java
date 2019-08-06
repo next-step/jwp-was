@@ -8,19 +8,15 @@ import webserver.http.HttpParameter;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-public class LoginServlet implements Servlet {
+import static webserver.http.HttpDispatcher.dispatcher;
+import static webserver.provider.ConfigurationProvider.LOGINED_KEY;
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginServlet.class);
+public class LoginController extends AbstractController {
 
-    private static final String LOGINED = "logined";
-
-    @Override
-    public String getName() {
-        return "/user/login";
-    }
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @Override
-    public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
+    protected void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
         logger.debug("login process.");
         UserService userService = UserService.getInstance();
 
@@ -33,11 +29,12 @@ public class LoginServlet implements Servlet {
         logger.debug(user + " " + userId + "/" + password);
 
         if (user != null && user.getPassword().equals(password)) {
-            httpResponse.addCookie(LOGINED, "true");
-            httpResponse.sendRedirect("/index.html");
+            httpResponse.addCookie(LOGINED_KEY, "true");
+            dispatcher(httpRequest, httpResponse).redirect("/index.html");
         }
 
-        httpResponse.addCookie(LOGINED, "false");
-        httpResponse.sendRedirect("/user/login_failed.html");
+        httpResponse.addCookie(LOGINED_KEY, "false");
+        dispatcher(httpRequest, httpResponse).redirect("/user/login_failed.html");
     }
+
 }

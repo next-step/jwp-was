@@ -1,6 +1,6 @@
 package webserver.resource;
 
-import webserver.ModelAndView;
+import webserver.http.ModelAndView;
 
 import java.io.IOException;
 

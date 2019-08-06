@@ -4,9 +4,8 @@ import exception.HttpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.StringUtils;
-import webserver.ModelAndView;
+import webserver.http.ModelAndView;
 import webserver.http.HttpStatusCode;
-import webserver.http.response.ResponseSender;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +35,7 @@ public class StaticResourceLoader extends AbstractResourceLoader {
     public String getResource(ModelAndView mav) {
         String name = "static" + mav.getViewName();
         validate(name);
-        logger.info("## resource retrieve: " + name);
+        logger.debug("## retrieve resource name: {}", name);
         try (InputStream in = classLoader.getResourceAsStream(name)) {
             if (in == null) {
                 throw new HttpException(HttpStatusCode.NOT_FOUND);

@@ -3,7 +3,7 @@ package webserver.resource;
 import exception.HttpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.ModelAndView;
+import webserver.http.ModelAndView;
 import webserver.http.HttpStatusCode;
 
 import java.io.IOException;
@@ -21,6 +21,17 @@ public class ResourceHandler {
         resourceLoaders = getDefaultResourceLoaders();
     }
 
+    public ResourceHandler(List<ResourceLoader> resourceLoaders) {
+        this.resourceLoaders = resourceLoaders;
+    }
+
+    /**
+     * if load static file (in static folder)
+     * @see StaticResourceLoader
+     * if load html file (in templates folder)
+     * @see HandlebarsResourceLoader
+     * else raise NotFoundException
+     */
     public String getContents(ModelAndView mav) {
         try {
             for (ResourceLoader resourceLoader : resourceLoaders) {

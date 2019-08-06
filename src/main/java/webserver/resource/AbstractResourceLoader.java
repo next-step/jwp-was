@@ -18,7 +18,6 @@ public abstract class AbstractResourceLoader implements ResourceLoader {
         this.classLoader = classLoader;
     }
 
-
     protected void validate(String name) {
         URL resource = classLoader.getResource(name);
 

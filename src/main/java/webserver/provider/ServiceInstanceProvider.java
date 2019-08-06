@@ -1,23 +1,22 @@
 package webserver.provider;
 
-import webserver.Ordered;
+import webserver.http.Ordered;
+import webserver.http.HttpHandler;
+import webserver.http.HttpControllerHandler;
+import webserver.http.HttpStaticHandler;
 import webserver.resource.HandlebarsResourceLoader;
 import webserver.resource.ResourceLoader;
 import webserver.resource.StaticResourceLoader;
-import webserver.http.HttpHandler;
-import webserver.http.HttpServletHandler;
-import webserver.http.HttpStaticHandler;
-import webserver.servlet.LoginServlet;
-import webserver.servlet.RegistrationServlet;
-import webserver.servlet.Servlet;
-import webserver.servlet.UserListServlet;
+import webserver.servlet.Controller;
+import webserver.servlet.ListUserController;
+import webserver.servlet.LoginController;
+import webserver.servlet.RegistrationController;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.collect.ImmutableList.of;
 import static java.util.Arrays.asList;
 
 /**
@@ -25,20 +24,22 @@ import static java.util.Arrays.asList;
  */
 public class ServiceInstanceProvider {
 
-    public static List<HttpHandler> getDefaultResponseHandlers() {
-        List<HttpHandler> httpHandlers = asList(new HttpServletHandler(), new HttpStaticHandler());
-        httpHandlers.sort(Comparator.comparingInt(Ordered::getOrder));
-        return httpHandlers;
+    public static <T extends Ordered> List<T> getOrderedList(List<T> source) {
+        source.sort(Comparator.comparingInt(Ordered::getOrder));
+        return source;
     }
 
-    public static Map<String, Servlet> getDefaultServlets() {
-        List<Servlet> servlets = of(new RegistrationServlet(), new LoginServlet(), new UserListServlet());
+    public static List<HttpHandler> getDefaultResponseHandlers() {
+        return getOrderedList(asList(new HttpControllerHandler(), new HttpStaticHandler()));
+    }
 
-        Map<String, Servlet> servletMappings = new HashMap<>();
-        for (Servlet servlet : servlets) {
-            servletMappings.put(servlet.getName(), servlet);
-        }
-        return servletMappings;
+    public static Map<String, Controller> getDefaultControllers() {
+         return new HashMap<String, Controller>(){{
+            put("/user/create", new RegistrationController());
+            put("/user/login", new LoginController());
+            put("/user/list", new ListUserController());
+
+        }};
     }
 
     public static List<ResourceLoader> getDefaultResourceLoaders() {

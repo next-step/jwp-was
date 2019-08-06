@@ -9,7 +9,7 @@ import webserver.http.HttpParameter;
 import static utils.StringUtils.endSplit;
 import static utils.StringUtils.frontSplitWithOrigin;
 import static webserver.http.HttpParameter.parseParameter;
-import static webserver.RequestHandler.WELCOME_PAGE;
+import static webserver.provider.ConfigurationProvider.welcomePage;
 
 public class RequestLine {
 
@@ -31,18 +31,18 @@ public class RequestLine {
         private final String protocol;
         private HttpParameter httpParameter;
 
-        Builder(HttpMethod method, String path, String protocol) {
+        public Builder(HttpMethod method, String path, String protocol) {
             this.method = method;
             this.path = path;
             this.protocol = protocol;
         }
 
-        Builder parameter(HttpParameter httpParameter) {
+        public Builder parameter(HttpParameter httpParameter) {
             this.httpParameter = httpParameter;
             return this;
         }
 
-        RequestLine build() {
+        public RequestLine build() {
             RequestLine requestLine = new RequestLine();
             requestLine.method = this.method;
             requestLine.path = this.path;
@@ -73,7 +73,7 @@ public class RequestLine {
 
     private static String getPath(String path) {
         logger.info("## " + path);
-        return ROOT.equals(path) ? WELCOME_PAGE : path;
+        return ROOT.equals(path) ? welcomePage() : path;
     }
 
     public void setPath(String path) {

@@ -3,7 +3,8 @@ package webserver.http;
 import exception.HttpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.ModelAndView;
+
+import static webserver.http.HttpDispatcher.dispatcher;
 
 public class HttpStaticHandler implements HttpHandler {
 
@@ -17,11 +18,10 @@ public class HttpStaticHandler implements HttpHandler {
     @Override
     public void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
         try {
-            ModelAndView mav = new ModelAndView(httpRequest.getPath());
-            httpResponse.forward(httpRequest, httpRequest.getPath());
+            dispatcher(httpRequest, httpResponse).forward(httpRequest.getPath());
         } catch (HttpException e) {
             logger.error("Http Exception " + e.getHttpStatusCode());
-            httpResponse.sendError(HttpStatusCode.NOT_FOUND);
+            dispatcher(httpRequest, httpResponse).notFound();
         }
     }
 

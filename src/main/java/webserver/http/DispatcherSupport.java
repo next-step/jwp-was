@@ -1,14 +1,11 @@
-package webserver.http.response;
-
-import webserver.http.HttpResponse;
-import webserver.http.HttpStatusCode;
+package webserver.http;
 
 import java.util.Map;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
-public class ResponseSupport {
+public class DispatcherSupport {
 
     String getStatusLine(HttpStatusCode httpStatusCode) {
         return "HTTP/1.1 " + httpStatusCode.getCode() + " " + httpStatusCode.getMessage() + " \r\n";
@@ -18,8 +15,8 @@ public class ResponseSupport {
         return "Location: " + location + "\r\n";
     }
 
-    String getContentTypeLine(HttpResponse httpResponse) {
-        return "Content-Type: " + httpResponse.getContentType() + ";charset=utf-8\r\n";
+    String getContentTypeLine(String contentType) {
+        return "Content-Type: " + contentType + ";charset=utf-8\r\n";
     }
 
     String getContentLengthLine(int lengthOfBodyContent) {

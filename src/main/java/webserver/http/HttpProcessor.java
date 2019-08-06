@@ -20,17 +20,22 @@ public class HttpProcessor {
         this.httpHandlers = getDefaultResponseHandlers();
     }
 
+    public HttpProcessor(List<HttpHandler> httpHandlers) {
+        this.httpHandlers = httpHandlers;
+    }
+
     /**
-     * access static resource (Web Server)
+     * if handle static resource (Web Server)
      * @see HttpStaticHandler
-     * access dynamic(servlet) resource (Web Application Server)
-     * @see HttpServletHandler
+     * if handle dynamic(servlet) resource (Web Application Server)
+     * @see HttpControllerHandler
      */
     public void process(HttpRequest httpRequest, HttpResponse httpResponse) {
         logger.info("## start: " + httpRequest.getPath());
         for (HttpHandler httpHandler : httpHandlers) {
             if (httpHandler.supports(httpRequest)) {
                 httpHandler.handle(httpRequest, httpResponse);
+                return;
             }
         }
     }

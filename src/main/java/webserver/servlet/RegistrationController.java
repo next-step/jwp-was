@@ -9,18 +9,15 @@ import webserver.http.request.RequestHeader;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-public class RegistrationServlet implements Servlet{
+import static webserver.http.HttpDispatcher.dispatcher;
+
+public class RegistrationController extends AbstractController {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHeader.class);
 
     @Override
-    public String getName() {
-        return "/user/create";
-    }
-
-    @Override
-    public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
-        logger.debug("{} service process, registration user ", getName());
+    protected void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+        logger.debug("service process, registration user ");
 
         UserService userService = UserService.getInstance();
         HttpParameter httpParameter = httpRequest.getMergedHttpParameter();
@@ -31,6 +28,7 @@ public class RegistrationServlet implements Servlet{
 
         userService.add(new User(userId, password, name, email));
 
-        httpResponse.sendRedirect("/index.html");
+        dispatcher(httpRequest, httpResponse).redirect("/index.html");
     }
+
 }

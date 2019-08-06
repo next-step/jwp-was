@@ -8,7 +8,6 @@ public enum ContentType {
     NONE("none"),
     X_WWW_FORM_URLENCODED("application/x-www-form-urlencoded");
 
-
     private String type;
 
     private static Map<String, ContentType> contentTypeMap = new HashMap<>();

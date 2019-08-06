@@ -5,21 +5,20 @@ import org.slf4j.LoggerFactory;
 import webserver.http.HttpProcessor;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
-import webserver.http.request.RequestBody;
-import webserver.http.request.RequestHeader;
-import webserver.http.request.RequestLine;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
-import static utils.IOUtils.readLines;
+import static webserver.http.HttpRequest.createHtpRequest;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
     private HttpProcessor httpProcessor;
-    public static final String WELCOME_PAGE = "/index.html";
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -32,21 +31,11 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
-            HttpRequest httpRequest = createRequestHolder(in);
-            httpProcessor.process(httpRequest, new HttpResponse(dos, httpRequest));
+            HttpRequest httpRequest = createHtpRequest(in);
+            httpProcessor.process(httpRequest, new HttpResponse(dos));
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
-
-    private HttpRequest createRequestHolder(InputStream in) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        RequestLine requestLine = RequestLine.parse(reader.readLine());
-        RequestHeader requestHeader = RequestHeader.parse(readLines(reader));
-        RequestBody requestBody = RequestBody.parse(reader, requestHeader);
-
-        return new HttpRequest(requestLine, requestHeader, requestBody);
-    }
-
 
 }
