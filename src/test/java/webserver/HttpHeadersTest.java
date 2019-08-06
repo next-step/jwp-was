@@ -5,15 +5,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.HttpHeaders.Parameter;
-import webserver.request.Cookie;
 
-import java.util.Arrays;
-import java.util.List;
-
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static webserver.HttpHeaders.SET_COOKIE;
+import static webserver.response.HeaderProperty.SET_COOKIE;
 
 class HttpHeadersTest {
 
@@ -50,7 +48,7 @@ class HttpHeadersTest {
         httpHeaders.setCookie(valueOfCookie);
 
         // when
-        String result = httpHeaders.get(SET_COOKIE);
+        String result = httpHeaders.get(SET_COOKIE.getHeaderName());
 
         // then
         assertThat(result).isEqualTo(valueOfCookie);
@@ -67,5 +65,14 @@ class HttpHeadersTest {
 
         // then
         assertThat(result).isNull();
+    }
+
+    @DisplayName("파라미터가 null or empty일 경우 생성에 실패한다")
+    @ParameterizedTest
+    @NullAndEmptySource
+    void ofParameter_whenInputNull_exception(String wrong) {
+        // exception
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> Parameter.of(wrong));
     }
 }

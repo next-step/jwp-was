@@ -6,9 +6,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import webserver.HttpHeaders;
+import webserver.request.QueryString.Parameter;
 
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class QueryStringTest {
@@ -57,5 +60,14 @@ class QueryStringTest {
 
         // then
         assertThat(result.get(attribute)).isEqualTo(value);
+    }
+
+    @DisplayName("파라미터가 null or empty일 경우 생성에 실패한다")
+    @ParameterizedTest
+    @NullAndEmptySource
+    void ofParameter_whenInputNull_exception(String wrong) {
+        // exception
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> Parameter.of(wrong));
     }
 }

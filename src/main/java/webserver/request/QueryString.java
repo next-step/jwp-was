@@ -1,5 +1,6 @@
 package webserver.request;
 
+import com.google.common.collect.Maps;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
@@ -12,7 +13,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class QueryString {
 
-    static final QueryString EMPTY = new QueryString(emptyMap());
+    static final QueryString EMPTY = new QueryString(Maps.newHashMap());
 
     private static final String SEPARATOR = "&";
 
@@ -64,6 +65,10 @@ public class QueryString {
         }
 
         static Parameter of(String parameter) {
+            if (parameter == null || parameter.isEmpty()) {
+                throw new IllegalArgumentException("Input value should not be null");
+            }
+
             String[] pair = parameter.split(SEPARATOR);
             return new Parameter(pair[INDEX_OF_ATTRIBUTE], pair[INDEX_OF_VALUE]);
         }

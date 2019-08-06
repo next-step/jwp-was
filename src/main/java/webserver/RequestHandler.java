@@ -2,24 +2,20 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import servlet.*;
+import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Function;
+import java.util.Optional;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
 
-    private List<HttpServlet> httpServlets = Arrays.asList(new StaticResourceServlet(),
-            new TemplateResourceServlet(),
-            new UserCreateServlet(),
-            new UserListServlet(),
-            new UserLoginServlet());
+    private ServletContext servletContext = new ServletContext();
 
     RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -31,29 +27,21 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            Request request = Request.of(in);
+            Request request = HttpRequest.newInstance(in);
             logger.info("IN request: {}", request);
 
-            httpServlets.stream()
-                    .filter(it -> it.isMapping(request))
-                    .findFirst()
-                    .map(serve(request))
-                    .orElseGet(Response::notFound)
-                    .send(out);
-
+            Response response = new HttpResponse(out);
+            service(request, response);
         } catch (Exception e) {
             logger.error("uncaught error", e);
         }
     }
 
-    private Function<HttpServlet, Response> serve(Request request) {
-        return servlet -> {
-            try {
-                return servlet.service(request);
-            } catch (Exception e) {
-                logger.error("servlet error", e);
-                return Response.internalServerError();
-            }
-        };
+    private void service(Request request, Response response) throws Exception {
+        try {
+            servletContext.mapping(request).service(request, response);
+        } catch (Exception e) {
+            response.internalServerError();
+        }
     }
 }

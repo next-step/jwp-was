@@ -54,6 +54,10 @@ public class RequestBody {
         }
 
         static Parameter of(String parameter) {
+            if (parameter == null) {
+                throw new IllegalArgumentException("Input value should not be null");
+            }
+
             String[] pair = parameter.split(SEPARATOR);
             if (pair.length < SIZE) {
                 throw new IllegalArgumentException(String.format("RequestBody 잘못된 입력값입니다. 입력값: %s", parameter));

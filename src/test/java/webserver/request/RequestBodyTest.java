@@ -2,8 +2,12 @@ package webserver.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import webserver.request.RequestBody.Parameter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static webserver.request.RequestBody.SEPARATOR;
 
 class RequestBodyTest {
@@ -23,5 +27,14 @@ class RequestBodyTest {
         // then
         assertThat(userId).isEqualTo("javajigi");
         assertThat(email).isEqualTo("javajigi%40slipp.net");
+    }
+
+    @DisplayName("파라미터가 null or empty일 경우 생성에 실패한다")
+    @ParameterizedTest
+    @NullAndEmptySource
+    void ofParameter_whenInputNull_exception(String wrong) {
+        // exception
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> Parameter.of(wrong));
     }
 }

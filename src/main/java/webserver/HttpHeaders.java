@@ -1,58 +1,63 @@
 package webserver;
 
+import webserver.response.HeaderProperty;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static webserver.response.HeaderProperty.*;
+
 public class HttpHeaders {
 
-    static final String CONTENT_LENGTH = "Content-Length";
-    static final String LOCATION = "Location";
-    static final String CONTENT_TYPE = "Content-Type";
-    static final String TEXT_HTML_CHARSET_UTF_8 = "text/html;charset=utf-8";
-    static final String SET_COOKIE = "Set-Cookie";
-
-    public static final String ACCEPT = "Accept";
-    public static final String COOKIE = "Cookie";
+    public static final String TEXT_HTML_CHARSET_UTF_8 = "text/html;charset=utf-8";
 
     private Map<String, String> headerInfo = new HashMap<>();
 
-    void add(String token) {
+    public void add(String token) {
         Parameter parameter = Parameter.of(token);
-        headerInfo.put(parameter.getField(), parameter.getValue());
+        addHeader(parameter.getField(), parameter.getValue());
     }
 
-    int getContentLength() {
-        return Integer.parseInt(headerInfo.getOrDefault(CONTENT_LENGTH, "-1"));
+    public void setLocation(String path) {
+        addHeader(LOCATION.getHeaderName(), path);
     }
 
-    void setLocation(String path) {
-        headerInfo.put(LOCATION, path);
+    public void setContentType(String value) {
+        addHeader(CONTENT_TYPE.getHeaderName(), value);
     }
 
-    void setContentLength(int contentLength) {
-        headerInfo.put(CONTENT_LENGTH, String.valueOf(contentLength));
+    public void setContentLength(int contentLength) {
+        addHeader(CONTENT_LENGTH.getHeaderName(), String.valueOf(contentLength));
     }
 
-    void setContentType(String value) {
-        headerInfo.put(CONTENT_TYPE, value);
+    public int getContentLength() {
+        return Integer.parseInt(headerInfo.getOrDefault(CONTENT_LENGTH.getHeaderName(), "-1"));
     }
 
-    public String get(String field) {
-        return headerInfo.get(field);
+    private void addHeader(String key, String value) {
+        headerInfo.put(key, value);
     }
 
-    List<String> output() {
+    public String get(HeaderProperty headerProperty) {
+        return get(headerProperty.getHeaderName());
+    }
+
+    public String get(String headerName) {
+        return headerInfo.get(headerName);
+    }
+
+    public void setCookie(String value) {
+        headerInfo.put(HeaderProperty.SET_COOKIE.getHeaderName(), value);
+    }
+
+    public List<String> output() {
         return headerInfo.entrySet()
                 .stream()
                 .map(entry -> new Parameter(entry.getKey(), entry.getValue()))
                 .map(Parameter::toString)
                 .collect(Collectors.toList());
-    }
-
-    public void setCookie(String value) {
-        headerInfo.put(SET_COOKIE, value);
     }
 
     @Override
@@ -78,6 +83,10 @@ public class HttpHeaders {
         }
 
         static Parameter of(String parameter) {
+            if (parameter == null) {
+                throw new IllegalArgumentException("Input value should not be null");
+            }
+
             String[] pair = parameter.split(SEPARATOR);
             if (pair.length < SIZE) {
                 throw new IllegalArgumentException(String.format("헤더 정보값이 잘못 입력하였습니다. 입력값: %s", parameter));
