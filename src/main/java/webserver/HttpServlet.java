@@ -1,8 +1,7 @@
 package webserver;
 
+@FunctionalInterface
 public interface HttpServlet {
 
-    boolean isMapping(Request request);
-
-    Response service(Request request) throws Exception;
+    void service(Request request, Response response) throws Exception;
 }

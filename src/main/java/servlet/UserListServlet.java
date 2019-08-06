@@ -10,27 +10,27 @@ import webserver.request.Cookie;
 import java.io.IOException;
 
 import static servlet.UserLoginServlet.COOKIE_OF_LOGIN;
-import static webserver.response.ResponseFactory.ok;
-import static webserver.response.ResponseFactory.redirect;
 
 public class UserListServlet implements HttpServlet {
 
     private static final ViewResolver viewResolver = new ViewResolver();
+    private static final String URL = "/user/list";
 
-    @Override
-    public boolean isMapping(Request request) {
-        return request.matchPath("/user/list");
+    public static boolean isMapping(Request request) {
+        return request.matchPath(URL);
     }
 
     @Override
-    public Response service(Request request) throws IOException {
+    public void service(Request request, Response response) throws IOException {
         Cookie cookie = request.getCookie();
 
         boolean checkLogin = Boolean.valueOf(cookie.get(COOKIE_OF_LOGIN));
         if (!checkLogin) {
-            return redirect("/user/login.html");
+            response.redirect("/index.html");
+            return;
         }
 
-        return ok(viewResolver.resolve("user/list", DataBase.findAll()));
+        String content = viewResolver.resolve("user/list", DataBase.findAll());
+        response.ok(content.getBytes());
     }
 }

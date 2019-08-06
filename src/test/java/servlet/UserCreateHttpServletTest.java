@@ -1,22 +1,23 @@
 package servlet;
 
-import db.DataBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.Request;
 import webserver.Response;
 import webserver.request.RequestTest;
+import webserver.response.HttpResponse;
 
-import java.io.IOException;
+import java.io.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static webserver.response.HttpStatus.REDIRECT;
 
 class UserCreateHttpServletTest {
 
     private Request request;
     private final UserCreateServlet userCreateServlet = new UserCreateServlet();
+
+    private static final String FILE_PATH_OF_RESPONSE = "./src/test/resources/";
 
     @BeforeEach
     void setUp() throws IOException {
@@ -35,15 +36,16 @@ class UserCreateHttpServletTest {
 
     @DisplayName("회원가입에 성공 후 main 페이지로 이동")
     @Test
-    void service_success() {
-        // given
-        String userId = "javajigi";
-
+    void service_success() throws IOException {
         // when
-        Response service = userCreateServlet.service(request);
+        userCreateServlet.service(request, createResponse("Response_CreateUser.txt"));
+    }
 
-        // then
-        assertThat(service.getStatus()).isEqualTo(REDIRECT);
-        assertThat(DataBase.findUserById(userId)).isNotNull();
+    static Response createResponse(String fileName) throws FileNotFoundException {
+        return new HttpResponse(createOutputStream(fileName));
+    }
+
+    static OutputStream createOutputStream(String filename) throws FileNotFoundException {
+        return new FileOutputStream(new File(FILE_PATH_OF_RESPONSE + filename));
     }
 }

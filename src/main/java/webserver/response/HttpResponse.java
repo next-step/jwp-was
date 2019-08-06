@@ -8,30 +8,19 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
+import static webserver.HttpHeaders.TEXT_HTML_CHARSET_UTF_8;
+
 public class HttpResponse implements Response {
 
     private static final String CRLF = "\r\n";
 
-    private HttpStatus httpStatus;
+    private OutputStream out;
+    private HttpStatus httpStatus = HttpStatus.NOT_FOUND;
     private HttpHeaders httpHeaders = new HttpHeaders();
     private byte[] responseBody = {};
 
-    HttpResponse(HttpStatus status) {
-        this.httpStatus = status;
-    }
-
-    HttpResponse(HttpStatus status, byte[] responseBody) {
-        this.httpStatus = status;
-        this.responseBody = responseBody;
-    }
-
-
-    public String getHeaderOf(String key) {
-        return httpHeaders.get(key);
-    }
-
-    public HttpStatus getStatus() {
-        return httpStatus;
+    public HttpResponse(OutputStream out) {
+        this.out = out;
     }
 
     public void setCookie(String value) {
@@ -51,22 +40,38 @@ public class HttpResponse implements Response {
     }
 
     @Override
-    public String getHeader(HeaderProperty headerName) {
-        return httpHeaders.get(headerName.getHeaderName());
+    public void ok(byte[] responseBody) throws IOException {
+        ok(responseBody, TEXT_HTML_CHARSET_UTF_8);
     }
 
     @Override
-    public String getHeader(String headerName) {
-        return httpHeaders.get(headerName);
+    public void ok(byte[] responseBody, String contentType) throws IOException {
+        this.responseBody = responseBody;
+        httpStatus = HttpStatus.SUCCESS;
+        setContentLength(this.responseBody.length);
+        setContentType(contentType);
+        send();
     }
 
     @Override
-    public void addHeader(HeaderProperty key, String value) {
-
+    public void notFound() throws IOException {
+        send();
     }
 
     @Override
-    public void send(OutputStream out) throws IOException {
+    public void internalServerError() throws IOException {
+        httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        send();
+    }
+
+    @Override
+    public void redirect(String location) throws IOException {
+        httpStatus = HttpStatus.REDIRECT;
+        setLocation(location);
+        send();
+    }
+
+    private void send() throws IOException {
         DataOutputStream dos = new DataOutputStream(out);
         dos.writeBytes(httpStatus.getStatusLine().concat(CRLF));
         writeHeaders(dos);

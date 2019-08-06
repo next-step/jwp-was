@@ -6,14 +6,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.Request;
-import webserver.Response;
 import webserver.request.RequestTest;
-import webserver.response.HeaderProperty;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static webserver.response.HttpStatus.REDIRECT;
+import static servlet.UserCreateHttpServletTest.createResponse;
 
 class UserLoginServletTest {
 
@@ -37,43 +35,20 @@ class UserLoginServletTest {
 
     @DisplayName("로그인 성공")
     @Test
-    void service_success() {
+    void service_success() throws Exception {
         // given
-        String userId = "javajigi";
+        DataBase.addUser( new User("javajigi", "password", "java", "java@email.com"));
 
         // when
-        DataBase.addUser(getUser(userId));
-        Response service = userLoginServlet.service(request);
-        Boolean checkedLogin = getCheckedLogin(service);
-
-        // then
-        assertThat(checkedLogin).isTrue();
-        assertThat(service.getStatus()).isEqualTo(REDIRECT);
+        userLoginServlet.service(request, createResponse("Response_Login_Success.txt"));
     }
 
     @DisplayName("로그인 실패")
     @Test
-    void service_fail() {
-        // given
-        String userId = "noUser";
+    void service_fail() throws Exception {
+        DataBase.deleteAll();
 
         // when
-        Response service = userLoginServlet.service(request);
-
-        // then
-        assertThat(DataBase.findUserById(userId)).isNull();
-        assertThat(service.getStatus()).isEqualTo(REDIRECT);
-    }
-
-    private User getUser(String userId) {
-        return new User(userId, "password", "name", "email");
-    }
-
-    private Boolean getCheckedLogin(Response response) {
-        String cookieOfLogin = response.getHeader(HeaderProperty.SET_COOKIE);
-
-        String checkedLogin = cookieOfLogin.split(";")[0]
-                                       .split("=")[1];
-        return Boolean.valueOf(checkedLogin);
+        userLoginServlet.service(request, createResponse("Response_Login_Fail.txt"));
     }
 }

@@ -3,14 +3,12 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.request.HttpRequest;
-import webserver.response.ResponseFactory;
+import webserver.response.HttpResponse;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.function.Function;
-
-import static webserver.response.ResponseFactory.internalServerError;
+import java.util.Optional;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -30,27 +28,20 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             Request request = HttpRequest.newInstance(in);
-
             logger.info("IN request: {}", request);
 
-            servletContext.mapping(request)
-                    .map(serve(request))
-                    .orElseGet(ResponseFactory::notFound)
-                    .send(out);
-
+            Response response = new HttpResponse(out);
+            service(request, response);
         } catch (Exception e) {
             logger.error("uncaught error", e);
         }
     }
 
-    private Function<HttpServlet, Response> serve(Request request) {
-        return servlet -> {
-            try {
-                return servlet.service(request);
-            } catch (Exception e) {
-                logger.error("servlet error", e);
-                return internalServerError();
-            }
-        };
+    private void service(Request request, Response response) throws Exception {
+        try {
+            servletContext.mapping(request).service(request, response);
+        } catch (Exception e) {
+            response.internalServerError();
+        }
     }
 }

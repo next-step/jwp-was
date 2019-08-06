@@ -2,21 +2,25 @@ package webserver;
 
 import servlet.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ServletContext {
 
-    private List<HttpServlet> httpServlets = Arrays.asList(new StaticResourceServlet(),
-            new TemplateResourceServlet(),
-            new UserCreateServlet(),
-            new UserListServlet(),
-            new UserLoginServlet());
+    private static Map<Condition, HttpServlet> httpServletMap = new HashMap<>();
 
-    Optional<HttpServlet> mapping(Request request) {
-        return httpServlets.stream()
-                .filter(it -> it.isMapping(request))
-                .findFirst();
+    static {
+        httpServletMap.put(UserCreateServlet::isMapping, new UserCreateServlet());
+        httpServletMap.put(UserListServlet::isMapping, new UserListServlet());
+        httpServletMap.put(UserLoginServlet::isMapping, new UserLoginServlet());
+        httpServletMap.put(StaticResourceServlet::isMapping, new StaticResourceServlet());
+        httpServletMap.put(TemplateResourceServlet::isMapping, new TemplateResourceServlet());
+    }
+
+    HttpServlet mapping(Request request) {
+        return httpServletMap.entrySet().stream()
+                .filter(it -> it.getKey().isMapping(request))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElse((ignore, response) -> response.notFound());
     }
 }

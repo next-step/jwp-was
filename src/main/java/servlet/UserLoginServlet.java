@@ -6,38 +6,38 @@ import webserver.HttpServlet;
 import webserver.Request;
 import webserver.Response;
 
-import static webserver.response.ResponseFactory.redirect;
+import java.io.IOException;
 
 public class UserLoginServlet implements HttpServlet {
 
     static final String COOKIE_OF_LOGIN = "logined";
 
-    @Override
-    public boolean isMapping(Request request) {
-        return request.matchPath("/user/login");
+    private static final String URL = "/user/login";
+
+    public static boolean isMapping(Request request) {
+        return request.matchPath(URL);
     }
 
     @Override
-    public Response service(Request request) {
+    public void service(Request request, Response response) throws Exception {
         String userId = request.getParameter("userId");
         String password = request.getParameter("password");
         User userById = DataBase.findUserById(userId);
 
         if (userById == null || !userById.checkPassword(password)) {
-            return loginFail();
+            loginFail(response);
+            return;
         }
-        return loginSuccess();
+        loginSuccess(response);
     }
 
-    private Response loginSuccess() {
-        Response response = redirect("/index.html");
+    private void loginSuccess(Response response) throws IOException {
         response.setCookie(COOKIE_OF_LOGIN + "=true; Path=/");
-        return response;
+        response.redirect("/index.html");
     }
 
-    private Response loginFail() {
-        Response response = redirect("/user/login_failed.html");
+    private void loginFail(Response response) throws IOException {
         response.setCookie(COOKIE_OF_LOGIN + "=false; Path=/");
-        return response;
+        response.redirect("/user/login_failed.html");
     }
 }
