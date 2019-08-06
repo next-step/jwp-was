@@ -13,25 +13,26 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static webserver.http.HttpHeaders.*;
+import static webserver.http.HttpHeaders.COOKIE;
+import static webserver.http.HttpHeaders.SET_COOKIE;
 
 public class UserListHandler extends AbstractRequestMappingHandler {
 
     public static final String LOGIN_TRUE_COOKIE = "logined=true";
 
     @Override
-    public void process(HttpRequest request, HttpResponse response) throws IOException {
-            if (LOGIN_TRUE_COOKIE.equals(request.getHeader(COOKIE))) {
-                Map<String, Object> data = findAllUsers();
-                byte[] body = HandleBarTemplateLoader.loadTemplate("/user/list", data);
+    public void doGet(HttpRequest request, HttpResponse response) throws IOException {
+        if (LOGIN_TRUE_COOKIE.equals(request.getHeader(COOKIE))) {
+            Map<String, Object> data = findAllUsers();
+            byte[] body = HandleBarTemplateLoader.loadTemplate("/user/list", data);
 
-                response.response200Header(body.length, ResourceLoader.resourceContentType("text/html;"));
-                response.responseBody(body);
+            response.response200Header(body.length, ResourceLoader.resourceContentType("text/html;"));
+            response.responseBody(body);
 
-            } else {
-                response.addHeader(SET_COOKIE, "logined=false; Path=/");
-                response.response302Header("/user/login.html");
-            }
+        } else {
+            response.addHeader(SET_COOKIE, "logined=false; Path=/");
+            response.response302Header("/user/login.html");
+        }
     }
 
     private Map<String, Object> findAllUsers() {

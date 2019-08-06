@@ -20,7 +20,7 @@ class HttpRequestTest {
         assertTrue(request.isGetRequest());
         assertEquals("/user/create", request.getRequestUriPath());
         assertEquals("keep-alive", request.getHeader("Connection"));
-        assertEquals("javajigi", request.getParameter("userId"));
+        assertEquals("javajigi", request.getQueryStringParameter("userId"));
     }
 
     @Test
@@ -32,6 +32,19 @@ class HttpRequestTest {
         assertTrue(request.isPostRequest());
         assertEquals("/user/create", request.getRequestUriPath());
         assertEquals("keep-alive", request.getHeader("Connection"));
-        assertEquals("javajigi", request.getParameter("userId"));
+        assertEquals("javajigi", request.getRequestBodyParameter("userId"));
+    }
+
+    @Test
+    public void post_request_with_queyrstring() throws Exception {
+        InputStream in = new FileInputStream(new File(testDirectory + "Http_POST2.txt"));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+        HttpRequest request = HttpRequest.parse(bufferedReader);
+
+        assertTrue(request.isPostRequest());
+        assertEquals("/user/create", request.getRequestUriPath());
+        assertEquals("keep-alive", request.getHeader("Connection"));
+        assertEquals("1", request.getQueryStringParameter("id"));
+        assertEquals("javajigi", request.getRequestBodyParameter("userId"));
     }
 }

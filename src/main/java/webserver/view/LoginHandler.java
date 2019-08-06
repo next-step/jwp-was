@@ -13,10 +13,10 @@ import static webserver.http.HttpHeaders.SET_COOKIE;
 public class LoginHandler extends AbstractRequestMappingHandler {
 
     @Override
-    public void process(HttpRequest request, HttpResponse response) throws IOException {
-        User user = DataBase.findUserById(request.getParameter("userId"));
+    public void doPost(HttpRequest request, HttpResponse response) throws IOException {
+        User user = DataBase.findUserById(request.getRequestBodyParameter("userId"));
 
-        if (isLoginSuccess(user, request.getParameter("password"))) {
+        if (isLoginSuccess(user, request.getRequestBodyParameter("password"))) {
             response.addHeader(SET_COOKIE, "logined=false; Path=/");
             response.response302Header("/user/login_failed.html");
         } else {

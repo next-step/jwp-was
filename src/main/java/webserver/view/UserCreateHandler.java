@@ -17,9 +17,9 @@ public class UserCreateHandler extends AbstractRequestMappingHandler {
     private static final Logger logger = LoggerFactory.getLogger(UserCreateHandler.class);
 
     @Override
-    public void process(HttpRequest request, HttpResponse response) throws IOException {
-        User user = new User(request.getParameter("userId"), request.getParameter("password"),
-                request.getParameter("name"), request.getParameter("email"));
+    public void doPost(HttpRequest request, HttpResponse response) throws IOException {
+        User user = new User(request.getRequestBodyParameter("userId"), request.getRequestBodyParameter("password"),
+                request.getRequestBodyParameter("name"), request.getRequestBodyParameter("email"));
         DataBase.addUser(user);
         logger.debug("User : {}", user);
 

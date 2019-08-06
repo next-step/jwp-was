@@ -68,20 +68,12 @@ public class HttpRequest {
         return requestLine.isGet();
     }
 
-    public String getParameter(String key) {
-        if (isPostRequest()) {
-            return getRequestBodyParameter(key);
-        }
-
-        return getQueryStringParameter(key);
-    }
-
-    private String getRequestBodyParameter(String key) {
-        return requestBody.getValue(key);
-    }
-
-    private String getQueryStringParameter(String key) {
+    public String getQueryStringParameter(String key) {
         return requestLine.getParameter(key);
+    }
+
+    public String getRequestBodyParameter(String key) {
+        return requestBody.getParameter(key);
     }
 
     @Override

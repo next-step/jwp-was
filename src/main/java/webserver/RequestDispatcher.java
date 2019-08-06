@@ -16,6 +16,6 @@ public class RequestDispatcher {
         logger.debug("request header : {}", request);
 
         RequestMappingHandler handler = RequestMapper.find(request.getRequestUriPath());
-        handler.handleRequest(request, response);
+        handler.service(request, response);
     }
 }

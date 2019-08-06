@@ -7,5 +7,5 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 public interface RequestMappingHandler {
-    void handleRequest(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException;
+    void service(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException;
 }

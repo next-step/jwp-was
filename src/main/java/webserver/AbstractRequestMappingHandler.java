@@ -9,23 +9,19 @@ import java.net.URISyntaxException;
 public abstract class AbstractRequestMappingHandler implements RequestMappingHandler {
 
     @Override
-    public void handleRequest(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+    public void service(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
         if (request.isPostRequest()) {
-            postMapping(request, response);
+            doPost(request, response);
         }
 
         if (request.isGetRequest()) {
-            getMapping(request, response);
+            doGet(request, response);
         }
     }
 
-    private void postMapping(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-        process(request, response);
+    public void doPost(HttpRequest request, HttpResponse response) throws IOException {
     }
 
-    private void getMapping(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-        process(request, response);
+    public void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
     }
-
-    protected abstract void process(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException;
 }
