@@ -3,6 +3,9 @@ package http;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -14,8 +17,30 @@ public class HttpResponse {
   private static final String STATIC_RESOURCE_PATH_PREFIX = "./static";
   private DataOutputStream dos;
 
+  private Map<String, String> cookies = new HashMap<>();
+
   public HttpResponse(DataOutputStream dos) {
     this.dos = dos;
+  }
+
+  public void addCookie(String cookieName, String cookieValue) {
+    cookies.put(cookieName, cookieValue);
+  }
+
+  private void setCookies() {
+    if (cookies.isEmpty()) {
+      return;
+    }
+    StringBuffer cookiesString = new StringBuffer();
+    cookiesString.append("Set-Cookie: ");
+    cookiesString.append(this.cookies.keySet().stream()
+        .map(key -> key + "=" + cookies.get(key))
+        .collect(Collectors.joining("; ")));
+    try {
+      dos.writeBytes(cookiesString.toString() + ";\r\n");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   private void response200Header(int lengthOfBodyContent) {
@@ -23,6 +48,7 @@ public class HttpResponse {
       dos.writeBytes("HTTP/1.1 200 OK \r\n");
       dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
       dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+      setCookies();
       dos.writeBytes("\r\n");
     } catch (IOException e) {
       logger.error(e.getMessage());
@@ -51,7 +77,9 @@ public class HttpResponse {
 
   public void forward(String url) {
     try {
-      byte[] body = FileIoUtils.loadFileFromClasspath(NON_STATIC_RESOURCE_PATH_PREFIX + url);
+      url = urlConvert(url);
+      byte[] body = FileIoUtils.loadFileFromClasspath(url);
+
       response200Header(body.length);
       responseBody(body);
     } catch (IOException e) {
@@ -59,6 +87,19 @@ public class HttpResponse {
     } catch (URISyntaxException e) {
       e.printStackTrace();
     }
+  }
 
+  private String urlConvert(String url) {
+    if (isStaticResource(url)) {
+      return STATIC_RESOURCE_PATH_PREFIX + url;
+    }
+    return NON_STATIC_RESOURCE_PATH_PREFIX + url;
+  }
+
+  private static boolean isStaticResource(String path) {
+    if (path == null) {
+      return false;
+    }
+    return path.contains(".css") || path.contains(".js");
   }
 }

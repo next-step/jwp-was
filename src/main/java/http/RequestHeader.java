@@ -1,7 +1,11 @@
 package http;
 
+import static java.util.stream.Collectors.toMap;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -11,6 +15,7 @@ public class RequestHeader {
   private static final int ATTRIBUTE_KEY_INDEX = 0;
   private static final int ATTRIBUTE_VALUE_INDEX = 1;
   private static final String ATTRIBUTE_DELIMITER = ": ";
+  private static final String COOKIES_DELIMITER = "; ";
   private static final String HOST_KEY = "Host";
   private static final String CONNECTION_KEY = "Connection";
   private static final String USER_AGENT_KEY = "User-Agent";
@@ -19,6 +24,7 @@ public class RequestHeader {
   private static final String ACCEPT_ENCODING_KEY = "Accept-Encoding";
   private static final String ACCEPT_LANGUAGE_KEY = "Accept-Language";
   private static final String CONTENT_LENGTH_KEY = "Content-Length";
+  private static final String COOKIE_KEY = "Cookie";
 
 
   private String host;
@@ -29,9 +35,11 @@ public class RequestHeader {
   private String acceptEncoding;
   private String acceptLanguage;
   private int contentLength;
+  private Map<String, String> cookies;
 
   public RequestHeader(String host, String connection, String userAgent, String accept,
-      String referer, String acceptEncoding, String acceptLanguage, int contentLength) {
+      String referer, String acceptEncoding, String acceptLanguage, int contentLength,
+      Map<String, String> cookies) {
     this.host = host;
     this.connection = connection;
     this.userAgent = userAgent;
@@ -40,6 +48,7 @@ public class RequestHeader {
     this.acceptEncoding = acceptEncoding;
     this.acceptLanguage = acceptLanguage;
     this.contentLength = contentLength;
+    this.cookies = cookies;
   }
 
   public static RequestHeader parse(BufferedReader request) throws IOException {
@@ -49,7 +58,18 @@ public class RequestHeader {
         attributes.get(USER_AGENT_KEY), attributes.get(ACCEPT_KEY), attributes.get(REFERER_KEY),
         attributes.get(ACCEPT_ENCODING_KEY), attributes.get(ACCEPT_LANGUAGE_KEY),
         attributes.get(CONTENT_LENGTH_KEY) != null ? Integer
-            .parseInt(attributes.get(CONTENT_LENGTH_KEY)) : 0);
+            .parseInt(attributes.get(CONTENT_LENGTH_KEY)) : 0
+        , cookieParse(attributes));
+  }
+
+  private static Map<String, String> cookieParse(Map<String, String> attributes) {
+    String cookies = attributes.get(COOKIE_KEY);
+    if (cookies == null) {
+      return Collections.EMPTY_MAP;
+    }
+    return Arrays.stream(cookies.split(COOKIES_DELIMITER))
+        .map(cookie -> cookie.split("="))
+        .collect(toMap(cookie -> cookie[0], cookie -> cookie[1]));
   }
 
   private static Map<String, String> parseAttributes(BufferedReader request) throws IOException {
@@ -59,6 +79,7 @@ public class RequestHeader {
       if ("".equals(line)) {
         break;
       }
+      System.out.println("line " + line);
       attributes.put(line.split(ATTRIBUTE_DELIMITER)[ATTRIBUTE_KEY_INDEX],
           line.split(ATTRIBUTE_DELIMITER)[ATTRIBUTE_VALUE_INDEX]);
     }
@@ -95,6 +116,10 @@ public class RequestHeader {
 
   public int getContentLength() {
     return contentLength;
+  }
+
+  public String getCookie(String cookieName) {
+    return cookies.get(cookieName);
   }
 
   @Override
@@ -136,4 +161,5 @@ public class RequestHeader {
         .hash(host, connection, userAgent, accept, referer, acceptEncoding, acceptLanguage,
             contentLength);
   }
+
 }
