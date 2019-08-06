@@ -1,7 +1,7 @@
 package webserver.http.response;
 
 import utils.FileIoUtils;
-import webserver.http.HeaderKey;
+import webserver.http.HeaderName;
 import webserver.http.HttpStatus;
 import webserver.http.header.HttpHeader;
 import webserver.http.header.HttpHeaders;
@@ -27,7 +27,7 @@ public class HttpResponse implements Response {
     }
 
     @Override
-    public void addHeader(final HeaderKey key,
+    public void addHeader(final HeaderName key,
                           final String value) {
         addHeader(key.toString(), value);
     }
@@ -59,7 +59,7 @@ public class HttpResponse implements Response {
     @Override
     public void forward(final String forwardPath,
                         final String contentType) throws Exception {
-        addHeader(HeaderKey.CONTENT_TYPE, contentType);
+        addHeader(HeaderName.CONTENT_TYPE, contentType);
         ok(FileIoUtils.loadFileFromClasspath(forwardPath));
     }
 

@@ -3,6 +3,7 @@ package webserver.http.request;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.HttpMethod;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -27,7 +28,7 @@ class RequestLineTest {
     @Test
     void getMethod() {
         // then
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
     }
 
 

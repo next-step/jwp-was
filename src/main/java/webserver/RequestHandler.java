@@ -2,7 +2,7 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.handler.HandlerProvider;
+import webserver.controller.ControllerProvider;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
@@ -15,12 +15,12 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private final Socket connection;
-    private final HandlerProvider handlerProvider;
+    private final ControllerProvider controllerProvider;
 
     RequestHandler(final Socket connection,
-                   final HandlerProvider handlerProvider) {
+                   final ControllerProvider controllerProvider) {
         this.connection = connection;
-        this.handlerProvider = handlerProvider;
+        this.controllerProvider = controllerProvider;
     }
 
     @Override
@@ -36,8 +36,8 @@ public class RequestHandler implements Runnable {
              final HttpRequest request = HttpRequest.of(in);
              logger.debug("In request [request={}]", request);
 
-            handlerProvider.provide(request)
-                    .handle(request, response);
+            controllerProvider.provide(request)
+                    .service(request, response);
         } catch (final Exception e) {
             logger.error("Error ", e);
         }

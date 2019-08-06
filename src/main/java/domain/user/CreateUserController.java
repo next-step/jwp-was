@@ -2,15 +2,15 @@ package domain.user;
 
 import db.DataBase;
 import model.User;
-import webserver.handler.Handler;
+import webserver.controller.AbstractController;
 import webserver.http.request.Request;
 import webserver.http.response.Response;
 
-public class CreateUserHandler implements Handler {
+public class CreateUserController extends AbstractController {
 
     @Override
-    public void handle(final Request request,
-                       final Response response) {
+    protected void doPost(final Request request,
+                          final Response response) {
         final String userId = request.getParameter("userId");
         final String password = request.getParameter("password");
         final String name = request.getParameter("name");

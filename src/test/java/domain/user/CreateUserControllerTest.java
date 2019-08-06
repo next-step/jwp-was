@@ -4,7 +4,7 @@ import db.DataBase;
 import model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.handler.Handler;
+import webserver.controller.Controller;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.Response;
@@ -13,9 +13,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static support.FileSupporter.read;
 import static support.FileSupporter.write;
 
-class CreateUserHandlerTest {
+class CreateUserControllerTest {
 
-    private static final Handler createUserHandler = new CreateUserHandler();
+    private static final Controller CREATE_USER_CONTROLLER = new CreateUserController();
 
     @DisplayName("유저 생성에 성공한다.")
     @Test
@@ -30,7 +30,7 @@ class CreateUserHandlerTest {
 
     public static void createUser() throws Exception {
         try (final Response response = HttpResponse.of(write("CreateUser_Response.txt"))) {
-            createUserHandler.handle(HttpRequest.of(read("CreateUser_Request.txt")), response);
+            CREATE_USER_CONTROLLER.service(HttpRequest.of(read("CreateUser_Request.txt")), response);
         }
     }
 }
