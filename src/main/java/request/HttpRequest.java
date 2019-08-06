@@ -6,8 +6,10 @@ package request;
 
 import header.Cookie;
 import header.setter.HeaderSetter;
+import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import session.HttpSession;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -60,6 +62,9 @@ public class HttpRequest {
     private String body;
 
     private MultiValueMap<String, String> bodyMap;
+
+    @Nullable
+    private volatile HttpSession session;
 
     public HttpRequest(RequestLine requestLine) {
         this.requestLine = requestLine;
