@@ -24,4 +24,8 @@ public enum HttpVersion {
 	public boolean equalsHeaderValue(String headerValue) {
 		return this.headerValue.equals(headerValue);
 	}
+
+	public String getHeaderValue() {
+		return headerValue;
+	}
 }

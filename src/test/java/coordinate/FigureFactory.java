@@ -1,27 +1,40 @@
 package coordinate;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class FigureFactory {
-	private static final Map<Integer, Class> FIGURE_MAP;
+	private static final Map<Integer, FigureType> FIGURE_MAP;
 
 	static {
-		Map<Integer, Class<? extends Figure>> initialMap = new HashMap<>();
-		initialMap.put(Line.POINT_SIZE, Line.class);
-		initialMap.put(Triangle.POINT_SIZE, Triangle.class);
-		initialMap.put(Rectangle.POINT_SIZE, Rectangle.class);
-		FIGURE_MAP = Collections.unmodifiableMap(initialMap);
+		FIGURE_MAP = Arrays.stream(FigureType.values())
+			.collect(Collectors.toMap(figureType -> figureType.pointSize, Function.identity()));
 	}
 
 	static Figure getInstance(List<Point> points) {
-		try {
-			Class<? extends Figure> clazz = FIGURE_MAP.get(points.size());
-			if (Objects.isNull(clazz)) {
-				throw new IllegalArgumentException("유효하지 않은 도형입니다.");
-			}
-			return clazz.getDeclaredConstructor(List.class).newInstance(points);
-		} catch (Exception e) {
-			throw new IllegalArgumentException("객체를 생성 할 수 없습니다. " + e.getMessage());
+		FigureType figureType = FIGURE_MAP.get(points.size());
+		if (Objects.isNull(figureType)) {
+			throw new IllegalArgumentException("유효하지 않은 도형입니다.");
+		}
+		return figureType.create(points);
+	}
+
+	private enum FigureType {
+		LINE(Line.POINT_SIZE, Line::new),
+		TRIANGLE(Triangle.POINT_SIZE, Triangle::new),
+		RECTANGLE(Rectangle.POINT_SIZE, Rectangle::new);
+
+		private int pointSize;
+		private Function<List<Point>, Figure> figureConstructor;
+
+		FigureType(int pointSize, Function<List<Point>, Figure> figureConstructor) {
+			this.pointSize = pointSize;
+			this.figureConstructor = figureConstructor;
+		}
+
+		public Figure create(List<Point> points) {
+			return figureConstructor.apply(points);
 		}
 
 	}

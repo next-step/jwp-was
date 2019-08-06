@@ -1,10 +1,10 @@
 package webserver.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import utils.FileUtils;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Created by hspark on 2019-08-01.
@@ -39,13 +39,18 @@ public class URI {
 		return queryString;
 	}
 
-	public Optional<String> get(String key) {
+	public String get(String key) {
 		return requestParameters.getOne(key);
 	}
 
 	public List<String> getAll(String key) {
 		return requestParameters.getAll(key);
 	}
+
+	public boolean isFile() {
+        return FileUtils.hasComma(path);
+    }
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -70,5 +75,14 @@ public class URI {
 		result = 31 * result + (queryString != null ? queryString.hashCode() : 0);
 		result = 31 * result + (requestParameters != null ? requestParameters.hashCode() : 0);
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "URI{" +
+				"path='" + path + '\'' +
+				", queryString='" + queryString + '\'' +
+				", requestParameters=" + requestParameters +
+				'}';
 	}
 }
