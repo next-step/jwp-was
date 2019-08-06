@@ -11,6 +11,7 @@ import static support.FileSupporter.read;
 class PostRequestTest {
 
     private Request request;
+
     @BeforeEach
     void setUp() throws Exception {
         request = HttpRequest.of(read("POST_Request.txt"));

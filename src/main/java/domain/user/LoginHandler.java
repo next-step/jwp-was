@@ -26,7 +26,7 @@ public class LoginHandler implements Handler {
     private Handler failHandler() {
         return (request, response) -> {
             response.addHeader("Set-Cookie", "logined=false; Path=/");
-            response.redirect("/user/login_failed.html");
+            response.sendRedirect("/user/login_failed.html");
         };
     }
 
@@ -35,7 +35,7 @@ public class LoginHandler implements Handler {
 
         return (request, response) -> {
             response.addHeader("Set-Cookie", "logined=true; Path=/");
-            response.redirect("/index.html");
+            response.sendRedirect("/index.html");
         };
     }
 }

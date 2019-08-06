@@ -3,7 +3,7 @@ package webserver.http.request;
 import utils.IOUtils;
 import utils.StringUtils;
 import webserver.http.HeaderKey;
-import webserver.http.RequestMethod;
+import webserver.http.HttpMethod;
 import webserver.http.cookie.Cookies;
 import webserver.http.header.HttpHeaders;
 
@@ -14,7 +14,7 @@ import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
 import static java.lang.System.lineSeparator;
-import static webserver.http.RequestMethod.POST;
+import static webserver.http.HttpMethod.POST;
 
 public class HttpRequest implements Request {
 
@@ -65,7 +65,7 @@ public class HttpRequest implements Request {
     }
 
     @Override
-    public boolean matchMethod(final RequestMethod method) {
+    public boolean matchMethod(final HttpMethod method) {
         return requestLine.matchMethod(method);
     }
 

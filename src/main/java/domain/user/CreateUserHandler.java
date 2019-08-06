@@ -19,6 +19,6 @@ public class CreateUserHandler implements Handler {
         final User user = new User(userId, password, name, email);
         DataBase.addUser(user);
 
-        response.redirect("/index.html");
+        response.sendRedirect("/index.html");
     }
 }

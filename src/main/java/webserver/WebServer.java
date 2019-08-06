@@ -15,8 +15,8 @@ import java.net.Socket;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import static webserver.http.RequestMethod.GET;
-import static webserver.http.RequestMethod.POST;
+import static webserver.http.HttpMethod.GET;
+import static webserver.http.HttpMethod.POST;
 
 public class WebServer {
 

@@ -1,6 +1,6 @@
 package webserver.handler;
 
-import webserver.http.RequestMethod;
+import webserver.http.HttpMethod;
 import webserver.http.request.Request;
 
 import java.util.HashMap;
@@ -13,9 +13,9 @@ public class HandlerMapper implements HandlerProvider {
     private final Map<Condition, Handler> handlerMapper = new HashMap<>();
 
     public void register(final String path,
-                         final RequestMethod requestMethod,
+                         final HttpMethod httpMethod,
                          final Handler handler) {
-        handlerMapper.put(createCondition(path, requestMethod), handler);
+        handlerMapper.put(createCondition(path, httpMethod), handler);
     }
 
     public Handler provide(final Request request) {
@@ -28,7 +28,7 @@ public class HandlerMapper implements HandlerProvider {
     }
 
     private Condition createCondition(final String path,
-                                      final RequestMethod requestMethod) {
-        return request -> request.matchPath(path) && request.matchMethod(requestMethod);
+                                      final HttpMethod httpMethod) {
+        return request -> request.matchPath(path) && request.matchMethod(httpMethod);
     }
 }

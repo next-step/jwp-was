@@ -26,15 +26,15 @@ public class HttpResponse implements Response {
     }
 
     @Override
-    public void addHeader(final String key,
-                          final String value) {
-        headers.add(key, value);
-    }
-
-    @Override
     public void addHeader(final HeaderKey key,
                           final String value) {
         addHeader(key.toString(), value);
+    }
+
+    @Override
+    public void addHeader(final String key,
+                          final String value) {
+        headers.add(key, value);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class HttpResponse implements Response {
     }
 
     @Override
-    public void redirect(final String redirectPath) {
+    public void sendRedirect(final String redirectPath) {
         responseLine = ResponseLine.of(HttpStatus.FOUND);
         headers.setLocation(redirectPath);
     }

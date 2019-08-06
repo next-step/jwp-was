@@ -11,6 +11,7 @@ import static support.FileSupporter.read;
 class GetRequestTest {
 
     private Request request;
+
     @BeforeEach
     void setUp() throws Exception {
         request = HttpRequest.of(read("GET_Request.txt"));

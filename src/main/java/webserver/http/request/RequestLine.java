@@ -1,6 +1,6 @@
 package webserver.http.request;
 
-import webserver.http.RequestMethod;
+import webserver.http.HttpMethod;
 
 public class RequestLine {
 
@@ -8,10 +8,10 @@ public class RequestLine {
     private static final int INDEX_OF_REQUEST_METHOD = 0;
     private static final int INDEX_OF_REQUEST_URL = 1;
 
-    private final RequestMethod method;
+    private final HttpMethod method;
     private final RequestURL url;
 
-    private RequestLine(final RequestMethod method,
+    private RequestLine(final HttpMethod method,
                         final RequestURL url) {
         this.method = method;
         this.url = url;
@@ -19,10 +19,10 @@ public class RequestLine {
 
     public static RequestLine parse(final String rawRequestLine) {
         final String[] splitRequestLine = rawRequestLine.split(SEPARATOR);
-        final RequestMethod requestMethod = RequestMethod.of(splitRequestLine[INDEX_OF_REQUEST_METHOD]);
+        final HttpMethod httpMethod = HttpMethod.of(splitRequestLine[INDEX_OF_REQUEST_METHOD]);
         final RequestURL requestURL = RequestURL.of(splitRequestLine[INDEX_OF_REQUEST_URL]);
 
-        return new RequestLine(requestMethod, requestURL);
+        return new RequestLine(httpMethod, requestURL);
     }
 
     public String getMethod() {
@@ -33,7 +33,7 @@ public class RequestLine {
         return url.getPath();
     }
 
-    boolean matchMethod(final RequestMethod other) {
+    boolean matchMethod(final HttpMethod other) {
         return method == other;
     }
 
