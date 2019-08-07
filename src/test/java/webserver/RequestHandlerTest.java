@@ -21,7 +21,7 @@ public class RequestHandlerTest {
     private static RequestStream requestStream;
 
     @BeforeAll
-    static void mockingBufferedReader() {
+    static void mockingBufferedReader() throws IOException {
         String request = "GET /index.html HTTP/1.1\n" +
         "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
@@ -37,7 +37,7 @@ public class RequestHandlerTest {
         HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
-        RequestHandler requestHandler = new RequestHandler(null);
+        RequestHandler requestHandler = new RequestHandler(null, router);
 
         byte[] responseBody = requestHandler.getResponse(httpRequest).getBody();
         log.debug("response body : {}", new String(responseBody));

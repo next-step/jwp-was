@@ -14,7 +14,7 @@ public class HttpRequestTest {
     private static RequestStream requestStream;
 
     @BeforeEach
-    void mockingRequestStream() {
+    void mockingRequestStream() throws IOException {
         String requestString = "POST /user/create HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
