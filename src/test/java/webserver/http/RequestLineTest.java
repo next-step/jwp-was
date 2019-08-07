@@ -7,8 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import webserver.HttpMethod;
-import webserver.request.RequestLine;
+import webserver.http.request.RequestLine;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class RequestLineTest {
 
-    @DisplayName("parse without query")
+    @DisplayName("to without query")
     @ParameterizedTest(name = "requestLine = {0} -> method : {1}, path : {2}, protocol : {3}, queryMap : {4}")
     @MethodSource("sampleRequestLine")
     void parse(String request,
@@ -31,7 +30,7 @@ class RequestLineTest {
         assertThat(requestLine.getMethod()).isEqualTo(expectedHttpMethod);
         assertThat(requestLine.getPath()).isEqualTo(expectedPath);
         assertThat(requestLine.getProtocol()).isEqualTo(expectedProtocol);
-        assertThat(requestLine.getParameter().getParameterMap()).containsAllEntriesOf(expectedQueryMap);
+        assertThat(requestLine.getHttpParameter().getParameters()).containsAllEntriesOf(expectedQueryMap);
     }
 
     @DisplayName("invalid request arguments")

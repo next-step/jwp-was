@@ -1,17 +1,17 @@
 package exception;
 
-import webserver.StatusCode;
+import webserver.http.HttpStatusCode;
 
 public class HttpException extends RuntimeException {
 
-    private StatusCode statusCode;
+    private HttpStatusCode httpStatusCode;
 
-    public HttpException(StatusCode code) {
+    public HttpException(HttpStatusCode code) {
         super(code.getMessage());
-        this.statusCode = code;
+        this.httpStatusCode = code;
     }
 
-    public StatusCode getStatusCode() {
-        return statusCode;
+    public HttpStatusCode getHttpStatusCode() {
+        return httpStatusCode;
     }
 }

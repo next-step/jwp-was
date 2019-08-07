@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import webserver.request.RequestHeader;
+import webserver.http.request.RequestHeader;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,13 +14,13 @@ import java.util.stream.Stream;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RequestHolderHeaderTest {
+class HttpRequestHeaderTest {
 
-    @DisplayName("parse request header")
+    @DisplayName("to request header")
     @ParameterizedTest(name = "test: {0} -> result: {1}")
     @MethodSource("sampleHeaders")
     void parseRequestHeader(List<String> headers, Map<String, String> expectedHeaders) {
-        RequestHeader requestHeader = RequestHeader.parse(headers);
+        RequestHeader requestHeader = RequestHeader.from(headers);
         assertThat(requestHeader.getHeaders()).containsAllEntriesOf(expectedHeaders);
     }
 

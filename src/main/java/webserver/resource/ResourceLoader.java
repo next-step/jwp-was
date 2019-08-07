@@ -1,13 +1,17 @@
 package webserver.resource;
 
-import webserver.ModelAndView;
+import webserver.http.ModelAndView;
 
-import java.io.IOException;
-
+/**
+ * strategy interface for loading resource given file extension
+ */
 public interface ResourceLoader {
 
+    /**
+     * Whether the given file name's extension is supported by loader
+     */
     boolean support(String name);
 
-    String getResource(ModelAndView mav) throws IOException;
+    String getResource(ModelAndView mav);
 
 }

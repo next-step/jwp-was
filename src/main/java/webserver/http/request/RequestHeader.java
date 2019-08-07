@@ -1,43 +1,39 @@
-package webserver.request;
+package webserver.http.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.MapUtils;
 import utils.StringUtils;
-import webserver.Parameter;
+import webserver.http.Cookies;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.stream.Collectors.joining;
 
 public class RequestHeader {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHeader.class);
 
     private static final char HEADER_DELIMITER = ':';
+    private static final String COOKIE = "Cookie";
 
     private Map<String, String> headers;
+    private Cookies cookies;
 
-    public RequestHeader(Map<String, String> headers) {
+    public RequestHeader(Map<String, String> headers, Cookies cookies) {
         this.headers = headers;
+        this.cookies = cookies;
     }
 
-    public static RequestHeader parse(List<String> requestHeaders) {
+    public static RequestHeader from(List<String> requestHeaders) {
         logger.debug("## header: \n{}", String.join("\n", requestHeaders));
-        Map<String, String> headerMap = new HashMap<>();
+        Map<String, String> headers = new HashMap<>();
         for (String requestHeader : requestHeaders) {
-            MapUtils.putIfKeyNotBlank(headerMap,
+            MapUtils.putIfKeyNotBlank(headers,
                     StringUtils.frontSplitWithOrigin(requestHeader, HEADER_DELIMITER),
                     StringUtils.endSplit(requestHeader, HEADER_DELIMITER));
         }
-
-        return new RequestHeader(headerMap);
-    }
-
-    public String getHost() {
-        return headers.get("Host");
+        return new RequestHeader(headers, Cookies.parse(headers.get(COOKIE)));
     }
 
     public String getAccept() {
@@ -53,9 +49,7 @@ public class RequestHeader {
     }
 
     public String getCookie(String key) {
-        String cookies = headers.get("Cookie");
-        Parameter parameter = Parameter.parseParameter(cookies, ";");
-        return parameter.getParameter(key);
+        return cookies.getCookie(key);
     }
 
     public Map<String, String> getHeaders() {

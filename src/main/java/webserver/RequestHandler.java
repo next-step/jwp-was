@@ -2,32 +2,27 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.RequestBody;
-import webserver.request.RequestHeader;
-import webserver.request.RequestHolder;
-import webserver.request.RequestLine;
-import webserver.response.ResponseHolder;
-import webserver.servlet.LoginServlet;
-import webserver.servlet.RegistrationServlet;
-import webserver.servlet.UserListServlet;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
-import static com.google.common.collect.ImmutableList.of;
-import static utils.IOUtils.readLines;
+import static webserver.Context.CONTROLLERS;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-    private HttpProcessor httpProcessor;
-    public static final String WELCOME_PAGE = "/index.html";
+    private DispatcherController dispatcherController;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
-        this.httpProcessor = new HttpProcessor(of(
-                new RegistrationServlet(), new LoginServlet(), new UserListServlet()));
+        this.dispatcherController = new DispatcherController();
+        dispatcherController.setMappingRegistry(CONTROLLERS);
     }
 
     public void run() {
@@ -36,21 +31,11 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
-            RequestHolder requestHolder = createRequestHolder(in);
-            httpProcessor.process(requestHolder, new ResponseHolder(dos, requestHolder));
+            HttpRequest httpRequest = HttpRequest.from(in);
+            dispatcherController.dispatch(httpRequest, new HttpResponse(dos));
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
-
-    private RequestHolder createRequestHolder(InputStream in) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        RequestLine requestLine = RequestLine.parse(reader.readLine());
-        RequestHeader requestHeader = RequestHeader.parse(readLines(reader));
-        RequestBody requestBody = RequestBody.parse(reader, requestHeader);
-
-        return new RequestHolder(requestLine, requestHeader, requestBody);
-    }
-
 
 }

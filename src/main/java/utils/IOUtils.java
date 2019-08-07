@@ -8,9 +8,9 @@ import java.util.List;
 public class IOUtils {
     /**
      * @param BufferedReader는
-     *            RequestHolder Body를 시작하는 시점이어야
+     *            HttpRequest Body를 시작하는 시점이어야
      * @param contentLength는
-     *            RequestHolder Header의 Content-Length 값이다.
+     *            HttpRequest Header의 Content-Length 값이다.
      * @return
      * @throws IOException
      */
