@@ -34,10 +34,10 @@ public enum RequestMapper {
         return Optional.ofNullable(uris.get(path))
                 .map(mapper -> mapper.handlerCreator)
                 .map(HandlerCreator::createHandler)
-                .orElse(getResourceHadlerCreator().createHandler());
+                .orElse(getResourceHandlerCreator().createHandler());
     }
 
-    private static HandlerCreator getResourceHadlerCreator() {
+    private static HandlerCreator getResourceHandlerCreator() {
         return uris.get("resource")
                 .handlerCreator;
     }
