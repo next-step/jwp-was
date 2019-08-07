@@ -1,11 +1,11 @@
 package webserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.http.HttpResponse;
 import webserver.http.HttpStatus;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
@@ -21,6 +21,7 @@ public enum FileResponse {
     private String fileSuffix;
     private Function<String, HttpResponse> responseFunction;
 
+    private static final Logger logger = LoggerFactory.getLogger(FileResponse.class);
     private static final String STATIC_FILE_PREFIX = "./static";
     private static final String CSS_FILE_SUFFIX = ".css";
     private static final String TEMPLATE_FILE_PREFIX = "./templates";
@@ -33,11 +34,11 @@ public enum FileResponse {
         this.responseFunction = responseFunction;
     }
 
-    private static byte[] getBody(String requestPath, String s) {
+    private static byte[] getBody(String requestPath, String prefix) {
         try {
-            return FileIoUtils.loadFileFromClasspath(s + requestPath);
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
+            return FileIoUtils.loadFileFromClasspath(prefix + requestPath);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
         return new byte[0];
     }
