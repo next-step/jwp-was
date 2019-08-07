@@ -33,41 +33,37 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private Optional<byte[]> getBody(InputStream in) throws IOException {
+    private Optional<byte[]> getBody(InputStream in) {
+        return getRequestLine(in).flatMap(requestLine -> {
+            UriPath path = requestLine.getRequestUri().getUriPath();
+
+            Optional<byte[]> body;
+            if ((body = ResourceFinder.find(path)).isPresent()) return body;
+
+            return ControllerFinder.findController(path)
+                    .flatMap(method -> ResourceFinder.find(UriPath.of(method.invoke(method.getDeclaringClass().newInstance()).toString() + ".html")))
+        });
+    }
+
+    private Optional<RequestLine> getRequestLine(InputStream in) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
         String line;
         int requestHeaderLineIndex = 0;
         RequestLine requestLine = null;
 
-        while (!StringUtils.isEmpty(line = reader.readLine())) {
+        while (true) {
+            try {
+                if (StringUtils.isEmpty(line = reader.readLine())) break;
+            } catch (IOException e) {
+                return Optional.empty();
+            }
             if (++requestHeaderLineIndex == 1) {
                 requestLine = RequestLine.of(line);
             }
         }
 
-        if (requestLine == null) {
-            return Optional.empty();
-        }
-
-        UriPath path = requestLine.getRequestUri().getUriPath();
-
-        Optional<byte[]> result = ResourceFinder.find(path);
-
-        if (!result.isPresent()) {
-            Optional<Method> method = ControllerFinder.findController(path);
-
-            if (method.isPresent()) {
-                Method methodFound = method.get();
-                try {
-                    result = ResourceFinder.find(UriPath.of(methodFound.invoke(methodFound.getDeclaringClass().newInstance()).toString() + ".html"));
-                } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return result;
+        return Optional.ofNullable(requestLine);
     }
 
     private void response(OutputStream out, byte[] body) {
