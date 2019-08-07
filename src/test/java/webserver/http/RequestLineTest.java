@@ -1,6 +1,7 @@
 package webserver.http;
 
 import org.junit.jupiter.api.Test;
+import webserver.http.request.HttpMethod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,14 +13,14 @@ public class RequestLineTest {
 
     @Test
     void get_parse() {
-        assertThat(GET.getMethod()).isEqualTo("GET");
+        assertThat(GET.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(GET.getPath()).isEqualTo("/users");
         assertThat(GET.getVersion()).isEqualTo("HTTP/1.1");
     }
 
     @Test
     void get_with_querystring_parse2() {
-        assertThat(GET_QUERYSTRING.getMethod()).isEqualTo("GET");
+        assertThat(GET_QUERYSTRING.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(GET_QUERYSTRING.getPath()).isEqualTo("/users");
         assertThat(GET_QUERYSTRING.getVersion()).isEqualTo("HTTP/1.1");
         assertThat(GET_QUERYSTRING.getQueryString()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
@@ -27,7 +28,7 @@ public class RequestLineTest {
 
     @Test
     void post_parse() {
-        assertThat(POST.getMethod()).isEqualTo("POST");
+        assertThat(POST.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(POST.getPath()).isEqualTo("/users");
         assertThat(POST.getVersion()).isEqualTo("HTTP/1.1");
     }

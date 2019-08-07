@@ -1,11 +1,13 @@
 package webserver.http;
 
+import webserver.http.request.HttpMethod;
+
 public class RequestLine {
     private final String version;
-    private final String method;
+    private final HttpMethod method;
     private final RequestURL requestURL;
 
-    public RequestLine(String method, RequestURL requestURL, String version) {
+    public RequestLine(HttpMethod method, RequestURL requestURL, String version) {
         this.method = method;
         this.requestURL = requestURL;
         this.version = version;
@@ -15,7 +17,7 @@ public class RequestLine {
         return version;
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
@@ -29,7 +31,7 @@ public class RequestLine {
 
     public static RequestLine parse(String requestLine) {
         String[] splitedRequestLine = requestLine.split(" ");
-        String method = splitedRequestLine[0];
+        HttpMethod method = HttpMethod.lookup(splitedRequestLine[0]);
         String path = splitedRequestLine[1];
         String version = splitedRequestLine[2];
         return new RequestLine(method, RequestURL.parse(path), version);

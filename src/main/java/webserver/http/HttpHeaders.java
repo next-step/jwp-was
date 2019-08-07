@@ -28,7 +28,7 @@ public class HttpHeaders {
         return headers.getOrDefault(key, "");
     }
 
-    public Set<String> keySet() {
+    public Set<String> getHeaderKeys() {
         return new HashSet<>(headers.keySet());
     }
 

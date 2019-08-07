@@ -1,14 +1,18 @@
 package webserver.http;
 
 import utils.IOUtils;
+import webserver.http.request.HttpMethod;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
+import java.util.Optional;
 
 public class HttpRequest {
+    private final String LOGIN_KEY = "logined";
+
     private RequestLine requestLine;
     private HttpHeaders httpHeaders;
     private Map<String, String> parameters;
@@ -39,7 +43,7 @@ public class HttpRequest {
     }
 
     private Map<String, String> createParameters(BufferedReader br, RequestLine requestLine, HttpHeaders httpHeaders) throws IOException {
-        if ("POST".equals(getMethod())) {
+        if (HttpMethod.isPOST(getMethod())) {
             int contentLength = Integer.valueOf(httpHeaders.get("Content-Length"));
             if (contentLength > 0) {
                 return HttpUtils.parseQueryString(IOUtils.readData(br, contentLength));
@@ -48,13 +52,15 @@ public class HttpRequest {
         return HttpUtils.parseQueryString(requestLine.getQueryString());
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return requestLine.getMethod();
     }
 
     public String getPath() {
         return requestLine.getPath();
     }
+
+    public String getHeader(String key) { return httpHeaders.get(key); }
 
     public String getQueryString() {
         return requestLine.getQueryString();
@@ -66,5 +72,11 @@ public class HttpRequest {
 
     public Cookie getCookie(String name) {
         return cookies.get(name);
+    }
+
+    public boolean isLogined() {
+        return Optional.ofNullable(cookies.get(LOGIN_KEY))
+                .map(cookie -> Boolean.parseBoolean(cookie.getValue()))
+                .orElse(false);
     }
 }

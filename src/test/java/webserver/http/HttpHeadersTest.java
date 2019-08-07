@@ -37,6 +37,6 @@ public class HttpHeadersTest {
         httpHeaders.add("Connection", "  ");
         httpHeaders.add("Accept", "\n");
 
-        assertThat(httpHeaders.keySet()).isEmpty();
+        assertThat(httpHeaders.getHeaderKeys()).isEmpty();
     }
 }

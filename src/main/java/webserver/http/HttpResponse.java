@@ -3,84 +3,67 @@ package webserver.http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.RequestHandler;
+import webserver.http.response.HttpStatus;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private int defaultStatusCode = 200;
-    private String defaultContentType = "text/plain";
+    private final int DEFAULT_STATUS_CODE = 200;
+    private final String DEFAULT_CONTENT_TYPE = "text/html";
+    private final String DEFAULT_CHARSET = "UTF-8";
 
     private HttpHeaders httpHeaders;
     private List<Cookie> cookies;
-    private int statusCode;
+    private HttpStatus status;
     private String contentType;
-    private String location;
-    private byte[] body;
+    private byte[] data;
+    private int contentLength;
 
-    public HttpResponse(int statusCode, HttpHeaders httpHeaders, byte[] body, List<Cookie> cookies) {
-        this.statusCode = statusCode;
-        this.httpHeaders = httpHeaders;
-        this.body = body;
-        this.cookies = cookies;
+    public HttpResponse(HttpStatus status, String contentType, byte[] data) {
+        this.status = status;
+        this.contentType = contentType;
+        this.httpHeaders = new HttpHeaders();
+        this.cookies = new ArrayList<>();
+
+        setContentType(contentType);
+
+        setData(data);
     }
 
-    public static HttpResponse ok(String contentType, byte[] body) {
-        return ok(contentType, body, new ArrayList<>());
+    public HttpResponse(HttpStatus status) {
+        this(status, null, null);
     }
 
-    public static HttpResponse ok(String contentType, byte[] body, List<Cookie> cookies) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Content-Type", String.format("%s;charset=utf-8", contentType));
-        httpHeaders.add("Content-Length", Integer.toString(body.length));
-        return new HttpResponse(200, httpHeaders, body, cookies);
-    }
-
-    public static HttpResponse redirect(String location) {
-        return redirect(location, new ArrayList<>());
-    }
-
-    public static HttpResponse redirect(String location, List<Cookie> cookies) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Location", location);
-        return new HttpResponse(302, httpHeaders, new byte[]{}, cookies);
-    }
-
-
-    public enum StatusLine {
-        OK(200, "HTTP/1.1 200 OK"),
-        FOUND(302, "HTTP/1.1 302 Found"),
-        INTERNAL_SERVER_ERROR(500, "HTTP/1.1 500 Internal Server Error");
-
-        private int statusCode;
-        private String statusLine;
-
-        StatusLine(int statusCode, String statusLine) {
-            this.statusCode = statusCode;
-            this.statusLine = statusLine;
+    private void setContentType(String contentType) {
+        if (contentType == null) {
+            this.contentType = DEFAULT_CONTENT_TYPE;
+        } else {
+            this.contentType = contentType;
         }
+    }
 
-        private boolean isEqaul(int statusCode) {
-            return this.statusCode == statusCode;
+    private void setData(byte[] data) {
+        if (data == null) {
+            this.data = new byte[]{};
+            this.contentLength = 0;
+        } else {
+            this.data = data;
+            this.contentLength = data.length;
         }
+    }
 
-        public static StatusLine findByStatusCode(int statusCode) {
-            return Arrays.stream(StatusLine.values())
-                    .filter(x -> x.isEqaul(statusCode))
-                    .findFirst()
-                    .orElse(INTERNAL_SERVER_ERROR);
-        }
+    public void addHeader(String key, String value) {
+        this.httpHeaders.add(key, value);
+    }
 
-        @Override
-        public String toString() {
-            return statusLine;
-        }
+    public void addCookie(String key, String value) {
+        cookies.add(new Cookie(key, value));
     }
 
     public void sendResponse(OutputStream out) {
@@ -89,22 +72,25 @@ public class HttpResponse {
         }
 
         try (DataOutputStream dos = new DataOutputStream(out)){
-            dos.writeBytes(StatusLine.findByStatusCode(statusCode) + "\r\n");
+            dos.writeBytes(String.format("HTTP/1.1 %s\r\n", status.getDescription()));
 
-            for (String key : httpHeaders.keySet()) {
+            dos.writeBytes(String.format("Content-Type: %s\r\n", contentType));
+
+            for (String key : httpHeaders.getHeaderKeys()) {
                 dos.writeBytes(String.format("%s: %s\r\n", key, httpHeaders.get(key)));
             }
 
             for (Cookie cookie : cookies) {
-                dos.writeBytes(cookie.toString() + "\r\n");
+                dos.writeBytes(String.format("Set-Cookie: %s\r\n", cookie));
             }
 
             dos.writeBytes("\r\n");
 
-            dos.write(body, 0, body.length);
+            dos.write(this.data, 0, contentLength);
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
+
 }
