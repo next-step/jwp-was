@@ -1,5 +1,5 @@
 package webserver;
 
 public interface HandlerCreator {
-    RequestMappingHandler createHandler();
+    Handler createHandler();
 }

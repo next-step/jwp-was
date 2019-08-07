@@ -30,7 +30,7 @@ public enum RequestMapper {
         this.handlerCreator = creator;
     }
 
-    public static RequestMappingHandler find(String path) {
+    public static Handler find(String path) {
         return Optional.ofNullable(uris.get(path))
                 .map(mapper -> mapper.handlerCreator)
                 .map(HandlerCreator::createHandler)

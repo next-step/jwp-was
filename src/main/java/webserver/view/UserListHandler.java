@@ -2,7 +2,7 @@ package webserver.view;
 
 import db.DataBase;
 import model.User;
-import webserver.AbstractRequestMappingHandler;
+import webserver.AbstractHandler;
 import webserver.ResourceLoader;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
@@ -16,7 +16,7 @@ import java.util.Map;
 import static webserver.http.HttpHeaders.COOKIE;
 import static webserver.http.HttpHeaders.SET_COOKIE;
 
-public class UserListHandler extends AbstractRequestMappingHandler {
+public class UserListHandler extends AbstractHandler {
 
     public static final String LOGIN_TRUE_COOKIE = "logined=true";
 

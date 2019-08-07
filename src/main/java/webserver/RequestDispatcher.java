@@ -15,7 +15,7 @@ public class RequestDispatcher {
     public void processRequest(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
         logger.debug("request header : {}", request);
 
-        RequestMappingHandler handler = RequestMapper.find(request.getRequestUriPath());
+        Handler handler = RequestMapper.find(request.getRequestUriPath());
         handler.service(request, response);
     }
 }

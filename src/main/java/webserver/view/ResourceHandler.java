@@ -1,6 +1,6 @@
 package webserver.view;
 
-import webserver.AbstractRequestMappingHandler;
+import webserver.AbstractHandler;
 import webserver.ResourceLoader;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
@@ -8,7 +8,7 @@ import webserver.http.response.HttpResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class ResourceHandler extends AbstractRequestMappingHandler {
+public class ResourceHandler extends AbstractHandler {
 
     @Override
     public void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {

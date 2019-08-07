@@ -2,7 +2,7 @@ package webserver.view;
 
 import db.DataBase;
 import model.User;
-import webserver.AbstractRequestMappingHandler;
+import webserver.AbstractHandler;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import static webserver.http.HttpHeaders.SET_COOKIE;
 
-public class LoginHandler extends AbstractRequestMappingHandler {
+public class LoginHandler extends AbstractHandler {
 
     @Override
     public void doPost(HttpRequest request, HttpResponse response) throws IOException {

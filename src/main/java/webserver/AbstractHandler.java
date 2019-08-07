@@ -6,7 +6,7 @@ import webserver.http.response.HttpResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public abstract class AbstractRequestMappingHandler implements RequestMappingHandler {
+public abstract class AbstractHandler implements Handler {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
