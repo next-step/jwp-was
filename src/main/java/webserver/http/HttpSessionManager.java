@@ -30,11 +30,11 @@ public class HttpSessionManager {
         return this.httpSessions.get(sessionId);
     }
 
-    public void invalidate(String sessionId){
+    public void invalidate(String sessionId) {
         this.httpSessions.remove(sessionId);
     }
 
-    public String getSessionKeyName(){
+    public String getSessionKeyName() {
         return this.sessionKeyName;
     }
 
@@ -45,7 +45,7 @@ public class HttpSessionManager {
                 .orElse("");
     }
 
-    public HttpSession newHttpSession(){
+    public HttpSession newHttpSession() {
         String sessionId = UUID.randomUUID().toString();
         return HttpSession.of(this, sessionId);
     }

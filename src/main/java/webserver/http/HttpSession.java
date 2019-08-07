@@ -5,13 +5,13 @@ import java.util.Map;
 
 public class HttpSession {
 
-
     private final HttpSessionManager manager;
+
     private final String id;
+
     private final Map<String, Object> attributes;
 
-
-    private HttpSession(HttpSessionManager manager, String id){
+    private HttpSession(HttpSessionManager manager, String id) {
         this.manager = manager;
         this.id = id;
         this.attributes = new HashMap<>();

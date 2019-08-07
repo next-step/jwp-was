@@ -11,6 +11,7 @@ public class HttpCookies {
     public static final String COOKIES_SPLIT_SIGN = ";";
 
     public static final String COOKIE_SPLIT_SIGN = "=";
+
     public static final int COOKIE_SPLIT_LIMIT = 2;
 
     private Map<String, HttpCookie> cookies;
@@ -37,7 +38,7 @@ public class HttpCookies {
     private static HttpCookie parseHttpCookie(String cookieValue) {
         String[] cookieNameAndValue = cookieValue.split(COOKIE_SPLIT_SIGN, COOKIE_SPLIT_LIMIT);
 
-        if(cookieNameAndValue.length != COOKIE_SPLIT_LIMIT) {
+        if (cookieNameAndValue.length != COOKIE_SPLIT_LIMIT) {
             throw new IllegalArgumentException("cookie value 이상함");
         }
 

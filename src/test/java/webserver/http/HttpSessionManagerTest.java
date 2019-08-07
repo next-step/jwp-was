@@ -19,9 +19,9 @@ public class HttpSessionManagerTest {
     @Test
     public void httpSessionCreate() {
         try {
-        HttpRequest request = HttpBaseRequest.parse(new ByteArrayInputStream(HTTP_PLAIN_GET.getBytes()));
-        HttpSession httpSession = request.getSession(true);
-        assertThat(HttpSessionManager.getInstance().getHttpSession(httpSession.getId())).isNotNull();
+            HttpRequest request = HttpBaseRequest.parse(new ByteArrayInputStream(HTTP_PLAIN_GET.getBytes()));
+            HttpSession httpSession = request.getSession(true);
+            assertThat(HttpSessionManager.getInstance().getHttpSession(httpSession.getId())).isNotNull();
         } catch (Exception e) {
             assertThat(e).doesNotThrowAnyException();
         }
