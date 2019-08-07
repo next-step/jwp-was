@@ -7,12 +7,12 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PartsTest {
+public class HttpUtilsTest {
 
     @ParameterizedTest
     @CsvSource(value = {"userId:javajigi", "password:password", "name:JaeSung"}, delimiter = ':')
-    void parse(String input, String expected) {
-        Parts parts = Parts.parse("/users?userId=javajigi&password=password&name=JaeSung");
-        assertThat(parts.getQuery(input)).isEqualTo(expected);
+    void parseQueryString(String input, String expected) {
+        Map<String, String> queryString = HttpUtils.parseQueryString("userId=javajigi&password=password&name=JaeSung");
+        assertThat(queryString.get(input)).isEqualTo(expected);
     }
 }
