@@ -1,17 +1,16 @@
 package webserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.IOUtils;
+import webserver.http.RequestHeader;
+import webserver.http.RequestLine;
+import webserver.service.WebService;
+import webserver.service.WebServiceFactory;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
-import utils.IOUtils;
-import webserver.http.RequestLine;
-import webserver.http.RequestHeader;
-import webserver.service.WebService;
-import webserver.service.WebServiceFactory;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -37,25 +36,25 @@ public class RequestHandler implements Runnable {
             RequestHeader requestHeader = readRequestHeader(br);
 
             handleRequestBody(requestLine, br, requestHeader.findByKey("Content-Length"));
-            handlerWebService(out, requestLine);
-        } catch (IOException| URISyntaxException e) {
+            handlerWebService(out, requestLine, requestHeader);
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
     private void handleRequestBody(RequestLine requestLine, BufferedReader br, String contentLength) throws IOException {
         if ("GET".equals(requestLine.getMethod())) {
-            return ;
+            return;
         }
 
         String reqBody = IOUtils.readData(br, Integer.parseInt(contentLength));
         requestLine.getPath().addParameters(reqBody);
     }
 
-    private void handlerWebService(OutputStream outputStream, RequestLine requestLine) throws IOException, URISyntaxException {
+    private void handlerWebService(OutputStream outputStream, RequestLine requestLine, RequestHeader requestHeader) throws IOException, URISyntaxException {
         WebService webService = WebServiceFactory.create(requestLine.getPath().getPath());
         if (webService != null) {
-            webService.process(outputStream, requestLine);
+            webService.process(outputStream, requestLine, requestHeader);
             return;
         }
 

@@ -14,4 +14,15 @@ public class HttpStringUtils {
     public static boolean isPatternMatch(String regex, String input) {
         return Pattern.matches(regex, input);
     }
+
+    public static boolean checkLoginCookie(String cookie) {
+        String[] cookies = split(cookie, ";");
+        for (String data : cookies) {
+            if (data.trim().equals("logined=true")) {
+                return Boolean.TRUE;
+            }
+        }
+
+        return Boolean.FALSE;
+    }
 }

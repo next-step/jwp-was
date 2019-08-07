@@ -69,4 +69,20 @@ public class ResponseHandler {
             logger.error(e.getMessage());
         }
     }
+
+    public static void response200WithBody(OutputStream out, String responseBody) {
+        try {
+            DataOutputStream doc = new DataOutputStream(out);
+            byte[] body = responseBody.getBytes();
+
+            doc.writeBytes("HTTP/1.1 200 OK \r\n");
+            doc.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            doc.writeBytes("Content-Length: " + body.length + "\r\n");
+            doc.writeBytes("\r\n");
+
+            responseBody(doc, body);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
 }

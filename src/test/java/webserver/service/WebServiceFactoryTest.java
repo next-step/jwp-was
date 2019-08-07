@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebServiceFactoryTest {
     @ParameterizedTest
-    @CsvSource({"/user/create,true", "/user/list,false"})
+    @CsvSource({"/user/create,true", "/user/end,false"})
     void create_userService(ArgumentsAccessor argumentsAccessor) {
         //when
         WebService webService = WebServiceFactory.create(argumentsAccessor.getString(0));

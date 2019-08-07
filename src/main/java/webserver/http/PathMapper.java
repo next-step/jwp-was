@@ -15,6 +15,7 @@ public class PathMapper {
         pathMapper.put("/user/create", "/index.html");
         pathMapper.put("/user/login/success", "/index.html");
         pathMapper.put("/user/login/fail", "/user/login_failed.html");
+        pathMapper.put("/user/list/fail", "/user/login.html");
     }
 
     private static boolean isMatchPath(String path) {

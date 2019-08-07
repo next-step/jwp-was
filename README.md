@@ -67,7 +67,12 @@
     - [x] UserService 내부에서 각 경로별로 method분리
     - [x] WebService로 Outputstream 넘길 것.
     
-- [ ] 요구사항 6 : 로그인상태인 경우 user/list보여주기 / 아닌경우 로그인페이지
+- [x] 요구사항 6 : 로그인상태인 경우 user/list보여주기 / 아닌경우 로그인페이지
+    - [x] /user/list 접근했을때 로그인상태인지 판단 (cookie 확인)
+    - [x] 로그인했으면 Database에 있는 user정보 읽어서 화면 출력
+    - [x] 아닌경우 로그인 페이지로 이동
+    - [x] handlebars적용, 결과출력
+    
 - [ ] 요구사항 7 : stylesheet 지원하도록 구현
 
 > 뒤로 갈수록 테스트케이스를 어떻게 만들어야할지 잘 모르겠다.
