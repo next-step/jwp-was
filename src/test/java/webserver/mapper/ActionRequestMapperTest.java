@@ -1,6 +1,6 @@
 package webserver.mapper;
 
-import actions.user.UserCreatAction;
+import actions.user.UserCreateAction;
 import enums.HttpMethod;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ActionRequestMapperTest {
 
     private static final ActionRequestMapper userCreatectionRequestMapper = new ActionRequestMapper("/user/create"
-            , new UserCreatAction()
+            , new UserCreateAction()
             , new HashSet<>(Arrays.asList(new HttpMethod[]{HttpMethod.GET}))
     );
 

@@ -2,8 +2,6 @@ package webserver.mapper;
 
 import enums.HttpMethod;
 import utils.FileIoUtils;
-import utils.MimeTypeUtils;
-import webserver.http.HttpHeaders;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
@@ -16,7 +14,9 @@ import java.util.regex.Pattern;
 public class TemplateRequestMapper implements RequestMapper{
 
     private final Map<String, URL> urlCache;
+    
     private final Map<Pattern, String> resources;
+    
     private final String templatePath;
 
     public TemplateRequestMapper(String templatePath) {
@@ -44,15 +44,9 @@ public class TemplateRequestMapper implements RequestMapper{
     }
 
     @Override
-    public Object handle(HttpRequest httpRequest, HttpResponse httpResponse) {
-
+    public void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
         URL resourceUrl = this.urlCache.get(httpRequest.getRequestURI());
-        byte[] body = FileIoUtils.loadFileFromURL(resourceUrl);
-        httpResponse.setResponseBody(body);
-
-        String mimeType = MimeTypeUtils.guessContentTypeFromName(resourceUrl.getFile(), httpRequest.getHeader(HttpHeaders.ACCEPT));
-        httpResponse.setHttpHeader(HttpHeaders.CONTENT_TYPE, mimeType);
-        return null;
+        httpResponse.sendResource(resourceUrl);
     }
 
     public TemplateRequestMapper addResourceMapping(String regex, String destination) {

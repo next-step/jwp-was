@@ -1,34 +1,45 @@
 package actions.user;
 
-import db.DataBase;
-import enums.HttpStatus;
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import db.DataBase;
+import model.User;
 import utils.StringUtils;
+import webserver.handler.ActionHandler;
 import webserver.handler.ModelView;
-import webserver.handler.ModelViewActionHandler;
 import webserver.http.HttpHeaders;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-public class UserListAction implements ModelViewActionHandler {
+public class UserListAction implements ActionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(UserListAction.class);
 
     @Override
-    public ModelView actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void actionHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
 
-        logger.debug("cookie : {}", httpRequest.getHeader(HttpHeaders.COOKIE));
-        if(!StringUtils.nvl(httpRequest.getHeader(HttpHeaders.COOKIE)).contains("logined=true")) {
-
-            httpResponse.setHttpStatus(HttpStatus.FOUND);
-            httpResponse.setHttpHeader(HttpHeaders.LOCATION, "/user/login.html");
-            return null;
+        if (!isLogin(httpRequest)) {
+            httpResponse.sendRedirect("/user/login.html");
+            return;
         }
 
-        ModelView modelView = new ModelView("user/list");
-        modelView.addObject("users", DataBase.findAll());
-        return modelView;
+        getUserList(httpRequest, httpResponse);
+    }
+
+    private boolean isLogin(HttpRequest httpRequest) {
+        return StringUtils.nvl(httpRequest.getHeader(HttpHeaders.COOKIE)).contains("logined=true");
+    }
+
+    private void getUserList(HttpRequest httpRequest, HttpResponse httpResponse) {
+
+        Collection<User> users = DataBase.findAll();
+
+        ModelView modelView = httpRequest.getModelView();
+        modelView.setView("user/list");
+        modelView.addObject("users", users);
     }
 
 }

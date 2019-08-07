@@ -8,8 +8,8 @@ import webserver.resolvers.view.ViewResolver;
 
 public class ViewActionRequestMapper implements RequestMapper {
 
-
     private final ActionRequestMapper actionRequestMapper;
+    
     private final ViewResolver viewResolver;
 
 
@@ -24,11 +24,8 @@ public class ViewActionRequestMapper implements RequestMapper {
     }
 
     @Override
-    public Object handle(HttpRequest httpRequest, HttpResponse httpResponse) {
-        Object object = this.actionRequestMapper.handle(httpRequest, httpResponse);
-        if(object != null && object instanceof ModelView) {
-            this.viewResolver.resove((ModelView)object, httpRequest, httpResponse);
-        }
-        return object;
+    public void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
+        this.actionRequestMapper.handle(httpRequest, httpResponse);
+        this.viewResolver.resolve(httpRequest, httpResponse);
     }
 }

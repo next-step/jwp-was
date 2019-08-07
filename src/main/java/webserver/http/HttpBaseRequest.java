@@ -5,6 +5,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import utils.IOUtils;
 import utils.StringUtils;
+import webserver.handler.ModelView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,14 +15,21 @@ import java.util.Optional;
 
 public class HttpBaseRequest implements HttpRequest {
 
+	private final ModelView modelView;
+	
     private final RequestLine requestLine;
+    
     private final String requestUri;
+    
     private final HttpHeaders httpHeaders;
+    
     private final String body;
+    
     private final MultiValueMap<String, String> params;
 
 
-    private HttpBaseRequest(RequestLine requestLine, HttpHeaders httpHeaders, String body){
+    private HttpBaseRequest(RequestLine requestLine, HttpHeaders httpHeaders, String body) {
+    	this.modelView = new ModelView();
         this.requestLine = requestLine;
         this.requestUri = parseRequestUri(requestLine.getPath());
         this.httpHeaders = httpHeaders;
@@ -44,17 +52,18 @@ public class HttpBaseRequest implements HttpRequest {
             httpHeaders.addHeaderLine(headerLine);
         }
 
-
         String body = null;
-        int contentLength = (int)httpHeaders.getContentLength();
-        if(contentLength != -1) {
+        int contentLength = (int) httpHeaders.getContentLength();
+        if (contentLength != -1) {
             body = IOUtils.readData(bufferedReader, contentLength);
         }
 
         return new HttpBaseRequest(requestLine, httpHeaders, body);
     }
 
-    public HttpMethod getMethod() {return this.requestLine.getMethod();}
+    public HttpMethod getMethod() {
+        return this.requestLine.getMethod();
+    }
 
     public String getPath() {
         return this.requestLine.getPath();
@@ -77,12 +86,16 @@ public class HttpBaseRequest implements HttpRequest {
         return this.httpHeaders.getHeaderValueFirst(name);
     }
 
-    public String getBody(){
+    public String getBody() {
         return this.body;
     }
 
     public String getRequestURI() {
         return this.requestUri;
     }
+
+	public ModelView getModelView() {
+		return this.modelView;
+	}
 
 }

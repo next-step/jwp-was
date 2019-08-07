@@ -1,6 +1,7 @@
 package webserver.http;
 
 import enums.HttpMethod;
+import webserver.handler.ModelView;
 
 public interface HttpRequest {
 
@@ -17,4 +18,6 @@ public interface HttpRequest {
     String getBody();
 
     String getRequestURI();
+
+	ModelView getModelView();
 }

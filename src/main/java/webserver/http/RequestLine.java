@@ -5,7 +5,9 @@ import enums.HttpMethod;
 public class RequestLine {
 
     private final HttpMethod method;
+    
     private final String path;
+    
     private final String version;
 
     private RequestLine(String method, String path, String version) {

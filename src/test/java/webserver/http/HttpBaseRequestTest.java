@@ -3,6 +3,8 @@ package webserver.http;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -12,19 +14,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class HttpBaseRequestTest {
 
 
-    private final static String HTTP_PLAIN_GET = "GET /index.html HTTP/1.1\n" +
+    private static final String HTTP_PLAIN_GET = "GET /index.html HTTP/1.1\n" +
             "Host: localhost:8080\n" +
             "Connection: keep-alive\n" +
             "Accept: */*\n";
 
 
-    private final static String HTTP_PLAIN_GET_QUERY_STRING = "GET http://localhost:8080/index.html?userId=circlee HTTP/1.1\n" +
+    private static final String HTTP_PLAIN_GET_QUERY_STRING = "GET http://localhost:8080/index.html?userId=circlee HTTP/1.1\n" +
             "Host: localhost:8080\n" +
             "Connection: keep-alive\n" +
             "Accept: */*\n";
 
 
-    private final static String HTTP_PLAIN_POST = "POST /user/create HTTP/1.1\n" +
+    private static final String HTTP_PLAIN_POST = "POST /user/create HTTP/1.1\n" +
             "Host: localhost:8080\n" +
             "Connection: keep-alive\n" +
             "Content-Length: 93\n" +
@@ -54,13 +56,14 @@ public class HttpBaseRequestTest {
             assertThat(httpRequest).isNotNull();
             assertThat(httpRequest.getPath()).isEqualTo("/index.html");
         } catch (Exception e) {
+            assertThat(e).doesNotThrowAnyException();
             assertThat(e).hasNoCause();
         }
 
     }
 
-    @DisplayName("Get Http HttpRequest 테스트 : queryString")
-    @Test
+    @ParameterizedTest(name = "{index} {0} is 30 days long")
+    @MethodSource("provideStringsForIsBlank")
     public void httpRequestParse2(){
         try{
             HttpBaseRequest httpRequest = HttpBaseRequest.parse(inputStreamGetQueryString);
@@ -69,6 +72,7 @@ public class HttpBaseRequestTest {
             assertThat(httpRequest.getRequestURI()).isEqualTo("/index.html");
             assertThat(httpRequest.getParameter("userId")).isEqualTo("circlee");
         } catch (Exception e) {
+            assertThat(e).doesNotThrowAnyException();
             assertThat(e).hasNoCause();
         }
 
@@ -83,6 +87,7 @@ public class HttpBaseRequestTest {
             assertThat(httpRequest.getPath()).isEqualTo("/user/create");
             assertThat(httpRequest.getBody()).isEqualTo("userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net");
         } catch (Exception e) {
+            assertThat(e).doesNotThrowAnyException();
             assertThat(e).hasNoCause();
         }
 
