@@ -9,9 +9,10 @@ import com.google.common.base.Charsets;
 import java.io.IOException;
 import java.util.Map;
 
-public class HandleBarTemplateLoader {
+public class HandleBarViewResolver implements ViewResolver {
 
-    public static byte[] loadTemplate(String path, Map<String, Object> data) throws IOException {
+    @Override
+    public byte[] loadTemplate(String path, Map<String, Object> data) throws IOException {
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix("/templates");
         loader.setSuffix(".html");

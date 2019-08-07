@@ -6,7 +6,7 @@ import webserver.AbstractHandler;
 import webserver.ResourceLoader;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
-import webserver.template.HandleBarTemplateLoader;
+import webserver.template.HandleBarViewResolver;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -24,7 +24,8 @@ public class UserListHandler extends AbstractHandler {
     public void doGet(HttpRequest request, HttpResponse response) throws IOException {
         if (LOGIN_TRUE_COOKIE.equals(request.getHeader(COOKIE))) {
             Map<String, Object> data = findAllUsers();
-            byte[] body = HandleBarTemplateLoader.loadTemplate("/user/list", data);
+            HandleBarViewResolver viewResolver = new HandleBarViewResolver();
+            byte[] body = viewResolver.loadTemplate("/user/list", data);
 
             response.response200Header(body.length, ResourceLoader.resourceContentType("text/html;"));
             response.responseBody(body);
