@@ -26,7 +26,6 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             if (in == null) {
                 return;
             }
@@ -58,7 +57,17 @@ public class RequestHandler implements Runnable {
             return;
         }
 
-        ResponseHandler.response200(outputStream, requestLine);
+        if (requestLine.getPath().getPath().endsWith(".css")) {
+            ResponseHandler.response200WithCss(outputStream, requestLine);
+            return;
+        }
+
+        if (requestLine.getPath().getPath().endsWith(".js")) {
+            ResponseHandler.response200WithJs(outputStream, requestLine);
+            return;
+        }
+
+        ResponseHandler.response200WithHtml(outputStream, requestLine);
     }
 
     public RequestLine readRequestLine(BufferedReader br) throws IOException {

@@ -14,22 +14,6 @@ import java.net.URISyntaxException;
 public class ResponseHandler {
     private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
 
-    public static void response200(OutputStream out, RequestLine requestLine) {
-        try {
-            DataOutputStream doc = new DataOutputStream(out);
-            byte[] body = FileIoUtils.loadFileFromClasspath(requestLine.getFilePath());
-
-            doc.writeBytes("HTTP/1.1 200 OK \r\n");
-            doc.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            doc.writeBytes("Content-Length: " + body.length + "\r\n");
-            doc.writeBytes("\r\n");
-
-            responseBody(doc, body);
-        } catch (IOException | URISyntaxException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
     public static void response302(OutputStream out, RequestLine requestLine) {
         try {
             DataOutputStream doc = new DataOutputStream(out);
@@ -61,11 +45,33 @@ public class ResponseHandler {
         }
     }
 
-    private static void responseBody(DataOutputStream doc, byte[] body) {
+    public static void response200WithCss(OutputStream out, RequestLine requestLine) {
+        String contentType = "Content-Type: text/css;charset=utf-8\r\n";
+        response200(out, requestLine, contentType);
+    }
+
+    public static void response200WithJs(OutputStream out, RequestLine requestLine) {
+        String contentType = "Content-Type: text/js;charset=utf-8\r\n";
+        response200(out, requestLine, contentType);
+    }
+
+    public static void response200WithHtml(OutputStream out, RequestLine requestLine) {
+        String contentType = "Content-Type: text/html;charset=utf-8\r\n";
+        response200(out, requestLine, contentType);
+    }
+
+    private static void response200(OutputStream out, RequestLine requestLine, String contentType) {
         try {
-            doc.write(body, 0, body.length);
-            doc.flush();
-        } catch (IOException e) {
+            DataOutputStream doc = new DataOutputStream(out);
+            byte[] body = FileIoUtils.loadFileFromClasspath(requestLine.getFilePath());
+
+            doc.writeBytes("HTTP/1.1 200 OK \r\n");
+            doc.writeBytes(contentType);
+            doc.writeBytes("Content-Length: " + body.length + "\r\n");
+            doc.writeBytes("\r\n");
+
+            responseBody(doc, body);
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
@@ -81,6 +87,15 @@ public class ResponseHandler {
             doc.writeBytes("\r\n");
 
             responseBody(doc, body);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private static void responseBody(DataOutputStream doc, byte[] body) {
+        try {
+            doc.write(body, 0, body.length);
+            doc.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

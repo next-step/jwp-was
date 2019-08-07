@@ -27,6 +27,10 @@ public class PathMapper {
             return HttpStringType.FILE_PATH_PREFIX.getType() + pathMapper.get(path);
         }
 
+        if (path.endsWith(".css") || path.endsWith(".js")) {
+            return "./static" + path;
+        }
+
         String filePath = HttpStringType.FILE_PATH_PREFIX.getType() + path;
 
         if (!Pattern.matches("^.+(.html)$", path)) {
