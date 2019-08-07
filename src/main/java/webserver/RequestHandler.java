@@ -41,7 +41,13 @@ public class RequestHandler implements Runnable {
             if ((body = ResourceFinder.find(path)).isPresent()) return body;
 
             return ControllerFinder.findController(path)
-                    .flatMap(method -> ResourceFinder.find(UriPath.of(method.invoke(method.getDeclaringClass().newInstance()).toString() + ".html")))
+                    .flatMap(method -> {
+                        try {
+                            return ResourceFinder.find(UriPath.of(method.invoke(method.getDeclaringClass().newInstance()).toString() + ".html"));
+                        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+                            return Optional.empty();
+                        }
+                    });
         });
     }
 
