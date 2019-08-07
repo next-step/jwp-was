@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import route.Router;
 
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
@@ -15,6 +16,7 @@ public class WebServer {
 
     public static void main(String args[]) throws Exception {
         int port = setPort(args);
+        WebServerRouter router = new Router();
         ExecutorService executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL);
 
         try (ServerSocket listenSocket = new ServerSocket(port)) {
@@ -22,7 +24,7 @@ public class WebServer {
 
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                executorService.execute(new RequestHandler(connection));
+                executorService.execute(new RequestHandler(connection, router));
             }
         }
     }
