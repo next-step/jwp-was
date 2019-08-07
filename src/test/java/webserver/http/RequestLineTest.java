@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class RequestLineTest {
 
-    @DisplayName("parse without query")
+    @DisplayName("to without query")
     @ParameterizedTest(name = "requestLine = {0} -> method : {1}, path : {2}, protocol : {3}, queryMap : {4}")
     @MethodSource("sampleRequestLine")
     void parse(String request,

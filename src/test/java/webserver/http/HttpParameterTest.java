@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import utils.ParsingUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,11 +16,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class HttpParameterTest {
 
-    @DisplayName("parse query with parameter")
+    @DisplayName("to query with parameter")
     @ParameterizedTest(name = "query: {0}")
     @MethodSource("sampleQuery")
     void parseQuery(String sampleQuery, Map<String, String> parameterMap) {
-        assertThat(HttpParameter.parseParameter(sampleQuery).getParameters())
+        assertThat(new HttpParameter(ParsingUtils.parseUrl(sampleQuery)).getParameters())
                 .containsAllEntriesOf(parameterMap);
     }
 

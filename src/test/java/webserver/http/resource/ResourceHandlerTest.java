@@ -15,14 +15,16 @@ class ResourceHandlerTest {
 
     @Test
     void resourceHandler() {
-        ResourceHandler resourceHandler = new ResourceHandler(asList(new MockResourceLoader(EXPECTED_LOCATION)));
+        ResourceHandler resourceHandler = new ResourceHandler();
+        resourceHandler.setResourceLoaders(asList(new MockResourceLoader(EXPECTED_LOCATION)));
         String contents = resourceHandler.getContents(new ModelAndView(EXPECTED_LOCATION));
         assertThat(contents).isEqualTo(EXPECTED_LOCATION);
     }
 
     @Test
     void resourceHandlerNotFound() {
-        ResourceHandler resourceHandler = new ResourceHandler(asList(new MockResourceLoader("NotFound")));
+        ResourceHandler resourceHandler = new ResourceHandler();
+        resourceHandler.setResourceLoaders(asList(new MockResourceLoader("NotFound")));
         assertThrows(HttpException.class, () -> resourceHandler.getContents(new ModelAndView(EXPECTED_LOCATION)));
     }
 

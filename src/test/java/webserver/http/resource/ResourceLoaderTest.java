@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.http.ModelAndView;
+import webserver.resource.AbstractResourceLoader;
 import webserver.resource.HandlebarsResourceLoader;
 import webserver.resource.ResourceLoader;
 import webserver.resource.StaticResourceLoader;
@@ -22,7 +23,8 @@ public class ResourceLoaderTest {
     @ParameterizedTest(name = "viewName: {0}")
     @ValueSource(strings = {"/test.js", "/test.css"})
     void loadStaticResource(String viewName) throws IOException {
-        ResourceLoader resourceLoader = new StaticResourceLoader(getClass().getClassLoader());
+        AbstractResourceLoader resourceLoader = new StaticResourceLoader();
+        resourceLoader.setClassLoader(getClass().getClassLoader());
         ModelAndView mav = new ModelAndView(viewName);
         assertThat(resourceLoader.getResource(mav)).contains("hello test");
     }

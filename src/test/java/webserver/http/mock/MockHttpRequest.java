@@ -1,5 +1,6 @@
 package webserver.http.mock;
 
+import webserver.http.Cookies;
 import webserver.http.HttpParameter;
 import webserver.http.HttpRequest;
 import webserver.http.request.RequestBody;
@@ -26,7 +27,7 @@ public class MockHttpRequest extends HttpRequest {
     }
 
     private static RequestHeader getMockRequestHeader(Map<String, String> headers) {
-        return new RequestHeader(headers);
+        return new RequestHeader(headers, new Cookies(Collections.emptyMap()));
     }
 
     private static RequestBody getMockRequestBody() {

@@ -8,14 +8,10 @@ import java.net.URL;
 
 public abstract class AbstractResourceLoader implements ResourceLoader {
 
-    protected ClassLoader classLoader;
+    public ClassLoader classLoader;
 
     public AbstractResourceLoader() {
         this.classLoader = Thread.currentThread().getContextClassLoader();
-    }
-
-    public AbstractResourceLoader(ClassLoader classLoader) {
-        this.classLoader = classLoader;
     }
 
     protected void validate(String name) {
@@ -32,4 +28,7 @@ public abstract class AbstractResourceLoader implements ResourceLoader {
         }
     }
 
+    public void setClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
 }

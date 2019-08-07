@@ -2,7 +2,6 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.HttpProcessor;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
@@ -12,17 +11,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import static webserver.http.HttpRequest.createHtpRequest;
+import static webserver.Context.CONTROLLERS;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-    private HttpProcessor httpProcessor;
+    private DispatcherController dispatcherController;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
-        this.httpProcessor = new HttpProcessor();
+        this.dispatcherController = new DispatcherController();
+        dispatcherController.setMappingRegistry(CONTROLLERS);
     }
 
     public void run() {
@@ -31,8 +31,8 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
-            HttpRequest httpRequest = createHtpRequest(in);
-            httpProcessor.process(httpRequest, new HttpResponse(dos));
+            HttpRequest httpRequest = HttpRequest.from(in);
+            dispatcherController.dispatch(httpRequest, new HttpResponse(dos));
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

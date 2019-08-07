@@ -6,10 +6,10 @@ import utils.StringUtils;
 import webserver.http.HttpMethod;
 import webserver.http.HttpParameter;
 
+import static utils.ParsingUtils.parseUrl;
 import static utils.StringUtils.endSplit;
 import static utils.StringUtils.frontSplitWithOrigin;
-import static webserver.http.HttpParameter.parseParameter;
-import static webserver.provider.ConfigurationProvider.welcomePage;
+import static webserver.Context.WELCOME_PAGE;
 
 public class RequestLine {
 
@@ -24,6 +24,8 @@ public class RequestLine {
 
     private static final char URL_QUERY_DELIMITER = '?';
     private static final String REQUEST_LINE_DELIMITER = " ";
+
+
 
     public static class Builder {
         private final HttpMethod method;
@@ -64,7 +66,7 @@ public class RequestLine {
         HttpMethod httpMethod = HttpMethod.valueOf(requests[0]);
         String path = getPath(frontSplitWithOrigin(requests[1], URL_QUERY_DELIMITER));
         String protocol = requests[2];
-        HttpParameter httpParameter = parseParameter(endSplit(requests[1], URL_QUERY_DELIMITER));
+        HttpParameter httpParameter = new HttpParameter(parseUrl(endSplit(requests[1], URL_QUERY_DELIMITER)));
 
         return new Builder(httpMethod, path, protocol)
                 .parameter(httpParameter)
@@ -73,7 +75,7 @@ public class RequestLine {
 
     private static String getPath(String path) {
         logger.info("## " + path);
-        return ROOT.equals(path) ? welcomePage() : path;
+        return ROOT.equals(path) ? WELCOME_PAGE : path;
     }
 
     public void setPath(String path) {

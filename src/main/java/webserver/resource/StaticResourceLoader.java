@@ -20,13 +20,6 @@ public class StaticResourceLoader extends AbstractResourceLoader {
     private static final Logger logger = LoggerFactory.getLogger(StaticResourceLoader.class);
     private static final List<String> AVAILABLE_RESOURCE = asList("js", "css", "woff", "svg", "ttf", "eot", "svg", "png");
 
-    public StaticResourceLoader() {
-    }
-
-    public StaticResourceLoader(ClassLoader classLoader) {
-        super(classLoader);
-    }
-
     @Override
     public boolean support(String name) {
         return AVAILABLE_RESOURCE.contains(StringUtils.endLastSplit(name, '.'));
@@ -36,9 +29,9 @@ public class StaticResourceLoader extends AbstractResourceLoader {
         String name = "static" + mav.getViewName();
         validate(name);
         logger.debug("## retrieve resource name: {}", name);
-        try (InputStream in = classLoader.getResourceAsStream(name)) {
+        try (InputStream in = classLoader.getResourceAsStream(name)){
             if (in == null) {
-                throw new HttpException(HttpStatusCode.NOT_FOUND);
+                throw new IOException();
             }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));

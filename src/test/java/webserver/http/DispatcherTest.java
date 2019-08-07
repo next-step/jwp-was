@@ -22,7 +22,7 @@ class DispatcherTest {
     private DataOutputStream dos;
     private HttpResponse response;
     private HttpRequest request;
-    private HttpDispatcher dispatcher;
+    private ViewResolver viewResolver;
 
     @BeforeEach
     void setUp() throws FileNotFoundException {
@@ -30,27 +30,27 @@ class DispatcherTest {
         this.dos = new DataOutputStream(new FileOutputStream(file));
         this.response = new MockHttpResponse(dos);
         this.request = new MockHttpRequest(EXPECTED_LOCATION);
-        this.dispatcher = new HttpDispatcher(request, response);
-        dispatcher.setResourceHandler(new MockResourceHandler());
+        this.viewResolver = ViewResolver.from(request, response);
+        viewResolver.setResourceHandler(new MockResourceHandler());
     }
 
     @Test
     void notFound() throws IOException {
-        dispatcher.notFound();
+        viewResolver.error(NOT_FOUND);
         assertThat(new String(loadFile(file)))
                 .contains(String.valueOf(NOT_FOUND.getCode()), EXPECTED_ERROR_LOCATION);
     }
 
     @Test
     void forward() throws IOException {
-        dispatcher.forward(EXPECTED_LOCATION);
+        viewResolver.forward(EXPECTED_LOCATION);
         assertThat(new String(loadFile(file)))
                 .contains(String.valueOf(OK.getCode()), EXPECTED_LOCATION);
     }
 
     @Test
     void redirect() throws IOException {
-        dispatcher.redirect(EXPECTED_LOCATION);
+        viewResolver.redirect(EXPECTED_LOCATION);
         assertThat(new String(loadFile(file)))
                 .contains(String.valueOf(FOUND.getCode()), EXPECTED_LOCATION);
     }

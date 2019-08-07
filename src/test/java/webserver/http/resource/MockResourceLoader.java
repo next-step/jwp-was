@@ -3,8 +3,6 @@ package webserver.http.resource;
 import webserver.http.ModelAndView;
 import webserver.resource.ResourceLoader;
 
-import java.io.IOException;
-
 public class MockResourceLoader implements ResourceLoader {
 
     private String location;
@@ -19,7 +17,7 @@ public class MockResourceLoader implements ResourceLoader {
     }
 
     @Override
-    public String getResource(ModelAndView mav) throws IOException {
+    public String getResource(ModelAndView mav) {
         return mav.getViewName();
     }
 }

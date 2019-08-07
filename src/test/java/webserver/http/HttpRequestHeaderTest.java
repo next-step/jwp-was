@@ -16,11 +16,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class HttpRequestHeaderTest {
 
-    @DisplayName("parse request header")
+    @DisplayName("to request header")
     @ParameterizedTest(name = "test: {0} -> result: {1}")
     @MethodSource("sampleHeaders")
     void parseRequestHeader(List<String> headers, Map<String, String> expectedHeaders) {
-        RequestHeader requestHeader = RequestHeader.parse(headers);
+        RequestHeader requestHeader = RequestHeader.from(headers);
         assertThat(requestHeader.getHeaders()).containsAllEntriesOf(expectedHeaders);
     }
 
