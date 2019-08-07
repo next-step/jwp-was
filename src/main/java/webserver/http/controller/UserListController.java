@@ -1,9 +1,11 @@
-package webserver.http.dispatcher;
+package webserver.http.controller;
 
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.Cookie;
+import webserver.http.HttpStatus;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.view.View;
@@ -15,13 +17,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserListDispatcher<V extends ViewResolver> extends AbstractDispatcher<HttpRequest, HttpResponse> {
+public class UserListController<V extends ViewResolver> extends AbstractController<HttpRequest, HttpResponse> {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserListDispatcher.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserListController.class);
 
     private V viewResolver;
 
-    public UserListDispatcher(V viewResolver) {
+    public UserListController(V viewResolver) {
         this.viewResolver = viewResolver;
     }
 
@@ -37,19 +39,24 @@ public class UserListDispatcher<V extends ViewResolver> extends AbstractDispatch
 
                 View view = viewResolver.render("user/list", data);
 
-                response.writeHeader(request.getAccept(), view.getLength());
+                response.writeHeader(HttpStatus.OK, request.getAccept(), view.getLength());
                 response.writeBody(view.getBody());
             } else {
-                response.redirect("/user/login.html", false);
+                response.addCookie(new Cookie("logined", "false"));
+                response.redirect("/user/login");
             }
         } catch (IOException | URISyntaxException e) {
-            logger.error("[PROCESS][HANDLEBAR] failed. {}", e);
+            logger.error("[PROCESS][USER LIST] failed. {}", e);
         }
     }
 
     @Override
     protected void doPost(HttpRequest request, HttpResponse response) {
-
+        try {
+            response.error(HttpStatus.METHOD_NOT_ALLOWED);
+        } catch (IOException e) {
+            logger.error("[PROCESS][USER LIST] failed. {}", e);
+        }
     }
 
     @Override

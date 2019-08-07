@@ -2,23 +2,24 @@ package webserver.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.mapping.HandlerMapping;
+import webserver.http.mapping.Dispatcher;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-    private HandlerMapping handlerMapping;
+    private Dispatcher dispatcher;
 
-    public RequestHandler(Socket connectionSocket, HandlerMapping handlerMapping) {
+    public RequestHandler(Socket connectionSocket, Dispatcher dispatcher) {
         this.connection = connectionSocket;
-        this.handlerMapping = handlerMapping;
+        this.dispatcher = dispatcher;
     }
 
     public void run() {
@@ -26,13 +27,10 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            DataOutputStream dos = new DataOutputStream(out);
+            HttpRequest httpRequest = new HttpRequest(in);
+            HttpResponse httpResponse = new HttpResponse(out);
 
-            HttpRequest httpRequest = new HttpRequest(br);
-            HttpResponse httpResponse = new HttpResponse(dos);
-
-            handlerMapping.route(httpRequest, httpResponse);
+            dispatcher.dispatch(httpRequest, httpResponse);
 
         } catch (IOException e) {
             logger.error(e.getMessage());

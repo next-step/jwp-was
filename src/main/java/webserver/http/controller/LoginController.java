@@ -1,9 +1,11 @@
-package webserver.http.dispatcher;
+package webserver.http.controller;
 
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.Cookie;
+import webserver.http.HttpStatus;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.view.View;
@@ -12,13 +14,13 @@ import webserver.view.ViewResolver;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class LoginDispatcher<V extends ViewResolver> extends AbstractDispatcher<HttpRequest, HttpResponse> {
+public class LoginController<V extends ViewResolver> extends AbstractController<HttpRequest, HttpResponse> {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginDispatcher.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     private V viewResolver;
 
-    public LoginDispatcher(V viewResolver) {
+    public LoginController(V viewResolver) {
         this.viewResolver = viewResolver;
     }
 
@@ -26,7 +28,7 @@ public class LoginDispatcher<V extends ViewResolver> extends AbstractDispatcher<
     protected void doGet(HttpRequest request, HttpResponse response) {
         try {
             View view = viewResolver.render(request.getPath());
-            response.writeHeader(request.getAccept(), view.getLength());
+            response.writeHeader(HttpStatus.OK, request.getAccept(), view.getLength());
             response.writeBody(view.getBody());
         } catch (IOException | URISyntaxException e) {
             logger.error("[PROCESS][LOGIN] failed. {}", e);
@@ -44,10 +46,11 @@ public class LoginDispatcher<V extends ViewResolver> extends AbstractDispatcher<
             if (user == null || !user.isOwner(password)) {
                 logger.error("[PROCESS][LOGIN] password not match. {}", userId);
                 View view = viewResolver.render("/user/login_failed");
-                response.writeHeader(request.getAccept(), view.getLength());
+                response.writeHeader(HttpStatus.OK, request.getAccept(), view.getLength());
                 response.writeBody(view.getBody());
             } else {
-                response.redirect("/index", true);
+                response.addCookie(new Cookie("logined", "true"));
+                response.redirect("/index");
             }
         } catch (IOException | URISyntaxException e) {
             logger.error("[PROCESS][LOGIN] failed. {}", e);

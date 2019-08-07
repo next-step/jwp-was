@@ -1,0 +1,4 @@
+HTTP/1.1 302 Redirect
+Set-Cookie: logined=true;Path=/
+Location: /index
+

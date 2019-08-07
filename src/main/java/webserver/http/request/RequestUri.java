@@ -35,7 +35,6 @@ public class RequestUri {
         }
 
         return new RequestUri(path, split[1]);
-
     }
 
     private static boolean hasView(String path) {
