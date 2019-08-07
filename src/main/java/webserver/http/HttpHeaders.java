@@ -8,6 +8,7 @@ import org.springframework.util.MultiValueMap;
 import utils.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -163,6 +164,13 @@ public class HttpHeaders {
         return getFirst(name);
     }
 
+    public List<String> getHeaderSplitValues(String name){
+        return this.headers.get(name)
+                .stream()
+                .flatMap( value -> Arrays.stream(value.split(";")))
+                .collect(Collectors.toList());
+    }
+
     public String getContentType() {
         return getFirst(CONTENT_TYPE);
     }
@@ -234,7 +242,5 @@ public class HttpHeaders {
     private String getFirst(String name){
         return this.headers.getFirst(name);
     }
-
-
 
 }

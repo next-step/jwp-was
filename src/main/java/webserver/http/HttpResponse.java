@@ -84,10 +84,26 @@ public class HttpResponse {
     }
 
     public void writeResponse() {
+
+        ifHasNewSessionSetCookie();
+
         writeStatusLine(this.outputStream, this.getHttpStatus());
         writeHeaderLines(this.outputStream, this.getHttpHeaderLines());
         writeBody(this.outputStream, this.getResponseBody());
         writeFlush(this.outputStream);
+    }
+
+    private void ifHasNewSessionSetCookie(){
+        if(!this.httpRequest.hasNewSession()) {
+            return;
+        }
+
+        HttpSession httpSession = this.httpRequest.getSession(false);
+        if(httpSession == null) {
+            return;
+        }
+
+        this.setHttpHeader(HttpHeaders.SET_COOKIE, httpSession.getCookieValue()+"; Path=/");
     }
 
     private void writeStatusLine(DataOutputStream dos, HttpStatus httpStatus) {

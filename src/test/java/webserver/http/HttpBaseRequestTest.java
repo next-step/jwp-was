@@ -17,6 +17,7 @@ public class HttpBaseRequestTest {
     private static final String HTTP_PLAIN_GET = "GET /index.html HTTP/1.1\n" +
             "Host: localhost:8080\n" +
             "Connection: keep-alive\n" +
+            "Cookie: test=testValue\n" +
             "Accept: */*\n";
 
 
@@ -55,6 +56,20 @@ public class HttpBaseRequestTest {
             HttpBaseRequest httpRequest = HttpBaseRequest.parse(inputStreamGet);
             assertThat(httpRequest).isNotNull();
             assertThat(httpRequest.getPath()).isEqualTo("/index.html");
+        } catch (Exception e) {
+            assertThat(e).doesNotThrowAnyException();
+            assertThat(e).hasNoCause();
+        }
+
+    }
+
+    @DisplayName("Get Http HttpRequest Cookies 테스트 : cookie 확인")
+    @Test
+    public void httpRequestCookiesTest(){
+        try{
+            HttpBaseRequest httpRequest = HttpBaseRequest.parse(inputStreamGet);
+            assertThat(httpRequest.getCookie("test")).isNotNull();
+            assertThat(httpRequest.getCookie("test").getValue()).isEqualTo("testValue");
         } catch (Exception e) {
             assertThat(e).doesNotThrowAnyException();
             assertThat(e).hasNoCause();

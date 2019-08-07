@@ -22,10 +22,15 @@ public class HttpBaseRequest implements HttpRequest {
     private final String requestUri;
     
     private final HttpHeaders httpHeaders;
+
+    private final HttpCookies httpCookies;
     
     private final String body;
     
     private final MultiValueMap<String, String> params;
+
+    private HttpSession httpSession;
+    private boolean hasNewSession = false;
 
 
     private HttpBaseRequest(RequestLine requestLine, HttpHeaders httpHeaders, String body) {
@@ -33,6 +38,7 @@ public class HttpBaseRequest implements HttpRequest {
         this.requestLine = requestLine;
         this.requestUri = parseRequestUri(requestLine.getPath());
         this.httpHeaders = httpHeaders;
+        this.httpCookies = HttpCookies.of(this.httpHeaders.getHeaderValueFirst(HttpHeaders.COOKIE));
         this.body = body;
         this.params = new LinkedMultiValueMap<>(QueryParams.parseByPath(requestLine.getPath()).getParameters());
     }
@@ -97,5 +103,54 @@ public class HttpBaseRequest implements HttpRequest {
 	public ModelView getModelView() {
 		return this.modelView;
 	}
+
+    @Override
+    public HttpCookie getCookie(String cookieName) {
+        return Optional.ofNullable(httpCookies)
+                .map(cookies -> cookies.getCookie(cookieName))
+                .orElse(null);
+    }
+
+    @Override
+    public HttpSession getSession() {
+        return getSession(true);
+    }
+
+    @Override
+    public HttpSession getSession(boolean create) {
+
+        setSessionIfNull();
+
+        String cookieSessionId = Optional.ofNullable(this.httpSession).map(session -> session.getId()).orElse("");
+
+        HttpSessionManager httpSessionManager = HttpSessionManager.getInstance();
+
+        if(!create) {
+            return this.httpSession;
+        }
+
+        httpSessionManager.invalidate(cookieSessionId);
+        this.hasNewSession = true;
+        this.httpSession = httpSessionManager.newHttpSession();
+        return this.httpSession;
+    }
+
+
+
+    @Override
+    public boolean hasNewSession() {
+        return this.hasNewSession;
+    }
+
+    private void setSessionIfNull(){
+
+        if(this.httpSession != null) {
+            return;
+        }
+
+        HttpSessionManager httpSessionManager = HttpSessionManager.getInstance();
+        String cookieSessionId = httpSessionManager.getSessionIdFromCookieValues(this.httpCookies);
+        this.httpSession = httpSessionManager.getHttpSession(cookieSessionId);
+    }
 
 }
