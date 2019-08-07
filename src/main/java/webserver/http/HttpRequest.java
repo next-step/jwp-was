@@ -13,26 +13,21 @@ public class HttpRequest {
     private HttpEntity httpEntity;
     private HttpController httpController;
 
-    public HttpRequest(HttpController httpController, String httpMsg) {
+    public HttpRequest(HttpController httpController) {
         this.httpController = httpController;
         this.httpEntity = new HttpEntity();
+    }
 
-        try {
+    public void parse(String httpMsg)
+            throws IOException, URISyntaxException{
             new HttpHeaderConverter(this, httpMsg);
-        }catch (IOException e){
-            HttpResponse.setPageError(this);
-        }catch (URISyntaxException e){
-            HttpResponse.setPageNotFond(this);
-        }
     }
 
     public HttpEntity getHttpEntity() {
         return httpEntity;
     }
 
-    public HttpHeader getHttpHeader(){
-        return httpEntity.getHttpHeader();
-    }
+    public HttpHeader getHttpHeader() { return httpEntity.getHttpHeader(); }
 
     public String getMethod(){
         return httpEntity.getMethod();
@@ -46,20 +41,8 @@ public class HttpRequest {
         return httpEntity.getParameter();
     }
 
-    public void setCookie(String cookie) {
-        httpEntity.setCookie(cookie);
-    }
-
-    public void setUrlPath(String urlPath) {
-        httpEntity.setUrlPath(urlPath);
-    }
-
     public String getReturnContent() {
         return httpEntity.getReturnContent();
-    }
-
-    public void setReturnContent(String remakeContent) {
-        httpEntity.setReturnContent(remakeContent);
     }
 
     public String getVersion() {
@@ -70,24 +53,8 @@ public class HttpRequest {
         return httpEntity.getResultCode();
     }
 
-    public String getLocation() {
-        return httpEntity.getLocation();
-    }
-
-    public String getCookie() {
-        return httpEntity.getCookie();
-    }
-
-    public void setResultCode(int httpStatusCode) {
-        httpEntity.setResultCode(httpStatusCode);
-    }
-
-    public void setLocation(String location) {
-        httpEntity.setLocation(location);
-    }
-
     public HashMap<String, String> getEtcHeader() {
-        return getEtcHeader();
+        return httpEntity.getEtcHeader();
     }
 
     public HttpController getHttpController() { return httpController; }

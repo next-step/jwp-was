@@ -3,6 +3,7 @@ package webserver.http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.converter.HttpConverter;
+import webserver.domain.HttpResponseEntity;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,35 +13,26 @@ import java.util.Optional;
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
-    public void sendResponse(DataOutputStream dos, HttpRequest httpRequest){
+    HttpResponseEntity responseEntity;
+    public HttpResponse(HttpResponseEntity responseEntity){
+        this.responseEntity = responseEntity;
+    }
+
+    public void sendResponse(DataOutputStream dos){
         try {
-            byte[] returnContent = Optional.ofNullable(httpRequest.getReturnContent())
+            byte[] returnContent = Optional.ofNullable(responseEntity.getResultBody())
                     .orElse("").getBytes();
 
-            dos.writeBytes(httpRequest.getVersion() +
+            dos.writeBytes(responseEntity.getVersion() +
                     HttpConverter.SEPARATOR +
-                    httpRequest.getResultCode() +
+                    responseEntity.getResultCode() +
                     HttpConverter.SEPARATOR +
-                    HttpStatus.getHttpStatusMessage(httpRequest.getResultCode()) +
+                    HttpStatus.getHttpStatusMessage(responseEntity.getResultCode()) +
                     HttpConverter.SEPARATOR +
                     HttpConverter.QUERY_NEW_LINE
             );
 
-            if(isCssFile(httpRequest)){
-                dos.writeBytes("Accept: text/css,*/*;q=0.1\r\n");
-                dos.writeBytes("Connection: keep-alive\r\n");
-            }else{
-                dos.writeBytes("Content-Type: text/html;charset=utf-8" + HttpConverter.QUERY_NEW_LINE);
-                dos.writeBytes("Content-Length: " + returnContent.length + "\r\n");
-            }
-
-            if(httpRequest.getResultCode() == HttpStatus.REDIRECT.getHttpStatusCode()){
-                dos.writeBytes("Location: " + httpRequest.getLocation() + "\r\n");
-            }
-
-            if(httpRequest.getCookie() != null){
-                dos.writeBytes("Set-Cookie: " + httpRequest.getCookie() + "\r\n");
-            }
+            setResponseAddOption(dos, responseEntity, returnContent.length);
 
             dos.writeBytes("\r\n");
             dos.write(returnContent, 0, returnContent.length);
@@ -50,23 +42,35 @@ public class HttpResponse {
         }
     }
 
-    public static void setRedirect(HttpRequest httpRequest, String location){
-        httpRequest.setResultCode(HttpStatus.REDIRECT.getHttpStatusCode());
-        httpRequest.setReturnContent(HttpStatus.REDIRECT.getHttpStatusMessage());
-        httpRequest.setLocation(location);
+    private void setResponseAddOption(DataOutputStream dos, HttpResponseEntity responseEntity, int contentLength) throws IOException{
+        setFileResourceOption(dos, responseEntity, contentLength);
+        setRedirectOption(dos, responseEntity);
+        setCookieOption(dos, responseEntity);
     }
 
-    public static void setPageNotFond(HttpRequest httpRequest){
-        httpRequest.setResultCode(HttpStatus.NOT_FOUND.getHttpStatusCode());
-        httpRequest.setReturnContent(HttpStatus.NOT_FOUND.getHttpStatusMessage());
+    private void setFileResourceOption(DataOutputStream dos,
+                                       HttpResponseEntity responseEntity,
+                                       int contentLength) throws IOException{
+
+        if(responseEntity.getHttpHeader().getEtcHeader().containsKey("Accept")){
+            dos.writeBytes("Accept: " + responseEntity.getHttpHeader().getEtcHeader().get("Accept"));
+        }
+
+        dos.writeBytes("Connection: keep-alive\r\n");
+        dos.writeBytes("Content-Length: " + contentLength + "\r\n");
     }
 
-    public static void setPageError(HttpRequest httpRequest){
-        httpRequest.setResultCode(HttpStatus.SERVER_ERROR.getHttpStatusCode());
-        httpRequest.setReturnContent(HttpStatus.SERVER_ERROR.getHttpStatusMessage());
+    private void setRedirectOption(DataOutputStream dos,
+                                   HttpResponseEntity responseEntity) throws IOException{
+        if(responseEntity.getResultCode() == HttpStatus.REDIRECT.getHttpStatusCode()){
+            dos.writeBytes("Location: " + responseEntity.getRedirectUrl() + "\r\n");
+        }
     }
 
-    public boolean isCssFile(HttpRequest httpRequest){
-        return (httpRequest.getUrlPath().indexOf(HttpConverter.CSS_FILE_NAMING) != -1) ? true : false;
+    private void setCookieOption(DataOutputStream dos,
+                                 HttpResponseEntity responseEntity) throws IOException{
+        if(responseEntity.getCookie() != null){
+            dos.writeBytes("Set-Cookie: " + responseEntity.getCookie() + "\r\n");
+        }
     }
 }

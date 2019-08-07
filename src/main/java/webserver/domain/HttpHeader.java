@@ -1,10 +1,12 @@
 package webserver.domain;
 
+import webserver.http.HttpStatus;
+
 import java.util.HashMap;
 
 public class HttpHeader {
 
-    private int resultCode = 200;
+    private int resultCode = HttpStatus.OK.getHttpStatusCode();
     private String method;
     private String urlPath;
     private String version;

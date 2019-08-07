@@ -31,12 +31,6 @@ public class HttpHeaderConverter extends HttpConverter{
         httpEntity.setUrlPath(setSeparatorUrlParameter(separatorMethodPath[1]));
         httpEntity.setVersion(separatorMethodPath[2]);
         HttpParameterConverter.HttpParameterParse(httpEntity, httpSplit);
-
-        if(httpRequest.getHttpController().isContainUrl(httpRequest.getUrlPath())){
-            httpRequest.getHttpController().callMethod(httpRequest);
-        }else{
-            HttpFileConverter.readFile(httpEntity);
-        }
     }
 
     private void setHtmlOptionMsgParsing(HttpRequest httpRequest, String[] str){

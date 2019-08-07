@@ -29,7 +29,7 @@ public enum HttpFileResource {
 
     public static String getFileBaseDirectory(String filePath){
         String BaseDirectoryStr = Arrays.stream(HttpFileResource.values())
-                .filter(httpFileResource -> filePath.indexOf(httpFileResource.getFileExtension()) != -1)
+                .filter(httpFileResource -> filePath.contains(httpFileResource.getFileExtension()))
                 .findFirst()
                 .orElseThrow(() -> new InvalidPathException(filePath, "지원하지 않는 형식의 파일입니다."))
                 .getFilePath();

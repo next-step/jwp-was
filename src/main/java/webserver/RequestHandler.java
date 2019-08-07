@@ -28,9 +28,9 @@ public class RequestHandler implements Runnable {
             String content = IOUtils.readData(new BufferedReader(new InputStreamReader(in, "UTF-8")), 1024);
 
             logger.debug(content);
-            RequestLine requestLine = RequestLine.parse(httpController, content);
+            HttpResponse response = RequestLine.parse(httpController, content);
             DataOutputStream dos = new DataOutputStream(out);
-            new HttpResponse().sendResponse(dos, requestLine.getHttpRequest());
+            response.sendResponse(dos);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

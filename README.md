@@ -39,3 +39,8 @@ feat ($step1): HTTP 파싱 및 IF문 중복 제거
 - AbstractControllerCreator 추상 컨트롤러 추가 (컨트롤러 추상화 작업)
 - ControllerCreator 인터페이스 추가
 - HttpController 클래스 추가 (AbstractControllerCreator 받아 컨트롤러들의 호출을 담당)
+
+새로 추가한 작업 $step2-3:
+- HttpResponseEntity 클래스 추가 (읽은 요청을 응답하기 위해 정리하는 클래스)
+- HttpRequest 클래스는 Http 파싱만 하게 분리
+- HttpResponse 클래스는 정리된 HttpResponseEntity를 받아 응답 결과를 리턴한다
