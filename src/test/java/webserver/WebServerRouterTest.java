@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WebServerRouterTest {
     private String CREATE_USER_URL = "/user/create";
     private String LOGIN_URL = "/user/login";
-    WebServerRouter webServerRouter = new Router();
+    private WebServerRouter webServerRouter = new Router();
 
     @Test
     @Disabled
@@ -26,7 +26,6 @@ public class WebServerRouterTest {
         HttpResponse httpResponse = new HttpResponse();
         User user = new User("javajigi", "password", "박재성", "javajigi@slipp.net");
 
-
         assertThat(webServerRouter.route(httpRequest, httpResponse).orElse("")).isEqualTo(user.toString());
     }
 
@@ -36,7 +35,6 @@ public class WebServerRouterTest {
         RequestStream requestStream = new RequestStream(inputStream);
         HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
-
 
         assertThat(webServerRouter.route(httpRequest, httpResponse).orElse("").toString())
                 .isEqualTo("redirect:/index.html");
