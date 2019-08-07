@@ -13,12 +13,7 @@ import java.util.Optional;
  * @author : yusik
  * @date : 2019-08-07
  */
-public class UserListController implements Controller {
-
-    @Override
-    public ModelAndView postProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return null;
-    }
+public class UserListController extends AbstractController {
 
     @Override
     public ModelAndView getProcess(HttpRequest httpRequest, HttpResponse httpResponse) {

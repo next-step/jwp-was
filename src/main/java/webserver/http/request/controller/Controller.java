@@ -9,8 +9,5 @@ import webserver.http.response.view.ModelAndView;
  * @date : 2019-08-06
  */
 public interface Controller {
-
-    ModelAndView postProcess(HttpRequest httpRequest, HttpResponse httpResponse);
-
-    ModelAndView getProcess(HttpRequest httpRequest, HttpResponse httpResponse);
+    ModelAndView process(HttpRequest httpRequest, HttpResponse httpResponse);
 }

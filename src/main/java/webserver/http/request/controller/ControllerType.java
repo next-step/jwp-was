@@ -8,6 +8,7 @@ public enum ControllerType {
     LOGIN("/user/login", LoginController::new, true),
     JOIN("/user/create", JoinController::new, true),
     USER_LIST("/user/list", UserListController::new, false),
+    DEFAULT_ERROR("/error", ErrorController::new, true),
     ;
 
     private final ControllerCreator creator;

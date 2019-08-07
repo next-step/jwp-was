@@ -40,7 +40,7 @@ public class ModelAndView {
     }
 
     public boolean isRedirect() {
-        return view.contains(PREFIX_REDIRECT);
+        return view.startsWith(PREFIX_REDIRECT);
     }
 
     public String getRedirectUrl() {

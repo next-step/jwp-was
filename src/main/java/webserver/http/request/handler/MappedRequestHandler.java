@@ -35,21 +35,20 @@ public class MappedRequestHandler implements RequestHandler {
     @Override
     public ViewRenderer handle(HttpRequest httpRequest, HttpResponse httpResponse) {
 
-        HttpMethod method = httpRequest.getHttpMethod();
         String url = httpRequest.getPath();
-        ModelAndView modelAndView = new ModelAndView("redirect::/user/login.html");
+        ModelAndView modelAndView = new ModelAndView("/error");
+
+        ControllerType controllerType = mappingControllerCache.get(url);
+
+        if (controllerType == null) {
+            controllerType = mappingControllerCache.get("/error");
+        }
 
         // check login
-        ControllerType controllerType = mappingControllerCache.get(url);
         Controller controller = controllerType.getController();
         if (controllerType.isAllowAll() || isLogin(httpRequest)) {
-
             // service logic
-            if (HttpMethod.GET == method) {
-                modelAndView = controller.getProcess(httpRequest, httpResponse);
-            } else if (HttpMethod.POST == method) {
-                modelAndView = controller.postProcess(httpRequest, httpResponse);
-            }
+            modelAndView = controller.process(httpRequest, httpResponse);
         }
 
         // redirect

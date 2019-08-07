@@ -5,6 +5,9 @@ version = '1.0.0'
 sourceCompatibility = 1.8
 
 repositories {
+    maven {
+        url 'http://jcenter.bintray.com'
+    }
     mavenCentral()
 }
 

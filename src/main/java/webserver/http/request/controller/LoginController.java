@@ -11,7 +11,8 @@ import webserver.http.response.view.ModelAndView;
  * @author : yusik
  * @date : 2019-08-07
  */
-public class LoginController implements Controller {
+public class LoginController extends AbstractController {
+
     @Override
     public ModelAndView postProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
         ParameterMap parameters = httpRequest.getParameters();
@@ -24,11 +25,7 @@ public class LoginController implements Controller {
         }
 
         httpResponse.setCookie("logined=true; Path=/");
-        return new ModelAndView("redirect::/index.html");
-    }
 
-    @Override
-    public ModelAndView getProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return null;
+        return new ModelAndView("redirect::/index.html");
     }
 }

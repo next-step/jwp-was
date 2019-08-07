@@ -11,7 +11,8 @@ import webserver.http.response.view.ModelAndView;
  * @author : yusik
  * @date : 2019-08-07
  */
-public class JoinController implements Controller {
+public class JoinController extends AbstractController {
+
     @Override
     public ModelAndView postProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
         ParameterMap parameters = httpRequest.getParameters();
@@ -24,10 +25,5 @@ public class JoinController implements Controller {
 
         DataBase.addUser(user);
         return new ModelAndView("redirect::/index.html");
-    }
-
-    @Override
-    public ModelAndView getProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return null;
     }
 }
