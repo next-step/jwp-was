@@ -30,7 +30,7 @@ public class RequestStream {
     }
 
     public List<String> header() {
-        return this.requestLines.subList(1, requestLines.size() - 1);
+        return this.requestLines.subList(1, requestLines.size());
     }
 
     public String body() throws IOException {

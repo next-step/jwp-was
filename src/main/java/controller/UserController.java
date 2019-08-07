@@ -14,7 +14,7 @@ public class UserController {
 
     private static final String COOKIE_LOGINED_KEY = "logined";
     private static final String COOKIE_LOGINED_SUCCESS_VALUE = "true";
-    private static final String COOKIE_LOGINED_FAIL_VALUE = "true";
+    private static final String COOKIE_LOGINED_FAIL_VALUE = "false";
 
     public static Optional createUser(HttpRequest httpRequest, HttpResponse httpResponse) {
         User user = new User(
