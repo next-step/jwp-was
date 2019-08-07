@@ -3,6 +3,7 @@ package webserver;
 import model.User;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import route.Router;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.RequestStream;
@@ -14,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WebServerRouterTest {
     private String CREATE_USER_URL = "/user/create";
     private String LOGIN_URL = "/user/login";
+    WebServerRouter webServerRouter = new Router();
 
     @Test
     @Disabled
@@ -24,7 +26,8 @@ public class WebServerRouterTest {
         HttpResponse httpResponse = new HttpResponse();
         User user = new User("javajigi", "password", "박재성", "javajigi@slipp.net");
 
-        assertThat(WebServerRouter.route(httpRequest, httpResponse).orElse("")).isEqualTo(user.toString());
+
+        assertThat(webServerRouter.route(httpRequest, httpResponse).orElse("")).isEqualTo(user.toString());
     }
 
     @Test
@@ -35,7 +38,7 @@ public class WebServerRouterTest {
         HttpResponse httpResponse = new HttpResponse();
 
 
-        assertThat(WebServerRouter.route(httpRequest, httpResponse).orElse("").toString())
+        assertThat(webServerRouter.route(httpRequest, httpResponse).orElse("").toString())
                 .isEqualTo("redirect:/index.html");
     }
 
@@ -47,7 +50,7 @@ public class WebServerRouterTest {
         HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
-        assertThat(WebServerRouter.route(httpRequest, httpResponse).orElse(""))
+        assertThat(webServerRouter.route(httpRequest, httpResponse).orElse(""))
                 .isEqualTo("redirect:/index.html");
     }
 
@@ -59,7 +62,7 @@ public class WebServerRouterTest {
         HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
-        assertThat(WebServerRouter.route(httpRequest, httpResponse).orElse(""))
+        assertThat(webServerRouter.route(httpRequest, httpResponse).orElse(""))
                 .isEqualTo("redirect:/user/login_failed.html");
     }
 
@@ -69,7 +72,7 @@ public class WebServerRouterTest {
         HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
-        WebServerRouter.route(httpRequest, httpResponse);
+        webServerRouter.route(httpRequest, httpResponse);
     }
 
     private InputStream makeLoginSuccessBufferedReader() {
