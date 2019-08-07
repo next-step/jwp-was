@@ -1,5 +1,8 @@
 package webserver;
 
+import webserver.template.HandleBarViewResolver;
+import webserver.template.HtmlViewResolver;
+import webserver.template.ViewResolver;
 import webserver.view.LoginHandler;
 import webserver.view.ResourceHandler;
 import webserver.view.UserCreateHandler;
@@ -11,13 +14,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public enum RequestMapper {
-    USER_CREATE("/user/create", UserCreateHandler::new),
-    USER_LOGIN("/user/login", LoginHandler::new),
-    USER_LIST("/user/list", UserListHandler::new),
-    RESOURCE("resource", ResourceHandler::new);
+    USER_CREATE("/user/create", UserCreateHandler::new, new HtmlViewResolver()),
+    USER_LOGIN("/user/login", LoginHandler::new, new HtmlViewResolver()),
+    USER_LIST("/user/list", UserListHandler::new, new HandleBarViewResolver()),
+    RESOURCE("resource", ResourceHandler::new, new HtmlViewResolver());
 
     private String path;
     private HandlerCreator handlerCreator;
+    private ViewResolver resolver;
 
     private static Map<String, RequestMapper> uris;
     static {
@@ -25,20 +29,23 @@ public enum RequestMapper {
                 .collect(Collectors.toMap(requestMapper -> requestMapper.path, requestMapper -> requestMapper, (requestMapper1, requestMapper2) -> requestMapper1));
     }
 
-    RequestMapper(String path, HandlerCreator creator) {
+    RequestMapper(String path, HandlerCreator creator, ViewResolver resolver) {
         this.path = path;
         this.handlerCreator = creator;
+        this.resolver = resolver;
     }
 
     public static Handler find(String path) {
         return Optional.ofNullable(uris.get(path))
-                .map(mapper -> mapper.handlerCreator)
-                .map(HandlerCreator::createHandler)
-                .orElse(getResourceHandlerCreator().createHandler());
+                .map(mapper -> mapper.handlerCreator
+                        .createHandler(mapper.resolver))
+                .orElse(getResourceHandlerCreator());
     }
 
-    private static HandlerCreator getResourceHandlerCreator() {
-        return uris.get("resource")
-                .handlerCreator;
+    private static Handler getResourceHandlerCreator() {
+        RequestMapper mapper = uris.get("resource");
+        return mapper.handlerCreator
+                .createHandler(mapper.resolver);
+
     }
 }

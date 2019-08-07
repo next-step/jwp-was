@@ -5,12 +5,17 @@ import model.User;
 import webserver.AbstractHandler;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.template.ViewResolver;
 
 import java.io.IOException;
 
 import static webserver.http.HttpHeaders.SET_COOKIE;
 
 public class LoginHandler extends AbstractHandler {
+
+    public LoginHandler(ViewResolver viewResolver) {
+        super(viewResolver);
+    }
 
     @Override
     public void doPost(HttpRequest request, HttpResponse response) throws IOException {

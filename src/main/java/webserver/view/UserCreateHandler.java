@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import webserver.AbstractHandler;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.template.ViewResolver;
 
 import java.io.IOException;
 
@@ -15,6 +16,10 @@ import static webserver.http.HttpHeaders.SET_COOKIE;
 public class UserCreateHandler extends AbstractHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(UserCreateHandler.class);
+
+    public UserCreateHandler(ViewResolver viewResolver) {
+        super(viewResolver);
+    }
 
     @Override
     public void doPost(HttpRequest request, HttpResponse response) throws IOException {

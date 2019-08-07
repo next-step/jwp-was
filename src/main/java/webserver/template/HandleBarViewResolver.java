@@ -12,7 +12,22 @@ import java.util.Map;
 public class HandleBarViewResolver implements ViewResolver {
 
     @Override
-    public byte[] loadTemplate(String path, Map<String, Object> data) throws IOException {
+    public byte[] loadView(String path) throws IOException {
+        Template template = loadTemplate(path);
+        String usersPage = template.text();
+
+        return usersPage.getBytes();
+    }
+
+    @Override
+    public byte[] loadView(String path, Map<String, Object> data) throws IOException {
+        Template template = loadTemplate(path);
+        String usersPage = template.apply(data);
+
+        return usersPage.getBytes();
+    }
+
+    private Template loadTemplate(String path) throws IOException {
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix("/templates");
         loader.setSuffix(".html");
@@ -20,8 +35,7 @@ public class HandleBarViewResolver implements ViewResolver {
 
         Handlebars handlebars = new Handlebars(loader);
         Template template = handlebars.compile(path);
-        String usersPage = template.apply(data);
 
-        return usersPage.getBytes();
+        return template;
     }
 }

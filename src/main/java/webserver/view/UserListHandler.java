@@ -6,9 +6,10 @@ import webserver.AbstractHandler;
 import webserver.ResourceLoader;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
-import webserver.template.HandleBarViewResolver;
+import webserver.template.ViewResolver;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,12 +21,15 @@ public class UserListHandler extends AbstractHandler {
 
     public static final String LOGIN_TRUE_COOKIE = "logined=true";
 
+    public UserListHandler(ViewResolver viewResolver) {
+        super(viewResolver);
+    }
+
     @Override
-    public void doGet(HttpRequest request, HttpResponse response) throws IOException {
+    public void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
         if (LOGIN_TRUE_COOKIE.equals(request.getHeader(COOKIE))) {
             Map<String, Object> data = findAllUsers();
-            HandleBarViewResolver viewResolver = new HandleBarViewResolver();
-            byte[] body = viewResolver.loadTemplate("/user/list", data);
+            byte[] body = viewResolver.loadView("user/list", data);
 
             response.response200Header(body.length, ResourceLoader.resourceContentType("text/html;"));
             response.responseBody(body);
