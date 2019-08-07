@@ -13,6 +13,8 @@ public class PathMapper {
         pathMapper = new HashMap<>();
         pathMapper.put("/", "/index.html");
         pathMapper.put("/user/create", "/index.html");
+        pathMapper.put("/user/login/success", "/index.html");
+        pathMapper.put("/user/login/fail", "/user/login_failed.html");
     }
 
     private static boolean isMatchPath(String path) {

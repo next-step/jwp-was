@@ -45,4 +45,16 @@ public class Path {
     public void addParameters(String requestBody) {
         parameters.addAll(requestBody);
     }
+
+    public String getSubPath() {
+        int lastIndex = path.lastIndexOf("/");
+        if (lastIndex > 0) {
+            return path.substring(lastIndex);
+        }
+        return "none";
+    }
+
+    public void addSubPath(String subPath) {
+        this.path = this.path + subPath;
+    }
 }

@@ -7,7 +7,8 @@ public class WebServiceFactory {
     private static final Map<String, WebService> webServices;
     static {
         webServices = new HashMap<>();
-        webServices.put("/user/create",new UserService());
+        webServices.put("/user/create", new UserService());
+        webServices.put("/user/login", new UserService());
     }
 
     public static WebService create(String path) {

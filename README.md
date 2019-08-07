@@ -63,6 +63,11 @@
 - [x] 요구사항 3 : form 태그 method를 get에서 post로 수정 / 회원가입 기능 정상 동작하도록 구현
 
 - [x] 요구사항 4 : 회원가입 후 index.html로 이동 (redirect)
-- [ ] 요구사항 5 : 로그인 기능 구현 ( 성공,실패 case) / 쿠키사용
+- [x] 요구사항 5 : 로그인 기능 구현 ( 성공,실패 case) / 쿠키사용
+    - [x] UserService 내부에서 각 경로별로 method분리
+    - [x] WebService로 Outputstream 넘길 것.
+    
 - [ ] 요구사항 6 : 로그인상태인 경우 user/list보여주기 / 아닌경우 로그인페이지
 - [ ] 요구사항 7 : stylesheet 지원하도록 구현
+
+> 뒤로 갈수록 테스트케이스를 어떻게 만들어야할지 잘 모르겠다.

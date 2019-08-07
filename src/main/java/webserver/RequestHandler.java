@@ -37,9 +37,7 @@ public class RequestHandler implements Runnable {
             RequestHeader requestHeader = readRequestHeader(br);
 
             handleRequestBody(requestLine, br, requestHeader.findByKey("Content-Length"));
-            handlerWebService(requestLine);
-
-            ResponseHandler.response(out, requestLine);
+            handlerWebService(out, requestLine);
         } catch (IOException| URISyntaxException e) {
             logger.error(e.getMessage());
         }
@@ -54,11 +52,14 @@ public class RequestHandler implements Runnable {
         requestLine.getPath().addParameters(reqBody);
     }
 
-    private void handlerWebService(RequestLine requestLine) {
+    private void handlerWebService(OutputStream outputStream, RequestLine requestLine) throws IOException, URISyntaxException {
         WebService webService = WebServiceFactory.create(requestLine.getPath().getPath());
         if (webService != null) {
-            webService.process(requestLine);
+            webService.process(outputStream, requestLine);
+            return;
         }
+
+        ResponseHandler.response200(outputStream, requestLine);
     }
 
     public RequestLine readRequestLine(BufferedReader br) throws IOException {
