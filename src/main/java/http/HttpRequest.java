@@ -1,20 +1,32 @@
 package http;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+
 public class HttpRequest {
 
   private RequestLine requestLine;
-  Parameters parameters;
-  RequestHeader requestHeader;
+  private RequestHeader requestHeader;
+  private Map<String, String> requestBody;
 
-  public HttpRequest(RequestLine requestLine, RequestHeader requestHeader, String requestBody) {
-    this.requestLine = requestLine;
-    this.requestHeader = requestHeader;
-    this.parameters =
-        requestBody == null ? requestLine.getParameters() : Parameters.parse(requestBody);
+  public HttpRequest(BufferedReader requestStream) throws IOException {
+    requestLine = RequestLine.parse(requestStream.readLine());
+    requestHeader = RequestHeader.parse(requestStream);
+    requestBody = initRequestBody(requestStream);
+  }
+
+  private Map<String, String> initRequestBody(BufferedReader requestStream) throws IOException {
+    if (!requestLine.isPost()) {
+      return Collections.EMPTY_MAP;
+    }
+    String requestBody = requestStream.readLine();
+    return Parameters.parse(requestBody).getParameters();
   }
 
   public Parameters getParameters() {
-    return parameters;
+    return requestLine.getParameters();
   }
 
   public RequestLine getRequestLine() {
@@ -35,5 +47,9 @@ public class HttpRequest {
 
   public boolean isLogin() {
     return requestHeader.isLogin();
+  }
+
+  public Map<String, String> getRequestBody() {
+    return requestBody;
   }
 }

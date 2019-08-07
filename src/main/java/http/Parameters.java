@@ -43,6 +43,10 @@ public class Parameters {
     return parameters.get(key);
   }
 
+  public Map<String, String> getParameters() {
+    return parameters;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
