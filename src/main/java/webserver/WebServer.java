@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 public class WebServer {
 
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
-
+    private static final ServletContext SERVLET_CONTEXT = new ServletContext();
     private static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(100);
 
     private static final int DEFAULT_PORT = 8080;
@@ -28,7 +28,7 @@ public class WebServer {
             logger.info("Web Application Server started {} port.", port);
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                RequestHandler requestHandler = new RequestHandler(connection);
+                RequestHandler requestHandler = new RequestHandler(connection, SERVLET_CONTEXT);
                 THREAD_POOL.execute(requestHandler);
             }
         }

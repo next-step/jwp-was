@@ -14,11 +14,11 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private ServletContext servletContext;
 
-    private ServletContext servletContext = new ServletContext();
-
-    RequestHandler(Socket connectionSocket) {
-        this.connection = connectionSocket;
+    RequestHandler(Socket connection, ServletContext servletContext) {
+        this.connection = connection;
+        this.servletContext = servletContext;
     }
 
     public void run() {
