@@ -16,8 +16,8 @@ public class LoginController extends AbstractController {
     @Override
     public ModelAndView postProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
         ParameterMap parameters = httpRequest.getParameters();
-        User user = DataBase.findUserById((String) parameters.get("userId"));
-        String password = (String) parameters.get("password");
+        User user = DataBase.findUserById(parameters.get("userId"));
+        String password = parameters.get("password");
 
         if (user == null || !user.matchPassword(password)) {
             httpResponse.setCookie("logined=false; Path=/");

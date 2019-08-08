@@ -1,9 +1,6 @@
 package webserver.http.request;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author : yusik
@@ -11,31 +8,20 @@ import java.util.Map;
  */
 public class ParameterMap {
 
-    private Map<String, Object> parameters;
+    private Map<String, List<String>> parameters;
 
     public ParameterMap() {
         this.parameters = new HashMap<>();
     }
 
-    public Object put(String key, String newValue) {
-        if (parameters.containsKey(key)) {
-            Object oldValue = parameters.get(key);
-            if (oldValue instanceof List) {
-                ((List) oldValue).add(key);
-            } else {
-                List<String> values = new ArrayList<>();
-                values.add((String) oldValue);
-                values.add(newValue);
-                parameters.put(key, values);
-            }
-        } else {
-            parameters.put(key, newValue);
-        }
-        return parameters.put("", "");
+    public void put(String field, String value) {
+        List<String> valueList = Optional.ofNullable(parameters.get(field)).orElseGet(ArrayList::new);
+        valueList.add(value);
+        parameters.put(field, valueList);
     }
 
-    public Object get(String key) {
-        return parameters.get(key);
+    public String get(String key) {
+        return String.join(",", parameters.get(key));
     }
 
     public boolean isEmpty() {

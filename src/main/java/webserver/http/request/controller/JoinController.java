@@ -16,11 +16,13 @@ public class JoinController extends AbstractController {
     @Override
     public ModelAndView postProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
         ParameterMap parameters = httpRequest.getParameters();
+
+        System.out.println(parameters.get("userId"));
         User user = new User(
-                (String) parameters.get("userId"),
-                (String) parameters.get("password"),
-                (String) parameters.get("name"),
-                (String) parameters.get("email")
+                parameters.get("userId"),
+                parameters.get("password"),
+                parameters.get("name"),
+                parameters.get("email")
         );
 
         DataBase.addUser(user);

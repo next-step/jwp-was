@@ -14,10 +14,11 @@ public abstract class AbstractController implements Controller {
 
         ModelAndView modelAndView = new ModelAndView("redirect::" + DEFAULT_ERROR_VIEW);
         HttpMethod method = httpRequest.getHttpMethod();
+
         // service logic
-        if (HttpMethod.GET == method) {
+        if (method.isGet()) {
             modelAndView = getProcess(httpRequest, httpResponse);
-        } else if (HttpMethod.POST == method) {
+        } else if (method.isPost()) {
             modelAndView = postProcess(httpRequest, httpResponse);
         }
         return modelAndView;
@@ -28,6 +29,14 @@ public abstract class AbstractController implements Controller {
     }
 
     ModelAndView getProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
+        return new ModelAndView("redirect::" + DEFAULT_ERROR_VIEW);
+    }
+
+    ModelAndView putProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
+        return new ModelAndView("redirect::" + DEFAULT_ERROR_VIEW);
+    }
+
+    ModelAndView deleteProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
         return new ModelAndView("redirect::" + DEFAULT_ERROR_VIEW);
     }
 }
