@@ -2,6 +2,7 @@ package webserver.http.controller;
 
 import db.DataBase;
 import model.User;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
@@ -16,6 +17,7 @@ class CreateUserControllerTest {
 
     private CreateUserController createUserController = new CreateUserController();
 
+    @DisplayName("유저 생성 테스트")
     @Test
     void user_생성_테스트() throws IOException {
 

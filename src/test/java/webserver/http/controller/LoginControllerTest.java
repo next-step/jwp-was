@@ -3,6 +3,7 @@ package webserver.http.controller;
 import com.google.common.base.Charsets;
 import db.DataBase;
 import model.User;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.Cookie;
 import webserver.http.request.HttpRequest;
@@ -19,6 +20,7 @@ class LoginControllerTest {
 
     private LoginController loginController = new LoginController(new HtmlViewResolver());
 
+    @DisplayName("로그인 테스트")
     @Test
     void 로그인_테스트() throws IOException {
 
