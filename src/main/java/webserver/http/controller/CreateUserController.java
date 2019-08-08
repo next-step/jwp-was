@@ -5,7 +5,6 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.Cookie;
-import webserver.http.HttpStatus;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
@@ -14,15 +13,6 @@ import java.io.IOException;
 public class CreateUserController extends AbstractController<HttpRequest, HttpResponse> {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateUserController.class);
-
-    @Override
-    protected void doGet(HttpRequest request, HttpResponse response) {
-        try {
-            response.error(HttpStatus.METHOD_NOT_ALLOWED);
-        } catch (IOException e) {
-            logger.error("[PROCESS][CREATE USER] failed. {}", e);
-        }
-    }
 
     @Override
     protected void doPost(HttpRequest request, HttpResponse response) {
@@ -47,8 +37,13 @@ public class CreateUserController extends AbstractController<HttpRequest, HttpRe
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
+
         if (request.isGetRequest()) {
-            doGet(request, response);
+            try {
+                doGet(request, response);
+            } catch (IOException e) {
+                logger.error("[PROCESS][CREATE USER] failed. {}", e);
+            }
         }
 
         if (request.isPostRequest()) {

@@ -33,22 +33,17 @@ public class MainController<V extends ViewResolver> extends AbstractController<H
     }
 
     @Override
-    protected void doPost(HttpRequest request, HttpResponse response) {
-        try {
-            response.error(HttpStatus.METHOD_NOT_ALLOWED);
-        } catch (IOException e) {
-            logger.error("[PROCESS][MAIN] failed. {}", e);
-        }
-    }
-
-    @Override
     public void service(HttpRequest request, HttpResponse response) {
         if (request.isGetRequest()) {
             doGet(request, response);
         }
 
         if (request.isPostRequest()) {
-            doPost(request, response);
+            try {
+                doPost(request, response);
+            } catch (IOException e) {
+                logger.error("[PROCESS][MAIN] failed. {}", e);
+            }
         }
     }
 }

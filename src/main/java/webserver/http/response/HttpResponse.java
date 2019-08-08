@@ -70,6 +70,7 @@ public class HttpResponse implements Response {
                 .orElse(null);
     }
 
+    @Override
     public void error(HttpStatus status) throws IOException {
         dos.writeBytes(toHttpStatusResponseHeader(status));
     }

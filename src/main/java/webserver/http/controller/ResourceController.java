@@ -32,22 +32,17 @@ public class ResourceController extends AbstractController<HttpRequest, HttpResp
     }
 
     @Override
-    protected void doPost(HttpRequest request, HttpResponse response) {
-        try {
-            response.error(HttpStatus.METHOD_NOT_ALLOWED);
-        } catch (IOException e) {
-            logger.error("[PROCESS][RESOURCE] failed. {}", e);
-        }
-    }
-
-    @Override
     public void service(HttpRequest request, HttpResponse response) {
-        if(request.isGetRequest()) {
+        if (request.isGetRequest()) {
             doGet(request, response);
         }
 
-        if(request.isPostRequest()) {
-            doPost(request, response);
+        if (request.isPostRequest()) {
+            try {
+                doPost(request, response);
+            } catch (IOException e) {
+                logger.error("[PROCESS][RESOURCE] failed. {}", e);
+            }
         }
     }
 }
