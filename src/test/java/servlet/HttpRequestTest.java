@@ -3,7 +3,6 @@ package servlet;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import http.HttpRequest;
-import http.Parameters;
 import http.RequestHeader;
 import http.RequestLine;
 import java.io.BufferedReader;
@@ -36,8 +35,11 @@ public class HttpRequestTest {
     HttpRequest httpRequest = new HttpRequest(requestStream);
     BufferedReader requestHeaderStream = new BufferedReader(new StringReader(header.toString()));
 
-    assertThat(httpRequest.getParameters())
-        .isEqualTo(Parameters.parse("userId=javajigi&password=password&name=JaeSung&noValue="));
+    assertThat(httpRequest.getParameters()).hasSize(4)
+        .containsEntry("userId", "javajigi")
+        .containsEntry("password", "password")
+        .containsEntry("name", "JaeSung")
+        .containsEntry("noValue", "");
     assertThat(httpRequest.getRequestLine()).isEqualTo(RequestLine
         .parse("GET /users?userId=javajigi&password=password&name=JaeSung&noValue= HTTP/1.1"));
     assertThat(httpRequest.getRequestHeader()).isEqualTo(RequestHeader.parse(requestHeaderStream));
@@ -52,7 +54,7 @@ public class HttpRequestTest {
     StringBuffer header = new StringBuffer();
     header.append("Host: localhost:8080\n");
     header.append("Connection: keep-alive\n");
-    header.append("Content-Length: 59\n");
+    header.append("Content-Length: 71\n");
     header.append("Content-Type: application/x-www-form-urlencoded\n");
     header.append("Accept: */*\n");
     header.append("\n");
@@ -74,6 +76,11 @@ public class HttpRequestTest {
     assertThat(httpRequest.getRequestLine())
         .isEqualTo(RequestLine.parse("POST /user/create HTTP/1.1"));
     assertThat(httpRequest.getRequestHeader()).isEqualTo(RequestHeader.parse(httpHeaderRequest));
+    assertThat(httpRequest.getParameters()).hasSize(4)
+        .containsEntry("userId", "javajigi")
+        .containsEntry("password", "password")
+        .containsEntry("name", "jaesung")
+        .containsEntry("email", "javajigi@slipp.net");
   }
 
 }

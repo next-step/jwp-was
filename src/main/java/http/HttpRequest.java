@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import utils.IOUtils;
 
 public class HttpRequest {
 
@@ -21,11 +22,14 @@ public class HttpRequest {
     if (!requestLine.isPost()) {
       return Collections.EMPTY_MAP;
     }
-    String requestBody = requestStream.readLine();
+    String requestBody = IOUtils.readData(requestStream, requestHeader.getContentLength());
     return Parameters.parse(requestBody).getParameters();
   }
 
-  public Parameters getParameters() {
+  public Map<String, String> getParameters() {
+    if (requestLine.isPost()) {
+      return getRequestBody();
+    }
     return requestLine.getParameters();
   }
 
@@ -45,11 +49,19 @@ public class HttpRequest {
     return requestLine.isPost();
   }
 
-  public boolean isLogin() {
-    return requestHeader.isLogin();
-  }
-
   public Map<String, String> getRequestBody() {
     return requestBody;
+  }
+
+  public HttpMethod getMethod() {
+    return requestLine.getMethod();
+  }
+
+  public boolean isGet() {
+    return requestLine.isGet();
+  }
+
+  public Map<String, String> getCookies() {
+    return requestHeader.getCookies();
   }
 }

@@ -29,9 +29,6 @@ public class RequestHeader {
   private static final String CONTENT_LENGTH_KEY = "Content-Length";
   private static final String COOKIE_KEY = "Cookie";
   private static final String EQUALS_SYMBOL = "=";
-  private static final String LOGIN_COOKIE_KEY = "logined";
-
-
 
   private String host;
   private String connection;
@@ -123,13 +120,8 @@ public class RequestHeader {
     return contentLength;
   }
 
-  public String getCookie(String cookieName) {
-    return cookies.get(cookieName);
-  }
-
-  public boolean isLogin() {
-    String logined = cookies.get(LOGIN_COOKIE_KEY);
-    return logined != null && "true".equals(logined);
+  public Map<String, String> getCookies() {
+    return cookies;
   }
 
   @Override

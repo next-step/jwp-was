@@ -3,23 +3,24 @@ package servlet;
 import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
-import http.Parameters;
+import java.util.Map;
 import model.User;
 
 public class LoginServlet extends AbstractHttpServlet {
 
+  private static final String LOGIN_COOKIE_KEY = "logined";
+
   @Override
-  public void action(HttpRequest httpRequest, HttpResponse httpResponse) {
-    if (login(httpRequest.getParameters())) {
-      httpResponse.addLoginCookie();
+  public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
+    if (isLoginSuccess(httpRequest.getParameters())) {
+      httpResponse.addCookie(LOGIN_COOKIE_KEY, "true");
       httpResponse.forward("/index.html");
     }
     httpResponse.sendRedirect("/user/login_failed.html");
   }
 
-  private boolean login(Parameters parameters) {
-    User userId = DataBase.findUserById(parameters.getParameter("userId"));
-    return userId != null && userId.getPassword().equals(parameters.getParameter("password"));
+  private boolean isLoginSuccess(Map<String, String> parameters) {
+    User user = DataBase.findUserById(parameters.get("userId"));
+    return user != null && user.isCorrectPassword(parameters.get("password"));
   }
-
 }
