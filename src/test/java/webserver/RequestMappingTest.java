@@ -3,7 +3,6 @@ package webserver;
 import model.User;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import route.Router;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.RequestStream;
@@ -12,10 +11,9 @@ import java.io.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class WebServerRouterTest {
+public class RequestMappingTest {
     private String CREATE_USER_URL = "/user/create";
     private String LOGIN_URL = "/user/login";
-    private WebServerRouter webServerRouter = new Router();
 
     @Test
     @Disabled
@@ -26,7 +24,7 @@ public class WebServerRouterTest {
         HttpResponse httpResponse = new HttpResponse();
         User user = new User("javajigi", "password", "박재성", "javajigi@slipp.net");
 
-        assertThat(webServerRouter.route(httpRequest, httpResponse).orElse("")).isEqualTo(user.toString());
+        assertThat(RequestMapping.mapping(httpRequest, httpResponse).orElse("")).isEqualTo(user.toString());
     }
 
     @Test
@@ -36,7 +34,7 @@ public class WebServerRouterTest {
         HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
-        assertThat(webServerRouter.route(httpRequest, httpResponse).orElse("").toString())
+        assertThat(RequestMapping.mapping(httpRequest, httpResponse).orElse(""))
                 .isEqualTo("redirect:/index.html");
     }
 
@@ -48,7 +46,7 @@ public class WebServerRouterTest {
         HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
-        assertThat(webServerRouter.route(httpRequest, httpResponse).orElse(""))
+        assertThat(RequestMapping.mapping(httpRequest, httpResponse).orElse(""))
                 .isEqualTo("redirect:/index.html");
     }
 
@@ -60,7 +58,7 @@ public class WebServerRouterTest {
         HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
-        assertThat(webServerRouter.route(httpRequest, httpResponse).orElse(""))
+        assertThat(RequestMapping.mapping(httpRequest, httpResponse).orElse(""))
                 .isEqualTo("redirect:/user/login_failed.html");
     }
 
@@ -70,7 +68,7 @@ public class WebServerRouterTest {
         HttpRequest httpRequest = HttpRequest.parse(requestStream);
         HttpResponse httpResponse = new HttpResponse();
 
-        webServerRouter.route(httpRequest, httpResponse);
+        RequestMapping.mapping(httpRequest, httpResponse);
     }
 
     private InputStream makeLoginSuccessBufferedReader() {

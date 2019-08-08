@@ -15,11 +15,9 @@ public class RequestHandler implements Runnable {
     private static final String REDIRECT_URL_FORMAT = "http://%s%s";
 
     private Socket connection;
-    private WebServerRouter router;
 
-    public RequestHandler(Socket connectionSocket, WebServerRouter router) {
+    public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
-        this.router = router;
     }
 
     public void run() {
@@ -66,7 +64,7 @@ public class RequestHandler implements Runnable {
     }
 
     private String getViewName(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return router.route(httpRequest, httpResponse)
+        return RequestMapping.mapping(httpRequest, httpResponse)
                 .orElse(StringUtils.EMPTY);
     }
 }
