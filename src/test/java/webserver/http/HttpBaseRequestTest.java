@@ -60,7 +60,21 @@ public class HttpBaseRequestTest {
             assertThat(e).doesNotThrowAnyException();
             assertThat(e).hasNoCause();
         }
-
+    }
+    
+    @DisplayName("Get Http HttpRequest QueryString 테스트 : cookie 확인")
+    @Test
+    public void httpRequestParseWithQueryString(){ 
+        try{
+            HttpBaseRequest httpRequest = HttpBaseRequest.parse(inputStreamGetQueryString);
+            assertThat(httpRequest).isNotNull();
+            assertThat(httpRequest.getPath()).isEqualTo("http://localhost:8080/index.html?userId=circlee");
+            assertThat(httpRequest.getRequestURI()).isEqualTo("/index.html");
+            assertThat(httpRequest.getParameter("userId")).isEqualTo("circlee");
+        } catch (Exception e) {
+            assertThat(e).doesNotThrowAnyException();
+            assertThat(e).hasNoCause();
+        }
     }
 
     @DisplayName("Get Http HttpRequest Cookies 테스트 : cookie 확인")
@@ -70,22 +84,6 @@ public class HttpBaseRequestTest {
             HttpBaseRequest httpRequest = HttpBaseRequest.parse(inputStreamGet);
             assertThat(httpRequest.getCookie("test")).isNotNull();
             assertThat(httpRequest.getCookie("test").getValue()).isEqualTo("testValue");
-        } catch (Exception e) {
-            assertThat(e).doesNotThrowAnyException();
-            assertThat(e).hasNoCause();
-        }
-
-    }
-
-    @ParameterizedTest(name = "{index} {0} is 30 days long")
-    @MethodSource("provideStringsForIsBlank")
-    public void httpRequestParse2(){
-        try{
-            HttpBaseRequest httpRequest = HttpBaseRequest.parse(inputStreamGetQueryString);
-            assertThat(httpRequest).isNotNull();
-            assertThat(httpRequest.getPath()).isEqualTo("http://localhost:8080/index.html?userId=circlee");
-            assertThat(httpRequest.getRequestURI()).isEqualTo("/index.html");
-            assertThat(httpRequest.getParameter("userId")).isEqualTo("circlee");
         } catch (Exception e) {
             assertThat(e).doesNotThrowAnyException();
             assertThat(e).hasNoCause();
