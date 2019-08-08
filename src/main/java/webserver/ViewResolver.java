@@ -21,9 +21,13 @@ public class ViewResolver {
         Handlebars handlebars = new Handlebars(loader);
         Template template = handlebars.compile(view);
 
-        if (view.startsWith("/" + ERROR_TEMPLATES_PREFIX) || view.startsWith(ERROR_TEMPLATES_PREFIX))
+        if (isErrorPage(view))
             return template.text();
 
         return template.apply(modelAndView.getModelMap());
+    }
+
+    private static boolean isErrorPage(String view) {
+        return view.startsWith("/" + ERROR_TEMPLATES_PREFIX) || view.startsWith(ERROR_TEMPLATES_PREFIX);
     }
 }
