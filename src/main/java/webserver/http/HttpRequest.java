@@ -64,4 +64,8 @@ public class HttpRequest {
     public String bodyValue(String key) {
         return this.requestBody.get(key);
     }
+
+    public String getPath() {
+        return getUri().getPath();
+    }
 }

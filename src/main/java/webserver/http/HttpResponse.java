@@ -1,7 +1,10 @@
 package webserver.http;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.FileResponse;
+import webserver.RequestMapping;
 import webserver.ViewResolver;
 
 import java.io.DataOutputStream;
@@ -9,6 +12,10 @@ import java.io.IOException;
 
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
+    private static final String REDIRECT_START_WITH = "redirect:";
+    private static final String HEADER_HOST_KEY = "Host";
+    private static final String REDIRECT_URL_FORMAT = "http://%s%s";
+
     private byte[] body;
     private Cookie cookie;
     private HttpHeaders httpHeaders;
@@ -29,6 +36,12 @@ public class HttpResponse {
         this.modelAndView = new ModelAndView();
         this.httpStatus = httpStatus;
         this.httpHeaders = new HttpHeaders();
+    }
+
+    public static HttpResponse createResponse(HttpRequest httpRequest) {
+        String requestPath = httpRequest.getPath();
+        return FileResponse.getFileResponse(requestPath)
+                .orElse(getViewMappingResponse(httpRequest));
     }
 
     public HttpHeaders getHttpHeaders() {
@@ -72,13 +85,37 @@ public class HttpResponse {
         this.cookie.set(key, value);
     }
 
-    public void setView(String viewName) {
+    private static HttpResponse getViewMappingResponse(HttpRequest httpRequest) {
+        HttpResponse httpResponse = new HttpResponse();
+        String viewName = getViewName(httpRequest, httpResponse);
+        if (viewName.startsWith(REDIRECT_START_WITH)) {
+            return getRedirectHttpResponse(httpRequest, httpResponse, viewName);
+        }
+
+        httpResponse.setView(viewName);
+        return httpResponse;
+    }
+
+    private void setView(String viewName) {
         this.modelAndView.setView(viewName);
         try {
             setBody(ViewResolver.mapping(modelAndView).getBytes());
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private static HttpResponse getRedirectHttpResponse(HttpRequest httpRequest, HttpResponse httpResponse, String viewName) {
+        String redirectPath = viewName.replace(REDIRECT_START_WITH, StringUtils.EMPTY);
+        String redirectUrl = String.format(REDIRECT_URL_FORMAT, httpRequest.getHeaderValue(HEADER_HOST_KEY), redirectPath);
+        httpResponse.setRedirectPath(redirectUrl);
+        httpResponse.setHttpStatus(HttpStatus.REDIRECT);
+        return httpResponse;
+    }
+
+    private static String getViewName(HttpRequest httpRequest, HttpResponse httpResponse) {
+        return RequestMapping.mapping(httpRequest, httpResponse)
+                .orElse(StringUtils.EMPTY);
     }
 }
 
