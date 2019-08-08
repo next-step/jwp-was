@@ -27,6 +27,9 @@ public class HttpRequest {
   }
 
   public Map<String, String> getParameters() {
+    if (requestLine.isPost()) {
+      return getRequestBody();
+    }
     return requestLine.getParameters();
   }
 
