@@ -32,22 +32,22 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = HttpRequest.parse(requestStream);
             logger.debug("Request {}", httpRequest.getRequestLine());
 
-            HttpResponse httpResponse = getResponse(httpRequest);
-            httpResponse.responseByStatus(dos);
+            writeResponse(httpRequest, dos);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    HttpResponse getResponse(HttpRequest httpRequest) {
+    void writeResponse(HttpRequest httpRequest, DataOutputStream dos) {
         String requestPath = httpRequest.getUri().getPath();
-        HttpResponse httpResponse = new HttpResponse();
+        HttpResponse httpResponse = FileResponse.getFileResponse(requestPath)
+                .orElse(getViewMappingResponse(httpRequest));
 
-        return FileResponse.getFileResponse(requestPath)
-                .orElse(getViewMappingResponse(httpRequest, httpResponse));
+        httpResponse.responseByStatus(dos);
     }
 
-    private HttpResponse getViewMappingResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
+    private HttpResponse getViewMappingResponse(HttpRequest httpRequest) {
+        HttpResponse httpResponse = new HttpResponse();
         ModelAndView modelAndView = httpResponse.getModelAndView();
         String viewName = getViewName(httpRequest, httpResponse);
         modelAndView.setView(viewName);
@@ -55,11 +55,12 @@ public class RequestHandler implements Runnable {
             return getRedirectHttpResponse(httpRequest, httpResponse, viewName);
         }
 
-        setResponseBody(httpResponse, modelAndView);
+        setResponseBody(httpResponse);
         return httpResponse;
     }
 
-    private void setResponseBody(HttpResponse httpResponse, ModelAndView modelAndView) {
+    private void setResponseBody(HttpResponse httpResponse) {
+        ModelAndView modelAndView = httpResponse.getModelAndView();
         try {
             httpResponse.setBody(ViewResolver.mapping(modelAndView).getBytes());
         } catch (IOException e) {

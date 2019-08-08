@@ -7,12 +7,10 @@ import org.slf4j.LoggerFactory;
 import route.Router;
 import utils.FileIoUtils;
 import webserver.http.HttpRequest;
-import webserver.http.HttpResponse;
 import webserver.http.RequestStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,7 +38,7 @@ public class RequestHandlerTest {
 
         RequestHandler requestHandler = new RequestHandler(null, webServerRouter);
 
-        byte[] responseBody = requestHandler.getResponse(httpRequest).getBody();
+        byte[] responseBody = requestHandler.writeResponse(httpRequest).getBody();
         log.debug("response body : {}", new String(responseBody));
         assertThat(responseBody).isEqualTo(FileIoUtils.loadFileFromClasspath(filePath));
     }
