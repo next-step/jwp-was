@@ -14,7 +14,7 @@ public class ActionRequestMapperTest {
 
     private static final ActionRequestMapper userCreatectionRequestMapper = new ActionRequestMapper("/user/create"
             , new UserCreateAction()
-            , new HashSet<>(Arrays.asList(new HttpMethod[]{HttpMethod.GET}))
+            , new HttpMethod[]{HttpMethod.GET}
     );
 
     @DisplayName("ActionRequestMapperTest 매칭 테스트 : 매칭 케이스")

@@ -19,7 +19,7 @@ public class ViewActionRequestMapperTest {
             , new ActionRequestMapper(
                     "/user/list"
                     , new UserListAction()
-                    , new HashSet<>(Arrays.asList(new HttpMethod[]{HttpMethod.GET}))
+                    , new HttpMethod[]{HttpMethod.GET}
             )
     );
 

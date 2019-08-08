@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import actions.user.UserCreateAction;
 import actions.user.UserListAction;
 import actions.user.UserLoginAction;
+import enums.HttpMethod;
 import webserver.mapper.ActionRequestMapper;
 import webserver.mapper.RequestMappers;
 import webserver.mapper.ResourceRequestMapper;
@@ -47,7 +48,7 @@ public class WebServer {
 
 
         HandlebarViewResolver handlebarViewResolver = HandlebarViewResolver.of("/templates", ".html");
-        ViewActionRequestMapper viewActionRequestMapper = new ViewActionRequestMapper(handlebarViewResolver, new ActionRequestMapper("/user/list", new UserListAction()));
+        ViewActionRequestMapper viewActionRequestMapper = new ViewActionRequestMapper(handlebarViewResolver, new ActionRequestMapper("/user/list", new UserListAction(), new HttpMethod[]{ HttpMethod.GET }));
 
         RequestMappers requestMappers = RequestMappers.of(resourceRequestMapper
                 , templateRequestMapper

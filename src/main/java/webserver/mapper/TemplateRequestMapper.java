@@ -1,15 +1,15 @@
 package webserver.mapper;
 
+import java.net.URL;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
+
 import enums.HttpMethod;
 import utils.FileIoUtils;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
-
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Pattern;
 
 public class TemplateRequestMapper implements RequestMapper{
 
@@ -20,8 +20,8 @@ public class TemplateRequestMapper implements RequestMapper{
     private final String templatePath;
 
     public TemplateRequestMapper(String templatePath) {
-        this.urlCache = new HashMap<>();
-        this.resources = new HashMap<>();
+        this.urlCache = new ConcurrentHashMap<>();
+        this.resources = new ConcurrentHashMap<>();
         this.templatePath = templatePath;
     }
 

@@ -1,8 +1,11 @@
 package webserver.http;
 
-import constants.SessionConstants;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-import java.util.*;
+import constants.SessionConstants;
 
 public class HttpSessionManager {
 
@@ -11,7 +14,7 @@ public class HttpSessionManager {
 
     private HttpSessionManager(String sessionKeyName) {
         this.sessionKeyName = sessionKeyName;
-        this.httpSessions = new HashMap<>();
+        this.httpSessions = new ConcurrentHashMap<>();
     }
 
     public static HttpSessionManager getInstance() {
