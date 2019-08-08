@@ -48,24 +48,13 @@ public class RequestHandler implements Runnable {
 
     private HttpResponse getViewMappingResponse(HttpRequest httpRequest) {
         HttpResponse httpResponse = new HttpResponse();
-        ModelAndView modelAndView = httpResponse.getModelAndView();
         String viewName = getViewName(httpRequest, httpResponse);
-        modelAndView.setView(viewName);
         if (viewName.startsWith(REDIRECT_START_WITH)) {
             return getRedirectHttpResponse(httpRequest, httpResponse, viewName);
         }
 
-        setResponseBody(httpResponse);
+        httpResponse.setView(viewName);
         return httpResponse;
-    }
-
-    private void setResponseBody(HttpResponse httpResponse) {
-        ModelAndView modelAndView = httpResponse.getModelAndView();
-        try {
-            httpResponse.setBody(ViewResolver.mapping(modelAndView).getBytes());
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
     }
 
     private HttpResponse getRedirectHttpResponse(HttpRequest httpRequest, HttpResponse httpResponse, String viewName) {
@@ -77,6 +66,7 @@ public class RequestHandler implements Runnable {
     }
 
     private String getViewName(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return router.route(httpRequest, httpResponse).orElse(StringUtils.EMPTY);
+        return router.route(httpRequest, httpResponse)
+                .orElse(StringUtils.EMPTY);
     }
 }

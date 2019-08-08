@@ -2,21 +2,23 @@ package webserver.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.ViewResolver;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
     private byte[] body;
     private Cookie cookie;
     private HttpHeaders httpHeaders;
-    private ModelAndView model;
+    private ModelAndView modelAndView;
     private HttpStatus httpStatus;
     private String redirectPath;
 
     public HttpResponse() {
         this.cookie = new Cookie();
-        this.model = new ModelAndView();
+        this.modelAndView = new ModelAndView();
         this.httpStatus = HttpStatus.OK;
         this.httpHeaders = new HttpHeaders();
     }
@@ -24,7 +26,7 @@ public class HttpResponse {
     public HttpResponse(HttpStatus httpStatus, byte[] body) {
         this.body = body;
         this.cookie = new Cookie();
-        this.model = new ModelAndView();
+        this.modelAndView = new ModelAndView();
         this.httpStatus = httpStatus;
         this.httpHeaders = new HttpHeaders();
     }
@@ -42,7 +44,7 @@ public class HttpResponse {
     }
 
     public ModelAndView getModelAndView() {
-        return model;
+        return modelAndView;
     }
 
     public Cookie getCookie() {
@@ -68,6 +70,15 @@ public class HttpResponse {
 
     public void setCookie(String key, String value) {
         this.cookie.set(key, value);
+    }
+
+    public void setView(String viewName) {
+        this.modelAndView.setView(viewName);
+        try {
+            setBody(ViewResolver.mapping(modelAndView).getBytes());
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 }
 
