@@ -6,18 +6,18 @@ public enum ServletMappingInfo {
   USER_LIST("/user/list", new UserListServlet());
 
   private String path;
-  private HttpServlet creator;
+  private HttpServlet servlet;
 
-  ServletMappingInfo(String path, HttpServlet creator) {
+  ServletMappingInfo(String path, HttpServlet servlet) {
     this.path = path;
-    this.creator = creator;
+    this.servlet = servlet;
   }
 
   public String getPath() {
     return path;
   }
 
-  public HttpServlet getCreator() {
-    return creator;
+  public HttpServlet getServlet() {
+    return servlet;
   }
 }

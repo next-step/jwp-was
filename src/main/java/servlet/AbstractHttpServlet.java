@@ -7,22 +7,28 @@ abstract class AbstractHttpServlet implements HttpServlet {
 
   @Override
   public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
+
     if (httpRequest.isPost()) {
       doPost(httpRequest, httpResponse);
       return;
     }
-    doGet(httpRequest, httpResponse);
+    if (httpRequest.isGet()) {
+      doGet(httpRequest, httpResponse);
+      return;
+    }
+    throw new UnsupportedOperationException("허용되지 않은 메소드 요청입니다.");
   }
 
-  @Override
   public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-    action(httpRequest, httpResponse);
+    throw new UnsupportedOperationException("허용되지 않은 메소드 요청입니다.");
   }
 
-  @Override
+  ;
+
   public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
-    action(httpRequest, httpResponse);
+    throw new UnsupportedOperationException("허용되지 않은 메소드 요청입니다.");
   }
 
-  public abstract void action(HttpRequest httpRequest, HttpResponse httpResponse);
+  ;
+
 }

@@ -60,6 +60,10 @@ public class RequestLine {
     return method.isPost();
   }
 
+  public boolean isGet() {
+    return method.isGet();
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -79,4 +83,5 @@ public class RequestLine {
   public int hashCode() {
     return Objects.hash(method, path, version, parameters);
   }
+
 }

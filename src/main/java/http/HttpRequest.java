@@ -56,4 +56,12 @@ public class HttpRequest {
   public Map<String, String> getRequestBody() {
     return requestBody;
   }
+
+  public HttpMethod getMethod() {
+    return requestLine.getMethod();
+  }
+
+  public boolean isGet() {
+    return requestLine.isGet();
+  }
 }
