@@ -49,10 +49,6 @@ public class HttpRequest {
     return requestLine.isPost();
   }
 
-  public boolean isLogin() {
-    return requestHeader.isLogin();
-  }
-
   public Map<String, String> getRequestBody() {
     return requestBody;
   }
@@ -63,5 +59,9 @@ public class HttpRequest {
 
   public boolean isGet() {
     return requestLine.isGet();
+  }
+
+  public Map<String, String> getCookies() {
+    return requestHeader.getCookies();
   }
 }
