@@ -1,32 +1,46 @@
 package webserver.http;
 
+import webserver.converter.HttpFileConverter;
+import webserver.domain.HttpResponseEntity;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 public class RequestLine {
-    public HttpRequest httpRequest;
 
-    public String httpMsg;
-
-
-    public RequestLine(String httpMsg){
-        this.httpMsg = httpMsg;
-        httpRequest = new HttpRequest(httpMsg);
-
+    public static HttpResponse parse(HttpController httpController, String socketMsg){
+        HttpRequest httpRequest = new HttpRequest(httpController);
+        return new HttpResponse(getResultContent(httpRequest, socketMsg));
     }
 
-    public static RequestLine parse(String url){
-        return new RequestLine(url);
-    }
+    private static HttpResponseEntity getResultContent
+            (HttpRequest httpRequest, String socketMsg){
+        try{
+            httpRequest.parse(socketMsg);
+            if(httpRequest.getHttpController()
+                    .isContainUrl(httpRequest.getUrlPath())){
+                return httpRequest.getHttpController()
+                        .callMethod(httpRequest);
+            }
 
-    public String getMethod(){
-        return httpRequest.getHttpMethod();
-    }
 
-    public String getPath(){
-        return httpRequest.getHttpPath();
-    }
+            String readFile = HttpFileConverter.readFile(httpRequest.getHttpEntity());
+            HttpResponseEntity responseEntity =
+                    new HttpResponseEntity(httpRequest.getHttpHeader(),
+                            HttpStatus.OK.getHttpStatusCode(),
+                            httpRequest.getVersion());
 
-    public String getParameter(String keyStr){
-        return httpRequest.getHttpParameterValue(keyStr);
-    }
+            responseEntity.setResultBody(readFile);
 
+            return responseEntity;
+
+        }catch (IOException e){
+            return HttpResponseEntity.setStatusResponse(httpRequest,
+                    HttpStatus.SERVER_ERROR);
+        }catch (URISyntaxException e){
+            return HttpResponseEntity.setStatusResponse(httpRequest,
+                    HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

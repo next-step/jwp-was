@@ -16,3 +16,31 @@ feat ($step1): HTTP 파싱 및 IF문 중복 제거
 - FigureFactory 클래스 내 중복 IF문 FigureConstructor 클래스 사용하여 해결
 - RequestLineTest 파라미터 파싱 테스트 추가
 - RequestLine 파라미터 분리 메소드 추가
+
+새로 추가한 작업 $step2:
+- UserController 클래스 추가 (유저 관련 호출 담당)
+- ControllerCreator 인터페이스 추가
+- HttpStatus Enum 추가 (HTTP 상태값 관리)
+- HttpControllerManage 클래스 추가 (컨트롤러 클래스 관리)
+- HttpMethodParameter 클래스 추가 (GET, POST 파라미터 추출 클래스)
+- HttpResponse 클래스 추가 (HTTP 응답 담당)
+
+새로 추가한 작업 $step2-2:
+- UserCreateController 클래스 추가 (유저 생성 클래스)
+- UserListController 클래스 추가 (유저 리스트 클래스)
+- UserLoginController 클래스 추가 (유저 로그인 클래스)
+- HttpConverter 클래스 추가 (http 메시지 파싱 담당 클래스)
+- HttpFileConverter 클래스 추가 (파일 READ 담당 클래스)
+- HttpFileResource ENUM 추가 (웹 파일 리소스)
+- HttpHeaderConverter 클래스 추가 (헤더 파싱 클래스)
+- HttpParameterConverter 클래스 추가 (기존 HttpMethodParamter 위치 이동 및 클래스 이름 변경)
+- HttpEntity 클래스 추가 (기존 HttpParseVO를 변환 및 HTTP 전문 메시지를 정보를 저장)
+- HttpHeader 클래스 추가 (헤더 정보를 저장)
+- AbstractControllerCreator 추상 컨트롤러 추가 (컨트롤러 추상화 작업)
+- ControllerCreator 인터페이스 추가
+- HttpController 클래스 추가 (AbstractControllerCreator 받아 컨트롤러들의 호출을 담당)
+
+새로 추가한 작업 $step2-3:
+- HttpResponseEntity 클래스 추가 (읽은 요청을 응답하기 위해 정리하는 클래스)
+- HttpRequest 클래스는 Http 파싱만 하게 분리
+- HttpResponse 클래스는 정리된 HttpResponseEntity를 받아 응답 결과를 리턴한다

@@ -1,53 +1,61 @@
 package webserver.http;
 
+import webserver.converter.HttpHeaderConverter;
+import webserver.domain.HttpEntity;
+import webserver.domain.HttpHeader;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 
 public class HttpRequest {
 
-    private static final String SEPARATOR = " ";
-    private static final String QUERY_PREFIX = "\\?";
-    private static final String QUERY_DELIMITER = "&";
-    private static final String QUERY_KEY_VALUE_DELIMITER = "=";
+    private HttpEntity httpEntity;
+    private HttpController httpController;
 
-    public String httpMethod;
-    public String httpPath;
-    public HashMap<String, String> httpParameter;
-
-    public HttpRequest(String httpMsg) {
-        String[] separatorMsg = httpMsg.split(SEPARATOR);
-        httpMethod = separatorMsg[0];
-        httpPath = separatorMsg[1];
-        getSeparatorParameter();
+    public HttpRequest(HttpController httpController) {
+        this.httpController = httpController;
+        this.httpEntity = new HttpEntity();
     }
 
-    public String getHttpMethod() {
-        return httpMethod;
+    public void parse(String httpMsg)
+            throws IOException, URISyntaxException{
+            new HttpHeaderConverter(this, httpMsg);
     }
 
-    public String getHttpPath() {
-        return httpPath;
+    public HttpEntity getHttpEntity() {
+        return httpEntity;
     }
 
-    public String getHttpParameterValue(String keyStr){
-        if(httpParameter.containsKey(keyStr))
-            return httpParameter.get(keyStr);
-        else return null;
+    public HttpHeader getHttpHeader() { return httpEntity.getHttpHeader(); }
+
+    public String getMethod(){
+        return httpEntity.getMethod();
     }
 
-    public void getSeparatorParameter() {
-        String[] paramStr = httpPath.split(QUERY_PREFIX)[1].split(QUERY_DELIMITER);
-
-        HashMap<String, String> paramMap = new HashMap<>();
-        for (int i = 0; i < paramStr.length; i++) {
-            String[] keyValueStr = paramStr[i].split(QUERY_KEY_VALUE_DELIMITER);
-            paramMap.put(keyValueStr[0], nullCheck(keyValueStr));
-        }
-
-        httpParameter = paramMap;
+    public String getUrlPath() {
+        return httpEntity.getUrlPath();
     }
 
-    private String nullCheck(String[] keyValue){
-        return keyValue.length == 1 ? null : keyValue[1];
+    public HashMap<String, String> getParameter() {
+        return httpEntity.getParameter();
     }
 
+    public String getReturnContent() {
+        return httpEntity.getReturnContent();
+    }
+
+    public String getVersion() {
+        return httpEntity.getVersion();
+    }
+
+    public int getResultCode() {
+        return httpEntity.getResultCode();
+    }
+
+    public HashMap<String, String> getEtcHeader() {
+        return httpEntity.getEtcHeader();
+    }
+
+    public HttpController getHttpController() { return httpController; }
 }

@@ -1,6 +1,7 @@
 package model;
 
 public class User {
+    private Integer index;
     private String userId;
     private String password;
     private String name;
@@ -11,6 +12,14 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 
     public String getUserId() {
