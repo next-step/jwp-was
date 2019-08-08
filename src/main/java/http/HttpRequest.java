@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import utils.IOUtils;
 
 public class HttpRequest {
 
@@ -21,11 +22,11 @@ public class HttpRequest {
     if (!requestLine.isPost()) {
       return Collections.EMPTY_MAP;
     }
-    String requestBody = requestStream.readLine();
+    String requestBody = IOUtils.readData(requestStream, requestHeader.getContentLength());
     return Parameters.parse(requestBody).getParameters();
   }
 
-  public Parameters getParameters() {
+  public Map<String, String> getParameters() {
     return requestLine.getParameters();
   }
 
