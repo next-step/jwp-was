@@ -1,14 +1,14 @@
 package servlet;
 
 public enum ServletMappingInfo {
-  USER_CREATE("/user/create", UserCreateServlet::new),
-  USER_LOGIN("/user/login", LoginServlet::new),
-  USER_LIST("/user/list", UserListServlet::new);
+  USER_CREATE("/user/create", new UserCreateServlet()),
+  USER_LOGIN("/user/login", new LoginServlet()),
+  USER_LIST("/user/list", new UserListServlet());
 
   private String path;
-  private ServletCreator creator;
+  private HttpServlet creator;
 
-  ServletMappingInfo(String path, ServletCreator creator) {
+  ServletMappingInfo(String path, HttpServlet creator) {
     this.path = path;
     this.creator = creator;
   }
@@ -17,7 +17,7 @@ public enum ServletMappingInfo {
     return path;
   }
 
-  public ServletCreator getCreator() {
+  public HttpServlet getCreator() {
     return creator;
   }
 }

@@ -12,16 +12,18 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import servlet.HttpServlet;
-import servlet.ServletMapping;
+import servlet.ServletMapper;
 
 public class RequestHandler implements Runnable {
 
   private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
   private Socket connection;
+  private ServletMapper servletMapper;
 
-  public RequestHandler(Socket connectionSocket) {
+  public RequestHandler(Socket connectionSocket, ServletMapper servletMapper) {
     this.connection = connectionSocket;
+    this.servletMapper = servletMapper;
   }
 
   public void run() {
@@ -34,7 +36,7 @@ public class RequestHandler implements Runnable {
       HttpRequest httpRequest = new HttpRequest(bufferedReader);
       HttpResponse httpResponse = new HttpResponse(new DataOutputStream(out));
 
-      HttpServlet servlet = ServletMapping.getServlet(httpRequest.getPath());
+      HttpServlet servlet = servletMapper.getServlet(httpRequest.getPath());
       servlet.service(httpRequest, httpResponse);
 
     } catch (IOException e) {
