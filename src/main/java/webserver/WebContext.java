@@ -1,23 +1,21 @@
 package webserver;
 
+import webserver.controller.Controller;
+import webserver.http.HttpSession;
 import webserver.resource.HandlebarsResourceLoader;
 import webserver.resource.ResourceLoader;
 import webserver.resource.StaticResourceLoader;
-import webserver.controller.Controller;
-import webserver.controller.ListUserController;
-import webserver.controller.LoginController;
-import webserver.controller.RegistrationController;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Arrays.asList;
 
 /**
  * for Dependency Injection Provider
  */
-public class Context {
+public class WebContext {
 
     public static final String LOGINED_KEY = "logined";
 
@@ -25,13 +23,13 @@ public class Context {
 
     public static String ERROR_PAGE = "/error.html";
 
-    public static Map<String, Controller> CONTROLLERS = new HashMap<String, Controller>(){{
-        put("/user/create", new RegistrationController());
-        put("/user/login", new LoginController());
-        put("/user/list", new ListUserController());
-    }};
+    public static String SESSION_KEY = "session-key";
+
+    public static Map<String, Controller> CONTROLLERS = ComponentFactory.getComponents();
 
     public static List<ResourceLoader> RESOURCE_LOADERS =
             asList(new StaticResourceLoader(), new HandlebarsResourceLoader());
+
+    public static Map<String, HttpSession> SESSIONS = new ConcurrentHashMap<>();
 
 }

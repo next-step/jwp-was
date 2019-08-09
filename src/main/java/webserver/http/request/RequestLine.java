@@ -9,7 +9,7 @@ import webserver.http.HttpParameter;
 import static utils.ParsingUtils.parseUrl;
 import static utils.StringUtils.endSplit;
 import static utils.StringUtils.frontSplitWithOrigin;
-import static webserver.Context.WELCOME_PAGE;
+import static webserver.WebContext.WELCOME_PAGE;
 
 public class RequestLine {
 
@@ -24,8 +24,6 @@ public class RequestLine {
 
     private static final char URL_QUERY_DELIMITER = '?';
     private static final String REQUEST_LINE_DELIMITER = " ";
-
-
 
     public static class Builder {
         private final HttpMethod method;

@@ -12,19 +12,6 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    private UserService() {
-    }
-
-    private static UserService instance;
-
-    public static UserService getInstance() {
-        if (instance == null) {
-            instance = new UserService();
-        }
-
-        return instance;
-    }
-
     public void add(final User user) {
 
         if (DataBase.findUserById(user.getUserId()) != null) {

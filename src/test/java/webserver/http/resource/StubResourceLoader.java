@@ -3,11 +3,11 @@ package webserver.http.resource;
 import webserver.http.ModelAndView;
 import webserver.resource.ResourceLoader;
 
-public class MockResourceLoader implements ResourceLoader {
+public class StubResourceLoader implements ResourceLoader {
 
     private String location;
 
-    public MockResourceLoader(String location) {
+    public StubResourceLoader(String location) {
         this.location = location;
     }
 

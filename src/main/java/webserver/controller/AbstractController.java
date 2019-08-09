@@ -3,7 +3,6 @@ package webserver.controller;
 import exception.HttpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import service.UserService;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.HttpStatusCode;
@@ -29,7 +28,6 @@ public class AbstractController implements Controller {
                 doGet(httpRequest, httpResponse);
                 break;
             case POST:
-                setUserService(UserService.getInstance());
                 doPost(httpRequest, httpResponse);
                 break;
             default:
@@ -43,8 +41,5 @@ public class AbstractController implements Controller {
     protected void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
     }
 
-    protected void setUserService(UserService userService) {
-
-    }
 
 }

@@ -4,8 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
-
-import static webserver.http.ViewResolver.from;
+import webserver.http.ViewResolver;
 
 public class StaticResourceController extends AbstractController {
 
@@ -14,6 +13,6 @@ public class StaticResourceController extends AbstractController {
     @Override
     protected void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
         logger.debug("## access static resource {}", httpRequest.getPath());
-        from(httpRequest, httpResponse).forward(httpRequest.getPath());
+        ViewResolver.from(httpRequest, httpResponse).forward(httpRequest.getPath());
     }
 }

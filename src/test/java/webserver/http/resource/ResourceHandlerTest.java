@@ -16,7 +16,7 @@ class ResourceHandlerTest {
     @Test
     void resourceHandler() {
         ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setResourceLoaders(asList(new MockResourceLoader(EXPECTED_LOCATION)));
+        resourceHandler.setResourceLoaders(asList(new StubResourceLoader(EXPECTED_LOCATION)));
         String contents = resourceHandler.getContents(new ModelAndView(EXPECTED_LOCATION));
         assertThat(contents).isEqualTo(EXPECTED_LOCATION);
     }
@@ -24,7 +24,7 @@ class ResourceHandlerTest {
     @Test
     void resourceHandlerNotFound() {
         ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setResourceLoaders(asList(new MockResourceLoader("NotFound")));
+        resourceHandler.setResourceLoaders(asList(new StubResourceLoader("NotFound")));
         assertThrows(HttpException.class, () -> resourceHandler.getContents(new ModelAndView(EXPECTED_LOCATION)));
     }
 
