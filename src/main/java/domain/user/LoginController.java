@@ -2,10 +2,12 @@ package domain.user;
 
 import db.DataBase;
 import webserver.controller.AbstractController;
+import webserver.http.AttributeName;
 import webserver.http.request.Request;
 import webserver.http.response.Response;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class LoginController extends AbstractController {
 
@@ -17,17 +19,20 @@ public class LoginController extends AbstractController {
         final String userId = request.getParameter("userId");
         final String password = request.getParameter("password");
 
-        final boolean exists = Optional.ofNullable(DataBase.findUserById(userId))
-                .map(user -> user.matchPassword(password))
-                .isPresent();
+        Optional.ofNullable(DataBase.findUserById(userId))
+                .filter(user -> user.matchPassword(password))
+                .ifPresentOrElse(successHandle(request, response), failHandle(response));
+    }
 
-        if (exists) {
-            response.addHeader("Set-Cookie", "logined=true; Path=/");
+    private Consumer<User> successHandle(final Request request,
+                                         final Response response) {
+        return user -> {
+            request.getSession().setAttribute(AttributeName.USER.toString(), user);
             response.sendRedirect("/index.html");
-            return;
-        }
+        };
+    }
 
-        response.addHeader("Set-Cookie", "logined=false; Path=/");
-        response.sendRedirect("/user/login_failed.html");
+    private Runnable failHandle(final Response response) {
+        return () -> response.sendRedirect("/user/login_failed.html");
     }
 }

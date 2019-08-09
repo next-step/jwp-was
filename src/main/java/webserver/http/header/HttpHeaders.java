@@ -2,19 +2,21 @@ package webserver.http.header;
 
 import utils.StringUtils;
 import webserver.http.HeaderName;
+import webserver.http.cookie.Cookies;
+import webserver.http.cookie.HttpCookies;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.lang.Integer.parseInt;
 import static java.lang.System.lineSeparator;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toMap;
 
-public class HttpHeaders {
+public class HttpHeaders implements Headers {
 
     private static final int DEFAULT_CONTENT_LENGTH = 0;
 
@@ -24,7 +26,7 @@ public class HttpHeaders {
         this.headers = headers;
     }
 
-    public static HttpHeaders of(final String rawHttpHeaders) {
+    public static Headers of(final String rawHttpHeaders) {
         if (StringUtils.isBlank(rawHttpHeaders)) {
             return empty();
         }
@@ -35,66 +37,61 @@ public class HttpHeaders {
                         HttpHeaders::new));
     }
 
-    public static HttpHeaders empty() {
+    public static Headers empty() {
         return new HttpHeaders(new HashMap<>());
     }
 
+    @Override
     public void add(final String key,
                     final String value) {
         headers.put(key, value);
     }
 
-    public void add(final HeaderName key,
-                    final String value) {
-        add(key.toString(), value);
-    }
-
-    public void add(final HeaderName key,
-                    final int value) {
-        add(key, String.valueOf(value));
-    }
-
+    @Override
     public void setLocation(final String redirectPath) {
         add(HeaderName.LOCATION, redirectPath);
     }
 
+    @Override
     public void setContentLength(final int contentLength) {
-        add(HeaderName.CONTENT_LENGTH, contentLength);
+        add(HeaderName.CONTENT_LENGTH, String.valueOf(contentLength));
     }
 
+    @Override
+    public Cookies getCookies() {
+        return HttpCookies.of(getString(HeaderName.COOKIE.toString()));
+    }
+
+    @Override
     public String getString(final String key) {
         return headers.get(key);
     }
 
-    public int getInt(final String key) {
-        return Integer.parseInt(getString(key));
-    }
-
-    public int getInt(final HeaderName key,
-                      final int defaultValue) {
+    @Override
+    public int getContentLength() {
         try {
-            return getInt(key.toString());
+            return parseInt(getString(HeaderName.CONTENT_LENGTH.toString()));
         } catch (final NumberFormatException ignore) { }
 
-        return defaultValue;
+        return DEFAULT_CONTENT_LENGTH;
     }
 
-    public int getContentLength() {
-        return getInt(HeaderName.CONTENT_LENGTH, DEFAULT_CONTENT_LENGTH);
-    }
-
+    @Override
     public boolean isEmpty() {
         return headers.isEmpty();
     }
 
-    public Set<Map.Entry<String, String>> entrySet() {
-        return headers.entrySet();
-    }
-
+    @Override
     public List<HttpHeader> toList() {
-        return entrySet().stream()
+        return headers.entrySet()
+                .stream()
                 .map(entry -> HttpHeader.of(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
+    }
+
+    private void add(final HeaderName key,
+                     final String value) {
+        add(key.toString(), value);
     }
 
     @Override

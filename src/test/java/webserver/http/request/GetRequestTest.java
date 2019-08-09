@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.cookie.Cookies;
-import webserver.http.session.MockSessionStore;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static support.FileSupporter.read;
@@ -15,7 +14,7 @@ class GetRequestTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        request = HttpRequest.of(read("GET_Request.txt"), new MockSessionStore());
+        request = HttpRequest.of(read("GET_Request.txt"));
     }
 
     @DisplayName("쿠키를 가져온다.")

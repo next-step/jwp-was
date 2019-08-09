@@ -1,4 +1,4 @@
-package model;
+package domain.user;
 
 public class User {
     private String userId;
@@ -29,7 +29,7 @@ public class User {
         return email;
     }
 
-    public boolean matchPassword(final String other) {
+    boolean matchPassword(final String other) {
         return password.equals(other);
     }
 

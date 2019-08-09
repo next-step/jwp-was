@@ -1,7 +1,6 @@
 package domain.user;
 
 import db.DataBase;
-import model.User;
 import webserver.controller.AbstractController;
 import webserver.http.request.Request;
 import webserver.http.response.Response;

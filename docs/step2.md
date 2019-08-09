@@ -49,7 +49,7 @@ public class FileIoUtilsTest {
 ```
 /create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net
 ```
-> HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.User 클래스에 저장한다.
+> HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 domain.user.User 클래스에 저장한다.
 
 ### HTTP Request Header 예
 ```

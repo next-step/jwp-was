@@ -29,7 +29,13 @@ public class HttpCookies implements Cookies {
 
         return Arrays.stream(rawCookies.split(SEPARATOR))
                 .map(Cookie::of)
-                .collect(collectingAndThen(toMap(Cookie::getKey, Cookie::getValue), HttpCookies::new));
+                .collect(collectingAndThen(toMap(Cookie::getKey, Cookie::getValue, HttpCookies::duplicationPolicy),
+                        HttpCookies::new));
+    }
+
+    private static String duplicationPolicy(final String before,
+                                            final String after) {
+        return after;
     }
 
     public Optional<String> getString(final String key) {
