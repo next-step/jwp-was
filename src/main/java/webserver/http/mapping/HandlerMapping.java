@@ -1,8 +1,7 @@
 package webserver.http.mapping;
 
-import webserver.http.dispatcher.*;
-import webserver.http.request.HttpRequest;
-import webserver.http.response.HttpResponse;
+import webserver.http.controller.*;
+import webserver.http.request.Request;
 import webserver.resource.ResourceResolver;
 import webserver.view.HandlebarViewResolver;
 import webserver.view.HtmlViewResolver;
@@ -10,27 +9,24 @@ import webserver.view.HtmlViewResolver;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HandlerMapping implements Router<HttpRequest, HttpResponse> {
+public class HandlerMapping {
 
-    private Map<String, Dispatcher> dispatchers;
-    private ResourceDispatcher resourceDispatcher;
+    private Map<String, Controller> controllers;
+    private ResourceController resourceController;
 
-    public HandlerMapping() {
+    HandlerMapping() {
 
-        dispatchers = new HashMap<>();
-        dispatchers.put("/index", new MainDispatcher<>(new HtmlViewResolver()));
-        dispatchers.put("/user/form", new RegisterFormDispatcher<>(new HtmlViewResolver()));
-        dispatchers.put("/user/login", new LoginDispatcher<>(new HtmlViewResolver()));
-        dispatchers.put("/user/list", new UserListDispatcher<>(new HandlebarViewResolver()));
-        dispatchers.put("/user/create", new CreateUserDispatcher());
+        controllers = new HashMap<>();
+        controllers.put("/index", new MainController<>(new HtmlViewResolver()));
+        controllers.put("/user/form", new RegisterFormController<>(new HtmlViewResolver()));
+        controllers.put("/user/login", new LoginController<>(new HtmlViewResolver()));
+        controllers.put("/user/list", new UserListController<>(new HandlebarViewResolver()));
+        controllers.put("/user/create", new CreateUserController());
 
-        resourceDispatcher = new ResourceDispatcher(new ResourceResolver());
+        resourceController = new ResourceController(new ResourceResolver());
     }
 
-    @Override
-    public void route(HttpRequest request, HttpResponse response) {
-        dispatchers.getOrDefault(request.getPath(), resourceDispatcher)
-                .service(request, response);
+    Controller getController(Request request) {
+        return controllers.getOrDefault(request.getPath(), resourceController);
     }
-
 }

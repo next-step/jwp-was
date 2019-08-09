@@ -5,6 +5,9 @@ import webserver.http.HttpMethod;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,10 +27,10 @@ public class HttpRequest implements Request {
     private Map<String, String> cookies;
     private QueryParam body = QueryParam.EMPTY_QUERY_PARAM;
 
-    public HttpRequest(BufferedReader br) throws IOException {
+    public HttpRequest(InputStream in) throws IOException {
         requestHeaders = new HashMap<>();
         cookies = new HashMap<>();
-        process(br);
+        process(in);
     }
 
     @Override
@@ -46,11 +49,18 @@ public class HttpRequest implements Request {
     }
 
     @Override
-    public void process(BufferedReader br) throws IOException {
+    public HttpMethod getMethod() {
+        return requestLine.getHttpMethod();
+    }
+
+    @Override
+    public void process(InputStream in) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+
         String line = br.readLine();
         requestLine = RequestLine.parse(line);
-
-        while (!(line = br.readLine()).isEmpty()) {
+        System.out.println(line);
+        while ((line = br.readLine()) != null && !line.isEmpty()) {
             String[] keyValue = line.split(COLON_SEPARATOR);
             requestHeaders.put(keyValue[0], keyValue[1]);
         }
@@ -65,9 +75,12 @@ public class HttpRequest implements Request {
 
         String contentLength = requestHeaders.get(CONTENT_LENGTH_KEY);
         if (contentLength != null) {
-            String messageBody = IOUtils.readData(br, Integer.parseInt(contentLength));
-            body = QueryParam.parse(messageBody);
+            body = QueryParam.parse(RequestBodyToString(br, contentLength));
         }
+    }
+
+    private String RequestBodyToString(BufferedReader br, String contentLength) throws IOException {
+        return IOUtils.readData(br, Integer.parseInt(contentLength));
     }
 
     public boolean isGetRequest() {
