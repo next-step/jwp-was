@@ -1,22 +1,34 @@
-package webserver.domain;
-
-import webserver.http.HttpStatus;
+package webserver.http;
 
 import java.util.HashMap;
 
 public class HttpHeader {
 
-    private int resultCode = HttpStatus.OK.getHttpStatusCode();
+    public static final String DEFAULT_HTTP_VERSION = "HTTP/1.1";
+
+    private HttpStatus resultCode = HttpStatus.OK;
     private String method;
     private String urlPath;
-    private String version;
+    private String version = "HTTP/1.1";
     private HashMap<String, String> etcHeader;
 
-    public int getResultCode() {
+    public HttpHeader(){}
+
+    public HttpHeader(HttpStatus resultCode){
+        this.resultCode = resultCode;
+        this.version = DEFAULT_HTTP_VERSION;
+    }
+
+    public HttpHeader(HttpStatus resultCode, String version) {
+        this.resultCode = resultCode;
+        this.version = (version == null) ? DEFAULT_HTTP_VERSION : version;
+    }
+
+    public HttpStatus getResultCode() {
         return resultCode;
     }
 
-    public void setResultCode(int resultCode) {
+    public void setResultCode(HttpStatus resultCode) {
         this.resultCode = resultCode;
     }
 

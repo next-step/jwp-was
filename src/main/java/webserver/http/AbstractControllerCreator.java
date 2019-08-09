@@ -1,22 +1,18 @@
 package webserver.http;
 
-
-import webserver.domain.HttpResponseEntity;
-
 public abstract class AbstractControllerCreator implements ControllerCreator{
 
     @Override
-    public HttpResponseEntity doMethodCall(HttpRequest httpRequest) {
-        String method = httpRequest.getMethod();
+    public HttpResponse doMethodCall(HttpRequest request) {
+        String method = request.getMethod();
         if(method.equals("GET")){
-            return doGet(httpRequest);
+            return doGet(request);
         }
 
         if(method.equals("POST")){
-            return doPost(httpRequest);
+            return doPost(request);
         }
 
-        return HttpResponseEntity.setStatusResponse(httpRequest,
-                HttpStatus.NOT_FOUND);
+        return HttpResponse.setStatusResponse(HttpStatus.NOT_FOUND);
     }
 }

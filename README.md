@@ -44,3 +44,11 @@ feat ($step1): HTTP 파싱 및 IF문 중복 제거
 - HttpResponseEntity 클래스 추가 (읽은 요청을 응답하기 위해 정리하는 클래스)
 - HttpRequest 클래스는 Http 파싱만 하게 분리
 - HttpResponse 클래스는 정리된 HttpResponseEntity를 받아 응답 결과를 리턴한다
+
+새로 추가한 작업 $step3:
+- WebServer 스레드풀 추가
+- HttpRequest 기존 HttpEntity를 합침
+- HttpResponse 기존 HttpResponseEntity를 합침
+- HttpHeader req,response 시 각각 생성
+- 기존 HttpResponseEntity로 response 만드는걸 직접적으로 접근
+- RequestLine 을 ServletContainer로 이름 변경

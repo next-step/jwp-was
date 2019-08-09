@@ -1,76 +1,78 @@
 package webserver.http;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import webserver.converter.HttpConverter;
-import webserver.domain.HttpResponseEntity;
-
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.Optional;
-
-
 public class HttpResponse {
-    private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
+    protected HttpHeader httpHeader;
+    protected String urlPath;
+    protected String resultBody;
+    protected String redirectUrl;
+    protected String cookie;
 
-    HttpResponseEntity responseEntity;
-    public HttpResponse(HttpResponseEntity responseEntity){
-        this.responseEntity = responseEntity;
+    public HttpResponse(HttpHeader httpHeader) {
+        this.httpHeader = httpHeader;
     }
 
-    public void sendResponse(DataOutputStream dos){
-        try {
-            byte[] returnContent = Optional.ofNullable(responseEntity.getResultBody())
-                    .orElse("").getBytes();
-
-            dos.writeBytes(responseEntity.getVersion() +
-                    HttpConverter.SEPARATOR +
-                    responseEntity.getResultCode() +
-                    HttpConverter.SEPARATOR +
-                    HttpStatus.getHttpStatusMessage(responseEntity.getResultCode()) +
-                    HttpConverter.SEPARATOR +
-                    HttpConverter.QUERY_NEW_LINE
-            );
-
-            setResponseAddOption(dos, responseEntity, returnContent.length);
-
-            dos.writeBytes("\r\n");
-            dos.write(returnContent, 0, returnContent.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+    public static HttpResponse setStatusResponse(HttpStatus status){
+        HttpResponse response =
+                new HttpResponse(new HttpHeader(status));
+        response.setResultBody(status.getHttpStatusMessage());
+        return response;
     }
 
-    private void setResponseAddOption(DataOutputStream dos, HttpResponseEntity responseEntity, int contentLength) throws IOException{
-        setFileResourceOption(dos, responseEntity, contentLength);
-        setRedirectOption(dos, responseEntity);
-        setCookieOption(dos, responseEntity);
+    public static HttpResponse ok(HttpRequest request){
+        HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.OK));
+        return response;
     }
 
-    private void setFileResourceOption(DataOutputStream dos,
-                                       HttpResponseEntity responseEntity,
-                                       int contentLength) throws IOException{
-
-        if(responseEntity.getHttpHeader().getEtcHeader().containsKey("Accept")){
-            dos.writeBytes("Accept: " + responseEntity.getHttpHeader().getEtcHeader().get("Accept"));
-        }
-
-        dos.writeBytes("Connection: keep-alive\r\n");
-        dos.writeBytes("Content-Length: " + contentLength + "\r\n");
+    public static HttpResponse reDirect(HttpRequest request, String redirectUrl) {
+        HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.REDIRECT));
+        response.setRedirectUrl(redirectUrl);
+        return response;
     }
 
-    private void setRedirectOption(DataOutputStream dos,
-                                   HttpResponseEntity responseEntity) throws IOException{
-        if(responseEntity.getResultCode() == HttpStatus.REDIRECT.getHttpStatusCode()){
-            dos.writeBytes("Location: " + responseEntity.getRedirectUrl() + "\r\n");
-        }
+    private static HttpHeader makeHeader(HttpRequest request, HttpStatus status){
+        HttpHeader httpHeader = new HttpHeader(status, request.getVersion());
+        httpHeader.setEtcHeader(request.getEtcHeader());
+        return httpHeader;
     }
 
-    private void setCookieOption(DataOutputStream dos,
-                                 HttpResponseEntity responseEntity) throws IOException{
-        if(responseEntity.getCookie() != null){
-            dos.writeBytes("Set-Cookie: " + responseEntity.getCookie() + "\r\n");
-        }
+    public HttpHeader getHttpHeader() {
+        return httpHeader;
     }
+
+    public HttpStatus getHttpStatus() { return httpHeader.getResultCode(); }
+
+    public int getStatusCode() {
+        return httpHeader.getResultCode().getHttpStatusCode();
+    }
+
+    public String getUrlPath(){ return urlPath; }
+
+    public String getResultBody() {
+        return resultBody;
+    }
+
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    public String getCookie() {
+        return cookie;
+    }
+
+    public void setUrlPath(String urlPath) {
+        this.urlPath = urlPath;
+    }
+
+    public void setResultBody(String resultBody) {
+        this.resultBody = resultBody;
+    }
+
+    public void setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
+    }
+
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
+    }
+
 }

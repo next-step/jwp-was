@@ -2,13 +2,15 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
+import webserver.converter.HttpResponseConverter;
 import webserver.http.HttpController;
 import webserver.http.HttpResponse;
-import webserver.http.RequestLine;
+import webserver.http.ServletContainer;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -28,11 +30,26 @@ public class RequestHandler implements Runnable {
             String content = IOUtils.readData(new BufferedReader(new InputStreamReader(in, "UTF-8")), 1024);
 
             logger.debug(content);
-            HttpResponse response = RequestLine.parse(httpController, content);
+            HttpResponse response = ServletContainer.make(httpController, content);
             DataOutputStream dos = new DataOutputStream(out);
-            response.sendResponse(dos);
+            responseReq(dos, response);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
+
+
+    public void responseReq(DataOutputStream dos, HttpResponse response){
+        try {
+            byte[] returnContent = Optional.ofNullable(response.getResultBody())
+                    .orElse("").getBytes();
+            dos.writeBytes(new HttpResponseConverter(response).getResponse().toString());
+            dos.write(returnContent, 0, returnContent.length);
+            dos.flush();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+
 }

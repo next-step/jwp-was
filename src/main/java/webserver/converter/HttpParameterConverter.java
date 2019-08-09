@@ -1,6 +1,6 @@
 package webserver.converter;
 
-import webserver.domain.HttpEntity;
+import webserver.http.HttpRequest;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -8,34 +8,34 @@ import java.util.HashMap;
 
 public class HttpParameterConverter extends HttpConverter{
 
-    public static void HttpParameterParse(HttpEntity httpEntity, String[] separatorMethodPath){
-        setMethodParse(httpEntity, separatorMethodPath);
+    public static void HttpParameterParse(HttpRequest request, String[] separatorMethodPath){
+        setMethodParse(request, separatorMethodPath);
     }
 
-    private static void setMethodParse(HttpEntity httpEntity, String[] httpSplit){
-        if(httpEntity.getMethod().equals("GET")){
-            setGetMethodParameter(httpEntity, httpSplit);
+    private static void setMethodParse(HttpRequest request, String[] httpSplit){
+        if(request.getMethod().equals("GET")){
+            setGetMethodParameter(request, httpSplit);
         }
 
-        if(httpEntity.getMethod().equals("POST")){
-            setPostMethodParameter(httpEntity, httpSplit);
+        if(request.getMethod().equals("POST")){
+            setPostMethodParameter(request, httpSplit);
         }
     }
 
-    private static void setGetMethodParameter(HttpEntity httpEntity, String[] httpSplit){
+    private static void setGetMethodParameter(HttpRequest request, String[] httpSplit){
         String[] urlStr = httpSplit[0]
                 .split(SEPARATOR)[1]
                 .split(QUERY_PREFIX);
         if(urlStr.length > 1){
-            setSeparatorParameter(httpEntity, urlStr[1]);
+            setSeparatorParameter(request, urlStr[1]);
         }
     }
 
-    private static void setPostMethodParameter(HttpEntity httpEntity, String[] httpSplit){
+    private static void setPostMethodParameter(HttpRequest request, String[] httpSplit){
         boolean postParameterCheck = false;
         for (int i = 1; i < httpSplit.length; i++) {
             if(postParameterCheck){
-                setSeparatorParameter(httpEntity, httpSplit[i]);
+                setSeparatorParameter(request, httpSplit[i]);
                 break;
             }
 
@@ -45,7 +45,7 @@ public class HttpParameterConverter extends HttpConverter{
         }
     }
 
-    private static void setSeparatorParameter(HttpEntity httpEntity, String splitStr){
+    private static void setSeparatorParameter(HttpRequest request, String splitStr){
         HashMap<String, String> paramMap = new HashMap<>();
         String[] paramStr = splitStr.split(QUERY_DELIMITER);
         for (int i = 0; i < paramStr.length; i++) {
@@ -53,7 +53,7 @@ public class HttpParameterConverter extends HttpConverter{
             paramMap.put(keyValueStr[0], setNullCheck(keyValueStr));
         }
 
-        httpEntity.setParameter(paramMap);
+        request.setParameter(paramMap);
     }
 
     private static String setNullCheck(String[] keyValue){

@@ -1,61 +1,78 @@
 package webserver.http;
 
 import webserver.converter.HttpHeaderConverter;
-import webserver.domain.HttpEntity;
-import webserver.domain.HttpHeader;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 
 public class HttpRequest {
 
-    private HttpEntity httpEntity;
-    private HttpController httpController;
+    protected HttpHeader httpHeader;
 
-    public HttpRequest(HttpController httpController) {
-        this.httpController = httpController;
-        this.httpEntity = new HttpEntity();
+    private HashMap<String, String> parameter;
+    private String returnContent;
+    private String location;
+    private String cookie;
+
+    public void parse(String httpMsg){
+        this.httpHeader = new HttpHeader();
+        new HttpHeaderConverter(this, httpMsg);
     }
 
-    public void parse(String httpMsg)
-            throws IOException, URISyntaxException{
-            new HttpHeaderConverter(this, httpMsg);
+    public HttpHeader getHttpHeader() { return this.httpHeader; }
+
+    public String getCookie() {
+        return cookie;
     }
 
-    public HttpEntity getHttpEntity() {
-        return httpEntity;
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
     }
 
-    public HttpHeader getHttpHeader() { return httpEntity.getHttpHeader(); }
-
-    public String getMethod(){
-        return httpEntity.getMethod();
+    public String getLocation() {
+        return location;
     }
 
-    public String getUrlPath() {
-        return httpEntity.getUrlPath();
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public HashMap<String, String> getParameter() {
-        return httpEntity.getParameter();
+        return parameter;
     }
 
-    public String getReturnContent() {
-        return httpEntity.getReturnContent();
+    public void setParameter(HashMap<String, String> parameter) {
+        this.parameter = parameter;
+    }
+
+    public String getMethod() {
+        return this.httpHeader.getMethod();
+    }
+
+    public void setMethod(String method) {
+        this.httpHeader.setMethod(method);
+    }
+
+    public String getUrlPath() {
+        return this.httpHeader.getUrlPath();
+    }
+
+    public void setUrlPath(String urlPath) {
+        this.httpHeader.setUrlPath(urlPath);
     }
 
     public String getVersion() {
-        return httpEntity.getVersion();
+        return this.httpHeader.getVersion();
     }
 
-    public int getResultCode() {
-        return httpEntity.getResultCode();
+    public void setVersion(String version) {
+        this.httpHeader.setVersion(version);
     }
 
     public HashMap<String, String> getEtcHeader() {
-        return httpEntity.getEtcHeader();
+        return this.httpHeader.getEtcHeader();
     }
 
-    public HttpController getHttpController() { return httpController; }
+    public void setEtcHeader(HashMap<String, String> etcHeader) {
+        this.httpHeader.setEtcHeader(etcHeader);
+    }
+
 }

@@ -3,7 +3,6 @@ package webserver.http;
 import webserver.controller.UserCreateController;
 import webserver.controller.UserListController;
 import webserver.controller.UserLoginController;
-import webserver.domain.HttpResponseEntity;
 
 import java.util.HashMap;
 
@@ -21,13 +20,12 @@ public class HttpController {
         return controllerCreatorHashMap.containsKey(url);
     }
 
-    public HttpResponseEntity callMethod(HttpRequest httpRequest) {
+    public HttpResponse callMethod(HttpRequest httpRequest) {
         String callUrlPath = httpRequest.getUrlPath();
         if(controllerCreatorHashMap.containsKey(callUrlPath)){
             return controllerCreatorHashMap.get(callUrlPath).doMethodCall(httpRequest);
         }
 
-        return HttpResponseEntity.setStatusResponse(httpRequest,
-                HttpStatus.NOT_FOUND);
+        return HttpResponse.setStatusResponse(HttpStatus.NOT_FOUND);
     }
 }
