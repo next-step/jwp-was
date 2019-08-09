@@ -42,7 +42,7 @@ public class HttpSession {
         this.manager.invalidate(this.id);
     }
 
-    public String getCookieValue() {
-        return new HttpCookie(this.manager.getSessionKeyName(), this.getId()).getCookieNameAndValue();
+    public HttpCookie getCookieValue() {
+        return new HttpCookie(this.manager.getSessionKeyName(), this.getId());
     }
 }

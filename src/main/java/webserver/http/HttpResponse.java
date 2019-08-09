@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import utils.MimeTypeUtils;
+import utils.StringUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,135 +15,142 @@ import java.util.List;
 
 public class HttpResponse {
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
+	private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
-    private final HttpRequest httpRequest;
+	private static final String RESPONSE_HTTP_VERSION = "HTTP/1.1";
+	private final HttpRequest httpRequest;
 
-    private final HttpHeaders httpHeaders;
+	private final HttpHeaders httpHeaders;
 
-    private final DataOutputStream outputStream;
+	private final DataOutputStream outputStream;
 
-    private HttpStatus httpStatus = HttpStatus.OK;
+	private HttpStatus httpStatus = HttpStatus.OK;
 
-    private byte[] responseBody;
+	private byte[] responseBody;
 
-    private HttpResponse(HttpRequest httpRequest, OutputStream out){
-        this.httpRequest = httpRequest;
-        this.httpHeaders = new HttpHeaders();
-        this.outputStream = new DataOutputStream(out);
-    }
+	private HttpResponse(HttpRequest httpRequest, OutputStream out){
+		this.httpRequest = httpRequest;
+		this.httpHeaders = new HttpHeaders();
+		this.outputStream = new DataOutputStream(out);
+	}
 
-    public static HttpResponse of(HttpRequest httpRequest, OutputStream out) {
+	public static HttpResponse of(HttpRequest httpRequest, OutputStream out) {
 
-        return new HttpResponse(httpRequest, out);
-    }
+		return new HttpResponse(httpRequest, out);
+	}
 
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
-    }
+	public HttpStatus getHttpStatus() {
+		return httpStatus;
+	}
 
-    public void setHttpStatus(HttpStatus httpStatus) {
-        this.httpStatus = httpStatus;
-    }
+	public void setHttpStatus(HttpStatus httpStatus) {
+		this.httpStatus = httpStatus;
+	}
 
-    public void setHttpHeader(String name, String value) {
-        this.httpHeaders.setHeader(name, value);
-    }
+	public void setHttpHeader(String name, String value) {
+		this.httpHeaders.setHeader(name, value);
+	}
 
-    public HttpHeaders getHttpHeaders(){
-        return this.httpHeaders;
-    }
-    
-    public List<String> getHttpHeaderLines(){
-        return this.httpHeaders.getHeaderLines();
-    }
+	public HttpHeaders getHttpHeaders(){
+		return this.httpHeaders;
+	}
 
-    public byte[] getResponseBody() {
-        return responseBody;
-    }
+	public List<String> getHttpHeaderLines(){
+		return this.httpHeaders.getHeaderLines();
+	}
 
-    public void setResponseBody(byte[] responseBody) {
-        setHttpHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(responseBody.length));
-        this.responseBody = responseBody;
-    }
+	public byte[] getResponseBody() {
+		return responseBody;
+	}
 
-    public void sendRedirect(String redirectUrl) {
-        this.setHttpStatus(HttpStatus.FOUND);
-        this.setHttpHeader(HttpHeaders.LOCATION, redirectUrl);
-    }
+	public void setResponseBody(byte[] responseBody) {
+		setHttpHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(responseBody.length));
+		this.responseBody = responseBody;
+	}
 
-    public void sendResource(URL resourceUrl){
-        byte[] body = FileIoUtils.loadFileFromURL(resourceUrl);
-        this.setResponseBody(body);
+	public void sendRedirect(String redirectUrl) {
+		this.setHttpStatus(HttpStatus.FOUND);
+		this.setHttpHeader(HttpHeaders.LOCATION, redirectUrl);
+	}
 
-        String mimeType = MimeTypeUtils.guessContentTypeFromName(resourceUrl.getFile(), httpRequest.getHeader(HttpHeaders.ACCEPT));
-        this.setHttpHeader(HttpHeaders.CONTENT_TYPE, mimeType);
-    }
+	public void sendResource(URL resourceUrl){
+		byte[] body = FileIoUtils.loadFileFromURL(resourceUrl);
+		this.setResponseBody(body);
 
-    public void send404(){
-        this.setHttpStatus(HttpStatus.NOT_FOUND);
-    }
+		String mimeType = MimeTypeUtils.guessContentTypeFromName(resourceUrl.getFile(), httpRequest.getHeader(HttpHeaders.ACCEPT));
+		this.setHttpHeader(HttpHeaders.CONTENT_TYPE, mimeType);
+	}
 
-    public void writeResponse() {
+	public void send404(){
+		this.setHttpStatus(HttpStatus.NOT_FOUND);
+	}
 
-        ifHasNewSessionSetCookie();
+	public void writeResponse() {
 
-        writeStatusLine(this.outputStream, this.getHttpStatus());
-        writeHeaderLines(this.outputStream, this.getHttpHeaderLines());
-        writeBody(this.outputStream, this.getResponseBody());
-        writeFlush(this.outputStream);
-    }
+		ifHasNewSessionSetCookie();
 
-    private void ifHasNewSessionSetCookie(){
-        if(!this.httpRequest.hasNewSession()) {
-            return;
-        }
+		writeStatusLine(this.outputStream, this.getHttpStatus());
+		writeHeaderLines(this.outputStream, this.getHttpHeaderLines());
+		writeBody(this.outputStream, this.getResponseBody());
+		writeFlush(this.outputStream);
+	}
 
-        HttpSession httpSession = this.httpRequest.getSession(false);
-        if(httpSession == null) {
-            return;
-        }
+	private void ifHasNewSessionSetCookie(){
+		if(!this.httpRequest.hasNewSession()) {
+			return;
+		}
 
-        this.setHttpHeader(HttpHeaders.SET_COOKIE, httpSession.getCookieValue()+"; Path=/");
-    }
+		HttpSession httpSession = this.httpRequest.getSession(false);
+		if(httpSession == null) {
+			return;
+		}
+		this.setHttpHeader(HttpHeaders.SET_COOKIE, httpSession.getCookieValue().getCookieSetLine());
+	}
 
-    private void writeStatusLine(DataOutputStream dos, HttpStatus httpStatus) {
-        try {
-            dos.writeBytes("HTTP/1.1 " + httpStatus.getValue() + " " + httpStatus.getReasonPhrase() + " \r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
+	private void writeStatusLine(DataOutputStream dos, HttpStatus httpStatus) {
+		try {
+			StringBuilder sb = new StringBuilder()
+					.append(RESPONSE_HTTP_VERSION)
+					.append(StringUtils.getWhiteSpace())
+					.append(String.valueOf(httpStatus.getValue()))
+					.append(StringUtils.getWhiteSpace())
+					.append(httpStatus.getReasonPhrase())
+					.append(StringUtils.getNewLine());
+			dos.writeBytes(sb.toString());			
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}
+	}
 
-    private void writeHeaderLines(DataOutputStream dos, List<String> headerLines) {
-        try {
-            for (String headerLine : headerLines) {
-                dos.writeBytes(headerLine + " \r\n");
-            }
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
+	private void writeHeaderLines(DataOutputStream dos, List<String> headerLines) {
+		try {
+			for (String headerLine : headerLines) {
+				dos.writeBytes(headerLine + StringUtils.getNewLine());
+			}
+			dos.writeBytes(StringUtils.getNewLine());
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}
+	}
 
-    private void writeBody(DataOutputStream dos, byte[] body) {
-        if (body == null) {
-            return;
-        }
+	private void writeBody(DataOutputStream dos, byte[] body) {
+		if (body == null) {
+			return;
+		}
 
-        try {
-            dos.write(body, 0, body.length);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
+		try {
+			dos.write(body, 0, body.length);
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}
+	}
 
-    private void writeFlush(DataOutputStream dos) {
-        try {
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
+	private void writeFlush(DataOutputStream dos) {
+		try {
+			dos.flush();
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}
+	}
 
 }

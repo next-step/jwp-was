@@ -1,5 +1,6 @@
 package webserver.http;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +43,7 @@ public class HttpCookies {
 		return Optional.ofNullable(cookieSplitValues)
 				.orElse(Collections.emptyList())
 				.stream()
-				.filter(value -> !StringUtils.isEmpty(value))
+				.filter(value -> !StringUtils.isEmpty(value) && !StringUtils.isEmpty(value.trim()))
 				.map(HttpCookies::parseHttpCookie)
 				.collect(Collectors.toMap(httpCookie -> httpCookie.getName(), Function.identity(), (c1, c2) -> c1));
 	}

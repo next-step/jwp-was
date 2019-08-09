@@ -2,8 +2,12 @@ package utils;
 
 public class StringUtils {
 
-	private static final String EMPTY = "";  
+	private static final String EMPTY = ""; 
+	private static final String WHITE_SPACE = " ";
 	private static final String DOT = ".";  
+	private static final String LINE_FEED = "\n";
+	private static final String CARRIAGE_RETURN = "\r";
+	private static final String NEW_LINE = CARRIAGE_RETURN+LINE_FEED;
 
 	public static boolean isEmpty(String str) {
 		return str == null || str.isEmpty();
@@ -33,5 +37,13 @@ public class StringUtils {
 
 	public static String getEmpty() {
 		return EMPTY;
+	}
+	
+	public static String getNewLine() {
+		return NEW_LINE;
+	}
+	
+	public static String getWhiteSpace() {
+		return WHITE_SPACE;
 	}
 }
