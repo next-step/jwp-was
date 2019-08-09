@@ -1,10 +1,5 @@
 package utils;
 
-import exceptions.ResourceLoadException;
-import exceptions.ResourceNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,6 +8,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import webserver.exceptions.ResourceLoadException;
+import webserver.exceptions.ResourceNotFoundException;
 
 public class FileIoUtils {
 

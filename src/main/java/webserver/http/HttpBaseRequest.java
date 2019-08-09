@@ -1,101 +1,189 @@
 package webserver.http;
 
-import enums.HttpMethod;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import utils.IOUtils;
-import utils.StringUtils;
-import webserver.handler.ModelView;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Optional;
 
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import enums.HttpMethod;
+import utils.IOUtils;
+import utils.StringUtils;
+import webserver.handler.ModelView;
+
 public class HttpBaseRequest implements HttpRequest {
 
 	private final ModelView modelView;
-	
-    private final RequestLine requestLine;
-    
-    private final String requestUri;
-    
-    private final HttpHeaders httpHeaders;
-    
-    private final String body;
-    
-    private final MultiValueMap<String, String> params;
+
+	private final RequestLine requestLine;
+
+	private final String requestUri;
+
+	private final HttpHeaders httpHeaders;
+
+	private final HttpCookies httpCookies;
+
+	private final String body;
+
+	private final MultiValueMap<String, String> params;
+
+	private HttpSession httpSession;
+	private boolean hasNewSession = false;
 
 
-    private HttpBaseRequest(RequestLine requestLine, HttpHeaders httpHeaders, String body) {
-    	this.modelView = new ModelView();
-        this.requestLine = requestLine;
-        this.requestUri = parseRequestUri(requestLine.getPath());
-        this.httpHeaders = httpHeaders;
-        this.body = body;
-        this.params = new LinkedMultiValueMap<>(QueryParams.parseByPath(requestLine.getPath()).getParameters());
-    }
+	private HttpBaseRequest(RequestLine requestLine, HttpHeaders httpHeaders, String body) {
+		this.modelView = new ModelView();
+		this.requestLine = requestLine;
+		this.requestUri = parseRequestUri(requestLine.getPath());
+		this.httpHeaders = httpHeaders;
+		this.httpCookies = HttpCookies.of(this.httpHeaders.getHeaderValueFirst(HttpHeaders.COOKIE));
+		this.body = body;
+		this.params = new LinkedMultiValueMap<>(QueryParams.parseByPath(requestLine.getPath()).getParameters());
+	}
 
-    public static String parseRequestUri(String path) {
-        return path.replaceAll("http(s)?://.*?(?=/)", "")
-                .replaceAll("\\?.*$", "");
-    }
+	public static String parseRequestUri(String path) {
+		return path.replaceAll("http(s)?://.*?(?=/)", "")
+				.replaceAll("\\?.*$", "");
+	}
 
-    public static HttpBaseRequest parse(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+	public static HttpBaseRequest parse(InputStream inputStream) throws IOException {
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		RequestLine requestLine = parseRequestLine(bufferedReader);
+		HttpHeaders httpHeaders = parseHeaderLine(bufferedReader);
+		String body = parseBody(httpHeaders, bufferedReader);
 
-        RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
-        HttpHeaders httpHeaders = new HttpHeaders();
-        String headerLine;
-        while (!StringUtils.isEmpty(headerLine = bufferedReader.readLine())) {
-            httpHeaders.addHeaderLine(headerLine);
-        }
+		return new HttpBaseRequest(requestLine, httpHeaders, body);
+	}
 
-        String body = null;
-        int contentLength = (int) httpHeaders.getContentLength();
-        if (contentLength != -1) {
-            body = IOUtils.readData(bufferedReader, contentLength);
-        }
+	private static RequestLine parseRequestLine(BufferedReader bufferedReader) throws IOException {
+		return RequestLine.parse(bufferedReader.readLine());
+	}
 
-        return new HttpBaseRequest(requestLine, httpHeaders, body);
-    }
+	private static HttpHeaders parseHeaderLine(BufferedReader bufferedReader) throws IOException {
+		HttpHeaders httpHeaders = new HttpHeaders();
+		String headerLine;
 
-    public HttpMethod getMethod() {
-        return this.requestLine.getMethod();
-    }
+		while (!StringUtils.isEmpty(headerLine = bufferedReader.readLine())) {
+			httpHeaders.addHeaderLine(headerLine);
+		}
 
-    public String getPath() {
-        return this.requestLine.getPath();
-    }
+		return httpHeaders;
+	}
 
-    public String getParameter(String name) {
-        return Optional.ofNullable(getParameterValues(name))
-                .filter(values -> values.length > 0)
-                .map(values -> values[0])
-                .orElse(null);
-    }
+	private static String parseBody(HttpHeaders httpHeaders, BufferedReader bufferedReader) throws IOException {
+		int contentLength = (int) httpHeaders.getContentLength();
 
-    public String[] getParameterValues(String name) {
-        return Optional.ofNullable(this.params.get(name))
-                .map(values -> values.toArray(new String[values.size()]))
-                .orElse(null);
-    }
+		if (contentLength == -1) {
+			return null;
+		}
 
-    public String getHeader(String name) {
-        return this.httpHeaders.getHeaderValueFirst(name);
-    }
+		return IOUtils.readData(bufferedReader, contentLength);
+	}
 
-    public String getBody() {
-        return this.body;
-    }
+	public HttpMethod getMethod() {
+		return this.requestLine.getMethod();
+	}
 
-    public String getRequestURI() {
-        return this.requestUri;
-    }
+	public String getPath() {
+		return this.requestLine.getPath();
+	}
+
+	public String getParameter(String name) {
+		return Optional.ofNullable(getParameterValues(name))
+				.filter(values -> values.length > 0)
+				.map(values -> values[0])
+				.orElse(null);
+	}
+
+	public String[] getParameterValues(String name) {
+		return Optional.ofNullable(this.params.get(name))
+				.map(values -> values.toArray(new String[values.size()]))
+				.orElse(null);
+	}
+
+	public String getHeader(String name) {
+		return this.httpHeaders.getHeaderValueFirst(name);
+	}
+
+	public String getBody() {
+		return this.body;
+	}
+
+	public String getRequestURI() {
+		return this.requestUri;
+	}
 
 	public ModelView getModelView() {
 		return this.modelView;
+	}
+
+	@Override
+	public HttpCookie getCookie(String cookieName) {
+		return Optional.ofNullable(httpCookies)
+				.map(cookies -> cookies.getCookie(cookieName))
+				.orElse(null);
+	}
+
+	@Override
+	public HttpSession getSession() {
+		return getSession(true);
+	}
+
+	@Override
+	public HttpSession getSession(boolean create) {
+
+		setSessionIfNull();
+
+		if(!create) {
+			return this.httpSession;
+		}
+
+		setHasNewSession(true);
+		setHttpSession(createNewSession());
+		return this.httpSession;
+	}
+
+	@Override
+	public boolean hasNewSession() {
+		return this.hasNewSession;
+	}
+
+	private void setHttpSession(HttpSession httpSession) {
+		this.httpSession = httpSession;
+	}
+
+	private void setHasNewSession(boolean hasNewSession) {
+		this.hasNewSession = hasNewSession;
+	}
+
+	private HttpSession createNewSession() {
+		HttpSessionManager httpSessionManager = HttpSessionManager.getInstance();
+		Optional<String> sessionId = getSessionId();
+
+		if(sessionId.isPresent()) {
+			httpSessionManager.invalidate(sessionId.get());	
+		}
+
+		return httpSessionManager.newHttpSession();
+	}
+
+	private Optional<String> getSessionId() {
+		return Optional.ofNullable(this.httpSession)
+				.map(HttpSession::getId);
+	}
+
+	private void setSessionIfNull(){
+
+		if(this.httpSession != null) {
+			return;
+		}
+
+		HttpSessionManager httpSessionManager = HttpSessionManager.getInstance();
+		String cookieSessionId = httpSessionManager.getSessionIdFromCookieValues(this.httpCookies);
+		this.httpSession = httpSessionManager.getHttpSession(cookieSessionId);
 	}
 
 }

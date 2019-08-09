@@ -20,4 +20,12 @@ public interface HttpRequest {
     String getRequestURI();
 
 	ModelView getModelView();
+
+	HttpCookie getCookie(String cookieName);
+
+	HttpSession getSession();
+
+	HttpSession getSession(boolean create);
+
+	boolean hasNewSession();
 }

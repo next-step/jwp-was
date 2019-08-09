@@ -1,11 +1,10 @@
 package webserver.http;
 
-import java.util.Optional;
-
-import org.springframework.util.MultiValueMap;
-
 import enums.HttpMethod;
+import org.springframework.util.MultiValueMap;
 import webserver.handler.ModelView;
+
+import java.util.Optional;
 
 public class HttpBodyRequest implements HttpRequest {
 
@@ -67,4 +66,24 @@ public class HttpBodyRequest implements HttpRequest {
 	public ModelView getModelView() {
 		return wrapedRequest.getModelView();
 	}
+
+    @Override
+    public HttpCookie getCookie(String cookieName) {
+        return wrapedRequest.getCookie(cookieName);
+    }
+
+    @Override
+    public HttpSession getSession() {
+        return wrapedRequest.getSession();
+    }
+
+    @Override
+    public HttpSession getSession(boolean create) {
+        return wrapedRequest.getSession(create);
+    }
+
+    @Override
+    public boolean hasNewSession() {
+        return wrapedRequest.hasNewSession();
+    }
 }

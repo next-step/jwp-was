@@ -1,17 +1,23 @@
 package webserver.http;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import org.springframework.util.MultiValueMap;
+
 import utils.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.*;
 
 public class HttpHeaders {
 
@@ -163,13 +169,25 @@ public class HttpHeaders {
         return getFirst(name);
     }
 
+    public List<String> getHeaderSplitValues(String name){
+        return this.headers.get(name)
+                .stream()
+                .flatMap(this::getHeadLineSplit)
+                .collect(toList());
+    }
+
     public String getContentType() {
         return getFirst(CONTENT_TYPE);
     }
 
     public long getContentLength() {
         String value = getFirst(CONTENT_LENGTH);
-        return (value != null ? Long.parseLong(value) : -1);
+        
+        if(value == null) {
+        	return -1;
+        }
+        
+        return Long.parseLong(value);
     }
 
     public void setHeader(String name, String value) {
@@ -178,13 +196,18 @@ public class HttpHeaders {
 
     public List<String> getHeaderLines() {
         return this.headers.entrySet().stream()
-                .flatMap(entry -> {
-                    String name = entry.getKey();
-                    return entry.getValue().stream()
-                            .map(value -> this.getHeaderLine(name, value));
-                })
-                .collect(Collectors.toList());
-
+                .flatMap(this::getHeadLineByKey)
+                .collect(toList());
+    }
+    
+    private Stream<String> getHeadLineSplit(String headLine){
+    	return Arrays.stream(headLine.split(HEADER_LINE_SPLIT_SIGN));
+    }
+    
+    private Stream<String> getHeadLineByKey(Entry<String, List<String>> headerKeyValue){
+    	 String name = headerKeyValue.getKey();
+         return headerKeyValue.getValue().stream()
+                 .map(value -> this.getHeaderLine(name, value));
     }
 
     private String getHeaderLine(String name, String value) {
@@ -234,7 +257,5 @@ public class HttpHeaders {
     private String getFirst(String name){
         return this.headers.getFirst(name);
     }
-
-
 
 }

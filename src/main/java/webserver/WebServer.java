@@ -11,7 +11,10 @@ import org.slf4j.LoggerFactory;
 import actions.user.UserCreateAction;
 import actions.user.UserListAction;
 import actions.user.UserLoginAction;
+import enums.HttpMethod;
+import utils.StringUtils;
 import webserver.mapper.ActionRequestMapper;
+import webserver.mapper.RedirectRequestMapper;
 import webserver.mapper.RequestMappers;
 import webserver.mapper.ResourceRequestMapper;
 import webserver.mapper.TemplateRequestMapper;
@@ -26,6 +29,8 @@ public class WebServer {
     
     private static final int DEFAULT_PORT = 8080;
 
+    private static final String TEMPLATE_ROOT = "/templates";
+
     public static void main(String args[]) throws Exception {
         int port = 0;
         if (args == null || args.length == 0) {
@@ -34,26 +39,25 @@ public class WebServer {
             port = Integer.parseInt(args[0]);
         }
 
+        RedirectRequestMapper rootRedirectRequestMapper = RedirectRequestMapper.of("/", "/index.html");
         ResourceRequestMapper resourceRequestMapper = new ResourceRequestMapper()
                 .addResourceMapping("/css/.*", "./static" )
                 .addResourceMapping("/fonts/.*", "./static" )
                 .addResourceMapping("/images/.*", "./static" )
                 .addResourceMapping("/js/.*", "./static" );
-
-        TemplateRequestMapper templateRequestMapper = new TemplateRequestMapper("./templates");
-
+        TemplateRequestMapper templateRequestMapper = new TemplateRequestMapper(StringUtils.makeRelativePath(TEMPLATE_ROOT));
         ActionRequestMapper userCreatectionRequestMapper = new ActionRequestMapper("/user/create", new UserCreateAction());
         ActionRequestMapper userLoginActionRequestMapper = new ActionRequestMapper("/user/login", new UserLoginAction());
+        HandlebarViewResolver handlebarViewResolver = HandlebarViewResolver.of(TEMPLATE_ROOT, ".html");
+        ActionRequestMapper userListActionRequestMapper = new ActionRequestMapper("/user/list", new UserListAction(), new HttpMethod[]{ HttpMethod.GET });
+        ViewActionRequestMapper viewUserListActionRequestMapper = new ViewActionRequestMapper(handlebarViewResolver, userListActionRequestMapper);
 
-
-        HandlebarViewResolver handlebarViewResolver = HandlebarViewResolver.of("/templates", ".html");
-        ViewActionRequestMapper viewActionRequestMapper = new ViewActionRequestMapper(handlebarViewResolver, new ActionRequestMapper("/user/list", new UserListAction()));
-
-        RequestMappers requestMappers = RequestMappers.of(resourceRequestMapper
+        RequestMappers requestMappers = RequestMappers.of(rootRedirectRequestMapper
+        		, resourceRequestMapper
                 , templateRequestMapper
                 , userCreatectionRequestMapper
                 , userLoginActionRequestMapper
-                , viewActionRequestMapper
+                , viewUserListActionRequestMapper
         );
 
         BodyResolvers bodyResolvers = BodyResolvers.of(FormBodyResolver.getInstance());

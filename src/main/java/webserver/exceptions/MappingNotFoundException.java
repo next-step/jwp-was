@@ -1,8 +1,9 @@
-package exceptions;
+package webserver.exceptions;
 
-public class MappingNotFoundException extends RuntimeException {
+public class MappingNotFoundException extends Exception {
+	private static final long serialVersionUID = 7107452393139765620L;
 
-    public MappingNotFoundException() {
+	public MappingNotFoundException() {
         super();
     }
 
