@@ -21,8 +21,6 @@ public class SecureController implements Controller {
     @Override
     public void service(final Request request,
                         final Response response) throws Exception {
-//        System.out.println("@@ Session @@ :: " + request.getSession());
-
         final boolean isNotLogin = request.getSession()
                 .getAttribute(AttributeName.USER.toString())
                 .isEmpty();
