@@ -35,9 +35,6 @@ public class ActionRequestMapper implements RequestMapper {
 
 	@Override
 	public boolean isMatchedRequest(HttpMethod method, String requestUri) {
-		
-		System.out.println(this.httpMethods);
-		System.out.println(this.mappedRequestUri);
 		return this.httpMethods.contains(method) && mappedRequestUri.equalsIgnoreCase(requestUri);
 	}
 

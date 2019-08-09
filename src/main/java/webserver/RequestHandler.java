@@ -43,12 +43,6 @@ public class RequestHandler implements Runnable {
             if(httpRequest.getSession(false) == null) {
                 httpRequest.getSession(true);
             }
-
-            if("/".equals(httpRequest.getPath())) {
-            	httpResponse.sendRedirect("/index.html");
-            	httpResponse.writeResponse();
-            	return;
-            }
             
             try {
             	requestMappers.matchHandle(httpRequest, httpResponse);	
