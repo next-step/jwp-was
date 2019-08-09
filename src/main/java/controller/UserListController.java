@@ -5,6 +5,7 @@ import view.ViewResolver;
 import webserver.Request;
 import webserver.Response;
 import webserver.request.Cookie;
+import webserver.response.HttpResponse;
 
 import static controller.UserLoginController.COOKIE_OF_LOGIN;
 
@@ -18,21 +19,20 @@ public class UserListController extends AbstractController {
     }
 
     @Override
-    void doGet(Request request, Response response) throws Exception {
+    Response doGet(Request request) throws Exception {
         Cookie cookie = request.getCookie();
 
         boolean checkLogin = Boolean.valueOf(cookie.get(COOKIE_OF_LOGIN));
         if (!checkLogin) {
-            response.redirect("/index.html");
-            return;
+            return HttpResponse.redirect("/index.html");
         }
 
         String content = viewResolver.resolve("user/list", DataBase.findAll());
-        response.ok(content.getBytes());
+        return HttpResponse.ok(content.getBytes());
     }
 
     @Override
-    void doPost(Request request, Response response) throws Exception {
-        response.notFound();
+    Response doPost(Request request) {
+        return HttpResponse.notFound();
     }
 }

@@ -30,18 +30,9 @@ public class RequestHandler implements Runnable {
             Request request = HttpRequest.newInstance(in);
             logger.info("IN request: {}", request);
 
-            Response response = new HttpResponse(out);
-            service(request, response);
+            servletContext.mapping(request).send(out);
         } catch (Exception e) {
             logger.error("uncaught error", e);
-        }
-    }
-
-    private void service(Request request, Response response) throws Exception {
-        try {
-            servletContext.mapping(request).service(request, response);
-        } catch (Exception e) {
-            response.internalServerError();
         }
     }
 }

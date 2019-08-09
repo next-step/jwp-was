@@ -4,11 +4,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.Request;
 import webserver.request.RequestTest;
+import webserver.response.HeaderProperty;
+import webserver.response.HttpResponse;
+import webserver.response.HttpStatus;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static controller.UserCreateControllerTest.createResponse;
 
 class UserListControllerTest {
 
@@ -35,7 +37,10 @@ class UserListControllerTest {
         request = RequestTest.getRequest("Request_List.txt");
 
         // when
-        userListController.service(request, createResponse("Response_List.txt"));
+        HttpResponse response = (HttpResponse) userListController.service(request);
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.SUCCESS);
     }
 
     @DisplayName("로그인 안했을 시 로그인 페이지로 이동")
@@ -45,6 +50,10 @@ class UserListControllerTest {
         request = RequestTest.getRequest("Request_List_Fail.txt");
 
         // when
-        userListController.service(request, createResponse("Response_List_No_Login.txt"));
+        HttpResponse response = (HttpResponse) userListController.service(request);
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.REDIRECT);
+        assertThat(response.getHeader(HeaderProperty.LOCATION)).isEqualTo("/index.html");
     }
 }

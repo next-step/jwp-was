@@ -3,5 +3,5 @@ package webserver;
 @FunctionalInterface
 public interface Controller {
 
-    void service(Request request, Response response) throws Exception;
+    Response service(Request request) throws Exception;
 }

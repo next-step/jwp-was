@@ -14,53 +14,65 @@ public class HttpResponse implements Response {
 
     private static final String CRLF = "\r\n";
 
-    private final OutputStream out;
+    private HttpStatus httpStatus;
     private HttpHeaders httpHeaders = new HttpHeaders();
     private byte[] responseBody = {};
-
-    public HttpResponse(OutputStream out) {
-        this.out = out;
-    }
 
     public void setCookie(String value) {
         httpHeaders.setCookie(value);
     }
 
-    @Override
-    public void ok(byte[] responseBody) throws IOException {
-        ok(responseBody, TEXT_HTML_CHARSET_UTF_8);
+    public static Response ok(byte[] responseBody) {
+        return ok(responseBody, TEXT_HTML_CHARSET_UTF_8);
     }
 
-    @Override
-    public void ok(byte[] responseBody, String contentType) throws IOException {
-        this.responseBody = responseBody;
-        httpHeaders.setContentLength(this.responseBody.length);
+    public static Response ok(byte[] responseBody, String contentType) {
+        HttpResponse response = new HttpResponse();
+        response.httpStatus = HttpStatus.SUCCESS;
+        response.responseBody = responseBody;
+        response.setResponseBody(contentType);
+        return response;
+    }
+
+    private void setResponseBody(String contentType) {
         httpHeaders.setContentType(contentType);
-        send(HttpStatus.SUCCESS);
+        httpHeaders.setContentLength(this.responseBody.length);
     }
 
-    @Override
-    public void notFound() throws IOException {
-        send(HttpStatus.NOT_FOUND);
+    public static Response notFound() {
+        HttpResponse response = new HttpResponse();
+        response.httpStatus = HttpStatus.NOT_FOUND;
+        return response;
     }
 
-    @Override
-    public void internalServerError() throws IOException {
-        send(HttpStatus.INTERNAL_SERVER_ERROR);
+    public static Response internalServerError() {
+        HttpResponse response = new HttpResponse();
+        response.httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        return response;
     }
 
-    @Override
-    public void redirect(String location) throws IOException {
-        httpHeaders.setLocation(location);
-        send(HttpStatus.REDIRECT);
+    public static Response redirect(String location) {
+        HttpResponse response = new HttpResponse();
+        response.httpStatus = HttpStatus.REDIRECT;
+        response.setLocation(location);
+        return response;
     }
 
-    private void send(HttpStatus httpStatus) throws IOException {
+    private void setLocation(String location) {
+        this.httpHeaders.setLocation(location);
+    }
+
+    public void send(OutputStream out) throws IOException {
         DataOutputStream dos = new DataOutputStream(out);
         dos.writeBytes(httpStatus.getStatusLine().concat(CRLF));
         writeHeaders(dos);
         dos.writeBytes(CRLF);
         writeReposeBody(dos);
+    }
+
+    @Override
+    public String getHeader(HeaderProperty key) {
+        return httpHeaders.get(key);
     }
 
     private void writeHeaders(DataOutputStream dos) throws IOException {
@@ -72,5 +84,9 @@ public class HttpResponse implements Response {
     private void writeReposeBody(DataOutputStream dos) throws IOException {
         dos.write(responseBody, 0, responseBody.length);
         dos.flush();
+    }
+
+    public HttpStatus getStatus() {
+        return httpStatus;
     }
 }

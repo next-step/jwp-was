@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import webserver.Request;
 import webserver.Response;
 import webserver.request.RequestTest;
-import webserver.response.HttpResponse;
+import webserver.response.HeaderProperty;
 
-import java.io.*;
+import java.io.IOException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -16,8 +16,6 @@ class UserCreateControllerTest {
 
     private Request request;
     private final UserCreateController userCreateController = new UserCreateController();
-
-    private static final String FILE_PATH_OF_RESPONSE = "./src/test/resources/";
 
     @BeforeEach
     void setUp() throws IOException {
@@ -38,14 +36,10 @@ class UserCreateControllerTest {
     @Test
     void service_success() throws Exception {
         // when
-        userCreateController.service(request, createResponse("Response_CreateUser.txt"));
-    }
+        Response response = userCreateController.service(request);
+        String location = response.getHeader(HeaderProperty.LOCATION);
 
-    static Response createResponse(String fileName) throws FileNotFoundException {
-        return new HttpResponse(createOutputStream(fileName));
-    }
-
-    static OutputStream createOutputStream(String filename) throws FileNotFoundException {
-        return new FileOutputStream(new File(FILE_PATH_OF_RESPONSE + filename));
+        // then
+        assertThat(location).isEqualTo("/index.html");
     }
 }

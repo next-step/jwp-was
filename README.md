@@ -12,47 +12,66 @@
 
 # HTTP 웹 서버 구현
 
-### 요구사항
-- [ ] webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답
-```
-// HTTP Request Header example
-GET /index.html HTTP/1.1
-Host: localhost:8080
-Connection: keep-alive
-Accept: */*
-```
-- [x] Headers는 RequestLine을 가지고 있다.
+### Step2 요구사항 
+* `페이지 이동`
+- [x] webapp directory file read and responseBody write 
 
-- [ ] http://localhost:8080/index.html 로 접속했을 때 
-webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
+* `회원가입` 
+- [x] 회원가입 페이지로 이동 (page: /user/form.html, method: get)
+- [x] 회원가입 (action: /user/create, method: post)
+- [x] 회원가입 성공 시 메인 페이지로 이동
+    * redirect
+    - [x] httpResponse status 302
+    - [x] header Location (index.html) 
 
-- [ ] “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 
-이동하면서 회원가입할 수 있다. 회원가입한다.
+* `로그인` /user/login.html        
+- [x] 로그인이 성공 : redirect : index.html (header cookie : logined=true)
+- [x] 로그인이 실패 : redirect : /user/login_fail.html (header cookie : logined=false)
 
-- [ ] http://localhost:8080/user/form.html 파일의 form 태그 method를 
-get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.
+*  `회원 리스트` /user/list
+- [x] 로그인 X (logined = false): 로그인 페이지로 이동 (login.html)
+- [x] 로그인 O (logined = true): 회원 목록 보기 (/user/list)
 
-- [ ] “회원가입”을 완료하면 /index.html 페이지로 이동하고 싶다.
-현재는 URL이 /user/create 로 유지되는 상태로 읽어서 전달할 파일이 없다. 
-따라서 redirect 방식처럼 회원가입을 완료한 후 “index.html”로 이동해야 한다. 
-즉, 브라우저의 URL이 /index.html로 변경해야 한다. (rediect)
-- HTTP 응답 헤더의 status code를 200이 아니라 302 code를 사용한다.
+- [x] viewResolver : templateEngine 
+- [x] Accept : html, css, js... 인 경우, 응답 header contentType 에 담아준다
 
-- [ ] "로그인” 메뉴를 클릭하면 http://localhost:8080/user/login.html 으로 이동해 로그인할 수 있다. 
-로그인이 성공하면 index.html로 이동하고, 
-로그인이 실패하면 /user/login_failed.html로 이동해야 한다.
-
-앞에서 회원가입한 사용자로 로그인할 수 있어야 한다. 
-로그인이 성공하면 cookie를 활용해 로그인 상태를 유지할 수 있어야 한다. 
-로그인이 성공할 경우 요청 header의 Cookie header 값이 logined=true, 
-로그인이 실패하면 Cookie header 값이 logined=false로 전달되어야 한다.
-
-- [ ] 접근하고 있는 사용자가 “로그인” 상태일 경우(Cookie 값이 logined=true) 경우,
-http://localhost:8080/user/list 로 접근했을 때 사용자 목록을 출력한다. 
-만약 로그인하지 않은 상태라면 로그인 페이지(login.html)로 이동한다.
-동적으로 html을 생성하기 위해 handlebars.java template engine을 활용한다.
-
-- [ ] 지금까지 구현한 소스 코드는 stylesheet 파일을 지원하지 못하고 있다. 
-Stylesheet 파일을 지원하도록 구현하도록 한다.
-
+---
+### Step3 웹 서버 리팩토링
+* WAS 기능 요구사항
+- [x] Thread pool 구현
  
+* HTTP 요청/응답 처리 기능
+- [x] Http Request Header/Body 분리
+- [x] Http Response Header/Body 분리
+- [x] HttpHeaderProperty 분리
+- [x] servlet -> controller
+- [x] request parameter merge
+
+---
+
+### Step4 세션 구현하기
+* 요구사항
+- Servlet 에서 지원하는 HttpSession API
+- [ ] String getId() 
+- [ ] void setAttribute(String name, Object value)
+- [ ] Object getAttribute(String name) 
+- [ ] void removeAttribute(String name) 
+- [ ] void invalidate() 
+
+```
+String getId(): 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환
+void setAttribute(String name, Object value): 현재 세션에 value 인자로 전달되는 객체를 name 인자 이름으로 저장
+Object getAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환
+void removeAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
+void invalidate(): 현재 세션에 저장되어 있는 모든 값을 삭제
+세션은 클라이언트와 서버 간에 상태 값을 공유하기 위해 고유한 아이디를 활용하고, 이 고유한 아이디는 쿠키를 활용해 공유한다.
+여기서 힌트를 얻어 세션을 구현해 보자.
+```
+
+SessionId 생성
+JDK에서 제공하는 UUID 클래스를 사용해 고유한 아이디를 생성할 수 있다.
+UUID uuid = UUID.randomUUID();
+
+세션 관리를 위한 자료구조
+Map<String, HttpSession>와 같은 구조가 될 것이다. 
+이 Map의 키(key)는 앞에서 UUID로 생성한 고유한 아이디이다.

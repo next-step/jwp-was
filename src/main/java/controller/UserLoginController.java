@@ -2,12 +2,9 @@ package controller;
 
 import db.DataBase;
 import model.User;
-import webserver.Controller;
 import webserver.Request;
 import webserver.Response;
-
-import javax.swing.*;
-import java.io.IOException;
+import webserver.response.HttpResponse;
 
 public class UserLoginController extends AbstractController {
 
@@ -20,30 +17,31 @@ public class UserLoginController extends AbstractController {
     }
 
     @Override
-    void doGet(Request request, Response response) throws Exception {
-        response.notFound();
+    Response doGet(Request request) {
+        return HttpResponse.notFound();
     }
 
     @Override
-    void doPost(Request request, Response response) throws Exception {
+    Response doPost(Request request) {
         String userId = request.getParameter("userId");
         String password = request.getParameter("password");
         User userById = DataBase.findUserById(userId);
 
         if (userById == null || !userById.checkPassword(password)) {
-            loginFail(response);
-            return;
+            return loginFail();
         }
-        loginSuccess(response);
+        return loginSuccess();
     }
 
-    private void loginSuccess(Response response) throws IOException {
+    private Response loginSuccess() {
+        Response response = HttpResponse.redirect("/index.html");
         response.setCookie(COOKIE_OF_LOGIN + "=true; Path=/");
-        response.redirect("/index.html");
+        return response;
     }
 
-    private void loginFail(Response response) throws IOException {
+    private Response loginFail() {
+        Response response = HttpResponse.redirect("/user/login_failed.html");
         response.setCookie(COOKIE_OF_LOGIN + "=false; Path=/");
-        response.redirect("/user/login_failed.html");
+        return response;
     }
 }
