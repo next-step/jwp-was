@@ -65,11 +65,11 @@ public class HttpBaseRequest implements HttpRequest {
 	private static HttpHeaders parseHeaderLine(BufferedReader bufferedReader) throws IOException {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		String headerLine;
-		
+
 		while (!StringUtils.isEmpty(headerLine = bufferedReader.readLine())) {
 			httpHeaders.addHeaderLine(headerLine);
 		}
-		
+
 		return httpHeaders;
 	}
 
@@ -137,25 +137,42 @@ public class HttpBaseRequest implements HttpRequest {
 
 		setSessionIfNull();
 
-		String cookieSessionId = Optional.ofNullable(this.httpSession).map(HttpSession::getId).orElse(StringUtils.getEmpty());
-
-		HttpSessionManager httpSessionManager = HttpSessionManager.getInstance();
-
 		if(!create) {
 			return this.httpSession;
 		}
 
-		httpSessionManager.invalidate(cookieSessionId);
-		this.hasNewSession = true;
-		this.httpSession = httpSessionManager.newHttpSession();
+		setHasNewSession(true);
+		setHttpSession(createNewSession());
 		return this.httpSession;
 	}
-
-
 
 	@Override
 	public boolean hasNewSession() {
 		return this.hasNewSession;
+	}
+
+	private void setHttpSession(HttpSession httpSession) {
+		this.httpSession = httpSession;
+	}
+
+	private void setHasNewSession(boolean hasNewSession) {
+		this.hasNewSession = hasNewSession;
+	}
+
+	private HttpSession createNewSession() {
+		HttpSessionManager httpSessionManager = HttpSessionManager.getInstance();
+		Optional<String> sessionId = getSessionId();
+
+		if(sessionId.isPresent()) {
+			httpSessionManager.invalidate(sessionId.get());	
+		}
+
+		return httpSessionManager.newHttpSession();
+	}
+
+	private Optional<String> getSessionId() {
+		return Optional.ofNullable(this.httpSession)
+				.map(HttpSession::getId);
 	}
 
 	private void setSessionIfNull(){
