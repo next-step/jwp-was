@@ -1,16 +1,15 @@
 package webserver.mapper;
 
-import enums.HttpMethod;
-import utils.FileIoUtils;
-import webserver.http.HttpRequest;
-import webserver.http.HttpResponse;
-
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
+
+import enums.HttpMethod;
+import utils.FileIoUtils;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 public class ResourceRequestMapper implements RequestMapper{
 
