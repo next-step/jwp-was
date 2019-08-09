@@ -3,6 +3,7 @@ package webserver.http.response;
 import utils.FileIoUtils;
 import webserver.http.HeaderName;
 import webserver.http.HttpStatus;
+import webserver.http.header.Headers;
 import webserver.http.header.HttpHeader;
 import webserver.http.header.HttpHeaders;
 
@@ -13,7 +14,7 @@ import java.io.OutputStream;
 public class HttpResponse implements Response {
 
     private final OutputStream out;
-    private final HttpHeaders headers = HttpHeaders.empty();
+    private final Headers headers = HttpHeaders.empty();
 
     private ResponseLine responseLine;
     private byte[] body = {};

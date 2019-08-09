@@ -9,7 +9,6 @@ import java.util.Objects;
 
 public class ResponseLine {
 
-    // TODO: 버전 어떻게할까나...
     private static final HttpVersion httpVersion = HttpVersion.HTTP1_1;
     private static final String FORMAT = "%s %s";
 

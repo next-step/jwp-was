@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-class CookiesTest {
+class HttpCookiesTest {
 
     @DisplayName("쿠키를 생성한다.")
     @ParameterizedTest
@@ -18,10 +18,10 @@ class CookiesTest {
     })
     void create(final String rawCookie) {
         // when
-        final Cookies cookies = Cookies.of(rawCookie);
+        final Cookies httpCookies = HttpCookies.of(rawCookie);
 
         // then
-        assertThat(cookies).isNotNull();
+        assertThat(httpCookies).isNotNull();
     }
 
     @DisplayName("빈값의 쿠키를 생성하면 빈값이다.")
@@ -32,10 +32,10 @@ class CookiesTest {
     })
     void empty(final String rawCookie) {
         // when
-        final Cookies cookies = Cookies.of(rawCookie);
+        final Cookies httpCookies = HttpCookies.of(rawCookie);
 
         // then
-        assertThat(cookies.isEmpty()).isTrue();
+        assertThat(httpCookies.isEmpty()).isTrue();
     }
 
     @DisplayName("쿠키의 스트링 값을 가져온다.")
@@ -47,10 +47,10 @@ class CookiesTest {
     })
     void getString(final String key) {
         // given
-        final Cookies cookies = Cookies.of("a=a; b=b; c=c");
+        final Cookies httpCookies = HttpCookies.of("a=a; b=b; c=c");
 
         // when
-        final String value = cookies.getString(key);
+        final String value = httpCookies.getString(key).get();
 
         // then
         assertThat(value).isEqualTo(key);
@@ -62,16 +62,16 @@ class CookiesTest {
     void getBoolean(final boolean aBoolean) {
         // given
         final String key = "test";
-        final Cookies cookies = Cookies.of(key + "=" + aBoolean);
+        final Cookies httpCookies = HttpCookies.of(key + "=" + aBoolean);
 
         // when
-        final boolean value = cookies.getBoolean(key);
+        final boolean value = httpCookies.getBoolean(key);
 
         // then
         assertThat(value).isEqualTo(aBoolean);
     }
 
-    @DisplayName("쿠키의 값이 없으면 null을 반환한다.")
+    @DisplayName("쿠키의 값이 없으면 가져올 수 없다.")
     @ParameterizedTest
     @ValueSource(strings = {
             "a",
@@ -80,13 +80,13 @@ class CookiesTest {
     })
     void notFound(final String key) {
         // given
-        final Cookies cookies = Cookies.of("a=a; b=b; c=c");
+        final Cookies httpCookies = HttpCookies.of("a=a; b=b; c=c");
         final String padding = "!!";
 
         // when
-        final String value = cookies.getString(key + padding);
+        final boolean exists = httpCookies.getString(key + padding).isPresent();
 
         // then
-        assertThat(value).isNull();
+        assertThat(exists).isFalse();
     }
 }

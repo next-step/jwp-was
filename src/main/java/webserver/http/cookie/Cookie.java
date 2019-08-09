@@ -2,8 +2,6 @@ package webserver.http.cookie;
 
 import utils.StringUtils;
 
-// TODO: 비슷한 기능을 하는 클래스가 너무 많다.
-// TODO: 중복을 제거하자.
 public class Cookie {
 
     static final String SEPARATOR = "=";

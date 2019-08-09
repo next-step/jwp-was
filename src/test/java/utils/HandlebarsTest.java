@@ -4,7 +4,7 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import model.User;
+import domain.user.MockUser;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +21,7 @@ public class HandlebarsTest {
 
         Template template = handlebars.compile("user/profile");
 
-        User user = new User("javajigi", "password", "자바지기", "javajigi@gmail.com");
-        String profilePage = template.apply(user);
+        String profilePage = template.apply(new MockUser());
         log.debug("ProfilePage : {}", profilePage);
     }
 }

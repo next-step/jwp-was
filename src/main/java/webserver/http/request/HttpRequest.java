@@ -5,7 +5,9 @@ import utils.StringUtils;
 import webserver.http.HeaderName;
 import webserver.http.HttpMethod;
 import webserver.http.cookie.Cookies;
+import webserver.http.header.Headers;
 import webserver.http.header.HttpHeaders;
+import webserver.http.session.Session;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,17 +21,17 @@ import static webserver.http.HttpMethod.POST;
 
 public class HttpRequest implements Request {
 
-    private static final String BLANK = "";
-
     private final RequestLine requestLine;
-    private final HttpHeaders httpHeaders;
+    private final Headers headers;
     private final RequestQuery requestQuery;
 
+    private Session session;
+
     private HttpRequest(final RequestLine requestLine,
-                        final HttpHeaders httpHeaders,
+                        final Headers headers,
                         final RequestQuery requestQuery) {
         this.requestLine = requestLine;
-        this.httpHeaders = httpHeaders;
+        this.headers = headers;
         this.requestQuery = requestQuery;
     }
 
@@ -37,15 +39,15 @@ public class HttpRequest implements Request {
         final BufferedReader requestReader = new BufferedReader(new InputStreamReader(in));
 
         final RequestLine requestLine = RequestLine.parse(requestReader.readLine());
-        final HttpHeaders httpHeaders = readHeaders(requestReader);
+        final Headers headers = readHeaders(requestReader);
         final RequestQuery requestQuery = requestLine.getParameters();
 
         if (requestLine.matchMethod(POST)) {
-            final String body = readBody(requestReader, httpHeaders.getContentLength());
+            final String body = readBody(requestReader, headers.getContentLength());
             requestQuery.join(RequestQuery.of(body));
         }
 
-        return new HttpRequest(requestLine, httpHeaders, requestQuery);
+        return new HttpRequest(requestLine, headers, requestQuery);
     }
 
     @Override
@@ -70,7 +72,7 @@ public class HttpRequest implements Request {
 
     @Override
     public Optional<String> getHeader(final String key) {
-        return Optional.ofNullable(httpHeaders.getString(key));
+        return Optional.ofNullable(headers.getString(key));
     }
 
     @Override
@@ -80,10 +82,19 @@ public class HttpRequest implements Request {
 
     @Override
     public Cookies getCookies() {
-        return Cookies.of(getHeader("Cookie").orElse(BLANK));
+        return headers.getCookies();
     }
 
-    private static HttpHeaders readHeaders(final BufferedReader requestReader) throws IOException {
+    @Override
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(final Session session) {
+        this.session = session;
+    }
+
+    private static Headers readHeaders(final BufferedReader requestReader) throws IOException {
         final StringBuilder rawHeadersBuilder = new StringBuilder();
 
         String readRawHeader = requestReader.readLine();
@@ -105,8 +116,9 @@ public class HttpRequest implements Request {
     public String toString() {
         return "HttpRequest{" +
                 "requestLine=" + requestLine +
-                ", httpHeaders=" + httpHeaders +
+                ", headers=" + headers +
                 ", requestQuery=" + requestQuery +
+                ", session=" + session +
                 '}';
     }
 }

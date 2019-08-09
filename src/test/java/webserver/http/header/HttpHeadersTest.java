@@ -18,7 +18,7 @@ class HttpHeadersTest {
     })
     void create(final String rawHttpHeaders) {
         // when
-        final HttpHeaders httpHeaders = HttpHeaders.of(rawHttpHeaders);
+        final Headers httpHeaders = HttpHeaders.of(rawHttpHeaders);
 
         // then
         assertThat(httpHeaders).isNotNull();
@@ -32,7 +32,7 @@ class HttpHeadersTest {
     })
     void empty(final String rawHttpHeaders) {
         // when
-        final HttpHeaders httpHeaders = HttpHeaders.of(rawHttpHeaders);
+        final Headers httpHeaders = HttpHeaders.of(rawHttpHeaders);
 
         // then
         assertThat(httpHeaders.isEmpty()).isTrue();
@@ -47,7 +47,7 @@ class HttpHeadersTest {
     })
     void getString(final String key) {
         // given
-        final HttpHeaders httpHeaders = HttpHeaders.of("a: a\nb: b\nc: c");
+        final Headers httpHeaders = HttpHeaders.of("a: a\nb: b\nc: c");
 
         // when
         final String value = httpHeaders.getString(key);
@@ -65,7 +65,7 @@ class HttpHeadersTest {
     })
     void notFound(final String key) {
         // given
-        final HttpHeaders httpHeaders = HttpHeaders.of("a: a\nb: b\nc: c");
+        final Headers httpHeaders = HttpHeaders.of("a: a\nb: b\nc: c");
         final String padding = "!!";
 
         // when

@@ -22,21 +22,21 @@ class GetRequestTest {
     void getCookies() {
         // when
         final Cookies cookies = request.getCookies();
-        final String value = cookies.getString("hello");
+        final String value = cookies.getString("hello").get();
 
         // then
         assertThat(value).isEqualTo("world");
     }
 
-    @DisplayName("쿠키가 없으면 null을 반환한다.")
+    @DisplayName("쿠키가 없으면 값을 가져올 수 없다.")
     @Test
-    void getCookiesNull() {
+    void getCookieEmpty() {
         // when
         final Cookies cookies = request.getCookies();
-        final String value = cookies.getString("sdfadadsf");
+        final boolean notExists = cookies.getString("sdfadadsf").isEmpty();
 
         // then
-        assertThat(value).isEqualTo(null);
+        assertThat(notExists).isTrue();
     }
 
     @DisplayName("경로 매칭을 확인한다.")
