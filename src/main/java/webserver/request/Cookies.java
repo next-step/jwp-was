@@ -1,29 +1,30 @@
 package webserver.request;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toMap;
 
-public class Cookie {
+public class Cookies {
 
     private static final String SEPARATOR = "; ";
     private Map<String, String> cookies;
 
-    private Cookie(Map<String, String> cookies) {
+    private Cookies(Map<String, String> cookies) {
         this.cookies = cookies;
     }
 
-    public static Cookie of(String token) {
+    public static Cookies of(String token) {
         if (token == null || token.isEmpty()) {
-            return new Cookie(Collections.emptyMap());
+            return new Cookies(new HashMap<>());
         }
 
         return Arrays.stream(token.split(SEPARATOR))
                 .map(Parameter::of)
-                .collect(collectingAndThen(toMap(Parameter::getAttribute, Parameter::getValue), Cookie::new));
+                .collect(collectingAndThen(toMap(Parameter::getAttribute, Parameter::getValue, (p1, p2) -> p2),
+                        Cookies::new));
     }
 
     public String get(String key) {

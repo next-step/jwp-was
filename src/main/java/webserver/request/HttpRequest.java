@@ -2,8 +2,11 @@ package webserver.request;
 
 import utils.IOUtils;
 import webserver.HttpHeaders;
+import webserver.HttpSession;
 import webserver.Request;
 import webserver.response.HeaderProperty;
+import webserver.session.HttpUUIDSession;
+import webserver.session.SessionContainer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,8 +73,8 @@ public class HttpRequest implements Request {
     }
 
     @Override
-    public Cookie getCookie() {
-        return Cookie.of(httpHeaders.get(COOKIE.getHeaderName()));
+    public Cookies getCookies() {
+        return Cookies.of(httpHeaders.get(COOKIE.getHeaderName()));
     }
 
     @Override
@@ -92,6 +95,28 @@ public class HttpRequest implements Request {
     @Override
     public String getHeader(HeaderProperty headerProperty) {
         return httpHeaders.get(headerProperty);
+    }
+
+    @Override
+    public HttpSession getSession() {
+        String jsessionid = getCookie("JSESSIONID");
+
+        if(jsessionid == null){
+            return initSession();
+        }
+        return SessionContainer.getSession(jsessionid)
+                .orElseGet(this::initSession);
+    }
+
+    private HttpSession initSession() {
+        HttpSession session = HttpUUIDSession.of();
+        SessionContainer.register(session);
+        return session;
+    }
+
+    @Override
+    public String getCookie(String key) {
+        return getCookies().get(key);
     }
 
     @Override

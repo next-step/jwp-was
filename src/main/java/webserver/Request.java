@@ -1,6 +1,6 @@
 package webserver;
 
-import webserver.request.Cookie;
+import webserver.request.Cookies;
 import webserver.request.HttpMethod;
 import webserver.response.HeaderProperty;
 
@@ -12,7 +12,7 @@ public interface Request {
 
     String getParameter(String field);
 
-    Cookie getCookie();
+    Cookies getCookies();
 
     String getAccept();
 
@@ -21,4 +21,8 @@ public interface Request {
     boolean containPath(String path);
 
     String getHeader(HeaderProperty headerProperty);
+
+    HttpSession getSession();
+
+    String getCookie(String key);
 }
