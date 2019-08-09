@@ -11,6 +11,7 @@ public class HttpRequest {
     private HttpHeaders httpHeaders;
     private Cookie cookie;
     private RequestBody requestBody;
+    private HttpSession httpSession;
 
     private HttpRequest(RequestLine requestLine, HttpHeaders httpHeaders, RequestBody requestBody) {
         this.requestLine = requestLine;
@@ -63,6 +64,18 @@ public class HttpRequest {
 
     public String bodyValue(String key) {
         return this.requestBody.get(key);
+    }
+
+    public HttpSession getHttpSession() {
+        return httpSession;
+    }
+
+    public void addCookie(String key, String value) {
+        this.cookie.set(key, value);
+    }
+
+    public void setSession(HttpSession httpSession) {
+        this.httpSession = httpSession;
     }
 
     public String getPath() {

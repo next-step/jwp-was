@@ -1,6 +1,7 @@
 package webserver.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.FileResponse;
@@ -15,6 +16,7 @@ public class HttpResponse {
     private static final String REDIRECT_START_WITH = "redirect:";
     private static final String HEADER_HOST_KEY = "Host";
     private static final String REDIRECT_URL_FORMAT = "http://%s%s";
+    private static final String SESSION_ID_KEY = "jsessionid";
 
     private byte[] body;
     private Cookie cookie;
@@ -87,6 +89,7 @@ public class HttpResponse {
 
     private static HttpResponse getViewMappingResponse(HttpRequest httpRequest) {
         HttpResponse httpResponse = new HttpResponse();
+        setSession(httpRequest, httpResponse);
         String viewName = getViewName(httpRequest, httpResponse);
         if (viewName.startsWith(REDIRECT_START_WITH)) {
             return getRedirectHttpResponse(httpRequest, httpResponse, viewName);
@@ -94,6 +97,18 @@ public class HttpResponse {
 
         httpResponse.setView(viewName);
         return httpResponse;
+    }
+
+    private static void setSession(HttpRequest httpRequest, HttpResponse httpResponse) {
+        String sessionId = httpRequest.cookieValue(SESSION_ID_KEY);
+        HttpSession httpSession = HttpSessionManager.get(sessionId);
+        httpRequest.setSession(httpSession);
+
+        if (Strings.isNullOrEmpty(sessionId)) {
+            String newSessionId = httpSession.getId();
+            httpRequest.addCookie(SESSION_ID_KEY, newSessionId);
+            httpResponse.setCookie(SESSION_ID_KEY, newSessionId);
+        }
     }
 
     private void setView(String viewName) {
