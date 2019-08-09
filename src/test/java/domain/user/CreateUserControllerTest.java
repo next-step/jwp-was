@@ -8,6 +8,7 @@ import webserver.controller.Controller;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.Response;
+import webserver.http.session.MockSessionStore;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static support.FileSupporter.read;
@@ -30,7 +31,7 @@ class CreateUserControllerTest {
 
     public static void createUser() throws Exception {
         try (final Response response = HttpResponse.of(write("CreateUser_Response.txt"))) {
-            CREATE_USER_CONTROLLER.service(HttpRequest.of(read("CreateUser_Request.txt")), response);
+            CREATE_USER_CONTROLLER.service(HttpRequest.of(read("CreateUser_Request.txt"), new MockSessionStore()), response);
         }
     }
 }

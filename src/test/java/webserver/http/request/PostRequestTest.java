@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.cookie.Cookies;
+import webserver.http.session.MockSessionStore;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static support.FileSupporter.read;
@@ -14,7 +15,7 @@ class PostRequestTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        request = HttpRequest.of(read("POST_Request.txt"));
+        request = HttpRequest.of(read("POST_Request.txt"), new MockSessionStore());
     }
 
     @DisplayName("쿠키를 가져온다.")
@@ -22,21 +23,21 @@ class PostRequestTest {
     void getCookies() {
         // when
         final Cookies cookies = request.getCookies();
-        final String value = cookies.getString("hello");
+        final String value = cookies.getString("hello").get();
 
         // then
         assertThat(value).isEqualTo("world");
     }
 
-    @DisplayName("쿠키가 없으면 null을 반환한다.")
+    @DisplayName("쿠키가 없으면 값을 가져올 수 없다.")
     @Test
     void getCookiesNull() {
         // when
         final Cookies cookies = request.getCookies();
-        final String value = cookies.getString("sdfadadsf");
+        final boolean exists = cookies.getString("sdfadadsf").isPresent();
 
         // then
-        assertThat(value).isEqualTo(null);
+        assertThat(exists).isFalse();
     }
 
     @DisplayName("경로를 가져온다.")

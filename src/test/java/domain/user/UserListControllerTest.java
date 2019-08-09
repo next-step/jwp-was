@@ -8,6 +8,7 @@ import webserver.controller.Controller;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.Response;
+import webserver.http.session.MockSessionStore;
 
 import static support.FileSupporter.read;
 import static support.FileSupporter.write;
@@ -25,14 +26,14 @@ class UserListControllerTest {
     @Test
     void userListSuccess() throws Exception {
         try (final Response response = HttpResponse.of(write("UserList_Success_Response.txt"))) {
-            userListController.service(HttpRequest.of(read("UserList_Login.txt")), response);
+            userListController.service(HttpRequest.of(read("UserList_Login.txt"), new MockSessionStore()), response);
         }
     }
     @DisplayName("로그인에 실패했다면 리스트 조회에 실패한다.")
     @Test
     void userListFail() throws Exception {
         try (final Response response = HttpResponse.of(write("UserList_Fail_Response.txt"))) {
-            userListController.service(HttpRequest.of(read("UserList_NotLogin.txt")), response);
+            userListController.service(HttpRequest.of(read("UserList_NotLogin.txt"), new MockSessionStore()), response);
         }
     }
 }

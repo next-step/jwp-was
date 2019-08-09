@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import webserver.controller.ControllerProvider;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.http.session.SessionStore;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,11 +17,14 @@ public class RequestHandler implements Runnable {
 
     private final Socket connection;
     private final ControllerProvider controllerProvider;
+    private final SessionStore sessionStore;
 
     RequestHandler(final Socket connection,
-                   final ControllerProvider controllerProvider) {
+                   final ControllerProvider controllerProvider,
+                   final SessionStore sessionStore) {
         this.connection = connection;
         this.controllerProvider = controllerProvider;
+        this.sessionStore = sessionStore;
     }
 
     @Override
@@ -33,7 +37,7 @@ public class RequestHandler implements Runnable {
              final OutputStream out = connection.getOutputStream();
              final HttpResponse response = HttpResponse.of(out)) {
 
-             final HttpRequest request = HttpRequest.of(in);
+             final HttpRequest request = HttpRequest.of(in, sessionStore);
              logger.debug("In request [request={}]", request);
 
             controllerProvider.provide(request)

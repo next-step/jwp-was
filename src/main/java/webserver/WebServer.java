@@ -9,6 +9,9 @@ import view.HandlebarsCompiler;
 import webserver.controller.ControllerMapper;
 import webserver.controller.ControllerProvider;
 import webserver.controller.ResourceController;
+import webserver.http.session.InMemorySessionStore;
+import webserver.http.session.SessionStore;
+import webserver.http.session.UUIDBaseHttpSessionGenerator;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -27,6 +30,7 @@ public class WebServer {
     public static void main(final String... args) throws Exception {
         final int port = getPort(args);
         final ControllerProvider controllerProviders = getHandlerProvider();
+        final SessionStore sessionStore = getSessionStore();
 
         // 서버소켓을 생성한다. 웹서버는 기본적으로 8080번 포트를 사용한다.
         try (final ServerSocket listenSocket = new ServerSocket(port)) {
@@ -35,11 +39,15 @@ public class WebServer {
             // 클라이언트가 연결될때까지 대기한다.
             while (true) {
                 final Socket connection = listenSocket.accept();
-                final Runnable requestHandler = new RequestHandler(connection, controllerProviders);
+                final Runnable requestHandler = new RequestHandler(connection, controllerProviders, sessionStore);
 
                 threadPool.execute(requestHandler);
             }
         }
+    }
+
+    private static SessionStore getSessionStore() {
+        return InMemorySessionStore.with(new UUIDBaseHttpSessionGenerator());
     }
 
     private static ControllerProvider getHandlerProvider() {
