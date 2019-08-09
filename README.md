@@ -25,8 +25,8 @@
     - [x] header Location (index.html) 
 
 * `로그인` /user/login.html        
-- [x] 로그인이 성공 : redirect : index.html (header cookie : logined=true)
-- [x] 로그인이 실패 : redirect : /user/login_fail.html (header cookie : logined=false)
+- [x] 로그인이 성공 : redirect : index.html (header cookies : logined=true)
+- [x] 로그인이 실패 : redirect : /user/login_fail.html (header cookies : logined=false)
 
 *  `회원 리스트` /user/list
 - [x] 로그인 X (logined = false): 로그인 페이지로 이동 (login.html)
@@ -52,11 +52,11 @@
 ### Step4 세션 구현하기
 * 요구사항
 - Servlet 에서 지원하는 HttpSession API
-- [ ] String getId() 
-- [ ] void setAttribute(String name, Object value)
-- [ ] Object getAttribute(String name) 
-- [ ] void removeAttribute(String name) 
-- [ ] void invalidate() 
+- [x] String getId() 
+- [x] void setAttribute(String name, Object value)
+- [x] Object getAttribute(String name) 
+- [x] void removeAttribute(String name) 
+- [x] void invalidate() 
 
 ```
 String getId(): 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환
@@ -64,14 +64,12 @@ void setAttribute(String name, Object value): 현재 세션에 value 인자로 �
 Object getAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환
 void removeAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
 void invalidate(): 현재 세션에 저장되어 있는 모든 값을 삭제
-세션은 클라이언트와 서버 간에 상태 값을 공유하기 위해 고유한 아이디를 활용하고, 이 고유한 아이디는 쿠키를 활용해 공유한다.
-여기서 힌트를 얻어 세션을 구현해 보자.
+세션은 클라이언트와 서버 간에 상태 값을 공유하기 위해 고유한 아이디를 활용하고, 
+이 고유한 아이디는 쿠키를 활용해 공유한다.
 ```
 
 SessionId 생성
-JDK에서 제공하는 UUID 클래스를 사용해 고유한 아이디를 생성할 수 있다.
 UUID uuid = UUID.randomUUID();
 
-세션 관리를 위한 자료구조
 Map<String, HttpSession>와 같은 구조가 될 것이다. 
 이 Map의 키(key)는 앞에서 UUID로 생성한 고유한 아이디이다.
