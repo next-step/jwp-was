@@ -23,15 +23,14 @@ public class RequestMappers {
         return new RequestMappers(Arrays.asList(requestMappers));
     }
 
-    public void matchHandle(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void matchHandle(HttpRequest httpRequest, HttpResponse httpResponse) throws MappingNotFoundException {
         RequestMapper matchedRequestMapper = getMatchedRequestMapper(httpRequest);
 
         logger.debug("matchedRequestMapper : {}", matchedRequestMapper.getClass());
         matchedRequestMapper.handle(httpRequest, httpResponse);
-
     }
 
-    private RequestMapper getMatchedRequestMapper(HttpRequest httpRequest){
+    private RequestMapper getMatchedRequestMapper(HttpRequest httpRequest) throws MappingNotFoundException {
         return this.requestMappers.stream()
                 .filter(mapper -> mapper.isMatchedRequest(httpRequest.getMethod(), httpRequest.getRequestURI()))
                 .findFirst()

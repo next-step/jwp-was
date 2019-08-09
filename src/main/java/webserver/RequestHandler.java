@@ -45,10 +45,10 @@ public class RequestHandler implements Runnable {
             }
             
             try {
-            	requestMappers.matchHandle(httpRequest, httpResponse);	
-            } catch(MappingNotFoundException e) {
-            	httpResponse.send404();	
-            }
+				requestMappers.matchHandle(httpRequest, httpResponse);	
+			} catch(MappingNotFoundException e) {
+				httpResponse.send404();	
+			}
             httpResponse.writeResponse();
         } catch (IOException e) {
             logger.error(e.getMessage());
