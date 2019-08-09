@@ -5,17 +5,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.UserService;
 import webserver.http.HttpParameter;
-import webserver.http.request.RequestHeader;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
-
-import static webserver.http.ViewResolver.from;
+import webserver.http.ViewResolver;
+import webserver.http.request.RequestHeader;
 
 public class RegistrationController extends AbstractController {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHeader.class);
 
-    private UserService userService;
+    private final UserService userService;
+
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     protected void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
@@ -29,11 +32,7 @@ public class RegistrationController extends AbstractController {
 
         userService.add(new User(userId, password, name, email));
 
-        from(httpRequest, httpResponse).redirect("/index.html");
+        ViewResolver.from(httpRequest, httpResponse).redirect("/index.html");
     }
 
-    @Override
-    protected void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 }

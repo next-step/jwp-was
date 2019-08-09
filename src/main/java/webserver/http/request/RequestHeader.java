@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.MapUtils;
 import utils.StringUtils;
+import webserver.http.ContentType;
 import webserver.http.Cookies;
 
 import java.util.HashMap;
@@ -20,7 +21,7 @@ public class RequestHeader {
     private Map<String, String> headers;
     private Cookies cookies;
 
-    public RequestHeader(Map<String, String> headers, Cookies cookies) {
+    private RequestHeader(Map<String, String> headers, Cookies cookies) {
         this.headers = headers;
         this.cookies = cookies;
     }
@@ -40,12 +41,16 @@ public class RequestHeader {
         return headers.get("Accept");
     }
 
-    public String getContentType() {
-        return headers.get("Content-Type");
+    public ContentType getContentType() {
+        return ContentType.getByType(headers.get("Content-Type"));
     }
 
     public Integer getContentLength() {
-        return Integer.valueOf(headers.get("Content-Length"));
+        if (headers.containsKey("Content-Length")) {
+            return Integer.valueOf(headers.get("Content-Length"));
+        }
+
+        return 0;
     }
 
     public String getCookie(String key) {

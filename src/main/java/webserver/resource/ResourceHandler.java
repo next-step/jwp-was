@@ -8,7 +8,7 @@ import webserver.http.ModelAndView;
 
 import java.util.List;
 
-import static webserver.Context.RESOURCE_LOADERS;
+import static webserver.WebContext.RESOURCE_LOADERS;
 
 public class ResourceHandler {
 

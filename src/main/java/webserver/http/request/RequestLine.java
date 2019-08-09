@@ -9,7 +9,7 @@ import webserver.http.HttpParameter;
 import static utils.ParsingUtils.parseUrl;
 import static utils.StringUtils.endSplit;
 import static utils.StringUtils.frontSplitWithOrigin;
-import static webserver.Context.WELCOME_PAGE;
+import static webserver.WebContext.WELCOME_PAGE;
 
 public class RequestLine {
 

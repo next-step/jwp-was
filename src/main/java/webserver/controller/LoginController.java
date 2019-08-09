@@ -7,15 +7,19 @@ import service.UserService;
 import webserver.http.HttpParameter;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.ViewResolver;
 
-import static webserver.Context.LOGINED_KEY;
-import static webserver.http.ViewResolver.from;
+import static webserver.WebContext.LOGINED_KEY;
 
 public class LoginController extends AbstractController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-    private UserService userService;
+    private final UserService userService;
+
+    public LoginController(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     protected void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
@@ -30,17 +34,13 @@ public class LoginController extends AbstractController {
         if (user != null && user.getPassword().equals(password)) {
             logger.debug("## login success. " + userId);
             httpResponse.addCookie(LOGINED_KEY, "true");
-            from(httpRequest, httpResponse).redirect("/index.html");
+            ViewResolver.from(httpRequest, httpResponse).redirect("/index.html");
             return;
         }
 
         logger.debug("## login failed. " + userId);
         httpResponse.addCookie(LOGINED_KEY, "false");
-        from(httpRequest, httpResponse).redirect("/user/login_failed.html");
+        ViewResolver.from(httpRequest, httpResponse).redirect("/user/login_failed.html");
     }
 
-    @Override
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 }

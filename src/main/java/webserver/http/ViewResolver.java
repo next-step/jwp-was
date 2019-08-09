@@ -5,7 +5,8 @@ import webserver.resource.ResourceHandler;
 
 import java.io.IOException;
 
-import static webserver.Context.ERROR_PAGE;
+import static webserver.WebContext.ERROR_PAGE;
+import static webserver.WebContext.SESSION_KEY;
 
 public class ViewResolver {
 
@@ -23,6 +24,7 @@ public class ViewResolver {
         this.httpResponse = httpResponse;
         this.setResourceHandler(new ResourceHandler());
         this.errorPage = ERROR_PAGE;
+        httpResponse.addCookie(SESSION_KEY, httpRequest.getSessionID());
     }
 
     public void setResourceHandler(ResourceHandler resourceHandler) {

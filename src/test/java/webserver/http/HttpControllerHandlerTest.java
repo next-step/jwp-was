@@ -2,8 +2,8 @@ package webserver.http;
 
 import org.junit.jupiter.api.Test;
 import webserver.DispatcherController;
-import webserver.http.mock.MockHttpRequest;
-import webserver.http.mock.MockHttpResponse;
+import webserver.http.stub.StubHttpRequest;
+import webserver.http.stub.StubHttpResponse;
 import webserver.controller.Controller;
 
 import java.util.HashMap;
@@ -19,8 +19,8 @@ class HttpControllerHandlerTest {
     void controllerHandler() {
         DispatcherController dispatcherController = new DispatcherController();
         dispatcherController.setMappingRegistry(getMockController());
-        HttpRequest mockHttpRequest = new MockHttpRequest("/test");
-        HttpResponse mockHttpResponse = new MockHttpResponse();
+        HttpRequest mockHttpRequest = new StubHttpRequest("/test");
+        HttpResponse mockHttpResponse = new StubHttpResponse();
         dispatcherController.dispatch(mockHttpRequest, mockHttpResponse);
         assertThat(mockHttpResponse.getCookie("dummy")).isEqualTo(EXPECTED_RESULT);
     }
