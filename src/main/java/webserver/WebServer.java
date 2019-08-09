@@ -12,6 +12,7 @@ import actions.user.UserCreateAction;
 import actions.user.UserListAction;
 import actions.user.UserLoginAction;
 import enums.HttpMethod;
+import utils.StringUtils;
 import webserver.mapper.ActionRequestMapper;
 import webserver.mapper.RedirectRequestMapper;
 import webserver.mapper.RequestMappers;
@@ -28,6 +29,8 @@ public class WebServer {
     
     private static final int DEFAULT_PORT = 8080;
 
+    private static final String TEMPLATE_ROOT = "/templates";
+
     public static void main(String args[]) throws Exception {
         int port = 0;
         if (args == null || args.length == 0) {
@@ -42,10 +45,10 @@ public class WebServer {
                 .addResourceMapping("/fonts/.*", "./static" )
                 .addResourceMapping("/images/.*", "./static" )
                 .addResourceMapping("/js/.*", "./static" );
-        TemplateRequestMapper templateRequestMapper = new TemplateRequestMapper("./templates");
+        TemplateRequestMapper templateRequestMapper = new TemplateRequestMapper(StringUtils.makeRelativePath(TEMPLATE_ROOT));
         ActionRequestMapper userCreatectionRequestMapper = new ActionRequestMapper("/user/create", new UserCreateAction());
         ActionRequestMapper userLoginActionRequestMapper = new ActionRequestMapper("/user/login", new UserLoginAction());
-        HandlebarViewResolver handlebarViewResolver = HandlebarViewResolver.of("/templates", ".html");
+        HandlebarViewResolver handlebarViewResolver = HandlebarViewResolver.of(TEMPLATE_ROOT, ".html");
         ViewActionRequestMapper viewActionRequestMapper = new ViewActionRequestMapper(handlebarViewResolver, new ActionRequestMapper("/user/list", new UserListAction(), new HttpMethod[]{ HttpMethod.GET }));
 
         RequestMappers requestMappers = RequestMappers.of(rootRedirectRequestMapper
