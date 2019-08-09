@@ -7,6 +7,8 @@ import webserver.request.RequestTest;
 import webserver.response.HeaderProperty;
 import webserver.response.HttpResponse;
 import webserver.response.HttpStatus;
+import webserver.session.MockHttpSession;
+import webserver.session.SessionContainer;
 
 import java.io.IOException;
 
@@ -34,6 +36,7 @@ class UserListControllerTest {
     @Test
     void service_success() throws Exception {
         // given
+        SessionContainer.register(new MockHttpSession());
         request = RequestTest.getRequest("Request_List.txt");
 
         // when

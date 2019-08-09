@@ -1,13 +1,11 @@
 package controller;
 
 import db.DataBase;
+import model.User;
 import view.ViewResolver;
 import webserver.Request;
 import webserver.Response;
-import webserver.request.Cookie;
 import webserver.response.HttpResponse;
-
-import static controller.UserLoginController.COOKIE_OF_LOGIN;
 
 public class UserListController extends AbstractController {
 
@@ -20,10 +18,8 @@ public class UserListController extends AbstractController {
 
     @Override
     Response doGet(Request request) throws Exception {
-        Cookie cookie = request.getCookie();
-
-        boolean checkLogin = Boolean.valueOf(cookie.get(COOKIE_OF_LOGIN));
-        if (!checkLogin) {
+        User user = (User) request.getSession().getAttribute("user");
+        if(user == null){
             return HttpResponse.redirect("/index.html");
         }
 
