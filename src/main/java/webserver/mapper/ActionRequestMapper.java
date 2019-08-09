@@ -1,14 +1,9 @@
 package webserver.mapper;
 
-import java.util.Arrays;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-
-import com.google.common.base.Functions;
 
 import enums.HttpMethod;
+import utils.ConcurrentCollectionUtils;
 import webserver.handler.ActionHandler;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
@@ -30,7 +25,7 @@ public class ActionRequestMapper implements RequestMapper {
 	public ActionRequestMapper(String mappedRequestUri, ActionHandler actionHandler, HttpMethod[] httpMethods) {
 		this.mappedRequestUri = mappedRequestUri;
 		this.actionHandler = actionHandler;
-		this.httpMethods = convertToConcurrentSet(httpMethods);
+		this.httpMethods = ConcurrentCollectionUtils.convertToConcurrentSet(httpMethods);
 	}
 
 	@Override
@@ -41,13 +36,5 @@ public class ActionRequestMapper implements RequestMapper {
 	@Override
 	public void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
 		actionHandler.actionHandle(httpRequest, httpResponse);
-	}
-
-	private Set<HttpMethod> convertToConcurrentSet(HttpMethod[] httpMethods) {
-
-		Map<HttpMethod, Boolean> methods = Arrays.stream(httpMethods)
-				.collect(Collectors.toMap(Functions.identity(), (v) -> Boolean.TRUE, (v1, v2) -> v1));
-
-		return new ConcurrentHashMap<>(methods).keySet();
 	}
 }
