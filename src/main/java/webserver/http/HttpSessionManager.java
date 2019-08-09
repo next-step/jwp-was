@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import constants.SessionConstants;
+import webserver.constants.SessionConstants;
 
 public class HttpSessionManager {
 
