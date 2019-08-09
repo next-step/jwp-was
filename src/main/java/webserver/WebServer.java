@@ -49,14 +49,15 @@ public class WebServer {
         ActionRequestMapper userCreatectionRequestMapper = new ActionRequestMapper("/user/create", new UserCreateAction());
         ActionRequestMapper userLoginActionRequestMapper = new ActionRequestMapper("/user/login", new UserLoginAction());
         HandlebarViewResolver handlebarViewResolver = HandlebarViewResolver.of(TEMPLATE_ROOT, ".html");
-        ViewActionRequestMapper viewActionRequestMapper = new ViewActionRequestMapper(handlebarViewResolver, new ActionRequestMapper("/user/list", new UserListAction(), new HttpMethod[]{ HttpMethod.GET }));
+        ActionRequestMapper userListActionRequestMapper = new ActionRequestMapper("/user/list", new UserListAction(), new HttpMethod[]{ HttpMethod.GET });
+        ViewActionRequestMapper viewUserListActionRequestMapper = new ViewActionRequestMapper(handlebarViewResolver, userListActionRequestMapper);
 
         RequestMappers requestMappers = RequestMappers.of(rootRedirectRequestMapper
         		, resourceRequestMapper
                 , templateRequestMapper
                 , userCreatectionRequestMapper
                 , userLoginActionRequestMapper
-                , viewActionRequestMapper
+                , viewUserListActionRequestMapper
         );
 
         BodyResolvers bodyResolvers = BodyResolvers.of(FormBodyResolver.getInstance());

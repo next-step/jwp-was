@@ -137,7 +137,7 @@ public class HttpBaseRequest implements HttpRequest {
 
 		setSessionIfNull();
 
-		String cookieSessionId = Optional.ofNullable(this.httpSession).map(session -> session.getId()).orElse("");
+		String cookieSessionId = Optional.ofNullable(this.httpSession).map(HttpSession::getId).orElse(StringUtils.getEmpty());
 
 		HttpSessionManager httpSessionManager = HttpSessionManager.getInstance();
 
