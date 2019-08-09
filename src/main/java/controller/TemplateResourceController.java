@@ -3,6 +3,7 @@ package controller;
 import utils.FileIoUtils;
 import webserver.Request;
 import webserver.Response;
+import webserver.response.HttpResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,19 +19,19 @@ public class TemplateResourceController extends AbstractController {
                 .anyMatch(suffix::equals);
     }
 
-    @Override
-    void doGet(Request request, Response response) throws Exception {
-        byte[] body = FileIoUtils.loadFileFromClasspath(TEMPLATES_PATH + request.getPath());
-        response.ok(body);
-    }
-
-    @Override
-    void doPost(Request request, Response response) throws Exception {
-        response.notFound();
-    }
-
     private static String getSuffix(Request request) {
         String path = request.getPath();
         return path.substring(path.lastIndexOf(".") + 1);
+    }
+
+    @Override
+    Response doGet(Request request) throws Exception {
+        byte[] body = FileIoUtils.loadFileFromClasspath(TEMPLATES_PATH + request.getPath());
+        return HttpResponse.ok(body);
+    }
+
+    @Override
+    Response doPost(Request request) {
+        return HttpResponse.notFound();
     }
 }

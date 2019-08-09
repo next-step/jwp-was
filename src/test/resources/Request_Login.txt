@@ -3,6 +3,7 @@ Host: localhost:8080
 Connection: keep-alive
 Content-Length: 33
 Content-Type: application/x-www-form-urlencoded
+Cookie: JSESSIONID=55717547-6aa9-45a2-8288-d02b47334413
 Accept: */*
 
 userId=javajigi&password=password

@@ -3,22 +3,20 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.request.HttpRequest;
-import webserver.response.HttpResponse;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Optional;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private ServletContext servletContext;
 
-    private ServletContext servletContext = new ServletContext();
-
-    RequestHandler(Socket connectionSocket) {
-        this.connection = connectionSocket;
+    RequestHandler(Socket connection, ServletContext servletContext) {
+        this.connection = connection;
+        this.servletContext = servletContext;
     }
 
     public void run() {
@@ -30,18 +28,11 @@ public class RequestHandler implements Runnable {
             Request request = HttpRequest.newInstance(in);
             logger.info("IN request: {}", request);
 
-            Response response = new HttpResponse(out);
-            service(request, response);
+            Response mapping = servletContext.mapping(request);
+            mapping.setCookie("JSESSIONID=" + request.getSession().getId());
+            mapping.send(out);
         } catch (Exception e) {
             logger.error("uncaught error", e);
-        }
-    }
-
-    private void service(Request request, Response response) throws Exception {
-        try {
-            servletContext.mapping(request).service(request, response);
-        } catch (Exception e) {
-            response.internalServerError();
         }
     }
 }

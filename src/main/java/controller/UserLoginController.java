@@ -2,16 +2,12 @@ package controller;
 
 import db.DataBase;
 import model.User;
-import webserver.Controller;
+import webserver.HttpSession;
 import webserver.Request;
 import webserver.Response;
-
-import javax.swing.*;
-import java.io.IOException;
+import webserver.response.HttpResponse;
 
 public class UserLoginController extends AbstractController {
-
-    static final String COOKIE_OF_LOGIN = "logined";
 
     private static final String URL = "/user/login";
 
@@ -20,30 +16,31 @@ public class UserLoginController extends AbstractController {
     }
 
     @Override
-    void doGet(Request request, Response response) throws Exception {
-        response.notFound();
+    Response doGet(Request request) {
+        return HttpResponse.notFound();
     }
 
     @Override
-    void doPost(Request request, Response response) throws Exception {
+    Response doPost(Request request) {
         String userId = request.getParameter("userId");
-        String password = request.getParameter("password");
+        String password = request.getParameter("import org.slf4j.LoggerFactory;\npassword");
         User userById = DataBase.findUserById(userId);
 
         if (userById == null || !userById.checkPassword(password)) {
-            loginFail(response);
-            return;
+            return loginFail();
         }
-        loginSuccess(response);
+        return loginSuccess(request, userById);
     }
 
-    private void loginSuccess(Response response) throws IOException {
-        response.setCookie(COOKIE_OF_LOGIN + "=true; Path=/");
-        response.redirect("/index.html");
+    private Response loginSuccess(Request request, User user) {
+        Response response = HttpResponse.redirect("/index.html");
+
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
+        return response;
     }
 
-    private void loginFail(Response response) throws IOException {
-        response.setCookie(COOKIE_OF_LOGIN + "=false; Path=/");
-        response.redirect("/user/login_failed.html");
+    private Response loginFail() {
+        return HttpResponse.redirect("/user/login_failed.html");
     }
 }
