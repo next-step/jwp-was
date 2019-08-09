@@ -1,10 +1,11 @@
 package webserver.http;
 
+import com.google.common.base.Strings;
+
 import java.io.IOException;
 
 public class HttpRequest {
     private static final String HEADER_COOKIE_KEY = "Cookie";
-    private static final String HEADER_CONTENT_LENGTH_KEY = "Content-Length";
 
     private RequestLine requestLine;
     private HttpHeaders httpHeaders;
@@ -28,9 +29,8 @@ public class HttpRequest {
         RequestLine requestLine = RequestLine.parse(requestStream.requestLine());
         HttpHeaders httpHeaders = HttpHeaders.parse(requestStream.header());
 
-        if (HttpMethod.POST.equals(requestLine.getMethod())) {
-            int contentLength = Integer.parseInt(httpHeaders.get(HEADER_CONTENT_LENGTH_KEY));
-            RequestBody requestBody = RequestBody.parse(requestStream.body(contentLength));
+        if (!Strings.isNullOrEmpty(requestStream.body())) {
+            RequestBody requestBody = RequestBody.parse(requestStream.body());
             return new HttpRequest(requestLine, httpHeaders, requestBody);
         }
 
@@ -63,5 +63,9 @@ public class HttpRequest {
 
     public String bodyValue(String key) {
         return this.requestBody.get(key);
+    }
+
+    public String getPath() {
+        return getUri().getPath();
     }
 }

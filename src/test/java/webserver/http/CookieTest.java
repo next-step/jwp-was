@@ -12,10 +12,11 @@ public class CookieTest {
     private static RequestStream requestStream;
 
     @BeforeEach
-    private void makeGetRequestStream() {
+    private void makeGetRequestStream() throws IOException {
         String request = "GET /create?userId=javajigi&password=password&name=박재성&email=javajigi%40slipp.net HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
+                "Cookie: logined=false\n" +
                 "Accept: */*\n" +
                 "";
 
@@ -26,6 +27,6 @@ public class CookieTest {
     void parse() throws IOException {
         HttpRequest httpRequest = HttpRequest.parse(requestStream);
 
-        assertThat(Boolean.parseBoolean(httpRequest.cookieValue("logined")));
+        assertThat(Boolean.parseBoolean(httpRequest.cookieValue("logined"))).isEqualTo(false);
     }
 }

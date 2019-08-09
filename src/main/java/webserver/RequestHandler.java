@@ -1,21 +1,19 @@
 package webserver;
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
-import webserver.http.HttpStatus;
 import webserver.http.RequestStream;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final String REDIRECT_START_WITH = "redirect:";
-    private static final String HEADER_HOST_KEY = "Host";
-    private static final String REDIRECT_URL_FORMAT = "http://%s%s";
 
     private Socket connection;
 
@@ -33,44 +31,10 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = HttpRequest.parse(requestStream);
             logger.debug("Request {}", httpRequest.getRequestLine());
 
-            HttpResponse httpResponse = getResponse(httpRequest);
+            HttpResponse httpResponse = HttpResponse.createResponse(httpRequest);
             httpResponse.responseByStatus(dos);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    HttpResponse getResponse(HttpRequest httpRequest) {
-        String requestPath = httpRequest.getUri().getPath();
-        HttpResponse httpResponse = new HttpResponse();
-
-        return FileResponse.getFileResponse(requestPath)
-                .orElse(getViewMappingResponse(httpRequest, httpResponse));
-    }
-
-    private HttpResponse getViewMappingResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
-        String viewName = getViewName(httpRequest, httpResponse);
-        if (viewName.startsWith(REDIRECT_START_WITH)) {
-            return getRedirectHttpResponse(httpRequest, httpResponse, viewName);
-        }
-
-        try {
-            httpResponse.setBody(ViewResolver.mapping(httpRequest, httpResponse).getBytes());
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-        return httpResponse;
-    }
-
-    private HttpResponse getRedirectHttpResponse(HttpRequest httpRequest, HttpResponse httpResponse, String viewName) {
-        String redirectPath = viewName.replace(REDIRECT_START_WITH, StringUtils.EMPTY);
-        String redirectUrl = String.format(REDIRECT_URL_FORMAT, httpRequest.getHeaderValue(HEADER_HOST_KEY), redirectPath);
-        httpResponse.setRedirectPath(redirectUrl);
-        httpResponse.setHttpStatus(HttpStatus.REDIRECT);
-        return httpResponse;
-    }
-
-    private String getViewName(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return Router.route(httpRequest, httpResponse).orElse(StringUtils.EMPTY);
     }
 }

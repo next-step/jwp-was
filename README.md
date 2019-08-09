@@ -21,3 +21,8 @@
     - 인증되지 않은 사용자면 로그인 페이지로 이동
 - 요구사항 7 : Stylesheet 파일 지원
     - Request Contents-Type에 맞는 Response 구현 
+
+### 3단계 - HTTP 웹 서버 리팩토링
+- 요구사항 1 : Thread Pool 생성
+    - ExecutorService를 사용하여 정해진 Thread 수 만큼 요청을 수행하도록 구현
+- 요구사항 2: 리펙토링
