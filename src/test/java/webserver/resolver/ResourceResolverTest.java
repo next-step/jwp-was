@@ -1,6 +1,7 @@
 package webserver.resolver;
 
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -10,6 +11,7 @@ import webserver.request.HttpRequest;
 import webserver.request.RequestLine;
 import webserver.resolver.resource.ResourceResolver;
 import webserver.response.HttpResponse;
+import webserver.response.HttpStatus;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -28,6 +30,20 @@ class ResourceResolverTest {
         HttpResponse httpResponse = new HttpResponse();
         resourceResolver.resolve(httpRequest, httpResponse);
         log.debug("file : {}", new String(httpResponse.getBody()));
+    }
+
+    void test_resolver_notfound() {
+        HttpRequest httpRequest = HttpRequest.builder().requestLine(RequestLine.parse("GET /test/test.css HTTP/1.1")).build();
+        HttpResponse httpResponse = new HttpResponse();
+        resourceResolver.resolve(httpRequest, httpResponse);
+        Assertions.assertThat(httpResponse.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    void test_notfound_resource_registration() {
+        HttpRequest httpRequest = HttpRequest.builder().requestLine(RequestLine.parse("GET /test/test.jsx HTTP/1.1")).build();
+        HttpResponse httpResponse = new HttpResponse();
+        Assertions.assertThatThrownBy(() -> resourceResolver.resolve(httpRequest, httpResponse))
+                .hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     private static Stream<Arguments> getTestSources() {

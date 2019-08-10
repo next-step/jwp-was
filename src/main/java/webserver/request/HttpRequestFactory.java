@@ -52,9 +52,9 @@ public class HttpRequestFactory {
         RequestHeaders requestHeaders = new RequestHeaders();
         String line = reader.readLine();
         while (!StringUtils.EMPTY.equals(line)) {
+            logger.debug("RequestHeaders : {}", line);
             requestHeaders.add(line);
             line = reader.readLine();
-            logger.debug("RequestHeaders : {}", line);
         }
         builder.requestHeaders(requestHeaders);
         return requestHeaders;

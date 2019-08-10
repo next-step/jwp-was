@@ -7,6 +7,8 @@ import webserver.request.Cookie;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
+import static java.util.Objects.nonNull;
+
 /**
  * Created by hspark on 2019-08-05.
  */
@@ -19,7 +21,7 @@ public class UserLoginController extends AbstractController {
         String password = httpRequest.getParameter("password");
 
         User user = DataBase.findUserById(userId);
-        if (user.matchPassword(password)) {
+        if (nonNull(user) && user.matchPassword(password)) {
             httpResponse.addCookie(new Cookie("logined", "true"));
             httpResponse.redirect("/index.html");
             return;
