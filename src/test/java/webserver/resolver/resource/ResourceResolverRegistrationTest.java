@@ -1,4 +1,4 @@
-package webserver;
+package webserver.resolver.resource;
 
 import com.google.common.collect.Sets;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -6,7 +6,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import webserver.request.HttpRequest;
 import webserver.request.RequestLine;
-import webserver.resolver.resource.ResourceResolverRegistration;
 
 import java.util.Set;
 import java.util.stream.Stream;

@@ -1,4 +1,4 @@
-package webserver;
+package webserver.resolver;
 
 
 import org.junit.jupiter.params.ParameterizedTest;

@@ -24,6 +24,10 @@ public class RequestHeaders {
         return cookies;
     }
 
+    public String getCookie(String name) {
+        return cookies.getCookie(name);
+    }
+
     public boolean hasContentLength() {
         return Objects.nonNull(headers.get(CONTENT_LENGTH));
     }

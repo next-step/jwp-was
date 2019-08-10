@@ -40,6 +40,10 @@ public class HttpRequest {
         return getRequestHeaders().getHeader(name);
     }
 
+    public String getCookie(String name) {
+        return getRequestHeaders().getCookie(name);
+    }
+
     public static HttpRequestBuilder builder() {
         return new HttpRequestBuilder();
     }
