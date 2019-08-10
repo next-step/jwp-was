@@ -23,8 +23,7 @@ public class RequestLineTest {
     @Test
     @DisplayName("Step0 기본 헤더 파싱")
     void parse(){
-        HttpController httpController = new HttpController();
-        HttpResponse response = ServletContainer.make(httpController, "GET /users HTTP/1.1");
+        HttpResponse response = new ServletContainer().getResponse("GET /users HTTP/1.1");
         assertThat(response.getHttpHeader().getMethod()).isEqualTo("GET");
         assertThat(response.getHttpHeader().getUrlPath()).isEqualTo("/users");
     }
@@ -35,7 +34,6 @@ public class RequestLineTest {
             "GET /users?userId=javajigi&password=&name=JaeSung HTTP/1.1, "
     })
     void parseParameter(String url, String value){
-        HttpController httpController = new HttpController();
         /*HttpResponse httpResponse = RequestLine.parse(httpController, url);
         assertThat(httpResponse.get().get("userId")).isEqualTo("javajigi");
         assertThat(httpResponse.getParameter().get("password")).isEqualTo(value);
@@ -49,8 +47,7 @@ public class RequestLineTest {
             "Accept: */*"})
     @DisplayName("Step2 헤더 파싱")
     void parseHeader(String httpFormStr){
-        HttpController httpController = new HttpController();
-        HttpResponse response = ServletContainer.make(httpController, httpFormStr);
+        HttpResponse response = new ServletContainer().getResponse(httpFormStr);
         assertThat(response.getHttpHeader().getMethod()).isEqualTo("GET");
         assertThat(response.getHttpHeader().getUrlPath()).isEqualTo("/index.html");
         assertThat(response.getHttpHeader().getVersion()).isEqualTo("HTTP/1.1");
@@ -66,8 +63,7 @@ public class RequestLineTest {
             "Accept: */*"})
     @DisplayName("Step2 헤더 파싱 및 파일 조회")
     void FileRead(String httpFormStr) throws URISyntaxException, IOException {
-        HttpController httpController = new HttpController();
-        HttpResponse response = ServletContainer.make(httpController, httpFormStr);
+        HttpResponse response = new ServletContainer().getResponse(httpFormStr);
 
         byte[] contentByte = FileIoUtils.loadFileFromClasspath("./templates/index.html");
         String content = new String(contentByte);
@@ -92,8 +88,7 @@ public class RequestLineTest {
     })
     @DisplayName("유저 회원 가입")
     void UserCreate(String httpFormStr){
-        HttpController httpController = new HttpController();
-        HttpResponse response = ServletContainer.make(httpController, httpFormStr);
+        HttpResponse response = new ServletContainer().getResponse(httpFormStr);
 
         assertThat(response.getHttpHeader().getUrlPath()).isEqualTo("/user/create");
         assertThat(response.getStatusCode()).isEqualTo("302");

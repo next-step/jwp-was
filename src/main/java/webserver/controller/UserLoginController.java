@@ -3,12 +3,11 @@ package webserver.controller;
 import db.DataBase;
 import model.User;
 import webserver.converter.HttpConverter;
-import webserver.http.AbstractControllerCreator;
+import webserver.http.AbstractControllerStructor;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
-import webserver.http.HttpStatus;
 
-public class UserLoginController extends AbstractControllerCreator {
+public class UserLoginController extends AbstractControllerStructor {
 
     @Override
     public HttpResponse doPost(HttpRequest httpRequest) {
@@ -28,11 +27,6 @@ public class UserLoginController extends AbstractControllerCreator {
             response.setCookie("logined=false; Path=/user/login_failed.html");
         }
         return response;
-    }
-
-    @Override
-    public HttpResponse doGet(HttpRequest httpRequest) {
-        return HttpResponse.setStatusResponse(HttpStatus.METHOD_NOT_ALLOWED);
     }
 
 }

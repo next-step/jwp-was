@@ -7,17 +7,17 @@ import java.net.URISyntaxException;
 
 public class ServletContainer {
 
-    public static HttpResponse make(HttpController httpController, String socketMsg){
-        HttpRequest httpRequest = new HttpRequest();
-        return getResultContent(httpController, httpRequest, socketMsg);
+    public HttpResponse getResponse(String socketMsg){
+        return getResultContent(socketMsg);
     }
 
-    private static HttpResponse getResultContent
-            (HttpController controller, HttpRequest httpRequest, String socketMsg){
+    private HttpResponse getResultContent
+            (String socketMsg){
+        HttpRequest httpRequest = HttpRequest.parse(socketMsg);
+
         try{
-            httpRequest.parse(socketMsg);
-            if(controller.isContainUrl(httpRequest.getUrlPath())){
-                return controller.callMethod(httpRequest);
+            if(HttpController.isContainUrl(httpRequest.getUrlPath())){
+                return HttpController.callMethod(httpRequest);
             }
 
             String readFile = HttpFileConverter.readFile(httpRequest.getUrlPath());
@@ -26,9 +26,9 @@ public class ServletContainer {
 
             return response;
         }catch (IOException e){
-            return HttpResponse.setStatusResponse(HttpStatus.SERVER_ERROR);
+            return HttpResponse.serverError(httpRequest);
         }catch (URISyntaxException e){
-            return HttpResponse.setStatusResponse(HttpStatus.NOT_FOUND);
+            return HttpResponse.pageNotFound(httpRequest);
         }
     }
 

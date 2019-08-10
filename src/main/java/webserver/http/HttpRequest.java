@@ -12,9 +12,14 @@ public class HttpRequest {
     private String location;
     private String cookie;
 
-    public void parse(String httpMsg){
-        this.httpHeader = new HttpHeader();
-        new HttpHeaderConverter(this, httpMsg);
+    public static HttpRequest parse(String httpMsg){
+        HttpRequest request = new HttpRequest(new HttpHeader());
+        new HttpHeaderConverter(request, httpMsg);
+        return request;
+    }
+
+    public HttpRequest(HttpHeader httpHeader) {
+        this.httpHeader = httpHeader;
     }
 
     public HttpHeader getHttpHeader() { return this.httpHeader; }

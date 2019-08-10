@@ -6,7 +6,7 @@ import db.DataBase;
 import model.User;
 import webserver.converter.HttpConverter;
 import webserver.converter.HttpFileConverter;
-import webserver.http.AbstractControllerCreator;
+import webserver.http.AbstractControllerStructor;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.HttpStatus;
@@ -14,12 +14,7 @@ import webserver.http.HttpStatus;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserListController extends AbstractControllerCreator {
-
-    @Override
-    public HttpResponse doPost(HttpRequest httpRequest) {
-        return HttpResponse.setStatusResponse(HttpStatus.METHOD_NOT_ALLOWED);
-    }
+public class UserListController extends AbstractControllerStructor {
 
     @Override
     public HttpResponse doGet(HttpRequest httpRequest) {
@@ -40,7 +35,7 @@ public class UserListController extends AbstractControllerCreator {
 
             return response;
         }catch (Exception e){
-            return HttpResponse.setStatusResponse(HttpStatus.NOT_FOUND);
+            return HttpResponse.pageNotFound(httpRequest);
         }
     }
 

@@ -11,13 +11,6 @@ public class HttpResponse {
         this.httpHeader = httpHeader;
     }
 
-    public static HttpResponse setStatusResponse(HttpStatus status){
-        HttpResponse response =
-                new HttpResponse(new HttpHeader(status));
-        response.setResultBody(status.getHttpStatusMessage());
-        return response;
-    }
-
     public static HttpResponse ok(HttpRequest request){
         HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.OK));
         return response;
@@ -33,6 +26,16 @@ public class HttpResponse {
         HttpHeader httpHeader = new HttpHeader(status, request.getVersion());
         httpHeader.setEtcHeader(request.getEtcHeader());
         return httpHeader;
+    }
+
+    public static HttpResponse serverError(HttpRequest request){
+        HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.OK));
+        return response;
+    }
+
+    public static HttpResponse pageNotFound(HttpRequest request){
+        HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.NOT_FOUND));
+        return response;
     }
 
     public HttpHeader getHttpHeader() {
