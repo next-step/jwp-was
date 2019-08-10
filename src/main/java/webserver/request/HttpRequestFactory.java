@@ -34,11 +34,18 @@ public class HttpRequestFactory {
         return builder.build();
     }
 
+    private static String buildRequestLine(HttpRequest.HttpRequestBuilder builder, BufferedReader reader) throws IOException {
+        String line = reader.readLine();
+        logger.debug("Request Line : {}", line);
+        RequestLine requestLine = RequestLine.parse(line);
+        builder.requestLine(requestLine);
+        return line;
+    }
+
     private static void buildRequestBody(HttpRequest.HttpRequestBuilder builder, BufferedReader reader, int contentLength) throws IOException {
         String body = IOUtils.readData(reader, contentLength);
         logger.debug("Request Body : {}", body);
-        RequestBody requestBody = RequestBody.parse(body);
-        builder.requestBody(requestBody);
+        builder.requestBody(body);
     }
 
     private static RequestHeaders buildRequestHeader(HttpRequest.HttpRequestBuilder builder, BufferedReader reader) throws IOException {
@@ -51,13 +58,5 @@ public class HttpRequestFactory {
         }
         builder.requestHeaders(requestHeaders);
         return requestHeaders;
-    }
-
-    private static String buildRequestLine(HttpRequest.HttpRequestBuilder builder, BufferedReader reader) throws IOException {
-        String line = reader.readLine();
-        logger.debug("Request Line : {}", line);
-        RequestLine requestLine = RequestLine.parse(line);
-        builder.requestLine(requestLine);
-        return line;
     }
 }

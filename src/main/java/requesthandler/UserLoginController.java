@@ -15,8 +15,8 @@ public class UserLoginController extends AbstractController {
 
     @Override
     public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
-        String userId = httpRequest.getRequestBody().getOne("userId");
-        String password = httpRequest.getRequestBody().getOne("password");
+        String userId = httpRequest.getParameter("userId");
+        String password = httpRequest.getParameter("password");
 
         User user = DataBase.findUserById(userId);
         if (user.matchPassword(password)) {

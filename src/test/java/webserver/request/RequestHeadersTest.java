@@ -20,15 +20,6 @@ class RequestHeadersTest {
         Assertions.assertThat(requestHeaders.getHeader(name)).isEqualTo(value);
     }
 
-    void test_cookie() {
-        RequestHeaders requestHeaders = new RequestHeaders();
-        String rawCookie = "Cookie: isLogin=1;JSESSIONID=1234";
-        requestHeaders.add(rawCookie);
-
-        Assertions.assertThat(requestHeaders.getCookies().getCookie("isLogin")).isEqualTo("1");
-        Assertions.assertThat(requestHeaders.getCookies().getCookie("JSESSIONID")).isEqualTo("1234");
-    }
-
     private static Stream<Arguments> parseHeader() {
         return Stream.of(
                 Arguments.of("Host: localhost:8080", "Host", "localhost:8080"),

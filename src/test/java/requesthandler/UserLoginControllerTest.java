@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import webserver.request.HttpRequest;
-import webserver.request.RequestBody;
 import webserver.request.RequestLine;
 import webserver.response.HttpResponse;
 import webserver.response.HttpStatus;
@@ -26,7 +25,7 @@ class UserLoginControllerTest {
     @Test
     void test_로그인_성공() {
         RequestLine requestLine = RequestLine.parse("POST /users/login HTTP/1.1");
-        RequestBody requestBody = RequestBody.parse("userId=test&password=123");
+        String requestBody = "userId=test&password=123";
         HttpRequest httpRequest = HttpRequest.builder().requestLine(requestLine).requestBody(requestBody).build();
         HttpResponse httpResponse = new HttpResponse();
 
@@ -41,7 +40,7 @@ class UserLoginControllerTest {
     @Test
     void test_로그인_실패() {
         RequestLine requestLine = RequestLine.parse("POST /users/login HTTP/1.1");
-        RequestBody requestBody = RequestBody.parse("userId=test&password=1234");
+        String requestBody = "userId=test&password=1234";
         HttpRequest httpRequest = HttpRequest.builder().requestLine(requestLine).requestBody(requestBody).build();
         HttpResponse httpResponse = new HttpResponse();
 

@@ -14,10 +14,10 @@ public class UserSignupController extends AbstractController {
 
     @Override
     public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-        String userId = httpRequest.getAttribute("userId");
-        String password = httpRequest.getAttribute("password");
-        String name = httpRequest.getAttribute("name");
-        String email = httpRequest.getAttribute("email");
+        String userId = httpRequest.getParameter("userId");
+        String password = httpRequest.getParameter("password");
+        String name = httpRequest.getParameter("name");
+        String email = httpRequest.getParameter("email");
 
         User user = new User(userId, password, name, email);
         DataBase.addUser(user);

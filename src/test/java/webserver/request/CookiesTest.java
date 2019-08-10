@@ -7,8 +7,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * Created by hspark on 2019-08-06.
  */
@@ -16,7 +14,8 @@ class CookiesTest {
     @ParameterizedTest(name = "cookies: {0}, [ key : {1}, value : {2}]")
     @MethodSource("parseHeader")
     void test_parse_header(String rawCookie, String name, String value) {
-        Cookies cookies = Cookies.parse(rawCookie);
+        Cookies cookies = new Cookies();
+        cookies.addCookieByRawString(rawCookie);
         Assertions.assertThat(cookies.getCookie(name)).isEqualTo(value);
     }
 
