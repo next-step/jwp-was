@@ -72,6 +72,10 @@ public class HttpRequest {
         return headers;
     }
 
+    public String getHeader(String field) {
+        return headers.get(field);
+    }
+
     public String getCookie(String name) {
         return cookies.get(name);
     }

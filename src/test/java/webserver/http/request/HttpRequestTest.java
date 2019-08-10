@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.common.exception.HttpMethodNotSupportedException;
-import webserver.http.common.header.Header;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -26,7 +25,6 @@ public class HttpRequestTest {
 
     @BeforeAll
     static void init() {
-        Header.values();
         requestHeader = new TestRequest.Builder("GET", "/user/login?userName=123&password=123")
                 .addHeader("Host", "localhost:8080")
                 .addHeader("Connection", "keep-alive")
@@ -99,5 +97,31 @@ public class HttpRequestTest {
         HttpRequest request = new HttpRequest(in);
         assertEquals("123", request.getParameter("userName"));
         assertEquals("123", request.getParameter("password"));
+    }
+
+    @DisplayName("POST 쿼리스트링 파싱")
+    @Test
+    public void request_POST2() throws Exception {
+
+        String requestHeader = new TestRequest.Builder("POST", "/user/create?id=1")
+                .addHeader("Host", "localhost:8080")
+                .addHeader("Connection", "keep-alive")
+                .addHeader("Content-Length", "46")
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("Accept", "*/*")
+                .addBody("userId", "usik")
+                .addBody("password", "1234")
+                .addBody("name", "kohyusik")
+                .buildString();
+
+
+        InputStream in = new ByteArrayInputStream(requestHeader.getBytes());
+        HttpRequest request = new HttpRequest(in);
+
+        assertEquals(HttpMethod.POST, request.getHttpMethod());
+        assertEquals("/user/create", request.getPath());
+        assertEquals("keep-alive", request.getHeader("Connection"));
+        assertEquals("1", request.getParameter("id"));
+        assertEquals("usik", request.getParameter("userId"));
     }
 }
