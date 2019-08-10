@@ -10,7 +10,9 @@ public class HttpSessionManager {
 
     public static HttpSession get(String sessionId) {
         if (isSessionNotValid(sessionId)) {
-            return new HttpSession();
+            HttpSession httpSession = new HttpSession();
+            httpSessionMap.put(httpSession.getId(), httpSession);
+            return httpSession;
         }
 
         return httpSessionMap.get(sessionId);

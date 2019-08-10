@@ -6,6 +6,7 @@ import java.io.IOException;
 
 public class HttpRequest {
     private static final String HEADER_COOKIE_KEY = "Cookie";
+    private static final String SESSION_ID_KEY = "jsessionid";
 
     private RequestLine requestLine;
     private HttpHeaders httpHeaders;
@@ -36,6 +37,11 @@ public class HttpRequest {
         }
 
         return new HttpRequest(requestLine, httpHeaders);
+    }
+
+    public void setSession() {
+        String sessionId = cookieValue(SESSION_ID_KEY);
+        this.httpSession = HttpSessionManager.get(sessionId);
     }
 
     public HttpMethod getMethod() {
@@ -80,5 +86,9 @@ public class HttpRequest {
 
     public String getPath() {
         return getUri().getPath();
+    }
+
+    public String getSessionId() {
+        return this.httpSession.getId();
     }
 }

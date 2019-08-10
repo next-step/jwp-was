@@ -1,7 +1,6 @@
 package webserver.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
-import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.FileResponse;
@@ -43,7 +42,7 @@ public class HttpResponse {
     public static HttpResponse createResponse(HttpRequest httpRequest) {
         String requestPath = httpRequest.getPath();
         return FileResponse.getFileResponse(requestPath)
-                .orElse(getViewMappingResponse(httpRequest));
+                .orElse(getServiceResponse(httpRequest));
     }
 
     public HttpHeaders getHttpHeaders() {
@@ -87,28 +86,17 @@ public class HttpResponse {
         this.cookie.set(key, value);
     }
 
-    private static HttpResponse getViewMappingResponse(HttpRequest httpRequest) {
+    private static HttpResponse getServiceResponse(HttpRequest httpRequest) {
         HttpResponse httpResponse = new HttpResponse();
-        setSession(httpRequest, httpResponse);
-        String viewName = getViewName(httpRequest, httpResponse);
-        if (viewName.startsWith(REDIRECT_START_WITH)) {
-            return getRedirectHttpResponse(httpRequest, httpResponse, viewName);
+        httpRequest.setSession();
+        String nextViewName = service(httpRequest, httpResponse);
+        if (nextViewName.startsWith(REDIRECT_START_WITH)) {
+            return getRedirectHttpResponse(httpRequest, httpResponse, nextViewName);
         }
 
-        httpResponse.setView(viewName);
+        httpResponse.setView(nextViewName);
+        httpResponse.setCookie(SESSION_ID_KEY, httpRequest.getSessionId());
         return httpResponse;
-    }
-
-    private static void setSession(HttpRequest httpRequest, HttpResponse httpResponse) {
-        String sessionId = httpRequest.cookieValue(SESSION_ID_KEY);
-        HttpSession httpSession = HttpSessionManager.get(sessionId);
-        httpRequest.setSession(httpSession);
-
-        if (Strings.isNullOrEmpty(sessionId)) {
-            String newSessionId = httpSession.getId();
-            httpRequest.addCookie(SESSION_ID_KEY, newSessionId);
-            httpResponse.setCookie(SESSION_ID_KEY, newSessionId);
-        }
     }
 
     private void setView(String viewName) {
@@ -128,7 +116,7 @@ public class HttpResponse {
         return httpResponse;
     }
 
-    private static String getViewName(HttpRequest httpRequest, HttpResponse httpResponse) {
+    private static String service(HttpRequest httpRequest, HttpResponse httpResponse) {
         return RequestMapping.mapping(httpRequest, httpResponse)
                 .orElse(StringUtils.EMPTY);
     }
