@@ -1,21 +1,17 @@
 package webserver.http;
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
-
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class HttpSession {
-    private static final String UUID_SEPARATOR = "-";
     private static final String SESSION_INVALIDATE_MESSAGE = "세션이 이미 무효화 되었습니다.";
 
     private String id;
     private ConcurrentMap<String, Object> sessionMap;
     private boolean invalidate;
 
-    public HttpSession() {
-        this.id = generatedSessionId();
+    public HttpSession(String id) {
+        this.id = id;
         this.sessionMap = new ConcurrentHashMap<>();
     }
 
@@ -53,11 +49,5 @@ public class HttpSession {
 
     public int size() {
         return this.sessionMap.size();
-    }
-
-    private String generatedSessionId() {
-        return UUID.randomUUID()
-                .toString()
-                .replaceAll(UUID_SEPARATOR, StringUtils.EMPTY);
     }
 }

@@ -19,7 +19,8 @@ public class HttpSessionTest {
     void setUp() {
         attributeName = "name";
         attributeValue = "dave";
-        httpSession = new HttpSession();
+        String sessionId = HttpSessionGenerator.generate();
+        httpSession = new HttpSession(sessionId);
     }
 
     @Test

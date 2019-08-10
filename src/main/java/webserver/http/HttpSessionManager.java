@@ -10,12 +10,22 @@ public class HttpSessionManager {
 
     public static HttpSession get(String sessionId) {
         if (isSessionNotValid(sessionId)) {
-            HttpSession httpSession = new HttpSession();
-            httpSessionMap.put(httpSession.getId(), httpSession);
+            String generatedSessionId = generateSessionId();
+            HttpSession httpSession = new HttpSession(generatedSessionId);
+            httpSessionMap.put(generatedSessionId, httpSession);
             return httpSession;
         }
 
         return httpSessionMap.get(sessionId);
+    }
+
+    private static String generateSessionId() {
+        String sessionId = HttpSessionGenerator.generate();
+        if (httpSessionMap.containsKey(sessionId)) {
+            return generateSessionId();
+        }
+
+        return sessionId;
     }
 
     private static boolean isSessionNotValid(String sessionId) {

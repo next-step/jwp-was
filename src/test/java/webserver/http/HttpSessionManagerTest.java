@@ -14,7 +14,8 @@ public class HttpSessionManagerTest {
 
     @Test
     void getSession() {
-        HttpSession testHttpSession = new HttpSession();
+        String sessionId = HttpSessionGenerator.generate();
+        HttpSession testHttpSession = new HttpSession(sessionId);
         HttpSessionManager.add(testHttpSession);
         HttpSession httpSession = HttpSessionManager.get(testHttpSession.getId());
         assertThat(httpSession.getId()).isEqualTo(testHttpSession.getId());
