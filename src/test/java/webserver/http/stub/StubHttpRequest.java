@@ -1,4 +1,4 @@
-package webserver.http.mock;
+package webserver.http.stub;
 
 import webserver.http.HttpParameter;
 import webserver.http.HttpRequest;
@@ -6,18 +6,19 @@ import webserver.http.request.RequestBody;
 import webserver.http.request.RequestHeader;
 import webserver.http.request.RequestLine;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
 import static webserver.http.HttpMethod.GET;
 
-public class MockHttpRequest extends HttpRequest {
+public class StubHttpRequest extends HttpRequest {
 
-    public MockHttpRequest(String path) {
+    public StubHttpRequest(String path) {
         super(getMockRequestLine(path), getMockRequestHeader(Collections.emptyMap()), getMockRequestBody());
     }
 
-    public MockHttpRequest(String path, Map<String, String> header) {
+    public StubHttpRequest(String path, Map<String, String> header) {
         super(getMockRequestLine(path), getMockRequestHeader(Collections.emptyMap()), getMockRequestBody());
     }
 
@@ -26,7 +27,8 @@ public class MockHttpRequest extends HttpRequest {
     }
 
     private static RequestHeader getMockRequestHeader(Map<String, String> headers) {
-        return RequestHeader.from(Collections.emptyList());
+
+        return RequestHeader.from(new ArrayList<>());
     }
 
     private static RequestBody getMockRequestBody() {

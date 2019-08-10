@@ -3,9 +3,9 @@ package webserver.http;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import webserver.http.mock.MockHttpRequest;
-import webserver.http.mock.MockHttpResponse;
-import webserver.http.resource.MockResourceHandler;
+import webserver.http.stub.StubHttpRequest;
+import webserver.http.stub.StubHttpResponse;
+import webserver.http.resource.StubResourceHandler;
 
 import java.io.*;
 
@@ -28,10 +28,10 @@ class DispatcherTest {
     void setUp() throws FileNotFoundException {
         this.file = new File("test.txt");
         this.dos = new DataOutputStream(new FileOutputStream(file));
-        this.response = new MockHttpResponse(dos);
-        this.request = new MockHttpRequest(EXPECTED_LOCATION);
+        this.response = new StubHttpResponse(dos);
+        this.request = new StubHttpRequest(EXPECTED_LOCATION);
         this.viewResolver = ViewResolver.from(request, response);
-        viewResolver.setResourceHandler(new MockResourceHandler());
+        viewResolver.setResourceHandler(new StubResourceHandler());
     }
 
     @Test

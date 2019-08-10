@@ -1,5 +1,7 @@
 package webserver.http;
 
+import utils.StringUtils;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -21,7 +23,9 @@ public class HttpResponse {
     }
 
     public void addCookie(String key, String value) {
-        cookies.addCookie(key, value);
+        if (StringUtils.isNotBlank(value)) {
+            cookies.addCookie(key, value);
+        }
     }
 
     public String getCookie(String key) {
