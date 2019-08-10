@@ -46,11 +46,7 @@ public class RequestHeader {
     }
 
     public Integer getContentLength() {
-        if (headers.containsKey("Content-Length")) {
-            return Integer.valueOf(headers.get("Content-Length"));
-        }
-
-        return 0;
+        return Integer.valueOf(headers.getOrDefault("Content-Length", "0"));
     }
 
     public String getCookie(String key) {

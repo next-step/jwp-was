@@ -15,6 +15,7 @@ import java.net.Socket;
 import static utils.IOUtils.readData;
 import static utils.IOUtils.readLines;
 import static webserver.WebContext.CONTROLLERS;
+import static webserver.WebContext.HTTP_SESSION_MANAGER;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -35,7 +36,6 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
             HttpRequest httpRequest = readStream(in);
-            httpRequest.initSession();
             dispatcherController.dispatch(httpRequest, new HttpResponse(dos));
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -52,7 +52,7 @@ public class RequestHandler implements Runnable {
         RequestBody requestBody = new RequestBody(contentType
                 .to(readData(reader, requestHeader.getContentLength())));
 
-        return new HttpRequest(requestLine, requestHeader, requestBody);
+        return new HttpRequest(requestLine, requestHeader, requestBody, HTTP_SESSION_MANAGER);
     }
 
 }

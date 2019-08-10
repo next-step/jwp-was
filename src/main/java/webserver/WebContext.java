@@ -1,14 +1,13 @@
 package webserver;
 
 import webserver.controller.Controller;
-import webserver.http.HttpSession;
+import webserver.http.HttpSessionManager;
 import webserver.resource.HandlebarsResourceLoader;
 import webserver.resource.ResourceLoader;
 import webserver.resource.StaticResourceLoader;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Arrays.asList;
 
@@ -30,6 +29,6 @@ public class WebContext {
     public static List<ResourceLoader> RESOURCE_LOADERS =
             asList(new StaticResourceLoader(), new HandlebarsResourceLoader());
 
-    public static Map<String, HttpSession> SESSIONS = new ConcurrentHashMap<>();
+    public static HttpSessionManager HTTP_SESSION_MANAGER = new HttpSessionManager();
 
 }
