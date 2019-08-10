@@ -19,31 +19,45 @@ public class HttpRequestFactory {
     private static final Logger logger = LoggerFactory.getLogger(HttpRequestFactory.class);
 
     public static HttpRequest create(InputStream in) throws IOException {
-
         HttpRequest.HttpRequestBuilder builder = HttpRequest.builder();
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+        buildRequestLine(builder, reader);
+        RequestHeaders requestHeaders = buildRequestHeader(builder, reader);
+
+        if (requestHeaders.hasContentLength()) {
+            int contentLength = Integer.parseInt(requestHeaders.getHeader(CONTENT_LENGTH));
+            buildRequestBody(builder, reader, contentLength);
+        }
+
+        return builder.build();
+    }
+
+    private static void buildRequestBody(HttpRequest.HttpRequestBuilder builder, BufferedReader reader, int contentLength) throws IOException {
+        String body = IOUtils.readData(reader, contentLength);
+        logger.debug("Request Body : {}", body);
+        RequestBody requestBody = RequestBody.parse(body);
+        builder.requestBody(requestBody);
+    }
+
+    private static RequestHeaders buildRequestHeader(HttpRequest.HttpRequestBuilder builder, BufferedReader reader) throws IOException {
+        RequestHeaders requestHeaders = new RequestHeaders();
+        String line = reader.readLine();
+        while (!StringUtils.EMPTY.equals(line)) {
+            requestHeaders.add(line);
+            line = reader.readLine();
+            logger.debug("RequestHeaders : {}", line);
+        }
+        builder.requestHeaders(requestHeaders);
+        return requestHeaders;
+    }
+
+    private static String buildRequestLine(HttpRequest.HttpRequestBuilder builder, BufferedReader reader) throws IOException {
         String line = reader.readLine();
         logger.debug("Request Line : {}", line);
         RequestLine requestLine = RequestLine.parse(line);
         builder.requestLine(requestLine);
-
-        RequestHeaders requestHeaders = new RequestHeaders();
-        while (!StringUtils.EMPTY.equals(line)) {
-            line = reader.readLine();
-            if (StringUtils.EMPTY.equals(line)) {
-                break;
-            }
-            requestHeaders.add(line);
-            logger.debug("RequestHeaders : {}", line);
-        }
-        builder.requestHeaders(requestHeaders);
-
-        if (requestHeaders.hasContentLength()) {
-            String body = IOUtils.readData(reader, Integer.parseInt(requestHeaders.getHeader(CONTENT_LENGTH)));
-            logger.debug("Request Body : {}", body);
-            RequestBody requestBody = RequestBody.parse(body);
-            builder.requestBody(requestBody);
-        }
-        return builder.build();
+        return line;
     }
 }
