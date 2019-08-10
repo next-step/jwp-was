@@ -3,6 +3,7 @@ package webserver.request;
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import utils.FileUtils;
 
+import java.net.URLDecoder;
 import java.util.Objects;
 
 /**
@@ -18,7 +19,7 @@ public class URI {
 
 	public URI(String path, String queryString) {
 		this.path = path;
-		this.queryString = queryString;
+		this.queryString = URLDecoder.decode(queryString);
 	}
 
 	public static URI parse(String uri) {

@@ -42,7 +42,7 @@ public class RequestHandler implements Runnable {
 
     private void response(DataOutputStream dos, HttpResponse httpResponse, HttpRequest httpRequest) {
         try {
-            String header = httpResponse.getResponseHeader(httpRequest);
+            String header = httpResponse.getResponseHeaderString(httpRequest);
             dos.writeBytes(header);
             logger.info(header);
             dos.write(httpResponse.getBody(), 0, httpResponse.getBody().length);
