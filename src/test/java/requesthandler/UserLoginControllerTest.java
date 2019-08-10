@@ -11,8 +11,6 @@ import webserver.request.RequestLine;
 import webserver.response.HttpResponse;
 import webserver.response.HttpStatus;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * Created by hspark on 2019-08-06.
  */
@@ -27,7 +25,7 @@ class UserLoginControllerTest {
 
     @Test
     void test_로그인_성공() {
-        RequestLine requestLine = RequestLine.parse("GET /users/login HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse("POST /users/login HTTP/1.1");
         RequestBody requestBody = RequestBody.parse("userId=test&password=123");
         HttpRequest httpRequest = HttpRequest.builder().requestLine(requestLine).requestBody(requestBody).build();
         HttpResponse httpResponse = new HttpResponse();
@@ -42,7 +40,7 @@ class UserLoginControllerTest {
 
     @Test
     void test_로그인_실패() {
-        RequestLine requestLine = RequestLine.parse("GET /users/login HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse("POST /users/login HTTP/1.1");
         RequestBody requestBody = RequestBody.parse("userId=test&password=1234");
         HttpRequest httpRequest = HttpRequest.builder().requestLine(requestLine).requestBody(requestBody).build();
         HttpResponse httpResponse = new HttpResponse();

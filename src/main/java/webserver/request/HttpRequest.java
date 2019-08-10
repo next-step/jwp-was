@@ -1,5 +1,7 @@
 package webserver.request;
 
+import webserver.request.enums.HttpMethod;
+
 import java.util.Objects;
 
 /**
@@ -42,6 +44,10 @@ public class HttpRequest {
 
     public String getCookie(String name) {
         return getRequestHeaders().getCookie(name);
+    }
+
+    public HttpMethod getHttpMethod() {
+        return requestLine.getHttpMethod();
     }
 
     public static HttpRequestBuilder builder() {
