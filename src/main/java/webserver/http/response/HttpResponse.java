@@ -1,5 +1,8 @@
 package webserver.http.response;
 
+import webserver.http.common.header.Header;
+import webserver.http.response.header.Cookie;
+
 import java.io.DataOutputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -11,11 +14,12 @@ import java.util.Map;
  */
 public class HttpResponse {
 
-    private static final String COOKIE_FIELD_NAME = "Set-Cookie";
     private static final String HTTP_VERSION = "HTTP/1.1";
     private HttpStatus httpStatus;
     private Map<String, String> headers;
+    private Cookie cookie;
     private DataOutputStream outputStream;
+
 
     public HttpResponse(OutputStream out) {
         headers = new HashMap<>();
@@ -50,7 +54,20 @@ public class HttpResponse {
         return outputStream;
     }
 
-    public void setCookie(String cookie) {
-        headers.put(COOKIE_FIELD_NAME, cookie);
+    public void setCookie(String name, String value) {
+        addCookieToHeader(new Cookie(name, value));
+    }
+
+    public void setCookie(Cookie cookie) {
+        addCookieToHeader(cookie);
+    }
+
+    private void addCookieToHeader(Cookie cookie) {
+        this.cookie = cookie;
+        headers.put(Header.SET_COOKIE.getName(), cookie.toString());
+    }
+
+    public Cookie getCookie() {
+        return cookie;
     }
 }

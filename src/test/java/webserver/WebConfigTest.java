@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.controller.Controller;
-import webserver.http.request.exception.UrlNotFoundException;
+import webserver.http.common.exception.UrlNotFoundException;
 import webserver.http.request.handler.RequestHandler;
 import webserver.http.response.view.ViewRenderer;
 import webserver.http.response.view.ViewType;

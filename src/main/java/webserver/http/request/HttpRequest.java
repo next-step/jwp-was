@@ -1,8 +1,10 @@
 package webserver.http.request;
 
 import utils.IOUtils;
-import webserver.http.request.exception.HttpMethodNotSupportedException;
+import webserver.http.common.header.Header;
+import webserver.http.common.exception.HttpMethodNotSupportedException;
 import webserver.http.request.support.RequestParser;
+import webserver.http.response.header.Cookie;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +21,6 @@ public class HttpRequest {
 
     private static final String END_OF_LINE = "";
     private static final String REQUEST_HEADER_DELIMITER = ": ";
-    private static final String COOKIE_FIELD_NAME = "Cookie";
     private static final String REQUEST_LINE_SEPARATOR = " ";
 
     private HttpMethod httpMethod;
@@ -27,6 +28,7 @@ public class HttpRequest {
     private ParameterMap parameters = new ParameterMap();
     private String httpVersion;
     private Map<String, String> headers;
+    private Map<String, String> cookies;
 
     public HttpRequest(InputStream in) throws IOException {
 
@@ -41,10 +43,16 @@ public class HttpRequest {
             headers.put(line.substring(0, indexOfHeaderKey), line.substring(indexOfHeaderKey + REQUEST_HEADER_DELIMITER.length()));
         }
 
-        String contentLength = headers.get("Content-Length");
+        String contentLength = headers.get(Header.CONTENT_LENGTH.getName());
         if (contentLength != null) {
             parameters.putAll(RequestParser.parseQuery(IOUtils.readData(bufferedReader, Integer.parseInt(contentLength))));
         }
+
+        String cookieString = headers.get(Header.COOKIE.getName());
+        if (cookieString != null) {
+            cookies = Cookie.parse(cookieString);
+        }
+
     }
 
     private void parseRequestLine(String requestLine) {
@@ -64,8 +72,8 @@ public class HttpRequest {
         return headers;
     }
 
-    public String getCookie() {
-        return headers.get(COOKIE_FIELD_NAME);
+    public String getCookie(String name) {
+        return cookies.get(name);
     }
 
     public String getPath() {

@@ -2,7 +2,7 @@ package webserver;
 
 import webserver.http.request.controller.Controller;
 import webserver.http.request.controller.ControllerType;
-import webserver.http.request.exception.UrlNotFoundException;
+import webserver.http.common.exception.UrlNotFoundException;
 import webserver.http.request.handler.RequestHandler;
 import webserver.http.request.handler.RequestHandlerType;
 import webserver.http.request.handler.RequestMappingHandler;

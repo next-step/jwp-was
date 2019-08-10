@@ -1,5 +1,7 @@
 package webserver.http.response;
 
+import webserver.http.common.header.Header;
+
 /**
  * @author : yusik
  * @date : 2019-08-06
@@ -17,7 +19,7 @@ public enum ContentType {
     }
 
     public static String getHeaderFieldName() {
-        return "Content-Type";
+        return Header.CONTENT_TYPE.getName();
     }
 
     public String getMediaType() {

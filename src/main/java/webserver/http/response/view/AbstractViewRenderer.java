@@ -2,7 +2,8 @@ package webserver.http.response.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.request.exception.UrlNotFoundException;
+import webserver.http.common.header.Header;
+import webserver.http.common.exception.UrlNotFoundException;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.HttpStatus;
 
@@ -32,7 +33,7 @@ public abstract class AbstractViewRenderer implements ViewRenderer {
             messageBody = createResponseInfo(modelAndView, httpResponse);
 
             if (messageBody.length > 0) {
-                httpResponse.addHeader("Content-Length", String.valueOf(messageBody.length));
+                httpResponse.addHeader(Header.CONTENT_LENGTH.getName(), String.valueOf(messageBody.length));
             }
 
             writeStream(messageBody, httpResponse);

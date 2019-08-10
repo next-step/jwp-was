@@ -3,7 +3,8 @@ package webserver.http.request;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.request.exception.HttpMethodNotSupportedException;
+import webserver.http.common.exception.HttpMethodNotSupportedException;
+import webserver.http.common.header.Header;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,25 +18,25 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author : yusik
  * @date : 2019-08-10
  */
+@DisplayName("HttpRequest")
 public class HttpRequestTest {
 
     private static String requestHeader;
     private static String noMethodHeader;
 
     @BeforeAll
-    public static void init() {
-        requestHeader =
-                "GET /user/login?userName=123&password=123 HTTP/1.1\r\n" +
-                        "Host: localhost:8080\r\n" +
-                        "Connection: keep-alive\r\n" +
-                        "Cache-Control: max-age=0\r\n" +
-                        "Upgrade-Insecure-Requests: 1\r\n" +
-                        "Cookie: login=true\r\n" +
-                        "\r\n";
+    static void init() {
+        Header.values();
+        requestHeader = new TestRequest.Builder("GET", "/user/login?userName=123&password=123")
+                .addHeader("Host", "localhost:8080")
+                .addHeader("Connection", "keep-alive")
+                .addHeader("Cache-Control", "max-age=0")
+                .addHeader("Upgrade-Insecure-Requests", "1")
+                .addHeader("Cookie", "login=true")
+                .buildString();
 
-        noMethodHeader =
-                "TEST /user/login?username=123&password=123 HTTP/1.1\r\n" +
-                        "\r\n";
+        noMethodHeader = new TestRequest.Builder("TEST", "/user/login?userName=123&password=123")
+                .buildString();
     }
 
     @DisplayName("HTTP 메서드 파싱")
@@ -60,7 +61,7 @@ public class HttpRequestTest {
 
     @DisplayName("예외 테스트: 허용되지 않는 method")
     @Test
-    void notSupportedMethodTest() throws IOException {
+    void notSupportedMethodTest() {
         InputStream in = new ByteArrayInputStream(noMethodHeader.getBytes());
         assertThrows(HttpMethodNotSupportedException.class, () -> new HttpRequest(in));
     }
@@ -80,7 +81,7 @@ public class HttpRequestTest {
     void cookieTest() throws IOException {
         InputStream in = new ByteArrayInputStream(requestHeader.getBytes());
         HttpRequest request = new HttpRequest(in);
-        assertEquals("login=true", request.getCookie());
+        assertEquals("true", request.getCookie("login"));
     }
 
     @DisplayName("http version 파싱")

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.WebConfig;
+import webserver.http.common.header.Header;
 import webserver.http.request.controller.Controller;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.view.ModelAndView;
@@ -32,7 +33,7 @@ public class ControllerTest {
     public static void init() {
         loginController = new TestRequest.Builder("POST", "/user/login")
                 .addHeader("Host", "localhost:8080")
-                .addHeader("Content-Length", "23")
+                .addHeader(Header.CONTENT_LENGTH.getName(), "23")
                 .addBody("userId", "koh")
                 .addBody("password", "123")
                 .buildString();
@@ -57,25 +58,24 @@ public class ControllerTest {
     @DisplayName("로그인 컨트롤러 테스트")
     @Test
     void loginControllerTest() throws IOException {
-        HttpRequest request = new HttpRequest(new ByteArrayInputStream(loginController.getBytes()));
-        HttpResponse response = new HttpResponse(new ByteArrayBuffer());
-
-        Controller controller = WebConfig.getController(request.getPath());
-        ModelAndView mv = controller.process(request, response);
+        ModelAndView mv = runController(loginController);
 
         logger.debug("{}", mv.getViewName());
         assertNotNull(mv);
     }
 
+    private ModelAndView runController(String httpRequest) throws IOException {
+        HttpRequest request = new HttpRequest(new ByteArrayInputStream(httpRequest.getBytes()));
+        HttpResponse response = new HttpResponse(new ByteArrayBuffer());
+        Controller controller = WebConfig.getController(request.getPath());
+
+        return controller.process(request, response);
+    }
+
     @DisplayName("회원가입 컨트롤러 테스트")
     @Test
     void joinControllerTest() throws IOException {
-        HttpRequest request = new HttpRequest(new ByteArrayInputStream(joinController.getBytes()));
-        HttpResponse response = new HttpResponse(new ByteArrayBuffer());
-
-        Controller controller = WebConfig.getController(request.getPath());
-        ModelAndView mv = controller.process(request, response);
-
+        ModelAndView mv = runController(joinController);
         logger.debug("{}", mv.getViewName());
         assertNotNull(mv);
     }
@@ -83,12 +83,7 @@ public class ControllerTest {
     @DisplayName("유저리스트 컨트롤러 테스트")
     @Test
     void userListControllerTest() throws IOException {
-        HttpRequest request = new HttpRequest(new ByteArrayInputStream(userListController.getBytes()));
-        HttpResponse response = new HttpResponse(new ByteArrayBuffer());
-
-        Controller controller = WebConfig.getController(request.getPath());
-        ModelAndView mv = controller.process(request, response);
-
+        ModelAndView mv = runController(userListController);
         logger.debug("{}", mv.getViewName());
         assertNotNull(mv);
     }
@@ -96,12 +91,7 @@ public class ControllerTest {
     @DisplayName("error 컨트롤러 테스트")
     @Test
     void errorControllerTest() throws IOException {
-        HttpRequest request = new HttpRequest(new ByteArrayInputStream(errorController.getBytes()));
-        HttpResponse response = new HttpResponse(new ByteArrayBuffer());
-
-        Controller controller = WebConfig.getController(request.getPath());
-        ModelAndView mv = controller.process(request, response);
-
+        ModelAndView mv = runController(errorController);
         logger.debug("{}", mv.getViewName());
         assertNotNull(mv);
     }
