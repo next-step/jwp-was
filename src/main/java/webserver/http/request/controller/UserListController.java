@@ -5,9 +5,9 @@ import model.User;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.view.ModelAndView;
+import webserver.http.response.view.ViewType;
 
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * @author : yusik
@@ -15,9 +15,13 @@ import java.util.Optional;
  */
 public class UserListController extends AbstractController {
 
+    public UserListController(boolean allowAll) {
+        super(allowAll);
+    }
+
     @Override
     public ModelAndView getProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
         Collection<User> users = DataBase.findAll();
-        return new ModelAndView(users, "/user/list");
+        return new ModelAndView(users, ViewType.TEMPLATE.getPrefix() + "/user/list");
     }
 }

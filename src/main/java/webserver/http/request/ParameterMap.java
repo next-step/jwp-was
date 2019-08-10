@@ -20,8 +20,20 @@ public class ParameterMap {
         parameters.put(field, valueList);
     }
 
+    public void putAll(ParameterMap otherParameters) {
+        parameters.putAll(otherParameters.getOriginalMap());
+    }
+
     public String get(String key) {
+        List<String> parameter = parameters.get(key);
+        if (parameter == null) {
+            return "";
+        }
         return String.join(",", parameters.get(key));
+    }
+
+    public Map<String, List<String>> getOriginalMap() {
+        return parameters;
     }
 
     public boolean isEmpty() {

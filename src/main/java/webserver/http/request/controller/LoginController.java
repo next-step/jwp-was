@@ -3,9 +3,9 @@ package webserver.http.request.controller;
 import db.DataBase;
 import model.User;
 import webserver.http.request.HttpRequest;
-import webserver.http.request.ParameterMap;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.view.ModelAndView;
+import webserver.http.response.view.ViewType;
 
 /**
  * @author : yusik
@@ -13,11 +13,14 @@ import webserver.http.response.view.ModelAndView;
  */
 public class LoginController extends AbstractController {
 
+    public LoginController(boolean allowAll) {
+        super(allowAll);
+    }
+
     @Override
     public ModelAndView postProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
-        ParameterMap parameters = httpRequest.getParameters();
-        User user = DataBase.findUserById(parameters.get("userId"));
-        String password = parameters.get("password");
+        User user = DataBase.findUserById(httpRequest.getParameter("userId"));
+        String password = httpRequest.getParameter("password");
 
         if (user == null || !user.matchPassword(password)) {
             httpResponse.setCookie("logined=false; Path=/");
@@ -26,6 +29,6 @@ public class LoginController extends AbstractController {
 
         httpResponse.setCookie("logined=true; Path=/");
 
-        return new ModelAndView("redirect::/index.html");
+        return new ModelAndView(ViewType.REDIRECT.getPrefix()+ "/index.html");
     }
 }

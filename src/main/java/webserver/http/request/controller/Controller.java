@@ -10,4 +10,5 @@ import webserver.http.response.view.ModelAndView;
  */
 public interface Controller {
     ModelAndView process(HttpRequest httpRequest, HttpResponse httpResponse);
+    boolean isAllowAll();
 }

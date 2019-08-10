@@ -3,9 +3,9 @@ package webserver.http.request.controller;
 import db.DataBase;
 import model.User;
 import webserver.http.request.HttpRequest;
-import webserver.http.request.ParameterMap;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.view.ModelAndView;
+import webserver.http.response.view.ViewType;
 
 /**
  * @author : yusik
@@ -13,19 +13,20 @@ import webserver.http.response.view.ModelAndView;
  */
 public class JoinController extends AbstractController {
 
+    public JoinController(boolean allowAll) {
+        super(allowAll);
+    }
+
     @Override
     public ModelAndView postProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
-        ParameterMap parameters = httpRequest.getParameters();
-
-        System.out.println(parameters.get("userId"));
         User user = new User(
-                parameters.get("userId"),
-                parameters.get("password"),
-                parameters.get("name"),
-                parameters.get("email")
+                httpRequest.getParameter("userId"),
+                httpRequest.getParameter("password"),
+                httpRequest.getParameter("name"),
+                httpRequest.getParameter("email")
         );
 
         DataBase.addUser(user);
-        return new ModelAndView("redirect::/index.html");
+        return new ModelAndView(ViewType.REDIRECT.getPrefix() + "/index.html");
     }
 }

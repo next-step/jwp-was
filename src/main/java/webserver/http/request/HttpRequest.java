@@ -1,12 +1,15 @@
 package webserver.http.request;
 
 import utils.IOUtils;
+import webserver.http.request.exception.HttpMethodNotSupportedException;
+import webserver.http.request.support.RequestParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author : yusik
@@ -17,14 +20,20 @@ public class HttpRequest {
     private static final String END_OF_LINE = "";
     private static final String REQUEST_HEADER_DELIMITER = ": ";
     private static final String COOKIE_FIELD_NAME = "Cookie";
+    private static final String REQUEST_LINE_SEPARATOR = " ";
 
-    private RequestLine requestLine;
+    private HttpMethod httpMethod;
+    private String path;
+    private ParameterMap parameters = new ParameterMap();
+    private String httpVersion;
     private Map<String, String> headers;
 
-    public HttpRequest(BufferedReader bufferedReader) throws IOException {
+    public HttpRequest(InputStream in) throws IOException {
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 
         String line = bufferedReader.readLine();
-        this.requestLine = RequestLine.parse(line);
+        parseRequestLine(line);
 
         headers = new HashMap<>();
         while (!(line = bufferedReader.readLine()).equals(END_OF_LINE)) {
@@ -34,12 +43,21 @@ public class HttpRequest {
 
         String contentLength = headers.get("Content-Length");
         if (contentLength != null) {
-            setQueryString(QueryString.parse(IOUtils.readData(bufferedReader, Integer.parseInt(contentLength))));
+            parameters.putAll(RequestParser.parseQuery(IOUtils.readData(bufferedReader, Integer.parseInt(contentLength))));
         }
     }
 
-    public RequestLine getRequestLine() {
-        return requestLine;
+    private void parseRequestLine(String requestLine) {
+        String[] parsedLines = requestLine.split(REQUEST_LINE_SEPARATOR);
+        if (!HttpMethod.contains(parsedLines[0])) {
+            throw new HttpMethodNotSupportedException();
+        }
+
+        httpMethod = HttpMethod.valueOf(parsedLines[0]);
+        path = RequestParser.parsePathFromRequestURI(parsedLines[1]);
+        parameters.putAll(RequestParser.parseQueryFromRequestURI(parsedLines[1]));
+        httpVersion = parsedLines[2];
+
     }
 
     public Map<String, String> getHeaders() {
@@ -51,21 +69,22 @@ public class HttpRequest {
     }
 
     public String getPath() {
-        return this.getRequestLine().getRequestURI().getPath();
+        return this.path;
     }
 
-    public void setQueryString(QueryString queryString) {
-        RequestURI requestURI = this.getRequestLine().getRequestURI();
-        requestURI.setQueryString(queryString);
+    public String getParameter(String parameterName) {
+        return parameters.get(parameterName);
     }
 
     public ParameterMap getParameters() {
-        return Optional.ofNullable(this.getRequestLine().getRequestURI().getQueryString())
-                .map(QueryString::getParameters)
-                .orElse(null);
+        return parameters;
     }
 
     public HttpMethod getHttpMethod() {
-        return getRequestLine().getMethod();
+        return httpMethod;
+    }
+
+    public String getHttpVersion() {
+        return httpVersion;
     }
 }

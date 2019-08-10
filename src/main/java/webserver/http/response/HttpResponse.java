@@ -1,6 +1,7 @@
 package webserver.http.response;
 
 import java.io.DataOutputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,44 +11,27 @@ import java.util.Map;
  */
 public class HttpResponse {
 
-    private static final String SP = " ";
-    public static final String CRLF = "\r\n";
-    private static final String RESPONSE_HEADER_DELIMITER = ": ";
     private static final String COOKIE_FIELD_NAME = "Set-Cookie";
+    private static final String HTTP_VERSION = "HTTP/1.1";
     private HttpStatus httpStatus;
     private Map<String, String> headers;
-    private String messageBody;
-    private String redirectUrl;
     private DataOutputStream outputStream;
 
-    public HttpResponse(DataOutputStream outputStream) {
+    public HttpResponse(OutputStream out) {
         headers = new HashMap<>();
-        this.outputStream = outputStream;
+        this.outputStream = new DataOutputStream(out);
     }
 
     public void addHeader(String key, String value) {
         headers.put(key, value);
     }
 
-    public String getHeader(String key) {
-        return headers.get(key);
+    public Map<String, String> getHeaders() {
+        return headers;
     }
 
-    public String getHeaders() {
-        StringBuilder builder = new StringBuilder();
-        for (Map.Entry<String, String> header : headers.entrySet()) {
-            builder
-                    .append(header.getKey())
-                    .append(RESPONSE_HEADER_DELIMITER)
-                    .append(header.getValue())
-                    .append(CRLF);
-        }
-        return builder.toString();
-    }
-
-    // Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
-    public String getStatusLine() {
-        return "HTTP/1.1" + SP + getHttpStatus().getCode() + SP + getHttpStatus().getReasonPhrase() + CRLF;
+    public String getHttpVersion() {
+        return HTTP_VERSION;
     }
 
     public HttpStatus getHttpStatus() {
@@ -62,20 +46,8 @@ public class HttpResponse {
         addHeader(ContentType.getHeaderFieldName(), contentType.getMediaType());
     }
 
-    public String getMessageBody() {
-        return messageBody;
-    }
-
     public DataOutputStream getOutputStream() {
         return outputStream;
-    }
-
-    public String getRedirectUrl() {
-        return redirectUrl;
-    }
-
-    public void sendRedirect(String redirectUrl) {
-        this.redirectUrl = redirectUrl;
     }
 
     public void setCookie(String cookie) {
