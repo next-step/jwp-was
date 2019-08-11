@@ -14,16 +14,10 @@ public class RequestHeaders {
     public static final String COOKIE = "Cookie";
 
     private Map<String, String> headers = new HashMap<>();
-    private Cookies cookies = new Cookies();
 
     public String getHeader(String name) {
         return headers.get(name);
     }
-
-    public Cookies getCookies() {
-        return cookies;
-    }
-
     public boolean hasContentLength() {
         return Objects.nonNull(headers.get(CONTENT_LENGTH));
     }
@@ -32,10 +26,6 @@ public class RequestHeaders {
         int delimiterIndex = rawHeader.indexOf(HEADER_DELIMITER);
         String name = rawHeader.substring(BEGIN_INDEX, delimiterIndex);
         String value = rawHeader.substring(delimiterIndex + 1);
-        if (COOKIE.equals(name)){
-            this.cookies = Cookies.parse(value);
-            return;
-        }
         headers.put(name.trim(), value.trim());
     }
 

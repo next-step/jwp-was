@@ -2,35 +2,33 @@ package requesthandler;
 
 import db.DataBase;
 import model.User;
-import webserver.controller.Controller;
+import webserver.controller.AbstractController;
 import webserver.request.Cookie;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
+import static java.lang.Boolean.*;
+import static java.util.Objects.nonNull;
+
 /**
  * Created by hspark on 2019-08-05.
  */
-public class UserLoginController implements Controller {
+public class UserLoginController extends AbstractController {
     public static final String URL = "/user/login";
-
+    private static final String COOKIE_LOGIN_KEY = "logined";
 
     @Override
-    public void action(HttpRequest httpRequest, HttpResponse httpResponse) {
-        String userId = httpRequest.getRequestBody().getOne("userId");
-        String password = httpRequest.getRequestBody().getOne("password");
+    public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+        String userId = httpRequest.getParameter("userId");
+        String password = httpRequest.getParameter("password");
 
         User user = DataBase.findUserById(userId);
-        if (user.matchPassword(password)) {
-            httpResponse.addCookie(new Cookie("logined", "true"));
+        if (nonNull(user) && user.matchPassword(password)) {
+            httpResponse.addCookie(new Cookie(COOKIE_LOGIN_KEY, TRUE.toString()));
             httpResponse.redirect("/index.html");
             return;
         }
         httpResponse.redirect("/user/login_failed.html");
-        httpResponse.addCookie(new Cookie("logined", "false"));
-    }
-
-    @Override
-    public String getRequestUrl() {
-        return URL;
+        httpResponse.addCookie(new Cookie(COOKIE_LOGIN_KEY, FALSE.toString()));
     }
 }

@@ -19,31 +19,43 @@ public class HttpRequestFactory {
     private static final Logger logger = LoggerFactory.getLogger(HttpRequestFactory.class);
 
     public static HttpRequest create(InputStream in) throws IOException {
-
         HttpRequest.HttpRequestBuilder builder = HttpRequest.builder();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        String line = reader.readLine();
-        logger.debug("Request Line : {}", line);
-        RequestLine requestLine = RequestLine.parse(line);
-        builder.requestLine(requestLine);
 
-        RequestHeaders requestHeaders = new RequestHeaders();
-        while (!StringUtils.EMPTY.equals(line)) {
-            line = reader.readLine();
-            if (StringUtils.EMPTY.equals(line)) {
-                break;
-            }
-            requestHeaders.add(line);
-            logger.debug("RequestHeaders : {}", line);
-        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+        builder.requestLine(createRequestLine(reader));
+
+        RequestHeaders requestHeaders = createdRequestHeaders(reader);
         builder.requestHeaders(requestHeaders);
 
         if (requestHeaders.hasContentLength()) {
-            String body = IOUtils.readData(reader, Integer.parseInt(requestHeaders.getHeader(CONTENT_LENGTH)));
-            logger.debug("Request Body : {}", body);
-            RequestBody requestBody = RequestBody.parse(body);
-            builder.requestBody(requestBody);
+            int contentLength = Integer.parseInt(requestHeaders.getHeader(CONTENT_LENGTH));
+            builder.requestBody(createRequestBody(reader, contentLength));
         }
+
         return builder.build();
+    }
+
+    private static RequestLine createRequestLine(BufferedReader reader) throws IOException {
+        String line = reader.readLine();
+        logger.debug("Request Line : {}", line);
+        return RequestLine.parse(line);
+    }
+
+    private static String createRequestBody(BufferedReader reader, int contentLength) throws IOException {
+        String body = IOUtils.readData(reader, contentLength);
+        logger.debug("Request Body : {}", body);
+        return body;
+    }
+
+    private static RequestHeaders createdRequestHeaders(BufferedReader reader) throws IOException {
+        RequestHeaders requestHeaders = new RequestHeaders();
+        String line = reader.readLine();
+        while (!StringUtils.EMPTY.equals(line)) {
+            logger.debug("RequestHeaders : {}", line);
+            requestHeaders.add(line);
+            line = reader.readLine();
+        }
+        return requestHeaders;
     }
 }

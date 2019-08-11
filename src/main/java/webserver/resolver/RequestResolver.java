@@ -14,7 +14,7 @@ public class RequestResolver {
 
 
     public void resolve(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (httpRequest.getRequestLine().getRequestUrl().isFile()) {
+        if (httpRequest.getRequestUrl().isFile()) {
             resourceResolver.resolve(httpRequest, httpResponse);
             return;
         }

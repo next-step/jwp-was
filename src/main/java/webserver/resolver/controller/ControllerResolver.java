@@ -18,12 +18,9 @@ public class ControllerResolver implements Resolver {
     private static final Map<String, Controller> CONTROLLERS = new HashMap<>();
 
     static {
-        Controller userSignupController = new UserSignupController();
-        Controller userLoginController = new UserLoginController();
-        Controller userListController = new UserListController();
-        CONTROLLERS.put(userSignupController.getRequestUrl(), userSignupController);
-        CONTROLLERS.put(userLoginController.getRequestUrl(), userLoginController);
-        CONTROLLERS.put(userListController.getRequestUrl(), userListController);
+        CONTROLLERS.put(UserSignupController.URL, new UserSignupController());
+        CONTROLLERS.put(UserLoginController.URL, new UserLoginController());
+        CONTROLLERS.put(UserListController.URL, new UserListController());
     }
 
     @Override

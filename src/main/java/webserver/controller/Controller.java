@@ -8,5 +8,4 @@ import webserver.response.HttpResponse;
  */
 public interface Controller {
     void action(HttpRequest httpRequest, HttpResponse httpResponse);
-    String getRequestUrl();
 }

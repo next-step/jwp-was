@@ -44,4 +44,8 @@ public class RequestLine {
 				", httpVersion=" + httpVersion +
 				'}';
 	}
+
+    public boolean isEqualsHttpMethod(HttpMethod httpMethod) {
+        return this.httpMethod == httpMethod;
+    }
 }

@@ -18,19 +18,6 @@ public class Cookies {
     public Cookies() {
     }
 
-    private Cookies(List<Cookie> cookies) {
-        this.cookies = cookies;
-    }
-
-    public static Cookies parse(String rawCookie) {
-        List<Cookie> cookies = Arrays.stream(rawCookie.split(SEMICOLON))
-                .map(it -> it.split(EQUAL))
-                .map(it -> new Cookie(it[0].trim(), it[1].trim()))
-                .collect(Collectors.toList());
-
-        return new Cookies(cookies);
-    }
-
     public String getCookie(String name) {
         return cookies.stream()
                 .filter(it -> it.isEqualName(name))
@@ -41,6 +28,17 @@ public class Cookies {
 
     public void addCookie(Cookie cookie) {
         cookies.add(cookie);
+    }
+
+    protected void addCookieByRawString(String rawCookie) {
+        this.cookies.addAll(parse(rawCookie));
+    }
+
+    private List<Cookie> parse(String rawCookie) {
+        return Arrays.stream(rawCookie.split(SEMICOLON))
+                .map(it -> it.split(EQUAL))
+                .map(it -> new Cookie(it[0].trim(), it[1].trim()))
+                .collect(Collectors.toList());
     }
 
     public boolean hasCookie() {

@@ -3,7 +3,7 @@ package webserver.request;
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import utils.FileUtils;
 
-import java.util.List;
+import java.net.URLDecoder;
 import java.util.Objects;
 
 /**
@@ -16,12 +16,10 @@ public class URI {
 
 	private String path;
 	private String queryString;
-	private RequestParameters requestParameters;
 
 	public URI(String path, String queryString) {
 		this.path = path;
-		this.queryString = queryString;
-		this.requestParameters = RequestParameters.parse(queryString);
+		this.queryString = URLDecoder.decode(queryString);
 	}
 
 	public static URI parse(String uri) {
@@ -37,14 +35,6 @@ public class URI {
 
 	public String getQueryString() {
 		return queryString;
-	}
-
-	public String get(String key) {
-		return requestParameters.getOne(key);
-	}
-
-	public List<String> getAll(String key) {
-		return requestParameters.getAll(key);
 	}
 
 	public boolean isFile() {
@@ -63,17 +53,13 @@ public class URI {
 
 		if (!Objects.equals(path, uri.path))
 			return false;
-		if (!Objects.equals(queryString, uri.queryString))
-			return false;
-		return Objects.equals(requestParameters, uri.requestParameters);
-
+		return Objects.equals(queryString, uri.queryString);
 	}
 
 	@Override
 	public int hashCode() {
 		int result = path != null ? path.hashCode() : 0;
 		result = 31 * result + (queryString != null ? queryString.hashCode() : 0);
-		result = 31 * result + (requestParameters != null ? requestParameters.hashCode() : 0);
 		return result;
 	}
 
@@ -82,7 +68,6 @@ public class URI {
 		return "URI{" +
 				"path='" + path + '\'' +
 				", queryString='" + queryString + '\'' +
-				", requestParameters=" + requestParameters +
 				'}';
 	}
 }

@@ -10,15 +10,22 @@ import java.util.stream.Collectors;
  */
 
 public class RequestParameters {
-	private List<Parameter> parameters;
+	private List<Parameter> parameters = new ArrayList<>();
+
+	public RequestParameters() {
+	}
 
 	public RequestParameters(List<Parameter> parameters) {
 		this.parameters = parameters;
 	}
 
-	public static RequestParameters parse(String rawParameter) {
+	protected static RequestParameters parse(String rawParameter) {
 		return new RequestParameters(ParameterParser.parseParameter(rawParameter));
 	}
+
+	public void addParameter(String rawParameter) {
+	    this.parameters.addAll(ParameterParser.parseParameter(rawParameter));
+    }
 
 	public String getOne(String key) {
 		return parameters.stream().

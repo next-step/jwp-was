@@ -20,8 +20,14 @@ class UserListControllerTest {
 
 
         RequestLine requestLine = RequestLine.parse("GET /users/list HTTP/1.1");
-        HttpRequest httpRequest = HttpRequest.builder().requestLine(requestLine).build();
-        HttpResponse httpResponse = new HttpResponse();
+        RequestHeaders headers = new RequestHeaders();
+        headers.add("Accept: text/html");
+        HttpRequest httpRequest = HttpRequest
+                .builder()
+                .requestLine(requestLine)
+                .requestHeaders(headers)
+                .build();
+        HttpResponse httpResponse = new HttpResponse(httpRequest);
 
         userListController.action(httpRequest, httpResponse);
 
@@ -36,12 +42,13 @@ class UserListControllerTest {
 
         RequestLine requestLine = RequestLine.parse("GET /users/list HTTP/1.1");
         RequestHeaders requestHeaders = new RequestHeaders();
+        requestHeaders.add("Accept: text/html");
         requestHeaders.add("Cookie: logined=true");
         HttpRequest httpRequest = HttpRequest.builder()
                 .requestLine(requestLine)
                 .requestHeaders(requestHeaders)
                 .build();
-        HttpResponse httpResponse = new HttpResponse();
+        HttpResponse httpResponse = new HttpResponse(httpRequest);
 
         userListController.action(httpRequest, httpResponse);
 
