@@ -3,6 +3,7 @@ package model.http;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -34,6 +35,12 @@ public class Query {
     private static boolean validatePattern(String queryString) {
         Matcher matcher = PATTERN.matcher(queryString);
         return matcher.find() && queryString.length() == matcher.group().length();
+    }
+
+    public Optional<QueryParameter> findByName(String name) {
+        return parameters.stream()
+                .filter(queryParameter -> queryParameter.isEqualName(name))
+                .findFirst();
     }
 
     @Override

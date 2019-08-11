@@ -8,7 +8,6 @@ import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.Optional;
 
@@ -43,7 +42,8 @@ public class RequestHandler implements Runnable {
             return ControllerFinder.findController(path)
                     .flatMap(method -> {
                         try {
-                            return ResourceFinder.find(UriPath.of(method.invoke(method.getDeclaringClass().newInstance()).toString() + ".html"));
+                            String returnResourcePath = (String) ControllerMethodInvoker.invoke(method, requestLine.getRequestUri().getQuery());
+                            return ResourceFinder.find(UriPath.of(returnResourcePath + ".html"));
                         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
                             return Optional.empty();
                         }

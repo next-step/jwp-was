@@ -10,12 +10,12 @@ public class QueryParameter {
     public static final Pattern VALUE_PATTERN = Pattern.compile("[a-zA-Z0-9\\-._~%!$'()*+,;=@]+");
     public static final Pattern PATTERN = Pattern.compile(KEY_PATTERN + KEY_VALUE_SPLITTER + VALUE_PATTERN);
 
-    private String key;
+    private String name;
     private String value;
 
-    private QueryParameter(String key, String value) {
-        this.key = key.toLowerCase();
-        this.value = value.toLowerCase();
+    private QueryParameter(String name, String value) {
+        this.name = name.toLowerCase();
+        this.value = value;
     }
 
     public static QueryParameter of(String key, String value) {
@@ -27,6 +27,14 @@ public class QueryParameter {
         if (!validatePattern(parameter)) throw new IllegalArgumentException("wrong query parameter pattern");
         String[] parts = parameter.split(KEY_VALUE_SPLITTER);
         return of(parts[0], parts[1]);
+    }
+
+    public boolean isEqualName(String name) {
+        return this.name.equals(name);
+    }
+
+    public String getValue() {
+        return value;
     }
 
     private static boolean validatePattern(String key, String value) {
@@ -49,19 +57,19 @@ public class QueryParameter {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         QueryParameter that = (QueryParameter) o;
-        return Objects.equals(key, that.key) &&
+        return Objects.equals(name, that.name) &&
                 Objects.equals(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(key, value);
+        return Objects.hash(name, value);
     }
 
     @Override
     public String toString() {
         return "QueryParameter{" +
-                "key='" + key + '\'' +
+                "name='" + name + '\'' +
                 ", value='" + value + '\'' +
                 '}';
     }
