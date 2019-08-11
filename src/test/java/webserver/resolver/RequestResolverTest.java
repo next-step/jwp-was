@@ -22,7 +22,7 @@ class RequestResolverTest {
     void test_index() throws Exception {
         InputStream in = TestHttpMessageLoader.load("Http_GET_index.txt");
         HttpRequest httpRequest = HttpRequestFactory.create(in);
-        HttpResponse httpResponse = new HttpResponse();
+        HttpResponse httpResponse = new HttpResponse(httpRequest);
         requestResolver.resolve(httpRequest, httpResponse);
 
         Assertions.assertThat(httpResponse.getHttpStatus()).isEqualTo(HttpStatus.OK);
@@ -30,9 +30,10 @@ class RequestResolverTest {
 
     @Test
     void test_login_fail() throws Exception {
+        DataBase.delete("phs1116");
         InputStream in = TestHttpMessageLoader.load("Http_POST_login.txt");
         HttpRequest httpRequest = HttpRequestFactory.create(in);
-        HttpResponse httpResponse = new HttpResponse();
+        HttpResponse httpResponse = new HttpResponse(httpRequest);
         requestResolver.resolve(httpRequest, httpResponse);
 
         Assertions.assertThat(httpResponse.getHttpStatus()).isEqualTo(HttpStatus.FOUND);
@@ -45,7 +46,7 @@ class RequestResolverTest {
         DataBase.addUser(user);
         InputStream in = TestHttpMessageLoader.load("Http_POST_login.txt");
         HttpRequest httpRequest = HttpRequestFactory.create(in);
-        HttpResponse httpResponse = new HttpResponse();
+        HttpResponse httpResponse = new HttpResponse(httpRequest);
         requestResolver.resolve(httpRequest, httpResponse);
 
         Assertions.assertThat(httpResponse.getHttpStatus()).isEqualTo(HttpStatus.FOUND);
@@ -56,7 +57,7 @@ class RequestResolverTest {
     void test_signup() throws Exception {
         InputStream in = TestHttpMessageLoader.load("Http_GET_signUp.txt");
         HttpRequest httpRequest = HttpRequestFactory.create(in);
-        HttpResponse httpResponse = new HttpResponse();
+        HttpResponse httpResponse = new HttpResponse(httpRequest);
         requestResolver.resolve(httpRequest, httpResponse);
 
 

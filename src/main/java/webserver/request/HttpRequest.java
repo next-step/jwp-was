@@ -1,6 +1,7 @@
 package webserver.request;
 
 import webserver.request.enums.HttpMethod;
+import webserver.request.enums.HttpVersion;
 
 import java.util.Objects;
 
@@ -8,28 +9,40 @@ import java.util.Objects;
  * Created by hspark on 2019-08-04.
  */
 public class HttpRequest {
-    private RequestLine requestLine;
+    private HttpMethod httpMethod;
+    private HttpVersion httpVersion;
+    private URI requestUrl;
     private RequestHeaders requestHeaders;
     private RequestParameters requestParameters;
     private Cookies cookies;
 
-    public HttpRequest(RequestLine requestLine, RequestHeaders requestHeaders, RequestParameters requestParameters, Cookies cookies) {
-        this.requestLine = requestLine;
+    private HttpRequest(RequestLine requestLine,
+                        RequestHeaders requestHeaders,
+                        RequestParameters requestParameters,
+                        Cookies cookies) {
+        this.httpMethod = requestLine.getHttpMethod();
+        this.httpVersion = requestLine.getHttpVersion();
+        this.requestUrl = requestLine.getRequestUrl();
         this.requestHeaders = requestHeaders;
         this.requestParameters = requestParameters;
         this.cookies = cookies;
-    }
-
-    public RequestLine getRequestLine() {
-        return requestLine;
     }
 
     public RequestHeaders getRequestHeaders() {
         return requestHeaders;
     }
 
+
+    public HttpVersion getHttpVersion() {
+        return httpVersion;
+    }
+
+    public URI getRequestUrl() {
+        return requestUrl;
+    }
+
     public String getPath() {
-        return requestLine.getRequestUrl().getPath();
+        return requestUrl.getPath();
     }
 
     public String getParameter(String name) {
@@ -45,7 +58,7 @@ public class HttpRequest {
     }
 
     public HttpMethod getHttpMethod() {
-        return requestLine.getHttpMethod();
+        return httpMethod;
     }
 
     public static HttpRequestBuilder builder() {
@@ -92,7 +105,9 @@ public class HttpRequest {
     @Override
     public String toString() {
         return "HttpRequest{" +
-                "requestLine=" + requestLine +
+                "httpMethod=" + httpMethod +
+                ", httpVersion=" + httpVersion +
+                ", requestUrl=" + requestUrl +
                 ", requestHeaders=" + requestHeaders +
                 ", requestParameters=" + requestParameters +
                 ", cookies=" + cookies +

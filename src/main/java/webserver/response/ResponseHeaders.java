@@ -15,6 +15,10 @@ public class ResponseHeaders {
         return headers.get(name);
     }
 
+    public void addHeader(String name, String value) {
+        headers.put(name, value);
+    }
+
     public void addLocation(String value) {
         headers.put(LOCATION, value);
     }

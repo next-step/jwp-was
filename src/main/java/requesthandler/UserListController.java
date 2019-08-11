@@ -19,7 +19,7 @@ public class UserListController extends AbstractController {
     @Override
     public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
         String logined = httpRequest.getCookie(LOGIN_COOKIE_NAME);
-        if (isLogined(logined)) {
+        if (!isLogined(logined)) {
             httpResponse.redirect("/index.html");
             return;
         }
@@ -30,6 +30,6 @@ public class UserListController extends AbstractController {
     }
 
     private boolean isLogined(String logined) {
-        return !LOGIN_VALUE.equals(logined);
+        return Boolean.parseBoolean(logined);
     }
 }

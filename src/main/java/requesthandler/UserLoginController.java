@@ -7,6 +7,7 @@ import webserver.request.Cookie;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
+import static java.lang.Boolean.*;
 import static java.util.Objects.nonNull;
 
 /**
@@ -14,6 +15,7 @@ import static java.util.Objects.nonNull;
  */
 public class UserLoginController extends AbstractController {
     public static final String URL = "/user/login";
+    private static final String COOKIE_LOGIN_KEY = "logined";
 
     @Override
     public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
@@ -22,11 +24,11 @@ public class UserLoginController extends AbstractController {
 
         User user = DataBase.findUserById(userId);
         if (nonNull(user) && user.matchPassword(password)) {
-            httpResponse.addCookie(new Cookie("logined", "true"));
+            httpResponse.addCookie(new Cookie(COOKIE_LOGIN_KEY, TRUE.toString()));
             httpResponse.redirect("/index.html");
             return;
         }
         httpResponse.redirect("/user/login_failed.html");
-        httpResponse.addCookie(new Cookie("logined", "false"));
+        httpResponse.addCookie(new Cookie(COOKIE_LOGIN_KEY, FALSE.toString()));
     }
 }

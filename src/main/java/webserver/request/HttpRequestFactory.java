@@ -23,32 +23,32 @@ public class HttpRequestFactory {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
-        buildRequestLine(builder, reader);
-        RequestHeaders requestHeaders = buildRequestHeader(builder, reader);
+        builder.requestLine(createRequestLine(reader));
+
+        RequestHeaders requestHeaders = createdRequestHeaders(reader);
+        builder.requestHeaders(requestHeaders);
 
         if (requestHeaders.hasContentLength()) {
             int contentLength = Integer.parseInt(requestHeaders.getHeader(CONTENT_LENGTH));
-            buildRequestBody(builder, reader, contentLength);
+            builder.requestBody(createRequestBody(reader, contentLength));
         }
 
         return builder.build();
     }
 
-    private static String buildRequestLine(HttpRequest.HttpRequestBuilder builder, BufferedReader reader) throws IOException {
+    private static RequestLine createRequestLine(BufferedReader reader) throws IOException {
         String line = reader.readLine();
         logger.debug("Request Line : {}", line);
-        RequestLine requestLine = RequestLine.parse(line);
-        builder.requestLine(requestLine);
-        return line;
+        return RequestLine.parse(line);
     }
 
-    private static void buildRequestBody(HttpRequest.HttpRequestBuilder builder, BufferedReader reader, int contentLength) throws IOException {
+    private static String createRequestBody(BufferedReader reader, int contentLength) throws IOException {
         String body = IOUtils.readData(reader, contentLength);
         logger.debug("Request Body : {}", body);
-        builder.requestBody(body);
+        return body;
     }
 
-    private static RequestHeaders buildRequestHeader(HttpRequest.HttpRequestBuilder builder, BufferedReader reader) throws IOException {
+    private static RequestHeaders createdRequestHeaders(BufferedReader reader) throws IOException {
         RequestHeaders requestHeaders = new RequestHeaders();
         String line = reader.readLine();
         while (!StringUtils.EMPTY.equals(line)) {
@@ -56,7 +56,6 @@ public class HttpRequestFactory {
             requestHeaders.add(line);
             line = reader.readLine();
         }
-        builder.requestHeaders(requestHeaders);
         return requestHeaders;
     }
 }

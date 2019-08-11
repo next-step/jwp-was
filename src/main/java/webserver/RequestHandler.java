@@ -29,24 +29,12 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = HttpRequestFactory.create(in);
-            HttpResponse httpResponse = new HttpResponse();
+            HttpResponse httpResponse = new HttpResponse(httpRequest);
 
             DataOutputStream dos = new DataOutputStream(out);
             resolver.resolve(httpRequest, httpResponse);
 
-            response(dos, httpResponse, httpRequest);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response(DataOutputStream dos, HttpResponse httpResponse, HttpRequest httpRequest) {
-        try {
-            String header = httpResponse.getResponseHeaderString(httpRequest);
-            dos.writeBytes(header);
-            logger.info(header);
-            dos.write(httpResponse.getBody(), 0, httpResponse.getBody().length);
-            dos.flush();
+            httpResponse.response(dos);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
