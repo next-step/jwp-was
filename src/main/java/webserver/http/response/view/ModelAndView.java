@@ -5,45 +5,27 @@ package webserver.http.response.view;
  * @date : 2019-08-07
  */
 public class ModelAndView {
-
-    private static final String PREFIX_REDIRECT = "redirect::";
     private Object model;
-    private String view;
+    private String viewName;
 
-    public ModelAndView(String view) {
-        this.view = view;
-    }
-
-    public ModelAndView(Object model, String view) {
+    public ModelAndView(Object model, String viewName) {
         this.model = model;
-        this.view = view;
+        this.viewName = viewName;
     }
 
-    public ModelAndView() {
-        this.view = "";
+    public ModelAndView(String viewName) {
+        this.viewName = viewName;
     }
 
     public Object getModel() {
         return model;
     }
 
-    public void setModel(Object model) {
-        this.model = model;
+    public String getViewName() {
+        return viewName;
     }
 
-    public String getView() {
-        return view;
-    }
-
-    public void setView(String view) {
-        this.view = view;
-    }
-
-    public boolean isRedirect() {
-        return view.startsWith(PREFIX_REDIRECT);
-    }
-
-    public String getRedirectUrl() {
-        return view.substring(PREFIX_REDIRECT.length());
+    public String getOriginalViewName(String prefix) {
+        return viewName.substring(prefix.length());
     }
 }

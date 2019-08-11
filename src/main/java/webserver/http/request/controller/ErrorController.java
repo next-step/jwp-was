@@ -10,8 +10,12 @@ import webserver.http.response.view.ModelAndView;
  */
 public class ErrorController extends AbstractController {
 
+    public ErrorController(boolean allowAll) {
+        super(allowAll);
+    }
+
     @Override
     public ModelAndView process(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return new ModelAndView(DEFAULT_ERROR_VIEW);
+        return new ModelAndView(DEFAULT_ERROR_TEMPLATE);
     }
 }

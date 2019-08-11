@@ -4,13 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.handler.RequestHandler;
-import webserver.http.request.handler.RequestHandlerType;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.view.ModelAndView;
 import webserver.http.response.view.ViewRenderer;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
-import java.util.regex.Matcher;
 
 public class RequestDispatcher implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestDispatcher.class);
@@ -26,30 +27,19 @@ public class RequestDispatcher implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
-            HttpRequest httpRequest = new HttpRequest(new BufferedReader(new InputStreamReader(in)));
-            HttpResponse httpResponse = new HttpResponse(new DataOutputStream(out));
+            HttpRequest httpRequest = new HttpRequest(in);
+            HttpResponse httpResponse = new HttpResponse(out);
 
             // get handler
-            RequestHandler handler = getHandler(httpRequest);
+            RequestHandler handler = WebConfig.getHandler(httpRequest.getPath());
 
             // view: static resource, template engine, json
-            ViewRenderer viewRenderer = handler.handle(httpRequest, httpResponse);
-            viewRenderer.render();
+            ModelAndView modelAndView = handler.handle(httpRequest, httpResponse);
+            ViewRenderer viewRenderer = WebConfig.getViewRenderer(modelAndView.getViewName());
+            viewRenderer.render(modelAndView, httpResponse);
 
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    private RequestHandler getHandler(HttpRequest httpRequest) {
-
-        String requestPath = httpRequest.getPath();
-        for (RequestHandlerType handlerType: RequestHandlerType.values()) {
-            Matcher matcher = handlerType.getPattern().matcher(requestPath);
-            if (matcher.find()) {
-                return handlerType.getHandler();
-            }
-        }
-        return RequestHandlerType.STATIC_RESOURCE.getHandler();
     }
 }

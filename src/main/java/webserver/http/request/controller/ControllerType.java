@@ -26,15 +26,11 @@ public enum ControllerType {
     }
 
     public Controller getController() {
-        return creator.create();
-    }
-
-    public boolean isAllowAll() {
-        return allowAll;
+        return creator.create(this.allowAll);
     }
 
     @FunctionalInterface
     public interface ControllerCreator {
-        Controller create();
+        Controller create(boolean allowAll);
     }
 }

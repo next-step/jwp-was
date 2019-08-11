@@ -14,28 +14,22 @@ import java.net.URISyntaxException;
  */
 public class StaticResourceViewRenderer extends AbstractViewRenderer {
 
-    private String path;
     private String prefix;
 
-    public StaticResourceViewRenderer(HttpResponse httpResponse, String path, String prefix) {
-        super(httpResponse);
-        this.path = path;
+    public StaticResourceViewRenderer(String prefix) {
         this.prefix = prefix;
     }
 
     @Override
-    public void render() {
-        try {
-            byte[] body = FileIoUtils.loadFileFromClasspath("." + prefix + path);
-            if (path.contains(".css")) {
-                httpResponse.setContentType(ContentType.CSS);
-            }
-            httpResponse.setHttpStatus(HttpStatus.OK);
-            writeHeader(body.length);
-            writeBody(body);
-            flush();
-        } catch (IOException | URISyntaxException e) {
-            witeErrorPage(e);
+    protected byte[] createResponseInfo(ModelAndView modelAndView, HttpResponse httpResponse) throws IOException, URISyntaxException {
+        String resourcePath = modelAndView.getOriginalViewName(prefix);
+        byte[] body = FileIoUtils.loadFileFromClasspath("." + resourcePath);
+
+        if (resourcePath.contains(".css")) {
+            httpResponse.setContentType(ContentType.CSS);
         }
+        httpResponse.setHttpStatus(HttpStatus.OK);
+
+        return body;
     }
 }

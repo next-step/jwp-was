@@ -3,9 +3,12 @@ package webserver.http.request.controller;
 import db.DataBase;
 import model.User;
 import webserver.http.request.HttpRequest;
-import webserver.http.request.ParameterMap;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.header.Cookie;
 import webserver.http.response.view.ModelAndView;
+import webserver.http.response.view.ViewType;
+
+import static webserver.http.request.handler.RequestMappingHandler.LOGIN_COOKIE;
 
 /**
  * @author : yusik
@@ -13,19 +16,26 @@ import webserver.http.response.view.ModelAndView;
  */
 public class LoginController extends AbstractController {
 
+    public LoginController(boolean allowAll) {
+        super(allowAll);
+    }
+
     @Override
     public ModelAndView postProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
-        ParameterMap parameters = httpRequest.getParameters();
-        User user = DataBase.findUserById((String) parameters.get("userId"));
-        String password = (String) parameters.get("password");
+        User user = DataBase.findUserById(httpRequest.getParameter("userId"));
+        String password = httpRequest.getParameter("password");
 
         if (user == null || !user.matchPassword(password)) {
-            httpResponse.setCookie("logined=false; Path=/");
-            return new ModelAndView("redirect::/user/login_failed.html");
+            Cookie cookie = new Cookie(LOGIN_COOKIE, "false");
+            cookie.setPath("/");
+            httpResponse.setCookie(cookie);
+            return new ModelAndView(ViewType.REDIRECT.getPrefix() + "/user/login_failed.html");
         }
 
-        httpResponse.setCookie("logined=true; Path=/");
+        Cookie cookie = new Cookie(LOGIN_COOKIE, "true");
+        cookie.setPath("/");
+        httpResponse.setCookie(cookie);
 
-        return new ModelAndView("redirect::/index.html");
+        return new ModelAndView(ViewType.REDIRECT.getPrefix() + "/index.html");
     }
 }

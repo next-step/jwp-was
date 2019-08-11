@@ -2,11 +2,15 @@ package webserver.http.response.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.common.header.Header;
+import webserver.http.common.exception.UrlNotFoundException;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.HttpStatus;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Map;
 
 /**
  * @author : yusik
@@ -15,47 +19,83 @@ import java.io.IOException;
 public abstract class AbstractViewRenderer implements ViewRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractViewRenderer.class);
-    final HttpResponse httpResponse;
-    private final DataOutputStream outputStream;
+    private static final String SP = " ";
+    private static final String CRLF = "\r\n";
+    private static final String RESPONSE_HEADER_DELIMITER = ": ";
+    protected byte[] EMPTY_BODY = new byte[0];
 
-    public AbstractViewRenderer(HttpResponse httpResponse) {
-        this.httpResponse = httpResponse;
-        this.outputStream = httpResponse.getOutputStream();
-    }
+    @Override
+    public void render(ModelAndView modelAndView, HttpResponse httpResponse) {
 
-    void writeHeader(int lengthOfBodyContent) {
+        byte[] messageBody = EMPTY_BODY;
         try {
-            httpResponse.addHeader("Content-Length", String.valueOf(lengthOfBodyContent));
-            outputStream.writeBytes(httpResponse.getStatusLine());
-            outputStream.writeBytes(httpResponse.getHeaders());
-            outputStream.writeBytes(HttpResponse.CRLF);
+
+            messageBody = createResponseInfo(modelAndView, httpResponse);
+
+            if (messageBody.length > 0) {
+                httpResponse.addHeader(Header.CONTENT_LENGTH.getName(), String.valueOf(messageBody.length));
+            }
+
+            writeStream(messageBody, httpResponse);
+
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error("body length : {}", messageBody.length, e);
+            writeErrorPage(e, httpResponse);
+        } catch (URISyntaxException e) {
+            throw new UrlNotFoundException();
         }
     }
 
-    void writeBody(byte[] body) {
-        try {
-            outputStream.write(body, 0, body.length);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+    void writeStream(byte[] messageBody, HttpResponse httpResponse) throws IOException {
+
+        DataOutputStream outputStream = httpResponse.getOutputStream();
+
+        // header
+        outputStream.writeBytes(createStatusLine(httpResponse));
+        outputStream.writeBytes(createHeaders(httpResponse.getHeaders()));
+        outputStream.writeBytes(CRLF);
+
+        // body
+        if (messageBody.length > 0) {
+            outputStream.write(messageBody, 0, messageBody.length);
         }
     }
 
-    void flush() {
+    private String createStatusLine(HttpResponse httpResponse) {
+        String version = httpResponse.getHttpVersion();
+        HttpStatus status = httpResponse.getHttpStatus();
+
+        // Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
+        return String.join(SP, version, String.valueOf(status.getCode()), status.getReasonPhrase()) + CRLF;
+    }
+
+    private String createHeaders(Map<String, String> headers) {
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            builder
+                    .append(header.getKey())
+                    .append(RESPONSE_HEADER_DELIMITER)
+                    .append(header.getValue())
+                    .append(CRLF);
+        }
+        return builder.toString();
+    }
+
+    void writeErrorPage(Exception e, HttpResponse httpResponse) {
+        writeErrorPage(e, httpResponse, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    void writeErrorPage(Exception e, HttpResponse httpResponse, HttpStatus httpStatus) {
+        DataOutputStream outputStream = httpResponse.getOutputStream();
+        httpResponse.setHttpStatus(httpStatus);
         try {
-            outputStream.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+            outputStream.writeBytes(createStatusLine(httpResponse));
+            outputStream.writeBytes(createHeaders(httpResponse.getHeaders()));
+            outputStream.writeBytes(CRLF);
+        } catch (IOException ex) {
+            logger.error("error page rendering exception", e);
         }
     }
 
-    void witeErrorPage(Exception e) {
-        logger.error("{}", e.getMessage(), e);
-        httpResponse.setHttpStatus(HttpStatus.SERVICE_UNAVAILABLE);
-        writeHeader(0);
-        flush();
-    }
-
-    public abstract void render();
+    protected abstract byte[] createResponseInfo(ModelAndView modelAndView, HttpResponse httpResponse) throws IOException, URISyntaxException;
 }

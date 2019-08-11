@@ -2,8 +2,8 @@ package webserver.http.request.handler;
 
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
-import webserver.http.response.view.StaticResourceViewRenderer;
-import webserver.http.response.view.ViewRenderer;
+import webserver.http.response.view.ModelAndView;
+import webserver.http.response.view.ViewType;
 
 /**
  * @author : yusik
@@ -18,7 +18,7 @@ public class StaticResourceRequestHandler implements RequestHandler {
     }
 
     @Override
-    public ViewRenderer handle(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return new StaticResourceViewRenderer(httpResponse, httpRequest.getPath(), prefix);
+    public ModelAndView handle(HttpRequest httpRequest, HttpResponse httpResponse) {
+        return new ModelAndView(ViewType.RESOURCE.getPrefix() + prefix + httpRequest.getPath());
     }
 }
