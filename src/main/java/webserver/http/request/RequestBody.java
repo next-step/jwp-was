@@ -9,7 +9,7 @@ public class RequestBody {
     }
 
     public static RequestBody parse(String value) {
-        return new RequestBody(QueryParameter.parse(value));
+        return new RequestBody(new QueryParameter(value));
     }
 
     public String getParameter(String key) {
