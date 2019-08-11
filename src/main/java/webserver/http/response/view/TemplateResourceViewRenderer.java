@@ -31,16 +31,10 @@ public class TemplateResourceViewRenderer extends AbstractViewRenderer {
     }
 
     @Override
-    protected byte[] createResponseInfo(ModelAndView modelAndView, HttpResponse httpResponse) {
-        byte[] template = EMPTY_BODY;
-        try {
-            httpResponse.setContentType(ContentType.HTML_UTF_8);
-            httpResponse.setHttpStatus(HttpStatus.OK);
-            template = compileTemplate(modelAndView).getBytes();
-        } catch (IOException e) {
-            writeErrorPage(e, httpResponse);
-        }
-        return template;
+    protected byte[] createResponseInfo(ModelAndView modelAndView, HttpResponse httpResponse) throws IOException {
+        httpResponse.setContentType(ContentType.HTML_UTF_8);
+        httpResponse.setHttpStatus(HttpStatus.OK);
+        return compileTemplate(modelAndView).getBytes();
     }
 
     private String compileTemplate(ModelAndView modelAndView) throws IOException {

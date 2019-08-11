@@ -28,13 +28,13 @@ public class LoginController extends AbstractController {
         if (user == null || !user.matchPassword(password)) {
             Cookie cookie = new Cookie(LOGIN_COOKIE, "false");
             cookie.setPath("/");
-            httpResponse.setCookie(cookie);
+            httpResponse.addCookie(cookie);
             return new ModelAndView(ViewType.REDIRECT.getPrefix() + "/user/login_failed.html");
         }
 
         Cookie cookie = new Cookie(LOGIN_COOKIE, "true");
         cookie.setPath("/");
-        httpResponse.setCookie(cookie);
+        httpResponse.addCookie(cookie);
 
         return new ModelAndView(ViewType.REDIRECT.getPrefix() + "/index.html");
     }

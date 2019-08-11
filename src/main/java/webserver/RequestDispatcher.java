@@ -30,10 +30,8 @@ public class RequestDispatcher implements Runnable {
             HttpRequest httpRequest = new HttpRequest(in);
             HttpResponse httpResponse = new HttpResponse(out);
 
-            // get handler
             RequestHandler handler = WebConfig.getHandler(httpRequest.getPath());
 
-            // view: static resource, template engine, json
             ModelAndView modelAndView = handler.handle(httpRequest, httpResponse);
             ViewRenderer viewRenderer = WebConfig.getViewRenderer(modelAndView.getViewName());
             viewRenderer.render(modelAndView, httpResponse);

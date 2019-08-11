@@ -2,10 +2,8 @@ package webserver;
 
 import webserver.http.request.controller.Controller;
 import webserver.http.request.controller.ControllerType;
-import webserver.http.common.exception.UrlNotFoundException;
 import webserver.http.request.handler.RequestHandler;
 import webserver.http.request.handler.RequestHandlerType;
-import webserver.http.request.handler.RequestMappingHandler;
 import webserver.http.response.view.ViewRenderer;
 import webserver.http.response.view.ViewType;
 
@@ -44,7 +42,7 @@ public class WebConfig {
         return handlerCache.entrySet().stream()
                 .filter(entry -> entry.getKey().matcher(url).find())
                 .map(Map.Entry::getValue)
-                .findFirst().orElse(new RequestMappingHandler("/template"));
+                .findFirst().orElse(handlerCache.get(RequestHandlerType.TEMPLATE_RESOURCE.getPattern()));
     }
 
     public static Controller getController(String path) {
@@ -55,6 +53,6 @@ public class WebConfig {
         return rendererCache.entrySet().stream()
                 .filter(entry -> viewName.startsWith(entry.getKey()))
                 .map(Map.Entry::getValue)
-                .findFirst().orElseThrow(UrlNotFoundException::new);
+                .findFirst().orElse(rendererCache.get(ViewType.TEMPLATE.getPrefix()));
     }
 }

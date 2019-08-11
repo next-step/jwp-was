@@ -23,13 +23,10 @@ public class StaticResourceViewRenderer extends AbstractViewRenderer {
     @Override
     protected byte[] createResponseInfo(ModelAndView modelAndView, HttpResponse httpResponse) throws IOException, URISyntaxException {
         String resourcePath = modelAndView.getOriginalViewName(prefix);
-        byte[] body = FileIoUtils.loadFileFromClasspath("." + resourcePath);
-
-        if (resourcePath.contains(".css")) {
+        if (resourcePath.endsWith(".css")) {
             httpResponse.setContentType(ContentType.CSS);
         }
         httpResponse.setHttpStatus(HttpStatus.OK);
-
-        return body;
+        return FileIoUtils.loadFileFromClasspath("." + resourcePath);
     }
 }

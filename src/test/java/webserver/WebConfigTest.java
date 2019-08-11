@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.controller.Controller;
-import webserver.http.common.exception.UrlNotFoundException;
 import webserver.http.request.handler.RequestHandler;
 import webserver.http.response.view.ViewRenderer;
 import webserver.http.response.view.ViewType;
@@ -45,10 +44,11 @@ public class WebConfigTest {
         assertNotNull(viewRenderer);
     }
 
-    @DisplayName("렌더러 예외 테스트")
+    @DisplayName("기본 렌더러 테스트")
     @Test
     void rendererExceptionTest() {
-        assertThrows(UrlNotFoundException.class, () -> WebConfig.getViewRenderer("/exception"));
+        ViewRenderer viewRenderer = WebConfig.getViewRenderer("/exception");
+        assertNotNull(viewRenderer);
     }
 }
 
