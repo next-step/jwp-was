@@ -12,40 +12,26 @@ import java.util.*;
 
 public class ControllerFinder {
     private static final String BASE_CLASS_PATH = "";
+    private static final String CLASS_FILE_EXTENSION = ".class";
 
     public static Optional<Method> findController(UriPath path) {
         try {
             return findAllClassInClassPath().stream()
-                    .filter(cls -> cls.isAnnotationPresent(Controller.class)
-                                && Arrays.stream(cls.getMethods())
-                                .anyMatch(method ->
-                                        method.isAnnotationPresent(RequestMapping.class)
-                                                && path.isSamePath(method.getDeclaredAnnotation(RequestMapping.class).path())
-                                )
-                    ).map(cls -> Arrays.stream(cls.getMethods())
-                                .filter(method ->
-                                        method.isAnnotationPresent(RequestMapping.class)
-                                                && path.isSamePath(method.getDeclaredAnnotation(RequestMapping.class).path())
-                                ).findFirst()
-                    ).findFirst()
+                    .filter(clazz -> clazz.isAnnotationPresent(Controller.class)
+                                && isRequestMappingAnnotationPresentWithUriPath(path, clazz))
+                    .map(clazz -> getMethodWithRequestMappingAnnotation(path, clazz))
+                    .findFirst()
                     .orElseGet(Optional::empty);
-
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
     private static List<Class> findAllClassInClassPath() throws IOException, ClassNotFoundException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        assert classLoader != null;
 
-        String path = BASE_CLASS_PATH.replace('.', '/');
-        Enumeration<URL> resources = classLoader.getResources(path);
-        List<File> dirs = new ArrayList<>();
-        while (resources.hasMoreElements()) {
-            URL resource = resources.nextElement();
-            dirs.add(new File(resource.getFile()));
-        }
+        Enumeration<URL> resources = classLoader.getResources(BASE_CLASS_PATH);
+        List<File> dirs = getRootFiles(resources);
         List<Class> classes = new ArrayList<>();
         for (File directory : dirs) {
             classes.addAll(findClasses(directory, BASE_CLASS_PATH));
@@ -53,25 +39,56 @@ public class ControllerFinder {
         return classes;
     }
 
+    private static List<File> getRootFiles(Enumeration<URL> resources) {
+        List<File> dirs = new ArrayList<>();
+        while (resources.hasMoreElements()) {
+            URL resource = resources.nextElement();
+            dirs.add(new File(resource.getFile()));
+        }
+        return dirs;
+    }
+
     private static List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
-        List<Class> classes = new ArrayList<>();
-        if (!directory.exists()) {
-            return classes;
+        File[] filesInDir;
+        if (!directory.exists() || (filesInDir = directory.listFiles()) == null) {
+            return Collections.emptyList();
         }
 
-        File[] files = directory.listFiles();
-        assert files != null;
+        List<Class> classes = new ArrayList<>();
+        String packagePrefix = BASE_CLASS_PATH.equals(packageName)? BASE_CLASS_PATH : packageName + ".";
 
-        for (File file : files) {
+        for (File file : filesInDir) {
+            String fileName = file.getName();
             if (file.isDirectory()) {
-                assert !file.getName().contains(".");
-                String packagePrefix = BASE_CLASS_PATH;
-                if (!BASE_CLASS_PATH.equals(packageName)) packagePrefix = packageName + ".";
-                classes.addAll(findClasses(file,  packagePrefix + file.getName()));
-            } else if (file.getName().endsWith(".class")) {
-                classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
+                classes.addAll(findClasses(file,  packagePrefix + fileName));
+            } else if (isClassFile(file)) {
+                classes.add(Class.forName(packagePrefix + getFileNameWithoutExtension(fileName)));
             }
         }
         return classes;
+    }
+
+    private static String getFileNameWithoutExtension(String fileName) {
+        return fileName.substring(0, fileName.length() - CLASS_FILE_EXTENSION.length());
+    }
+
+    private static boolean isClassFile(File file) {
+        return file.getName().endsWith(CLASS_FILE_EXTENSION);
+    }
+
+    private static boolean isRequestMappingAnnotationPresentWithUriPath(UriPath path, Class clazz) {
+        return Arrays.stream(clazz.getMethods())
+        .anyMatch(method ->
+                method.isAnnotationPresent(RequestMapping.class)
+                        && path.isSamePath(method.getDeclaredAnnotation(RequestMapping.class).path())
+        );
+    }
+
+    private static Optional<Method> getMethodWithRequestMappingAnnotation(UriPath path, Class clazz) {
+        return Arrays.stream(clazz.getMethods())
+                .filter(method ->
+                        method.isAnnotationPresent(RequestMapping.class)
+                                && path.isSamePath(method.getDeclaredAnnotation(RequestMapping.class).path())
+                ).findFirst();
     }
 }
