@@ -4,6 +4,7 @@ import db.DataBase;
 import model.User;
 import webserver.AbstractHandler;
 import webserver.ResourceLoader;
+import webserver.http.HttpSession;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.template.ViewResolver;
@@ -14,12 +15,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static webserver.http.HttpHeaders.COOKIE;
-import static webserver.http.HttpHeaders.SET_COOKIE;
+import static webserver.view.SessionUtil.SESSION_KEY;
 
 public class UserListHandler extends AbstractHandler {
-
-    public static final String LOGIN_TRUE_COOKIE = "logined=true";
 
     public UserListHandler(ViewResolver viewResolver) {
         super(viewResolver);
@@ -27,16 +25,17 @@ public class UserListHandler extends AbstractHandler {
 
     @Override
     public void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-        if (LOGIN_TRUE_COOKIE.equals(request.getHeader(COOKIE))) {
+        HttpSession session = request.getSession();
+        Object user = session.getAttribute(SESSION_KEY);
+
+        if(user == null) {
+            response.response302Header("/user/login.html");
+        } else {
             Map<String, Object> data = findAllUsers();
             byte[] body = viewResolver.loadView("user/list", data);
 
             response.response200Header(body.length, ResourceLoader.resourceContentType("text/html;"));
             response.responseBody(body);
-
-        } else {
-            response.addHeader(SET_COOKIE, "logined=false; Path=/");
-            response.response302Header("/user/login.html");
         }
     }
 

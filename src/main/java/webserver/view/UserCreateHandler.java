@@ -11,8 +11,6 @@ import webserver.template.ViewResolver;
 
 import java.io.IOException;
 
-import static webserver.http.HttpHeaders.SET_COOKIE;
-
 public class UserCreateHandler extends AbstractHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(UserCreateHandler.class);
@@ -28,7 +26,6 @@ public class UserCreateHandler extends AbstractHandler {
         DataBase.addUser(user);
         logger.debug("User : {}", user);
 
-        response.addHeader(SET_COOKIE, "logined=false; Path=/");
         response.response302Header("/index.html");
     }
 }
