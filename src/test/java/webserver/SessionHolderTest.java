@@ -24,4 +24,15 @@ class SessionHolderTest {
 
         assertEquals(httpSession.getId(), existSession.getId());
     }
+
+    @DisplayName("session 삭제하는 걍우")
+    @Test
+    public void session_remove_test() throws Exception {
+        HttpSession httpSession = SessionHolder.getSession(null);
+        SessionHolder.removeSession(httpSession.getId());
+
+        HttpSession deletedSession = SessionHolder.getSession(httpSession.getId());
+        assertNull(deletedSession);
+    }
+
 }
