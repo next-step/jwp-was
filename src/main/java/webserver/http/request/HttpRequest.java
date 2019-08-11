@@ -56,7 +56,7 @@ public class HttpRequest {
 
     private void setCookie() {
         String value = headers.get(COOKIE);
-        this.httpCookie = HttpCookie.parse(value);
+        this.httpCookie = new HttpCookie(value);
     }
 
     public HttpSession getSession() {

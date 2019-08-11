@@ -36,7 +36,7 @@ class HttpRequestTest {
     }
 
     @Test
-    public void post_request_with_queyrstring() throws Exception {
+    public void post_request_with_querystring() throws Exception {
         InputStream in = new FileInputStream(new File(testDirectory + "Http_POST2.txt"));
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         HttpRequest request = HttpRequest.parse(bufferedReader);
