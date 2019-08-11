@@ -23,18 +23,11 @@ public class Cookies {
     }
 
     public static Cookies parse(String value) {
-        if (StringUtils.isNotBlank(value)) {
-            return new Cookies(ParsingUtils.parseCookie(value));
-        }
-
-        return new Cookies(Collections.emptyMap());
+        return StringUtils.isNotBlank(value) ?
+                new Cookies(ParsingUtils.parseCookie(value)) : new Cookies(Collections.emptyMap());
     }
 
     public String getCookie(String key) {
-        if (cookies.containsKey(key)) {
-            return cookies.get(key);
-        }
-
-        return null;
+        return cookies.getOrDefault(key, null);
     }
 }

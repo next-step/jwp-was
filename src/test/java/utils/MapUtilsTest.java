@@ -1,6 +1,7 @@
 package utils;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MapUtilsTest {
@@ -27,6 +29,20 @@ class MapUtilsTest {
                 Arguments.of("", "value"),
                 Arguments.of(null, "value")
         );
+    }
+
+    @Test
+    public void nullMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("a", "b");
+        assertNull(map.get(null));
+    }
+
+    @Test
+    public void putMapReturnValue() {
+        Map<String, String> map = new HashMap<>();
+        String put = map.put("a", "b");
+        assertNull(put);
     }
 
 }

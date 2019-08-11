@@ -24,7 +24,7 @@ public class ViewResolver {
         this.httpResponse = httpResponse;
         this.setResourceHandler(new ResourceHandler());
         this.errorPage = ERROR_PAGE;
-        httpResponse.addCookie(SESSION_KEY, httpRequest.getSessionID());
+        httpResponse.addCookie(SESSION_KEY, httpRequest.getSessionId());
     }
 
     public void setResourceHandler(ResourceHandler resourceHandler) {

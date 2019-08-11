@@ -2,6 +2,7 @@ package webserver.http.stub;
 
 import webserver.http.HttpParameter;
 import webserver.http.HttpRequest;
+import webserver.http.HttpSessionManager;
 import webserver.http.request.RequestBody;
 import webserver.http.request.RequestHeader;
 import webserver.http.request.RequestLine;
@@ -15,11 +16,11 @@ import static webserver.http.HttpMethod.GET;
 public class StubHttpRequest extends HttpRequest {
 
     public StubHttpRequest(String path) {
-        super(getMockRequestLine(path), getMockRequestHeader(Collections.emptyMap()), getMockRequestBody());
+        super(getMockRequestLine(path), getMockRequestHeader(Collections.emptyMap()), getMockRequestBody(), new HttpSessionManager());
     }
 
     public StubHttpRequest(String path, Map<String, String> header) {
-        super(getMockRequestLine(path), getMockRequestHeader(Collections.emptyMap()), getMockRequestBody());
+        super(getMockRequestLine(path), getMockRequestHeader(Collections.emptyMap()), getMockRequestBody(), new HttpSessionManager());
     }
 
     private static RequestLine getMockRequestLine(String path) {
