@@ -1,5 +1,6 @@
 package webserver.http.request;
 
+import com.google.common.base.Strings;
 import utils.IOUtils;
 import webserver.http.HttpMethod;
 
@@ -31,6 +32,7 @@ public class HttpRequest implements Request {
         requestHeaders = new HashMap<>();
         cookies = new HashMap<>();
         process(in);
+        addCookies();
     }
 
     @Override
@@ -59,12 +61,18 @@ public class HttpRequest implements Request {
 
         String line = br.readLine();
         requestLine = RequestLine.parse(line);
-        System.out.println(line);
-        while ((line = br.readLine()) != null && !line.isEmpty()) {
-            String[] keyValue = line.split(COLON_SEPARATOR);
-            requestHeaders.put(keyValue[0], keyValue[1]);
+
+        while (!Strings.isNullOrEmpty(line = br.readLine())) {
+            addHeader(line);
         }
 
+        String contentLength = requestHeaders.get(CONTENT_LENGTH_KEY);
+        if (contentLength != null) {
+            body = QueryParam.parse(RequestBodyToString(br, contentLength));
+        }
+    }
+
+    private void addCookies() {
         String cookieStr = requestHeaders.get(COOKIE_KEY);
         if (cookieStr != null) {
             Arrays.stream(cookieStr.split(COOKIE_SEPARATOR))
@@ -72,11 +80,11 @@ public class HttpRequest implements Request {
                     .map(cookie -> cookie.split(KEY_VALUE_SEPARATOR))
                     .forEach(keyValue -> cookies.put(keyValue[0], keyValue[1]));
         }
+    }
 
-        String contentLength = requestHeaders.get(CONTENT_LENGTH_KEY);
-        if (contentLength != null) {
-            body = QueryParam.parse(RequestBodyToString(br, contentLength));
-        }
+    private void addHeader(String line) {
+        String[] keyValue = line.split(COLON_SEPARATOR);
+        requestHeaders.put(keyValue[0], keyValue[1]);
     }
 
     private String RequestBodyToString(BufferedReader br, String contentLength) throws IOException {

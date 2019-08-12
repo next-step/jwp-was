@@ -24,17 +24,20 @@ public class RequestUri {
     public static RequestUri parse(String line) {
         String[] split = line.split(PATH_SEPARATOR);
 
-        String path = split[0];
-
-        if (hasView(path)) {
-            path = path.split(VIEW_SEPARATOR)[0];
-        }
+        String path = toPath(split[0]);
 
         if (!hasQueryParams(split)) {
             return new RequestUri(path);
         }
 
         return new RequestUri(path, split[1]);
+    }
+
+    private static String toPath(String path) {
+        if (hasView(path)) {
+            path = path.split(VIEW_SEPARATOR)[0];
+        }
+        return path;
     }
 
     private static boolean hasView(String path) {
