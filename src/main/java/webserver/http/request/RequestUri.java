@@ -24,7 +24,7 @@ public class RequestUri {
         if (hasQueryString(values))
             queryString = values[1];
 
-        return new RequestUri(path, QueryParameter.parse(queryString));
+        return new RequestUri(path, new QueryParameter(queryString));
     }
 
     private static boolean hasQueryString(String[] values) {

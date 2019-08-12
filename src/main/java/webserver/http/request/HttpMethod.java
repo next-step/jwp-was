@@ -19,4 +19,12 @@ public enum HttpMethod {
         return Optional.ofNullable(httpMethods.get(method))
                 .orElseThrow(() -> new IllegalArgumentException("Not supported method"));
     }
+
+    public boolean isPost() {
+        return this == POST;
+    }
+
+    public boolean isGet() {
+        return this == GET;
+    }
 }

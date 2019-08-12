@@ -2,6 +2,7 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.HttpSession;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
@@ -9,6 +10,8 @@ import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+
+import static webserver.http.HttpHeaders.SET_COOKIE;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -30,10 +33,15 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
 
             HttpRequest httpRequest = HttpRequest.parse(bufferedReader);
+            HttpSession session = httpRequest.getSession();
+
             HttpResponse httpResponse = new HttpResponse(dos);
 
-            dispatcher.processRequest(httpRequest, httpResponse);
+            if( httpRequest.getCookie("JSESSIONID") == null) {
+                httpResponse.addHeader(SET_COOKIE, "JSESSIONID=" + session.getId() + "; Path=/");
+            }
 
+            dispatcher.processRequest(httpRequest, httpResponse);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }

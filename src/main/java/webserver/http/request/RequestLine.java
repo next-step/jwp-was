@@ -21,11 +21,11 @@ public class RequestLine {
     }
 
     public boolean isPost() {
-        return method == HttpMethod.POST;
+        return method.isPost();
     }
 
     public boolean isGet() {
-        return method == HttpMethod.GET;
+        return method.isGet();
     }
 
     public String getRequestUriPath() {

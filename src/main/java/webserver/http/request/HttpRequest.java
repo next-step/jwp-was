@@ -2,6 +2,9 @@ package webserver.http.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import utils.IOUtils;
+import webserver.SessionHolder;
+import webserver.http.HttpCookie;
+import webserver.http.HttpSession;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static webserver.http.HttpHeaders.CONTENT_LENGTH;
+import static webserver.http.HttpHeaders.COOKIE;
 
 public class HttpRequest {
     private static final String END_OF_LINE = "";
@@ -17,12 +21,14 @@ public class HttpRequest {
 
     private RequestLine requestLine;
     private Map<String, String> headers;
+    private HttpCookie httpCookie;
     private RequestBody requestBody;
 
     private HttpRequest(RequestLine requestLine, Map<String, String> headers, RequestBody requestBody) {
         this.requestLine = requestLine;
         this.headers = headers;
         this.requestBody = requestBody;
+        setCookie();
     }
 
     public static HttpRequest parse(BufferedReader bufferedReader) throws IOException {
@@ -46,6 +52,22 @@ public class HttpRequest {
         }
 
         return new HttpRequest(requestLine, headers, RequestBody.parse(requestBody));
+    }
+
+    private void setCookie() {
+        String value = headers.get(COOKIE);
+        this.httpCookie = new HttpCookie(value);
+    }
+
+    public HttpSession getSession() {
+        String sessionId = httpCookie.getCookie("JSESSIONID");
+        HttpSession httpSession = SessionHolder.getSession(sessionId);
+
+        return httpSession;
+    }
+
+    public String getCookie(String key) {
+        return httpCookie.getCookie(key);
     }
 
     private static boolean hasValues(String[] values) {
