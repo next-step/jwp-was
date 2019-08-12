@@ -15,6 +15,7 @@ public class HttpResponse {
     private static final String REDIRECT_START_WITH = "redirect:";
     private static final String HEADER_HOST_KEY = "Host";
     private static final String REDIRECT_URL_FORMAT = "http://%s%s";
+    private static final String SESSION_ID_KEY = "jsessionid";
 
     private byte[] body;
     private Cookie cookie;
@@ -41,7 +42,7 @@ public class HttpResponse {
     public static HttpResponse createResponse(HttpRequest httpRequest) {
         String requestPath = httpRequest.getPath();
         return FileResponse.getFileResponse(requestPath)
-                .orElse(getViewMappingResponse(httpRequest));
+                .orElse(getServiceResponse(httpRequest));
     }
 
     public HttpHeaders getHttpHeaders() {
@@ -85,14 +86,16 @@ public class HttpResponse {
         this.cookie.set(key, value);
     }
 
-    private static HttpResponse getViewMappingResponse(HttpRequest httpRequest) {
+    private static HttpResponse getServiceResponse(HttpRequest httpRequest) {
         HttpResponse httpResponse = new HttpResponse();
-        String viewName = getViewName(httpRequest, httpResponse);
-        if (viewName.startsWith(REDIRECT_START_WITH)) {
-            return getRedirectHttpResponse(httpRequest, httpResponse, viewName);
+        httpRequest.setSession();
+        String nextViewName = service(httpRequest, httpResponse);
+        if (nextViewName.startsWith(REDIRECT_START_WITH)) {
+            return getRedirectHttpResponse(httpRequest, httpResponse, nextViewName);
         }
 
-        httpResponse.setView(viewName);
+        httpResponse.setView(nextViewName);
+        httpResponse.setCookie(SESSION_ID_KEY, httpRequest.getSessionId());
         return httpResponse;
     }
 
@@ -113,7 +116,7 @@ public class HttpResponse {
         return httpResponse;
     }
 
-    private static String getViewName(HttpRequest httpRequest, HttpResponse httpResponse) {
+    private static String service(HttpRequest httpRequest, HttpResponse httpResponse) {
         return RequestMapping.mapping(httpRequest, httpResponse)
                 .orElse(StringUtils.EMPTY);
     }
