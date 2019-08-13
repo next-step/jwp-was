@@ -4,6 +4,7 @@ import webserver.http.request.controller.Controller;
 import webserver.http.request.controller.ControllerType;
 import webserver.http.request.handler.RequestHandler;
 import webserver.http.request.handler.RequestHandlerType;
+import webserver.http.request.handler.RequestMappingHandler;
 import webserver.http.response.view.ViewRenderer;
 import webserver.http.response.view.ViewType;
 
@@ -42,7 +43,7 @@ public class WebConfig {
         return handlerCache.entrySet().stream()
                 .filter(entry -> entry.getKey().matcher(url).find())
                 .map(Map.Entry::getValue)
-                .findFirst().orElse(handlerCache.get(RequestHandlerType.TEMPLATE_RESOURCE.getPattern()));
+                .findFirst().orElse(new RequestMappingHandler("template"));
     }
 
     public static Controller getController(String path) {

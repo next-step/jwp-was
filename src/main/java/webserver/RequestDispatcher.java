@@ -2,6 +2,7 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.common.session.SessionManager;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.handler.RequestHandler;
 import webserver.http.response.HttpResponse;
@@ -29,6 +30,7 @@ public class RequestDispatcher implements Runnable {
 
             HttpRequest httpRequest = new HttpRequest(in);
             HttpResponse httpResponse = new HttpResponse(out);
+            SessionManager.setSession(httpRequest);
 
             RequestHandler handler = WebConfig.getHandler(httpRequest.getPath());
 

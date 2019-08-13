@@ -3,6 +3,7 @@ package webserver.http.request;
 import utils.IOUtils;
 import webserver.http.common.header.Header;
 import webserver.http.common.exception.HttpMethodNotSupportedException;
+import webserver.http.common.session.HttpSession;
 import webserver.http.request.support.RequestParser;
 import webserver.http.response.header.Cookie;
 
@@ -28,7 +29,8 @@ public class HttpRequest {
     private ParameterMap parameters = new ParameterMap();
     private String httpVersion;
     private Map<String, String> headers;
-    private Map<String, String> cookies;
+    private Map<String, Cookie> cookies;
+    private HttpSession httpSession;
 
     public HttpRequest(InputStream in) throws IOException {
 
@@ -76,7 +78,7 @@ public class HttpRequest {
         return headers.get(field);
     }
 
-    public String getCookie(String name) {
+    public Cookie getCookie(String name) {
         return cookies.get(name);
     }
 
@@ -98,5 +100,13 @@ public class HttpRequest {
 
     public String getHttpVersion() {
         return httpVersion;
+    }
+
+    public void setSession(HttpSession httpSession) {
+        this.httpSession = httpSession;
+    }
+
+    public HttpSession getHttpSession() {
+        return httpSession;
     }
 }

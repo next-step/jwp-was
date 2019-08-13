@@ -79,7 +79,7 @@ public class HttpRequestTest {
     void cookieTest() throws IOException {
         InputStream in = new ByteArrayInputStream(requestHeader.getBytes());
         HttpRequest request = new HttpRequest(in);
-        assertEquals("true", request.getCookie("login"));
+        assertEquals("true", request.getCookie("login").getValue());
     }
 
     @DisplayName("http version 파싱")

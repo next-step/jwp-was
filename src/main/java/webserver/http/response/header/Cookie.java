@@ -26,15 +26,23 @@ public class Cookie {
         this.value = value;
     }
 
-    public static Map<String, String> parse(String cookieString) {
-        Map<String, String> cookies = new HashMap<>();
+    public static Map<String, Cookie> parse(String cookieString) {
+        Map<String, Cookie> cookies = new HashMap<>();
         String[] tmpCookies = cookieString.split(COOKIE_SEPARATOR);
         for (String tmpCookie : tmpCookies) {
             String[] cookie = tmpCookie.trim().split(COOKIE_DELIMITER);
-            cookies.put(cookie[0], cookie[1]);
+            cookies.put(cookie[0], new Cookie(cookie[0], cookie[1]));
         }
 
         return cookies;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getValue() {
+        return value;
     }
 
     public void setDomain(String domain) {
