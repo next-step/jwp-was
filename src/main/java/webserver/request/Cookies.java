@@ -10,7 +10,8 @@ import java.util.stream.Collectors;
  */
 public class Cookies {
     private static final String SEMICOLON = ";";
-    public static final String EQUAL = "=";
+    private static final String EQUAL = "=";
+    public static final String JSESSIONID = "JSESSIONID";
 
     private List<Cookie> cookies = new ArrayList<>();
 
