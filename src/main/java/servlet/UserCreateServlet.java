@@ -7,20 +7,16 @@ import http.HttpStatus;
 import http.Parameters;
 import java.util.Map;
 import model.User;
+import view.RedirectView;
+import view.View;
 
 public class UserCreateServlet extends AbstractHttpServlet {
 
   @Override
-  public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+  public View doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
     User user = createUser(httpRequest.getParameters());
     DataBase.addUser(user);
-
-    httpResponse.setHttpVersion("HTTP1/1");
-    httpResponse.setHttpStatus(HttpStatus.Found);
-    httpResponse.setContentType("Content-Type: text/html;charset=utf-8");
-    httpResponse.setLocation("/index.html");
-
-    httpResponse.render();
+    return new RedirectView("/index.html");
   }
 
   User createUser(Map<String, String> parameters) {

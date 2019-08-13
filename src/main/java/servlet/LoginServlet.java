@@ -6,25 +6,20 @@ import http.HttpResponse;
 import http.HttpStatus;
 import java.util.Map;
 import model.User;
+import view.RedirectView;
+import view.View;
 
 public class LoginServlet extends AbstractHttpServlet {
 
   private static final String LOGIN_COOKIE_KEY = "logined";
 
   @Override
-  public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
-    httpResponse.setHttpVersion("HTTP1/1");
-    httpResponse.setHttpStatus(HttpStatus.Found);
-    httpResponse.setContentType("Content-Type: text/html;charset=utf-8");
-
+  public View doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
     if (isLoginSuccess(httpRequest.getParameters())) {
       httpResponse.addCookie(LOGIN_COOKIE_KEY, "true");
-      httpResponse.setLocation("/index.html");
-      httpResponse.render();
-      return;
+      return new RedirectView("/index.html");
     }
-    httpResponse.setLocation("/user/login_failed.html");
-    httpResponse.render();
+    return new RedirectView("/user/login_failed.html");
   }
 
   private boolean isLoginSuccess(Map<String, String> parameters) {

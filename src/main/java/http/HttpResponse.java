@@ -22,7 +22,6 @@ public class HttpResponse {
   private static final String CONTENT_LENGTH_WORD = "Content-Length: ";
   private static final String NO_VALUE = "";
 
-
   private Map<String, String> cookies = new HashMap<>();
   private String httpVersion;
   private HttpStatus httpStatus;
