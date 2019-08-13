@@ -1,36 +1,32 @@
 package webserver.converter;
 
-import webserver.domain.HttpEntity;
 import webserver.http.HttpRequest;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 
 public class HttpHeaderConverter extends HttpConverter{
 
 
-    public HttpHeaderConverter(HttpRequest httpRequest, String httpMsg) throws IOException, URISyntaxException {
+    public HttpHeaderConverter(HttpRequest httpRequest, String httpMsg) {
         setParseHeader(httpRequest, httpMsg);
     }
 
-    private void setParseHeader(HttpRequest httpRequest, String httpMsg) throws IOException, URISyntaxException {
+    private void setParseHeader(HttpRequest httpRequest, String httpMsg) {
         String[] httpSplit = httpMsg.split(QUERY_NEW_LINE);
         setHtmlHeaderMsgParsing(httpRequest, httpSplit);
         setHtmlOptionMsgParsing(httpRequest, httpSplit);
     }
 
-    private void setHtmlHeaderMsgParsing(HttpRequest httpRequest, String[] httpSplit) throws IOException, URISyntaxException {
-        HttpEntity httpEntity = httpRequest.getHttpEntity();
+    private void setHtmlHeaderMsgParsing(HttpRequest httpRequest, String[] httpSplit) {
         String[] separatorMethodPath = httpSplit[0].split(SEPARATOR);
         if(separatorMethodPath.length == 1){
             return;
         }
 
-        httpEntity.setMethod(separatorMethodPath[0]);
-        httpEntity.setUrlPath(setSeparatorUrlParameter(separatorMethodPath[1]));
-        httpEntity.setVersion(separatorMethodPath[2]);
-        HttpParameterConverter.HttpParameterParse(httpEntity, httpSplit);
+        httpRequest.initHeaderValue(separatorMethodPath[0],
+                setSeparatorUrlParameter(separatorMethodPath[1]),
+                separatorMethodPath[2]);
+
+        HttpParameterConverter.HttpParameterParse(httpRequest, httpSplit);
     }
 
     private void setHtmlOptionMsgParsing(HttpRequest httpRequest, String[] str){
@@ -41,7 +37,7 @@ public class HttpHeaderConverter extends HttpConverter{
                 etcHeader.put(keyValue[0], keyValue[1]);
             }
         }
-        httpRequest.getHttpEntity().setEtcHeader(etcHeader);
+        httpRequest.initEtcHeaderParameter(etcHeader);
     }
 
     private String setSeparatorUrlParameter(String urlPath){
