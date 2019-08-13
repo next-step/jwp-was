@@ -50,7 +50,7 @@ public class HttpResponse {
       }
       dos.flush();
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage());
     }
   }
 
@@ -158,10 +158,6 @@ public class HttpResponse {
 
   public void setHttpVersion(String httpVersion) {
     this.httpVersion = httpVersion;
-  }
-
-  public void sendRedirect(String s) {
-
   }
 
 }

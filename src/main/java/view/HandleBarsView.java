@@ -16,17 +16,17 @@ public class HandleBarsView implements View {
 
   @Override
   public void render(HttpRequest request, HttpResponse response) {
+    response.setHttpVersion("HTTP1/1");
+    
     try {
       String renderView = HandleBarsRender.render(path);
       byte[] view = renderView.getBytes();
-      response.setHttpVersion("HTTP1/1");
       response.setHttpStatus(HttpStatus.OK);
       response.setContentType("text/html;charset=utf-8");
       response.setContentLength(view.length);
       response.setBody(view);
     } catch (IOException e) {
-      response.setHttpVersion("HTTP1/1");
-      response.setHttpStatus(HttpStatus.NOT_FOUND);
+      response.setHttpStatus(HttpStatus.Internal_Server_Error);
     }
     response.render();
   }

@@ -18,34 +18,25 @@ public class StaticView implements View {
 
   @Override
   public void render(HttpRequest request, HttpResponse response) {
-    byte[] resource = getResource(STATIC_RESOURCE_PATH_PREFIX + path);
-
     response.setHttpVersion("HTTP1/1");
-    response.setHttpStatus(resource != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
-    response.setContentType(getContentType(request));
-    response.setContentLength(resource.length);
-    response.setBody(resource);
+
+    try {
+      byte[] resource = FileIoUtils.loadFileFromClasspath(STATIC_RESOURCE_PATH_PREFIX + path);
+      response.setHttpStatus(HttpStatus.OK);
+      response.setContentType(getContentType(request));
+      response.setContentLength(resource.length);
+      response.setBody(resource);
+    } catch (IOException e) {
+      response.setHttpStatus(HttpStatus.Internal_Server_Error);
+    } catch (URISyntaxException e) {
+      response.setHttpStatus(HttpStatus.NOT_FOUND);
+    }
 
     response.render();
   }
 
   private String getContentType(HttpRequest httpRequest) {
-    if (httpRequest.getPath().contains(".css")) {
-      return "text/css;charset=utf-8";
-    } else if (httpRequest.getPath().contains(".js")) {
-      return "text/javascript;charset=utf-8";
-    }
-    return "text/html;charset=utf-8";
+    return httpRequest.getAccept();
   }
 
-  private byte[] getResource(String path) {
-    try {
-      return FileIoUtils.loadFileFromClasspath(path);
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
 }

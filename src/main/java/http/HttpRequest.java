@@ -64,4 +64,8 @@ public class HttpRequest {
   public Map<String, String> getCookies() {
     return requestHeader.getCookies();
   }
+
+  public String getAccept() {
+    return requestHeader.getAccept();
+  }
 }
