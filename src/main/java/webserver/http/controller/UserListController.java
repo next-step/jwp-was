@@ -4,7 +4,7 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.Cookie;
+import webserver.http.HttpSession;
 import webserver.http.HttpStatus;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
@@ -29,10 +29,9 @@ public class UserListController<V extends ViewResolver> extends AbstractControll
 
     @Override
     protected void doGet(HttpRequest request, HttpResponse response) {
-        Boolean logined = Boolean.valueOf(request.getCookie("logined"));
 
         try {
-            if (logined) {
+            if (isLogined(request.getSession())) {
                 Map<String, Object> data = new HashMap<>();
                 Collection<User> users = DataBase.findAll();
                 data.put("users", users);
@@ -42,12 +41,16 @@ public class UserListController<V extends ViewResolver> extends AbstractControll
                 response.writeHeader(HttpStatus.OK, request.getAccept(), view.getLength());
                 response.writeBody(view.getBody());
             } else {
-                response.addCookie(new Cookie("logined", "false"));
                 response.redirect("/user/login");
             }
         } catch (IOException | URISyntaxException e) {
             logger.error("[PROCESS][USER LIST] failed. {}", e);
         }
+    }
+
+    private boolean isLogined(HttpSession session) {
+        Object user = session.getAttribute("user");
+        return user != null;
     }
 
     @Override

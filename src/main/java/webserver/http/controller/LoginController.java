@@ -4,7 +4,7 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.Cookie;
+import webserver.http.HttpSession;
 import webserver.http.HttpStatus;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
@@ -13,6 +13,8 @@ import webserver.view.ViewResolver;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+
+import static webserver.http.HttpSession.DEFAULT_SESSION_KEY;
 
 public class LoginController<V extends ViewResolver> extends AbstractController<HttpRequest, HttpResponse> {
 
@@ -49,7 +51,9 @@ public class LoginController<V extends ViewResolver> extends AbstractController<
                 response.writeHeader(HttpStatus.OK, request.getAccept(), view.getLength());
                 response.writeBody(view.getBody());
             } else {
-                response.addCookie(new Cookie("logined", "true"));
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+                response.addCookie(DEFAULT_SESSION_KEY, session.getId());
                 response.redirect("/index");
             }
         } catch (IOException | URISyntaxException e) {
