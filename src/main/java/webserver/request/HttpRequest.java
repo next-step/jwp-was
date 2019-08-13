@@ -5,6 +5,8 @@ import webserver.request.enums.HttpVersion;
 
 import java.util.Objects;
 
+import static webserver.request.Cookies.JSESSIONID;
+
 /**
  * Created by hspark on 2019-08-04.
  */
@@ -39,6 +41,13 @@ public class HttpRequest {
 
     public URI getRequestUrl() {
         return requestUrl;
+    }
+
+    public HttpSession getHttpSession() {
+        String sessionId = cookies.getCookie(JSESSIONID);
+        HttpSession httpSession = HttpSessionStore.getSession(sessionId);
+        cookies.addCookie(new Cookie(JSESSIONID, httpSession.getId()));
+        return httpSession;
     }
 
     public String getPath() {

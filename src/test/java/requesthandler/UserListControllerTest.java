@@ -3,9 +3,7 @@ package requesthandler;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import webserver.controller.Controller;
-import webserver.request.HttpRequest;
-import webserver.request.RequestHeaders;
-import webserver.request.RequestLine;
+import webserver.request.*;
 import webserver.response.HttpResponse;
 import webserver.response.HttpStatus;
 
@@ -39,11 +37,13 @@ class UserListControllerTest {
     void test_로그인일_경우() {
         Controller userListController = new UserListController();
 
+        HttpSession httpSession = HttpSessionStore.getSession("test");
+        httpSession.setAttribute("logined", true);
 
         RequestLine requestLine = RequestLine.parse("GET /users/list HTTP/1.1");
         RequestHeaders requestHeaders = new RequestHeaders();
         requestHeaders.add("Accept: text/html");
-        requestHeaders.add("Cookie: logined=true");
+        requestHeaders.add("Cookie: JSESSIONID=test");
         HttpRequest httpRequest = HttpRequest.builder()
                 .requestLine(requestLine)
                 .requestHeaders(requestHeaders)
