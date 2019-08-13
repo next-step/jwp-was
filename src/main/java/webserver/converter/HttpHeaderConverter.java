@@ -22,9 +22,10 @@ public class HttpHeaderConverter extends HttpConverter{
             return;
         }
 
-        httpRequest.setMethod(separatorMethodPath[0]);
-        httpRequest.setUrlPath(setSeparatorUrlParameter(separatorMethodPath[1]));
-        httpRequest.setVersion(separatorMethodPath[2]);
+        httpRequest.initHeaderValue(separatorMethodPath[0],
+                setSeparatorUrlParameter(separatorMethodPath[1]),
+                separatorMethodPath[2]);
+
         HttpParameterConverter.HttpParameterParse(httpRequest, httpSplit);
     }
 
@@ -36,7 +37,7 @@ public class HttpHeaderConverter extends HttpConverter{
                 etcHeader.put(keyValue[0], keyValue[1]);
             }
         }
-        httpRequest.setEtcHeader(etcHeader);
+        httpRequest.initEtcHeaderParameter(etcHeader);
     }
 
     private String setSeparatorUrlParameter(String urlPath){

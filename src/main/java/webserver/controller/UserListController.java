@@ -9,7 +9,6 @@ import webserver.converter.HttpFileConverter;
 import webserver.http.AbstractControllerStructor;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
-import webserver.http.HttpStatus;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +20,7 @@ public class UserListController extends AbstractControllerStructor {
         try {
             HttpResponse response = HttpResponse.ok(httpRequest);
 
-            response.setUrlPath(httpRequest.getUrlPath());
+
             String readFileContent = HttpFileConverter.readFile(httpRequest.getUrlPath() + HttpConverter.HTML_FILE_NAMING);
 
             Handlebars handlebars = new Handlebars();
@@ -31,8 +30,7 @@ public class UserListController extends AbstractControllerStructor {
                     .stream().collect(Collectors.toList());
             String remakeContent = template.apply(userList);
 
-            response.setResultBody(remakeContent);
-
+            response.initResultBody(httpRequest.getUrlPath(), remakeContent);
             return response;
         }catch (Exception e){
             return HttpResponse.pageNotFound(httpRequest);

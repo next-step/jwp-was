@@ -22,7 +22,9 @@ public class ServletContainer {
 
             String readFile = HttpFileConverter.readFile(httpRequest.getUrlPath());
             HttpResponse response = HttpResponse.ok(httpRequest);
-            response.setResultBody(readFile);
+
+
+            response.initResultBody(httpRequest.getUrlPath(), readFile);
 
             return response;
         }catch (IOException e){

@@ -53,7 +53,7 @@ public class HttpParameterConverter extends HttpConverter{
             paramMap.put(keyValueStr[0], setNullCheck(keyValueStr));
         }
 
-        request.setParameter(paramMap);
+        request.initRequestParameter(paramMap);
     }
 
     private static String setNullCheck(String[] keyValue){

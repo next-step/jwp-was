@@ -22,9 +22,9 @@ public class UserLoginController extends AbstractControllerStructor {
         HttpResponse response = HttpResponse.reDirect(httpRequest, redirectUrl);
 
         if(user != null){
-            response.setCookie("logined=true; Path=/");
+            response.addCookie("logined=true; Path=/");
         }else{
-            response.setCookie("logined=false; Path=/user/login_failed.html");
+            response.addCookie("logined=false; Path=/user/login_failed.html");
         }
         return response;
     }

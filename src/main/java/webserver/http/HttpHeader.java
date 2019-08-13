@@ -19,48 +19,40 @@ public class HttpHeader {
         this.version = DEFAULT_HTTP_VERSION;
     }
 
-    public HttpHeader(HttpStatus resultCode, String version) {
+    public HttpHeader(HttpStatus resultCode, String version, HashMap<String, String> etcHeader) {
         this.resultCode = resultCode;
         this.version = (version == null) ? DEFAULT_HTTP_VERSION : version;
+        this.etcHeader = etcHeader;
+    }
+
+    public void initHeader(String method, String urlPath, String version){
+        this.method = method;
+        this.urlPath = urlPath;
+        this.version = version;
     }
 
     public HttpStatus getResultCode() {
         return resultCode;
     }
 
-    public void setResultCode(HttpStatus resultCode) {
-        this.resultCode = resultCode;
-    }
-
     public String getMethod() {
         return method;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
-    }
 
     public String getUrlPath() {
         return urlPath;
-    }
-
-    public void setUrlPath(String urlPath) {
-        this.urlPath = urlPath;
     }
 
     public String getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
     public HashMap<String, String> getEtcHeader() {
         return etcHeader;
     }
 
-    public void setEtcHeader(HashMap<String, String> etcHeader) {
+    public void initEtcHeaderParameter(HashMap<String, String> etcHeader) {
         this.etcHeader = etcHeader;
     }
 }

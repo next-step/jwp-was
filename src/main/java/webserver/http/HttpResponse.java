@@ -1,5 +1,7 @@
 package webserver.http;
 
+import java.util.HashMap;
+
 public class HttpResponse {
     protected HttpHeader httpHeader;
     protected String urlPath;
@@ -12,30 +14,38 @@ public class HttpResponse {
     }
 
     public static HttpResponse ok(HttpRequest request){
-        HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.OK));
+        HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.OK, request.getEtcHeader()));
         return response;
     }
 
     public static HttpResponse reDirect(HttpRequest request, String redirectUrl) {
-        HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.REDIRECT));
-        response.setRedirectUrl(redirectUrl);
+        HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.REDIRECT, request.getEtcHeader()));
+        response.redirectUrl = redirectUrl;
         return response;
     }
 
-    private static HttpHeader makeHeader(HttpRequest request, HttpStatus status){
-        HttpHeader httpHeader = new HttpHeader(status, request.getVersion());
-        httpHeader.setEtcHeader(request.getEtcHeader());
+    private static HttpHeader makeHeader(HttpRequest request, HttpStatus status, HashMap<String, String > etcHeader){
+        HttpHeader httpHeader = new HttpHeader(status, request.getVersion(), etcHeader);
         return httpHeader;
     }
 
     public static HttpResponse serverError(HttpRequest request){
-        HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.OK));
+        HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.OK, request.getEtcHeader()));
         return response;
     }
 
     public static HttpResponse pageNotFound(HttpRequest request){
-        HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.NOT_FOUND));
+        HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.NOT_FOUND, request.getEtcHeader()));
         return response;
+    }
+
+    public void initResultBody(String urlPath, String resultBody){
+        this.urlPath = urlPath;
+        this.resultBody = resultBody;
+    }
+
+    public void addCookie(String cookie){
+        this.cookie = cookie;
     }
 
     public HttpHeader getHttpHeader() {
@@ -60,22 +70,6 @@ public class HttpResponse {
 
     public String getCookie() {
         return cookie;
-    }
-
-    public void setUrlPath(String urlPath) {
-        this.urlPath = urlPath;
-    }
-
-    public void setResultBody(String resultBody) {
-        this.resultBody = resultBody;
-    }
-
-    public void setRedirectUrl(String redirectUrl) {
-        this.redirectUrl = redirectUrl;
-    }
-
-    public void setCookie(String cookie) {
-        this.cookie = cookie;
     }
 
 }
