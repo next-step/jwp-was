@@ -10,10 +10,15 @@ import utils.FileIoUtils;
 public class StaticView implements View {
 
   private static final String STATIC_RESOURCE_PATH_PREFIX = "./static";
+  private String path;
+
+  public StaticView(String path) {
+    this.path = path;
+  }
 
   @Override
   public void render(HttpRequest request, HttpResponse response) {
-    byte[] resource = getResource(request);
+    byte[] resource = getResource(STATIC_RESOURCE_PATH_PREFIX + path);
 
     response.setHttpVersion("HTTP1/1");
     response.setHttpStatus(resource != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
@@ -33,9 +38,9 @@ public class StaticView implements View {
     return "text/html;charset=utf-8";
   }
 
-  private byte[] getResource(HttpRequest httpRequest) {
+  private byte[] getResource(String path) {
     try {
-      return FileIoUtils.loadFileFromClasspath(STATIC_RESOURCE_PATH_PREFIX + httpRequest.getPath());
+      return FileIoUtils.loadFileFromClasspath(path);
     } catch (IOException e) {
       e.printStackTrace();
     } catch (URISyntaxException e) {
