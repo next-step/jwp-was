@@ -22,14 +22,13 @@ public class ControllerMethodInvoker {
         for (Parameter parameter : getParametersWithRequestBody(method)) {
             Object instance = parameter.getType().newInstance();
             Field[] fields = parameter.getType().getDeclaredFields();
-            initFieldsWithQueryParameterValue(query, instance, fields);
-            parameterObjects.add(instance);
+            parameterObjects.add(initFieldsWithQueryParameterValue(query, instance, fields));
         }
 
         return method.invoke(method.getDeclaringClass().newInstance(), parameterObjects.toArray());
     }
 
-    private static void initFieldsWithQueryParameterValue(Query query, Object instance, Field[] fields) throws IllegalAccessException {
+    private static Object initFieldsWithQueryParameterValue(Query query, Object instance, Field[] fields) throws IllegalAccessException {
         for (Field field : fields) {
             Optional<QueryParameter> queryParameter = query.findByName(field.getName().toLowerCase());
             if (queryParameter.isPresent()) {
@@ -37,6 +36,7 @@ public class ControllerMethodInvoker {
                 field.set(instance, queryParameter.get().getValue());
             }
         }
+        return instance;
     }
 
     private static List<Parameter> getParametersWithRequestBody(Method method) {

@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.Optional;
 
@@ -25,30 +26,31 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            byte[] body = getBody(in).orElseThrow(() -> new FileNotFoundException("not found file"));
+            RequestLine requestLine = getRequestLine(in).orElseThrow(() -> new FileNotFoundException("not found request line"));
+            byte[] body = getBody(requestLine).orElseThrow(() -> new FileNotFoundException("not found file"));
             response(out, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private Optional<byte[]> getBody(InputStream in) {
-        return getRequestLine(in).flatMap(requestLine -> {
-            UriPath path = requestLine.getRequestUri().getUriPath();
+    private Optional<byte[]> getBody(RequestLine requestLine) {
+        UriPath path = requestLine.getRequestUri().getUriPath();
 
-            Optional<byte[]> body;
-            if ((body = ResourceFinder.find(path)).isPresent()) return body;
+        Optional<byte[]> body;
+        if ((body = ResourceFinder.find(path)).isPresent()) return body;
 
-            return ControllerFinder.findController(path)
-                    .flatMap(method -> {
-                        try {
-                            String returnResourcePath = (String) ControllerMethodInvoker.invoke(method, requestLine.getRequestUri().getQuery());
-                            return ResourceFinder.find(UriPath.of(returnResourcePath + ".html"));
-                        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                            return Optional.empty();
-                        }
-                    });
-        });
+        return ControllerFinder.findController(path)
+                .flatMap(method -> getBodyByControllerResource(requestLine, method));
+    }
+
+    private Optional<byte[]> getBodyByControllerResource(RequestLine requestLine, Method method) {
+        try {
+            String returnResourcePath = (String) ControllerMethodInvoker.invoke(method, requestLine.getRequestUri().getQuery());
+            return ResourceFinder.find(UriPath.of(returnResourcePath + ".html"));
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            return Optional.empty();
+        }
     }
 
     private Optional<RequestLine> getRequestLine(InputStream in) {

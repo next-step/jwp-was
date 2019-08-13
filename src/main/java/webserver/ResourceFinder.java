@@ -22,13 +22,7 @@ public class ResourceFinder {
     public static Optional<byte[]> find(UriPath resourcePath) {
         return resourcePath.getExtension()
                 .flatMap(extension -> getResourcePath(resourcePath, extension)
-                        .flatMap(path -> {
-                            try {
-                                return Optional.of(FileIoUtils.loadFileFromClasspath(path));
-                            } catch (Exception e) {
-                                return Optional.empty();
-                            }
-                        }));
+                                        .flatMap(FileIoUtils::loadFileFromClasspath));
     }
 
     private static Optional<String> getResourcePath(UriPath resourcePath, String extension) {
