@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class ServletMapperTest {
 
@@ -29,6 +31,15 @@ class ServletMapperTest {
     ServletMapper servletMapper = new ServletMapper(servletMappingInfo);
 
     assertThat(servletMapper.getServlet("/user/create")).isInstanceOf(UserCreateServlet.class);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"/css/style.css", "/js/scripts.js"})
+  @DisplayName("staticResource는 StaticResourceServlet 클래스를 맵핑해준다")
+  void staticResourceMappingStaticResourceServlet(String path) {
+    ServletMapper servletMapper = new ServletMapper();
+
+    assertThat(servletMapper.getServlet(path)).isInstanceOf(StaticResourceServlet.class);
   }
 
 }
