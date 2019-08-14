@@ -114,7 +114,7 @@ public class HttpRequest {
                 .orElse(null);
     }
 
-    public void setHttpSession() {
-        httpSession = SessionManager.createSessionIfAbsent(getSessionId());
+    public void setHttpSession(SessionManager manager) {
+        httpSession = manager.createSessionIfAbsent(getSessionId());
     }
 }

@@ -12,15 +12,19 @@ public class SessionManager {
 
     public static final String SESSION_HEADER_NAME = "JSESSIONID";
 
-    private static ConcurrentMap<String, HttpSession> sessions = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, HttpSession> sessions;
 
-    public static HttpSession createSessionIfAbsent(String sessionId) {
+    public SessionManager() {
+        sessions = new ConcurrentHashMap<>();
+    }
+
+    public HttpSession createSessionIfAbsent(String sessionId) {
         HttpSession httpSession = new HttpSession();
         String id = Optional.ofNullable(sessionId).orElse(httpSession.getId());
         return Optional.ofNullable(sessions.putIfAbsent(id, httpSession)).orElse(httpSession);
     }
 
-    public static HttpSession remove(String sessionId) {
+    public HttpSession remove(String sessionId) {
         return sessions.remove(sessionId);
     }
 

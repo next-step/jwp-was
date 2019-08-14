@@ -2,6 +2,7 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.common.session.SessionManager;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,6 +17,7 @@ public class WebServer {
     public static void main(String args[]) throws Exception {
 
         ExecutorService es = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL);
+        SessionManager manager = new SessionManager();
 
         int port = 0;
         if (args == null || args.length == 0) {
@@ -31,7 +33,7 @@ public class WebServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                es.execute(new RequestDispatcher(connection));
+                es.execute(new RequestDispatcher(connection, manager));
             }
         }
     }
