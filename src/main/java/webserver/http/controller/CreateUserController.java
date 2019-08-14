@@ -4,7 +4,6 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.Cookie;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
@@ -19,7 +18,6 @@ public class CreateUserController extends AbstractController<HttpRequest, HttpRe
         try {
             User user = extractUser(request);
             DataBase.addUser(user);
-            response.addCookie(new Cookie("logined", "false"));
             response.redirect("/index");
         } catch (Exception e) {
             logger.error("[PROCESS][CREATE USER] failed. {}", e);

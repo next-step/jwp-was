@@ -1,16 +1,21 @@
 package webserver.http.request;
 
+import com.google.common.base.Strings;
 import utils.IOUtils;
+import webserver.http.HttpCookie;
 import webserver.http.HttpMethod;
+import webserver.http.HttpSession;
+import webserver.http.HttpSessionContext;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static webserver.http.HttpSession.DEFAULT_SESSION_KEY;
 
 public class HttpRequest implements Request {
 
@@ -18,19 +23,18 @@ public class HttpRequest implements Request {
     private static final String CONTENT_LENGTH_KEY = "Content-Length";
     private static final String ACCEPT_KEY = "Accept";
     private static final String COOKIE_KEY = "Cookie";
-    private static final String KEY_VALUE_SEPARATOR = "=";
     private static final String COLON_SEPARATOR = ": ";
-    private static final String COOKIE_SEPARATOR = ";";
 
     private RequestLine requestLine;
     private Map<String, String> requestHeaders;
-    private Map<String, String> cookies;
+    private HttpCookie httpCookies;
     private QueryParam body = QueryParam.EMPTY_QUERY_PARAM;
+    private HttpSession session;
 
     public HttpRequest(InputStream in) throws IOException {
         requestHeaders = new HashMap<>();
-        cookies = new HashMap<>();
         process(in);
+        processCookies();
     }
 
     @Override
@@ -59,24 +63,30 @@ public class HttpRequest implements Request {
 
         String line = br.readLine();
         requestLine = RequestLine.parse(line);
-        System.out.println(line);
-        while ((line = br.readLine()) != null && !line.isEmpty()) {
-            String[] keyValue = line.split(COLON_SEPARATOR);
-            requestHeaders.put(keyValue[0], keyValue[1]);
-        }
 
-        String cookieStr = requestHeaders.get(COOKIE_KEY);
-        if (cookieStr != null) {
-            Arrays.stream(cookieStr.split(COOKIE_SEPARATOR))
-                    .map(String::trim)
-                    .map(cookie -> cookie.split(KEY_VALUE_SEPARATOR))
-                    .forEach(keyValue -> cookies.put(keyValue[0], keyValue[1]));
+        while (!Strings.isNullOrEmpty(line = br.readLine())) {
+            addHeader(line);
         }
 
         String contentLength = requestHeaders.get(CONTENT_LENGTH_KEY);
         if (contentLength != null) {
             body = QueryParam.parse(RequestBodyToString(br, contentLength));
         }
+    }
+
+    private void processCookies() {
+
+        httpCookies = HttpCookie.parse(requestHeaders.get(COOKIE_KEY));
+        session = HttpSessionContext.getSession(httpCookies.get(DEFAULT_SESSION_KEY));
+        if(session == null) {
+            session = HttpSessionContext.createSession();
+        }
+        httpCookies.add(DEFAULT_SESSION_KEY, session.getId());
+    }
+
+    private void addHeader(String line) {
+        String[] keyValue = line.split(COLON_SEPARATOR);
+        requestHeaders.put(keyValue[0], keyValue[1]);
     }
 
     private String RequestBodyToString(BufferedReader br, String contentLength) throws IOException {
@@ -91,10 +101,6 @@ public class HttpRequest implements Request {
         return requestLine.getHttpMethod() == HttpMethod.POST;
     }
 
-    public String getCookie(String key) {
-        return cookies.get(key);
-    }
-
     public String getBodyParameter(String key) {
         return body.getParameter(key);
     }
@@ -102,5 +108,9 @@ public class HttpRequest implements Request {
     public String getAccept() {
         return requestHeaders.get(ACCEPT_KEY)
                 .split(ACCEPT_SEPARATOR)[0];
+    }
+
+    public HttpSession getSession() {
+        return session;
     }
 }

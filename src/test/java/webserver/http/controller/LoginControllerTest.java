@@ -5,7 +5,7 @@ import db.DataBase;
 import model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.Cookie;
+import webserver.http.HttpSession;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.view.HtmlViewResolver;
@@ -43,10 +43,10 @@ class LoginControllerTest {
         HttpResponse httpResponse = new HttpResponse(out);
         loginController.service(httpRequest, httpResponse);
 
-        Cookie cookie = httpResponse.getCookie("logined");
+        HttpSession session = httpRequest.getSession();
 
-        assertThat(cookie).isNotNull();
-        assertThat(cookie.getValue()).isEqualTo("true");
+        assertThat(session).isNotNull();
+        assertThat(session.getAttribute("user")).isEqualTo(loginUser);
 
     }
 }
