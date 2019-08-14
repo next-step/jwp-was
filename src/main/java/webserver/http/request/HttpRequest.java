@@ -1,9 +1,10 @@
 package webserver.http.request;
 
 import utils.IOUtils;
-import webserver.http.common.header.Header;
 import webserver.http.common.exception.HttpMethodNotSupportedException;
+import webserver.http.common.header.Header;
 import webserver.http.common.session.HttpSession;
+import webserver.http.common.session.SessionManager;
 import webserver.http.request.support.RequestParser;
 import webserver.http.response.header.Cookie;
 
@@ -13,6 +14,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
+import static webserver.http.common.session.SessionManager.SESSION_HEADER_NAME;
 
 /**
  * @author : yusik
@@ -102,11 +106,17 @@ public class HttpRequest {
         return httpVersion;
     }
 
-    public void setSession(HttpSession httpSession) {
-        this.httpSession = httpSession;
-    }
-
     public HttpSession getHttpSession() {
         return httpSession;
+    }
+
+    private String getSessionId() {
+        return Optional.ofNullable(getCookie(SESSION_HEADER_NAME))
+                .map(Cookie::getValue)
+                .orElse(null);
+    }
+
+    public void setHttpSession() {
+        httpSession = SessionManager.getSession(getSessionId());
     }
 }
