@@ -55,9 +55,7 @@ public class HttpRequest {
         }
 
         String cookieString = headers.get(Header.COOKIE.getName());
-        if (cookieString != null) {
-            cookies = Cookie.parse(cookieString);
-        }
+        cookies = Cookie.parse(cookieString);
 
     }
 
@@ -117,6 +115,6 @@ public class HttpRequest {
     }
 
     public void setHttpSession() {
-        httpSession = SessionManager.getSession(getSessionId());
+        httpSession = SessionManager.createSessionIfAbsent(getSessionId());
     }
 }

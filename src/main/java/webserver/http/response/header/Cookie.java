@@ -28,6 +28,10 @@ public class Cookie {
 
     public static Map<String, Cookie> parse(String cookieString) {
         Map<String, Cookie> cookies = new HashMap<>();
+        if (cookieString == null) {
+            return cookies;
+        }
+
         String[] tmpCookies = cookieString.split(COOKIE_SEPARATOR);
         for (String tmpCookie : tmpCookies) {
             String[] cookie = tmpCookie.trim().split(COOKIE_DELIMITER);

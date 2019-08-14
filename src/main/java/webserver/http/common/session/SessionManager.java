@@ -1,7 +1,8 @@
 package webserver.http.common.session;
 
-import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author : yusik
@@ -11,26 +12,12 @@ public class SessionManager {
 
     public static final String SESSION_HEADER_NAME = "JSESSIONID";
 
-    private static Map<String, HttpSession> sessions = new ConcurrentHashMap<>();
+    private static ConcurrentMap<String, HttpSession> sessions = new ConcurrentHashMap<>();
 
-    private static HttpSession createSession() {
+    public static HttpSession createSessionIfAbsent(String sessionId) {
         HttpSession httpSession = new HttpSession();
-        sessions.put(httpSession.getId(), httpSession);
-        return httpSession;
-    }
-
-    public static HttpSession getSession(String sessionId) {
-
-        if (sessionId == null) {
-            return createSession();
-        }
-
-        HttpSession httpSession = sessions.get(sessionId);
-        if (httpSession == null) {
-            return createSession();
-        }
-
-        return httpSession;
+        String id = Optional.ofNullable(sessionId).orElse(httpSession.getId());
+        return Optional.ofNullable(sessions.putIfAbsent(id, httpSession)).orElse(httpSession);
     }
 
     public static HttpSession remove(String sessionId) {
