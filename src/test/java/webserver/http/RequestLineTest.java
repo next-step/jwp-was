@@ -95,4 +95,28 @@ public class RequestLineTest {
         //assertThat(.getParameter().get("userId")).isEqualTo("javajigi");
         //assertThat(httpRequest.getParameter().get("password")).isEqualTo("password");
     }
+
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "GET /index.html HTTP/1.1\r\n"+
+        "Host: localhost:8080\r\n"+
+        "Connection: keep-alive\r\n"+
+        "Cache-Control: max-age=0\r\n"+
+        "Upgrade-Insecure-Requests: 1\r\n"+
+        "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36\r\n"+
+        "Sec-Fetch-Mode: navigate\r\n"+
+        "Sec-Fetch-User: ?1\r\n"+
+        "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3\r\n"+
+        "Sec-Fetch-Site: same-origin\r\n"+
+        "Referer: http://localhost:8080/user/login.html\r\n"+
+        "Accept-Encoding: gzip, deflate, br\r\n"+
+        "Accept-Language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7\r\n"+
+        "Cookie: logined=true; token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkZXB0TmFtZSI6IuqwnOuwnOyLpCIsImRlcHRTZXEiOjQsIm1lbWJlclNlcSI6NjAsIm1lbWJlck5hbWUiOiLrsJXquLDtg5wiLCJleHAiOjE1NjU3NzU4MjcsIm1lbWJlcklkIjoiZWpraW0ifQ.I7NBRw9rH6HPLbkzIW3aElz1ECFf6NoptYK_wZc4D-I; JSESSIONID=382613A39102B3D8E675A9D6CED9E677\r\n"
+    })
+    @DisplayName("유저 회원 가입")
+    void Cookies(String httpFormStr){
+        HttpResponse response = new ServletContainer().getResponse(httpFormStr);
+
+    }
 }

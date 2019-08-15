@@ -6,6 +6,7 @@ import webserver.converter.HttpConverter;
 import webserver.http.AbstractControllerStructor;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
 
 public class UserLoginController extends AbstractControllerStructor {
 
@@ -21,11 +22,17 @@ public class UserLoginController extends AbstractControllerStructor {
 
         HttpResponse response = HttpResponse.reDirect(httpRequest, redirectUrl);
 
+        HttpSession newSession = response.getHttpSession();
+
         if(user != null){
-            response.addCookie("logined=true; Path=/");
+            newSession.setAttribute("logined", true);
+            newSession.setAttribute("Path", "/");
         }else{
-            response.addCookie("logined=false; Path=/user/login_failed.html");
+            newSession.setAttribute("logined", false);
+            newSession.setAttribute("Path", "/user/login_failed.html");
         }
+
+        response.addSession(newSession);
         return response;
     }
 
