@@ -1,20 +1,36 @@
 package http;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+import utils.IOUtils;
+
 public class HttpRequest {
 
   private RequestLine requestLine;
-  Parameters parameters;
-  RequestHeader requestHeader;
+  private RequestHeader requestHeader;
+  private Map<String, String> requestBody;
 
-  public HttpRequest(RequestLine requestLine, RequestHeader requestHeader, String requestBody) {
-    this.requestLine = requestLine;
-    this.requestHeader = requestHeader;
-    this.parameters =
-        requestBody == null ? requestLine.getParameters() : Parameters.parse(requestBody);
+  public HttpRequest(BufferedReader requestStream) throws IOException {
+    requestLine = RequestLine.parse(requestStream.readLine());
+    requestHeader = RequestHeader.parse(requestStream);
+    requestBody = initRequestBody(requestStream);
   }
 
-  public Parameters getParameters() {
-    return parameters;
+  private Map<String, String> initRequestBody(BufferedReader requestStream) throws IOException {
+    if (!requestLine.isPost()) {
+      return Collections.EMPTY_MAP;
+    }
+    String requestBody = IOUtils.readData(requestStream, requestHeader.getContentLength());
+    return Parameters.parse(requestBody).getParameters();
+  }
+
+  public Map<String, String> getParameters() {
+    if (requestLine.isPost()) {
+      return getRequestBody();
+    }
+    return requestLine.getParameters();
   }
 
   public RequestLine getRequestLine() {
@@ -33,7 +49,23 @@ public class HttpRequest {
     return requestLine.isPost();
   }
 
-  public boolean isLogin() {
-    return requestHeader.isLogin();
+  public Map<String, String> getRequestBody() {
+    return requestBody;
+  }
+
+  public HttpMethod getMethod() {
+    return requestLine.getMethod();
+  }
+
+  public boolean isGet() {
+    return requestLine.isGet();
+  }
+
+  public Map<String, String> getCookies() {
+    return requestHeader.getCookies();
+  }
+
+  public String getAccept() {
+    return requestHeader.getAccept();
   }
 }

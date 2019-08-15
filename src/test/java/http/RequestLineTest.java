@@ -2,6 +2,7 @@ package http;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,13 +14,14 @@ public class RequestLineTest {
     RequestLine requestLine = RequestLine
         .parse("GET /users?userId=javajigi&password=password&name=JaeSung&noValue= HTTP/1.1");
 
-    Parameters parameters = Parameters
-        .parse("userId=javajigi&password=password&name=JaeSung&noValue=");
-
     assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
     assertThat(requestLine.getPath()).isEqualTo("/users");
     assertThat(requestLine.getVersion()).isEqualTo("HTTP/1.1");
-    assertThat(requestLine.getParameters()).isEqualTo(parameters);
+    assertThat(requestLine.getParameters()).hasSize(4)
+        .containsEntry("userId", "javajigi")
+        .containsEntry("password", "password")
+        .containsEntry("name", "JaeSung")
+        .containsEntry("noValue", "");
   }
 
   @Test
@@ -30,7 +32,7 @@ public class RequestLineTest {
     assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
     assertThat(requestLine.getPath()).isEqualTo("/users");
     assertThat(requestLine.getVersion()).isEqualTo("HTTP/1.1");
-    assertThat(requestLine.getParameters()).isEqualTo(Parameters.EMPTY);
+    assertThat(requestLine.getParameters()).isEqualTo(Collections.EMPTY_MAP);
   }
 
 }

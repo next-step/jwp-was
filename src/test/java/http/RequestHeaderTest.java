@@ -12,7 +12,7 @@ public class RequestHeaderTest {
 
   @Test
   @DisplayName("RequestHeader 파싱")
-  void parseTest() {
+  void parseTest() throws IOException {
 
     StringBuffer request = new StringBuffer();
     request.append("Host: localhost:8080\n");
@@ -26,13 +26,7 @@ public class RequestHeaderTest {
         "Cookie: _ga=GA1.1.119138890.1541999795; Idea-c6c45020=4670ba4e-13af-4efe-aaab-aea22f033243\n");
 
     BufferedReader bufferedReader = new BufferedReader(new StringReader(request.toString()));
-
-    RequestHeader requestHeader = null;
-    try {
-      requestHeader = RequestHeader.parse(bufferedReader);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    RequestHeader requestHeader = RequestHeader.parse(bufferedReader);
 
     assertThat(requestHeader.getHost()).isEqualTo("localhost:8080");
     assertThat(requestHeader.getConnection()).isEqualTo("keep-alive");
@@ -42,9 +36,11 @@ public class RequestHeaderTest {
     assertThat(requestHeader.getReferer()).isEqualTo("http://localhost:8080/user/form.html");
     assertThat(requestHeader.getAcceptEncoding()).isEqualTo("gzip, deflate, br");
     assertThat(requestHeader.getAcceptLanguage()).isEqualTo("ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7");
-    assertThat(requestHeader.getCookie("_ga")).isEqualTo("GA1.1.119138890.1541999795");
-    assertThat(requestHeader.getCookie("Idea-c6c45020"))
-        .isEqualTo("4670ba4e-13af-4efe-aaab-aea22f033243");
+
+    assertThat(requestHeader.getCookies()).hasSize(2)
+        .containsEntry("_ga", "GA1.1.119138890.1541999795")
+        .containsEntry("Idea-c6c45020", "4670ba4e-13af-4efe-aaab-aea22f033243");
+
 
   }
 

@@ -1,5 +1,6 @@
 package http;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class RequestLine {
@@ -51,12 +52,16 @@ public class RequestLine {
     return path;
   }
 
-  public Parameters getParameters() {
-    return parameters;
+  public Map<String, String> getParameters() {
+    return parameters.getParameters();
   }
 
   public boolean isPost() {
     return method.isPost();
+  }
+
+  public boolean isGet() {
+    return method.isGet();
   }
 
   @Override
@@ -78,4 +83,5 @@ public class RequestLine {
   public int hashCode() {
     return Objects.hash(method, path, version, parameters);
   }
+
 }

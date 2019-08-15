@@ -3,21 +3,25 @@ package servlet;
 import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
+import http.HttpStatus;
 import http.Parameters;
+import java.util.Map;
 import model.User;
+import view.RedirectView;
+import view.View;
 
 public class UserCreateServlet extends AbstractHttpServlet {
 
   @Override
-  public void action(HttpRequest httpRequest, HttpResponse httpResponse) {
+  public View doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
     User user = createUser(httpRequest.getParameters());
-    System.out.println(user.toString());
     DataBase.addUser(user);
-    httpResponse.sendRedirect("/index.html");
+    return new RedirectView("/index.html");
   }
 
-  User createUser(Parameters parameters) {
-    return new User(parameters.getParameter("userId"), parameters.getParameter("password"),
-        parameters.getParameter("name"), parameters.getParameter("email"));
+  User createUser(Map<String, String> parameters) {
+    return new User(parameters.get("userId"), parameters.get("password"),
+        parameters.get("name"), parameters.get("email"));
   }
+
 }
