@@ -1,6 +1,7 @@
 package model.http;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -25,5 +26,17 @@ public class QueryTest {
     void of(String queryString) {
         Query query = Query.of(queryString);
         assertThat(query).isEqualTo(Query.of(givenQueryParameters));
+    }
+
+    @Test
+    void addAll() {
+        List<QueryParameter> queryParameters = Arrays.asList(QueryParameter.of("ssosso", "nice"), QueryParameter.of("hey", "like"));
+
+        Query queryGiven = Query.ofEmpty();
+        Query queryExpected = Query.of(queryParameters);
+
+        Query queryForAdd = Query.of(queryParameters);
+
+        assertThat(queryGiven.addAll(queryForAdd)).isEqualTo(queryExpected);
     }
 }

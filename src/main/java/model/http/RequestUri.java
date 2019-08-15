@@ -24,10 +24,14 @@ public class RequestUri {
     private RequestUri(UriPath uriPath, Query query) {
         this.uriPath = uriPath;
         this.query = query;
+        if (query == null) {
+            this.query = Query.ofEmpty();
+        }
     }
 
     private RequestUri(UriPath uriPath) {
         this.uriPath = uriPath;
+        this.query = Query.ofEmpty();
     }
 
     public static RequestUri of(String requestUri) {
@@ -42,6 +46,10 @@ public class RequestUri {
                     Query query = Query.of(parts[1]);
                     return new RequestUri(uriPath, query);
                 }).orElseGet(() -> new RequestUri(UriPath.of(finalRequestUri)));
+    }
+
+    public static RequestUri of(UriPath uriPath, Query query) {
+        return new RequestUri(uriPath, query);
     }
 
     private static Optional<String> hasPathQuerySplitter(String requestUri) {
@@ -74,5 +82,10 @@ public class RequestUri {
                 "uriPath=" + uriPath +
                 ", query=" + query +
                 '}';
+    }
+
+    public RequestUri appendQuery(Query query) {
+        this.query.addAll(query);
+        return this;
     }
 }

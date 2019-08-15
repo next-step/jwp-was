@@ -1,10 +1,13 @@
 package webserver;
 
+import model.http.HttpMethod;
+import model.http.Query;
 import model.http.RequestLine;
 import model.http.UriPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+import utils.IOUtils;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -27,20 +30,20 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             RequestLine requestLine = getRequestLine(in).orElseThrow(() -> new FileNotFoundException("not found request line"));
-            byte[] body = getBody(requestLine).orElseThrow(() -> new FileNotFoundException("not found file"));
+            byte[] body = getResponseBody(requestLine).orElseThrow(() -> new FileNotFoundException("not found file"));
             response(out, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private Optional<byte[]> getBody(RequestLine requestLine) {
+    private Optional<byte[]> getResponseBody(RequestLine requestLine) {
         UriPath path = requestLine.getRequestUri().getUriPath();
 
         Optional<byte[]> body;
         if ((body = ResourceFinder.find(path)).isPresent()) return body;
 
-        return ControllerFinder.findController(path)
+        return ControllerFinder.findController(requestLine.getMethod(), path)
                 .flatMap(method -> getBodyByControllerResource(requestLine, method));
     }
 
@@ -60,18 +63,21 @@ public class RequestHandler implements Runnable {
         int requestHeaderLineIndex = 0;
         RequestLine requestLine = null;
 
-        while (true) {
-            try {
-                if (StringUtils.isEmpty(line = reader.readLine())) break;
-            } catch (IOException e) {
-                return Optional.empty();
+        try {
+            while (!StringUtils.isEmpty(line = reader.readLine())) {
+                if (++requestHeaderLineIndex == 1) {
+                    requestLine = RequestLine.of(line);
+                }
             }
-            if (++requestHeaderLineIndex == 1) {
-                requestLine = RequestLine.of(line);
-            }
-        }
 
-        return Optional.ofNullable(requestLine);
+            if (HttpMethod.POST == requestLine.getMethod()) {
+                Query query = Query.of(IOUtils.readData(reader, 101));
+                requestLine.appendQuery(query);
+            }
+            return Optional.ofNullable(requestLine);
+        } catch(Exception e) {
+            return Optional.empty();
+        }
     }
 
     private void response(OutputStream out, byte[] body) {

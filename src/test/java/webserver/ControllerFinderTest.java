@@ -2,6 +2,7 @@ package webserver;
 
 import controller.UserController;
 import model.User;
+import model.http.HttpMethod;
 import model.http.UriPath;
 import org.junit.jupiter.api.Test;
 
@@ -12,9 +13,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ControllerFinderTest {
     @Test
-    void test() throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
+    void findControllerMethodWithGet() throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
         Method givenMethod = UserController.class.getMethod("createUser", User.class);
-        Method methodFound = ControllerFinder.findController(UriPath.of("/user/create")).get();
+        Method methodFound = ControllerFinder.findController(HttpMethod.GET, UriPath.of("/user/create")).get();
+        assertThat(methodFound).isEqualTo(givenMethod);
+        assertThat(methodFound.invoke(methodFound.getDeclaringClass().newInstance(), new User()).toString()).isEqualTo("/user/profile");
+    }
+
+    @Test
+    void findControllerMethodWithPost() throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
+        Method givenMethod = UserController.class.getMethod("createUserPost", User.class);
+        Method methodFound = ControllerFinder.findController(HttpMethod.POST, UriPath.of("/user/create")).get();
         assertThat(methodFound).isEqualTo(givenMethod);
         assertThat(methodFound.invoke(methodFound.getDeclaringClass().newInstance(), new User()).toString()).isEqualTo("/user/profile");
     }

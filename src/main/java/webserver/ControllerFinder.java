@@ -2,6 +2,7 @@ package webserver;
 
 import annotation.Controller;
 import annotation.RequestMapping;
+import model.http.HttpMethod;
 import model.http.UriPath;
 
 import java.io.File;
@@ -14,14 +15,13 @@ public class ControllerFinder {
     private static final String BASE_CLASS_PATH = "";
     private static final String CLASS_FILE_EXTENSION = ".class";
 
-    public static Optional<Method> findController(UriPath path) {
+    public static Optional<Method> findController(HttpMethod httpMethod, UriPath path) {
         try {
             return findAllClassInClassPath().stream()
-                    .filter(clazz -> clazz.isAnnotationPresent(Controller.class)
-                                && isRequestMappingAnnotationPresentWithUriPath(path, clazz))
-                    .map(clazz -> getMethodWithRequestMappingAnnotation(path, clazz))
-                    .findFirst()
-                    .orElseGet(Optional::empty);
+                    .filter(clazz -> clazz.isAnnotationPresent(Controller.class))
+                    .flatMap(clazz -> Arrays.stream(clazz.getMethods()))
+                    .filter(method -> isRequestMappingAnnotationPresentWithUriPath(httpMethod, path, method))
+                    .findFirst();
         } catch (Exception e) {
             return Optional.empty();
         }
@@ -76,19 +76,9 @@ public class ControllerFinder {
         return file.getName().endsWith(CLASS_FILE_EXTENSION);
     }
 
-    private static boolean isRequestMappingAnnotationPresentWithUriPath(UriPath path, Class clazz) {
-        return Arrays.stream(clazz.getMethods())
-        .anyMatch(method ->
-                method.isAnnotationPresent(RequestMapping.class)
-                        && path.isSamePath(method.getDeclaredAnnotation(RequestMapping.class).path())
-        );
-    }
-
-    private static Optional<Method> getMethodWithRequestMappingAnnotation(UriPath path, Class clazz) {
-        return Arrays.stream(clazz.getMethods())
-                .filter(method ->
-                        method.isAnnotationPresent(RequestMapping.class)
-                                && path.isSamePath(method.getDeclaredAnnotation(RequestMapping.class).path())
-                ).findFirst();
+    private static boolean isRequestMappingAnnotationPresentWithUriPath(HttpMethod httpMethod, UriPath path, Method method) {
+        return method.isAnnotationPresent(RequestMapping.class)
+                && path.isSamePath(method.getDeclaredAnnotation(RequestMapping.class).path())
+                && httpMethod.equals(method.getDeclaredAnnotation(RequestMapping.class).method());
     }
 }

@@ -1,5 +1,7 @@
 package model.http;
 
+import java.util.Objects;
+
 public class RequestLine {
     private static final String DELEMETER = " ";
 
@@ -33,6 +35,15 @@ public class RequestLine {
         return new RequestLine(method, requestUri, version);
     }
 
+    public static RequestLine of(HttpMethod method, RequestUri requestUri, HttpVersion httpVersion) {
+        return new RequestLine(method, requestUri, httpVersion);
+    }
+
+    public RequestLine appendQuery(Query query) {
+        requestUri.appendQuery(query);
+        return this;
+    }
+
     @Override
     public String toString() {
         return "RequestLine{" +
@@ -40,5 +51,20 @@ public class RequestLine {
                 ", requestUri=" + requestUri +
                 ", httpVersion=" + httpVersion +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestLine that = (RequestLine) o;
+        return method == that.method &&
+                Objects.equals(requestUri, that.requestUri) &&
+                httpVersion == that.httpVersion;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(method, requestUri, httpVersion);
     }
 }
