@@ -15,7 +15,6 @@ import java.util.Optional;
  */
 public class RequestMappingHandler implements RequestHandler {
 
-    public static final String LOGIN_COOKIE = "logined";
     private final String prefix;
 
     public RequestMappingHandler(String prefix) {
@@ -42,8 +41,7 @@ public class RequestMappingHandler implements RequestHandler {
     }
 
     private boolean isLogin(HttpRequest httpRequest) {
-        return Optional.ofNullable(httpRequest.getCookie(LOGIN_COOKIE))
-                .map("true"::equals)
-                .orElse(false);
+        return Optional.ofNullable(httpRequest.getHttpSession())
+                .map(httpSession -> httpSession.getAttribute("user")).isPresent();
     }
 }

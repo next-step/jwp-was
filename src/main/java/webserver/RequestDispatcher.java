@@ -2,6 +2,7 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.common.session.SessionManager;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.handler.RequestHandler;
 import webserver.http.response.HttpResponse;
@@ -15,10 +16,12 @@ import java.net.Socket;
 
 public class RequestDispatcher implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestDispatcher.class);
-    private Socket connection;
+    private final SessionManager manager;
+    private final Socket connection;
 
-    public RequestDispatcher(Socket connectionSocket) {
+    public RequestDispatcher(Socket connectionSocket, SessionManager manager) {
         this.connection = connectionSocket;
+        this.manager = manager;
     }
 
     public void run() {
@@ -28,12 +31,11 @@ public class RequestDispatcher implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
             HttpRequest httpRequest = new HttpRequest(in);
+            httpRequest.setHttpSession(manager);
             HttpResponse httpResponse = new HttpResponse(out);
 
-            // get handler
             RequestHandler handler = WebConfig.getHandler(httpRequest.getPath());
 
-            // view: static resource, template engine, json
             ModelAndView modelAndView = handler.handle(httpRequest, httpResponse);
             ViewRenderer viewRenderer = WebConfig.getViewRenderer(modelAndView.getViewName());
             viewRenderer.render(modelAndView, httpResponse);

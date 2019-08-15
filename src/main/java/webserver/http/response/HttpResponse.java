@@ -1,11 +1,12 @@
 package webserver.http.response;
 
-import webserver.http.common.header.Header;
 import webserver.http.response.header.Cookie;
 
 import java.io.DataOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,13 +17,12 @@ public class HttpResponse {
 
     private static final String HTTP_VERSION = "HTTP/1.1";
     private HttpStatus httpStatus;
-    private Map<String, String> headers;
-    private Cookie cookie;
+    private Map<String, String> headers = new HashMap<>();
+    private List<Cookie> cookies = new ArrayList<>();
     private DataOutputStream outputStream;
 
 
     public HttpResponse(OutputStream out) {
-        headers = new HashMap<>();
         this.outputStream = new DataOutputStream(out);
     }
 
@@ -54,20 +54,15 @@ public class HttpResponse {
         return outputStream;
     }
 
-    public void setCookie(String name, String value) {
-        addCookieToHeader(new Cookie(name, value));
+    public void addCookie(String name, String value) {
+        cookies.add(new Cookie(name, value));
     }
 
-    public void setCookie(Cookie cookie) {
-        addCookieToHeader(cookie);
+    public void addCookie(Cookie cookie) {
+        cookies.add(cookie);
     }
 
-    private void addCookieToHeader(Cookie cookie) {
-        this.cookie = cookie;
-        headers.put(Header.SET_COOKIE.getName(), cookie.toString());
-    }
-
-    public Cookie getCookie() {
-        return cookie;
+    public List<Cookie> getCookies() {
+        return cookies;
     }
 }

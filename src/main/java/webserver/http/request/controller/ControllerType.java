@@ -6,6 +6,7 @@ package webserver.http.request.controller;
  */
 public enum ControllerType {
     LOGIN("/user/login", LoginController::new, true),
+    LOGOUT("/user/logout", LogoutController::new, true),
     JOIN("/user/create", JoinController::new, true),
     USER_LIST("/user/list", UserListController::new, false),
     DEFAULT_ERROR("/error", ErrorController::new, true),

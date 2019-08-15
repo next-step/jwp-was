@@ -11,7 +11,6 @@ import webserver.http.request.ControllerTest;
 import webserver.http.response.header.Cookie;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 /**
@@ -49,13 +48,14 @@ public class HttpResponseTest {
         cookie.setDomain("127.0.0.1");
         cookie.setExpires("2022-07-22T15:21:05.000Z");
         logger.debug("case1: {}", cookie);
-        response.setCookie(cookie);
-        assertEquals(cookie, response.getCookie());
+        response.addCookie(cookie);
+        assertEquals(cookie, response.getCookies().get(0));
 
         // case 2
-        response.setCookie("test", "value");
-        logger.debug("case2: {}", response.getCookie());
-        assertNotNull(response.getCookie());
+        response.addCookie("test2", "value");
+        logger.debug("case2: {}", response.getCookies().get(1));
+        assertEquals(2, response.getCookies().size());
+
     }
 
     @DisplayName("응답코드 테스트")

@@ -3,13 +3,14 @@ package webserver.http.response.view;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.common.header.Header;
-import webserver.http.common.exception.UrlNotFoundException;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.HttpStatus;
+import webserver.http.response.header.Cookie;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,7 +43,8 @@ public abstract class AbstractViewRenderer implements ViewRenderer {
             logger.error("body length : {}", messageBody.length, e);
             writeErrorPage(e, httpResponse);
         } catch (URISyntaxException e) {
-            throw new UrlNotFoundException();
+            logger.error("요청 자원을 찾을 수 없음 : {}", modelAndView.getViewName(), e);
+            writeErrorPage(e, httpResponse);
         }
     }
 
@@ -52,7 +54,7 @@ public abstract class AbstractViewRenderer implements ViewRenderer {
 
         // header
         outputStream.writeBytes(createStatusLine(httpResponse));
-        outputStream.writeBytes(createHeaders(httpResponse.getHeaders()));
+        outputStream.writeBytes(createHeaders(httpResponse));
         outputStream.writeBytes(CRLF);
 
         // body
@@ -69,16 +71,24 @@ public abstract class AbstractViewRenderer implements ViewRenderer {
         return String.join(SP, version, String.valueOf(status.getCode()), status.getReasonPhrase()) + CRLF;
     }
 
-    private String createHeaders(Map<String, String> headers) {
+    private String createHeaders(HttpResponse response) {
+        Map<String, String> headers = response.getHeaders();
+        List<Cookie> cookies = response.getCookies();
         StringBuilder builder = new StringBuilder();
+
         for (Map.Entry<String, String> header : headers.entrySet()) {
-            builder
-                    .append(header.getKey())
-                    .append(RESPONSE_HEADER_DELIMITER)
-                    .append(header.getValue())
-                    .append(CRLF);
+            appendHeaderLine(builder, header.getKey(), header.getValue());
+        }
+
+        for (Cookie cookie : cookies) {
+            appendHeaderLine(builder, Header.SET_COOKIE.getName(), cookie.toString());
         }
         return builder.toString();
+    }
+
+    private void appendHeaderLine(StringBuilder builder, String key, String value) {
+        builder.append(key).append(RESPONSE_HEADER_DELIMITER)
+                .append(value).append(CRLF);
     }
 
     void writeErrorPage(Exception e, HttpResponse httpResponse) {
@@ -90,7 +100,7 @@ public abstract class AbstractViewRenderer implements ViewRenderer {
         httpResponse.setHttpStatus(httpStatus);
         try {
             outputStream.writeBytes(createStatusLine(httpResponse));
-            outputStream.writeBytes(createHeaders(httpResponse.getHeaders()));
+            outputStream.writeBytes(createHeaders(httpResponse));
             outputStream.writeBytes(CRLF);
         } catch (IOException ex) {
             logger.error("error page rendering exception", e);
