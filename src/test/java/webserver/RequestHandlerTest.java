@@ -27,7 +27,7 @@ public class RequestHandlerTest {
     @Test
     void postUserCreate() throws IOException {
         Socket socket = mock(Socket.class);
-        when(socket.getInputStream()).thenReturn(new ByteArrayInputStream("POST /user/create HTTP/1.1\n\nuserid=ssosso&password=test&name=JangSoHyun".getBytes()));
+        when(socket.getInputStream()).thenReturn(new ByteArrayInputStream("POST /user/create HTTP/1.1\nContent-Length: 43\n\nuserid=ssosso&password=test&name=JangSoHyun".getBytes()));
         when(socket.getOutputStream()).thenReturn(new ByteArrayOutputStream());
 
         RequestHandler requestHandler = new RequestHandler(socket);
@@ -36,5 +36,19 @@ public class RequestHandlerTest {
         InputStream responseStream = new ByteArrayInputStream(((ByteArrayOutputStream) socket.getOutputStream()).toByteArray());
         BufferedReader reader = new BufferedReader(new InputStreamReader(responseStream));
         assertThat(reader.readLine()).isEqualTo("HTTP/1.1 200 OK ");
+    }
+
+    @Test
+    void runRedirect() throws IOException {
+        Socket socket = mock(Socket.class);
+        when(socket.getInputStream()).thenReturn(new ByteArrayInputStream("PUT /user/update HTTP/1.1\nContent-Length: 43\n\nuserid=ssosso&password=test&name=JangSoHyun".getBytes()));
+        when(socket.getOutputStream()).thenReturn(new ByteArrayOutputStream());
+
+        RequestHandler requestHandler = new RequestHandler(socket);
+        requestHandler.run();
+
+        InputStream responseStream = new ByteArrayInputStream(((ByteArrayOutputStream) socket.getOutputStream()).toByteArray());
+        BufferedReader reader = new BufferedReader(new InputStreamReader(responseStream));
+        assertThat(reader.readLine()).isEqualTo("HTTP/1.1 302 Found ");
     }
 }

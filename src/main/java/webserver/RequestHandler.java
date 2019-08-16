@@ -1,15 +1,15 @@
 package webserver;
 
-import model.http.HttpMethod;
-import model.http.Query;
+import model.http.HttpRequest;
 import model.http.RequestLine;
 import model.http.UriPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-import utils.IOUtils;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
@@ -25,84 +25,105 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
+        logger.debug("New Client Connect! Connected IP : {}, Port : {}",
+                connection.getInetAddress(),
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            RequestLine requestLine = getRequestLine(in).orElseThrow(() -> new FileNotFoundException("not found request line"));
-            byte[] body = getResponseBody(requestLine).orElseThrow(() -> new FileNotFoundException("not found file"));
-            response(out, body);
-        } catch (IOException e) {
+            HttpRequest httpRequest = HttpRequest.of(in);
+            getResponseBody(httpRequest, out);
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
 
-    private Optional<byte[]> getResponseBody(RequestLine requestLine) {
-        UriPath path = requestLine.getRequestUri().getUriPath();
+    private boolean getResponseBody(HttpRequest httpRequest, OutputStream out) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        RequestLine requestLine = httpRequest.getHttpRequestHeader().getRequestLine();
+        UriPath uriPath = requestLine.getRequestUri().getUriPath();
 
         Optional<byte[]> body;
-        if ((body = ResourceFinder.find(path)).isPresent()) return body;
-
-        return ControllerFinder.findController(requestLine.getMethod(), path)
-                .flatMap(method -> getBodyByControllerResource(requestLine, method));
-    }
-
-    private Optional<byte[]> getBodyByControllerResource(RequestLine requestLine, Method method) {
-        try {
-            String returnResourcePath = (String) ControllerMethodInvoker.invoke(method, requestLine.getRequestUri().getQuery());
-            return ResourceFinder.find(UriPath.of(returnResourcePath + ".html"));
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            return Optional.empty();
+        if ((body = ResourceFinder.find(uriPath)).isPresent()) {
+            response(out, body.get());
+            return true;
         }
-    }
 
-    private Optional<RequestLine> getRequestLine(InputStream in) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        Optional<Method> method = ControllerFinder.findController(requestLine.getMethod(), uriPath);
 
-        String line;
-        int requestHeaderLineIndex = 0;
-        RequestLine requestLine = null;
+        if (method.isPresent()) {
+            String returnResourcePath = returnResourcePath(httpRequest, method.get());
 
-        try {
-            while (!StringUtils.isEmpty(line = reader.readLine())) {
-                if (++requestHeaderLineIndex == 1) {
-                    requestLine = RequestLine.of(line);
-                }
+            if (isRedirect(returnResourcePath)) {
+                redirectResponse(out, returnResourcePath.replace("redirect:", ""));
+                return true;
             }
-
-            if (HttpMethod.POST == requestLine.getMethod()) {
-                Query query = Query.of(IOUtils.readData(reader, 101));
-                requestLine.appendQuery(query);
-            }
-            return Optional.ofNullable(requestLine);
-        } catch(Exception e) {
-            return Optional.empty();
+            body = getBodyByControllerResource(returnResourcePath);
+            response(out, body.get());
         }
+        return true;
     }
 
-    private void response(OutputStream out, byte[] body) {
+    private Optional<byte[]> getBodyByControllerResource(String returnResourcePath) {
+        return ResourceFinder.find(UriPath.of(returnResourcePath + ".html"));
+    }
+
+    private boolean isRedirect(String returnValueByControllerMethod) {
+        return returnValueByControllerMethod.startsWith("redirect:");
+    }
+
+    private String returnResourcePath(HttpRequest httpRequest, Method method) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        return (String) ControllerMethodInvoker.invoke(method, httpRequest);
+    }
+
+    private boolean response(OutputStream out, byte[] body) {
         DataOutputStream dos = new DataOutputStream(out);
-        response200Header(dos, body.length);
-        responseBody(dos, body);
+        return response200Header(dos, body.length)
+                && responseBody(dos, body);
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private boolean redirectResponse(OutputStream out, String location) {
+        DataOutputStream dos = new DataOutputStream(out);
+        return response302Header(dos, location);
+    }
+
+    private boolean response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+        boolean result = false;
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
+            result = true;
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+
+        return result;
     }
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
+    private boolean response302Header(DataOutputStream dos, String location) {
+        boolean result = false;
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Location: " + location + " \r\n");
+            dos.writeBytes("\r\n");
+            result = true;
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+
+        return result;
+    }
+
+    private boolean responseBody(DataOutputStream dos, byte[] body) {
+        boolean result = false;
         try {
             dos.write(body, 0, body.length);
             dos.flush();
+            result = true;
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+
+        return result;
     }
 }

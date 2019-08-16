@@ -1,6 +1,7 @@
 package webserver;
 
 import annotation.RequestBody;
+import model.http.HttpRequest;
 import model.http.Query;
 import model.http.QueryParameter;
 
@@ -16,12 +17,16 @@ import java.util.stream.Collectors;
 
 public class ControllerMethodInvoker {
 
-    public static Object invoke(Method method, Query query) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public static Object invoke(Method method, HttpRequest httpRequest) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         List<Object> parameterObjects = new ArrayList<>();
 
         for (Parameter parameter : getParametersWithRequestBody(method)) {
             Object instance = parameter.getType().newInstance();
             Field[] fields = parameter.getType().getDeclaredFields();
+            Query query = httpRequest.getHttpRequestHeader().getRequestLine().getRequestUri().getQuery();
+            if (httpRequest.getHttpRequestHeader().containsBody()) {
+                query = httpRequest.getHttpRequestBody().getQuery();
+            }
             parameterObjects.add(initFieldsWithQueryParameterValue(query, instance, fields));
         }
 

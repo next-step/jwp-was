@@ -25,4 +25,11 @@ public class UserController {
         logger.debug(user.toString());
         return "/user/profile";
     }
+
+    @RequestMapping(method = HttpMethod.PUT, path = "/user/update")
+    public String updateUser(@RequestBody User user) {
+        logger.debug("==============PUT /user/update");
+        logger.debug(user.toString());
+        return "redirect:/index.html";
+    }
 }
