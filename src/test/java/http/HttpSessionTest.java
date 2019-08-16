@@ -9,20 +9,9 @@ import org.junit.jupiter.api.Test;
 class HttpSessionTest {
 
   @Test
-  @DisplayName("세션 생성확인")
-  void generate() {
-    UUID uuid = UUID.randomUUID();
-
-    HttpSession httpSession = new HttpSession(uuid);
-    assertThat(httpSession.getId()).isEqualTo(uuid.toString());
-  }
-
-  @Test
   @DisplayName("세션 addtibute값 확인")
   void attributeGetSet() {
-    UUID uuid = UUID.randomUUID();
-
-    HttpSession httpSession = new HttpSession(uuid);
+    HttpSession httpSession = new HttpSession("");
 
     httpSession.setAttribute("name", "changjun");
     httpSession.setAttribute("age", 31);
@@ -36,7 +25,7 @@ class HttpSessionTest {
   void attributeHasNokey() {
     UUID uuid = UUID.randomUUID();
 
-    HttpSession httpSession = new HttpSession(uuid);
+    HttpSession httpSession = new HttpSession("");
 
     httpSession.setAttribute("name", "changjun");
     assertThat(httpSession.getAttribute("age")).isEqualTo(null);
@@ -45,9 +34,7 @@ class HttpSessionTest {
   @Test
   @DisplayName("해당 키값으로 저장된 값을 삭제한다")
   void removeAttribute() {
-    UUID uuid = UUID.randomUUID();
-
-    HttpSession httpSession = new HttpSession(uuid);
+    HttpSession httpSession = new HttpSession("");
 
     httpSession.setAttribute("name", "changjun");
     assertThat(httpSession.getAttribute("name")).isEqualTo("changjun");
@@ -58,9 +45,7 @@ class HttpSessionTest {
   @Test
   @DisplayName("현재 세션에 저장된 값을 모두 삭제한다")
   void invalidate() {
-    UUID uuid = UUID.randomUUID();
-
-    HttpSession httpSession = new HttpSession(uuid);
+    HttpSession httpSession = new HttpSession("");
 
     httpSession.setAttribute("name", "changjun");
     httpSession.setAttribute("age", 31);

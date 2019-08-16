@@ -13,7 +13,7 @@ public class HttpResponse {
   private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
   private static final String NEW_LINE_SYMBOL = "\r\n";
-  private static final String COOKIES_JOINING_SYMBOL = "; ";
+  private static final String COOKIES_JOINING_SYMBOL = ", ";
   private static final String EQUALS_SYMBOL = "=";
   private static final String SET_COOKIE_KEY = "Set-Cookie: ";
   private static final String SPACE = " ";

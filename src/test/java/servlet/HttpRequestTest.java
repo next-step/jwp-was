@@ -3,6 +3,7 @@ package servlet;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import http.HttpRequest;
+import http.HttpSessions;
 import http.RequestHeader;
 import http.RequestLine;
 import java.io.BufferedReader;
@@ -32,7 +33,7 @@ public class HttpRequestTest {
     String request = queryString.append(header).toString();
     BufferedReader requestStream = new BufferedReader(new StringReader(request));
 
-    HttpRequest httpRequest = new HttpRequest(requestStream);
+    HttpRequest httpRequest = new HttpRequest(requestStream, new HttpSessions());
     BufferedReader requestHeaderStream = new BufferedReader(new StringReader(header.toString()));
 
     assertThat(httpRequest.getParameters()).hasSize(4)
@@ -64,7 +65,7 @@ public class HttpRequestTest {
     String request = queryString.append(header).append(requestBody).toString();
     BufferedReader requestStream = new BufferedReader(new StringReader(request));
 
-    HttpRequest httpRequest = new HttpRequest(requestStream);
+    HttpRequest httpRequest = new HttpRequest(requestStream, new HttpSessions());
     BufferedReader httpHeaderRequest = new BufferedReader(new StringReader(header.toString()));
 
     assertThat(httpRequest.getRequestBody()).hasSize(4)

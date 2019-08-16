@@ -2,19 +2,14 @@ package http;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class HttpSession {
 
-  private String id;
   private Map<String, Object> attributes = new HashMap<>();
+  private String id;
 
-  public HttpSession(UUID uuid) {
-    this.id = uuid.toString();
-  }
-
-  public String getId() {
-    return this.id;
+  public HttpSession(String id) {
+    this.id = id;
   }
 
   public void setAttribute(String key, Object value) {
@@ -31,5 +26,9 @@ public class HttpSession {
 
   public void invalidate() {
     attributes.clear();
+  }
+
+  public String getId() {
+    return id;
   }
 }

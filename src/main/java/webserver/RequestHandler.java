@@ -2,6 +2,7 @@ package webserver;
 
 import http.HttpRequest;
 import http.HttpResponse;
+import http.HttpSessions;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -21,10 +22,13 @@ public class RequestHandler implements Runnable {
 
   private Socket connection;
   private ServletMapper servletMapper;
+  private HttpSessions httpSessions;
 
-  public RequestHandler(Socket connectionSocket, ServletMapper servletMapper) {
+  public RequestHandler(Socket connectionSocket, ServletMapper servletMapper,
+      HttpSessions httpSessions) {
     this.connection = connectionSocket;
     this.servletMapper = servletMapper;
+    this.httpSessions = httpSessions;
   }
 
   public void run() {
@@ -35,8 +39,13 @@ public class RequestHandler implements Runnable {
         .getOutputStream()) {
 
       BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-      HttpRequest httpRequest = new HttpRequest(bufferedReader);
+      HttpRequest httpRequest = new HttpRequest(bufferedReader, httpSessions);
       HttpResponse httpResponse = new HttpResponse(new DataOutputStream(out));
+
+      if (!httpRequest.hasSession()) {
+        String newSession = httpSessions.createNewSession();
+        httpResponse.addCookie(HttpRequest.SESSION_COOKIE_ID, newSession + "; Path;/");
+      }
 
       HttpServlet servlet = servletMapper.getServlet(httpRequest.getPath());
       View view = servlet.service(httpRequest, httpResponse);
