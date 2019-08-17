@@ -2,8 +2,8 @@ package webserver;
 
 import controller.UserController;
 import model.User;
-import model.http.HttpMethod;
-import model.http.UriPath;
+import model.controller.View;
+import model.http.*;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -15,16 +15,18 @@ public class ControllerFinderTest {
     @Test
     void findControllerMethodWithGet() throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
         Method givenMethod = UserController.class.getMethod("createUser", User.class);
-        Method methodFound = ControllerFinder.findController(HttpMethod.GET, UriPath.of("/user/create")).get();
+        RequestLine requestLine = RequestLine.of(HttpMethod.GET, RequestUri.of("/user/create"), HttpVersion.HTTP1_1);
+        Method methodFound = ControllerFinder.findController(requestLine).get();
         assertThat(methodFound).isEqualTo(givenMethod);
-        assertThat(methodFound.invoke(methodFound.getDeclaringClass().newInstance(), new User()).toString()).isEqualTo("/user/profile");
+        assertThat(methodFound.invoke(methodFound.getDeclaringClass().newInstance(), new User())).isEqualTo(View.of("/user/profile"));
     }
 
     @Test
     void findControllerMethodWithPost() throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
         Method givenMethod = UserController.class.getMethod("createUserPost", User.class);
-        Method methodFound = ControllerFinder.findController(HttpMethod.POST, UriPath.of("/user/create")).get();
+        RequestLine requestLine = RequestLine.of(HttpMethod.POST, RequestUri.of("/user/create"), HttpVersion.HTTP1_1);
+        Method methodFound = ControllerFinder.findController(requestLine).get();
         assertThat(methodFound).isEqualTo(givenMethod);
-        assertThat(methodFound.invoke(methodFound.getDeclaringClass().newInstance(), new User()).toString()).isEqualTo("/user/profile");
+        assertThat(methodFound.invoke(methodFound.getDeclaringClass().newInstance(), new User())).isEqualTo(View.of("/user/profile"));
     }
 }

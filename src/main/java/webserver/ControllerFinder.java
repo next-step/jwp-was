@@ -2,8 +2,7 @@ package webserver;
 
 import annotation.Controller;
 import annotation.RequestMapping;
-import model.http.HttpMethod;
-import model.http.UriPath;
+import model.http.RequestLine;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,12 +14,12 @@ public class ControllerFinder {
     private static final String BASE_CLASS_PATH = "";
     private static final String CLASS_FILE_EXTENSION = ".class";
 
-    public static Optional<Method> findController(HttpMethod httpMethod, UriPath path) {
+    public static Optional<Method> findController(RequestLine requestLine) {
         try {
             return findAllClassInClassPath().stream()
                     .filter(clazz -> clazz.isAnnotationPresent(Controller.class))
                     .flatMap(clazz -> Arrays.stream(clazz.getMethods()))
-                    .filter(method -> isRequestMappingAnnotationPresentWithUriPath(httpMethod, path, method))
+                    .filter(method -> isRequestMappingAnnotationPresentWithUriPath(requestLine, method))
                     .findFirst();
         } catch (Exception e) {
             return Optional.empty();
@@ -76,9 +75,9 @@ public class ControllerFinder {
         return file.getName().endsWith(CLASS_FILE_EXTENSION);
     }
 
-    private static boolean isRequestMappingAnnotationPresentWithUriPath(HttpMethod httpMethod, UriPath path, Method method) {
+    private static boolean isRequestMappingAnnotationPresentWithUriPath(RequestLine requestLine, Method method) {
         return method.isAnnotationPresent(RequestMapping.class)
-                && path.isSamePath(method.getDeclaredAnnotation(RequestMapping.class).path())
-                && httpMethod.equals(method.getDeclaredAnnotation(RequestMapping.class).method());
+                && requestLine.isSamePath(method.getDeclaredAnnotation(RequestMapping.class).path())
+                && requestLine.isSameMethod(method.getDeclaredAnnotation(RequestMapping.class).method());
     }
 }

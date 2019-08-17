@@ -2,16 +2,19 @@ package model.http;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class HttpRequestHeader {
     private RequestLine requestLine;
     private ContentLength contentLength;
 
     private HttpRequestHeader(RequestLine requestLine) {
+        if (!validateRequestLine(requestLine)) throw new IllegalArgumentException("wrong request line");
         this.requestLine = requestLine;
     }
 
     private HttpRequestHeader(RequestLine requestLine, ContentLength contentLength) {
+        if (!validateRequestLine(requestLine)) throw new IllegalArgumentException("wrong request line");
         this.requestLine = requestLine;
         this.contentLength = contentLength;
     }
@@ -50,8 +53,16 @@ public class HttpRequestHeader {
         return contentLength;
     }
 
+    private boolean validateRequestLine(RequestLine requestLine) {
+        return requestLine != null;
+    }
+
     public boolean containsBody() {
         return requestLine.getMethod().containsBody();
+    }
+
+    public Optional<QueryParameter> findQueryParameterByName(String name) {
+        return requestLine.getRequestUri().getQuery().findByName(name);
     }
 
     @Override

@@ -21,6 +21,10 @@ public class RequestLine {
         return httpVersion;
     }
 
+    public UriPath getPath() {
+        return requestUri.getUriPath();
+    }
+
     private RequestLine(HttpMethod method, RequestUri requestUri, HttpVersion httpVersion) {
         this.method = method;
         this.requestUri = requestUri;
@@ -66,5 +70,13 @@ public class RequestLine {
     @Override
     public int hashCode() {
         return Objects.hash(method, requestUri, httpVersion);
+    }
+
+    public boolean isSamePath(String path) {
+        return requestUri.getUriPath().isSamePath(path);
+    }
+
+    public boolean isSameMethod(HttpMethod method) {
+        return this.method.equals(method);
     }
 }

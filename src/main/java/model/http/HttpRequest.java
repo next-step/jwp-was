@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class HttpRequest {
     private HttpRequestHeader httpRequestHeader;
@@ -24,17 +25,8 @@ public class HttpRequest {
     }
 
     public static HttpRequest of(InputStream in) throws IOException {
-        HttpRequestHeader httpRequestHeader;
-
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        List<String> headerLines = new ArrayList<>();
-        String line;
-
-        while (!StringUtils.isEmpty(line = reader.readLine())) {
-            headerLines.add(line);
-        }
-
-        httpRequestHeader = HttpRequestHeader.of(headerLines);
+        HttpRequestHeader httpRequestHeader = makeHttpRequestHeader(reader);
 
         if (httpRequestHeader.containsBody()) {
             HttpRequestBody httpRequestBody = HttpRequestBody.of(reader, httpRequestHeader.getContentLength());
@@ -44,16 +36,38 @@ public class HttpRequest {
         return new HttpRequest(httpRequestHeader);
     }
 
+    private static HttpRequestHeader makeHttpRequestHeader(BufferedReader reader) throws IOException {
+        HttpRequestHeader httpRequestHeader;
+        List<String> headerLines = new ArrayList<>();
+        String line;
+
+        while (!StringUtils.isEmpty(line = reader.readLine())) {
+            headerLines.add(line);
+        }
+
+        httpRequestHeader = HttpRequestHeader.of(headerLines);
+        return httpRequestHeader;
+    }
+
     public static HttpRequest of(HttpRequestHeader httpRequestHeader) {
         return new HttpRequest(httpRequestHeader);
     }
 
-    public HttpRequestHeader getHttpRequestHeader() {
-        return httpRequestHeader;
+    public RequestLine getRequestLine() {
+        return httpRequestHeader.getRequestLine();
     }
 
-    public HttpRequestBody getHttpRequestBody() {
-        return httpRequestBody;
+    public boolean containsBody() {
+        return httpRequestHeader.containsBody() && httpRequestBody != null;
+    }
+
+    public Optional<String> findDataValueByName(String name) {
+        if (containsBody()) {
+            return httpRequestBody.findDataByName(name)
+                    .map(QueryParameter::getValue);
+        }
+        return httpRequestHeader.findQueryParameterByName(name)
+                .map(QueryParameter::getValue);
     }
 
     @Override

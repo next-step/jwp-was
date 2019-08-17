@@ -5,6 +5,7 @@ import utils.IOUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 public class HttpRequestBody {
     private Query query;
@@ -19,6 +20,10 @@ public class HttpRequestBody {
 
     public Query getQuery() {
         return query;
+    }
+
+    public Optional<QueryParameter> findDataByName(String name) {
+        return query.findByName(name);
     }
 
     @Override

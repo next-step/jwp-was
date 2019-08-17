@@ -1,5 +1,6 @@
 package webserver;
 
+import model.controller.View;
 import model.http.HttpRequest;
 import model.http.RequestLine;
 import model.http.UriPath;
@@ -18,6 +19,8 @@ import java.util.Optional;
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
+    private static final String DEFAULT_RESOURCE_EXTENSION = ".html";
+
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -31,50 +34,45 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = HttpRequest.of(in);
-            getResponseBody(httpRequest, out);
+            response(httpRequest, out);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
 
-    private boolean getResponseBody(HttpRequest httpRequest, OutputStream out) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        RequestLine requestLine = httpRequest.getHttpRequestHeader().getRequestLine();
-        UriPath uriPath = requestLine.getRequestUri().getUriPath();
+    private boolean response(HttpRequest httpRequest, OutputStream out) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        RequestLine requestLine = httpRequest.getRequestLine();
 
         Optional<byte[]> body;
-        if ((body = ResourceFinder.find(uriPath)).isPresent()) {
-            response(out, body.get());
+        if ((body = ResourceFinder.find(requestLine.getPath())).isPresent()) {
+            okResponse(out, body.get());
             return true;
         }
 
-        Optional<Method> method = ControllerFinder.findController(requestLine.getMethod(), uriPath);
+        Optional<Method> method = ControllerFinder.findController(requestLine);
 
         if (method.isPresent()) {
-            String returnResourcePath = returnResourcePath(httpRequest, method.get());
+            View view = returnResourcePath(httpRequest, method.get());
 
-            if (isRedirect(returnResourcePath)) {
-                redirectResponse(out, returnResourcePath.replace("redirect:", ""));
+            if (view.isRedirect()) {
+                redirectResponse(out, view.getResourcePath());
                 return true;
             }
-            body = getBodyByControllerResource(returnResourcePath);
-            response(out, body.get());
+            body = getBodyByControllerResource(view.getResourcePath());
+            okResponse(out, body.get());
         }
         return true;
     }
 
     private Optional<byte[]> getBodyByControllerResource(String returnResourcePath) {
-        return ResourceFinder.find(UriPath.of(returnResourcePath + ".html"));
+        return ResourceFinder.find(UriPath.of(returnResourcePath + DEFAULT_RESOURCE_EXTENSION));
     }
 
-    private boolean isRedirect(String returnValueByControllerMethod) {
-        return returnValueByControllerMethod.startsWith("redirect:");
+    private View returnResourcePath(HttpRequest httpRequest, Method method) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        return ControllerMethodInvoker.invoke(method, httpRequest);
     }
 
-    private String returnResourcePath(HttpRequest httpRequest, Method method) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        return (String) ControllerMethodInvoker.invoke(method, httpRequest);
-    }
-
-    private boolean response(OutputStream out, byte[] body) {
+    private boolean okResponse(OutputStream out, byte[] body) {
         DataOutputStream dos = new DataOutputStream(out);
         return response200Header(dos, body.length)
                 && responseBody(dos, body);
