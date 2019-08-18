@@ -16,7 +16,7 @@ public abstract class HttpConverter {
     public static final String JS_FILE_NAMING = ".js";
 
     public static final String BASIC_URL = "http://localhost:8080";
-    public static final String SESSION_ID = "tokenId";
+    public static final String SESSION_ID = "jsessionid";
     public static final String COOKIE = "Cookie";
 
 }

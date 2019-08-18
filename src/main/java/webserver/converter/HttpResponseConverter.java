@@ -50,9 +50,15 @@ public class HttpResponseConverter {
     }
 
     private static void setCookieOption(HttpResponse httpResponse, StringBuffer buffer){
-        if(httpResponse.getHttpSession() != null){
-            buffer.append("Set-Cookie: " + httpResponse.getHttpSession().getToString() + "\r\n");
+        String cookieStr = "";
+        if(httpResponse.getSession() != null){
+            cookieStr = httpResponse.getSession().getToString() + HttpConverter.QUERY_COOKIE_SEPARATOR
+                    + HttpConverter.SEPARATOR;
         }
+
+        cookieStr += httpResponse.getCookie();
+
+        buffer.append("Set-Cookie: " + cookieStr + "\r\n");
     }
 
 }

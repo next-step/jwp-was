@@ -33,7 +33,7 @@ public class HttpRequest {
 
     public HttpHeader getHttpHeader() { return this.httpHeader; }
 
-    public HttpSession getHttpSession() {
+    public HttpSession getSession() {
         return httpSession;
     }
 

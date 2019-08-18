@@ -22,17 +22,15 @@ public class UserLoginController extends AbstractControllerStructor {
 
         HttpResponse response = HttpResponse.reDirect(httpRequest, redirectUrl);
 
-        HttpSession newSession = response.getHttpSession();
+        HttpSession httpSession = httpRequest.getSession();
+        httpSession.setAttribute("login", user.getUserId());
 
         if(user != null){
-            newSession.setAttribute("logined", true);
-            newSession.setAttribute("Path", "/");
+            response.addCookie("logined=true; Path=/");
         }else{
-            newSession.setAttribute("logined", false);
-            newSession.setAttribute("Path", "/user/login_failed.html");
+            response.addCookie("logined=false; Path=/user/login_failed.html");
         }
 
-        response.addSession(newSession);
         return response;
     }
 

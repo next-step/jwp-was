@@ -17,13 +17,13 @@ public class HttpResponse {
 
     public static HttpResponse ok(HttpRequest request){
         HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.OK, request.getEtcHeader()),
-                request.getHttpSession());
+                request.getSession());
         return response;
     }
 
     public static HttpResponse reDirect(HttpRequest request, String redirectUrl) {
         HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.REDIRECT, request.getEtcHeader()),
-                request.getHttpSession());
+                request.getSession());
         response.redirectUrl = redirectUrl;
         return response;
     }
@@ -35,13 +35,13 @@ public class HttpResponse {
 
     public static HttpResponse serverError(HttpRequest request){
         HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.OK, request.getEtcHeader()),
-                request.getHttpSession());
+                request.getSession());
         return response;
     }
 
     public static HttpResponse pageNotFound(HttpRequest request){
         HttpResponse response = new HttpResponse(makeHeader(request, HttpStatus.NOT_FOUND, request.getEtcHeader()),
-                request.getHttpSession());
+                request.getSession());
         return response;
     }
 
@@ -50,11 +50,11 @@ public class HttpResponse {
         this.resultBody = resultBody;
     }
 
-    public void addSession(HttpSession httpSession){
-        this.httpSession = httpSession;
+    public void addCookie(String cookie){
+        this.cookie = cookie;
     }
 
-    public HttpSession getHttpSession() {
+    public HttpSession getSession() {
         if(httpSession == null)
             return new HttpSession();
 

@@ -81,13 +81,11 @@ public class HttpHeaderConverter extends HttpConverter{
         HttpSession session;
         if(cookieAttribute.containsKey(SESSION_ID)){
             session = HttpSessionManager.getSession(cookieAttribute.get(SESSION_ID));
-            initSessionAttribute(cookieAttribute, session);
             request.addSession(session);
             return;
         }
 
         session = HttpSessionManager.newSession();
-        initSessionAttribute(cookieAttribute, session);
         request.addSession(session);
     }
 
@@ -99,10 +97,4 @@ public class HttpHeaderConverter extends HttpConverter{
         }
     }
 
-    private void initSessionAttribute(HashMap<String, String> cookies, HttpSession session){
-        cookies.keySet().stream()
-                .forEach(s -> {
-                    session.setAttribute(s, cookies.get(s));
-                });
-    }
 }

@@ -9,6 +9,7 @@ import webserver.converter.HttpFileConverter;
 import webserver.http.AbstractControllerStructor;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +30,9 @@ public class UserListController extends AbstractControllerStructor {
             List<User> userList = DataBase.findAll()
                     .stream().collect(Collectors.toList());
             String remakeContent = template.apply(userList);
+
+            HttpSession session = httpRequest.getSession();
+            System.out.println("session TESTTTTTTtttttttt ||  " + session.getAttribute("login"));
 
             response.initResultBody(httpRequest.getUrlPath(), remakeContent);
             return response;
