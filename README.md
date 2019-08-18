@@ -76,3 +76,35 @@
 - [x] 요구사항 7 : stylesheet 지원하도록 구현
 
 > 뒤로 갈수록 테스트케이스를 어떻게 만들어야할지 잘 모르겠다.
+
+-----------------------------------------------------
+## step2 구조 재정리
+
+#### 1. HttpRequest
+- [x] RequestLine : method, url, queryString 정보 보관
+- [x] RequestHeader : header 각종정보 보관
+- [x] RequestParams : queryString 또는 reqBody 데이터를 key,value형태로 나눠서 보관
+
+ #### 2. HttpResponse
+- [x] StatusLine
+- [x] Location
+- [x] ContentType
+- [x] ContentLength
+- [x] Cookie
+
+ #### 3. RequestMapping
+- [x] PathMapper -> RequestMapping 
+    - [x] 각각 controller를 호출하도록 변경
+    - [x] responseUrl은 controller에서 관리하도록 변경
+
+- [x] ResourceMapping
+    - [x] css, js, font, images 지원
+
+ #### 4. Controller
+- [x] HomeController : index.html
+- [x] UserCreateController : 회원가입
+- [x] UserListController : 회원목록
+- [x] UserLoginController : 로그인
+- [x] ForwardController : 단순 forwarding
+
+

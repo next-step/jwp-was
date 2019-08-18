@@ -1,12 +1,15 @@
 package model;
 
-import webserver.http.Parameters;
+import webserver.http.request.HttpRequestParams;
 
 public class User {
     private String userId;
     private String password;
     private String name;
     private String email;
+
+    private User() {
+    }
 
     public User(String userId, String password, String name, String email) {
         this.userId = userId;
@@ -15,11 +18,15 @@ public class User {
         this.email = email;
     }
 
-    public static User newInstance(Parameters parameters) {
-        return new User(parameters.findByKey("userId")
-                , parameters.findByKey("password")
-                , parameters.findByKey("name")
-                , parameters.findByKey("email"));
+    public static User of(HttpRequestParams reqParams) {
+        return new User(reqParams.findByKey("userId")
+                , reqParams.findByKey("password")
+                , reqParams.findByKey("name")
+                , reqParams.findByKey("email"));
+    }
+
+    public static User empty() {
+        return new User();
     }
 
     public String getUserId() {
@@ -38,8 +45,19 @@ public class User {
         return email;
     }
 
-    public boolean isCorrectPassword(String password) {
-        return this.password.equals(password);
+    public boolean isOwner(HttpRequestParams requestParams) {
+        if (isEmpty()) {
+            return false;
+        }
+
+        String userId = requestParams.findByKey("userId");
+        String password = requestParams.findByKey("password");
+
+        return this.userId.equals(userId) && this.password.equals(password);
+    }
+
+    private boolean isEmpty() {
+        return userId == null && password == null;
     }
 
     @Override

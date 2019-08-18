@@ -1,13 +1,16 @@
 package utils;
 
 public enum HttpStringType {
-    PATH_PATTERN("^(/[a-zA-Z0-9]+)+[?](.+)$"),
     QUERYSTRING_PATTERN("^([^=&]+=[^=&]+)+(&[^&]+=[^=&]+)*$"),
+
     DELIMITER_AMPERSAND("&"),
     DELIMITER_EQUAL_SIGN("="),
     DELIMITER_QUESTION_MARK("[?]"),
     DELIMITER_SPACE(" "),
-    FILE_PATH_PREFIX("./templates"),
+
+    TEMPLATES_PREFIX("./templates"),
+    STATIC_PREFIX("./static"),
+
     FILE_PATH_EXT(".html");
 
     private String type;

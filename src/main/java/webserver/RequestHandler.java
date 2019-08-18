@@ -2,15 +2,14 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.IOUtils;
-import webserver.http.RequestHeader;
-import webserver.http.RequestLine;
-import webserver.service.WebService;
-import webserver.service.WebServiceFactory;
+import webserver.controller.Controller;
+import webserver.http.mapping.RequestMapping;
+import webserver.http.mapping.ResourceMapping;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.URISyntaxException;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -31,50 +30,27 @@ public class RequestHandler implements Runnable {
             }
 
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            RequestLine requestLine = readRequestLine(br);
-            RequestHeader requestHeader = readRequestHeader(br);
-
-            handleRequestBody(requestLine, br, requestHeader.findByKey("Content-Length"));
-            handlerWebService(out, requestLine, requestHeader);
-        } catch (IOException | URISyntaxException e) {
+            handleRequest(br, out);
+        } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
         }
     }
 
-    private void handleRequestBody(RequestLine requestLine, BufferedReader br, String contentLength) throws IOException {
-        if ("GET".equals(requestLine.getMethod())) {
+    private void handleRequest(BufferedReader br, OutputStream out) throws Exception {
+        HttpRequest httpRequest = HttpRequest.of(br);
+        String requestUri = httpRequest.getRequestUri();
+        logger.debug("requestUri : {}", requestUri);
+
+        if (ResourceMapping.support(requestUri)) {
+            HttpResponse response = new HttpResponse().resource(requestUri);
+            ResponseHandler.response(out, response);
             return;
         }
 
-        String reqBody = IOUtils.readData(br, Integer.parseInt(contentLength));
-        requestLine.getPath().addParameters(reqBody);
-    }
-
-    private void handlerWebService(OutputStream outputStream, RequestLine requestLine, RequestHeader requestHeader) throws IOException, URISyntaxException {
-        WebService webService = WebServiceFactory.create(requestLine.getPath().getPath());
-        if (webService != null) {
-            webService.process(outputStream, requestLine, requestHeader);
-            return;
+        if (RequestMapping.support(requestUri)) {
+            Controller controller = RequestMapping.getController(requestUri);
+            controller.handle(out, httpRequest);
         }
-
-        if (requestLine.getPath().getPath().endsWith(".css")) {
-            ResponseHandler.response200WithCss(outputStream, requestLine);
-            return;
-        }
-
-        if (requestLine.getPath().getPath().endsWith(".js")) {
-            ResponseHandler.response200WithJs(outputStream, requestLine);
-            return;
-        }
-
-        ResponseHandler.response200WithHtml(outputStream, requestLine);
-    }
-
-    public RequestLine readRequestLine(BufferedReader br) throws IOException {
-        return RequestLine.parse(br.readLine());
-    }
-
-    public RequestHeader readRequestHeader(BufferedReader br) throws IOException {
-        return RequestHeader.newInstance(br);
     }
 }
