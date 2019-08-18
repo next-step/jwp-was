@@ -18,4 +18,4 @@ public class HttpResponseTest {
 
         logger.debug(httpResponse.getResponseHeader());
     }
- }
+}
