@@ -6,6 +6,6 @@ import view.View;
 
 public interface HttpServlet {
 
-  View service(HttpRequest httpRequest, HttpResponse httpResponse);
+  void service(HttpRequest httpRequest, HttpResponse httpResponse);
   
 }

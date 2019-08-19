@@ -3,6 +3,7 @@ package http;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import utils.IOUtils;
 
@@ -14,6 +15,7 @@ public class HttpRequest {
   private RequestHeader requestHeader;
   private Map<String, String> requestBody;
   private HttpSession httpSession;
+  private Map<String, Object> attributes = new HashMap<>();
 
   public HttpRequest(BufferedReader requestStream, HttpSessions httpSessions) throws IOException {
     requestLine = RequestLine.parse(requestStream.readLine());
@@ -84,4 +86,13 @@ public class HttpRequest {
   public HttpSession getHttpSession() {
     return httpSession;
   }
+
+  public void addAttribute(String name, Object value) {
+    attributes.put(name, value);
+  }
+
+  public Map<String, Object> getAttributes() {
+    return attributes;
+  }
+
 }

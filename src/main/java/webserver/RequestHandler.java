@@ -13,8 +13,6 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import servlet.HttpServlet;
-import servlet.ServletMapper;
-import view.View;
 
 public class RequestHandler implements Runnable {
 
@@ -48,13 +46,10 @@ public class RequestHandler implements Runnable {
       }
 
       HttpServlet servlet = servletMapper.getServlet(httpRequest.getPath());
-      View view = servlet.service(httpRequest, httpResponse);
-      view.render(httpRequest, httpResponse);
+      servlet.service(httpRequest, httpResponse);
 
     } catch (IOException e) {
       logger.error(e.getMessage());
     }
   }
-
-
 }

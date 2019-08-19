@@ -1,22 +1,26 @@
 package servlet;
 
+import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
+import java.util.Collection;
 import java.util.Map;
-import view.HandleBarsView;
-import view.RedirectView;
-import view.View;
+import model.User;
+import view.HandleBarsViewResolver;
 
 public class UserListServlet extends AbstractHttpServlet {
 
   private static final String LOGIN_COOKIE_KEY = "logined";
 
   @Override
-  public View doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
+  public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
     if (isLogined(httpRequest.getCookies())) {
-      return new HandleBarsView("/user/list");
+      Collection<User> users = DataBase.findAll();
+      httpRequest.addAttribute("users", users);
+      httpResponse.forward("/user/list", httpRequest, new HandleBarsViewResolver());
+      return;
     }
-    return new RedirectView("/user/login.html");
+    httpResponse.sendRedirect("/user/login.html");
   }
 
   private boolean isLogined(Map<String, String> cookies) {

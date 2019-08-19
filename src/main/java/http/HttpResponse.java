@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import view.DefaultViewResolver;
+import view.View;
+import view.ViewResolver;
 
 public class HttpResponse {
 
@@ -35,8 +38,33 @@ public class HttpResponse {
     this.dos = dos;
   }
 
+  private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
+
   public void addCookie(String cookieName, String cookieValue) {
     cookies.put(cookieName, cookieValue);
+  }
+
+  public void sendRedirect(String redirectUrl) {
+    setHttpVersion("HTTP1/1");
+    setHttpStatus(HttpStatus.Found);
+    setContentType("Content-Type: text/html;charset=utf-8");
+    setLocation(redirectUrl);
+    render();
+  }
+
+  public void forward(String path, HttpRequest request, ViewResolver viewResolver) {
+    try {
+      View view = viewResolver.resolve(path);
+      view.render(request, this);
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
+  }
+
+  public void error(HttpStatus status) {
+    setHttpVersion("HTTP1/1");
+    setHttpStatus(status);
+    render();
   }
 
   public void render() {

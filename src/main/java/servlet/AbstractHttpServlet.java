@@ -7,22 +7,24 @@ import view.View;
 abstract class AbstractHttpServlet implements HttpServlet {
 
   @Override
-  public View service(HttpRequest httpRequest, HttpResponse httpResponse) {
+  public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
 
     if (httpRequest.isPost()) {
-      return doPost(httpRequest, httpResponse);
+      doPost(httpRequest, httpResponse);
+      return;
     }
     if (httpRequest.isGet()) {
-      return doGet(httpRequest, httpResponse);
+      doGet(httpRequest, httpResponse);
+      return;
     }
     throw new UnsupportedOperationException("허용되지 않은 메소드 요청입니다.");
   }
 
-  public View doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
+  public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
     throw new UnsupportedOperationException("허용되지 않은 메소드 요청입니다.");
   }
 
-  public View doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+  public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
     throw new UnsupportedOperationException("허용되지 않은 메소드 요청입니다.");
   }
 

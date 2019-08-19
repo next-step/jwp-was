@@ -1,10 +1,13 @@
-package servlet;
+package webserver;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import servlet.DefaultServlet;
+import servlet.HttpServlet;
+import servlet.StaticResourceServlet;
 
 public class ServletMapper {
 
