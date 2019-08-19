@@ -52,15 +52,6 @@ public class HttpResponse {
     render();
   }
 
-  public void forward(String path, HttpRequest request, ViewResolver viewResolver) {
-    try {
-      View view = viewResolver.resolve(path);
-      view.render(request, this);
-    } catch (Exception e) {
-      log.error(e.getMessage());
-    }
-  }
-
   public void error(HttpStatus status) {
     setHttpVersion("HTTP1/1");
     setHttpStatus(status);

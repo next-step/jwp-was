@@ -26,8 +26,4 @@ public class DefaultView implements View {
     response.render();
   }
 
-  private String getContentType(HttpRequest httpRequest) {
-    return httpRequest.getAccept();
-  }
-
 }

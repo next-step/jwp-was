@@ -5,14 +5,16 @@ import http.HttpRequest;
 import http.HttpResponse;
 import java.util.Map;
 import model.User;
+import view.RedirectView;
+import view.View;
 
 public class UserCreateServlet extends AbstractHttpServlet {
 
   @Override
-  public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+  public View doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
     User user = createUser(httpRequest.getParameters());
     DataBase.addUser(user);
-    httpResponse.sendRedirect("/index.html");
+    return new RedirectView("/index.html");
   }
 
   User createUser(Map<String, String> parameters) {
