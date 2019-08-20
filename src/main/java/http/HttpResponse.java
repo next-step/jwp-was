@@ -7,13 +7,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import view.DefaultViewResolver;
+import view.View;
+import view.ViewResolver;
 
 public class HttpResponse {
 
   private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
   private static final String NEW_LINE_SYMBOL = "\r\n";
-  private static final String COOKIES_JOINING_SYMBOL = "; ";
+  private static final String COOKIES_JOINING_SYMBOL = ", ";
   private static final String EQUALS_SYMBOL = "=";
   private static final String SET_COOKIE_KEY = "Set-Cookie: ";
   private static final String SPACE = " ";
@@ -35,8 +38,24 @@ public class HttpResponse {
     this.dos = dos;
   }
 
+  private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
+
   public void addCookie(String cookieName, String cookieValue) {
     cookies.put(cookieName, cookieValue);
+  }
+
+  public void sendRedirect(String redirectUrl) {
+    setHttpVersion("HTTP1/1");
+    setHttpStatus(HttpStatus.Found);
+    setContentType("Content-Type: text/html;charset=utf-8");
+    setLocation(redirectUrl);
+    render();
+  }
+
+  public void error(HttpStatus status) {
+    setHttpVersion("HTTP1/1");
+    setHttpStatus(status);
+    render();
   }
 
   public void render() {

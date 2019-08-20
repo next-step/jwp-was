@@ -4,11 +4,11 @@ import http.HttpRequest;
 import http.HttpResponse;
 import http.HttpStatus;
 
-public class StaticView implements View {
+public class DefaultView implements View {
 
-  private byte[] body;
+  byte[] body;
 
-  public StaticView(byte[] body) {
+  public DefaultView(byte[] body) {
     this.body = body;
   }
 
@@ -20,14 +20,10 @@ public class StaticView implements View {
     }
     response.setHttpVersion("HTTP1/1");
     response.setHttpStatus(HttpStatus.OK);
-    response.setContentType(getContentType(request));
+    response.setContentType("text/html;charset=utf-8");
     response.setContentLength(body.length);
     response.setBody(body);
     response.render();
-  }
-
-  private String getContentType(HttpRequest httpRequest) {
-    return httpRequest.getAccept();
   }
 
 }

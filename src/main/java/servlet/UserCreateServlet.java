@@ -3,8 +3,6 @@ package servlet;
 import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
-import http.HttpStatus;
-import http.Parameters;
 import java.util.Map;
 import model.User;
 import view.RedirectView;

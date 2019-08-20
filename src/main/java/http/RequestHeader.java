@@ -124,6 +124,10 @@ public class RequestHeader {
     return cookies;
   }
 
+  public String getSessionKey(String sessionCookieId) {
+    return cookies.get(sessionCookieId);
+  }
+
   @Override
   public String toString() {
     return "RequestHeader{" +
@@ -163,5 +167,4 @@ public class RequestHeader {
         .hash(host, connection, userAgent, accept, referer, acceptEncoding, acceptLanguage,
             contentLength);
   }
-
 }

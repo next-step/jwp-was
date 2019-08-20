@@ -1,4 +1,9 @@
-package servlet;
+package webserver;
+
+import servlet.HttpServlet;
+import servlet.LoginServlet;
+import servlet.UserCreateServlet;
+import servlet.UserListServlet;
 
 public enum ServletMappingInfo {
   USER_CREATE("/user/create", new UserCreateServlet()),

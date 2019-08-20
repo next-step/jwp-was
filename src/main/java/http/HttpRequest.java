@@ -3,19 +3,24 @@ package http;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import utils.IOUtils;
 
 public class HttpRequest {
 
+  public static final String SESSION_COOKIE_ID = "JSESSIONID";
+
   private RequestLine requestLine;
   private RequestHeader requestHeader;
   private Map<String, String> requestBody;
+  private HttpSession httpSession;
 
-  public HttpRequest(BufferedReader requestStream) throws IOException {
+  public HttpRequest(BufferedReader requestStream, HttpSessions httpSessions) throws IOException {
     requestLine = RequestLine.parse(requestStream.readLine());
     requestHeader = RequestHeader.parse(requestStream);
     requestBody = initRequestBody(requestStream);
+    httpSession = httpSessions.get(getSessionKey());
   }
 
   private Map<String, String> initRequestBody(BufferedReader requestStream) throws IOException {
@@ -68,4 +73,17 @@ public class HttpRequest {
   public String getAccept() {
     return requestHeader.getAccept();
   }
+
+  public String getSessionKey() {
+    return requestHeader.getSessionKey(SESSION_COOKIE_ID);
+  }
+
+  public boolean hasSession() {
+    return httpSession != null;
+  }
+
+  public HttpSession getHttpSession() {
+    return httpSession;
+  }
+
 }
