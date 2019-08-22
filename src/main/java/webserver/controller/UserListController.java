@@ -12,6 +12,7 @@ import webserver.http.HttpResponse;
 import webserver.http.HttpSession;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class UserListController extends AbstractControllerStructor {
@@ -32,10 +33,17 @@ public class UserListController extends AbstractControllerStructor {
             String remakeContent = template.apply(userList);
 
             HttpSession session = httpRequest.getSession();
-            System.out.println("session TESTTTTTTtttttttt ||  " + session.getAttribute("login"));
+            boolean loginYn = (boolean) Optional
+                    .ofNullable(session.getAttribute("logined"))
+                    .orElse(false);
 
-            response.initResultBody(httpRequest.getUrlPath(), remakeContent);
-            return response;
+            if(loginYn){
+                response.initResultBody(httpRequest.getUrlPath(), remakeContent);
+                return response;
+            }
+
+            return HttpResponse.reDirect(httpRequest,
+                    HttpConverter.BASIC_URL + "/user/login.html");
         }catch (Exception e){
             return HttpResponse.pageNotFound(httpRequest);
         }

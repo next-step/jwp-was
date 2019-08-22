@@ -46,20 +46,8 @@ public class HttpSession {
         sessionAttributeMap.clear();
     }
 
-    public String getToString(){
-        String attributeStr = "";
-        List<String> keyValue = new ArrayList<>(sessionAttributeMap.keySet());
-        for(String keyStr : keyValue){
-            if(keyStr.equals(HttpConverter.SESSION_ID)){
-                continue;
-            }
-
-            attributeStr += keyStr + HttpConverter.QUERY_KEY_VALUE_DELIMITER + sessionAttributeMap.get(keyStr)
-                    + HttpConverter.QUERY_COOKIE_SEPARATOR + HttpConverter.SEPARATOR;
-        }
-
+    public String getStringToSessionId(){
         return HttpConverter.SESSION_ID + HttpConverter.QUERY_KEY_VALUE_DELIMITER + sessionId
-                + HttpConverter.QUERY_COOKIE_SEPARATOR + HttpConverter.SEPARATOR
-                + attributeStr;
+                + HttpConverter.QUERY_COOKIE_SEPARATOR + HttpConverter.SEPARATOR;
     }
 }
