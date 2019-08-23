@@ -52,3 +52,9 @@ feat ($step1): HTTP 파싱 및 IF문 중복 제거
 - HttpHeader req,response 시 각각 생성
 - 기존 HttpResponseEntity로 response 만드는걸 직접적으로 접근
 - RequestLine 을 ServletContainer로 이름 변경
+
+새로 추가한 작업 $step4:
+- HttpSession 클래스 추가
+- HttpSessionManager 클래스 추가
+- addCookie 메소드 삭제 HttpSession으로 변경 작업
+- Header 쿠키값 Session 에 넣는 작업

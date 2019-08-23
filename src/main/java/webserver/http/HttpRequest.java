@@ -5,7 +5,8 @@ import java.util.HashMap;
 
 public class HttpRequest {
 
-    protected HttpHeader httpHeader;
+    private HttpHeader httpHeader;
+    private HttpSession httpSession;
 
     private HashMap<String, String> parameter;
     private String returnContent;
@@ -31,6 +32,10 @@ public class HttpRequest {
     }
 
     public HttpHeader getHttpHeader() { return this.httpHeader; }
+
+    public HttpSession getSession() {
+        return httpSession;
+    }
 
     public String getCookie() {
         return cookie;
@@ -62,5 +67,9 @@ public class HttpRequest {
 
     public void initEtcHeaderParameter(HashMap<String, String> etcHeader) {
         this.httpHeader.initEtcHeaderParameter(etcHeader);
+    }
+
+    public void addSession(HttpSession session){
+        this.httpSession = session;
     }
 }

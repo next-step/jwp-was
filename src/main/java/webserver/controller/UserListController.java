@@ -9,8 +9,10 @@ import webserver.converter.HttpFileConverter;
 import webserver.http.AbstractControllerStructor;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class UserListController extends AbstractControllerStructor {
@@ -30,8 +32,18 @@ public class UserListController extends AbstractControllerStructor {
                     .stream().collect(Collectors.toList());
             String remakeContent = template.apply(userList);
 
-            response.initResultBody(httpRequest.getUrlPath(), remakeContent);
-            return response;
+            HttpSession session = httpRequest.getSession();
+            boolean loginYn = (boolean) Optional
+                    .ofNullable(session.getAttribute("logined"))
+                    .orElse(false);
+
+            if(loginYn){
+                response.initResultBody(httpRequest.getUrlPath(), remakeContent);
+                return response;
+            }
+
+            return HttpResponse.reDirect(httpRequest,
+                    HttpConverter.BASIC_URL + "/user/login.html");
         }catch (Exception e){
             return HttpResponse.pageNotFound(httpRequest);
         }
