@@ -7,10 +7,16 @@ public class View {
 
     private String resourcePath;
     private boolean isRedirect;
+    private boolean hasLoginCookie;
 
     private View(String resourcePath, boolean isRedirect) {
+        this(resourcePath, isRedirect, false);
+    }
+
+    private View(String resourcePath, boolean isRedirect, boolean hasLoginCookie) {
         this.resourcePath = resourcePath;
         this.isRedirect = isRedirect;
+        this.hasLoginCookie = hasLoginCookie;
     }
 
     public static View of(String returnValue) {
@@ -23,12 +29,22 @@ public class View {
         return new View(resourcePath, isRedirect);
     }
 
+    public static View of(String returnValue, boolean hasLoginCookie) {
+        View newView = of(returnValue);
+        newView.hasLoginCookie = hasLoginCookie;
+        return newView;
+    }
+
     public String getResourcePath() {
         return resourcePath;
     }
 
     public boolean isRedirect() {
         return isRedirect;
+    }
+
+    public boolean isHasLoginCookie() {
+        return hasLoginCookie;
     }
 
     @Override

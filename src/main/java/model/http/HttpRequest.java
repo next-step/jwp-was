@@ -1,6 +1,9 @@
 package model.http;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+import webserver.RequestHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +15,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class HttpRequest {
+
+    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+
     private HttpRequestHeader httpRequestHeader;
     private HttpRequestBody httpRequestBody;
 
@@ -44,6 +50,8 @@ public class HttpRequest {
         while (!StringUtils.isEmpty(line = reader.readLine())) {
             headerLines.add(line);
         }
+
+        logger.debug(headerLines.toString());
 
         httpRequestHeader = HttpRequestHeader.of(headerLines);
         return httpRequestHeader;

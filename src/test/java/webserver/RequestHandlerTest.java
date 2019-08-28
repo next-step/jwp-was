@@ -1,5 +1,7 @@
 package webserver;
 
+import db.DataBase;
+import model.User;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -40,6 +42,8 @@ public class RequestHandlerTest {
 
     @Test
     void runRedirect() throws IOException {
+        DataBase.addUser(new User("ssosso", "test", "JangSoHyun", "ssossohow@gmail.com"));
+
         Socket socket = mock(Socket.class);
         when(socket.getInputStream()).thenReturn(new ByteArrayInputStream("PUT /user/update HTTP/1.1\nContent-Length: 43\n\nuserid=ssosso&password=test&name=JangSoHyun".getBytes()));
         when(socket.getOutputStream()).thenReturn(new ByteArrayOutputStream());
@@ -49,6 +53,25 @@ public class RequestHandlerTest {
 
         InputStream responseStream = new ByteArrayInputStream(((ByteArrayOutputStream) socket.getOutputStream()).toByteArray());
         BufferedReader reader = new BufferedReader(new InputStreamReader(responseStream));
-        assertThat(reader.readLine()).isEqualTo("HTTP/1.1 302 Found ");
+        assertThat(reader.readLine()).isEqualTo("HTTP/1.1 302 Found");
+        assertThat(reader.readLine()).isEqualTo("Location: /index.html");
+    }
+
+    @Test
+    void when_user_login_then_exist_set_cookie_in_header() throws IOException {
+        DataBase.addUser(new User("ssosso", "test", "JangSoHyun", "ssossohow@gmail.com"));
+
+        Socket loginSocket = mock(Socket.class);
+        when(loginSocket.getInputStream()).thenReturn(new ByteArrayInputStream("POST /user/login HTTP/1.1\nContent-Length: 27\n\nuserid=ssosso&password=test".getBytes()));
+        when(loginSocket.getOutputStream()).thenReturn(new ByteArrayOutputStream());
+
+        RequestHandler loginRequestHandler = new RequestHandler(loginSocket);
+        loginRequestHandler.run();
+
+        InputStream responseStream = new ByteArrayInputStream(((ByteArrayOutputStream) loginSocket.getOutputStream()).toByteArray());
+        BufferedReader reader = new BufferedReader(new InputStreamReader(responseStream));
+        assertThat(reader.readLine()).isEqualTo("HTTP/1.1 302 Found");
+        assertThat(reader.readLine()).isEqualTo("Location: /index.html");
+        assertThat(reader.readLine()).isEqualTo("Set-Cookie: logined=true; Path=/");
     }
 }

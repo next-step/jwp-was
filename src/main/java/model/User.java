@@ -23,8 +23,24 @@ public class User {
         return name;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     @Override
     public String toString() {
         return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
+    }
+
+    public User update(User user) {
+        this.userId = user.userId;
+        this.email = user.email;
+        this.name = user.name;
+        this.password = user.password;
+        return this;
+    }
+
+    public boolean matchPassword(String password) {
+        return this.password.equals(password);
     }
 }

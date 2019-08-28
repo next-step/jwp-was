@@ -3,6 +3,7 @@ package controller;
 import annotation.Controller;
 import annotation.RequestBody;
 import annotation.RequestMapping;
+import db.DataBase;
 import model.User;
 import model.controller.View;
 import model.http.HttpMethod;
@@ -17,6 +18,7 @@ public class UserController {
     public View createUser(@RequestBody User user) {
         logger.debug("==============GET /user/create");
         logger.debug(user.toString());
+        DataBase.addUser(user);
         return View.of("/user/profile");
     }
 
@@ -24,6 +26,7 @@ public class UserController {
     public View createUserPost(@RequestBody User user) {
         logger.debug("==============POST /user/create");
         logger.debug(user.toString());
+        DataBase.addUser(user);
         return View.of("/user/profile");
     }
 
@@ -31,6 +34,20 @@ public class UserController {
     public View updateUser(@RequestBody User user) {
         logger.debug("==============PUT /user/update");
         logger.debug(user.toString());
+        User userFound = DataBase.findUserById(user.getUserId());
+        userFound.update(user);
         return View.of("redirect:/index.html");
+    }
+
+    @RequestMapping(method = HttpMethod.POST, path = "/user/login")
+    public View loginUser(@RequestBody User user) {
+        logger.debug("==============POST /user/login");
+        logger.debug(user.toString());
+        User userFound = DataBase.findUserById(user.getUserId());
+        if (userFound != null && userFound.matchPassword(user.getPassword())) {
+            return View.of("redirect:/index.html", true);
+        } else {
+            return View.of("redirect:/user/login_failed.html");
+        }
     }
 }

@@ -45,7 +45,7 @@ public class RequestHandler implements Runnable {
 
         Optional<byte[]> body;
         if ((body = ResourceFinder.find(requestLine.getPath())).isPresent()) {
-            okResponse(out, body.get());
+            okResponse(out, body.get(), false);
             return true;
         }
 
@@ -55,11 +55,11 @@ public class RequestHandler implements Runnable {
             View view = returnResourcePath(httpRequest, method.get());
 
             if (view.isRedirect()) {
-                redirectResponse(out, view.getResourcePath());
+                redirectResponse(out, view.getResourcePath(), view.isHasLoginCookie());
                 return true;
             }
             body = getBodyByControllerResource(view.getResourcePath());
-            okResponse(out, body.get());
+            okResponse(out, body.get(), view.isHasLoginCookie());
         }
         return true;
     }
@@ -72,23 +72,24 @@ public class RequestHandler implements Runnable {
         return ControllerMethodInvoker.invoke(method, httpRequest);
     }
 
-    private boolean okResponse(OutputStream out, byte[] body) {
+    private boolean okResponse(OutputStream out, byte[] body, boolean hasLoginCookie) {
         DataOutputStream dos = new DataOutputStream(out);
-        return response200Header(dos, body.length)
+        return response200Header(dos, body.length, hasLoginCookie)
                 && responseBody(dos, body);
     }
 
-    private boolean redirectResponse(OutputStream out, String location) {
+    private boolean redirectResponse(OutputStream out, String location, boolean hasLoginCookie) {
         DataOutputStream dos = new DataOutputStream(out);
-        return response302Header(dos, location);
+        return response302Header(dos, location, hasLoginCookie);
     }
 
-    private boolean response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private boolean response200Header(DataOutputStream dos, int lengthOfBodyContent, boolean hasLoginCookie) {
         boolean result = false;
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            if (hasLoginCookie) responseLoginCookie(dos);
             dos.writeBytes("\r\n");
             result = true;
         } catch (IOException e) {
@@ -98,11 +99,12 @@ public class RequestHandler implements Runnable {
         return result;
     }
 
-    private boolean response302Header(DataOutputStream dos, String location) {
+    private boolean response302Header(DataOutputStream dos, String location, boolean hasLoginCookie) {
         boolean result = false;
         try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: " + location + " \r\n");
+            dos.writeBytes("HTTP/1.1 302 Found\r\n");
+            dos.writeBytes("Location: " + location + "\r\n");
+            if (hasLoginCookie) responseLoginCookie(dos);
             dos.writeBytes("\r\n");
             result = true;
         } catch (IOException e) {
@@ -110,6 +112,10 @@ public class RequestHandler implements Runnable {
         }
 
         return result;
+    }
+
+    private void responseLoginCookie(DataOutputStream dos) throws IOException {
+        dos.writeBytes("Set-Cookie: logined=true; Path=/");
     }
 
     private boolean responseBody(DataOutputStream dos, byte[] body) {
