@@ -2,8 +2,11 @@ package webserver;
 
 import controller.UserController;
 import model.User;
-import model.controller.View;
-import model.http.*;
+import model.controller.ResponseEntity;
+import model.http.HttpMethod;
+import model.http.HttpVersion;
+import model.http.RequestLine;
+import model.http.RequestUri;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,7 +21,7 @@ public class ControllerFinderTest {
         RequestLine requestLine = RequestLine.of(HttpMethod.GET, RequestUri.of("/user/create"), HttpVersion.HTTP1_1);
         Method methodFound = ControllerFinder.findController(requestLine).get();
         assertThat(methodFound).isEqualTo(givenMethod);
-        assertThat(methodFound.invoke(methodFound.getDeclaringClass().newInstance(), new User())).isEqualTo(View.of("/user/profile"));
+        assertThat(methodFound.invoke(methodFound.getDeclaringClass().newInstance(), new User())).isEqualTo(ResponseEntity.of("/user/profile"));
     }
 
     @Test
@@ -27,6 +30,6 @@ public class ControllerFinderTest {
         RequestLine requestLine = RequestLine.of(HttpMethod.POST, RequestUri.of("/user/create"), HttpVersion.HTTP1_1);
         Method methodFound = ControllerFinder.findController(requestLine).get();
         assertThat(methodFound).isEqualTo(givenMethod);
-        assertThat(methodFound.invoke(methodFound.getDeclaringClass().newInstance(), new User())).isEqualTo(View.of("/user/profile"));
+        assertThat(methodFound.invoke(methodFound.getDeclaringClass().newInstance(), new User())).isEqualTo(ResponseEntity.of("/user/profile"));
     }
 }

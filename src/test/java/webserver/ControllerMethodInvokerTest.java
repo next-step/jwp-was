@@ -2,7 +2,7 @@ package webserver;
 
 import controller.UserController;
 import model.User;
-import model.controller.View;
+import model.controller.ResponseEntity;
 import model.http.*;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +18,6 @@ public class ControllerMethodInvokerTest {
         Query query = Query.of("userid=ssosso&password=ssosso_password&name=JangSoHyun&email=ssossohow@gmail.com");
         RequestLine requestLine = RequestLine.of(HttpMethod.GET, RequestUri.of(UriPath.of("/user/create"), query), HttpVersion.HTTP1_1);
         HttpRequest httpRequest = HttpRequest.of(HttpRequestHeader.of(requestLine));
-        assertThat(ControllerMethodInvoker.invoke(method, httpRequest)).isEqualTo(View.of("/user/profile"));
+        assertThat(ControllerMethodInvoker.invoke(method, httpRequest)).isEqualTo(ResponseEntity.of("/user/profile"));
     }
 }

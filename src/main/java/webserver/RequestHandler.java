@@ -1,6 +1,6 @@
 package webserver;
 
-import model.controller.View;
+import model.controller.ResponseEntity;
 import model.http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,17 +40,6 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private boolean writeResponseIntoOutputStream(HttpResponse httpResponse, OutputStream out) {
-        DataOutputStream dos = new DataOutputStream(out);
-        try {
-            dos.writeBytes(httpResponse.print());
-            dos.flush();
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
-    }
-
     private Optional<HttpResponse> response(HttpRequest httpRequest) {
         RequestLine requestLine = httpRequest.getRequestLine();
         Optional<byte[]> body = ResourceFinder.find(requestLine.getPath());
@@ -62,18 +51,18 @@ public class RequestHandler implements Runnable {
         Optional<Method> method = ControllerFinder.findController(requestLine);
 
         if (method.isPresent()) {
-            View view;
+            ResponseEntity responseEntity;
             try {
-                view = returnResourcePath(httpRequest, method.get());
+                responseEntity = returnResourcePath(httpRequest, method.get());
             } catch (Exception e) {
                 return Optional.empty();
             }
 
-            if (view.isRedirect()) {
-                return Optional.of(getRedirectResponse(view.getResourcePath(), view.isHasLoginCookie()));
+            if (responseEntity.isRedirect()) {
+                return Optional.of(getRedirectResponse(responseEntity.getResourcePath(), responseEntity.isHasLoginCookie()));
             }
-            body = getBodyByControllerResource(view.getResourcePath());
-            return Optional.of(getOkResponse(body.get(), view.isHasLoginCookie()));
+            body = getBodyByControllerResource(responseEntity.getResourcePath());
+            return Optional.of(getOkResponse(body.get(), responseEntity.isHasLoginCookie()));
         }
         return Optional.empty();
     }
@@ -82,7 +71,7 @@ public class RequestHandler implements Runnable {
         return ResourceFinder.find(UriPath.of(returnResourcePath + DEFAULT_RESOURCE_EXTENSION));
     }
 
-    private View returnResourcePath(HttpRequest httpRequest, Method method) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    private ResponseEntity returnResourcePath(HttpRequest httpRequest, Method method) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         return ControllerMethodInvoker.invoke(method, httpRequest);
     }
 
@@ -111,5 +100,16 @@ public class RequestHandler implements Runnable {
         if (hasLoginCookie) httpResponseHeader.putAttribute("Set-Cookie", "logined=true; Path=/");
 
         return httpResponseHeader;
+    }
+
+    private boolean writeResponseIntoOutputStream(HttpResponse httpResponse, OutputStream out) {
+        DataOutputStream dos = new DataOutputStream(out);
+        try {
+            dos.writeBytes(httpResponse.print());
+            dos.flush();
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
     }
 }

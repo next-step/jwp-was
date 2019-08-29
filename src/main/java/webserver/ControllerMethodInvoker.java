@@ -1,7 +1,7 @@
 package webserver;
 
 import annotation.RequestBody;
-import model.controller.View;
+import model.controller.ResponseEntity;
 import model.http.HttpRequest;
 
 import java.lang.reflect.Field;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class ControllerMethodInvoker {
 
-    public static View invoke(Method method, HttpRequest httpRequest) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public static ResponseEntity invoke(Method method, HttpRequest httpRequest) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         List<Object> parameterObjects = new ArrayList<>();
 
         for (Parameter parameter : getParametersWithRequestBody(method)) {
@@ -25,7 +25,7 @@ public class ControllerMethodInvoker {
             parameterObjects.add(initFieldsWithQueryParameterValue(httpRequest, instance, fields));
         }
 
-        return (View) method.invoke(method.getDeclaringClass().newInstance(), parameterObjects.toArray());
+        return (ResponseEntity) method.invoke(method.getDeclaringClass().newInstance(), parameterObjects.toArray());
     }
 
     private static Object initFieldsWithQueryParameterValue(HttpRequest httpRequest, Object instance, Field[] fields) throws IllegalAccessException {
