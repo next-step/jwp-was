@@ -1,4 +1,4 @@
-package webserver;
+package model.http;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -24,5 +24,12 @@ public enum HttpVersion {
         return Arrays.stream(values())
                 .filter(httpVersion -> httpVersion.getVersion().equals(version))
                 .findFirst();
+    }
+
+    @Override
+    public String toString() {
+        return "HttpVersion{" +
+                "version='" + version + '\'' +
+                '}';
     }
 }

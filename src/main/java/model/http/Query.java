@@ -1,8 +1,6 @@
-package webserver;
+package model.http;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -15,6 +13,10 @@ public class Query {
 
     private Query(List<QueryParameter> queryParameters) {
         parameters = queryParameters;
+    }
+
+    public static Query ofEmpty() {
+        return new Query(new ArrayList<>());
     }
 
     public static Query of(String queryString) {
@@ -36,6 +38,17 @@ public class Query {
         return matcher.find() && queryString.length() == matcher.group().length();
     }
 
+    public Optional<QueryParameter> findByName(String name) {
+        return parameters.stream()
+                .filter(queryParameter -> queryParameter.isEqualName(name))
+                .findFirst();
+    }
+
+    public Query addAll(Query query) {
+        parameters.addAll(query.parameters);
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,5 +60,12 @@ public class Query {
     @Override
     public int hashCode() {
         return Objects.hash(parameters);
+    }
+
+    @Override
+    public String toString() {
+        return "Query{" +
+                "parameters=" + parameters +
+                '}';
     }
 }
