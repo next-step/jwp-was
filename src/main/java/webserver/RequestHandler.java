@@ -1,9 +1,7 @@
 package webserver;
 
 import model.controller.View;
-import model.http.HttpRequest;
-import model.http.RequestLine;
-import model.http.UriPath;
+import model.http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.NoRouteToHostException;
 import java.net.Socket;
 import java.util.Optional;
 
@@ -34,34 +33,49 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = HttpRequest.of(in);
-            response(httpRequest, out);
+            HttpResponse httpResponse = response(httpRequest).orElseThrow(() -> new NoRouteToHostException("test"));
+            writeResponseIntoOutputStream(httpResponse, out);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
 
-    private boolean response(HttpRequest httpRequest, OutputStream out) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        RequestLine requestLine = httpRequest.getRequestLine();
+    private boolean writeResponseIntoOutputStream(HttpResponse httpResponse, OutputStream out) {
+        DataOutputStream dos = new DataOutputStream(out);
+        try {
+            dos.writeBytes(httpResponse.print());
+            dos.flush();
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
 
-        Optional<byte[]> body;
-        if ((body = ResourceFinder.find(requestLine.getPath())).isPresent()) {
-            okResponse(out, body.get(), false);
-            return true;
+    private Optional<HttpResponse> response(HttpRequest httpRequest) {
+        RequestLine requestLine = httpRequest.getRequestLine();
+        Optional<byte[]> body = ResourceFinder.find(requestLine.getPath());
+
+        if (body.isPresent()) {
+            return Optional.of(getOkResponse(body.get(), false));
         }
 
         Optional<Method> method = ControllerFinder.findController(requestLine);
 
         if (method.isPresent()) {
-            View view = returnResourcePath(httpRequest, method.get());
+            View view;
+            try {
+                view = returnResourcePath(httpRequest, method.get());
+            } catch (Exception e) {
+                return Optional.empty();
+            }
 
             if (view.isRedirect()) {
-                redirectResponse(out, view.getResourcePath(), view.isHasLoginCookie());
-                return true;
+                return Optional.of(getRedirectResponse(view.getResourcePath(), view.isHasLoginCookie()));
             }
             body = getBodyByControllerResource(view.getResourcePath());
-            okResponse(out, body.get(), view.isHasLoginCookie());
+            return Optional.of(getOkResponse(body.get(), view.isHasLoginCookie()));
         }
-        return true;
+        return Optional.empty();
     }
 
     private Optional<byte[]> getBodyByControllerResource(String returnResourcePath) {
@@ -72,62 +86,30 @@ public class RequestHandler implements Runnable {
         return ControllerMethodInvoker.invoke(method, httpRequest);
     }
 
-    private boolean okResponse(OutputStream out, byte[] body, boolean hasLoginCookie) {
-        DataOutputStream dos = new DataOutputStream(out);
-        return response200Header(dos, body.length, hasLoginCookie)
-                && responseBody(dos, body);
+    private HttpResponse getOkResponse(byte[] body, boolean hasLoginCookie) {
+        return HttpResponse.of(getOkResponseHeader(body.length, hasLoginCookie), body);
     }
 
-    private boolean redirectResponse(OutputStream out, String location, boolean hasLoginCookie) {
-        DataOutputStream dos = new DataOutputStream(out);
-        return response302Header(dos, location, hasLoginCookie);
+    private HttpResponse getRedirectResponse(String location, boolean hasLoginCookie) {
+        return HttpResponse.of(getRedirectResponseHeader(location, hasLoginCookie));
     }
 
-    private boolean response200Header(DataOutputStream dos, int lengthOfBodyContent, boolean hasLoginCookie) {
-        boolean result = false;
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            if (hasLoginCookie) responseLoginCookie(dos);
-            dos.writeBytes("\r\n");
-            result = true;
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+    private HttpResponseHeader getOkResponseHeader(int lengthOfBodyContent, boolean hasLoginCookie) {
+        HttpResponseHeader httpResponseHeader = HttpResponseHeader.of(StatusLine.of(StatusCode.OK))
+                .putAttribute("Content-Type", "text/html;charset=utf-8")
+                .putAttribute("Content-Length", Integer.toString(lengthOfBodyContent));
 
-        return result;
+        if (hasLoginCookie) httpResponseHeader.putAttribute("Set-Cookie", "logined=true; Path=/");
+
+        return httpResponseHeader;
     }
 
-    private boolean response302Header(DataOutputStream dos, String location, boolean hasLoginCookie) {
-        boolean result = false;
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found\r\n");
-            dos.writeBytes("Location: " + location + "\r\n");
-            if (hasLoginCookie) responseLoginCookie(dos);
-            dos.writeBytes("\r\n");
-            result = true;
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+    private HttpResponseHeader getRedirectResponseHeader(String location, boolean hasLoginCookie) {
+        HttpResponseHeader httpResponseHeader = HttpResponseHeader.of(StatusLine.of(StatusCode.FOUND))
+                .putAttribute("Location", location);
 
-        return result;
-    }
+        if (hasLoginCookie) httpResponseHeader.putAttribute("Set-Cookie", "logined=true; Path=/");
 
-    private void responseLoginCookie(DataOutputStream dos) throws IOException {
-        dos.writeBytes("Set-Cookie: logined=true; Path=/");
-    }
-
-    private boolean responseBody(DataOutputStream dos, byte[] body) {
-        boolean result = false;
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-            result = true;
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-
-        return result;
+        return httpResponseHeader;
     }
 }

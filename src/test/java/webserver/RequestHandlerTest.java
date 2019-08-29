@@ -23,7 +23,7 @@ public class RequestHandlerTest {
 
         InputStream responseStream = new ByteArrayInputStream(((ByteArrayOutputStream) socket.getOutputStream()).toByteArray());
         BufferedReader reader = new BufferedReader(new InputStreamReader(responseStream));
-        assertThat(reader.readLine()).isEqualTo("HTTP/1.1 200 OK ");
+        assertThat(reader.readLine()).isEqualTo("HTTP/1.1 200 OK");
     }
 
     @Test
@@ -37,7 +37,7 @@ public class RequestHandlerTest {
 
         InputStream responseStream = new ByteArrayInputStream(((ByteArrayOutputStream) socket.getOutputStream()).toByteArray());
         BufferedReader reader = new BufferedReader(new InputStreamReader(responseStream));
-        assertThat(reader.readLine()).isEqualTo("HTTP/1.1 200 OK ");
+        assertThat(reader.readLine()).isEqualTo("HTTP/1.1 200 OK");
     }
 
     @Test
