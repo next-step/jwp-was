@@ -43,4 +43,16 @@ public class FigureFactoryTest {
         assertThat(figure).isInstanceOfAny(Rectangle.class);
         assertThat(figure.getName()).isEqualTo("사각형");
     }
+
+    @Test
+    public void test() {
+        List<Point> points = Arrays.asList(
+                Point.of(1, 1),
+                Point.of(4, 1),
+                Point.of(1, 4),
+                Point.of(4, 4));
+        Figure figure = FigureFactory.getInstance2(points);
+        assertThat(figure).isInstanceOfAny(Rectangle.class);
+        assertThat(figure.getName()).isEqualTo("사각형");
+    }
 }
