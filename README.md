@@ -107,4 +107,8 @@
 - [x] UserLoginController : 로그인
 - [x] ForwardController : 단순 forwarding
 
-
+-----------------------------------------------------
+# step3
+- [x] Thread Pool을 적용, 다수의 사용자 요청 동시 처리 (FixedThreadPool)
+- [ ] HTTP 요청/응답 처리 기능 분리, 재사용 가능 구조로 변경
+- [ ] Bad Smell 코드 리팩토링
