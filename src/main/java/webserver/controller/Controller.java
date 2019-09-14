@@ -1,9 +1,10 @@
 package webserver.controller;
 
 import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
 import java.io.OutputStream;
 
 public interface Controller {
-    public void handle(OutputStream out, HttpRequest request);
+    public HttpResponse handle(HttpRequest request);
 }

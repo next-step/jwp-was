@@ -1,87 +1,53 @@
 package webserver.http.response;
 
-import utils.FileIoUtils;
-import webserver.http.mapping.RequestMapping;
-import webserver.http.mapping.ResourceMapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpResponse {
-    private static final String SURFIX = "\r\n";
+    private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
+    private static final String SUFFIX = "\r\n";
 
     private String responseHeader;
     private byte[] responseBody;
 
-    public HttpResponse ok(String filePath, String contentType) {
-        try {
-            responseBody = getResponseBody(RequestMapping.getFilePath(filePath));
-            responseHeader = getResponseHeader(contentType);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return this;
-    }
-
-    public HttpResponse okWithBody(String contentType, String responseBody) {
-        try {
-            this.responseBody = responseBody.getBytes();
-            responseHeader = getResponseHeader(contentType);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return this;
-    }
-
-    public HttpResponse resource(String filePath) {
-        try {
-            responseBody = getResponseBody(ResourceMapping.getFilePath(filePath));
-            responseHeader = getResponseHeader(ResourceMapping.getContentType(filePath));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return this;
-    }
-
-    public HttpResponse found(String filePath, String cookie) {
-        try {
-            responseBody = getResponseBody(RequestMapping.getFilePath(filePath));
-            responseHeader = statusLine("302 Found")
-                    + location(filePath)
-                    + cookie(cookie)
-                    + SURFIX;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return this;
-    }
-
-    private String getResponseHeader(String contentType) {
-        return statusLine("200 OK")
+    public HttpResponse forward(String contentType, byte[] responseBody) {
+        this.responseBody = responseBody;
+        responseHeader = statusLine(HttpStatus.OK)
                 + contentType(contentType)
                 + contentLength(responseBody.length)
-                + SURFIX;
+                + SUFFIX;
+
+        return this;
     }
 
-    private byte[] getResponseBody(String filePath) throws Exception {
-        return FileIoUtils.loadFileFromClasspath(filePath);
+    public HttpResponse found(String requestUri, byte[] responseBody, String cookie) {
+        try {
+            this.responseBody = responseBody;
+            responseHeader = statusLine(HttpStatus.FOUND)
+                    + location(requestUri)
+                    + cookie(cookie)
+                    + SUFFIX;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return this;
     }
 
-    private String statusLine(String status) {
-        return "HTTP/1.1 " + status + SURFIX;
+    private String statusLine(HttpStatus status) {
+        return "HTTP/1.1 " + status.line() + SUFFIX;
     }
 
     private String contentType(String contentType) {
-        return "Content-Type: " + contentType + ";charset=utf-8" + SURFIX;
+        return "Content-Type: " + contentType + ";charset=utf-8" + SUFFIX;
     }
 
     private String contentLength(int length) {
-        return "Content-Length: " + length + SURFIX;
+        return "Content-Length: " + length + SUFFIX;
     }
 
     private String location(String redirectUri) {
-        return "Location : " + redirectUri + SURFIX;
+        return "Location : " + redirectUri + SUFFIX;
     }
 
     private String cookie(String cookie) {
@@ -89,7 +55,7 @@ public class HttpResponse {
             return null;
         }
 
-        return cookie + SURFIX;
+        return cookie + SUFFIX;
     }
 
     public String getResponseHeader() {

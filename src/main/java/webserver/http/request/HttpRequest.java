@@ -22,7 +22,7 @@ public class HttpRequest {
             return;
         }
 
-        if ("POST".equals(httpRequestLine.getMethod())) {
+        if (HttpMethod.POST.match(httpRequestLine.getMethod())) {
             String params = IOUtils.readData(br, httpRequestHeader.getContentLength());
             httpRequestParams = HttpRequestParams.of(params);
         }

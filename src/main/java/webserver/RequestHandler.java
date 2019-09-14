@@ -7,6 +7,7 @@ import webserver.http.mapping.RequestMapping;
 import webserver.http.mapping.ResourceMapping;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpResponseResolver;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -45,15 +46,26 @@ public class RequestHandler implements Runnable {
         String requestUri = httpRequest.getRequestUri();
         logger.debug("requestUri : {}", requestUri);
 
-        if (ResourceMapping.support(requestUri)) {
-            HttpResponse response = new HttpResponse().resource(requestUri);
-            ResponseHandler.response(out, response);
+        handleResources(out, requestUri);
+        handleController(out, httpRequest, requestUri);
+    }
+
+    private void handleResources(OutputStream out, String requestUri) {
+        if (!ResourceMapping.support(requestUri)) {
             return;
         }
 
-        if (RequestMapping.support(requestUri)) {
-            Controller controller = RequestMapping.getController(requestUri);
-            controller.handle(out, httpRequest);
+        HttpResponse response = HttpResponseResolver.resource(requestUri);
+        ResponseHandler.response(out, response);
+    }
+
+    private void handleController(OutputStream out, HttpRequest httpRequest, String requestUri) {
+        if (!RequestMapping.support(requestUri)) {
+            return;
         }
+
+        Controller controller = RequestMapping.getController(requestUri);
+        HttpResponse response = controller.handle(httpRequest);
+        ResponseHandler.response(out, response);
     }
 }
