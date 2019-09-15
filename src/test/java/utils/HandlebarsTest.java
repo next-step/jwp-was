@@ -25,4 +25,13 @@ public class HandlebarsTest {
         String profilePage = template.apply(user);
         log.debug("ProfilePage : {}", profilePage);
     }
+
+    @Test
+    void test() throws Exception {
+        Handlebars handlebars = new Handlebars();
+
+        Template template = handlebars.compileInline("Hello {{this}}!");
+
+        System.out.println(template.apply("Handlebars.java"));
+    }
 }
