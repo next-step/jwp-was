@@ -1,24 +1,28 @@
 package webserver.http.mapping;
 
+import com.google.common.collect.Sets;
 import utils.HttpStringType;
 import utils.HttpStringUtils;
 
+import java.util.Set;
+
 public class ResourceMapping {
+
+    private static final Set<String> resourceMapping;
+
+    static {
+        resourceMapping = Sets.newHashSet();
+        resourceMapping.add("/js");
+        resourceMapping.add("/css");
+        resourceMapping.add("/fonts");
+        resourceMapping.add("/images");
+    }
+
     public static boolean support(String requestUri) {
-        if (requestUri.startsWith("/js")) {
-            return true;
-        }
-
-        if (requestUri.startsWith("/css")) {
-            return true;
-        }
-
-        if (requestUri.startsWith("/fonts")) {
-            return true;
-        }
-
-        if (requestUri.startsWith("/images")) {
-            return true;
+        for (String resource : resourceMapping) {
+            if (requestUri.startsWith(resource)) {
+                return true;
+            }
         }
 
         return false;

@@ -10,10 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.HttpStringUtils;
 import webserver.ResponseHandler;
+import webserver.http.mapping.RequestMapping;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.HttpRequestHeader;
 import webserver.http.request.HttpRequestLine;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpResponseResolver;
+import webserver.http.view.ViewHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -23,39 +26,22 @@ public class UserListController implements Controller {
     private static final Logger log = LoggerFactory.getLogger(UserListController.class);
 
     @Override
-    public void handle(OutputStream out, HttpRequest request) {
+    public HttpResponse handle(HttpRequest request) {
         HttpRequestLine requestLine = request.getHttpRequestLine();
         HttpRequestHeader requestHeader = request.getHttpRequestHeader();
 
-        boolean isLogined = HttpStringUtils.checkLoginCookie(requestHeader.findByKey("Cookie"));
-        if (!isLogined) {
-            HttpResponse response = new HttpResponse().ok("/user/login.html", "text/html");
-            ResponseHandler.response(out, response);
-            return;
+        boolean isAuthorized = HttpStringUtils.checkLoginCookie(requestHeader.findByKey("Cookie"));
+        if (!isAuthorized) {
+            return HttpResponseResolver.forward("text/html", "/user/login.html");
         }
 
         try {
-            String listPage = render(requestLine);
-            HttpResponse response = new HttpResponse().okWithBody("text/html", listPage);
-            ResponseHandler.response(out, response);
+            List<User> users = DataBase.findAll();
+            String listPage = ViewHandler.render(requestLine, users);
+            return HttpResponseResolver.forward("text/html", listPage.getBytes());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.toString());
+            throw new RuntimeException(e);
         }
-    }
-
-    private String render(HttpRequestLine requestLine) throws IOException {
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".html");
-        Handlebars handlebars = new Handlebars(loader);
-
-        String requestUri = requestLine.getRequestUri();
-        requestUri = requestUri.substring(0, requestUri.lastIndexOf(".html"));
-
-        Template template = handlebars.compile(requestUri);
-        List<User> users = DataBase.findAll();
-        String listPage = template.apply(users);
-        log.debug("list Page : {}", listPage);
-        return listPage;
     }
 }

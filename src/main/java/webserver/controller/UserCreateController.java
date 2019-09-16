@@ -8,6 +8,7 @@ import webserver.ResponseHandler;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.HttpRequestParams;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpResponseResolver;
 
 import java.io.OutputStream;
 
@@ -15,15 +16,13 @@ public class UserCreateController implements Controller {
     private static final Logger log = LoggerFactory.getLogger(UserCreateController.class);
 
     @Override
-    public void handle(OutputStream out, HttpRequest request) {
+    public HttpResponse handle(HttpRequest request) {
         HttpRequestParams requestParams = request.getHttpRequestParams();
 
         User user = User.of(requestParams);
         DataBase.addUser(user);
         log.info("register : {}", user.toString());
 
-        HttpResponse response = new HttpResponse().found("/index.html", null);
-
-        ResponseHandler.response(out, response);
+        return HttpResponseResolver.redirect("/index.html", null);
     }
 }

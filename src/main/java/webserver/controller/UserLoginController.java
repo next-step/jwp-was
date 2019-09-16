@@ -8,6 +8,7 @@ import webserver.ResponseHandler;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.HttpRequestParams;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpResponseResolver;
 
 import java.io.OutputStream;
 
@@ -15,7 +16,7 @@ public class UserLoginController implements Controller {
     private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
 
     @Override
-    public void handle(OutputStream out, HttpRequest request) {
+    public HttpResponse handle(HttpRequest request) {
         HttpRequestParams requestParams = request.getHttpRequestParams();
 
         User user = DataBase.findById(requestParams);
@@ -25,13 +26,10 @@ public class UserLoginController implements Controller {
             log.info("login success : {} ", user.toString());
             cookie = cookie + "logined=true; Path=/";
 
-            HttpResponse response = new HttpResponse().found("/index.html", cookie);
-            ResponseHandler.response(out, response);
-            return;
+            return HttpResponseResolver.redirect("/index.html", cookie);
         }
 
         cookie = cookie + "logined=false;";
-        HttpResponse response = new HttpResponse().found("/user/login_failed.html", cookie);
-        ResponseHandler.response(out, response);
+        return HttpResponseResolver.redirect("/user/login_failed.html", cookie);
     }
 }
