@@ -29,10 +29,10 @@ public class ResourceMapping {
     }
 
     public static String getFilePath(String requestUri) {
-        return HttpStringType.STATIC_PREFIX.getType() + requestUri;
+        return HttpStringUtils.concat(HttpStringType.PFX_STATIC.getType(), requestUri);
     }
 
     public static String getContentType(String requestUri) {
-        return "text/" + HttpStringUtils.splitAndFindByIndex(requestUri, "/", 1);
+        return HttpStringUtils.concat("text/", HttpStringUtils.substring(requestUri, "/", 1));
     }
 }

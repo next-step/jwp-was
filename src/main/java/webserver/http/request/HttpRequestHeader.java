@@ -15,8 +15,13 @@ public class HttpRequestHeader {
 
     public static HttpRequestHeader of(BufferedReader br) throws IOException {
         Map<String, String> requestHeader = new HashMap<>();
-        String line;
+        parseRequestHeader(br, requestHeader);
 
+        return new HttpRequestHeader(requestHeader);
+    }
+
+    private static void parseRequestHeader(BufferedReader br, Map<String, String> requestHeader) throws IOException {
+        String line;
         while (!"".equals(line = br.readLine())) {
             if (line == null) {
                 break;
@@ -24,8 +29,6 @@ public class HttpRequestHeader {
             String[] headerData = HttpStringUtils.split(line, ": ");
             requestHeader.put(headerData[0], headerData[1]);
         }
-
-        return new HttpRequestHeader(requestHeader);
     }
 
     public String findByKey(String key) {

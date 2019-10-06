@@ -16,7 +16,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class RequestHandler implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
 
@@ -25,7 +25,7 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
+        log.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
@@ -37,14 +37,14 @@ public class RequestHandler implements Runnable {
             handleRequest(br, out);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
     private void handleRequest(BufferedReader br, OutputStream out) throws Exception {
         HttpRequest httpRequest = HttpRequest.of(br);
         String requestUri = httpRequest.getRequestUri();
-        logger.debug("requestUri : {}", requestUri);
+        log.debug("requestUri : {}", requestUri);
 
         handleResources(out, requestUri);
         handleController(out, httpRequest, requestUri);

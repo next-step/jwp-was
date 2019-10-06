@@ -26,11 +26,11 @@ public class HttpRequestLine {
             return defaultRequestLine();
         }
 
-        String[] requestLineValues = HttpStringUtils.split(requestLine, HttpStringType.DELIMITER_SPACE.getType());
+        String[] requestLineValues = HttpStringUtils.split(requestLine, HttpStringType.DLM_SPACE.getType());
 
         if (isQueryString(requestLineValues)) {
             return new HttpRequestLine(requestLineValues[0],
-                    HttpStringUtils.split(requestLineValues[1], HttpStringType.DELIMITER_QUESTION_MARK.getType()));
+                    HttpStringUtils.split(requestLineValues[1], HttpStringType.DLM_QUESTION.getType()));
         }
 
         return new HttpRequestLine(requestLineValues[0], requestLineValues[1]);

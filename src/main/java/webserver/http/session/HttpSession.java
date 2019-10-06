@@ -1,6 +1,8 @@
 package webserver.http.session;
 
 import com.google.common.collect.Maps;
+import utils.HttpStringType;
+import utils.HttpStringUtils;
 
 import java.util.Map;
 
@@ -39,8 +41,7 @@ public class HttpSession {
         return attribute.isEmpty();
     }
 
-    @Override
-    public String toString() {
-        return "sessionId=" + id + ";";
+    public String setCookie() {
+        return HttpStringUtils.concat(HttpStringType.SESSION_ID.getType(), "=", id);
     }
 }

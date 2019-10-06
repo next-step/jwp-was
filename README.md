@@ -112,3 +112,46 @@
 - [x] Thread Pool을 적용, 다수의 사용자 요청 동시 처리 (FixedThreadPool)
 - [x] HTTP 요청/응답 처리 기능 분리, 재사용 가능 구조로 변경
 - [x] Bad Smell 코드 리팩토링
+
+-----------------------------------------------------
+# step4
+- [x] HttpSession VO 생성
+    - [x] getId()
+    - [x] setAttribute(String name, Object value), getAttribute(String name)
+    - [x] removeAttribute(String name)
+    - [x] invalidate()
+    
+- [x] sessionManager (Map<String, HttpSession>)
+    - [x] Client Header Cookie 에 httpSession ID가 없거나, 다른경우 -> 신규 생성. 응답
+    - [x] 존재하는 경우 해당 HttpSession 반환
+    
+- [x] session ID 생성(UUID)
+    - [x] HttpRequestHeader 생성할때 cookie에서 SessionId 꺼내기
+    - [x] 없으면 생성하고, cookie에 sessionId 추가해줘야함
+    - [x] Response에 sessionId 추가하기
+
+- [x] sessionId로 로그인여부 확인하기
+    - [x] 로그인 할때 attribute에 User정보 등록
+    - [x] 로그인 여부 확인
+    
+- [ ] 로그아웃 기능 구현 / 저장된 session 모두 삭제
+
+-----------------------------------------------------
+#### step4 관련 궁금증
+- 세션은 언제 할당해줘야하지?
+    - HttpServletRequest 보니까 getSession 을 할때 없으면 새로 만들도록 되어있다.
+    - [세션개념2](https://cjh5414.github.io/cookie-and-session/)
+        - 로그인과 상관없이 세션생성
+        - 로그인하면 새로운 세션으로 변경
+        - 로그아웃하면 기존세션 제거, 새로운 세션 부여
+        - 브라우저 종료 -> 세션 제거 ( how? )
+
+- 브라우저 종료시점 알 수 있나? 세션 종료는 어떻게 해?
+    - [How to detect browser closing?](https://stackoverflow.com/questions/299679/how-to-detect-browser-closing)
+    - 브라우저 종료는 서버사이드에선 알 수 없다.
+
+- 참고 
+- [HTTP Session](https://mohwaproject.tistory.com/entry/HTTP-Session-%EC%9D%B4%EB%9E%80)
+- [쿠키 / 세선 개념](https://interconnection.tistory.com/74) 
+
+ 

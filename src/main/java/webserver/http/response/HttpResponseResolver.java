@@ -14,9 +14,14 @@ public class HttpResponseResolver {
         return new HttpResponse().forward(contentType, responseBody);
     }
 
-    public static HttpResponse redirect(String requestUri, String cookie) {
+    public static HttpResponse redirect(String requestUri) {
         byte[] responseBody = getResponseBody(requestUri);
-        return new HttpResponse().found(requestUri, responseBody, cookie);
+        return new HttpResponse().found(requestUri, responseBody);
+    }
+
+    public static HttpResponse redirect(String requestUri, String... cookies) {
+        byte[] responseBody = getResponseBody(requestUri);
+        return new HttpResponse().found(requestUri, responseBody, cookies);
     }
 
     public static HttpResponse resource(String requestUri) {

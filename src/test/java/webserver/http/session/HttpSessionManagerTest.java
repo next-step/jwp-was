@@ -10,8 +10,11 @@ public class HttpSessionManagerTest {
     @DisplayName("신규 Session 생성 - null")
     @Test
     void createSession_nullId() {
+        //given
+        String sessionId = null;
+
         //when
-        HttpSession httpSession = HttpSessionManager.getSession(null);
+        HttpSession httpSession = HttpSessionManager.getSession(sessionId);
 
         //then
         assertThat(httpSession).isNotNull();
@@ -20,7 +23,9 @@ public class HttpSessionManagerTest {
     @DisplayName("신규 Session 생성 - null")
     @Test
     void createSession_notMatched() {
+        //given
         String sessionId = "123520234";
+
         //when
         HttpSession httpSession = HttpSessionManager.getSession(sessionId);
 
@@ -32,7 +37,8 @@ public class HttpSessionManagerTest {
     @Test
     void removeSession() {
         //given
-        HttpSession httpSession = HttpSessionManager.getSession(null);
+        String sessionId = null;
+        HttpSession httpSession = HttpSessionManager.getSession(sessionId);
 
         //when, then
         assertThat(HttpSessionManager.remove(httpSession.getId())).isTrue();
