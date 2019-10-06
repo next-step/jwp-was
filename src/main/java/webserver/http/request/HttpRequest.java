@@ -1,5 +1,6 @@
 package webserver.http.request;
 
+import utils.HttpStringUtils;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -36,15 +37,16 @@ public class HttpRequest {
         return httpRequestLine;
     }
 
-    public HttpRequestHeader getHttpRequestHeader() {
-        return httpRequestHeader;
-    }
-
     public HttpRequestParams getHttpRequestParams() {
         return httpRequestParams;
     }
 
     public String getRequestUri() {
         return httpRequestLine.getRequestUri();
+    }
+
+    public String getSessionId() {
+        String values = httpRequestHeader.findByKey("Cookie");
+        return HttpStringUtils.extractSessionId(values);
     }
 }

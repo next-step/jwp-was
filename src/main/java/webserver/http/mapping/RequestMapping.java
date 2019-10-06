@@ -16,6 +16,7 @@ public class RequestMapping {
         controllers.put("home", new HomeController());
         controllers.put("userCreate", new UserCreateController());
         controllers.put("userLogin", new UserLoginController());
+        controllers.put("userLogout", new UserLogoutController());
         controllers.put("userList", new UserListController());
         controllers.put("forward", new ForwardController());
 
@@ -24,6 +25,7 @@ public class RequestMapping {
         requestMapping.put("/index.html", controllers.get("home"));
         requestMapping.put("/user/create", controllers.get("userCreate"));
         requestMapping.put("/user/login", controllers.get("userLogin"));
+        requestMapping.put("/user/logout.html", controllers.get("userLogout"));
         requestMapping.put("/user/list.html", controllers.get("userList"));
         requestMapping.put("/user/form.html", controllers.get("forward"));
         requestMapping.put("/user/login.html", controllers.get("forward"));

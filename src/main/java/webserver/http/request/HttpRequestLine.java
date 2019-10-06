@@ -37,11 +37,11 @@ public class HttpRequestLine {
     }
 
     private static HttpRequestLine defaultRequestLine() {
-        return new HttpRequestLine("GET", "/");
+        return new HttpRequestLine(HttpMethod.GET.name(), "/");
     }
 
     private static boolean isQueryString(String[] requestLineValues) {
-        if ("POST".equals(requestLineValues[0])) {
+        if (HttpMethod.POST.match(requestLineValues[0])) {
             return false;
         }
 
@@ -62,6 +62,6 @@ public class HttpRequestLine {
     }
 
     public boolean withQueryString() {
-        return "GET".equals(method) && queryString != null;
+        return HttpMethod.GET.match(method) && queryString != null;
     }
 }

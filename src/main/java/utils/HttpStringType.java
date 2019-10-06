@@ -14,7 +14,7 @@ public enum HttpStringType {
 
     FILE_PATH_EXT(".html"),
 
-    SESSION_ID("SESSION_ID");
+    SESSION_ID("SESSION-ID");
 
     private String type;
 

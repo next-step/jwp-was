@@ -5,8 +5,6 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.HttpRequest;
-import webserver.http.request.HttpRequestHeader;
-import webserver.http.request.HttpRequestLine;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.HttpResponseResolver;
 import webserver.http.session.HttpSession;
@@ -21,17 +19,14 @@ public class UserListController implements Controller {
 
     @Override
     public HttpResponse handle(HttpRequest request) {
-        HttpRequestLine requestLine = request.getHttpRequestLine();
-        HttpRequestHeader requestHeader = request.getHttpRequestHeader();
-
-        HttpSession httpSession = HttpSessionManager.getSession(requestHeader);
+        HttpSession httpSession = HttpSessionManager.getSession(request.getSessionId());
         if (httpSession.getAttribute("user") == null) {
             return HttpResponseResolver.forward("text/html", "/user/login.html");
         }
 
         try {
             List<User> users = DataBase.findAll();
-            String listPage = ViewHandler.render(requestLine, users);
+            String listPage = ViewHandler.render(request.getHttpRequestLine(), users);
             return HttpResponseResolver.forward("text/html", listPage.getBytes());
         } catch (IOException e) {
             log.error(e.toString());

@@ -3,8 +3,6 @@ package webserver.http.session;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.HttpStringUtils;
-import webserver.http.request.HttpRequestHeader;
 
 import java.util.Map;
 import java.util.UUID;
@@ -16,13 +14,6 @@ public class HttpSessionManager {
 
     static {
         sessions = Maps.newHashMap();
-    }
-
-    public static HttpSession getSession(HttpRequestHeader requestHeader) {
-        String values = requestHeader.findByKey("Cookie");
-        String sessionId = HttpStringUtils.extractSessionId(values);
-
-        return getSession(sessionId);
     }
 
     public static HttpSession getSession(String sessionId) {
@@ -52,15 +43,15 @@ public class HttpSessionManager {
         return newHttpSession;
     }
 
-    private static void remove(HttpRequestHeader requestHeader) {
-        HttpSession httpSession = getSession(requestHeader);
-        sessions.remove(httpSession.getId());
-
-        log.debug("remove session : {}, session_count : {}", httpSession.getId(), sessions.size());
-    }
-
     public static boolean remove(String id) {
         sessions.remove(id);
         return !sessions.containsKey(id);
+    }
+
+    public static void logout(String id) {
+        if (sessions.containsKey(id)) {
+            HttpSession httpSession = sessions.get(id);
+            httpSession.invalidate();
+        }
     }
 }

@@ -32,8 +32,7 @@ public class HttpRequestHeader {
     }
 
     public String findByKey(String key) {
-        return Optional.ofNullable(requestHeader.get(key))
-                .orElseThrow(NoSuchElementException::new);
+        return requestHeader.get(key);
     }
 
     public int getContentLength() {

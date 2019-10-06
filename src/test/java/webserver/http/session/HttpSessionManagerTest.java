@@ -1,5 +1,6 @@
 package webserver.http.session;
 
+import model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -42,5 +43,20 @@ public class HttpSessionManagerTest {
 
         //when, then
         assertThat(HttpSessionManager.remove(httpSession.getId())).isTrue();
+    }
+
+    @Test
+    void logout() {
+        //given
+        String sessionId = null;
+        HttpSession httpSession = HttpSessionManager.getSession(sessionId);
+        httpSession.setAttribute("user", new User("id", "pw", "name", "mail"));
+
+        //when
+        HttpSessionManager.logout(httpSession.getId());
+
+        //then
+        assertThat(httpSession.getAttribute("user")).isNull();
+
     }
 }
