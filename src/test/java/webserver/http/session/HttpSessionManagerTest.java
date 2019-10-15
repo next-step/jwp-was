@@ -1,6 +1,5 @@
 package webserver.http.session;
 
-import model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -8,14 +7,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpSessionManagerTest {
 
+    private String newSession = null;
+
     @DisplayName("신규 Session 생성 - null")
     @Test
     void createSession_nullId() {
-        //given
-        String sessionId = null;
-
         //when
-        HttpSession httpSession = HttpSessionManager.getSession(sessionId);
+        HttpSession httpSession = HttpSessionManager.getSession(newSession);
 
         //then
         assertThat(httpSession).isNotNull();
@@ -38,25 +36,19 @@ public class HttpSessionManagerTest {
     @Test
     void removeSession() {
         //given
-        String sessionId = null;
-        HttpSession httpSession = HttpSessionManager.getSession(sessionId);
+        HttpSession httpSession = HttpSessionManager.getSession(newSession);
 
         //when, then
         assertThat(HttpSessionManager.remove(httpSession.getId())).isTrue();
     }
 
     @Test
-    void logout() {
+    void isRegistered() {
         //given
-        String sessionId = null;
-        HttpSession httpSession = HttpSessionManager.getSession(sessionId);
-        httpSession.setAttribute("user", new User("id", "pw", "name", "mail"));
+        HttpSession httpSession = HttpSessionManager.getSession(newSession);
 
-        //when
-        HttpSessionManager.logout(httpSession.getId());
-
-        //then
-        assertThat(httpSession.getAttribute("user")).isNull();
+        //when, then
+        assertThat(HttpSessionManager.isRegistered(httpSession.getId())).isTrue();
 
     }
 }

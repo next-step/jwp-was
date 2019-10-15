@@ -36,22 +36,12 @@ public class HttpSessionManager {
         return sessions.get(httpSession.getId());
     }
 
-    public static HttpSession login(Object attribute) {
-        HttpSession newHttpSession = newSession();
-        newHttpSession.setAttribute("user", attribute);
-
-        return newHttpSession;
+    public static boolean isRegistered(String id) {
+        return sessions.containsKey(id);
     }
 
     public static boolean remove(String id) {
         sessions.remove(id);
         return !sessions.containsKey(id);
-    }
-
-    public static void logout(String id) {
-        if (sessions.containsKey(id)) {
-            HttpSession httpSession = sessions.get(id);
-            httpSession.invalidate();
-        }
     }
 }

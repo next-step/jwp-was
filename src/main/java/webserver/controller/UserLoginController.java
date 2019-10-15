@@ -22,7 +22,9 @@ public class UserLoginController implements Controller {
 
         if (user.isOwner(requestParams)) {
             log.info("login success : {} ", user.toString());
-            HttpSession httpSession = HttpSessionManager.login(user);
+
+            HttpSession httpSession = HttpSessionManager.getSession(null);
+            httpSession.setAttribute("user", user);
 
             return HttpResponseResolver.redirect("/index.html", httpSession.setCookie());
         }
