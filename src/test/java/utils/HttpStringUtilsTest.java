@@ -1,8 +1,10 @@
 package utils;
 
+import converter.NullableConverter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,13 +25,13 @@ public class HttpStringUtilsTest {
     @Test
     void splitAndGetDataByIndex() {
         //given
-        String inputData = "a/b/c";
+        String inputData = "a b c";
 
         //when
-        String result = HttpStringUtils.splitAndFindByIndex(inputData, "/", 2);
+        String result = HttpStringUtils.substring(inputData, HttpStringType.DLM_SPACE.getType(), 2);
 
         //then
-        assertThat(result).isEqualTo(inputData.split("/")[2]);
+        assertThat(result).isEqualTo(inputData.split(HttpStringType.DLM_SPACE.getType())[2]);
     }
 
     @ParameterizedTest
@@ -42,5 +44,29 @@ public class HttpStringUtilsTest {
 
         //then
         assertThat(isLogined).isEqualTo(argumentsAccessor.getBoolean(1));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"null, null"
+            , " logined=false, null"
+            , " sessionId=1234, 1234"
+            , " Idea-efa8df2d=1bb5567d-7139-475d-a323-ee4e3492e089; sessionId=1234;, 1234"})
+    void checkSessionId(@ConvertWith(NullableConverter.class) String cookie
+            , @ConvertWith(NullableConverter.class) String expectedId) {
+        //when
+        String actualId = HttpStringUtils.extractSessionId(cookie);
+
+        //then
+        assertThat(actualId).isEqualTo(expectedId);
+    }
+
+    @Test
+    void addValue() {
+        //given
+        String values = null;
+        String newValue = "sessionId=1234;";
+
+        //when, then
+        assertThat(HttpStringUtils.addValue(values, newValue)).isEqualTo(newValue);
     }
 }

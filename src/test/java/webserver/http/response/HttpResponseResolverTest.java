@@ -18,7 +18,7 @@ class HttpResponseResolverTest {
     @Test
     void status302Found() {
         String redirectPath = "/index.html";
-        HttpResponse httpResponse = HttpResponseResolver.redirect(redirectPath, null);
+        HttpResponse httpResponse = HttpResponseResolver.redirect(redirectPath);
 
         assertNotNull(httpResponse);
     }

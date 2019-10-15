@@ -3,15 +3,18 @@ package utils;
 public enum HttpStringType {
     QUERYSTRING_PATTERN("^([^=&]+=[^=&]+)+(&[^&]+=[^=&]+)*$"),
 
-    DELIMITER_AMPERSAND("&"),
-    DELIMITER_EQUAL_SIGN("="),
-    DELIMITER_QUESTION_MARK("[?]"),
-    DELIMITER_SPACE(" "),
+    DLM_AND("&"),
+    DLM_EQUAL("="),
+    DLM_QUESTION("[?]"),
+    DLM_SPACE(" "),
+    DLM_SEMICOLON(";"),
 
-    TEMPLATES_PREFIX("./templates"),
-    STATIC_PREFIX("./static"),
+    PFX_TEMPLATES("./templates"),
+    PFX_STATIC("./static"),
 
-    FILE_PATH_EXT(".html");
+    FILE_PATH_EXT(".html"),
+
+    SESSION_ID("SESSION-ID");
 
     private String type;
 

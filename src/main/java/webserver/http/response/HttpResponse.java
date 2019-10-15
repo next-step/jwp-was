@@ -1,10 +1,8 @@
 package webserver.http.response;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import utils.HttpStringUtils;
 
 public class HttpResponse {
-    private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
     private static final String SUFFIX = "\r\n";
 
     private String responseHeader;
@@ -12,50 +10,56 @@ public class HttpResponse {
 
     public HttpResponse forward(String contentType, byte[] responseBody) {
         this.responseBody = responseBody;
-        responseHeader = statusLine(HttpStatus.OK)
-                + contentType(contentType)
-                + contentLength(responseBody.length)
-                + SUFFIX;
+        this.responseHeader = HttpStringUtils.concat(statusLine(HttpStatus.OK)
+                , contentType(contentType)
+                , contentLength(responseBody.length)
+                , SUFFIX);
 
         return this;
     }
 
-    public HttpResponse found(String requestUri, byte[] responseBody, String cookie) {
-        try {
-            this.responseBody = responseBody;
-            responseHeader = statusLine(HttpStatus.FOUND)
-                    + location(requestUri)
-                    + cookie(cookie)
-                    + SUFFIX;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public HttpResponse found(String requestUri, byte[] responseBody) {
+        this.responseBody = responseBody;
+        this.responseHeader = HttpStringUtils.concat(statusLine(HttpStatus.FOUND)
+                , location(requestUri)
+                , SUFFIX);
+
+        return this;
+    }
+
+    public HttpResponse found(String requestUri, byte[] responseBody, String[] cookies) {
+        this.responseBody = responseBody;
+        this.responseHeader = HttpStringUtils.concat(statusLine(HttpStatus.FOUND)
+                , location(requestUri)
+                , cookies(cookies)
+                , SUFFIX);
 
         return this;
     }
 
     private String statusLine(HttpStatus status) {
-        return "HTTP/1.1 " + status.line() + SUFFIX;
+        return HttpStringUtils.concat("HTTP/1.1 ", status.line(), SUFFIX);
     }
 
     private String contentType(String contentType) {
-        return "Content-Type: " + contentType + ";charset=utf-8" + SUFFIX;
+        return HttpStringUtils.concat("Content-Type: ", contentType, ";charset=utf-8", SUFFIX);
     }
 
     private String contentLength(int length) {
-        return "Content-Length: " + length + SUFFIX;
+        return HttpStringUtils.concat("Content-Length: ", Integer.toString(length), SUFFIX);
     }
 
     private String location(String redirectUri) {
-        return "Location : " + redirectUri + SUFFIX;
+        return HttpStringUtils.concat("Location : ", redirectUri, SUFFIX);
     }
 
-    private String cookie(String cookie) {
-        if (cookie == null) {
-            return null;
+    private String cookies(String[] cookies) {
+        StringBuilder sb = new StringBuilder();
+        for (String cookie : cookies) {
+            sb.append(HttpStringUtils.concat("Set-Cookie: ", cookie, SUFFIX));
         }
 
-        return cookie + SUFFIX;
+        return sb.toString();
     }
 
     public String getResponseHeader() {
@@ -70,4 +74,3 @@ public class HttpResponse {
         return responseBody.length;
     }
 }
-

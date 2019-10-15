@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import utils.HttpStringUtils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -53,5 +54,13 @@ class HttpRequestHeaderTest {
         assertThrows(NoSuchElementException.class, () -> {
             requestHeader.findByKey(key);
         });
+    }
+
+    @DisplayName("쿠키 - 세션ID 등록")
+    @Test
+    void addSessionId() {
+        String sessionId = HttpStringUtils.extractSessionId(requestHeader.findByKey("Cookie"));
+
+        assertThat(sessionId).isNotNull();
     }
 }

@@ -18,8 +18,8 @@ public class HttpRequestParams {
     public static HttpRequestParams of(String parameterString) {
         patternCheck(parameterString);
 
-        Map<String, String> httpRequestParams = Stream.of(parameterString.split(HttpStringType.DELIMITER_AMPERSAND.getType()))
-                .map(params -> params.split(HttpStringType.DELIMITER_EQUAL_SIGN.getType()))
+        Map<String, String> httpRequestParams = Stream.of(parameterString.split(HttpStringType.DLM_AND.getType()))
+                .map(params -> params.split(HttpStringType.DLM_EQUAL.getType()))
                 .collect(Collectors.toMap(param -> param[0], param -> param[1]));
 
         return new HttpRequestParams(httpRequestParams);

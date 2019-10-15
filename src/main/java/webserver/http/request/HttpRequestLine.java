@@ -26,22 +26,22 @@ public class HttpRequestLine {
             return defaultRequestLine();
         }
 
-        String[] requestLineValues = HttpStringUtils.split(requestLine, HttpStringType.DELIMITER_SPACE.getType());
+        String[] requestLineValues = HttpStringUtils.split(requestLine, HttpStringType.DLM_SPACE.getType());
 
         if (isQueryString(requestLineValues)) {
             return new HttpRequestLine(requestLineValues[0],
-                    HttpStringUtils.split(requestLineValues[1], HttpStringType.DELIMITER_QUESTION_MARK.getType()));
+                    HttpStringUtils.split(requestLineValues[1], HttpStringType.DLM_QUESTION.getType()));
         }
 
         return new HttpRequestLine(requestLineValues[0], requestLineValues[1]);
     }
 
     private static HttpRequestLine defaultRequestLine() {
-        return new HttpRequestLine("GET", "/");
+        return new HttpRequestLine(HttpMethod.GET.name(), "/");
     }
 
     private static boolean isQueryString(String[] requestLineValues) {
-        if ("POST".equals(requestLineValues[0])) {
+        if (HttpMethod.POST.match(requestLineValues[0])) {
             return false;
         }
 
@@ -62,6 +62,6 @@ public class HttpRequestLine {
     }
 
     public boolean withQueryString() {
-        return "GET".equals(method) && queryString != null;
+        return HttpMethod.GET.match(method) && queryString != null;
     }
 }

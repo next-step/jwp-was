@@ -8,7 +8,7 @@ import java.io.DataOutputStream;
 import java.io.OutputStream;
 
 public class ResponseHandler {
-    private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(ResponseHandler.class);
 
     public static void response(OutputStream out, HttpResponse response) {
         try {
