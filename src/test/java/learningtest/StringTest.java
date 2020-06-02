@@ -47,11 +47,28 @@ public class StringTest {
         assertThat(extractedText).isEqualTo("1,2");
     }
 
-    @DisplayName("잘못된 index로 String을 자르려고 한 경우 IndexOutOfBoundsException")
+    @DisplayName("charAt()으로 특정 위치의 문자 가져오기")
     @Test
-    void stringIndexOutOfBoundsException() {
+    void charAt() {
+        /* given */
+        String sampleText = "abc";
+
+        /* when */
+        char c1 = sampleText.charAt(0);
+        char c2 = sampleText.charAt(1);
+        char c3 = sampleText.charAt(2);
+
+        /* then */
+        assertThat(c1).isEqualTo('a');
+        assertThat(c2).isEqualTo('b');
+        assertThat(c3).isEqualTo('c');
+    }
+
+    @DisplayName("잘못된 index로 char 문자를 지정한 경우 StringIndexOutOfBoundsException")
+    @Test
+    void charAt_StringIndexOutOfBoundsException() {
         /* when */ /* then */
-        assertThatThrownBy(() -> "".substring(0, 1))
-                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> "abc".charAt(4))
+                .isInstanceOf(StringIndexOutOfBoundsException.class);
     }
 }
