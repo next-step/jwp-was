@@ -8,8 +8,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class StringTest {
 
-    @Test
     @DisplayName("','를 기준으로 split한다.")
+    @Test
     void split() {
         /* given */
         String sampleText = "1,2";
@@ -21,8 +21,8 @@ public class StringTest {
         assertThat(tokens).containsExactly("1", "2");
     }
 
-    @Test
     @DisplayName("','가 없는 문자열을 split한 경우 그대로 나온다.")
+    @Test
     void split2() {
         /* given */
         String sampleText = "1";
@@ -34,8 +34,8 @@ public class StringTest {
         assertThat(tokens).containsExactly("1");
     }
 
-    @Test
     @DisplayName("substring()으로 괄호 안의 문자열을 추출한다.")
+    @Test
     void substring() {
         /* given */
         String sampleText = "(1,2)";
@@ -47,8 +47,8 @@ public class StringTest {
         assertThat(extractedText).isEqualTo("1,2");
     }
 
-    @Test
     @DisplayName("잘못된 index로 String을 자르려고 한 경우 IndexOutOfBoundsException")
+    @Test
     void stringIndexOutOfBoundsException() {
         /* when */ /* then */
         assertThatThrownBy(() -> "".substring(0, 1))
