@@ -25,7 +25,7 @@ public class RequestLineParserTest {
 
     @Test
     void parse_query_string() {
-        final RequestLine requestLine = RequestLineParser.parse("GET /users?userId=hyeyoom&password=1234abcd&name=Chiho");
+        final RequestLine requestLine = RequestLineParser.parse("GET /users?userId=hyeyoom&password=1234abcd&name=Chiho HTTP/1.1");
         assertThat(requestLine.getQueryString().getParameter("userId")).isEqualTo("hyeyoom");
         assertThat(requestLine.getQueryString().getParameter("password")).isEqualTo("1234abcd");
         assertThat(requestLine.getQueryString().getParameter("name")).isEqualTo("Chiho");
