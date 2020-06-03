@@ -36,5 +36,15 @@ class RequestLineParserTest {
         assertThat(queryStrings).containsKeys("userId", "password", "name");
     }
 
+    @Test
+    public void 학습테스트() {
+        String source = "/users?userId=javajigi&password=password&name=JaeSung";
+
+        final String[] pathValues = source.split("//?");
+        final String queryStrings = pathValues[1];
+
+        assertThat(pathValues.length).isEqualTo(2);
+    }
+
 
 }

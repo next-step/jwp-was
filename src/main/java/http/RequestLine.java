@@ -32,7 +32,7 @@ public class RequestLine {
             return Collections.emptyMap();
         }
 
-        final String[] pathValues = path.split("/?");
+        final String[] pathValues = path.split("//?");
         final String queryStrings = pathValues[1];
 
         Map<String, String> keyAndValues = new HashMap<>();
