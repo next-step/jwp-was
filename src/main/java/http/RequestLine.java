@@ -1,5 +1,7 @@
 package http;
 
+import java.util.List;
+
 public class RequestLine {
     private String method;
     private String path;
@@ -33,5 +35,9 @@ public class RequestLine {
 
     public String getVersion() {
         return version;
+    }
+
+    public List<QueryString> getQuerys() {
+        return null;
     }
 }
