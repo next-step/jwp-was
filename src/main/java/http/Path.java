@@ -1,7 +1,8 @@
 package http;
 
 public class Path {
-    public Path(String pathStr) {
+    public Path(final String pathStr) {
+        String[] tokens = pathStr.split("\\?");
     }
 
     public String getPath() {
