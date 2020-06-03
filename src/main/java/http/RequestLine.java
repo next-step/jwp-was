@@ -1,38 +1,37 @@
 package http;
 
-public class RequestLine {
-    private String method;
-    private String path;
-    private String protocol;
-    private String version;
+import lombok.Getter;
 
-    public RequestLine(String method, String path, String protocol, String version) {
-        this.method = method;
+@Getter
+public class RequestLine {
+    private static final String REQUEST_LINE_REGEX = " ";
+    private static final String PATH_REGEX = "\\?";
+
+    private HttpMethod method;
+    private String path;
+    private Protocol protocol;
+    private QueryString queryString;
+
+    private RequestLine(HttpMethod httpMethod, String path, Protocol protocol, QueryString queryString) {
+        this.method = httpMethod;
         this.path = path;
         this.protocol = protocol;
-        this.version = version;
+        this.queryString = queryString;
     }
 
-    public RequestLine of (String requestLine) {
+    private RequestLine(HttpMethod httpMethod, String path, Protocol protocol) {
+        this(httpMethod, path, protocol, QueryString.of(""));
+    }
+
+    public static RequestLine of(String requestLine) {
         String[] values = requestLine.split(" ");
-        String[] protocolValues = values[2].split("/");
+        String[] pathValues = values[1].split(PATH_REGEX);
+        Protocol protocol = Protocol.of(values[2]);
 
-        return new RequestLine(values[0], values[1], protocolValues[0], protocolValues[1]);
-    }
+        if (pathValues.length > 1) {
+            return new RequestLine(HttpMethod.valueOf(values[0]), pathValues[0], protocol, QueryString.of(pathValues[1]));
+        }
 
-    public String getMethod() {
-        return this.method;
-    }
-
-    public String getPath() {
-        return this.path;
-    }
-
-    public String getProtocol() {
-        return this.protocol;
-    }
-
-    public String getVersion() {
-        return this.version;
+        return new RequestLine(HttpMethod.valueOf(values[0]), pathValues[0], protocol);
     }
 }
