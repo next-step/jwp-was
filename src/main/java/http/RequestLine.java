@@ -1,5 +1,7 @@
 package http;
 
+import http.exceptions.UnsupportedHttpMethodException;
+
 import javax.annotation.Nullable;
 
 public class RequestLine {
@@ -10,7 +12,11 @@ public class RequestLine {
     private final QueryString queryString;
 
     public RequestLine(String method, String path, Protocol protocol, @Nullable QueryString queryString) {
-        this.method = HttpMethod.valueOf(method.toUpperCase());
+        try {
+            this.method = HttpMethod.valueOf(method.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new UnsupportedHttpMethodException("Unsupported Exception!", e);
+        }
         this.path = path;
         this.protocol = protocol;
         this.queryString = queryString;
