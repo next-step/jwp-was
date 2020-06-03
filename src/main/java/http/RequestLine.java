@@ -2,19 +2,19 @@ package http;
 
 public class RequestLine {
 
-    private final String method;
+    private final HttpMethod method;
     private final String path;
-    private final String protocol;
+    private final ProtocolType protocol;
     private final String version;
 
     public RequestLine(String method, String path, String protocol, String version) {
-        this.method = method;
+        this.method = HttpMethod.valueOf(method.toUpperCase());
         this.path = path;
-        this.protocol = protocol;
+        this.protocol = ProtocolType.valueOf(protocol.toUpperCase());
         this.version = version;
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
@@ -22,7 +22,7 @@ public class RequestLine {
         return path;
     }
 
-    public String getProtocol() {
+    public ProtocolType getProtocol() {
         return protocol;
     }
 
