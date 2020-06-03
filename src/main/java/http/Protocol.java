@@ -2,16 +2,16 @@ package http;
 
 public class Protocol {
 
-    private final ProtocolType protocolType;
+    private final String protocol;
     private final String version;
 
-    public Protocol(String[] rawProtocolPart) {
-        this.protocolType = ProtocolType.valueOf(rawProtocolPart[0].toUpperCase());
-        this.version = rawProtocolPart[1];
+    public Protocol(String protocol, String version) {
+        this.protocol = protocol;
+        this.version = version;
     }
 
-    public ProtocolType getProtocolType() {
-        return protocolType;
+    public String getProtocol() {
+        return protocol;
     }
 
     public String getVersion() {
