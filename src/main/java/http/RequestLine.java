@@ -1,5 +1,7 @@
 package http;
 
+import javax.annotation.Nullable;
+
 public class RequestLine {
 
     private final HttpMethod method;
@@ -7,7 +9,7 @@ public class RequestLine {
     private final Protocol protocol;
     private final QueryString queryString;
 
-    public RequestLine(String method, String path, Protocol protocol, QueryString queryString) {
+    public RequestLine(String method, String path, Protocol protocol, @Nullable QueryString queryString) {
         this.method = HttpMethod.valueOf(method.toUpperCase());
         this.path = path;
         this.protocol = protocol;
