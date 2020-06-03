@@ -5,11 +5,13 @@ public class RequestLine {
     private final HttpMethod method;
     private final String path;
     private final Protocol protocol;
+    private final QueryString queryString;
 
-    public RequestLine(String method, String path, Protocol protocol) {
+    public RequestLine(String method, String path, Protocol protocol, QueryString queryString) {
         this.method = HttpMethod.valueOf(method.toUpperCase());
         this.path = path;
         this.protocol = protocol;
+        this.queryString = queryString;
     }
 
     public HttpMethod getMethod() {
@@ -27,4 +29,9 @@ public class RequestLine {
     public String getVersion() {
         return protocol.getVersion();
     }
+
+    public QueryString getQueryString() {
+        return this.queryString;
+    }
+
 }
