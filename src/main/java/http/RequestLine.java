@@ -37,7 +37,7 @@ public class RequestLine {
 
         Map<String, String> keyAndValues = new HashMap<>();
         if (queryStrings.contains("&")) {
-            final String[] values = queryStrings.split("=");
+            final String[] values = queryStrings.split("&");
             return buildQueryStrings(keyAndValues, values);
         }
 

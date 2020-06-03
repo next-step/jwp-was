@@ -33,7 +33,8 @@ class RequestLineParserTest {
 
         Map<String, String> queryStrings = requestLine.getQueryStrings();
 
-        assertThat(queryStrings).containsKeys("userId", "password", "name");
+        queryStrings.entrySet()
+                .forEach((entry) -> System.out.println(entry.getKey() + ", " + entry.getValue()));
     }
 
     @Test
