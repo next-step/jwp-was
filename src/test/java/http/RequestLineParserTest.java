@@ -1,0 +1,21 @@
+package http;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@DisplayName("리퀘스트 라인 파서 테스트")
+public class RequestLineParserTest {
+
+    @Test
+    @DisplayName("파싱")
+    void parse() {
+        RequestLine requestLine = RequestLineParser.parse("GET /users HTTP/1.1");
+
+        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getPath()).isEqualTo("/users");
+        assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
+        assertThat(requestLine.getVersion()).isEqualTo("1.1");
+    }
+}
