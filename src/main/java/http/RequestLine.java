@@ -29,4 +29,8 @@ public class RequestLine {
     public String getVersion() {
         return version;
     }
+
+    public String getQueryString() {
+        return null;
+    }
 }
