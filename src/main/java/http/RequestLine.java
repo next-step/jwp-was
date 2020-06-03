@@ -7,11 +7,16 @@ public class RequestLine {
     private String version;
 
     public RequestLine(String requestLine) {
-
+        String[] str = requestLine.split(" ");
+        this.method = str[0];
+        this.path = str[1];
+        String[] protocolAndVersion = str[2].split("/");
+        this.protocol = protocolAndVersion[0];
+        this.version = protocolAndVersion[1];
     }
 
     public static RequestLine parse(String s) {
-        return  null;
+        return new RequestLine(s);
     }
 
     public String getMethod() {
