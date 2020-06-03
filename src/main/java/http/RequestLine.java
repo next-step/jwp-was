@@ -4,14 +4,16 @@ public class RequestLine {
 
     private final String method;
     private final String path;
+    private final String queryString;
     private final String protocol;
     private final String version;
 
-    public RequestLine(String value, String value1, String s, String s1) {
-        this.method = value;
-        this.path = value1;
-        this.protocol = s;
-        this.version = s1;
+    public RequestLine(String method, String path, String queryString, String protocol, String version) {
+        this.method = method;
+        this.path = path;
+        this.queryString = queryString;
+        this.protocol = protocol;
+        this.version = version;
     }
 
     public String getMethod() {
@@ -31,6 +33,6 @@ public class RequestLine {
     }
 
     public String getQueryString() {
-        return null;
+        return queryString;
     }
 }

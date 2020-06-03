@@ -33,7 +33,7 @@ public class RequestLineParserTest {
     @Test
     @DisplayName("QueryString 파싱")
     void parseQueryString() {
-        RequestLine requestLine = RequestLineParser.parse("POST /users?name1=value1&name2=value2 HTTP/1.1");
+        RequestLine requestLine = RequestLineParser.parse("GET /users?name1=value1&name2=value2 HTTP/1.1");
 
         assertThat(requestLine.getMethod()).isEqualTo("GET");
         assertThat(requestLine.getPath()).isEqualTo("/users");
