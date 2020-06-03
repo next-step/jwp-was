@@ -22,8 +22,8 @@ public class RequestLine {
         return path;
     }
 
-    public ProtocolType getProtocol() {
-        return protocol.getProtocolType();
+    public String getProtocol() {
+        return protocol.getProtocol();
     }
 
     public String getVersion() {
