@@ -3,18 +3,14 @@ package http;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
 
 public enum HttpMethod {
     GET,
-    HEAD,
     POST,
-    PUT,
-    PATCH,
-    DELETE,
-    OPTIONS,
-    TRACE;
+    ;
 
     private static final Map<String, HttpMethod> httpMethodMap = initHttpMethodMap();
 
@@ -23,11 +19,13 @@ public enum HttpMethod {
                 .collect(toMap(HttpMethod::name, entry -> entry));
     }
 
-    public static HttpMethod resolve(String code) {
+    public static String resolve(String code) {
         if (Objects.isNull(code)) {
             return null;
         }
 
-        return httpMethodMap.get(code);
+        return Optional.ofNullable(httpMethodMap.get(code))
+            .map(HttpMethod::name)
+            .orElseThrow(IllegalArgumentException::new);
     }
 }

@@ -2,62 +2,46 @@ package http.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import http.HttpMethod;
+import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 import static java.util.stream.Collectors.toMap;
 
+@Getter
 public class RequestLine {
-    private HttpMethod method;
+    private static final Logger logger = LoggerFactory.getLogger(RequestLine.class);
+
+    private String method;
     private String path;
-    private String protocol;
-    private String version;
+    private Protocol protocol;
     private Map<String, String> queryString = new HashMap<>();
 
-    public String getMethod() {
-        return Optional.ofNullable(method)
-                .map(HttpMethod::name)
-                .orElse(null);
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public Map<String, String> getQueryString() {
-        return queryString;
-    }
-
-    public RequestLine(String requestLine) {
+    public static RequestLine of(String requestLine) {
         if (StringUtils.isEmpty(requestLine)) {
             throw new IllegalArgumentException();
         }
 
         String[] splitLine = requestLine.split(" ");
 
-        if (splitLine.length < 3) {
+        if (splitLine.length != 3) {
             throw new IllegalArgumentException();
         }
 
-        setMethod(splitLine[0]);
-        setPathAndQueryString(splitLine[1]);
-        setProtocolAndVersion(splitLine[2]);
+        String[] protocolAndVersion = splitLine[2].split("/");
+        return new RequestLine(splitLine[0], splitLine[1], new Protocol(protocolAndVersion[0], protocolAndVersion[1]))
     }
 
-    void setMethod(String method) {
-        this.method = HttpMethod.resolve(method);
-
-        if (Objects.isNull(method) || StringUtils.isEmpty(getMethod())) {
-            throw new IllegalArgumentException();
-        }
+    public RequestLine(String method, String path, Protocol protocol) {
+        this.method = method;
+        setPathAndQueryString(path);
+        this.protocol = protocol;
     }
 
     void setPathAndQueryString(String path) {
@@ -87,9 +71,9 @@ public class RequestLine {
         }
 
         return Arrays.stream(queryString.split("&"))
-                .filter(param -> param.contains("="))
-                .map(param -> param.split("="))
-                .collect(toMap(entry -> entry[0], entry -> entry[1]));
+            .filter(param -> param.contains("="))
+            .map(param -> param.split("="))
+            .collect(toMap(entry -> entry[0], entry -> entry[1]));
     }
 
     void setProtocolAndVersion(String param) {
@@ -105,5 +89,17 @@ public class RequestLine {
         if (StringUtils.isEmpty(this.protocol) || StringUtils.isEmpty(this.version)) {
             throw new IllegalArgumentException();
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("method는 ").append(method.name()).append("\r\n");
+        sb.append("path는 ").append(path).append("\r\n");
+        sb.append("protocol은 ").append(protocol).append("\r\n");
+        sb.append("version은 ").append(version);
+
+        return sb.toString();
     }
 }

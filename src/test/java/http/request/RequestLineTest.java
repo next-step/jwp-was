@@ -17,6 +17,8 @@ class RequestLineTest {
     @DisplayName("RequestLine Exception 테스트")
     @ParameterizedTest
     @CsvSource({
+        "'', '', ''",
+        "null, null, null",
         "'GET', '', ''",
         "'POST', '', ''",
         "'', '/users', ''",
@@ -43,8 +45,7 @@ class RequestLineTest {
         "'', '/users', 'HTTP/2.0'",
         "'', '/users?userId=javajigi&password=password&name=JaeSung', 'HTTP/1.0'",
         "'', '/users?userId=javajigi&password=password&name=JaeSung', 'HTTP/1.1'",
-        "'', '/users?userId=javajigi&password=password&name=JaeSung', 'HTTP/2.0'",
-        "'', '', ''"
+        "'', '/users?userId=javajigi&password=password&name=JaeSung', 'HTTP/2.0'"
     })
     public void testRequestLine(String method, String path, String protocolAndVersion) {
         log.info("=============================================");
