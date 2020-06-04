@@ -7,7 +7,7 @@ public class Protocol {
     private String protocol;
     private String version;
 
-    public Protocol(String value) {
+    private Protocol(String value) {
         String[] values = value.split("/");
 
         if(values.length != 2) {
@@ -17,9 +17,17 @@ public class Protocol {
         this.version = values[1];
     }
 
-    public Protocol(String protocol, String version) {
+    private Protocol(String protocol, String version) {
         this.protocol = protocol;
         this.version = version;
+    }
+
+    public static Protocol fromString(String value) {
+        return new Protocol(value);
+    }
+
+    public static Protocol of(String protocol, String version) {
+        return new Protocol(protocol, version);
     }
 
     public String getProtocol() {

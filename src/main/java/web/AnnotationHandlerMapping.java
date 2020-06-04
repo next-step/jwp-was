@@ -31,10 +31,6 @@ public class AnnotationHandlerMapping {
         });
     }
 
-    public static AnnotationHandlerMapping from(Map<Class<?>, Object> controllers) {
-        return new AnnotationHandlerMapping(controllers);
-    }
-
     private Set<Method> getRequestMappingMethods(Set<Class<?>> controllers) {
         Set<Method> requestMappingMethods = new LinkedHashSet<>();
         for (Class<?> controller : controllers) {

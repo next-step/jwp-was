@@ -10,10 +10,6 @@ public class HttpHeaders extends LinkedHashMap<String, String> {
     public static final String ACCEPT = "Accept";
     public static final String USER_AGENT = "User-Agent";
 
-    private HttpHeaders() {
-
-    }
-
     private HttpHeaders(Map<String, String> headers) {
         super(headers);
     }
@@ -28,7 +24,7 @@ public class HttpHeaders extends LinkedHashMap<String, String> {
     }
 
     public static HttpHeaders emptyHeaders() {
-        return new HttpHeaders();
+        return new HttpHeaders(new LinkedHashMap<>());
     }
 
     public String getHeader(String key) {

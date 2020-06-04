@@ -17,4 +17,5 @@ public class HttpHeadersTest {
         assertThat(httpHeaders.getHeader("Accept")).isEqualTo("application/json");
         assertThat(httpHeaders.getHeader("User-Agent")).isEqualTo("Mozilla/5.0");
     }
+
 }

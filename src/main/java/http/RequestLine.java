@@ -23,7 +23,7 @@ public class RequestLine {
         HttpMethod method = HttpMethod.valueOf(tokens[0]);
         String path = pathAndQueryString[0];
         Parameters parameters = Parameters.emptyParameters();
-        Protocol protocol = new Protocol(tokens[2]);
+        Protocol protocol = Protocol.fromString(tokens[2]);
 
         boolean hasQueryString = pathAndQueryString.length > 1;
 

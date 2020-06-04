@@ -24,22 +24,22 @@ public class AnnotationHandlerMappingTest {
         Map<Class<?>, Object> controllers = new LinkedHashMap<>();
         controllers.put(TestClass.class, testClass);
 
-        InvocableHandlerMethod testHandlerMethod = new InvocableHandlerMethod(testClass, TestClass.class.getMethod("mypage"));
+        InvocableHandlerMethod testHandlerMethod = InvocableHandlerMethod.from(testClass, TestClass.class.getMethod("mypage"));
 
         AnnotationHandlerMapping annotationHandlerMapping = new AnnotationHandlerMapping(controllers);
         InvocableHandlerMethod invocableHandlerMethod = annotationHandlerMapping.getHandler(httpRequest);
 
         assertThat(invocableHandlerMethod).isEqualTo(testHandlerMethod);
-    }
 
+    }
 
     @Controller
     @RequestMapping("/users")
     public static class TestClass {
 
         @RequestMapping("/mypage")
-        public void mypage() {
-
+        public String mypage() {
+            return "/users/mypage";
         }
     }
 }
