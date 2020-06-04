@@ -8,8 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("스트링 토큰 관리 클래스")
 public class TokenTest {
@@ -42,5 +41,13 @@ public class TokenTest {
 
         assertThat(token.nextToken()).isEqualTo("origin");
         assertThat(token.nextToken()).isEqualTo("string");
+    }
+
+    @Test
+    @DisplayName("문자열을 토큰화 했들때 토큰 갯수를 검증한다.")
+    void validate() {
+        Token token = new Token("a,b,c", ",");
+
+        assertThatCode(() -> token.validate(3)).doesNotThrowAnyException();
     }
 }

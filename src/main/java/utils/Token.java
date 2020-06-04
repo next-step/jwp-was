@@ -11,7 +11,7 @@ public class Token {
         stringTokenizer = new StringTokenizer(origin, delimiter);
     }
 
-    private void validate(String origin, String delimiter) {
+    private void validate(final String origin, final String delimiter) {
         if (StringUtil.isEmpty(origin) || StringUtil.isEmpty(delimiter)) {
             throw new IllegalArgumentException("String or delimiter is null or empty");
         }
@@ -19,5 +19,9 @@ public class Token {
 
     public String nextToken() {
         return stringTokenizer.nextToken();
+    }
+
+    public void validate(final int expectedTokenSize) {
+
     }
 }
