@@ -1,6 +1,6 @@
-package http;
+package http.requestline;
 
-import http.exception.IllegalRequestLineParsingException;
+import http.requestline.exception.IllegalRequestLineParsingException;
 
 public class RequestLineParser {
 

@@ -1,4 +1,6 @@
-package http;
+package http.requestline;
+
+import http.requestline.protocol.Protocol;
 
 public class RequestLine {
 
@@ -20,11 +22,11 @@ public class RequestLine {
         return path;
     }
 
-    public String getProtocol() {
+    public String getProtocolName() {
         return protocol.getName();
     }
 
-    public String getVersion() {
+    public String getProtocolVersion() {
         return protocol.getVersion();
     }
 }

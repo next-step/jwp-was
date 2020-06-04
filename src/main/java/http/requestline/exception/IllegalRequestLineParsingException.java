@@ -1,4 +1,4 @@
-package http.exception;
+package http.requestline.exception;
 
 public class IllegalRequestLineParsingException extends IllegalArgumentException {
 }
