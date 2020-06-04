@@ -11,6 +11,10 @@ public class Token {
         stringTokenizer = new StringTokenizer(origin, delimiter);
     }
 
+    public static Token init(final String origin, final String delimiter) {
+        return new Token(origin, delimiter);
+    }
+
     private void validate(final String origin, final String delimiter) {
         if (StringUtil.isEmpty(origin) || StringUtil.isEmpty(delimiter)) {
             throw new IllegalArgumentException("String or delimiter is null or empty");
