@@ -30,10 +30,19 @@ public class PathTest {
 
     @ParameterizedTest
     @CsvSource(value = {"/index.html,html", "/style.css,css", "/test.img,img", "/test.test.js,js"}, delimiter = ',')
-    @DisplayName("path내부에서 확장자가 존재한다면 잘 추출하는지")
+    @DisplayName("path 내부에 확장자가 존재한다면 잘 추출하는지")
     void getExtension(final String pathStr, final String expected) {
         Path path = new Path(pathStr);
 
         assertThat(path.getExtension()).isEqualTo(expected);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/test", "/wowwwww"})
+    @DisplayName("path 내부에서 확장자가 존재하지 않을때는 null 을 리턴한다")
+    void getExtensionReturnNull(final String pathStr) {
+        Path path = new Path(pathStr);
+
+        assertThat(path.getExtension()).isNull();
     }
 }
