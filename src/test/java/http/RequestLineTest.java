@@ -17,7 +17,7 @@ public class RequestLineTest {
 
         //then
         assertThat(requestLine.getMethod()).isEqualTo("GET");
-        assertThat(requestLine.getPath()).isEqualTo("/users");
+        assertThat(requestLine.getPath()).isEqualTo(new Path("/users"));
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }
@@ -32,9 +32,9 @@ public class RequestLineTest {
         RequestLine parsedLine = RequestLine.parse(request);
 
         //then
-        assertThat(parsedLine.getQueryStrings()).hasSize(3);
-        assertThat(parsedLine.getQueryStrings().get("userId")).isEqualTo("javajigi");
-        assertThat(parsedLine.getQueryStrings().get("password")).isEqualTo("password");
-        assertThat(parsedLine.getQueryStrings().get("name")).isEqualTo("JaeSung");
+        assertThat(parsedLine.getPath().getQueryStrings()).hasSize(3);
+        assertThat(parsedLine.getPath().getQueryStrings().get("userId")).isEqualTo("javajigi");
+        assertThat(parsedLine.getPath().getQueryStrings().get("password")).isEqualTo("password");
+        assertThat(parsedLine.getPath().getQueryStrings().get("name")).isEqualTo("JaeSung");
     }
 }

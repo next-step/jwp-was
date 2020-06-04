@@ -4,16 +4,14 @@ import java.util.Map;
 
 public class RequestLine {
     private String method;
-    private String path;
+    private Path path;
     private String protocol;
     private String version;
-    private QueryStrings queryStrings;
 
     public RequestLine(String requestLine) {
         String[] str = requestLine.split(" ");
         this.method = str[0];
-        this.path = str[1];
-        queryStrings = new QueryStrings(path);
+        this.path = new Path(str[1]);
         String[] protocolAndVersion = str[2].split("/");
         this.protocol = protocolAndVersion[0];
         this.version = protocolAndVersion[1];
@@ -27,7 +25,7 @@ public class RequestLine {
         return method;
     }
 
-    public String getPath() {
+    public Path getPath() {
         return path;
     }
 
@@ -37,9 +35,5 @@ public class RequestLine {
 
     public String getVersion() {
         return version;
-    }
-
-    public Map<String, String> getQueryStrings() {
-        return this.queryStrings.getQueryStrings();
     }
 }
