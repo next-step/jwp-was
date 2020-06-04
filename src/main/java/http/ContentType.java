@@ -2,6 +2,7 @@ package http;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public enum ContentType {
@@ -19,20 +20,19 @@ public enum ContentType {
         this.contentTypeStr = contentTypeStr;
     }
 
-    private static final Map<String, String> ContentTypes =
+    private static final Map<String, ContentType> CONTENT_TYPES =
             Arrays.stream(values())
-                    .collect(Collectors.toMap(ContentType::getFileSuffix, ContentType::getContentTypeStr));
+                    .collect(Collectors.toMap(ContentType::getFileSuffix, Function.identity()));
 
-    public ContentType of(final String extension) {
+    public static ContentType of(final String extension) {
+        return CONTENT_TYPES.getOrDefault(extension, ContentType.TEXT);
+    }
 
-        return null;
+    public String getContentTypeStr() {
+        return contentTypeStr;
     }
 
     private String getFileSuffix() {
         return fileSuffix;
-    }
-
-    private String getContentTypeStr() {
-        return contentTypeStr;
     }
 }

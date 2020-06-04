@@ -19,6 +19,10 @@ public class HttpRequest {
         return requestLine.getPath();
     }
 
+    public String getExtension() {
+        return requestLine.getExtension();
+    }
+
     public String getParameter(final String parameter) {
         return requestLine.getParameter(parameter);
     }

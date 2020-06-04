@@ -30,4 +30,8 @@ public class RequestLine {
     public String getParameter(final String parameter) {
         return path.getParameter(parameter);
     }
+
+    public String getExtension() {
+        return path.getExtension();
+    }
 }
