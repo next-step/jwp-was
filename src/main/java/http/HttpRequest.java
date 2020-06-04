@@ -14,7 +14,15 @@ public class HttpRequest {
 
     public HttpRequest(BufferedReader bufferedReader) throws IOException {
         this.requestLine = RequestLine.from(bufferedReader.readLine());
-        this.httpHeaders = HttpHeaders.from(getHeaderString(bufferedReader));
+
+        String headerString = getHeaderString(bufferedReader);
+        HttpHeaders httpHeaders = HttpHeaders.emptyHeaders();
+
+        if(!StringUtils.isEmpty(headerString)) {
+            httpHeaders = HttpHeaders.from(headerString);
+        }
+
+        this.httpHeaders = httpHeaders;
     }
 
     private String getHeaderString(BufferedReader bufferedReader) throws IOException {
