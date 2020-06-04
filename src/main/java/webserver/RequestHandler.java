@@ -5,9 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.URISyntaxException;
 
+import http.RequestLine;
+import http.RequestLineParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
 import webserver.reader.DefaultRequestReader;
 
 public class RequestHandler implements Runnable {
@@ -28,12 +32,17 @@ public class RequestHandler implements Runnable {
             DefaultRequestReader defaultRequestReader = new DefaultRequestReader();
             String readStream = defaultRequestReader.readStream(in);
 
+            RequestLine requestLine = RequestLineParser.parse(readStream);
+            byte[] fileBytes = FileIoUtils.loadFileFromClasspath("./templates" + requestLine.getPath());
+
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            response200Header(dos, fileBytes.length);
+            responseBody(dos, fileBytes);
         } catch (IOException e) {
             logger.error(e.getMessage());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
     }
 
