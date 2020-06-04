@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class Token {
@@ -33,5 +35,15 @@ public class Token {
         if (stringTokenizer.countTokens() < expectedTokenSize) {
             throw new IllegalArgumentException("Tokenized string is not enough");
         }
+    }
+
+    public List<String> getAllTokens() {
+        List<String> tokens = new ArrayList<>();
+
+        while (stringTokenizer.hasMoreTokens()) {
+            tokens.add(stringTokenizer.nextToken());
+        }
+
+        return tokens;
     }
 }
