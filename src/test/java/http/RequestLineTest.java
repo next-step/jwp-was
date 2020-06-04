@@ -45,4 +45,11 @@ public class RequestLineTest {
         assertThat(queryString.getValue("password")).isEqualTo("password");
         assertThat(queryString.getValue("name")).isEqualTo("JaeSung");
     }
+
+    @Test
+    void getFilePath() {
+        RequestLine requestLine = RequestLine.of("GET /index.html HTTP/1.1");
+
+        assertThat(requestLine.getFilePath()).isEqualTo("./templates/index.html");
+    }
 }
