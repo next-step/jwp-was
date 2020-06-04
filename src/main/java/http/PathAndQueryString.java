@@ -14,7 +14,8 @@ public class PathAndQueryString {
         return this.path;
     }
 
-    public QueryString getQeuryString() {
+    public QueryString getQueryString() {
         return this.queryString;
     }
+
 }

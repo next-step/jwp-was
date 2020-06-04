@@ -1,19 +1,21 @@
 package http;
 
+import http.enums.Method;
+
 public class RequestLine {
 
 
-    private final String method;
+    private final Method method;
     private final String path;
     private  Protocol protocol2;
 
-    public RequestLine(String method, String path, Protocol protocol) {
+    public RequestLine(Method method, String path, Protocol protocol) {
         this.method = method;
         this.path = path;
         this.protocol2 = protocol;
     }
 
-    public String getMethod() {
+    public Method getMethod() {
         return this.method;
     }
 

@@ -14,7 +14,7 @@ public class QueryString {
                 .filter(value -> value.startsWith(name))
                 .findFirst();
 
-         String[] values = nameValueOptional.orElseThrow(() -> new NoSuchElementException())
+         String[] values = nameValueOptional.orElseThrow(NoSuchElementException::new)
                  .split("=");
 
          if(values.length < 2) {
@@ -24,4 +24,16 @@ public class QueryString {
          return values[1];
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof QueryString)) return false;
+        QueryString that = (QueryString) o;
+        return Objects.equals(fullQueryString, that.fullQueryString);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fullQueryString);
+    }
 }

@@ -9,6 +9,6 @@ public class PathAndQueryStringTest {
     void createQueryString() {
         PathAndQueryString pathAndQueryString = PathAndQuerySpliter.split("/users?userId=javajigi&password=password&name=JaeSung");
         assertThat(pathAndQueryString.getPath()).isEqualTo("/users");
-        assertThat(pathAndQueryString.getQeuryString()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
+        assertThat(pathAndQueryString.getQueryString()).isEqualTo(new QueryString("userId=javajigi&password=password&name=JaeSung"));
     }
 }
