@@ -2,6 +2,7 @@ package webserver.processor;
 
 import http.HttpRequest;
 import http.HttpResponse;
+import utils.FileIoUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -21,6 +22,9 @@ public class ResourceProcessor implements Processor {
 
     @Override
     public HttpResponse process(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        return null;
+        String filePath = "./static" + httpRequest.getPath();
+        byte[] body = FileIoUtils.loadFileFromClasspath(filePath);
+
+        return new HttpResponse(200, body);
     }
 }

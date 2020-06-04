@@ -56,8 +56,7 @@ class ResourceProcessorTest {
                 "/js/scripts.js",
                 "/images/80-text.png",
                 "/fonts/glyphicons-halflings-regular.ttf",
-                "/css/styles.css",
-                "/index.html"
+                "/css/styles.css"
         );
     }
 }
