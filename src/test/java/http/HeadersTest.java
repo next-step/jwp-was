@@ -3,6 +3,8 @@ package http;
 import http.headers.Headers;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
@@ -10,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class HeadersTest {
     @Test
-    void create() {
+    void create() throws IOException {
         //given
         String stringRequest = "POST /user/create HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
@@ -23,7 +25,7 @@ public class HeadersTest {
         Reader reader = new StringReader(stringRequest);
 
         //when
-        Headers headers = new Headers(reader);
+        Headers headers = new Headers(new BufferedReader(reader));
 
         //then
         assertThat(headers.getHeaders()).hasSize(5);

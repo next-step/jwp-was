@@ -6,6 +6,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import http.QueryStrings;
+import http.headers.Headers;
 import http.requestline.RequestLine;
 import model.User;
 import org.slf4j.Logger;
@@ -40,22 +41,23 @@ public class RequestHandler implements Runnable {
             String line = br.readLine();
             RequestLine requestLine = new RequestLine(line);
             String url = requestLine.getStringPath();
-            Map<String, String> headers = new HashMap<>();
+            Headers headers = new Headers(br);
 
-            while (!"".equals(line)) {
-                if (line == null) {
-                    return;
-                }
-                line = br.readLine();
-                logger.debug("header : {}", line);
-                String[] split = line.split(": ");
-                if (split.length == 2) {
-                    headers.put(split[0], split[1]);
-                }
-            }
+//            Map<String, String> headers = new HashMap<>();
+//            while (!"".equals(line)) {
+//                if (line == null) {
+//                    return;
+//                }
+//                line = br.readLine();
+//                logger.debug("header : {}", line);
+//                String[] split = line.split(": ");
+//                if (split.length == 2) {
+//                    headers.put(split[0], split[1]);
+//                }
+//            }
 
             if (url.startsWith("/users")) {
-                String requestBody = IOUtils.readData(br, Integer.parseInt(headers.get("Content-Length")));
+                String requestBody = IOUtils.readData(br, Integer.parseInt(headers.getValue("Content-Length")));
                 Map<String, String> map = QueryStrings.parseQueryStrings(requestBody);
                 User user = new User(map.get("userId"), map.get("password"), map.get("name"), map.get("email"));
                 DataBase.addUser(user);
@@ -67,7 +69,7 @@ public class RequestHandler implements Runnable {
                 response302Header(dos, url);
                 responseBody(dos, body);
             } else if (url.equals("/login")) {
-                String requestBody = IOUtils.readData(br, Integer.parseInt(headers.get("Content-Length")));
+                String requestBody = IOUtils.readData(br, Integer.parseInt(headers.getValue("Content-Length")));
                 Map<String, String> map = QueryStrings.parseQueryStrings(requestBody);
                 User userById = DataBase.findUserById(map.get("userId"));
                 if (userById.getPassword().equals(map.get("password"))) {
@@ -86,7 +88,7 @@ public class RequestHandler implements Runnable {
 
             } else if ("/user/list".equals(url)) {
                 DataOutputStream dos = new DataOutputStream(out);
-                String cookie = headers.get("Cookie");
+                String cookie = headers.getValue("Cookie");
                 if (cookie.contains("logined=true")) {
                     Collection<User> users = DataBase.findAll();
                     url = "/user/list.html";
