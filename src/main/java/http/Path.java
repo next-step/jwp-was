@@ -21,7 +21,7 @@ public class Path {
         return path;
     }
 
-    public String getQueryString(final String parameterName) {
+    public String getParameter(final String parameterName) {
         return queryString.get(parameterName);
     }
 }

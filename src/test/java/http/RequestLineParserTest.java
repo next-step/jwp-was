@@ -37,7 +37,8 @@ public class RequestLineParserTest {
 
         assertThat(requestLine.getMethod()).isEqualTo("GET");
         assertThat(requestLine.getPath()).isEqualTo("/users");
-        assertThat(requestLine.getQueryString()).isEqualTo("name1=value1&name2=value2");
+        assertThat(requestLine.getParameter("name1")).isEqualTo("value1");
+        assertThat(requestLine.getParameter("name2")).isEqualTo("value2");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }

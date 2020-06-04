@@ -2,8 +2,6 @@ package http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -23,7 +21,7 @@ public class PathTest {
         Path path = new Path("/users?name1=value1&name2=value2");
 
         assertThat(path.getPath()).isEqualTo("/users");
-        assertThat(path.getQueryString("name1")).isEqualTo("value1");
-        assertThat(path.getQueryString("name2")).isEqualTo("value2");
+        assertThat(path.getParameter("name1")).isEqualTo("value1");
+        assertThat(path.getParameter("name2")).isEqualTo("value2");
     }
 }
