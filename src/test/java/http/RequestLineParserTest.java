@@ -1,7 +1,7 @@
 package http;
 
 import http.exceptions.UnsupportedHttpMethodException;
-import http.pasers.RequestLineParser;
+import http.parsers.RequestLineParser;
 import http.requests.QueryString;
 import http.requests.RequestLine;
 import http.types.HttpMethod;

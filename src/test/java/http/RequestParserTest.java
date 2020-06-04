@@ -1,6 +1,6 @@
 package http;
 
-import http.pasers.RequestParser;
+import http.parsers.RequestParser;
 import http.requests.RequestContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
