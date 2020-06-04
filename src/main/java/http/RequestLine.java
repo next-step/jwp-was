@@ -3,12 +3,19 @@ package http;
 import java.util.Objects;
 
 public class RequestLine {
-    private String method;
+    private HttpMethod method;
     private String path;
     private Protocol protocol;
     private QueryString queryString;
 
-    public RequestLine(String method, String path, Protocol protocol, QueryString queryString) {
+
+    public RequestLine(HttpMethod method, String path, Protocol protocol) {
+        this.method = method;
+        this.path = path;
+        this.protocol = protocol;
+    }
+
+    public RequestLine(HttpMethod method, String path, Protocol protocol, QueryString queryString) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
