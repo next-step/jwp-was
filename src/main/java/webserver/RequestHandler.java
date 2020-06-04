@@ -114,9 +114,13 @@ public class RequestHandler implements Runnable {
                     response302Header(dos, url);
                     responseBody(dos, body);
                 }
-            }
-
-            else {
+            }else if(url.endsWith(".css")){
+                DataOutputStream dos = new DataOutputStream(out);
+                logger.debug("url: {}", url);
+                byte[] body = FileIoUtils.loadFileFromClasspath(url);
+                response200HeaderForCss(dos, body.length);
+                responseBody(dos, body);
+            } else {
                 DataOutputStream dos = new DataOutputStream(out);
                 logger.debug("url: {}", url);
                 byte[] body = FileIoUtils.loadFileFromClasspath(url);
@@ -157,6 +161,17 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Location: " + url + "\r\n");
             dos.writeBytes("Set-Cookie: " + cookie + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response200HeaderForCss(DataOutputStream dos, int lengthOfBodyContent) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());

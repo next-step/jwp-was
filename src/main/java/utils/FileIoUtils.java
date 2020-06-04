@@ -2,7 +2,6 @@ package utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.RequestHandler;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -13,13 +12,14 @@ import java.nio.file.Paths;
 public class FileIoUtils {
     private static final Logger logger = LoggerFactory.getLogger(FileIoUtils.class);
     private static final String PREFIX_TEMPLATES = "./templates";
-    private static final String PREFIX_STATIC= "./static";
+    private static final String PREFIX_STATIC = "./static";
 
     public static byte[] loadFileFromClasspath(String filePath) throws IOException, URISyntaxException {
-        if(filePath.startsWith("/js") || filePath.startsWith("/css")){
+        if (filePath.endsWith(".js") || filePath.endsWith(".css")
+                || filePath.endsWith(".ttf") || filePath.endsWith(".woff")) {
             filePath = PREFIX_STATIC + filePath;
             logger.debug("js or css filePath: {}", filePath);
-        }else {
+        } else {
             filePath = PREFIX_TEMPLATES + filePath;
             logger.debug("not js or css filePath: {}", filePath);
         }
