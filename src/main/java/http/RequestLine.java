@@ -22,6 +22,10 @@ public class RequestLine {
         this.queryString = queryString;
     }
 
+    public String getPath() {
+        return path;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
