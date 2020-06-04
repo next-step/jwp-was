@@ -18,10 +18,10 @@ class DefaultHttpRequestReaderTest {
 
 
     @Test
+    @DisplayName("input stream 을 받아 http request 객체로 파싱")
     void parse() throws IOException {
         InputStream testInputStream = new ByteArrayInputStream(Statics.RAW_REQUEST_STR.getBytes());
         HttpRequest httpRequest = defaultHttpRequestReader.read(testInputStream);
-
 
         assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(httpRequest.getPath()).isEqualTo("/foo/bar");
