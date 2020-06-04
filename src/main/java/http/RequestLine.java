@@ -5,39 +5,33 @@ package http;
  */
 public class RequestLine {
 
-    private final String method;
-    private final Method method1;
-    private final Protocol protocol;
-    private final URL url;
+    private final HttpMethod httpMethod;
+    private final RequestURI requestURI;
+    private final ProtocolVersion protocolVersion;
 
-    public RequestLine(String method, String path, Protocol protocol) {
-        this.method = method;
-        this.protocol = protocol;
-        this.url = new URL(path);
-        this.method1 = Method.valueOf(method);
+    public RequestLine(String httpMethod, String path, ProtocolVersion protocolVersion) {
+        this.httpMethod = HttpMethod.of(httpMethod);
+        this.requestURI = new RequestURI(path);
+        this.protocolVersion = protocolVersion;
     }
 
-    public String getMethod() {
-        return this.method;
-    }
-
-    public String getMethod1() {
-        return this.method1.toString();
+    public String getHttpMethod() {
+        return this.httpMethod.toString();
     }
 
     public String getPath() {
-        return this.url.getPath();
-    }
-
-    public String getProtocol() {
-        return this.protocol.getProtocol();
-    }
-
-    public String getVersion() {
-        return this.protocol.getVersion();
+        return this.requestURI.getPath();
     }
 
     public String getQueryString() {
-        return this.url.getQueryString();
+        return this.requestURI.getQueryString();
+    }
+
+    public String getProtocolVersion() {
+        return this.protocolVersion.getHttpProtocol();
+    }
+
+    public String getVersion() {
+        return this.protocolVersion.getVersion();
     }
 }
