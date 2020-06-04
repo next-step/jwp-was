@@ -6,7 +6,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import http.QueryStrings;
-import http.RequestLine;
+import http.requestline.RequestLine;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,12 +36,12 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             String line = br.readLine();
             RequestLine requestLine = new RequestLine(line);
             String url = requestLine.getStringPath();
             Map<String, String> headers = new HashMap<>();
+
             while (!"".equals(line)) {
                 if (line == null) {
                     return;
@@ -72,25 +72,22 @@ public class RequestHandler implements Runnable {
                 User userById = DataBase.findUserById(map.get("userId"));
                 if (userById.getPassword().equals(map.get("password"))) {
                     DataOutputStream dos = new DataOutputStream(out);
-                    logger.debug("url: {}", url);
                     url = "/index.html";
                     byte[] body = FileIoUtils.loadFileFromClasspath(url);
                     response200HeaderWithSetCookie(dos, url, "logined=true; Path=/");
                     responseBody(dos, body);
                 } else {
                     DataOutputStream dos = new DataOutputStream(out);
-                    logger.debug("url: {}", url);
                     url = "/user/login_failed.html";
                     byte[] body = FileIoUtils.loadFileFromClasspath(url);
                     response302HeaderWithSetCookie(dos, url, "logined=false");
                     responseBody(dos, body);
                 }
 
-            }else if("/user/list".equals(url)){
+            } else if ("/user/list".equals(url)) {
                 DataOutputStream dos = new DataOutputStream(out);
-                String cookie= headers.get("Cookie");
-                if(cookie.contains("logined=true")){
-                    logger.debug(">>>>>>>>>>>>>>You can read list");
+                String cookie = headers.get("Cookie");
+                if (cookie.contains("logined=true")) {
                     Collection<User> users = DataBase.findAll();
                     url = "/user/list.html";
 
@@ -107,22 +104,19 @@ public class RequestHandler implements Runnable {
                     byte[] body = profile.getBytes();
                     response200Header(dos, body.length);
                     responseBody(dos, body);
-                }else {
-                    logger.debug(">>>>>>>>>>>>>>>You need to login");
+                } else {
                     url = "/user/login.html";
                     byte[] body = FileIoUtils.loadFileFromClasspath(url);
                     response302Header(dos, url);
                     responseBody(dos, body);
                 }
-            }else if(url.endsWith(".css")){
+            } else if (url.endsWith(".css")) {
                 DataOutputStream dos = new DataOutputStream(out);
-                logger.debug("url: {}", url);
                 byte[] body = FileIoUtils.loadFileFromClasspath(url);
                 response200HeaderForCss(dos, body.length);
                 responseBody(dos, body);
             } else {
                 DataOutputStream dos = new DataOutputStream(out);
-                logger.debug("url: {}", url);
                 byte[] body = FileIoUtils.loadFileFromClasspath(url);
                 response200Header(dos, body.length);
                 responseBody(dos, body);
