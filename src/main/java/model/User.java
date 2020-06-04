@@ -15,11 +15,11 @@ public class User {
     public User() {
     }
 
-    public User(String userId, String password, String name, String email) {
-        this.userId = userId;
-        this.password = password;
-        this.name = name;
-        this.email = email;
+    public User(String userId, String password, String name, String email) throws UnsupportedEncodingException {
+        this.userId = URLDecoder.decode(userId, "UTF-8");
+        this.password = URLDecoder.decode(password, "UTF-8");
+        this.name = URLDecoder.decode(name, "UTF-8");
+        this.email = URLDecoder.decode(email, "UTF-8");
     }
 
     public static User of(QueryStrings queryStrings) throws UnsupportedEncodingException {

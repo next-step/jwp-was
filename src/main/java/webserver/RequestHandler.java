@@ -1,5 +1,9 @@
 package webserver;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import http.QueryStrings;
 import http.RequestLine;
@@ -12,8 +16,11 @@ import utils.IOUtils;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -79,7 +86,37 @@ public class RequestHandler implements Runnable {
                     responseBody(dos, body);
                 }
 
-            } else {
+            }else if("/user/list".equals(url)){
+                DataOutputStream dos = new DataOutputStream(out);
+                String cookie= headers.get("Cookie");
+                if(cookie.contains("logined=true")){
+                    logger.debug(">>>>>>>>>>>>>>You can read list");
+                    Collection<User> users = DataBase.findAll();
+                    url = "/user/list.html";
+
+                    TemplateLoader loader = new ClassPathTemplateLoader();
+                    loader.setPrefix("/templates");
+                    loader.setSuffix(".html");
+                    Handlebars handlebars = new Handlebars(loader);
+                    Template template = handlebars.compile("user/list");
+                    List<User> allUsers = users.stream()
+                            .collect(Collectors.toList());
+                    Map<String, List<User>> map = new HashMap<>();
+                    map.put("users", allUsers);
+                    String profile = template.apply(map);
+                    byte[] body = profile.getBytes();
+                    response200Header(dos, body.length);
+                    responseBody(dos, body);
+                }else {
+                    logger.debug(">>>>>>>>>>>>>>>You need to login");
+                    url = "/user/login.html";
+                    byte[] body = FileIoUtils.loadFileFromClasspath(url);
+                    response302Header(dos, url);
+                    responseBody(dos, body);
+                }
+            }
+
+            else {
                 DataOutputStream dos = new DataOutputStream(out);
                 logger.debug("url: {}", url);
                 byte[] body = FileIoUtils.loadFileFromClasspath(url);
@@ -90,7 +127,6 @@ public class RequestHandler implements Runnable {
             logger.error(e.getMessage());
         }
     }
-
 
     private void response302Header(DataOutputStream dos, String url) {
         try {
