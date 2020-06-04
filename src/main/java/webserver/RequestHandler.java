@@ -37,7 +37,7 @@ public class RequestHandler implements Runnable {
             //filePath decider
             byte[] fileBytes = FileIoUtils.loadFileFromClasspath("./templates" + httpRequest.getPath());
 
-            responseWriter.write(out, new HttpResponse());
+            responseWriter.write(out, new HttpResponse(200, null));
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (URISyntaxException e) {

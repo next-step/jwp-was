@@ -1,8 +1,13 @@
 package http;
 
 public class HttpResponse {
-    private int statusCode;
-    private byte[] responseBody;
+    private final int statusCode;
+    private final byte[] responseBody;
+
+    public HttpResponse(final int statusCode, final byte[] responseBody) {
+        this.statusCode = statusCode;
+        this.responseBody = responseBody;
+    }
 
     public int getBodyLength() {
         return responseBody.length;
