@@ -12,6 +12,14 @@ public class RequestLine {
         this.protocol = protocol;
     }
 
+    public String getPath() {
+        return requestMethod.getPath();
+    }
+
+    public String getMethodName() {
+        return requestMethod.getMethodName();
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;

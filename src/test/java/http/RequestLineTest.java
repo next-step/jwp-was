@@ -27,4 +27,28 @@ class RequestLineTest {
         // then
         assertThat(same).isTrue();
     }
+
+    @Test
+    @DisplayName("메소드 이름 테스트")
+    void getMethodNameByRequestLine() {
+        // give
+        RequestLine requestLine = new RequestLine(requestMethod, protocol);
+        String actualMethodName = requestLine.getMethodName();
+        // when
+        boolean same = actualMethodName.equals(requestMethod.getMethodName());
+        // then
+        assertThat(same).isTrue();
+    }
+
+    @Test
+    @DisplayName("패스 테스트")
+    void getPathByRequestLine() {
+        // give
+        RequestLine requestLine = new RequestLine(requestMethod, protocol);
+        String actualPath = requestLine.getPath();
+        // when
+        boolean same = actualPath.equals(requestMethod.getPath());
+        // then
+        assertThat(same).isTrue();
+    }
 }
