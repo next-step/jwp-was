@@ -2,6 +2,8 @@ package model;
 
 import http.QueryStrings;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Objects;
 
 public class User {
@@ -17,8 +19,13 @@ public class User {
         this.email = email;
     }
 
-    public static User of(QueryStrings queryStrings){
-        return null;
+    public static User of(QueryStrings queryStrings) throws UnsupportedEncodingException {
+        String userId = URLDecoder.decode(queryStrings.getQueryStrings().get("userId"), "UTF-8");
+        String password = URLDecoder.decode(queryStrings.getQueryStrings().get("password"), "UTF-8");
+        String name = URLDecoder.decode(queryStrings.getQueryStrings().get("name"), "UTF-8");
+        String email = URLDecoder.decode(queryStrings.getQueryStrings().get("email"), "UTF-8");
+
+        return new User(userId, password, name, email);
     }
 
     public String getUserId() {
