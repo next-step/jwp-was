@@ -3,11 +3,13 @@ package http;
 import java.util.Objects;
 
 public class Protocol {
+    private static final String SEPARATOR = "/";
+
     private final String protocol;
     private final String version;
 
     public Protocol(final String protocolAndVersion) {
-        String[] protocols = protocolAndVersion.split("/");
+        String[] protocols = protocolAndVersion.split(SEPARATOR);
         validateByLength(protocols);
         this.protocol = protocols[0];
         this.version = protocols[1];
@@ -19,7 +21,13 @@ public class Protocol {
         }
     }
 
+    public String getProtocol() {
+        return protocol;
+    }
 
+    public String getVersion() {
+        return version;
+    }
 
     @Override
     public boolean equals(final Object o) {
