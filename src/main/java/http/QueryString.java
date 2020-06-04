@@ -1,25 +1,27 @@
 package http;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class QueryString {
-    private final String queryString;
+    private final String fullQueryString;
 
     public QueryString(String queryString) {
-        this.queryString = queryString;
+        this.fullQueryString = queryString;
     }
 
     public String getParameter(String name) {
-        String parameterValue = "";
-        String[] values = name.split("&");
-        for (String value : values) {
-            if(value.startsWith(name)) {
-                String[] namesAndValue = value.split("=");
-                parameterValue = namesAndValue[1];
-                break;
-            }
-        }
+        Optional<String> nameValueOptional = Arrays.stream(this.fullQueryString.split("&"))
+                .filter(value -> value.startsWith(name))
+                .findFirst();
 
-        return parameterValue;
+         String[] values = nameValueOptional.orElseThrow(() -> new NoSuchElementException())
+                 .split("=");
+
+         if(values.length < 2) {
+             throw new IllegalArgumentException();
+         }
+
+         return values[1];
     }
+
 }

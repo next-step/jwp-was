@@ -5,14 +5,12 @@ public class RequestLine {
 
     private final String method;
     private final String path;
-    private final String protocol;
-    private final String version;
+    private  Protocol protocol2;
 
-    public RequestLine(String method, String path, String protocol, String version) {
+    public RequestLine(String method, String path, Protocol protocol) {
         this.method = method;
         this.path = path;
-        this.protocol = protocol;
-        this.version = version;
+        this.protocol2 = protocol;
     }
 
     public String getMethod() {
@@ -24,10 +22,10 @@ public class RequestLine {
     }
 
     public String getProtocol() {
-        return this.protocol;
+        return this.protocol2.getProtocol();
     }
 
     public String getVersion() {
-        return this.version;
+        return this.protocol2.getVersion();
     }
 }

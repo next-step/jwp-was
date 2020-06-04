@@ -2,10 +2,10 @@ package http;
 
 public class PathAndQueryString {
 
-    private String queryString;
+    private QueryString queryString;
     private String path;
 
-    public PathAndQueryString(String path, String queryString) {
+    public PathAndQueryString(String path, QueryString queryString) {
         this.path = path;
         this.queryString = queryString;
     }
@@ -14,7 +14,7 @@ public class PathAndQueryString {
         return this.path;
     }
 
-    public String getQeuryString() {
+    public QueryString getQeuryString() {
         return this.queryString;
     }
 }
