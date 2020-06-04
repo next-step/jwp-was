@@ -85,4 +85,8 @@ public class RequestContext {
     public Cookie getCookie() {
         return cookie;
     }
+
+    public String getHeader(String key) {
+        return requestHeaders.get(key);
+    }
 }

@@ -20,6 +20,7 @@ import java.util.Optional;
 
 /**
  * 그냥 컨트롤러라고 하면 밋밋해서 으메이징이라고 붙임. 다른 의미로 으미에징해질거 같지만 일단 모르는척..
+ * TODO: HttpRequest, HttpResponse를 좀 더 명확히 나눌 필요가 있다.. 일단은 러프하게
  */
 public class AmazingController {
 
@@ -103,11 +104,14 @@ public class AmazingController {
     }
 
     private static ResponseContext defaultHandler(RequestContext requestContext) {
+        final String accept = requestContext.getHeader("Accept");
+        final String contentType = (accept != null && accept.contains("text/css")) ? "text/css" : "text/html;charset=utf-8";
+        System.out.println(requestContext.getPath());
         final byte[] rawBody = convertFileToByte(requestContext.getPath());
         return ResponseContext
                 .builder()
                 .status(HttpStatus.OK)
-                .addHeader("Content-Type", "text/html;charset=utf-8")
+                .addHeader("Content-Type", contentType)
                 .addHeader("Content-Length", String.valueOf(rawBody.length))
                 .body(rawBody)
                 .build();
