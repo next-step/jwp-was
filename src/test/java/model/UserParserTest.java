@@ -1,10 +1,14 @@
 package model;
 
+import http.parsers.RequestContextParser;
 import http.parsers.RequestParser;
 import http.requests.RequestContext;
+import http.types.HttpMethod;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,22 +17,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("사용자 파싱하는 클래스 테스트")
 class UserParserTest {
 
-    @DisplayName("요청을 통해 생성된 user 모델과 같은 조건으로 생성한 user 모델이 동일한지 테스트")
+    @DisplayName("POST 요청을 통해 생성된 user 모델과 같은 조건으로 생성한 user 모델이 동일한지 테스트")
     @Test
-    void test_that_model_is_created() {
-        // given
-        final String rawRequestLine = "GET /user/create?userId=hyeyoom&password=1234abcd&name=ChihoWOn&email=neoul_chw%40icloud.com HTTP/1.1";
-        final List<String> rawRequestHeaders = new ArrayList<>();
-        rawRequestHeaders.add("Host: some_where_i_belong:8080");
-        rawRequestHeaders.add("Connection: keep-alive");
-        rawRequestHeaders.add("Cache-Control: no-cache");
-        rawRequestHeaders.add("x-my-message: 밥먹고-싶은데-밥통에-밥이-없다");
-        final RequestContext requestContext = RequestParser.parse(rawRequestLine, rawRequestHeaders);
+    void post_test_that_model_is_created() throws Exception {
+        final String testRequest =
+                "POST /user/create HTTP/1.1\r\n" +
+                        "Host: localhost:8080\r\n" +
+                        "Content-Length: 76\r\n" +
+                        "Content-Type: application/x-www-form-urlencoded\r\n" +
+                        "\r\n" +
+                        "userId=hyeyoom&password=1234abcd&name=Chiho+Won&email=neoul_chw%40icloud.com";
 
-        final User userFromRequest = UserParser.parse(requestContext);
-        final User userFromManual = new User("hyeyoom", "1234abcd", "ChihoWOn", "neoul_chw@icloud.com");
-
-        // 공장 생산 사용자와 수제 생산 사용자가 같으면 성공!
-        assertThat(userFromRequest).isEqualTo(userFromManual);
+        try (final InputStream input = new ByteArrayInputStream(testRequest.getBytes())) {
+            final RequestContext ctx = RequestContextParser.parse(input);
+            final User userFromRequest = UserParser.parse(ctx);
+            final User userFromManual = new User("hyeyoom", "1234abcd", "Chiho Won", "neoul_chw@icloud.com");
+            // 공장 생산 사용자와 수제 생산 사용자가 같으면 성공!
+            assertThat(userFromRequest).isEqualTo(userFromManual);
+        }
     }
 }

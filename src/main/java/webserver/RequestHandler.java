@@ -37,6 +37,7 @@ public class RequestHandler implements Runnable {
             final RequestContext requestContext = RequestContextParser.parse(in);
             logger.debug("request context: {}", requestContext);
 
+            // TODO: 이 부분이 컨트롤러가 되어야 함
             if ("/user/create".equals(requestContext.getPath())) {
                 final User user = UserParser.parse(requestContext);
                 logger.debug("user: {}", user);

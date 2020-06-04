@@ -16,7 +16,9 @@ public class RequestContextParser {
     private static final Logger logger = LoggerFactory.getLogger(RequestContextParser.class);
 
     public static RequestContext parse(InputStream input) {
-        try (final BufferedReader br = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
+        try {
+            // 습관적으로 try-with-resource를 사용했다가 소켓이 닫혔다. 인자가 parse 메소드의 inputstream이 옳은 것인지 의심해보자 'ㅅ'
+            final BufferedReader br = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
             final String rawRequestLine = br.readLine();
             final ArrayList<String> rawRequestHeaders = new ArrayList<>();
 
@@ -40,6 +42,7 @@ public class RequestContextParser {
             } while (readLine != null && !readLine.equals(""));
             final String parsedBody = IOUtils.readData(br, contentLength);
             logger.debug("parsed body: {}", parsedBody);
+
             // TODO: body가 string이라는 법은 없지만 지금은 string으로 하자 'ㅅ'
             return new RequestContext(rawRequestLine, rawRequestHeaders, parsedBody);
         } catch (Exception e) {
