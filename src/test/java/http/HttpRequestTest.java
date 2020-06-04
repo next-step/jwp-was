@@ -10,7 +10,8 @@ public class HttpRequestTest {
 
     @Test
     void parse() {
-        HttpRequest httpRequest = HttpRequest.init("GET /users?name1=value1&name2=value2 HTTP/1.1");
+        RequestLine requestLine = RequestLineParser.parse("GET /users?name1=value1&name2=value2 HTTP/1.1");
+        HttpRequest httpRequest = HttpRequest.init(requestLine);
 
         assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(httpRequest.getPath()).isEqualTo("/users");
