@@ -30,6 +30,10 @@ public class RequestLine {
         return queryString;
     }
 
+    public HttpMethod getHttpMethod() {
+        return method;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,4 +49,5 @@ public class RequestLine {
     public int hashCode() {
         return Objects.hash(method, path, protocol, queryString);
     }
+
 }

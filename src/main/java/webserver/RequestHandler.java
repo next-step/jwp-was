@@ -1,17 +1,16 @@
 package webserver;
 
-import java.io.*;
-import java.net.Socket;
-import java.net.URISyntaxException;
-
 import db.DataBase;
-import http.QueryString;
-import http.RequestLine;
-import http.RequestLineParser;
+import http.*;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import utils.IOUtils;
+
+import java.io.*;
+import java.net.Socket;
+import java.net.URISyntaxException;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -27,27 +26,42 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-           BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
             String line = br.readLine();
             logger.debug("Request Line :: {}", line);
             RequestLine requestLine = RequestLineParser.parse(line);
 
-            while(!line.equals("")) {
+            int contentLength = 0;
+            while (!line.equals("")) {
                 line = br.readLine();
                 logger.debug("Header :: {}", line);
+
+                if (line.split(":")[0].contains("Content-Length")) {
+                    String s = line;
+                    contentLength = Integer.parseInt(line.split(":")[1].trim());
+                }
             }
 
-            String path = requestLine.getPath();
-            if ("/user/create".equals(path)) {
-                QueryString queryString = requestLine.getQueryString();
+            String requestBody = IOUtils.readData(br, contentLength);
+            logger.debug("Body :: {}", line);
 
-                String userId = queryString.getParameterValue("userId");
-                String password = queryString.getParameterValue("password");
-                String name = queryString.getParameterValue("name");
-                String email = queryString.getParameterValue("email");
+            HttpMethod httpMethod = requestLine.getHttpMethod();
+            String path = requestLine.getPath();
+
+            if (isPost(httpMethod) && "/user/create".equals(path)) {
+
+                FormData formData = new FormData(requestBody);
+                String userId = formData.getValue("userId");
+                String password = formData.getValue("password");
+                String name = formData.getValue("name");
+                String email = formData.getValue("email");
 
                 DataBase.addUser(new User(userId, password, name, email));
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = null;
+                response302Header(dos, "/index.html");
+                responseBody(dos, body);
             }
 
             DataOutputStream dos = new DataOutputStream(out);
@@ -55,6 +69,20 @@ public class RequestHandler implements Runnable {
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private boolean isPost(HttpMethod httpMethod) {
+        return HttpMethod.POST.equals(httpMethod);
+    }
+
+    private void response302Header(DataOutputStream dos, String location) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 FOUND \r\n");
+            dos.writeBytes("Location: " + location + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
