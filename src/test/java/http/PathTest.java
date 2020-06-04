@@ -16,7 +16,7 @@ public class PathTest {
         Path path = new Path(strPath);
 
         //then
-        assertThat(path).isEqualTo(new Path(strPath));
+        assertThat(path.getStringPath()).isEqualTo("/users");
     }
 
     @DisplayName("Path 생성 - With QueryStrings")
@@ -29,7 +29,7 @@ public class PathTest {
         Path path = new Path(strPath);
 
         //then
-        assertThat(path.getPath()).isEqualTo("/users");
+        assertThat(path.getStringPath()).isEqualTo("/users");
         assertThat(path.getQueryStrings().get("userId")).isEqualTo("javajigi");
         assertThat(path.getQueryStrings().get("password")).isEqualTo("password");
         assertThat(path.getQueryStrings().get("name")).isEqualTo("JaeSung");

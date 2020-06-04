@@ -25,7 +25,7 @@ public class RequestLine {
     }
 
     public String getStringPath() {
-        return path.getPath();
+        return path.getStringPath();
     }
 
     public Map<String, String> getQueryStrings() {

@@ -12,7 +12,7 @@ public class Path {
         extractQueryStrings(path);
     }
 
-    public String getPath() {
+    public String getStringPath() {
         return path;
     }
 
