@@ -1,4 +1,4 @@
-package http;
+package http.requests;
 
 import java.util.*;
 import java.util.stream.Collectors;

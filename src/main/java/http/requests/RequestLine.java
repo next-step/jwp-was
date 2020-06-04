@@ -1,6 +1,7 @@
-package http;
+package http.requests;
 
 import http.exceptions.UnsupportedHttpMethodException;
+import http.types.HttpMethod;
 
 public class RequestLine {
 

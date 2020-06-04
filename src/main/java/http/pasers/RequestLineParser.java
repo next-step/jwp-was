@@ -1,4 +1,6 @@
-package http;
+package http.pasers;
+
+import http.requests.RequestLine;
 
 public class RequestLineParser {
 
