@@ -3,7 +3,6 @@ package webserver.processor;
 import http.HttpRequest;
 import http.HttpResponse;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 

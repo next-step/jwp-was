@@ -5,6 +5,7 @@ import http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import webserver.processor.Processors;
 import webserver.reader.DefaultHttpRequestReader;
 import webserver.reader.HttpRequestReader;
 import webserver.writer.DefaultHttpResponseWriter;
@@ -22,6 +23,7 @@ public class RequestHandler implements Runnable {
     private final Socket connection;
     private final HttpRequestReader requestReader = new DefaultHttpRequestReader();
     private final HttpResponseWriter responseWriter = new DefaultHttpResponseWriter();
+    private final Processors processors = new Processors();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -34,14 +36,11 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = requestReader.read(in);
 
-            //filePath decider
-            byte[] fileBytes = FileIoUtils.loadFileFromClasspath("./templates" + httpRequest.getPath());
+            HttpResponse httpResponse = processors.process(httpRequest);
 
-            responseWriter.write(out, new HttpResponse(200, null));
+            responseWriter.write(out, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
     }
 }
