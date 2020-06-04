@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Cookie {
@@ -35,5 +36,18 @@ public class Cookie {
 
     public String getValue(String key) {
         return cookieShop.get(key);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cookie cookie = (Cookie) o;
+        return Objects.equals(cookieShop, cookie.cookieShop);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cookieShop);
     }
 }
