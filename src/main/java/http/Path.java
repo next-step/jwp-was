@@ -8,20 +8,8 @@ public class Path {
     private QueryStrings queryStrings;
 
     public Path(String path) {
-        this.path = path;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Path path1 = (Path) o;
-        return Objects.equals(path, path1.path);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(path);
+        this.path = getPathOnly(path);
+        this.queryStrings = new QueryStrings(path);
     }
 
     public String getPath() {
@@ -30,5 +18,10 @@ public class Path {
 
     public Map<String, String> getQueryStrings() {
         return queryStrings.getQueryStrings();
+    }
+
+    private String getPathOnly(String path){
+        String[] split = path.split("\\?");
+        return split[0];
     }
 }

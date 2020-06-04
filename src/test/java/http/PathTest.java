@@ -21,7 +21,7 @@ public class PathTest {
 
     @DisplayName("Path 생성 - With QueryStrings")
     @Test
-    void createPathWithQueryStrings(){
+    void createPathWithQueryStrings() {
         //given
         String strPath = "/users?userId=javajigi&password=password&name=JaeSung";
 
