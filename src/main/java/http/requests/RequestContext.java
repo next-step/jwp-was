@@ -1,5 +1,7 @@
 package http.requests;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +14,8 @@ public class RequestContext {
     private final Map<String, String> requestHeaders;
 
     public RequestContext(String rawRequestLine, List<String> rawRequestHeaders) {
-        this.requestLine = new RequestLine(rawRequestLine);
+        final String decodedRequestLine = URLDecoder.decode(rawRequestLine, StandardCharsets.UTF_8);
+        this.requestLine = new RequestLine(decodedRequestLine);
         this.requestHeaders = rawRequestHeaders.stream()
                 .map(this::splitRequestHeaderKeyAndValue)
                 .collect(Collectors.toMap(
@@ -36,5 +39,9 @@ public class RequestContext {
 
     public String getPath() {
         return requestLine.getPath();
+    }
+
+    public String getAttributeFromQueryString(String key) {
+        return requestLine.getQueryString().getParameter(key);
     }
 }
