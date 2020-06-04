@@ -13,12 +13,12 @@ public class RequestMethodPost implements RequestMethod {
 
     @Override
     public String getPath() {
-        return null;
+        return path;
     }
 
     @Override
     public String getMethodName() {
-        return null;
+        return METHOD_NAME;
     }
 
     @Override

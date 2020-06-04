@@ -19,6 +19,11 @@ public class RequestLineParser {
         if (method.equals("GET")) {
             return new RequestMethodGet(path);
         }
+
+        if (method.equals("POST")) {
+            return new RequestMethodPost(path);
+        }
+
         throw new IllegalArgumentException("잘 못된 요청 입니다.");
     }
 }
