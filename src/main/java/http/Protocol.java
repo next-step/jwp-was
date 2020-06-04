@@ -4,6 +4,9 @@ import java.util.Objects;
 
 public class Protocol {
     private static final String SEPARATOR = "/";
+    private static final int MIN_SIZE = 2;
+    private static final int PROTOCOL_INDEX = 0;
+    private static final int VERSION_INDEX = 1;
 
     private final String protocol;
     private final String version;
@@ -11,12 +14,12 @@ public class Protocol {
     public Protocol(final String protocolAndVersion) {
         String[] protocols = protocolAndVersion.split(SEPARATOR);
         validateByLength(protocols);
-        this.protocol = protocols[0];
-        this.version = protocols[1];
+        this.protocol = protocols[PROTOCOL_INDEX];
+        this.version = protocols[VERSION_INDEX];
     }
 
     private void validateByLength(String[] protocols) {
-        if (protocols.length < 2) {
+        if (protocols.length < MIN_SIZE) {
             throw new IllegalArgumentException("잘못된 요청입니다.");
         }
     }
