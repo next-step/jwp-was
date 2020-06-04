@@ -1,5 +1,6 @@
 package http.controller;
 
+import db.DataBase;
 import http.requests.RequestContext;
 import http.responses.HttpStatus;
 import http.responses.ResponseContext;
@@ -33,6 +34,7 @@ public class AmazingController {
 
     private static ResponseContext signUpHandler(RequestContext requestContext) {
         final User user = UserParser.parse(requestContext);
+        DataBase.addUser(user);
         log.debug("user: {}", user);
         return ResponseContext
                 .builder()
