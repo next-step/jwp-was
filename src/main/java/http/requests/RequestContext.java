@@ -25,4 +25,12 @@ public class RequestContext {
         final String[] split = header.split(REQUEST_HEADER_DELIMITER);
         return new AbstractMap.SimpleImmutableEntry<>(split[0].trim(), split[1].trim());
     }
+
+    @Override
+    public String toString() {
+        return "RequestContext{" +
+                "requestLine=" + requestLine +
+                ", requestHeaders=" + requestHeaders +
+                '}';
+    }
 }
