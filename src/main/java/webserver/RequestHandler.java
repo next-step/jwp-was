@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import http.requests.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.TemplateReader;
 
 /**
  * TODO: 이 친구는 다음과 같이 리팩토링이 필요함 (나중)
@@ -35,11 +36,19 @@ public class RequestHandler implements Runnable {
             logger.debug("request context: {}", requestContext);
 
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
+            final byte[] body = convertFileToByte(requestContext.getPath());
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
+        }
+    }
+
+    private byte[] convertFileToByte(String path) {
+        try {
+            return TemplateReader.read(path);
+        } catch (FileNotFoundException e) {
+            return "Hello World".getBytes();
         }
     }
 
