@@ -8,6 +8,10 @@ public class Path {
     private final HashMap<String, String> queryString;
 
     public Path(final String pathStr) {
+        if (pathStr == null) {
+            throw new IllegalArgumentException("Path string is null");
+        }
+
         String[] tokens = pathStr.split("\\?");
 
         this.path = tokens[0];
