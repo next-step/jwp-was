@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import utils.TemplateReader;
 
 import java.io.FileNotFoundException;
+import java.util.Optional;
 
 /**
  * 그냥 컨트롤러라고 하면 밋밋해서 으메이징이라고 붙임. 다른 의미로 으미에징해질거 같지만 일단 모르는척..
@@ -27,15 +28,40 @@ public class AmazingController {
         switch (branch) {
             case "[POST]/user/create":  // 하드코딩 실화니.. =ㅁ=..
                 return signUpHandler(requestContext);
+            case "[POST]/user/login":   // 실화다..
+                return signInHandler(requestContext);
             default:
                 return defaultHandler(requestContext);
         }
+    }
+
+    private static ResponseContext signInHandler(RequestContext requestContext) {
+        final String userId = requestContext.getAttributeFromForm("userId");
+        final User user = DataBase.findUserById(userId);
+        final String password = requestContext.getAttributeFromForm("password");
+        final boolean isRightPassword = Optional.ofNullable(user.getPassword()).orElse("").equals(password);
+        if (isRightPassword) {
+            log.debug("Correct password!");
+            return ResponseContext
+                    .builder()
+                        .status(HttpStatus.FOUND)
+                        .addHeader("Set-Cookie", "logined=true; Path=/")
+                        .addHeader("Location", "/index.html")
+                    .build();
+        }
+        log.debug("Hacker :'(");
+        return ResponseContext
+                .builder()
+                    .status(HttpStatus.FOUND)
+                    .addHeader("Location", "/user/login_failed.html")
+                .build();
     }
 
     private static ResponseContext signUpHandler(RequestContext requestContext) {
         final User user = UserParser.parse(requestContext);
         DataBase.addUser(user);
         log.debug("user: {}", user);
+        log.debug("from db: {}", DataBase.findUserById(user.getUserId()));
         return ResponseContext
                 .builder()
                     .status(HttpStatus.FOUND)
