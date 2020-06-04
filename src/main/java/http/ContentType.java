@@ -1,4 +1,4 @@
-package webserver.mapper;
+package http;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -22,6 +22,11 @@ public enum ContentType {
     private static final Map<String, String> ContentTypes =
             Arrays.stream(values())
                     .collect(Collectors.toMap(ContentType::getFileSuffix, ContentType::getContentTypeStr));
+
+    public ContentType of(final String extension) {
+
+        return null;
+    }
 
     private String getFileSuffix() {
         return fileSuffix;

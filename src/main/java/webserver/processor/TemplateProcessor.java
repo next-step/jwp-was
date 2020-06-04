@@ -25,6 +25,6 @@ public class TemplateProcessor implements Processor {
             e.printStackTrace();
         }
 
-        return HttpResponse.ok("", body);
+        return HttpResponse.ok(null, body);
     }
 }
