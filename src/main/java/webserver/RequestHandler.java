@@ -1,10 +1,5 @@
 package webserver;
 
-import java.io.*;
-import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-
 import http.parsers.RequestContextParser;
 import http.requests.RequestContext;
 import model.User;
@@ -12,6 +7,9 @@ import model.UserParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.TemplateReader;
+
+import java.io.*;
+import java.net.Socket;
 
 /**
  * TODO: 이 친구는 다음과 같이 리팩토링이 필요함 (나중)
@@ -37,16 +35,20 @@ public class RequestHandler implements Runnable {
             final RequestContext requestContext = RequestContextParser.parse(in);
             logger.debug("request context: {}", requestContext);
 
+
+            final DataOutputStream dos = new DataOutputStream(out);
+            final byte[] body = convertFileToByte(requestContext.getPath());
+
             // TODO: 이 부분이 컨트롤러가 되어야 함
+            // TODO: response 핸들러 분리할 시점이 왔다.
             if ("/user/create".equals(requestContext.getPath())) {
                 final User user = UserParser.parse(requestContext);
                 logger.debug("user: {}", user);
+                response302Header(dos, "/index.html");
+            } else {
+                response200Header(dos, body.length);
+                responseBody(dos, body);
             }
-
-            DataOutputStream dos = new DataOutputStream(out);
-            final byte[] body = convertFileToByte(requestContext.getPath());
-            response200Header(dos, body.length);
-            responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -57,6 +59,16 @@ public class RequestHandler implements Runnable {
             return TemplateReader.read(path);
         } catch (FileNotFoundException e) {
             return "Hello World".getBytes();
+        }
+    }
+
+    private void response302Header(DataOutputStream dos, String location) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes(String.format("Location: %s\r\n", location));
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
         }
     }
 
