@@ -9,6 +9,13 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * TODO: 이 친구는 다음과 같이 리팩토링이 필요함 (나중)
+ * 이름은 RequestHandler지만 요청과 응답을 다 받고 있음.
+ * 1. RequestHandler -> Dispatcher [rename]
+ * 2. request, response 핸들러는 따로 만드는 방향이 맞을 듯
+ * 3. request, response는 context로 추상화 하는 방향으로 (scope에 따라 유연하게 다룰 수 있게)
+ */
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 

@@ -4,8 +4,7 @@ import http.exceptions.UnsupportedHttpMethodException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 public class RequestLineParserTest {
 
@@ -37,13 +36,12 @@ public class RequestLineParserTest {
         }).isInstanceOf(UnsupportedHttpMethodException.class);
     }
 
-    // TODO: 이건 QueryString의 책임인 듯 하므로 나중에 QueryString 테스트는 따로 빼는게 좋을 것 같다. (정신건강에)
-    @DisplayName("정상적인 QueryString 요청을 테스트한다.")
+    @DisplayName("같은 path라면 생성되는 QueryString 오브젝트도 동일해야한다")
     @Test
-    void parse_query_string() {
+    void test_two_query_string_objects_are_identical() {
         final RequestLine requestLine = RequestLineParser.parse("GET /users?userId=hyeyoom&password=1234abcd&name=Chiho HTTP/1.1");
-        assertThat(requestLine.getQueryString().getParameter("userId")).isEqualTo("hyeyoom");
-        assertThat(requestLine.getQueryString().getParameter("password")).isEqualTo("1234abcd");
-        assertThat(requestLine.getQueryString().getParameter("name")).isEqualTo("Chiho");
+        final QueryString queryStringFromRequestLine = requestLine.getQueryString();
+        final QueryString queryString = new QueryString("/users?userId=hyeyoom&password=1234abcd&name=Chiho");
+        assertThat(queryStringFromRequestLine).isEqualTo(queryString);
     }
 }
