@@ -1,8 +1,9 @@
 package http;
 
+import utils.StringUtils;
+
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
@@ -20,8 +21,8 @@ public enum HttpMethod {
     }
 
     public static String resolve(String code) {
-        if (Objects.isNull(code)) {
-            return null;
+        if (StringUtils.isEmpty(code)) {
+            throw new IllegalArgumentException();
         }
 
         return Optional.ofNullable(httpMethodMap.get(code))

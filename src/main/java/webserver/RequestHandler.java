@@ -4,14 +4,11 @@ import http.request.RequestLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 public class RequestHandler implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
     private RequestLine requestLine;
@@ -21,21 +18,23 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
+        log.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
+                  connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
 
-            requestLine = new RequestLine(in);
-            String bodyStr = requestLine.toString();
-            logger.info("body: {}", bodyStr);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String requestLine = br.readLine();
 
-            byte[] body = bodyStr.getBytes();
+            this.requestLine = RequestLine.of(requestLine);
+            log.info("body: {}", this.requestLine.toString());
+
+            byte[] body = this.requestLine.toString().getBytes();
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -46,7 +45,7 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -55,7 +54,7 @@ public class RequestHandler implements Runnable {
             dos.write(body, 0, body.length);
             dos.flush();
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 }

@@ -1,20 +1,32 @@
 package http.request;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import lombok.Getter;
 
 import java.util.*;
 
 @Getter
 public class Protocol {
-    private static final String HTTP = "HTTP";
-    private static final Set<String> ALLOWED_HTTP_VERSION = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("1.0", "1.1")));
-    private static final String VER_1_1 = "1.1";
+    static final String HTTP = "HTTP";
+    static final Set<String> ALLOWED_HTTP_VERSION = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("1.0", "1.1")));
 
-    private String protocol;
-    private String version;
+    private static final String SPLITTER = "\\/";
 
-    public Protocol(String protocolAndVersion) {
+    private final String protocol;
+    private final String version;
 
+    public static Protocol of(String protocolAndVersion) {
+        if (StringUtils.isEmpty(protocolAndVersion)) {
+            throw new IllegalArgumentException();
+        }
+
+        String[] split = protocolAndVersion.split(SPLITTER);
+
+        if (split.length != 2) {
+            throw new IllegalArgumentException();
+        }
+
+        return new Protocol(split[0], split[1]);
     }
 
     public Protocol(String protocol, String version) {
@@ -38,5 +50,14 @@ public class Protocol {
     @Override
     public int hashCode() {
         return Objects.hash(protocol, version);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("protocol은 ").append(protocol).append("\r\n");
+        sb.append("version은 ").append(version);
+
+        return sb.toString();
     }
 }
