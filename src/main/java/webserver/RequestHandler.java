@@ -7,17 +7,22 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
 
+import http.HttpRequest;
+import http.HttpRequestParser;
 import http.RequestLine;
 import http.RequestLineParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import webserver.reader.DefaultHttpRequestReader;
 import webserver.reader.DefaultRequestReader;
+import webserver.reader.HttpRequestReader;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private final Socket connection;
+    private final HttpRequestReader requestReader = new DefaultHttpRequestReader();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -28,13 +33,10 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO: 2020-06-04 request 에 대해서 파싱
-            DefaultRequestReader defaultRequestReader = new DefaultRequestReader();
-            String readStream = defaultRequestReader.readStream(in);
+            HttpRequest httpRequest = requestReader.read(in);
 
-            // TODO: 2020-06-04 request 에 대한 응답값 처리
-            RequestLine requestLine = RequestLineParser.parse(readStream);
-            byte[] fileBytes = FileIoUtils.loadFileFromClasspath("./templates" + requestLine.getPath());
+
+            byte[] fileBytes = FileIoUtils.loadFileFromClasspath("./templates" + httpRequest.getPath());
 
             // TODO: 2020-06-04 response 생성 및 리턴
             DataOutputStream dos = new DataOutputStream(out);
