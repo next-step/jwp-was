@@ -28,7 +28,7 @@ public class QueryStrings {
         return splitPath[1];
     }
 
-    private Map<String, String> parseQueryStrings(String queryStrings) {
+    public static Map<String, String> parseQueryStrings(String queryStrings) {
         String[] splitQueryStrings = queryStrings.split("&");
         Map<String, String> queries = new HashMap<>();
         for (int i = 0; i < splitQueryStrings.length; i++) {
