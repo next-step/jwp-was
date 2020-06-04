@@ -1,13 +1,16 @@
 package webserver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.net.URISyntaxException;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import http.RequestLine;
+import http.RequestLineParser;
+import http.ResourcePathMaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -24,11 +27,33 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            String line = br.readLine();
+            String request = line.trim(); // 첫번째 줄 저장
+            String header = StringUtils.EMPTY; // 첫번째 줄을 제외한 나머지 정보 저장
+
+            logger.debug("request first line : {}", line);
+
+            while (!"".equals(line)) {
+                if(StringUtils.isNotEmpty(header)) {
+                    header.concat("\n");
+                }
+                line = br.readLine().trim();
+                header.concat(line);
+                logger.debug("request : {}", line);
+            }
+
+            RequestLine requestLine = RequestLineParser.parse(request);
+            String resourcePath = ResourcePathMaker.makeTemplatePath(requestLine.getPath());
+
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
+            byte[] body =  FileIoUtils.loadFileFromClasspath(resourcePath);
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {
+            logger.error(e.getMessage());
+        } catch (URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }

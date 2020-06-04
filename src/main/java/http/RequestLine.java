@@ -6,13 +6,13 @@ public class RequestLine {
 
 
     private final Method method;
-    private final String path;
-    private  Protocol protocol2;
+    private final PathAndQueryString pathAndQueryString;
+    private  Protocol protocol;
 
-    public RequestLine(Method method, String path, Protocol protocol) {
+    public RequestLine(Method method, PathAndQueryString pathAndQueryString, Protocol protocol) {
         this.method = method;
-        this.path = path;
-        this.protocol2 = protocol;
+        this.pathAndQueryString = pathAndQueryString;
+        this.protocol = protocol;
     }
 
     public Method getMethod() {
@@ -20,14 +20,14 @@ public class RequestLine {
     }
 
     public String getPath() {
-        return this.path;
+        return this.pathAndQueryString.getPath();
     }
 
     public String getProtocol() {
-        return this.protocol2.getProtocol();
+        return this.protocol.getProtocol();
     }
 
     public String getVersion() {
-        return this.protocol2.getVersion();
+        return this.protocol.getVersion();
     }
 }
