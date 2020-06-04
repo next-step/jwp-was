@@ -11,6 +11,10 @@ public class QueryStrings {
         this.queryStrings = Collections.unmodifiableMap(queryStrings);
     }
 
+    public QueryStrings(String path) {
+        this.queryStrings = Collections.unmodifiableMap(queryStrings);
+    }
+
     public Map<String, String> getQueryStrings() {
         return queryStrings;
     }

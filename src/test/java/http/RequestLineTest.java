@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RequestLineTest {
-    @DisplayName("RequestLine 생성 - 정상")
+    @DisplayName("RequestLine 생성 - 전체 Parsing")
     @Test
     void create() {
         //given
@@ -22,7 +22,7 @@ public class RequestLineTest {
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }
 
-    @DisplayName("Query String 파싱 - 정상")
+    @DisplayName("RequestLine 생성 - QueryString Parsing")
     @Test
     void parseQueryString() {
         //given
