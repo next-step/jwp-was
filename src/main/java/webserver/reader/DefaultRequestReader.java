@@ -25,6 +25,7 @@ public class DefaultRequestReader implements RequestReader {
                     .append('\n');
         }
 
+        stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
         String rawRequest = stringBuilder.toString();
         printRequest(rawRequest);
 
