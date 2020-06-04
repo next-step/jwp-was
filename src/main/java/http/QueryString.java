@@ -9,6 +9,7 @@ import java.util.Map;
 public class QueryString {
     private static final String PARAMETER_DELIMITER = "&";
     private static final String KEY_AND_VALUE_DELIMITER = "=";
+    private static final int KEY_AND_VALUE_TOKEN_SIZE = 2;
 
     private static final Map<String, String> parameters = new HashMap<>();
 
@@ -24,7 +25,7 @@ public class QueryString {
 
     private void parseQuery(final String query) {
         Token token = Token.init(query, KEY_AND_VALUE_DELIMITER);
-        token.validate(2);
+        token.validate(KEY_AND_VALUE_TOKEN_SIZE);
 
         parameters.put(token.nextToken(), token.nextToken());
     }
