@@ -40,6 +40,7 @@ public class RequestHandler implements Runnable {
                     return;
                 }
                 line = br.readLine();
+                logger.debug("header : {}", line);
                 String[] split = line.split(": ");
                 if (split.length == 2) {
                     headers.put(split[0], split[1]);
@@ -58,7 +59,7 @@ public class RequestHandler implements Runnable {
                 byte[] body = FileIoUtils.loadFileFromClasspath(url);
                 response302Header(dos, url);
                 responseBody(dos, body);
-            } else if (url.equals("/user/login")) {
+            } else if (url.equals("/login")) {
                 String requestBody = IOUtils.readData(br, Integer.parseInt(headers.get("Content-Length")));
                 Map<String, String> map = QueryStrings.parseQueryStrings(requestBody);
                 User userById = DataBase.findUserById(map.get("userId"));
@@ -67,14 +68,14 @@ public class RequestHandler implements Runnable {
                     logger.debug("url: {}", url);
                     url = "/index.html";
                     byte[] body = FileIoUtils.loadFileFromClasspath(url);
-                    response302Header(dos, url);
+                    response200HeaderWithSetCookie(dos, url, "logined=true; Path=/");
                     responseBody(dos, body);
                 } else {
                     DataOutputStream dos = new DataOutputStream(out);
                     logger.debug("url: {}", url);
                     url = "/user/login_failed.html";
                     byte[] body = FileIoUtils.loadFileFromClasspath(url);
-                    response302Header(dos, url);
+                    response302HeaderWithSetCookie(dos, url, "logined=false");
                     responseBody(dos, body);
                 }
 
@@ -90,11 +91,36 @@ public class RequestHandler implements Runnable {
         }
     }
 
+
     private void response302Header(DataOutputStream dos, String url) {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Location: " + url + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302HeaderWithSetCookie(DataOutputStream dos, String url, String cookie) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Location: " + url + "\r\n");
+            dos.writeBytes("Set-Cookie: " + cookie + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response200HeaderWithSetCookie(DataOutputStream dos, String url, String cookie) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Location: " + url + "\r\n");
+            dos.writeBytes("Set-Cookie: " + cookie + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
