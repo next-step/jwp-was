@@ -5,13 +5,14 @@ import java.util.Objects;
 
 public class Path {
     private String path;
-    private QueryStrings queryStrings = new QueryStrings();
+    private QueryStrings queryStrings;
 
     public Path(String path) {
         this.path = getPathOnly(path);
         if (hasQueryStrings(path)) {
             this.queryStrings = new QueryStrings(path);
         }
+        this.queryStrings = new QueryStrings();
     }
 
     public String getPath() {

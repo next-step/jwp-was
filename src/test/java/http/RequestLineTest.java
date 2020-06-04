@@ -48,7 +48,7 @@ public class RequestLineTest {
 
         //then
         assertThat(parsedLine.getHttpMethod()).isEqualTo(HttpMethod.POST);
-        assertThat(parsedLine.getPath()).isEqualTo("/users");
+        assertThat(parsedLine.getPath().getPath()).isEqualTo("/users");
         assertThat(parsedLine.getPath().getQueryStrings()).hasSize(0);
         assertThat(parsedLine.getProtocolAndVersion())
                 .isEqualTo(new ProtocolAndVersion(Protocol.HTTP, "1.1"));
