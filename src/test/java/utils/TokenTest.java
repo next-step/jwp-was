@@ -59,4 +59,12 @@ public class TokenTest {
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> token.validate(4));
     }
+
+    @Test
+    @DisplayName("토큰을 한번에 가져오기")
+    void getAllTokens() {
+        Token token = new Token("a,b,c", ",");
+
+        assertThat(token.getAllTokens()).containsExactly("a", "b", "c");
+    }
 }
