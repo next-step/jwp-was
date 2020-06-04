@@ -5,7 +5,6 @@ import http.HttpRequest;
 import http.HttpResponse;
 import http.RequestLineParser;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -40,14 +39,25 @@ class ResourceProcessorTest {
         );
     }
 
-    @Test
-    @DisplayName("읽어온 html파일이 예상한 것과 같은지")
-    void process() throws IOException, URISyntaxException {
-/*
-        byte[] body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
+    @ParameterizedTest
+    @MethodSource
+    @DisplayName("읽어온 resource 파일이 예상한 것과 같은지")
+    void process(final String resource) throws IOException, URISyntaxException {
+        String url = "GET " + resource + " HTTP/1.1";
+        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(url));
+        byte[] body = FileIoUtils.loadFileFromClasspath("./static" + resource);
 
         HttpResponse httpResponse = resourceProcessor.process(httpRequest);
         assertThat(httpResponse.getBody()).isEqualTo(body);
-*/
+    }
+
+    private static Stream<String> process() {
+        return Stream.of(
+                "/js/scripts.js",
+                "/images/80-text.png",
+                "/fonts/glyphicons-halflings-regular.ttf",
+                "/css/styles.css",
+                "/index.html"
+        );
     }
 }
