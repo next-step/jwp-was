@@ -1,7 +1,9 @@
 package webserver;
 
 import db.DataBase;
+import http.QueryStrings;
 import http.RequestLine;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -29,14 +31,22 @@ public class RequestHandler implements Runnable {
             String strRequestLine = br.readLine();
             RequestLine requestLine = new RequestLine(strRequestLine);
             String url = requestLine.getStringPath();
-            if(url.startsWith("/create")){
+            if (url.startsWith("/user/create")) {
+                User user = User.of(new QueryStrings(requestLine.getQueryStrings()));
+                DataBase.addUser(user);
+                logger.debug(user.toString());
+
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath("/index.html");
+                response200Header(dos, body.length);
+                responseBody(dos, body);
+
+            } else {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath(url);
+                response200Header(dos, body.length);
+                responseBody(dos, body);
             }
-
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = FileIoUtils.loadFileFromClasspath(url);
-
-            response200Header(dos, body.length);
-            responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
