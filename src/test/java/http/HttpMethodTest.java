@@ -23,9 +23,7 @@ class HttpMethodTest {
 
     private static Stream<Arguments> of() {
         return Stream.of(
-                Arguments.of("get", HttpMethod.GET),
                 Arguments.of("GET", HttpMethod.GET),
-                Arguments.of("post", HttpMethod.POST),
                 Arguments.of("POST", HttpMethod.POST)
         );
     }
