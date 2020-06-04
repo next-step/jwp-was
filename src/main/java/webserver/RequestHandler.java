@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+import http.parsers.RequestContextParser;
 import http.requests.RequestContext;
 import model.User;
 import model.UserParser;
@@ -33,8 +34,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            final RequestContext requestContext = parseRequestContext(br);
+            final RequestContext requestContext = RequestContextParser.parse(in);
             logger.debug("request context: {}", requestContext);
 
             if ("/user/create".equals(requestContext.getPath())) {
@@ -57,24 +57,6 @@ public class RequestHandler implements Runnable {
         } catch (FileNotFoundException e) {
             return "Hello World".getBytes();
         }
-    }
-
-    // TODO: 이 위치가 정상은 아닌거 같은데 나중에 이동한다. TODO는 나중에 한 꺼번에 고..치려다가 못고치는데 흠..암튼..
-    private RequestContext parseRequestContext(BufferedReader br) throws IOException {
-        final String rawRequestLine = br.readLine();
-        final ArrayList<String> rawRequestHeaders = new ArrayList<>();
-        logger.debug("request line: {}", rawRequestLine);
-        String readLine;
-        do {
-            readLine = br.readLine();
-            if (!readLine.equals("")) {
-                // request body의 경계이므로
-                rawRequestHeaders.add(readLine);
-            }
-            logger.debug("header: {}", readLine);
-        } while (readLine != null && !readLine.equals(""));
-
-        return new RequestContext(rawRequestLine, rawRequestHeaders);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {

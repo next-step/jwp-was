@@ -1,5 +1,7 @@
 package http.requests;
 
+import http.types.HttpMethod;
+
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +12,9 @@ public class RequestContext {
     public static final String REQUEST_HEADER_DELIMITER = ":";
     private final RequestLine requestLine;
     private final Map<String, String> requestHeaders;
+    private final String body;
 
-    public RequestContext(String rawRequestLine, List<String> rawRequestHeaders) {
+    public RequestContext(String rawRequestLine, List<String> rawRequestHeaders, String body) {
         this.requestLine = new RequestLine(rawRequestLine);
         this.requestHeaders = rawRequestHeaders.stream()
                 .map(this::splitRequestHeaderKeyAndValue)
@@ -19,6 +22,7 @@ public class RequestContext {
                         AbstractMap.SimpleImmutableEntry::getKey,
                         AbstractMap.SimpleImmutableEntry::getValue)
                 );
+        this.body = body;
     }
 
     private AbstractMap.SimpleImmutableEntry<String, String> splitRequestHeaderKeyAndValue(String header) {
@@ -40,5 +44,13 @@ public class RequestContext {
 
     public String getAttributeFromQueryString(String key) {
         return requestLine.getQueryString().getParameter(key);
+    }
+
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
+    }
+
+    public String getBody() {
+        return body;
     }
 }

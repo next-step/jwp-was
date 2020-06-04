@@ -20,7 +20,7 @@ class RequestContextTest {
         rawRequestHeaders.add("Connection: keep-alive");
         rawRequestHeaders.add("Cache-Control: no-cache");
 
-        final RequestContext requestContext = new RequestContext(rawRequestLine, rawRequestHeaders);
+        final RequestContext requestContext = new RequestContext(rawRequestLine, rawRequestHeaders, "");
         assertThat(requestContext.getPath()).isEqualTo("/index.html");
     }
 }
