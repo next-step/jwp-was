@@ -20,6 +20,14 @@ public class RequestLine {
         return requestMethod.getMethodName();
     }
 
+    public String getProtocolName() {
+        return protocol.getProtocol();
+    }
+
+    public String getProtocolVersion() {
+        return protocol.getVersion();
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;

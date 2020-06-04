@@ -51,4 +51,28 @@ class RequestLineTest {
         // then
         assertThat(same).isTrue();
     }
+
+    @Test
+    @DisplayName("프로토콜 이름 테스트")
+    void getProtocolNameByRequestLine() {
+        // give
+        RequestLine requestLine = new RequestLine(requestMethod, protocol);
+        String actualProtocolName = requestLine.getProtocolName();
+        // when
+        boolean same = actualProtocolName.equals("HTTP");
+        // then
+        assertThat(same).isTrue();
+    }
+
+    @Test
+    @DisplayName("프로토콜 버전 확인")
+    void getProtocolVersionByRequestLine() {
+        // give
+        RequestLine requestLine = new RequestLine(requestMethod, protocol);
+        String actualProtocolVersion = requestLine.getProtocolVersion();
+        // when
+        boolean same = actualProtocolVersion.equals("1.1");
+        // then
+        assertThat(same).isTrue();
+    }
 }
