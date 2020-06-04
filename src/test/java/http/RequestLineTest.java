@@ -16,7 +16,7 @@ public class RequestLineTest {
         RequestLine requestLine = RequestLine.parse(request);
 
         //then
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getMethod()).isEqualTo(Method.GET);
         assertThat(requestLine.getPath()).isEqualTo(new Path("/users"));
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");

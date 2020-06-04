@@ -1,16 +1,14 @@
 package http;
 
-import java.util.Map;
-
 public class RequestLine {
-    private String method;
+    private Method method;
     private Path path;
     private String protocol;
     private String version;
 
     public RequestLine(String requestLine) {
         String[] str = requestLine.split(" ");
-        this.method = str[0];
+        this.method = Method.valueOf(str[0]);
         this.path = new Path(str[1]);
         String[] protocolAndVersion = str[2].split("/");
         this.protocol = protocolAndVersion[0];
@@ -21,7 +19,7 @@ public class RequestLine {
         return new RequestLine(s);
     }
 
-    public String getMethod() {
+    public Method getMethod() {
         return method;
     }
 
