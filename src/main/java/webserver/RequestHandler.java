@@ -38,23 +38,8 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            String line = br.readLine();
-            RequestLine requestLine = new RequestLine(line);
-            String url = requestLine.getStringPath();
+            String url = RequestLine.of(br).getStringPath();
             Headers headers = new Headers(br);
-
-//            Map<String, String> headers = new HashMap<>();
-//            while (!"".equals(line)) {
-//                if (line == null) {
-//                    return;
-//                }
-//                line = br.readLine();
-//                logger.debug("header : {}", line);
-//                String[] split = line.split(": ");
-//                if (split.length == 2) {
-//                    headers.put(split[0], split[1]);
-//                }
-//            }
 
             if (url.startsWith("/users")) {
                 String requestBody = IOUtils.readData(br, Integer.parseInt(headers.getValue("Content-Length")));

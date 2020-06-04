@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
@@ -71,7 +72,7 @@ public class RequestLineTest {
 
     @DisplayName("BufferedReader를 입력으로 받아서 객체 생성")
     @Test
-    void createByBufferedReader() {
+    void createByBufferedReader() throws IOException {
         //given
         String stringRequest = "POST /user/create HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
@@ -84,7 +85,7 @@ public class RequestLineTest {
         Reader reader = new StringReader(stringRequest);
 
         //when
-        RequestLine requestLine = new RequestLine(new BufferedReader(reader));
+        RequestLine requestLine = RequestLine.of(new BufferedReader(reader));
 
         //then
         assertThat(requestLine.getHttpMethod()).isEqualTo(HttpMethod.POST);
