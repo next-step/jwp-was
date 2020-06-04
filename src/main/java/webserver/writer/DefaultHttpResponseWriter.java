@@ -15,15 +15,15 @@ public class DefaultHttpResponseWriter implements HttpResponseWriter {
     public void write(final OutputStream outputStream, final HttpResponse httpResponse) {
         DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
 
-        response200Header(dataOutputStream, httpResponse.getBodyLength());
+        response200Header(dataOutputStream, httpResponse);
         responseBody(dataOutputStream, httpResponse.getBody());
     }
 
-    private void response200Header(DataOutputStream dataOutputStream, int lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dataOutputStream, HttpResponse httpResponse) {
         try {
             dataOutputStream.writeBytes("HTTP/1.1 200 OK \r\n");
-            dataOutputStream.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dataOutputStream.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dataOutputStream.writeBytes("Content-Type: " + httpResponse.getContentType().getContentTypeStr() + ";charset=utf-8\r\n");
+            dataOutputStream.writeBytes("Content-Length: " + httpResponse.getBodyLength() + "\r\n");
             dataOutputStream.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());

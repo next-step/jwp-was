@@ -1,5 +1,6 @@
 package webserver.processor;
 
+import http.ContentType;
 import http.HttpRequest;
 import http.HttpResponse;
 import utils.FileIoUtils;
@@ -25,6 +26,6 @@ public class TemplateProcessor implements Processor {
             e.printStackTrace();
         }
 
-        return HttpResponse.ok(null, body);
+        return HttpResponse.ok(ContentType.of(httpRequest.getExtension()), body);
     }
 }
