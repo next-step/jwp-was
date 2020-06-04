@@ -21,12 +21,10 @@ public class TemplateProcessor implements Processor {
         byte[] body = new byte[0];
         try {
             body = FileIoUtils.loadFileFromClasspath(filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
 
-        return new HttpResponse(200, body);
+        return HttpResponse.ok("", body);
     }
 }
