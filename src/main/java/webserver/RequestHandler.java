@@ -35,6 +35,8 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = requestReader.read(in);
 
+            //filePath decider
+
 
             byte[] fileBytes = FileIoUtils.loadFileFromClasspath("./templates" + httpRequest.getPath());
 
