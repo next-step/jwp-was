@@ -22,7 +22,7 @@ public class RequestLineTest {
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }
 
-    @DisplayName("RequestLine 생성 - QueryString Parsing")
+    @DisplayName("RequestLine 생성 - GET with QueryStrings")
     @Test
     void parseQueryString() {
         //given

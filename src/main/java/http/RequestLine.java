@@ -13,7 +13,7 @@ public class RequestLine {
         String[] str = requestLine.split(" ");
         this.method = str[0];
         this.path = str[1];
-
+        queryStrings = new QueryStrings(path);
         String[] protocolAndVersion = str[2].split("/");
         this.protocol = protocolAndVersion[0];
         this.version = protocolAndVersion[1];
