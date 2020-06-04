@@ -6,11 +6,10 @@ public class RequestLine {
     private ProtocolAndVersion protocolAndVersion;
 
     public RequestLine(String requestLine) {
-        String[] str = requestLine.split(" ");
-        this.method = Method.valueOf(str[0]);
-        this.path = new Path(str[1]);
-        String[] protocolAndVersion = str[2].split("/");
-        this.protocolAndVersion = new ProtocolAndVersion(str[2]);
+        String[] strRequestLine = requestLine.split(" ");
+        this.method = Method.valueOf(strRequestLine[0]);
+        this.path = new Path(strRequestLine[1]);
+        this.protocolAndVersion = new ProtocolAndVersion(strRequestLine[2]);
     }
 
     public static RequestLine parse(String s) {
