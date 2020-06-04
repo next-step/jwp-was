@@ -21,9 +21,16 @@ public class ResourceProcessor implements Processor {
     }
 
     @Override
-    public HttpResponse process(HttpRequest httpRequest) throws IOException, URISyntaxException {
+    public HttpResponse process(HttpRequest httpRequest) {
         String filePath = "./static" + httpRequest.getPath();
-        byte[] body = FileIoUtils.loadFileFromClasspath(filePath);
+        byte[] body = new byte[0];
+        try {
+            body = FileIoUtils.loadFileFromClasspath(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
         return new HttpResponse(200, body);
     }

@@ -16,9 +16,16 @@ public class TemplateProcessor implements Processor {
     }
 
     @Override
-    public HttpResponse process(final HttpRequest httpRequest) throws IOException, URISyntaxException {
+    public HttpResponse process(final HttpRequest httpRequest) {
         String filePath = "./templates" + httpRequest.getPath();
-        byte[] body = FileIoUtils.loadFileFromClasspath(filePath);
+        byte[] body = new byte[0];
+        try {
+            body = FileIoUtils.loadFileFromClasspath(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
         return new HttpResponse(200, body);
     }

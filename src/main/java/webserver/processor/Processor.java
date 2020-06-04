@@ -8,5 +8,5 @@ import java.net.URISyntaxException;
 
 public interface Processor {
     boolean isMatch(HttpRequest httpRequest);
-    HttpResponse process(HttpRequest httpRequest) throws IOException, URISyntaxException;
+    HttpResponse process(HttpRequest httpRequest);
 }
