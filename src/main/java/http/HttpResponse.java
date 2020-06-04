@@ -1,8 +1,8 @@
 package http;
 
 public class HttpResponse {
-    int statusCode;
-    byte[] responseBody;
+    private int statusCode;
+    private byte[] responseBody;
 
     public int getBodyLength() {
         return responseBody.length;
