@@ -17,6 +17,14 @@ public class ProtocolAndVersion {
         this.version = version;
     }
 
+    public Protocol getProtocol() {
+        return protocol;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

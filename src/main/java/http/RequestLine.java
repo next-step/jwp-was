@@ -3,16 +3,14 @@ package http;
 public class RequestLine {
     private Method method;
     private Path path;
-    private String protocol;
-    private String version;
+    private ProtocolAndVersion protocolAndVersion;
 
     public RequestLine(String requestLine) {
         String[] str = requestLine.split(" ");
         this.method = Method.valueOf(str[0]);
         this.path = new Path(str[1]);
         String[] protocolAndVersion = str[2].split("/");
-        this.protocol = protocolAndVersion[0];
-        this.version = protocolAndVersion[1];
+        this.protocolAndVersion = new ProtocolAndVersion(str[2]);
     }
 
     public static RequestLine parse(String s) {
@@ -27,11 +25,7 @@ public class RequestLine {
         return path;
     }
 
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public String getVersion() {
-        return version;
+    public ProtocolAndVersion getProtocolAndVersion() {
+        return protocolAndVersion;
     }
 }
