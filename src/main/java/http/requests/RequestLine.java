@@ -25,7 +25,6 @@ public class RequestLine {
      */
     public RequestLine(String rawRequestLine) {
         final String[] tokens = rawRequestLine.split(" ");
-
         this.method = parseHttpMethod(tokens[TOKEN_METHOD_PART]);
         this.path = parseUri(tokens[TOKEN_PATH_PART]);
         this.queryString = new QueryString(tokens[TOKEN_PATH_PART]);

@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import http.requests.RequestContext;
+import model.User;
+import model.UserParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.TemplateReader;
@@ -34,6 +36,11 @@ public class RequestHandler implements Runnable {
             final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             final RequestContext requestContext = parseRequestContext(br);
             logger.debug("request context: {}", requestContext);
+
+            if ("/user/create".equals(requestContext.getPath())) {
+                final User user = UserParser.parse(requestContext);
+                logger.debug("user: {}", user);
+            }
 
             DataOutputStream dos = new DataOutputStream(out);
             final byte[] body = convertFileToByte(requestContext.getPath());

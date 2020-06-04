@@ -1,5 +1,7 @@
 package http.requests;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -12,8 +14,9 @@ public class QueryString {
     private final Map<String, String> map;
 
     public QueryString(String pathString) {
+        final String decodedPathString = URLDecoder.decode(pathString, StandardCharsets.UTF_8);
         this.map = pathString.contains("?") ?
-                parseQueryString(pathString) :
+                parseQueryString(decodedPathString) :
                 new HashMap<>();
     }
 
