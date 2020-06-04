@@ -1,5 +1,6 @@
 package http.requestline;
 
+import java.io.BufferedReader;
 import java.util.Map;
 
 public class RequestLine {
@@ -8,6 +9,10 @@ public class RequestLine {
     private HttpMethod httpMethod;
     private Path path;
     private ProtocolAndVersion protocolAndVersion;
+
+    public RequestLine(BufferedReader br) {
+
+    }
 
     public RequestLine(String requestLine) {
         String[] strRequestLine = requestLine.split(BLANK_ONE);

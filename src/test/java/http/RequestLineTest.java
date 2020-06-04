@@ -7,6 +7,10 @@ import http.requestline.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.io.StringReader;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RequestLineTest {
@@ -63,5 +67,29 @@ public class RequestLineTest {
                 .hasSize(0);
         assertThat(parsedLine.getProtocolAndVersion())
                 .isEqualTo(new ProtocolAndVersion(Protocol.HTTP, "1.1"));
+    }
+
+    @DisplayName("BufferedReader를 입력으로 받아서 객체 생성")
+    @Test
+    void createByBufferedReader() {
+        //given
+        String stringRequest = "POST /user/create HTTP/1.1\n" +
+                "Host: localhost:8080\n" +
+                "Connection: keep-alive\n" +
+                "Content-Length: 59\n" +
+                "Content-Type: application/x-www-form-urlencoded\n" +
+                "Accept: */*\n" +
+                "\n" +
+                "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
+        Reader reader = new StringReader(stringRequest);
+
+        //when
+        RequestLine requestLine = new RequestLine(new BufferedReader(reader));
+
+        //then
+        assertThat(requestLine.getHttpMethod()).isEqualTo(HttpMethod.POST);
+        assertThat(requestLine.getStringPath()).isEqualTo("/user/create");
+        assertThat(requestLine.getProtocolAndVersion().getProtocol()).isEqualTo(Protocol.HTTP);
+        assertThat(requestLine.getProtocolAndVersion().getVersion()).isEqualTo("1.1");
     }
 }
