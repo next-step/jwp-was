@@ -58,7 +58,27 @@ public class RequestHandler implements Runnable {
                 byte[] body = FileIoUtils.loadFileFromClasspath(url);
                 response302Header(dos, url);
                 responseBody(dos, body);
-            }else {
+            } else if (url.equals("/user/login")) {
+                String requestBody = IOUtils.readData(br, Integer.parseInt(headers.get("Content-Length")));
+                Map<String, String> map = QueryStrings.parseQueryStrings(requestBody);
+                User userById = DataBase.findUserById(map.get("userId"));
+                if (userById.getPassword().equals(map.get("password"))) {
+                    DataOutputStream dos = new DataOutputStream(out);
+                    logger.debug("url: {}", url);
+                    url = "/index.html";
+                    byte[] body = FileIoUtils.loadFileFromClasspath(url);
+                    response302Header(dos, url);
+                    responseBody(dos, body);
+                } else {
+                    DataOutputStream dos = new DataOutputStream(out);
+                    logger.debug("url: {}", url);
+                    url = "/user/login_failed.html";
+                    byte[] body = FileIoUtils.loadFileFromClasspath(url);
+                    response302Header(dos, url);
+                    responseBody(dos, body);
+                }
+
+            } else {
                 DataOutputStream dos = new DataOutputStream(out);
                 logger.debug("url: {}", url);
                 byte[] body = FileIoUtils.loadFileFromClasspath(url);
@@ -70,7 +90,7 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void response302Header(DataOutputStream dos, String url){
+    private void response302Header(DataOutputStream dos, String url) {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
