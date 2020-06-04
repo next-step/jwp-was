@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DisplayName("사용자의 요청을 Request Context 객체로 파싱하는 모듈을 테스트한다")
 public class RequestParserTest {
 
@@ -20,5 +22,6 @@ public class RequestParserTest {
         rawRequestHeaders.add("Connection: keep-alive");
         rawRequestHeaders.add("Cache-Control: no-cache");
         final RequestContext requestContext = RequestParser.parse(rawRequestLine, rawRequestHeaders);
+        assertThat(requestContext).isNotNull();
     }
 }
