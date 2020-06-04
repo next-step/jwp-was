@@ -46,7 +46,7 @@ public class RequestHandler implements Runnable {
                 }
             }
 
-            if (url.startsWith("/user/create")) {
+            if (url.startsWith("/users")) {
                 String requestBody = IOUtils.readData(br, Integer.parseInt(headers.get("Content-Length")));
                 Map<String, String> map = QueryStrings.parseQueryStrings(requestBody);
                 User user = new User(map.get("userId"), map.get("password"), map.get("name"), map.get("email"));
