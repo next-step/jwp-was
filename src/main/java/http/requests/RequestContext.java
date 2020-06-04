@@ -33,4 +33,8 @@ public class RequestContext {
                 ", requestHeaders=" + requestHeaders +
                 '}';
     }
+
+    public String getPath() {
+        return requestLine.getPath();
+    }
 }

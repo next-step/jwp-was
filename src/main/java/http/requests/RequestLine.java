@@ -10,6 +10,9 @@ public class RequestLine {
     public static final int TOKEN_PATH_PART = 1;
     public static final int TOKEN_PROTOCOL_PART = 2;
 
+    // TODO: it's duplicated
+    private static final String QUERY_STRING_DELIMITER_REGEX = "\\?";
+
     private final HttpMethod method;
     private final String path;
     private final Protocol protocol;
@@ -24,9 +27,15 @@ public class RequestLine {
         final String[] tokens = rawRequestLine.split(" ");
 
         this.method = parseHttpMethod(tokens[TOKEN_METHOD_PART]);
-        this.path = tokens[TOKEN_PATH_PART];
+        this.path = parseUri(tokens[TOKEN_PATH_PART]);
         this.queryString = new QueryString(tokens[TOKEN_PATH_PART]);
         this.protocol = new Protocol(tokens[TOKEN_PROTOCOL_PART]);
+    }
+
+    private String parseUri(String rawPathString) {
+        return rawPathString.contains("?") ?
+                rawPathString.split(QUERY_STRING_DELIMITER_REGEX)[0] :
+                rawPathString;
     }
 
     private HttpMethod parseHttpMethod(String rawHttpMethod) {
