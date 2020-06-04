@@ -2,12 +2,23 @@ package http;
 
 import java.util.Objects;
 
-public class RequestMethodGet {
+public class RequestMethodGet implements RequestMethod{
+    private static final String METHOD_NAME = "GET";
 
     private final String path;
 
     public RequestMethodGet(final String path) {
         this.path = path;
+    }
+
+    @Override
+    public String getPath() {
+        return path;
+    }
+
+    @Override
+    public String getMethodName() {
+        return METHOD_NAME;
     }
 
     @Override
