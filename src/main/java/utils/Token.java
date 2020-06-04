@@ -22,6 +22,8 @@ public class Token {
     }
 
     public void validate(final int expectedTokenSize) {
-
+        if (stringTokenizer.countTokens() < expectedTokenSize) {
+            throw new IllegalArgumentException("Tokenized string is not enough");
+        }
     }
 }

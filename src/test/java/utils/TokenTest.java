@@ -50,4 +50,13 @@ public class TokenTest {
 
         assertThatCode(() -> token.validate(3)).doesNotThrowAnyException();
     }
+
+    @Test
+    @DisplayName("문자열을 토큰화 했들때 토큰 갯수가 예상보다 적을때 예외 생성")
+    void validateThrowException() {
+        Token token = new Token("a,b,c", ",");
+
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> token.validate(4));
+    }
 }
