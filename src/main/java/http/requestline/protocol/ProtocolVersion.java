@@ -7,15 +7,14 @@ import java.util.regex.Pattern;
 
 public class ProtocolVersion {
 
-    private static final String VERSION_REGEX = "[0-9][.][0-9]";
     private final String version;
 
-    ProtocolVersion(String version) { // TODO: 2020/06/04 public?
-        if (Pattern.matches(VERSION_REGEX, version)) { // TODO: 2020/06/04 test is broken now.
-            this.version = version;
+    ProtocolVersion(String version) {
+        if (isIllegalPattern(version)) {
+            throw new IllegalRequestLineParsingException();
         }
 
-        throw new IllegalRequestLineParsingException();
+        this.version = version;
     }
 
     public String getVersion() {
@@ -33,5 +32,21 @@ public class ProtocolVersion {
     @Override
     public int hashCode() {
         return Objects.hash(version);
+    }
+
+    private boolean isIllegalPattern(String version) {
+        return !ProtocolVersionMatcher.match(version);
+    }
+
+    public static class ProtocolVersionMatcher {
+
+        private static final String VERSION_REGEX = "^[0-9][.][0-9]$";
+
+        private ProtocolVersionMatcher() {
+        }
+
+        public static boolean match(String version) {
+            return Pattern.matches(VERSION_REGEX, version);
+        }
     }
 }
