@@ -22,6 +22,10 @@ public class Token {
     }
 
     public String nextToken() {
+        if(stringTokenizer.countTokens() < 1) {
+            return null;
+        }
+
         return stringTokenizer.nextToken();
     }
 

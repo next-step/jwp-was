@@ -1,25 +1,22 @@
 package http;
 
+import utils.Token;
+
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class Path {
+    public static final String PATH_AND_QUERY_STRING_DELIMITER = "\\?";
     private final String path;
     private final HashMap<String, String> queryString;
 
     public Path(final String pathStr) {
-        if (pathStr == null) {
-            throw new IllegalArgumentException("Path string is null");
-        }
+        Token token = Token.init(pathStr, PATH_AND_QUERY_STRING_DELIMITER);
+        token.validate(1);
 
-        String[] tokens = pathStr.split("\\?");
-
-        this.path = tokens[0];
+        this.path = token.nextToken();
         this.queryString = new HashMap<>();
-
-        if (tokens.length >= 2) {
-            initQueryString(tokens[1]);
-        }
+        token.nextToken();
     }
 
     private void initQueryString(final String queryString) {
