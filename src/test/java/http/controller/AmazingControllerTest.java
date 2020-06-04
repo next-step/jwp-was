@@ -1,11 +1,14 @@
 package http.controller;
 
 import http.requests.RequestContext;
+import http.responses.ResponseContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("으메이징 컨트롤러를 테스트한다.")
 class AmazingControllerTest {
