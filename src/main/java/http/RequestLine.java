@@ -4,14 +4,12 @@ public class RequestLine {
 
     private HttpMethodType method;
     private String path;
-    private String protocol;
-    private String version;
+    private Protocol protocol;
 
-    public RequestLine(String method, String path, String protocol, String version) {
+    public RequestLine(String method, String path, Protocol protocol) {
         this.method = HttpMethodType.valueOf(method);
         this.path = path;
         this.protocol = protocol;
-        this.version = version;
     }
 
     public HttpMethodType getMethod() {
@@ -22,11 +20,8 @@ public class RequestLine {
         return path;
     }
 
-    public String getProtocol() {
+    public Protocol getProtocol() {
         return protocol;
     }
 
-    public String getVersion() {
-        return version;
-    }
 }

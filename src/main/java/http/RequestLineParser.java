@@ -2,11 +2,11 @@ package http;
 
 public class RequestLineParser {
 
-    public static RequestLine parse(String value) {
-        String[] values = value.split(" ");
-        String[] protocolAndVersion = values[2].split("/");
+    private final static String REQUEST_LINE_DELIMITER = " ";
 
-        return new RequestLine(values[0], values[1], protocolAndVersion[0], protocolAndVersion[1]);
+    public static RequestLine parse(String value) {
+        String[] values = value.split(REQUEST_LINE_DELIMITER);
+        return new RequestLine(values[0], values[1], new Protocol(values[2]));
     }
 
     public static QueryString parseQueryString(String value) {
