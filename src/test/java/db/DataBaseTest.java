@@ -15,7 +15,7 @@ public class DataBaseTest {
 
         //when
         DataBase.addUser(user);
-        User palmseung = DataBase.findUserById("palmsueng");
+        User palmseung = DataBase.findUserById("palmseung");
 
         //then
         assertThat(palmseung).isEqualTo(user);

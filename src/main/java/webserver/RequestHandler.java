@@ -1,5 +1,6 @@
 package webserver;
 
+import db.DataBase;
 import http.RequestLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,8 @@ public class RequestHandler implements Runnable {
             String strRequestLine = br.readLine();
             RequestLine requestLine = new RequestLine(strRequestLine);
             String url = requestLine.getStringPath();
+            if(url.startsWith("/create")){
+            }
 
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = FileIoUtils.loadFileFromClasspath(url);

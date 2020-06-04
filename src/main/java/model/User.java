@@ -1,5 +1,7 @@
 package model;
 
+import http.QueryStrings;
+
 import java.util.Objects;
 
 public class User {
@@ -13,6 +15,10 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public static User of(QueryStrings queryStrings){
+        return null;
     }
 
     public String getUserId() {
