@@ -9,10 +9,7 @@ public class Path {
 
     public Path(String path) {
         this.path = getPathOnly(path);
-        if (hasQueryStrings(path)) {
-            this.queryStrings = new QueryStrings(path);
-        }
-        this.queryStrings = new QueryStrings();
+        extractQueryStrings(path);
     }
 
     public String getPath() {
@@ -31,6 +28,15 @@ public class Path {
     private String getPathOnly(String path) {
         String[] split = path.split("\\?");
         return split[0];
+    }
+
+    private void extractQueryStrings(String path) {
+        if (hasQueryStrings(path)) {
+            this.queryStrings = new QueryStrings(path);
+        }
+        if (!hasQueryStrings(path)) {
+            this.queryStrings = new QueryStrings();
+        }
     }
 
     @Override
