@@ -8,6 +8,6 @@ public class RequestLineParser {
         String path = lines[1];
         String protocol = lines[2];
 
-        return RequestLine.ofGet(path, protocol);
+        return new RequestLine(null, null);
     }
 }

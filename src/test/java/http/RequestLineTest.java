@@ -1,17 +1,30 @@
 package http;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class RequestLineTest {
 
+    private RequestMethod requestMethod;
+    private Protocol protocol;
+
+    @BeforeEach
+    void setUp() {
+        requestMethod = new RequestMethodGet("/users");
+        protocol = new Protocol("HTTP/1.1");
+    }
+
     @Test
-    @DisplayName("생성")
+    @DisplayName("객체 생성")
     void create() {
-        RequestLine requestLine = new RequestLine("GET", "/users", new Protocol("HTTP/1.1"));
-        assertThat(requestLine).isEqualTo(RequestLine.ofGet("/users", "HTTP/1.1"));
+        // give
+        RequestLine actualRequestLine = new RequestLine(requestMethod, protocol);
+        // when
+        boolean same = actualRequestLine.equals(new RequestLine(new RequestMethodGet("/users"), new Protocol("HTTP/1.1")));
+        // then
+        assertThat(same).isTrue();
     }
 }
