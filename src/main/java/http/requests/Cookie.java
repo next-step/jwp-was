@@ -2,10 +2,7 @@ package http.requests;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.AbstractMap;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Cookie {
@@ -16,6 +13,10 @@ public class Cookie {
     private final Map<String, String> cookieShop;
 
     public Cookie(String valueOfHeader) {
+        if (valueOfHeader == null) {
+            this.cookieShop = Collections.emptyMap();
+            return;
+        }
         final String decodedHeader = URLDecoder.decode(valueOfHeader, StandardCharsets.UTF_8);
         this.cookieShop = parseHeader(decodedHeader);
     }
@@ -49,5 +50,12 @@ public class Cookie {
     @Override
     public int hashCode() {
         return Objects.hash(cookieShop);
+    }
+
+    @Override
+    public String toString() {
+        return "Cookie{" +
+                "cookieShop=" + cookieShop +
+                '}';
     }
 }

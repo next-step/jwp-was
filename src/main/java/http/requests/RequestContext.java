@@ -16,6 +16,7 @@ public class RequestContext {
     private final Map<String, String> requestHeaders;
     private final String body;
     private final Map<String, String> formData;
+    private final Cookie cookie;
 
     public RequestContext(String rawRequestLine, List<String> rawRequestHeaders, String body) {
         this.requestLine = new RequestLine(rawRequestLine);
@@ -27,6 +28,7 @@ public class RequestContext {
                 );
         this.body = body;
         this.formData = body == null || body.isEmpty() ? new HashMap<>() : parseFormData(body);
+        this.cookie = new Cookie(requestHeaders.get("Cookie"));
     }
 
     // TODO: <duplicated> Query String parsing과 동일. 이와 같이 key, value로 파싱해야 할 util을 만들자.
@@ -80,4 +82,7 @@ public class RequestContext {
         return body;
     }
 
+    public Cookie getCookie() {
+        return cookie;
+    }
 }
