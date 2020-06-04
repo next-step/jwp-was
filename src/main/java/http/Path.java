@@ -1,9 +1,11 @@
 package http;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class Path {
     private String path;
+    private QueryStrings queryStrings;
 
     public Path(String path) {
         this.path = path;
@@ -20,5 +22,13 @@ public class Path {
     @Override
     public int hashCode() {
         return Objects.hash(path);
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public Map<String, String> getQueryStrings() {
+        return queryStrings.getQueryStrings();
     }
 }
