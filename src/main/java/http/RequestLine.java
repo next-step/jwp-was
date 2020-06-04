@@ -1,19 +1,18 @@
 package http;
 
 public class RequestLine {
-
-    private final String method;
+    private final HttpMethod httpMethod;
     private final Path path;
     private final Protocol protocol;
 
-    public RequestLine(final String method, final Path path, final Protocol protocol) {
-        this.method = method;
+    public RequestLine(final HttpMethod httpMethod, final Path path, final Protocol protocol) {
+        this.httpMethod = httpMethod;
         this.path = path;
         this.protocol = protocol;
     }
 
     public String getMethod() {
-        return method;
+        return httpMethod.name();
     }
 
     public String getPath() {
