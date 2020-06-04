@@ -15,6 +15,14 @@ public enum HttpStatus {
     private int statusCode;
     private String reasonPhrase;
 
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public String getReasonPhrase() {
+        return reasonPhrase;
+    }
+
     HttpStatus(int statusCode, String reasonPhrase) {
         this.statusCode = statusCode;
         this.reasonPhrase = reasonPhrase;

@@ -1,14 +1,16 @@
 package webserver;
 
+import http.controller.AmazingController;
 import http.parsers.RequestContextParser;
 import http.requests.RequestContext;
-import model.User;
-import model.UserParser;
+import http.responses.ResponseContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.TemplateReader;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 /**
@@ -35,60 +37,31 @@ public class RequestHandler implements Runnable {
             final RequestContext requestContext = RequestContextParser.parse(in);
             logger.debug("request context: {}", requestContext);
 
-
             final DataOutputStream dos = new DataOutputStream(out);
-            final byte[] body = convertFileToByte(requestContext.getPath());
 
-            // TODO: 이 부분이 컨트롤러가 되어야 함
-            // TODO: response 핸들러 분리할 시점이 왔다.
-            if ("/user/create".equals(requestContext.getPath())) {
-                final User user = UserParser.parse(requestContext);
-                logger.debug("user: {}", user);
-                response302Header(dos, "/index.html");
-            } else {
-                response200Header(dos, body.length);
-                responseBody(dos, body);
+            final ResponseContext responseContext = AmazingController.dispatch(requestContext);
+            logger.debug("response: {}", responseContext);
+
+            writeResponseContext(dos, responseContext);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void writeResponseContext(DataOutputStream dos, ResponseContext context) {
+        try {
+            dos.writeBytes(context.getStatusLine());
+            for (String header : context.getResponseHeaderList()) {
+                dos.writeBytes(header);
+            }
+            dos.writeBytes("\r\n");
+            final byte[] responseBody = context.getResponseBody();
+            if (responseBody != null) {
+                dos.write(responseBody, 0, responseBody.length);
+                dos.flush();
             }
         } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private byte[] convertFileToByte(String path) {
-        try {
-            return TemplateReader.read(path);
-        } catch (FileNotFoundException e) {
-            return "Hello World".getBytes();
-        }
-    }
-
-    private void response302Header(DataOutputStream dos, String location) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes(String.format("Location: %s\r\n", location));
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
     }
 }

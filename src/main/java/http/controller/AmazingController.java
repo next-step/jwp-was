@@ -3,6 +3,8 @@ package http.controller;
 import http.requests.RequestContext;
 import http.responses.HttpStatus;
 import http.responses.ResponseContext;
+import model.User;
+import model.UserParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.TemplateReader;
@@ -22,14 +24,16 @@ public class AmazingController {
         log.debug("branch: {}", branch);
 
         switch (branch) {
-            case "[POST]/user/create":
-                return signInHandler(requestContext);
+            case "[POST]/user/create":  // 하드코딩 실화니.. =ㅁ=..
+                return signUpHandler(requestContext);
             default:
                 return defaultHandler(requestContext);
         }
     }
 
-    private static ResponseContext signInHandler(RequestContext requestContext) {
+    private static ResponseContext signUpHandler(RequestContext requestContext) {
+        final User user = UserParser.parse(requestContext);
+        log.debug("user: {}", user);
         return ResponseContext
                 .builder()
                     .status(HttpStatus.FOUND)
@@ -56,6 +60,12 @@ public class AmazingController {
         }
     }
 
+    /**
+     * URI로만 분기하면 method를 구분할 수 없어서 분기용으로 일단 이렇게 만듬
+     * 
+     * @param ctx http 요청 컨텍스트
+     * @return 분기 문자열
+     */
     private static String buildBranchString(RequestContext ctx) {
         return String.format("[%s]%s", ctx.getMethod(), ctx.getPath());
     }

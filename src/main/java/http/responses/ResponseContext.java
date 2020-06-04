@@ -1,7 +1,9 @@
 package http.responses;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @see <a href=https://tools.ietf.org/html/rfc2616#section-6>Response Specification</a>
@@ -24,6 +26,32 @@ public class ResponseContext {
         this.status = status;
         this.responseHeaders = responseHeaders;
         this.body = body;
+    }
+
+    // TODO: 이 컨텍스트를 바탕으로 응답 렌더링 하는 부분은 외부로 빼자
+    public String getStatusLine() {
+        return String.format("HTTP/%s %d %s \r\n", httpVersion, status.getStatusCode(), status.getReasonPhrase());
+    }
+
+    // TODO: 이 컨텍스트를 바탕으로 응답 렌더링 하는 부분은 외부로 빼자
+    public List<String> getResponseHeaderList() {
+        return responseHeaders.entrySet().stream()
+                .map(e -> String.format("%s: %s\r\n", e.getKey(), e.getValue()))
+                .collect(Collectors.toList());
+    }
+
+    // TODO: 이 컨텍스트를 바탕으로 응답 렌더링 하는 부분은 외부로 빼자
+    public byte[] getResponseBody() {
+        return body;
+    }
+
+    @Override
+    public String toString() {
+        return "ResponseContext{" +
+                "httpVersion='" + httpVersion + '\'' +
+                ", status=" + status +
+                ", responseHeaders=" + responseHeaders +
+                '}';
     }
 
     public static ResponseContextBuilder builder() {

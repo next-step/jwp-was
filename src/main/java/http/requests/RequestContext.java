@@ -55,7 +55,6 @@ public class RequestContext {
         return "RequestContext{" +
                 "requestLine=" + requestLine +
                 ", requestHeaders=" + requestHeaders +
-                ", body='" + body + '\'' +
                 ", formData=" + formData +
                 '}';
     }
@@ -64,7 +63,7 @@ public class RequestContext {
         return requestLine.getPath();
     }
 
-    // TODO: getParameter로 메소드 이름 변경
+    // TODO: getParameter로 메소드 이름 변경 (unused 제거 해도.. 될 듯?)
     public String getAttributeFromQueryString(String key) {
         return requestLine.getQueryString().getParameter(key);
     }
