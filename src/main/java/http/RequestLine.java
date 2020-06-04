@@ -30,4 +30,12 @@ public class RequestLine {
     public String getVersion() {
         return this.protocol.getVersion();
     }
+
+    public QueryString getQueryString() {
+        return this.pathAndQueryString.getQueryString();
+    }
+
+    public boolean isSignRequest() {
+        return this.pathAndQueryString.isSignUrl();
+    }
 }

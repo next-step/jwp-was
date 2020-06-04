@@ -1,15 +1,20 @@
 package webserver;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.Socket;
 import java.net.URISyntaxException;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import db.DataBase;
+import http.QueryString;
 import http.RequestLine;
 import http.RequestLineParser;
 import http.ResourcePathMaker;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.FieldNameUtils;
 import utils.FileIoUtils;
 
 public class RequestHandler implements Runnable {
@@ -45,6 +50,14 @@ public class RequestHandler implements Runnable {
             }
 
             RequestLine requestLine = RequestLineParser.parse(request);
+
+            if(requestLine.isSignRequest()) {
+                QueryString queryString = requestLine.getQueryString();
+                User user = new User(queryString.getParameter("userId"), queryString.getParameter("password"), queryString.getParameter("name"), queryString.getParameter("email"));
+                DataBase.addUser(user);
+                return;
+            }
+
             String resourcePath = ResourcePathMaker.makeTemplatePath(requestLine.getPath());
 
             DataOutputStream dos = new DataOutputStream(out);

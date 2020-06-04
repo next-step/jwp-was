@@ -1,5 +1,8 @@
 package http;
 
+import model.User;
+import utils.FieldNameUtils;
+
 import java.util.*;
 
 public class QueryString {
@@ -7,6 +10,10 @@ public class QueryString {
 
     public QueryString(String queryString) {
         this.fullQueryString = queryString;
+    }
+
+    public String getFullQueryString() {
+        return this.fullQueryString;
     }
 
     public String getParameter(String name) {
@@ -35,5 +42,15 @@ public class QueryString {
     @Override
     public int hashCode() {
         return Objects.hash(fullQueryString);
+    }
+
+    public boolean isContainAllField(Class clazz) {
+        try {
+            FieldNameUtils.classFieldNames(clazz)
+                    .forEach(this::getParameter);
+            return true;
+        } catch (NoSuchElementException | IllegalAccessError e) {
+            return false;
+        }
     }
 }
