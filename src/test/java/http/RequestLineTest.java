@@ -29,9 +29,12 @@ public class RequestLineTest {
         String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
 
         //when
-        RequestLine parse = RequestLine.parse(request);
+        RequestLine parsedLine = RequestLine.parse(request);
 
         //then
-        assertThat(parse.getQuerys()).hasSize(3);
+        assertThat(parsedLine.getQueryStrings()).hasSize(3);
+        assertThat(parsedLine.getQueryStrings().get("userId")).isEqualTo("javajigi");
+        assertThat(parsedLine.getQueryStrings().get("password")).isEqualTo("password");
+        assertThat(parsedLine.getQueryStrings().get("name")).isEqualTo("JaeSung");
     }
 }

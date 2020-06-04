@@ -1,12 +1,13 @@
 package http;
 
-import java.util.List;
+import java.util.Map;
 
 public class RequestLine {
     private String method;
     private String path;
     private String protocol;
     private String version;
+    private QueryStrings queryStrings;
 
     public RequestLine(String requestLine) {
         String[] str = requestLine.split(" ");
@@ -37,7 +38,7 @@ public class RequestLine {
         return version;
     }
 
-    public List<QueryString> getQuerys() {
-        return null;
+    public Map<String, String> getQueryStrings() {
+        return this.queryStrings.getQueryStrings();
     }
 }
