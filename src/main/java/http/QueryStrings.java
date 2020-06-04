@@ -12,10 +12,28 @@ public class QueryStrings {
     }
 
     public QueryStrings(String path) {
-        this.queryStrings = Collections.unmodifiableMap(queryStrings);
+        Map<String, String> map = parseQueryStrings(getQueryStrings(path));
+        this.queryStrings = Collections.unmodifiableMap(map);
     }
 
     public Map<String, String> getQueryStrings() {
         return queryStrings;
+    }
+
+    private String getQueryStrings(String path) {
+        String[] splitPath = path.split("\\?");
+        return splitPath[1];
+    }
+
+    private Map<String, String> parseQueryStrings(String queryStrings) {
+        String[] splitQueryStrings = queryStrings.split("&");
+        Map<String, String> queries = new HashMap<>();
+        for (int i = 0; i < splitQueryStrings.length; i++) {
+            String[] split = splitQueryStrings[i].split("=");
+            String key = split[0];
+            String value = split[1];
+            queries.put(key, value);
+        }
+        return queries;
     }
 }
