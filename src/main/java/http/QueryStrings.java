@@ -7,6 +7,9 @@ import java.util.Map;
 public class QueryStrings {
     private Map<String, String> queryStrings = new HashMap<>();
 
+    public QueryStrings() {
+    }
+
     public QueryStrings(Map<String, String> queryStrings) {
         this.queryStrings = Collections.unmodifiableMap(queryStrings);
     }

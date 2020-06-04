@@ -1,13 +1,11 @@
 package http;
 
-public enum Method {
+public enum HttpMethod {
     GET("GET"), POST("POST");
 
     private String method;
 
-    Method(String method) {
+    HttpMethod(String method) {
         this.method = method.toUpperCase();
     }
-
-
 }

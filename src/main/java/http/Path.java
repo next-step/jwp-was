@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Path {
     private String path;
-    private QueryStrings queryStrings;
+    private QueryStrings queryStrings = new QueryStrings();
 
     public Path(String path) {
         this.path = getPathOnly(path);

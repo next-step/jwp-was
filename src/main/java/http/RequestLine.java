@@ -1,13 +1,13 @@
 package http;
 
 public class RequestLine {
-    private Method method;
+    private HttpMethod httpMethod;
     private Path path;
     private ProtocolAndVersion protocolAndVersion;
 
     public RequestLine(String requestLine) {
         String[] strRequestLine = requestLine.split(" ");
-        this.method = Method.valueOf(strRequestLine[0]);
+        this.httpMethod = HttpMethod.valueOf(strRequestLine[0]);
         this.path = new Path(strRequestLine[1]);
         this.protocolAndVersion = new ProtocolAndVersion(strRequestLine[2]);
     }
@@ -16,8 +16,8 @@ public class RequestLine {
         return new RequestLine(s);
     }
 
-    public Method getMethod() {
-        return method;
+    public HttpMethod getHttpMethod() {
+        return httpMethod;
     }
 
     public Path getPath() {
