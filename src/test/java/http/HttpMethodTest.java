@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 @DisplayName("Http method 종류에 대한 테스트")
 class HttpMethodTest {
@@ -26,5 +27,12 @@ class HttpMethodTest {
                 Arguments.of("GET", HttpMethod.GET),
                 Arguments.of("POST", HttpMethod.POST)
         );
+    }
+
+    @Test
+    @DisplayName("알수 없는 method 타입일 때 예외를 발생시킨다")
+    void ofException() {
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> HttpMethod.of("UNKNOWNNNN"));
     }
 }
