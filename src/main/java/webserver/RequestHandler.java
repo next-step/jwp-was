@@ -30,8 +30,8 @@ public class RequestHandler implements Runnable {
             String url = requestLine.getStringPath();
 
             DataOutputStream dos = new DataOutputStream(out);
-//            byte[] body = "Hello World".getBytes();
             byte[] body = FileIoUtils.loadFileFromClasspath(url);
+
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
