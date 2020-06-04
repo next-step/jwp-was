@@ -11,14 +11,14 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("스트링 토큰 관리 클래스")
-public class TokenTest {
+public class TokensTest {
 
     @ParameterizedTest
     @MethodSource
     @DisplayName("문자열 혹은 구분자가 null 혹은 빈 문자열인 경우에는 예외를 던진다")
     void tokenizeFailWithNull(final String origin, final String delimiter) {
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> new Token(origin, delimiter));
+                .isThrownBy(() -> new Tokens(origin, delimiter));
     }
 
     private static Stream<Arguments> tokenizeFailWithNull() {
@@ -37,34 +37,34 @@ public class TokenTest {
     @Test
     @DisplayName("문자열은 구분자로 토큰화")
     void tokenize() {
-        Token token = new Token("origin,string", ",");
+        Tokens tokens = new Tokens("origin,string", ",");
 
-        assertThat(token.nextToken()).isEqualTo("origin");
-        assertThat(token.nextToken()).isEqualTo("string");
+        assertThat(tokens.nextToken()).isEqualTo("origin");
+        assertThat(tokens.nextToken()).isEqualTo("string");
     }
 
     @Test
     @DisplayName("문자열을 토큰화 했들때 토큰 갯수를 검증한다.")
     void validate() {
-        Token token = new Token("a,b,c", ",");
+        Tokens tokens = new Tokens("a,b,c", ",");
 
-        assertThatCode(() -> token.validate(3)).doesNotThrowAnyException();
+        assertThatCode(() -> tokens.validate(3)).doesNotThrowAnyException();
     }
 
     @Test
     @DisplayName("문자열을 토큰화 했들때 토큰 갯수가 예상보다 적을때 예외 생성")
     void validateThrowException() {
-        Token token = new Token("a,b,c", ",");
+        Tokens tokens = new Tokens("a,b,c", ",");
 
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> token.validate(4));
+                .isThrownBy(() -> tokens.validate(4));
     }
 
     @Test
     @DisplayName("토큰을 한번에 가져오기")
     void getAllTokens() {
-        Token token = new Token("a,b,c", ",");
+        Tokens tokens = new Tokens("a,b,c", ",");
 
-        assertThat(token.getAllTokens()).containsExactly("a", "b", "c");
+        assertThat(tokens.getAllTokens()).containsExactly("a", "b", "c");
     }
 }

@@ -1,6 +1,6 @@
 package http;
 
-import utils.Token;
+import utils.Tokens;
 
 public class Protocol {
     public static final String PROTOCOL_SPLITTER = "/";
@@ -10,11 +10,11 @@ public class Protocol {
     private final String version;
 
     public Protocol(final String protocolStr) {
-        Token token = Token.init(protocolStr, PROTOCOL_SPLITTER);
-        token.validate(PROTOCOL_STRING_TOKEN_SIZE);
+        Tokens tokens = Tokens.init(protocolStr, PROTOCOL_SPLITTER);
+        tokens.validate(PROTOCOL_STRING_TOKEN_SIZE);
 
-        this.protocol = token.nextToken();
-        this.version = token.nextToken();
+        this.protocol = tokens.nextToken();
+        this.version = tokens.nextToken();
     }
 
     public String getProtocol() {

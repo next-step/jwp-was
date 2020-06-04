@@ -1,6 +1,6 @@
 package http;
 
-import utils.Token;
+import utils.Tokens;
 
 public class Path {
     private static final String PATH_AND_QUERY_STRING_DELIMITER = "\\?";
@@ -10,11 +10,11 @@ public class Path {
     private final QueryString queryString;
 
     public Path(final String pathStr) {
-        Token token = Token.init(pathStr, PATH_AND_QUERY_STRING_DELIMITER);
-        token.validate(MINIMUM_REQUIRED_TOKEN_SIZE);
+        Tokens tokens = Tokens.init(pathStr, PATH_AND_QUERY_STRING_DELIMITER);
+        tokens.validate(MINIMUM_REQUIRED_TOKEN_SIZE);
 
-        this.path = token.nextToken();
-        this.queryString = new QueryString(token.nextToken());
+        this.path = tokens.nextToken();
+        this.queryString = new QueryString(tokens.nextToken());
     }
 
     public String getPath() {

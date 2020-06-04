@@ -1,7 +1,7 @@
 package http;
 
 import utils.StringUtil;
-import utils.Token;
+import utils.Tokens;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,16 +18,16 @@ public class QueryString {
             return;
         }
 
-        Token token = Token.init(queryString, PARAMETER_DELIMITER);
-        token.getAllTokens()
+        Tokens tokens = Tokens.init(queryString, PARAMETER_DELIMITER);
+        tokens.getAllTokens()
                 .forEach(this::parseQuery);
     }
 
     private void parseQuery(final String query) {
-        Token token = Token.init(query, KEY_AND_VALUE_DELIMITER);
-        token.validate(KEY_AND_VALUE_TOKEN_SIZE);
+        Tokens tokens = Tokens.init(query, KEY_AND_VALUE_DELIMITER);
+        tokens.validate(KEY_AND_VALUE_TOKEN_SIZE);
 
-        parameters.put(token.nextToken(), token.nextToken());
+        parameters.put(tokens.nextToken(), tokens.nextToken());
     }
 
     public String get(final String parameter) {

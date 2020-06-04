@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class Token {
+public class Tokens {
     private final StringTokenizer stringTokenizer;
 
-    public Token(final String origin, final String delimiter) {
+    public Tokens(final String origin, final String delimiter) {
         validate(origin, delimiter);
 
         stringTokenizer = new StringTokenizer(origin, delimiter);
     }
 
-    public static Token init(final String origin, final String delimiter) {
-        return new Token(origin, delimiter);
+    public static Tokens init(final String origin, final String delimiter) {
+        return new Tokens(origin, delimiter);
     }
 
     private void validate(final String origin, final String delimiter) {
