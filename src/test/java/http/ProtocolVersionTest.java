@@ -3,6 +3,7 @@ package http;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -13,6 +14,7 @@ public class ProtocolVersionTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"HTTP/1.0", "HTTP/1.1"})
+    @DisplayName("유효한 입력값으로 ProtocolVersion 이 정상적으로 생성되는지 테스트")
     void createProtocolVersionTest(String protocolVersionInput) {
         ProtocolVersion protocolVersion = new ProtocolVersion(protocolVersionInput);
 
@@ -24,6 +26,7 @@ public class ProtocolVersionTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", "HTTP", "HTTP/", "HTTP/10.1", "HTTP/1.10", "HTTP/1.1.1"})
+    @DisplayName("유효하지 않은 입력값으로 ProtocolVersion 을 생성 시에 지정한 예외가 발생하는지 테스트")
     void createInvalidProtocolVersionTest(String protocolVersionInput) {
         assertThatIllegalArgumentException().isThrownBy(() -> {
             new ProtocolVersion(protocolVersionInput);
