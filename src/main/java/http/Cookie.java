@@ -15,7 +15,7 @@ public class Cookie {
         for (String cookie : values.split(";")) {
             String[] c = cookie.split("=");
             if (c.length != 2) {
-                throw new RuntimeException();
+                throw new RuntimeException("유효하지 않은 Cookie 헤더임. header :: [" + header + "]");
             }
             String cookieName = c[0].trim();
             String cookieValue = c[1].trim();
