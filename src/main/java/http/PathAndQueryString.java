@@ -22,6 +22,6 @@ public class PathAndQueryString {
     }
 
     public boolean isSignUrl() {
-        return "/create".equals(this.path) && StringUtils.isNotEmpty(this.queryString.getFullQueryString()) && this.queryString.isContainAllField(User.class);
+        return "/user/create".equals(this.path) && StringUtils.isNotEmpty(this.queryString.getFullQueryString()) && this.queryString.isContainAllField(User.class);
     }
 }

@@ -1,6 +1,5 @@
 package http;
 
-import model.User;
 import utils.FieldNameUtils;
 
 import java.util.*;

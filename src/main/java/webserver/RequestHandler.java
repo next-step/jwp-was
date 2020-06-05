@@ -7,15 +7,14 @@ import java.net.URISyntaxException;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import db.DataBase;
-import http.QueryString;
-import http.RequestLine;
-import http.RequestLineParser;
-import http.ResourcePathMaker;
+import http.*;
+import http.controller.PathController;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FieldNameUtils;
 import utils.FileIoUtils;
+import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -36,37 +35,38 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             String line = br.readLine();
             String request = line.trim(); // 첫번째 줄 저장
-            String header = StringUtils.EMPTY; // 첫번째 줄을 제외한 나머지 정보 저장
+            String requestBody = StringUtils.EMPTY;
+
+            RequestLine requestLine = RequestLineParser.parse(request);
+            HttpHeaderInfo headerInfo = new HttpHeaderInfo();
 
             logger.debug("request first line : {}", line);
 
             while (!"".equals(line)) {
-                if(StringUtils.isNotEmpty(header)) {
-                    header.concat("\n");
-                }
                 line = br.readLine().trim();
-                header.concat(line);
+                if(StringUtils.isNotEmpty(line)) {
+                    headerInfo.addHeaderValue(line);
+                }
                 logger.debug("request : {}", line);
             }
 
-            RequestLine requestLine = RequestLineParser.parse(request);
-
-            if(requestLine.isSignRequest()) {
-                QueryString queryString = requestLine.getQueryString();
-                User user = new User(queryString.getParameter("userId"), queryString.getParameter("password"), queryString.getParameter("name"), queryString.getParameter("email"));
-                DataBase.addUser(user);
-                return;
+            if(StringUtils.isNotEmpty(headerInfo.getValue("Content-Length"))) {
+                requestBody = IOUtils.readData(br, Integer.parseInt(headerInfo.getValue("Content-Length")));
             }
 
-            String resourcePath = ResourcePathMaker.makeTemplatePath(requestLine.getPath());
+            HttpRequest httpRequest = new HttpRequest(requestLine, headerInfo, requestBody);
+            PathController controller = ControllerHandler.getPathController(httpRequest);
 
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body =  FileIoUtils.loadFileFromClasspath(resourcePath);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            //controller 수행
+            byte[] body = controller.execute();
+
+            if(body.length > 0) {
+
+                DataOutputStream dos = new DataOutputStream(out);
+                response200Header(dos, body.length);
+                responseBody(dos, body);
+            }
         } catch (IOException e) {
-            logger.error(e.getMessage());
-        } catch (URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
