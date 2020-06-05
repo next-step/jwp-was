@@ -18,6 +18,7 @@ class RequestBodyTest {
 
         assertThat(requestBody.getBodyParameter("userId")).isEqualTo("javajigi");
         assertThat(requestBody.getBodyParameter("password")).isEqualTo("password");
+        assertThat(requestBody.getOrigin()).isEqualTo(body);
         assertThat(requestBody.getBodyParameter("not exist")).isNull();
     }
 }

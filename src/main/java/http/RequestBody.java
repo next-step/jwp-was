@@ -12,13 +12,13 @@ public class RequestBody {
     public RequestBody(final String origin) {
         this.origin = origin;
 
-        Tokens tokens = Tokens.init(origin, "\n");
+        Tokens tokens = Tokens.init(origin, "&");
         tokens.getAllTokens()
                 .forEach(this::addHeader);
     }
 
     private void addHeader(final String token) {
-        Tokens tokens = Tokens.init(token, ":");
+        Tokens tokens = Tokens.init(token, "=");
 
         PARAMS.put(tokens.nextToken().trim(), tokens.nextToken().trim());
     }
