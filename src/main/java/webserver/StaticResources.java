@@ -1,7 +1,5 @@
 package webserver;
 
-import http.request.Request;
-
 import java.util.Arrays;
 
 public enum StaticResources {
@@ -16,7 +14,7 @@ public enum StaticResources {
         this.suffix = suffix;
     }
 
-    public static boolean match(String url){
+    public static boolean match(String url) {
         return Arrays.stream(values())
                 .anyMatch(v -> url.endsWith(v.suffix));
     }
