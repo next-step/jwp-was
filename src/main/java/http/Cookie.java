@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Cookie {
+    private static final String COOKIE_HEADER_START_CONDITION = "Cookie: ";
     private static final String HEADER_NAME_VALUE_TOKENIZER = ":";
     private static final String COOKIE_TOKENIZER = ";";
     private static final String COOKIE_NAME_VALUE_TOKENIZER = "=";
@@ -11,7 +12,7 @@ public class Cookie {
     private Map<String, String> cookies = new HashMap<>();
 
     public Cookie(String header) {
-        if (header == null || !header.startsWith("Cookie: ")) {
+        if (header == null || !header.startsWith(COOKIE_HEADER_START_CONDITION)) {
             throw new RuntimeException("쿠키 관련 헤더가 아님. header :: [" + header + "]");
         }
 
