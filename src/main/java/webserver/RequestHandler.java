@@ -58,7 +58,7 @@ public class RequestHandler implements Runnable {
             }
 
             String requestBody = IOUtils.readData(br, contentLength);
-            logger.debug("Body :: {}", line);
+            logger.debug("Body :: {}", requestBody);
 
             HttpMethod httpMethod = requestLine.getHttpMethod();
             String path = requestLine.getPath();
