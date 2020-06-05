@@ -10,7 +10,7 @@ import utils.Args;
  */
 public class ProtocolVersion {
 
-    private static final String REQUEST_PROTOCOL_VERSION_FORMAT = "(?<protocol>.+)\\/(?<version>\\d.\\d)";
+    private static final String REQUEST_PROTOCOL_VERSION_FORMAT = "(?<protocol>.+)/(?<version>\\d.\\d)";
     private static final Pattern REQUEST_PROTOCOL_VERSION_PATTERN = Pattern.compile(REQUEST_PROTOCOL_VERSION_FORMAT);
     protected static final String ILLEGAL_PROTOCOL_VERSION = "유효하지 않은 프로토콜/버전 입니다.";
 
