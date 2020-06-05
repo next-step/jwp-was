@@ -3,14 +3,20 @@ package http;
 public class HttpRequest {
     private final RequestLine requestLine;
     private final RequestHeader requestHeader;
+    private final RequestBody requestBody;
 
-    private HttpRequest(final RequestLine requestLine, final RequestHeader requestHeader) {
+    private HttpRequest(final RequestLine requestLine,
+                        final RequestHeader requestHeader,
+                        final RequestBody requestBody) {
         this.requestLine = requestLine;
         this.requestHeader = requestHeader;
+        this.requestBody = requestBody;
     }
 
-    public static HttpRequest init(final RequestLine requestLine, RequestHeader requestHeader) {
-        return new HttpRequest(requestLine, requestHeader);
+    public static HttpRequest init(final RequestLine requestLine,
+                                   final RequestHeader requestHeader,
+                                   final RequestBody requestBody) {
+        return new HttpRequest(requestLine, requestHeader, requestBody);
     }
 
     public HttpMethod getMethod() {
@@ -39,5 +45,9 @@ public class HttpRequest {
 
     public String getHeader(final String headerName) {
         return requestHeader.getHeader(headerName);
+    }
+
+    public String getBodyParameter(final String parameter) {
+        return requestBody.getBodyParameter(parameter);
     }
 }
