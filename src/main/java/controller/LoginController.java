@@ -12,12 +12,12 @@ public class LoginController extends Controller {
     }
 
     @Override
-    public HttpResponse get(HttpRequest request) {
+    public HttpResponse get(final HttpRequest request) {
         return HttpResponse.redirect("/login.html");
     }
 
     @Override
-    public HttpResponse post(HttpRequest request) {
+    public HttpResponse post(final HttpRequest request) {
         String id = request.getBodyParameter("userId");
         String password = request.getBodyParameter("password");
 

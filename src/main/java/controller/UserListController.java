@@ -18,28 +18,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserListController extends Controller {
+    private static final Handlebars HANDLEBARS;
+
+    static {
+        TemplateLoader loader = new ClassPathTemplateLoader();
+        loader.setPrefix("/templates");
+        loader.setSuffix(".html");
+        HANDLEBARS = new Handlebars(loader);
+    }
+
     public UserListController() {
         super("/user/list");
     }
 
     @Override
-    protected HttpResponse get(HttpRequest request) throws IOException {
+    protected HttpResponse get(final HttpRequest request) throws IOException {
         if (!LoginUtil.isLogedIn(request)) {
             return HttpResponse.redirect("/user/login.html");
         }
 
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".html");
-        Handlebars handlebars = new Handlebars(loader);
-
-        Template template = handlebars.compile("user/profile");
+        Template template = HANDLEBARS.compile("user/profile");
 
         Collection<User> users = DataBase.findAll();
-
-
-        System.out.println(users.size());
-
 
         Map<String, Object> map = new HashMap<>();
         map.put("users", users);
@@ -49,7 +49,7 @@ public class UserListController extends Controller {
     }
 
     @Override
-    protected HttpResponse post(HttpRequest request) {
+    protected HttpResponse post(final HttpRequest request) {
         throw new InvalidAccessException("Post not support");
     }
 }

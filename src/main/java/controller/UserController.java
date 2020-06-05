@@ -12,16 +12,16 @@ public class UserController extends Controller {
     }
 
     @Override
-    public HttpResponse get(HttpRequest request) {
+    public HttpResponse get(final HttpRequest request) {
         return saveUser(request);
     }
 
     @Override
-    public HttpResponse post(HttpRequest request) {
+    public HttpResponse post(final HttpRequest request) {
         return saveUser(request);
     }
 
-    private HttpResponse saveUser(HttpRequest request) {
+    private HttpResponse saveUser(final HttpRequest request) {
         User newUser = User.init(request);
 
         DataBase.addUser(newUser);

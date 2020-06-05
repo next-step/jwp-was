@@ -13,7 +13,7 @@ public abstract class Controller {
         this.path = path;
     }
 
-    public HttpResponse process(HttpRequest request) throws IOException {
+    public HttpResponse process(final HttpRequest request) throws IOException {
         if (request.getMethod() == HttpMethod.GET) {
             return get(request);
         }
@@ -21,8 +21,8 @@ public abstract class Controller {
         return post(request);
     }
 
-    protected abstract HttpResponse get(HttpRequest request) throws IOException;
-    protected abstract HttpResponse post(HttpRequest request);
+    protected abstract HttpResponse get(final HttpRequest request) throws IOException;
+    protected abstract HttpResponse post(final HttpRequest request);
 
     public String getPath() {
         return path;
