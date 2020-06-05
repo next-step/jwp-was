@@ -1,4 +1,4 @@
-package http.requestline.old;
+package http.request.requestline.old;
 
 public enum Protocol {
     HTTP("HTTP");

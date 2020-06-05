@@ -1,4 +1,4 @@
-package http.requestline.requestLine2;
+package http.request.requestline.requestLine2;
 
 public class RequestLineUtils {
     private static final String REGEX_PROTOCOL_DELIMITER = "/";

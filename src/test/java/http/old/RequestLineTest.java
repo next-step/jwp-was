@@ -1,9 +1,9 @@
 package http.old;
 
-import http.requestline.old.HttpMethod;
-import http.requestline.old.Protocol;
-import http.requestline.old.ProtocolAndVersion;
-import http.requestline.old.RequestLine;
+import http.request.requestline.old.HttpMethod;
+import http.request.requestline.old.Protocol;
+import http.request.requestline.old.ProtocolAndVersion;
+import http.request.requestline.old.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package http.headers;
+package http.request.headers;
 
 import java.util.Collections;
 import java.util.HashMap;

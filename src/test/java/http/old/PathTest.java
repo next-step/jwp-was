@@ -1,6 +1,6 @@
 package http.old;
 
-import http.requestline.old.Path;
+import http.request.requestline.old.Path;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package http.old;
 
-import http.headers.Headers;
+import http.request.headers.Headers;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;

@@ -1,6 +1,6 @@
 package model;
 
-import http.requestline.old.QueryStrings;
+import http.request.requestline.old.QueryStrings;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

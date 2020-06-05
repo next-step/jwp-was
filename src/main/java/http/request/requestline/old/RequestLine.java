@@ -1,4 +1,4 @@
-package http.requestline.old;
+package http.request.requestline.old;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,8 +1,8 @@
-package http;
+package http.request;
 
-import http.body.Body;
-import http.headers.Headers2;
-import http.requestline.requestLine2.RequestLine2;
+import http.request.body.Body;
+import http.request.headers.Headers2;
+import http.request.requestline.requestLine2.RequestLine2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
