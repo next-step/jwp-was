@@ -30,5 +30,7 @@ class RequestHeaderTest {
         assertThat(requestHeader.getHeader("Host")).isEqualTo("example.org");
         assertThat(requestHeader.getHeader("Keep-Alive")).isEqualTo("115");
         assertThat(requestHeader.getHeader("not exist")).isNull();
+        assertThat(requestHeader.getCookie("foo")).isEqualTo("bar");
+        assertThat(requestHeader.getCookie("lorem")).isEqualTo("ipsum");
     }
 }

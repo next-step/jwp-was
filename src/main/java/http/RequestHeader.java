@@ -24,4 +24,8 @@ public class RequestHeader {
     public String getHeader(final String headerName) {
         return HEADERS.getOrDefault(headerName, null);
     }
+
+    public String getCookie(final String cookieName) {
+        return null;
+    }
 }
