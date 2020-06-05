@@ -16,5 +16,7 @@ public class Statics {
                     "Content-Type: application/x-www-form-urlencoded\n" +
                     "X-Requested-With: XMLHttpRequest\n" +
                     "Referer: http://example.org/test\n" +
-                    "Cookie: foo=bar; lorem=ipsum;";
+                    "Cookie: foo=bar; lorem=ipsum;\n" +
+                    "\n" +
+                    "some body contents\n";
 }
