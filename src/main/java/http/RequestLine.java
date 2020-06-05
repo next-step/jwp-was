@@ -1,8 +1,12 @@
 package http;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 
 public class RequestLine {
+
+    private static final Logger logger = LoggerFactory.getLogger(RequestLine.class);
 
     private HttpMethod method;
     private String path;
@@ -17,6 +21,8 @@ public class RequestLine {
     }
 
     public static RequestLine from(String requestLine) {
+        logger.info(requestLine);
+
         String[] tokens = requestLine.split(" ");
         String[] pathAndQueryString= tokens[1].split("\\?");
 

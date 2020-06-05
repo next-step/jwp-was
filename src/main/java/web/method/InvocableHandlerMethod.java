@@ -43,8 +43,11 @@ public class InvocableHandlerMethod {
         Object[] args = getMethodArgumentValues(providedArguments);
         try {
             return method.invoke(instance, args);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException e) {
             logger.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        } catch(InvocationTargetException e) {
+            logger.error(e.getTargetException().getMessage(), e.getTargetException());
             throw new RuntimeException(e);
         }
     }

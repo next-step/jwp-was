@@ -2,17 +2,16 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import controller.CommonController;
 import http.HttpRequest;
+import http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import web.AnnotationHandlerMapping;
 import web.method.InvocableHandlerMethod;
+import web.sevlet.View;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -37,47 +36,41 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
             HttpRequest httpRequest = HttpRequest.from(bufferedReader);
+            HttpResponse httpResponse = HttpResponse.from(dos);
 
             InvocableHandlerMethod handlerMethod = annotationHandlerMapping.getHandler(httpRequest);
 
             if(handlerMethod != null) {
-                byte[] bytes = (byte[]) handlerMethod.invoke(httpRequest);
 
-                dos.writeBytes("HTTP/1.1 200 OK \r\n");
-                dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-                dos.writeBytes("Content-Length: " + bytes.length + "\r\n");
-                dos.writeBytes(System.lineSeparator());
-                dos.write(bytes, 0, bytes.length);
-                dos.flush();
+                Object object = handlerMethod.invoke(httpRequest, httpResponse);
+
+                if(object instanceof View) {
+                    render((View) object, httpRequest, httpResponse);
+                }
                 return;
             }
 
-
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            if(!httpResponse.isResponseDone()) {
+                response404(dos);
+            }
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response404(DataOutputStream dos) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("HTTP/1.1 404 Not Found\r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private void render(View view, HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
+        view.render(new HashMap<>(), httpRequest, httpResponse);
+        httpResponse.responseDone();
     }
 }

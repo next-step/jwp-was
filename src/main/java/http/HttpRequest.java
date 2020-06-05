@@ -1,5 +1,6 @@
 package http;
 
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
@@ -55,4 +56,5 @@ public class HttpRequest {
     public String getParameter(String key) {
         return requestLine.getParameter(key);
     }
+
 }

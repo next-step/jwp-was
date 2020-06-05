@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class HandlerKeyTest {
 
     @Test
-    public void initTest() throws NoSuchMethodException {
+    public void initFromTest() throws NoSuchMethodException {
         HandlerKey handlerKey = HandlerKey.from(HandlerKeyTest.class.getMethod("testMethod", String.class, String.class));
 
         assertThat(handlerKey.getPath()).isEqualTo("/users");
