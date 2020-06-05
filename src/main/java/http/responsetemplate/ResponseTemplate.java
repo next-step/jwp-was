@@ -7,12 +7,13 @@ import java.io.IOException;
 import java.util.Map;
 
 public abstract class ResponseTemplate {
-    private static final String SET_COOKIE_FORMAT = "Set-Cookie: %s=%s; Path=%s\r\n";
-    public void write(HttpResponse httpResponse, DataOutputStream dataOutputStream) {
-        writeHeader(httpResponse, dataOutputStream);
-        writeCookies(httpResponse, dataOutputStream);
-        writeBody(httpResponse, dataOutputStream);
+    private static final String SET_COOKIE_FORMAT = "Set-Cookie: %s=%s; Path=%s \r\n";
 
+    public void write(HttpResponse httpResponse, DataOutputStream dataOutputStream) {
+        writeResponseHeader(httpResponse, dataOutputStream);
+        writeCookies(httpResponse, dataOutputStream);
+        writeHeader(httpResponse, dataOutputStream);
+        writeBody(httpResponse, dataOutputStream);
         flush(dataOutputStream);
     }
 
@@ -24,13 +25,14 @@ public abstract class ResponseTemplate {
         }
     }
 
-    protected abstract void writeHeader(HttpResponse httpResponse, DataOutputStream dataOutputStream);
+    protected abstract void writeResponseHeader(HttpResponse httpResponse, DataOutputStream dataOutputStream);
     protected abstract void writeBody(HttpResponse httpResponse, DataOutputStream dataOutputStream);
+    protected abstract void writeHeader(HttpResponse httpResponse, DataOutputStream dataOutputStream);
 
     protected void writeCookies(HttpResponse httpResponse, DataOutputStream dataOutputStream) {
         Map<String, String> cookies = httpResponse.getCookies();
 
-        cookies.values()
+        cookies.keySet()
                 .forEach(key -> setCookie(dataOutputStream, cookies, key));
     }
 

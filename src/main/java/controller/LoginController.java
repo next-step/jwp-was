@@ -23,7 +23,7 @@ public class LoginController extends Controller {
 
         User user = DataBase.findUserById(id);
 
-        if (!user.isValidPassword(password)) {
+        if (user == null || !user.isValidPassword(password)) {
             HttpResponse httpResponse = HttpResponse.redirect("/user/login_failed.html");
             httpResponse.setCookie("logined", "false");
 
