@@ -1,6 +1,5 @@
 #TODO
 
-- http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
 - “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다. 회원가입한다.
 - http://localhost:8080/user/form.html 파일의 form 태그 method를 get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.
 - “회원가입”을 완료하면 /index.html 페이지로 이동하고 싶다. 현재는 URL이 /user/create 로 유지되는 상태로 읽어서 전달할 파일이 없다. 따라서 redirect 방식처럼 회원가입을 완료한 후 “index.html”로 이동해야 한다. 즉, 브라우저의 URL이 /index.html로 변경해야 한다.
@@ -12,10 +11,6 @@
 
 
 #DONE
-- HttpMethod 생성시 예외처리할때에 input 값도 메시지로 표시하도록 수정
-- QueryString 클래스의 생성메소드 of() 에서 of(null) 말고 가독성 좋게 ofNull() 같은 메서드로 치환
-- HttpMethod Enum에서 toString() 오버라이드 대신 name() 사용하도록 수정
-- Test 코드에서 @DisplayName 을 도입하여 상세한 테스트 목적 제시
-- RequestLineParser의 parser기능을 RequestLine 생성자로 이동
-- QueryString 클래스에서 파싱 부분을 split() 이용하도록 수정
+- http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
+-
 -
