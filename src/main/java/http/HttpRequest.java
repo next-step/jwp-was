@@ -44,7 +44,7 @@ public class HttpRequest {
             return;
         }
 
-        String body = IOUtils.readData(bufferedReader, Integer.parseInt(Objects.requireNonNull(contentLength).trim()));
+        String body = IOUtils.readData(bufferedReader, Integer.parseInt(contentLength.trim()));
 
         if(StringUtils.isEmpty(body)) {
             return;
