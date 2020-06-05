@@ -34,6 +34,10 @@ public class QueryString {
         return new QueryString(queryString);
     }
 
+    public static QueryString ofNull() {
+        return QueryString.of(null);
+    }
+
     private Map<String, String> parseQuery(String queryString) {
         if (queryString.equals("")) {
             return Collections.emptyMap();

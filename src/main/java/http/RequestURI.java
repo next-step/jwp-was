@@ -23,7 +23,7 @@ public class RequestURI {
             this.queryString = QueryString.of(uriMatcher.group("query"));
         } else {
             this.path = requestURI;
-            this.queryString = QueryString.of(null);
+            this.queryString = QueryString.ofNull();
         }
     }
 
