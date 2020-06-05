@@ -1,4 +1,4 @@
-package http.requestline;
+package http.requestline.requestLine2;
 
 public class RequestUtils {
     public static String getUrl(String requestLine){

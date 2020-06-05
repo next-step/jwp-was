@@ -1,7 +1,6 @@
 package http;
 
-import http.requestline.Path2;
-import org.assertj.core.api.Assertions;
+import http.requestline.requestLine2.Path2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package http.requestline;
+package http.requestline.requestLine2;
 
 import java.util.Arrays;
 
@@ -19,5 +19,7 @@ public enum Method {
                 .orElseThrow(() -> new IllegalArgumentException("Not Found Matched HTTP method!"));
     }
 
-
+    public static boolean isGet(String requestLine){
+        return GET.equals(match(requestLine));
+    }
 }

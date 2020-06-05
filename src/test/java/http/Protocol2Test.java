@@ -1,6 +1,6 @@
 package http;
 
-import http.requestline.Protocol2;
+import http.requestline.requestLine2.Protocol2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
