@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import webserver.customhandler.LoginHandler;
 import webserver.customhandler.StaticResourceHandler;
 import webserver.customhandler.TemplateHandler;
 import webserver.customhandler.UserCreateHandler;
@@ -51,7 +52,7 @@ public class HandlersTest {
         assertThat(handler).isInstanceOf(TemplateHandler.class);
     }
 
-    @DisplayName("요청의 url이 /login이면, CreateUserHandler 맵핑")
+    @DisplayName("요청의 url이 /login이면, LoginHandler 맵핑")
     @Test
     void findHandlerWhenCreateUser() {
         //given
@@ -59,11 +60,12 @@ public class HandlersTest {
         Body body = new Body("body");
         Headers2 headers = new Headers2(new HashMap<>());
         Request request = new Request(requestLine, headers, body);
+        Handlers.addHandler(new LoginHandler("/login"));
 
         //when
         Handler handler = Handlers.findHandler(request);
 
         //then
-        assertThat(handler).isInstanceOf(UserCreateHandler.class);
+        assertThat(handler).isInstanceOf(LoginHandler.class);
     }
 }

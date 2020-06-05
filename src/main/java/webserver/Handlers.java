@@ -7,7 +7,9 @@ import webserver.resources.StaticResources;
 import webserver.resources.TemplateResources;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class Handlers {
     private static Set<Handler> handlers = new HashSet<>();
@@ -29,7 +31,7 @@ public class Handlers {
 
         return handlers.stream()
                 .filter(handler -> handler.isSameUrl(request.getUrl()))
-                .findFirst()
+                .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("Not found matched RequestHandler!"));
     }
 }
