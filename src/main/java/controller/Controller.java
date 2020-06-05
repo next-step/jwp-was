@@ -4,6 +4,8 @@ import http.HttpMethod;
 import http.HttpRequest;
 import http.HttpResponse;
 
+import java.io.IOException;
+
 public abstract class Controller {
     protected final String path;
 
@@ -11,7 +13,7 @@ public abstract class Controller {
         this.path = path;
     }
 
-    public HttpResponse process(HttpRequest request) {
+    public HttpResponse process(HttpRequest request) throws IOException {
         if (request.getMethod() == HttpMethod.GET) {
             return get(request);
         }
@@ -19,7 +21,7 @@ public abstract class Controller {
         return post(request);
     }
 
-    protected abstract HttpResponse get(HttpRequest request);
+    protected abstract HttpResponse get(HttpRequest request) throws IOException;
     protected abstract HttpResponse post(HttpRequest request);
 
     public String getPath() {

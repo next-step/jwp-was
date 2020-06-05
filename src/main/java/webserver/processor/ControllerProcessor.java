@@ -3,9 +3,11 @@ package webserver.processor;
 import controller.Controller;
 import controller.LoginController;
 import controller.UserController;
+import controller.UserListController;
 import http.HttpRequest;
 import http.HttpResponse;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +17,8 @@ import java.util.stream.Collectors;
 public class ControllerProcessor implements Processor {
     private static final List<? extends Controller> CONTROLLERS = Arrays.asList(
             new UserController(),
-            new LoginController()
+            new LoginController(),
+            new UserListController()
     );
 
     private static final Map<String, ? extends Controller> PATH_AND_CONTROLLER =
@@ -31,6 +34,12 @@ public class ControllerProcessor implements Processor {
     public HttpResponse process(final HttpRequest httpRequest) {
         Controller controller = PATH_AND_CONTROLLER.get(httpRequest.getPath());
 
-        return controller.process(httpRequest);
+        HttpResponse process = null;
+        try {
+            process = controller.process(httpRequest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return process;
     }
 }

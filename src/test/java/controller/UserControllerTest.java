@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import static http.RawRequestTest.HEADER;
@@ -34,7 +35,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("/user/create 호출시 유저를 메모리에 저장한다.")
-    void create() {
+    void create() throws IOException {
         HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(RAW_GET_REQUEST), new RequestHeader(HEADER), new RequestBody(""));
         Collection<User> users = DataBase.findAll();
 
@@ -47,7 +48,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("/user/create POST 호출시 유저를 메모리에 저장한다.")
-    void createUsingPost() {
+    void createUsingPost() throws IOException {
         HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(RAW_POST_REQUEST), new RequestHeader(HEADER), new RequestBody(""));
         Collection<User> users = DataBase.findAll();
 
