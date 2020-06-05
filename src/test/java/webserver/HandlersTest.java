@@ -5,10 +5,12 @@ import http.request.body.Body;
 import http.request.headers.Headers2;
 import http.request.requestline.requestLine2.RequestLine2;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.customhandler.StaticResourceHandler;
 import webserver.customhandler.TemplateHandler;
+import webserver.customhandler.UserCreateHandler;
 
 import java.util.HashMap;
 
@@ -47,5 +49,21 @@ public class HandlersTest {
 
         //then
         assertThat(handler).isInstanceOf(TemplateHandler.class);
+    }
+
+    @DisplayName("요청의 url이 /login이면, CreateUserHandler 맵핑")
+    @Test
+    void findHandlerWhenCreateUser() {
+        //given
+        RequestLine2 requestLine = new RequestLine2("POST /login HTTP/1.1");
+        Body body = new Body("body");
+        Headers2 headers = new Headers2(new HashMap<>());
+        Request request = new Request(requestLine, headers, body);
+
+        //when
+        Handler handler = Handlers.findHandler(request);
+
+        //then
+        assertThat(handler).isInstanceOf(UserCreateHandler.class);
     }
 }
