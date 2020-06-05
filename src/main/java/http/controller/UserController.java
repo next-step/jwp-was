@@ -4,6 +4,7 @@ import com.sun.istack.internal.logging.Logger;
 import db.DataBase;
 import http.HttpRequest;
 import http.QueryString;
+import http.enums.HttpResponseCode;
 import model.User;
 
 /**
@@ -27,6 +28,11 @@ public class UserController extends PathController {
                 requestBodyQuery.getParameter("email"));
 
         DataBase.addUser(user);
-        return new byte[0];
+        return this.addRedirectLocation(HttpResponseCode.REDIRECT.makeHeader(), "http://localhost:8080/index.html")
+               .getBytes();
+    }
+
+    private String addRedirectLocation(String header ,String location) {
+        return header + "Location: " + location + System.lineSeparator();
     }
 }

@@ -2,9 +2,11 @@ package http.controller;
 
 import http.HttpRequest;
 import http.ResourcePathMaker;
+import http.enums.HttpResponseCode;
 import http.enums.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.ResponseBody;
 import utils.FileIoUtils;
 
 import java.io.IOException;
@@ -29,7 +31,7 @@ public abstract class PathController {
         }
 
         if(this.httpRequest.getRequestLine().getMethod().equals(Method.POST)) {
-            log.info("post method execute ---------");
+            log.info("post method execute ========");
             return this.post();
         }
 
@@ -38,11 +40,19 @@ public abstract class PathController {
 
 
     public byte[] get()  {
-        log.info("default controller get method execute ---------");
+        log.info("default controller get method execute ========");
         String resourcePath = ResourcePathMaker.makeTemplatePath(httpRequest.getRequestLine().getPath());
 
         try {
-            return FileIoUtils.loadFileFromClasspath(resourcePath);
+            byte[] body = FileIoUtils.loadFileFromClasspath(resourcePath);
+            byte[] headerByte = this.addHeaderContentLength(HttpResponseCode.OK.makeHeader() ,body.length)
+                    .getBytes();
+            byte[] data = new byte[body.length + headerByte.length];
+            System.arraycopy(headerByte, 0, data ,0, headerByte.length);
+            System.arraycopy(body, 0, data, headerByte.length, body.length);
+
+            return data;
+
         } catch (IOException | URISyntaxException e) {
             log.error(e.getMessage());
             return new byte[0];
@@ -50,7 +60,13 @@ public abstract class PathController {
     }
 
     public byte[] post() {
-        log.info("default controller post method execute ---------");
+        log.info("default controller post method execute ========");
         return new byte[0];
     }
+
+    private String addHeaderContentLength(String header, int length) {
+        return header + "Content-Type: text/html;charset=utf-8" + System.lineSeparator() +
+                "Content-Length : "+ length + System.lineSeparator() + System.lineSeparator();
+    }
+
 }

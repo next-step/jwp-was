@@ -60,12 +60,8 @@ public class RequestHandler implements Runnable {
             //controller 수행
             byte[] body = controller.execute();
 
-            if(body.length > 0) {
-
-                DataOutputStream dos = new DataOutputStream(out);
-                response200Header(dos, body.length);
-                responseBody(dos, body);
-            }
+            DataOutputStream dos = new DataOutputStream(out);
+            responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -77,6 +73,14 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+    private void responseRedirectHeader(DataOutputStream dos) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Location: http://localhost:8080/index.html \r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
