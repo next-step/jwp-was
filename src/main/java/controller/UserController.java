@@ -4,6 +4,7 @@ import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
 import model.User;
+import sun.plugin.dom.exception.InvalidAccessException;
 
 public class UserController extends Controller {
 
@@ -13,7 +14,7 @@ public class UserController extends Controller {
 
     @Override
     public HttpResponse get(final HttpRequest request) {
-        return saveUser(request);
+        throw new InvalidAccessException("Not support method");
     }
 
     @Override

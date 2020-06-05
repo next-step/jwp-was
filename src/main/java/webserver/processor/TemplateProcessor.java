@@ -5,16 +5,20 @@ import http.HttpRequest;
 import http.HttpResponse;
 import utils.FileIoUtils;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
 
 public class TemplateProcessor implements Processor {
     private static final String TEMPLATE_PREFIX = "./templates";
 
+    private static final List<String> TEMPLATE_URL = Arrays.asList(
+            ".html", "ico"
+    );
+
     @Override
     public boolean isMatch(final HttpRequest httpRequest) {
-        return httpRequest.getPath()
-                .endsWith(".html");
+        return TEMPLATE_URL.stream()
+                .anyMatch(url -> httpRequest.getPath().endsWith(url));
     }
 
     @Override
