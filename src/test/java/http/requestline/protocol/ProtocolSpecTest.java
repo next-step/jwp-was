@@ -1,13 +1,12 @@
-package http.requestline;
+package http.requestline.protocol;
 
 import http.requestline.exception.IllegalRequestLineParsingException;
-import http.requestline.protocol.Protocol;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class ProtocolTest {
+class ProtocolSpecTest {
 
     @DisplayName("프로토콜 이름과 버전이 /로 나누어지지 않은 경우 IllegalRequestLineParsingException")
     @Test
@@ -16,6 +15,6 @@ class ProtocolTest {
         String protocolText = "HTTP";
 
         /* when */ /* then */
-        assertThrows(IllegalRequestLineParsingException.class, () -> new Protocol(protocolText));
+        assertThrows(IllegalRequestLineParsingException.class, () -> new ProtocolSpec(protocolText));
     }
 }

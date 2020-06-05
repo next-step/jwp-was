@@ -1,6 +1,7 @@
 package http.requestline;
 
 import http.requestline.exception.IllegalRequestLineParsingException;
+import http.requestline.protocol.Protocol;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +24,7 @@ public class RequestLineParserTest {
         /* then */
         assertThat(requestLine.getMethod()).isEqualTo("GET");
         assertThat(requestLine.getPath()).isEqualTo("/users");
-        assertThat(requestLine.getProtocolName()).isEqualTo("HTTP");
+        assertThat(requestLine.getProtocol()).isEqualTo(Protocol.HTTP);
         assertThat(requestLine.getProtocolVersion()).isEqualTo("1.1");
     }
 

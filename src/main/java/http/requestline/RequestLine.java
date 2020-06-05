@@ -1,32 +1,32 @@
 package http.requestline;
 
 import http.requestline.protocol.Protocol;
+import http.requestline.protocol.ProtocolSpec;
+import http.requestline.protocol.ProtocolSpecPool;
+import lombok.Builder;
+import lombok.Getter;
 
 public class RequestLine {
 
+    @Getter
     private final String method;
-    private final String path;
-    private final Protocol protocol;
 
-    public RequestLine(String method, String path, String protocolText) {
+    @Getter
+    private final String path;
+    private final ProtocolSpec protocolSpec;
+
+    @Builder
+    public RequestLine(String method, String path, String protocolSpec) {
         this.method = method;
         this.path = path;
-        this.protocol = new Protocol(protocolText);
+        this.protocolSpec = ProtocolSpecPool.find(protocolSpec);
     }
 
-    public String getMethod() {
-        return method;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public String getProtocolName() {
-        return protocol.getName();
+    public Protocol getProtocol() {
+        return protocolSpec.getProtocol();
     }
 
     public String getProtocolVersion() {
-        return protocol.getVersion();
+        return protocolSpec.getVersion();
     }
 }
