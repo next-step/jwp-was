@@ -2,6 +2,7 @@ package webserver.reader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.IOUtils;
 import utils.StringUtil;
 
 import java.io.BufferedReader;
@@ -18,14 +19,23 @@ public class DefaultRequestReader implements RequestReader {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
         StringBuilder stringBuilder = new StringBuilder();
+        int contentLength = 0;
         String line;
 
         while (!StringUtil.isEmpty(line = bufferedReader.readLine())) {
+            if (line.startsWith("Content-Length")) {
+                contentLength = Integer.parseInt(line.split(" ")[1]);
+            }
+
             stringBuilder.append(line)
                     .append('\n');
         }
 
-        stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
+        if (contentLength > 0) {
+            stringBuilder.append('\n')
+                    .append(IOUtils.readData(bufferedReader, contentLength));
+        }
+
         String rawRequest = stringBuilder.toString();
         printRequest(rawRequest);
 
