@@ -12,12 +12,12 @@ public enum Method {
         this.method = method;
     }
 
-    private static Method match(String requestLine){
+    public static Method match(String requestLine){
         return Arrays.stream(values())
                 .filter(m -> requestLine.startsWith(m.method))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Not Found Matched HTTP method!"));
     }
 
-    
+
 }

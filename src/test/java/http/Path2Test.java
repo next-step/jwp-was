@@ -2,6 +2,7 @@ package http;
 
 import http.requestline.Path2;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -9,8 +10,9 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Path2Test {
+    @DisplayName("ReuqestLine에서 URL/QuerieString 추출")
     @Test
-    void name() {
+    void getPathAndQueries() {
         //given
         String requestLine = "GET /user/create?name=seung&email=email@gmail.com HTTP/1.1";
 
