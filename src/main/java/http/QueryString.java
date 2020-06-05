@@ -12,6 +12,7 @@ import utils.Args;
  */
 public class QueryString {
 
+    private static final String QUERY_DELIMITER = "&";
     private static final String REQUEST_QUERY_FORMAT = "(?<key>.+)=(?<value>.+)";
     private static final Pattern REQUEST_QUERY_PATTERN = Pattern.compile(REQUEST_QUERY_FORMAT);
     protected static final String ILLEGAL_QUERY = "유효하지 않은 Query 입니다.";
@@ -38,7 +39,7 @@ public class QueryString {
             return Collections.emptyMap();
         }
         Map<String, String> queryMap = new HashMap<>();
-        for (String keyValue : queryString.split("&")) {
+        for (String keyValue : queryString.split(QUERY_DELIMITER)) {
             Matcher keyValueMatcher = Args.checkPattern(REQUEST_QUERY_PATTERN.matcher(keyValue), ILLEGAL_QUERY);
             queryMap.put(keyValueMatcher.group("key"), keyValueMatcher.group("value"));
         }
