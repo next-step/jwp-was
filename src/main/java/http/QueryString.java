@@ -25,22 +25,10 @@ public class QueryString {
             if (token.length != 2) {
                 throw new RuntimeException("queryString 자르기 실패");
             }
-            String parameterName = decode(token[0]);
-            String parameterValue = decode(token[1]);
+            String parameterName = UrlUtf8Decoder.decode(token[0]);
+            String parameterValue = UrlUtf8Decoder.decode(token[1]);
             queries.put(parameterName, parameterValue);
         }
-    }
-
-    private String decode(String encodedValue) {
-        final String EncodeType = "UTF-8";
-        String result = null;
-        try {
-            result = URLDecoder.decode(encodedValue, EncodeType);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            throw new RuntimeException("지원하지 않는 Encoding 타입. Type : [" + EncodeType + "]");
-        }
-        return result;
     }
 
     public String getParameterValue(String parameterName) {

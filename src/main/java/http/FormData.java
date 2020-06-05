@@ -1,5 +1,7 @@
 package http;
 
+import utils.UrlUtf8Decoder;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
@@ -13,7 +15,7 @@ public class FormData {
 
     public FormData(String encodedValue) {
 
-        String value = decode(encodedValue);
+        String value = UrlUtf8Decoder.decode(encodedValue);
 
         for (String v : value.split(FORM_DATA_TOKENIZER)) {
             String[] v1 = v.split(FORM_DATA_NAME_VALUE_TOKENIZER);
@@ -22,18 +24,6 @@ public class FormData {
             }
             data.put(v1[0], v1[1]);
         }
-    }
-
-    private String decode(String encodedValue) {
-        final String EncodeType = "UTF-8";
-        String result = null;
-        try {
-            result = URLDecoder.decode(encodedValue, EncodeType);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            throw new RuntimeException("지원하지 않는 Encoding 타입. Type : [" + EncodeType + "]");
-        }
-        return result;
     }
 
     public String getValue(String name) {
