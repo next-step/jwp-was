@@ -26,4 +26,22 @@ public class HttpRequestTest {
         assertThat(httpRequest.getHeader("Accept")).isEqualTo("text/html");
         assertThat(httpRequest.getParameter("key")).isEqualTo("1");
     }
+
+    @Test
+    public void parseBodyTest() throws IOException {
+        String body = "userId=KingCjy&password=1234";
+        BufferedReader bufferedReader = new BufferedReader(new StringReader(
+                "POST /users/create?key=key HTTP/1.1\n" +
+                        "Accept: text/html\n" +
+                        "Content-Length: " + body.getBytes().length + "\n" +
+                        "\n" +
+                        body
+        ));
+
+        HttpRequest httpRequest = new HttpRequest(bufferedReader);
+
+        assertThat(httpRequest.getParameter("userId")).isEqualTo("KingCjy");
+        assertThat(httpRequest.getParameter("password")).isEqualTo("1234");
+        assertThat(httpRequest.getParameter("key")).isEqualTo("key");
+    }
 }

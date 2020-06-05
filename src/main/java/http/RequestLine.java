@@ -68,4 +68,7 @@ public class RequestLine {
         return this.parameters.getParameter(key);
     }
 
+    Parameters getParameters() {
+        return parameters;
+    }
 }
