@@ -8,8 +8,8 @@ import java.io.IOException;
 public class Redirect extends ResponseTemplate {
 
     @Override
-    protected void writeResponseHeader(final HttpResponse httpResponse,
-                                       final DataOutputStream dataOutputStream) throws IOException {
+    protected void writeHeaderLine(final HttpResponse httpResponse,
+                                   final DataOutputStream dataOutputStream) throws IOException {
         dataOutputStream.writeBytes("HTTP/1.1 302 Found \r\n");
     }
 

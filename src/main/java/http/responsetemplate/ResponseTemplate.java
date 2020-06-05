@@ -11,7 +11,7 @@ public abstract class ResponseTemplate {
 
     public void write(final HttpResponse httpResponse, final DataOutputStream dataOutputStream) {
         try {
-            writeResponseHeader(httpResponse, dataOutputStream);
+            writeHeaderLine(httpResponse, dataOutputStream);
             writeCookies(httpResponse, dataOutputStream);
             writeHeader(httpResponse, dataOutputStream);
             writeBody(httpResponse, dataOutputStream);
@@ -25,8 +25,8 @@ public abstract class ResponseTemplate {
         dataOutputStream.flush();
     }
 
-    protected abstract void writeResponseHeader(final HttpResponse httpResponse,
-                                                final DataOutputStream dataOutputStream) throws IOException;
+    protected abstract void writeHeaderLine(final HttpResponse httpResponse,
+                                            final DataOutputStream dataOutputStream) throws IOException;
     protected abstract void writeBody(final HttpResponse httpResponse,
                                       final DataOutputStream dataOutputStream) throws IOException;
     protected abstract void writeHeader(final HttpResponse httpResponse,
