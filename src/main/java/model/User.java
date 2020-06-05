@@ -1,5 +1,9 @@
 package model;
 
+import http.QueryString;
+
+import java.util.HashMap;
+
 public class User {
     private String userId;
     private String password;
@@ -11,6 +15,14 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public User(QueryString queryString) {
+        HashMap<String, String> param = queryString.getParam();
+        this.userId = param.get("userId");
+        this.email = param.get("email");
+        this.name = param.get("name");
+        this.password = param.get("password");
     }
 
     public String getUserId() {
