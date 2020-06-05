@@ -7,10 +7,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URLDecoder;
 import java.util.Map;
 
 @Getter
 public class HttpRequest {
+    private static final String CHAR_SET = "UTF-8";
+
     private RequestLine requestLine;
     private RequestHeader requestHeader;
     private RequestBody requestBody;
@@ -26,14 +29,15 @@ public class HttpRequest {
     }
 
     public static HttpRequest of(InputStream inputStream) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, CHAR_SET));
 
         RequestLine requestLine = RequestLine.of(br.readLine());
         RequestHeader requestHeader = RequestHeader.of(br);
 
-        if(requestLine.getMethod() == HttpMethod.POST) {
+        if (requestLine.getMethod() == HttpMethod.POST) {
             String body = IOUtils.readData(br, requestHeader.getContentLength());
-            RequestBody requestBody = RequestBody.of(body);
+
+            RequestBody requestBody = RequestBody.of(URLDecoder.decode(body, CHAR_SET));
             return new HttpRequest(requestLine, requestHeader, requestBody);
         }
 
@@ -58,5 +62,9 @@ public class HttpRequest {
 
     public HttpMethod getMethod() {
         return this.requestLine.getMethod();
+    }
+
+    public boolean loggedIn() {
+        return this.requestHeader.loggedIn();
     }
 }

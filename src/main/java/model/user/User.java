@@ -1,4 +1,4 @@
-package model;
+package model.user;
 
 import lombok.Getter;
 
@@ -19,6 +19,13 @@ public class User {
     }
 
     public User() {
+    }
+
+    public boolean login(String password) {
+        if (this.password.equals(password)) {
+            return true;
+        }
+        return false;
     }
 
     @Override

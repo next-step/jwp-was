@@ -2,6 +2,8 @@ package http.request;
 
 import lombok.Getter;
 
+import java.io.UnsupportedEncodingException;
+
 @Getter
 public class RequestLine {
     private static final String REQUEST_LINE_REGEX = " ";
@@ -23,11 +25,11 @@ public class RequestLine {
         this.queryString = queryString;
     }
 
-    private RequestLine(HttpMethod httpMethod, String path, Protocol protocol) {
+    private RequestLine(HttpMethod httpMethod, String path, Protocol protocol) throws UnsupportedEncodingException {
         this(httpMethod, path, protocol, QueryString.of(""));
     }
 
-    public static RequestLine of(String requestLine) {
+    public static RequestLine of(String requestLine) throws UnsupportedEncodingException {
         String[] values = requestLine.split(" ");
         String[] pathValues = values[1].split(PATH_REGEX);
         Protocol protocol = Protocol.of(values[2]);
@@ -45,7 +47,7 @@ public class RequestLine {
         String[] fileNames = fileName.split("\\.");
 
         String extension = fileNames[1];
-        if(extension.equals(HTML_EXTENSION) || extension.equals(FAVICON_EXTENSION)) {
+        if (extension.equals(HTML_EXTENSION) || extension.equals(FAVICON_EXTENSION)) {
             return TEMPLATES_PATH + this.path;
         }
         return STATIC_PATH + this.path;

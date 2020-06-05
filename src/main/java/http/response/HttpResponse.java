@@ -1,6 +1,5 @@
 package http.response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import http.HttpStatus;
 import http.request.HttpRequest;
 import lombok.Getter;
@@ -8,6 +7,7 @@ import utils.FileIoUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 @Getter
 public class HttpResponse {
@@ -19,12 +19,8 @@ public class HttpResponse {
         this.body = body;
     }
 
-    public static HttpResponse body(HttpStatus httpStatus, Object data, String contentType) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        String dataValue = mapper.writeValueAsString(data);
-        byte[] dataByte = dataValue.getBytes();
-
-        return new HttpResponse(ResponseHeader.of(httpStatus, contentType, dataByte.length), dataByte);
+    public static HttpResponse body(HttpStatus httpStatus, byte[] data, String contentType) throws IOException {
+        return new HttpResponse(ResponseHeader.of(httpStatus, contentType, data.length), data);
     }
 
     public static HttpResponse loadFile(HttpRequest request) throws IOException, URISyntaxException {
@@ -35,6 +31,10 @@ public class HttpResponse {
 
     public static HttpResponse redirect(String location) {
         return new HttpResponse(ResponseHeader.of(HttpStatus.FOUND, "text/html", 0, location), null);
+    }
+
+    public void setCookie(String cookie) {
+        this.header.setCookie(cookie);
     }
 
     public String getContentType() {
@@ -53,7 +53,7 @@ public class HttpResponse {
         return this.header.getStatusName();
     }
 
-    public String getLocation() {
-        return this.header.getLocation();
+    public Map<String, String> getCustomHeader() {
+        return this.header.getCustomHeader();
     }
 }

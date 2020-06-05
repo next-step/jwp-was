@@ -2,6 +2,8 @@ package http.request;
 
 import lombok.Getter;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +11,7 @@ import java.util.Map;
 public class QueryString {
     private static final String QUERY_STRING_REGEX = "&";
     private static final String KEY_VALUE_REGEX = "=";
+    private static final String CHAR_SET = "UTF-8";
 
     private Map<String, String> queryStringMap;
 
@@ -16,8 +19,9 @@ public class QueryString {
         this.queryStringMap = queryStringMap;
     }
 
-    public static QueryString of(String value) {
+    public static QueryString of(String value) throws UnsupportedEncodingException {
         Map<String, String> queryStringMap = new HashMap<>();
+        value = URLDecoder.decode(value, CHAR_SET);
 
         String[] queryStrings = value.split(QUERY_STRING_REGEX);
 
