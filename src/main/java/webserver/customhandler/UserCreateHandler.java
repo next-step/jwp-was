@@ -22,7 +22,7 @@ public class UserCreateHandler implements Handler {
 
     @Override
     public boolean isSameUrl(String url) {
-        return false;
+        return this.url.equals(url);
     }
 
     @Override
