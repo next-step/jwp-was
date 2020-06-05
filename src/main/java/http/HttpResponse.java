@@ -2,10 +2,13 @@ package http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.MultiValueMap;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Map;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class HttpResponse {
 
@@ -13,12 +16,14 @@ public class HttpResponse {
     private HttpStatus httpStatus;
     private HttpHeaders httpHeaders;
     private DataOutputStream dataOutputStream;
+    private Set<Cookie> cookies;
     private boolean responseDone = false;
 
     private HttpResponse(DataOutputStream dataOutputStream) {
         this.httpStatus = HttpStatus.OK;
         this.httpHeaders = HttpHeaders.emptyHeaders();
         this.dataOutputStream = dataOutputStream;
+        this.cookies = new LinkedHashSet<>();
     }
 
     public static HttpResponse from(DataOutputStream dataOutputStream) {
@@ -29,8 +34,8 @@ public class HttpResponse {
         this.httpStatus = httpStatus;
     }
 
-    public void setHeader(String key, String value) {
-        this.httpHeaders.put(key, value);
+    public void setHeader(String name, String value) {
+        this.httpHeaders.add(name, value);
     }
 
     public HttpStatus getHttpStatus() {
@@ -49,8 +54,9 @@ public class HttpResponse {
         setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(length));
     }
 
-    public Map<String, String> getHeaders() {
-        return httpHeaders;
+    public void addCookie(Cookie cookie) {
+        this.cookies.add(cookie);
+        this.setHeader(httpHeaders.SET_COOKIE, cookie.getName() + "=" + cookie.getValue() + "; Path=" + cookie.getPath());
     }
 
     public void sendRedirect(String location) {
@@ -58,12 +64,7 @@ public class HttpResponse {
         setHttpStatus(HttpStatus.FOUND);
 
         try {
-            dataOutputStream.writeBytes("HTTP/1.1 " + httpStatus.getValue() + " " + httpStatus.getMessage() + "\r\n");
-
-            for (String key : httpHeaders.keySet()) {
-                dataOutputStream.writeBytes(key + ": " + httpHeaders.get(key) + "\r\n");
-            }
-            dataOutputStream.writeBytes(System.lineSeparator());
+            writeHeader();
         } catch(IOException e) {
             logger.error(e.getMessage());
         }
@@ -72,10 +73,17 @@ public class HttpResponse {
     }
 
     public void writeHeader() throws IOException {
-
         dataOutputStream.writeBytes("HTTP/1.1 " + httpStatus.getValue() + " " + httpStatus.getMessage() + "\r\n");
-        for (String key : httpHeaders.keySet()) {
-            dataOutputStream.writeBytes(key + ": " + httpHeaders.get(key) + "\r\n");
+        for (String name : httpHeaders.keySet()) {
+            List<String> headerValues = httpHeaders.get(name);
+
+            if(headerValues == null) {
+                continue;
+            }
+
+            for (String headerValue : headerValues) {
+                dataOutputStream.writeBytes(name + ": " + headerValue + "\r\n");
+            }
         }
         dataOutputStream.writeBytes(System.lineSeparator());
     }
@@ -93,4 +101,19 @@ public class HttpResponse {
         }
     }
 
+    public String getHeader(String name) {
+        return this.httpHeaders.getHeader(name);
+    }
+
+    public List<String> getHeaders(String name) {
+        return this.httpHeaders.getHeaders(name);
+    }
+
+    public MultiValueMap<String, String> getHeaderMap() {
+        return this.httpHeaders;
+    }
+
+    public Set<Cookie> getCookies() {
+        return cookies;
+    }
 }

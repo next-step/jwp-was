@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,6 +26,22 @@ public class HttpRequestTest {
         assertThat(httpRequest.getPath()).isEqualTo("/users");
         assertThat(httpRequest.getHeader("Accept")).isEqualTo("text/html");
         assertThat(httpRequest.getParameter("key")).isEqualTo("1");
+    }
+
+    @Test
+    public void parseCookieTest() throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new StringReader(
+                "GET /users?key=1 HTTP/1.1\n" +
+                        "Cookie: cookie1=one; cookie2=two\n"
+        ));
+
+        HttpRequest httpRequest = new HttpRequest(bufferedReader);
+        Set<Cookie> cookies = httpRequest.getCookies();
+
+        assertThat(cookies).contains(
+                new Cookie("cookie1", "one"),
+                new Cookie("cookie2", "two")
+        );
     }
 
     @Test

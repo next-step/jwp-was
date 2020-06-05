@@ -26,13 +26,13 @@ public class Parameters extends LinkedMultiValueMap<String, String> {
         return new Parameters(new LinkedMultiValueMap<>());
     }
 
-    public String getParameter(String key) {
-        List<String> values = get(key);
+    public String getParameter(String name) {
+        List<String> values = get(name);
 
         return values == null ? null : String.join(", ", values.toArray(new String[] {}));
     }
 
-    public String[] getParameterValues(String key) {
-        return get(key).toArray(new String[]{});
+    public String[] getParameterValues(String name) {
+        return get(name).toArray(new String[]{});
     }
 }

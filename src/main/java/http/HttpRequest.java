@@ -2,25 +2,37 @@ package http;
 
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import utils.CookieUtils;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class HttpRequest {
 
     private RequestLine requestLine;
     private HttpHeaders httpHeaders;
     private Parameters parameters;
+    private Set<Cookie> cookies;
 
     public HttpRequest(BufferedReader bufferedReader) throws IOException {
         this.requestLine = RequestLine.from(bufferedReader.readLine());
 
         setHttpHeaders(bufferedReader);
         setParameters(bufferedReader);
+        setCookies();
+    }
+
+    private void setCookies() {
+        String cookiesString = this.httpHeaders.getHeader(HttpHeaders.COOKIE);
+
+        if(cookiesString == null || StringUtils.isEmpty(cookiesString)) {
+            this.cookies = new LinkedHashSet<>();
+            return;
+        }
+
+        this.cookies = CookieUtils.stringToCookies(cookiesString);
     }
 
     private void setHttpHeaders(BufferedReader bufferedReader) throws IOException {
@@ -77,15 +89,25 @@ public class HttpRequest {
         return requestLine.getPath();
     }
 
-    public String getHeader(String key) {
-        return httpHeaders.getHeader(key);
+    public String getHeader(String name) {
+        return httpHeaders.getHeader(name);
     }
 
-    public String getParameter(String key) {
-        return parameters.getParameter(key);
+    public String getParameter(String name) {
+        return parameters.getParameter(name);
     }
 
     public MultiValueMap<String, String> getParameterMap() {
         return parameters;
+    }
+
+    public Set<Cookie> getCookies() {
+        return cookies;
+    }
+
+    public Cookie getCookie(String name) {
+        return cookies.stream()
+                .filter(cookie -> name.equals(cookie.getName()))
+                .findFirst().orElse(null);
     }
 }

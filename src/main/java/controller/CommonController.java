@@ -3,6 +3,7 @@ package controller;
 import annotations.Controller;
 import annotations.RequestMapping;
 import db.DataBase;
+import http.Cookie;
 import http.HttpMethod;
 import http.HttpRequest;
 import http.HttpResponse;
@@ -57,7 +58,7 @@ public class CommonController {
     }
 
     @RequestMapping(value = "/user/login", method = HttpMethod.POST)
-    public View login(HttpRequest httpRequest) {
+    public View login(HttpRequest httpRequest, HttpResponse httpResponse) {
 
         String userId = httpRequest.getParameter("userId");
         String password = httpRequest.getParameter("password");
@@ -69,7 +70,19 @@ public class CommonController {
             return new HtmlView("redirect:/user/login_failed.html");
         }
 
+        httpResponse.addCookie(new Cookie("logined", "true"));
         logger.info("로그인 성공 id={}, pw={}", userId, password);
         return new HtmlView("redirect:/index.html");
+    }
+
+    @RequestMapping("/user/list.html")
+    public View userListView(HttpRequest httpRequest) {
+
+        Cookie loginedCookie = httpRequest.getCookie("logined");
+
+        if(loginedCookie == null || !"true".equals(loginedCookie.getValue())) {
+            return new HtmlView("redirect:/user/login.html");
+        }
+        return new HtmlView("./templates/user/list.html");
     }
 }

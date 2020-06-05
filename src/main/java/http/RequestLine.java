@@ -64,8 +64,8 @@ public class RequestLine {
         return this.parameters;
     }
 
-    public String getParameter(String key) {
-        return this.parameters.getParameter(key);
+    public String getParameter(String name) {
+        return this.parameters.getParameter(name);
     }
 
     Parameters getParameters() {
