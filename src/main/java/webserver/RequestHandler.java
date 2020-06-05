@@ -5,9 +5,15 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
-import http.request.requestline.old.QueryStrings;
+import http.request.Request;
+import http.request.RequestUtils;
+import http.request.body.Body;
+import http.request.headers.Headers2;
+import http.request.requestline.requestLine2.QueryStrings;
 import http.request.headers.Headers;
 import http.request.requestline.old.RequestLine;
+import http.request.requestline.requestLine2.RequestLine2;
+import http.response.Response;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +46,17 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             String url = RequestLine.of(br).getStringPath();
             Headers headers = new Headers(br);
+
+            RequestUtils requestUtils = new RequestUtils(br);
+            Body body1 = requestUtils.getBody();
+            RequestLine2 requestLine = requestUtils.getRequestLine();
+            Headers2 headers1 = requestUtils.getHeaders();
+            Request request = new Request(requestLine, headers1, body1);
+
+
+            Handler handler = Handlers.findHandler(request);
+            
+
 
             if (url.startsWith("/users")) {
                 String requestBody = IOUtils.readData(br, Integer.parseInt(headers.getValue("Content-Length")));

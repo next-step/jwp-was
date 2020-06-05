@@ -9,7 +9,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Path2Test {
-    @DisplayName("ReuqestLine에서 URL/QuerieString 추출")
+    @DisplayName("RequestLine에서 URL/QueryString 추출")
     @Test
     void getPathAndQueries() {
         //given

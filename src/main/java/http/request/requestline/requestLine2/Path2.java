@@ -1,7 +1,5 @@
 package http.request.requestline.requestLine2;
 
-import http.request.requestline.old.QueryStrings;
-
 import java.util.Map;
 import java.util.function.Function;
 

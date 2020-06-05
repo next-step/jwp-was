@@ -1,4 +1,4 @@
-package http.request.requestline.old;
+package http.request.requestline.requestLine2;
 
 import java.util.Collections;
 import java.util.HashMap;

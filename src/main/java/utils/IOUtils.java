@@ -1,7 +1,11 @@
 package utils;
 
+import http.response.Response;
+
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 public class IOUtils {
     /**
@@ -16,5 +20,9 @@ public class IOUtils {
         char[] body = new char[contentLength];
         br.read(body, 0, contentLength);
         return String.copyValueOf(body);
+    }
+
+    public static void writeData(Response response, OutputStream out){
+
     }
 }

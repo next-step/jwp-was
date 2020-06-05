@@ -24,6 +24,10 @@ public class RequestUtils {
         this.br = br;
     }
 
+    public Request getRequest() throws IOException {
+        return new Request(getRequestLine(), getHeaders(), getBody());
+    }
+
     public RequestLine2 getRequestLine() throws IOException {
         return new RequestLine2(getRequestLineAsString());
     }

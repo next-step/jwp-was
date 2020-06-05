@@ -68,7 +68,7 @@ public class RequestUtilsTest {
         BufferedReader br = new BufferedReader(reader);
         RequestUtils requestUtils = new RequestUtils(br);
         requestUtils.getRequestLine();
-        Headers2 headers = requestUtils.getHeaders();
+        requestUtils.getHeaders();
 
         //when
         Body body = requestUtils.getBody();

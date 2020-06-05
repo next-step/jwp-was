@@ -1,5 +1,7 @@
 package http.request.requestline.old;
 
+import http.request.requestline.requestLine2.QueryStrings;
+
 import java.util.Map;
 import java.util.Objects;
 

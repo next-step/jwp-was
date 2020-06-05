@@ -1,6 +1,6 @@
 package http.old;
 
-import http.request.requestline.old.QueryStrings;
+import http.request.requestline.requestLine2.QueryStrings;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
