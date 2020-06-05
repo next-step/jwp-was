@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import utils.FileIoUtils;
+import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -20,12 +21,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private static final String TEMPLATE_PATH = "./templates";
+    private static final String CONTENT_LENGTH = "Content-Length";
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -39,14 +43,21 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             BufferedReader br = new BufferedReader(new InputStreamReader(in, UTF_8));
+            Map<String, String> header = new HashMap<>();
 
             String line = br.readLine();
-            logger.info(line);
             RequestLine requestLine = RequestLineParser.parse(line);
-
+            logger.info(line);
             while (isNotEmpty(line)) {
                 line = br.readLine();
                 logger.info(line);
+                putHeader(header, line);
+            }
+
+            if (requestLine.isPost()) {
+                String body = IOUtils.readData(br, Integer.parseInt(header.getOrDefault(CONTENT_LENGTH, "0")));
+                requestLine.addQueryString(body);
+                logger.info(body);
             }
 
             RequestUrl requestUrl = RequestUrl.findByPath(requestLine.getPath());
@@ -55,11 +66,11 @@ public class RequestHandler implements Runnable {
             if (requestLine.isExistQuery() && StringUtils.hasText(methodName)) {
                 Object object = RequestController.class.newInstance();
                 Method method = RequestController.class.getMethod(methodName, QueryString.class);
-                method.invoke(object, requestLine.getPath().getQueryString());
+                method.invoke(object, requestLine.getQueryString());
             }
 
-            logger.info("path : {}", requestLine.getPath().getPath());
-            byte[] bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + requestLine.getPath().getPath());
+            logger.info("path : {}", requestLine.getPath());
+            byte[] bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + requestLine.getPath());
 
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, bytes.length);
@@ -68,6 +79,13 @@ public class RequestHandler implements Runnable {
             logger.error(e.getMessage());
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void putHeader(Map<String, String> header, String line) {
+        String[] values = line.split(":");
+        if (values.length > 1) {
+            header.put(values[0], values[1].trim());
         }
     }
 

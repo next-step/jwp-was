@@ -1,5 +1,7 @@
 package http;
 
+import static http.HttpMethodType.*;
+
 public class RequestLine {
 
     private HttpMethodType method;
@@ -8,7 +10,7 @@ public class RequestLine {
 
     public RequestLine(String method, Path path, Protocol protocol) {
 
-        this.method = HttpMethodType.valueOf(method);
+        this.method = valueOf(method);
         this.path = path;
         this.protocol = protocol;
     }
@@ -17,8 +19,12 @@ public class RequestLine {
         return method;
     }
 
-    public Path getPath() {
-        return path;
+    public String getPath() {
+        return this.path.getPath();
+    }
+
+    public QueryString getQueryString() {
+        return this.path.getQueryString();
     }
 
     public Protocol getProtocol() {
@@ -29,4 +35,11 @@ public class RequestLine {
         return path.isExistQuery();
     }
 
+    public void addQueryString(String body) {
+        this.path.addQueryString(body);
+    }
+
+    public boolean isPost() {
+        return this.method == POST;
+    }
 }

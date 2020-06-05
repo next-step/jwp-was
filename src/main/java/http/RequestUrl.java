@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public enum RequestUrl {
 
-    USERS_CREATE("/user/create", "createUser"),
+    USER_CREATE("/user/create", "createUser"),
     OTHER("", null);
 
     private final String url;
@@ -15,9 +15,9 @@ public enum RequestUrl {
         this.methodName = methodName;
     }
 
-    public static RequestUrl findByPath(Path path) {
+    public static RequestUrl findByPath(String path) {
         return Arrays.stream(RequestUrl.values())
-                .filter(u -> path.getPath().equals(u.url))
+                .filter(u -> path.equals(u.url))
                 .findAny()
                 .orElse(OTHER);
     }
