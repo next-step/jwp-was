@@ -1,4 +1,4 @@
-package http;
+package http.request;
 
 import lombok.Getter;
 
@@ -45,7 +45,7 @@ public class RequestLine {
         String[] fileNames = fileName.split("\\.");
 
         String extension = fileNames[1];
-        if (extension.equals(HTML_EXTENSION) || extension.equals(FAVICON_EXTENSION)) {
+        if(extension.equals(HTML_EXTENSION) || extension.equals(FAVICON_EXTENSION)) {
             return TEMPLATES_PATH + this.path;
         }
         return STATIC_PATH + this.path;
