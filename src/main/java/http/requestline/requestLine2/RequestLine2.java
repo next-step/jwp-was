@@ -1,30 +1,49 @@
 package http.requestline.requestLine2;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 public class RequestLine2 {
-    public static Method getMethod(String requestLine) {
-        return Method.match(requestLine);
+    private String requestLine;
+
+    public RequestLine2(String requestLine) {
+        this.requestLine = requestLine;
     }
 
-    public static String getUrl(String requestLine) {
-        return Path2.getUrl(requestLine);
+    public Method getMethod() {
+        return Method.match(this.requestLine);
     }
 
-    public static Map<String, String> getQueries(String requestLine) {
-        if(Method.isGet(requestLine)){
+    public String getUrl() {
+        return Path2.getUrl(this.requestLine);
+    }
+
+    public Map<String, String> getQueries() {
+        if (Method.isGet(this.requestLine)) {
             return Path2.getQueries(requestLine);
         }
         return Collections.EMPTY_MAP;
     }
 
-    public static String getProtocol(String requestLine) {
-        return Protocol2.getProtocol(requestLine);
+    public String getProtocol() {
+        return Protocol2.getProtocol(this.requestLine);
     }
 
-    public static String getVersion(String requestLine) {
-        return Protocol2.getVersion(requestLine);
+    public String getVersion() {
+        return Protocol2.getVersion(this.requestLine);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestLine2 that = (RequestLine2) o;
+        return Objects.equals(requestLine, that.requestLine);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(requestLine);
     }
 }

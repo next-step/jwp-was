@@ -1,4 +1,4 @@
-package http;
+package http.requestLine;
 
 import http.requestline.requestLine2.Method;
 import org.junit.jupiter.api.DisplayName;

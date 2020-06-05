@@ -1,8 +1,7 @@
-package http;
+package http.requestLine;
 
 import http.requestline.requestLine2.Method;
 import http.requestline.requestLine2.RequestLine2;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,10 +14,11 @@ public class RequestLine2Test {
     @Test
     void getMethod() {
         //given
-        String requestLine = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+        String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
 
         //when
-        Method method = RequestLine2.getMethod(requestLine);
+        RequestLine2 requestLine = new RequestLine2(request);
+        Method method = requestLine.getMethod();
 
         //then
         assertThat(method).isEqualTo(Method.GET);
@@ -26,12 +26,12 @@ public class RequestLine2Test {
 
     @DisplayName("URL 추출")
     @Test
-    void getUrl(){
-        //given
-        String requestLine = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+    void getUrl() {
+        String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
 
         //when
-        String url = RequestLine2.getUrl(requestLine);
+        RequestLine2 requestLine = new RequestLine2(request);
+        String url = requestLine.getUrl();
 
         //then
         assertThat(url).isEqualTo("/users");
@@ -39,12 +39,13 @@ public class RequestLine2Test {
 
     @DisplayName("QueryString 추출 - GET일 때")
     @Test
-    void getQueriesWhenGet(){
+    void getQueriesWhenGet() {
         //given
-        String requestLine = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+        String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
 
         //when
-        Map<String, String> queries = RequestLine2.getQueries(requestLine);
+        RequestLine2 requestLine = new RequestLine2(request);
+        Map<String, String> queries = requestLine.getQueries();
 
         //then
         assertThat(queries).hasSize(3);
@@ -55,12 +56,13 @@ public class RequestLine2Test {
 
     @DisplayName("QueryString 추출 - GET이 아닐 때")
     @Test
-    void getQueriesWhenNotGet(){
+    void getQueriesWhenNotGet() {
         //given
-        String requestLine = "POST /users HTTP/1.1";
+        String request = "POST /users HTTP/1.1";
 
         //when
-        Map<String, String> queries = RequestLine2.getQueries(requestLine);
+        RequestLine2 requestLine = new RequestLine2(request);
+        Map<String, String> queries = requestLine.getQueries();
 
         //then
         assertThat(queries).hasSize(0);
@@ -68,12 +70,13 @@ public class RequestLine2Test {
 
     @DisplayName("Protocol 추출")
     @Test
-    void getProtocol(){
+    void getProtocol() {
         //given
-        String requestLine = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+        String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
 
         //when
-        String protocol = RequestLine2.getProtocol(requestLine);
+        RequestLine2 requestLine = new RequestLine2(request);
+        String protocol = requestLine.getProtocol();
 
         //then
         assertThat(protocol).isEqualTo("HTTP");
@@ -81,12 +84,13 @@ public class RequestLine2Test {
 
     @DisplayName("Version 추출")
     @Test
-    void getVersion(){
+    void getVersion() {
         //given
-        String requestLine = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+        String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
 
         //when
-        String version = RequestLine2.getVersion(requestLine);
+        RequestLine2 requestLine = new RequestLine2(request);
+        String version = requestLine.getVersion();
 
         //then
         assertThat(version).isEqualTo("1.1");

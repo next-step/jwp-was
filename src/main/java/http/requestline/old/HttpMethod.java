@@ -1,4 +1,4 @@
-package http.requestline;
+package http.requestline.old;
 
 public enum HttpMethod {
     GET("GET"), POST("POST");

@@ -1,13 +1,13 @@
 package http.requestline.requestLine2;
 
-import http.QueryStrings;
+import http.requestline.old.QueryStrings;
 
 import java.util.Map;
 import java.util.function.Function;
 
 public enum Path2 {
-    URL(requestLine -> RequestUtils.getUrl(requestLine)),
-    QUERIES(requestLine -> RequestUtils.getQueries(requestLine));
+    URL(requestLine -> RequestLineUtils.getUrl(requestLine)),
+    QUERIES(requestLine -> RequestLineUtils.getQueries(requestLine));
 
     private Function<String, String> expression;
 
@@ -23,6 +23,7 @@ public enum Path2 {
     public static Map<String, String> getQueries(String requestLine){
         String queryStrings = QUERIES.expression
                 .apply(requestLine);
+
         return QueryStrings.parseQueryStrings(queryStrings);
     }
 }

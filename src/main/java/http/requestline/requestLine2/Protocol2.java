@@ -3,8 +3,8 @@ package http.requestline.requestLine2;
 import java.util.function.Function;
 
 public enum Protocol2 {
-    PROTOCOL(requestLine -> RequestUtils.getProtocol(requestLine)),
-    VERSION(requestLine -> RequestUtils.getVersion(requestLine));
+    PROTOCOL(requestLine -> RequestLineUtils.getProtocol(requestLine)),
+    VERSION(requestLine -> RequestLineUtils.getVersion(requestLine));
 
     private Function<String, String> expression;
 
