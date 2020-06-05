@@ -1,16 +1,14 @@
-package webserver;
+package webserver.resources;
 
 import java.util.Arrays;
 
-public enum StaticResources {
-    JAVASCRIPT(".js"),
-    CSS(".css"),
-    WOFF(".woff"),
-    TTF(".ttf");
+public enum TemplateResources {
+    HTML(".html"),
+    FAVICON(".ico");
 
     private String suffix;
 
-    StaticResources(String suffix) {
+    TemplateResources(String suffix) {
         this.suffix = suffix;
     }
 
