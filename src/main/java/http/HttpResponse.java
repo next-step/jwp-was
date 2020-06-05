@@ -4,6 +4,7 @@ public class HttpResponse {
     private final int statusCode;
     private final ContentType contentType;
     private final byte[] responseBody;
+    private String location;
 
     private HttpResponse(final int statusCode, final ContentType contentType, final byte[] responseBody) {
         this.statusCode = statusCode;
@@ -13,6 +14,14 @@ public class HttpResponse {
 
     public static HttpResponse ok(final ContentType contentType, final byte[] responseBody) {
         return new HttpResponse(200, contentType, responseBody);
+    }
+
+    public static HttpResponse redirect(final String location) {
+        HttpResponse httpResponse = new HttpResponse(302, null, null);
+
+        httpResponse.location = location;
+
+        return httpResponse;
     }
 
     public ContentType getContentType() {
@@ -29,5 +38,9 @@ public class HttpResponse {
 
     public byte[] getBody() {
         return responseBody;
+    }
+
+    public String getLocation() {
+        return location;
     }
 }
