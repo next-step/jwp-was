@@ -10,7 +10,8 @@ public class Processors {
 
     private static final List<Processor> processors = Arrays.asList(
             new TemplateProcessor(),
-            new ResourceProcessor()
+            new ResourceProcessor(),
+            new ControllerProcessor()
     );
 
     public HttpResponse process(final HttpRequest httpRequest) {

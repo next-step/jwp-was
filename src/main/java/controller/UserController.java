@@ -1,6 +1,7 @@
 package controller;
 
 import db.DataBase;
+import http.ContentType;
 import http.HttpRequest;
 import http.HttpResponse;
 import model.User;
@@ -17,7 +18,7 @@ public class UserController extends Controller {
 
         DataBase.addUser(newUser);
 
-        return null;
+        return HttpResponse.ok(ContentType.TEXT, new byte[]{});
     }
 
     @Override
