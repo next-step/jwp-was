@@ -90,18 +90,12 @@ public class RequestHandler implements Runnable {
                 }
             } else if (isGet(httpMethod) && "/user/list".equals(path)) {
                 if (isLogined(cookie)) {
-
-                    Collection<User> userList = new HashSet<>();
-
-                    IntStream.rangeClosed(1,5)
-                            .mapToObj(x->String.valueOf(x))
-                            .forEach(x -> userList.add(new User("userId"+x, "password"+x, "name"+x, x+"@.x.x")));
-
-                    Users users = new Users(userList);
+                    Users users = new Users(DataBase.findAll());
 
                     TemplateLoader loader = new ClassPathTemplateLoader();
                     loader.setPrefix("/templates");
                     loader.setSuffix(".html");
+
                     Handlebars handlebars = new Handlebars(loader);
                     handlebars.registerHelpers(new HandlebarsHelper());
 
