@@ -5,11 +5,11 @@ import utils.Tokens;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpRequestHeaders {
+public class RequestHeader {
 
     private final Map<String, String> HEADERS = new HashMap<>();
 
-    public HttpRequestHeaders(final String header) {
+    public RequestHeader(final String header) {
         Tokens tokens = Tokens.init(header, "\n");
         tokens.getAllTokens()
                 .forEach(this::addHeader);

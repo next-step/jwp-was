@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("리퀘스트 해더들을 관리하는 class")
-class HttpRequestHeadersTest {
+class RequestHeaderTest {
 
 //    "Host: example.org\n" +
 //    "User-Agent: Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; fr; rv:1.9.2.8) Gecko/20100722 Firefox/3.6.8\n" +
@@ -25,10 +25,10 @@ class HttpRequestHeadersTest {
     void parse() {
         String header = RawRequestTest.HEADER;
 
-        HttpRequestHeaders httpRequestHeaders = new HttpRequestHeaders(header);
+        RequestHeader requestHeader = new RequestHeader(header);
 
-        assertThat(httpRequestHeaders.getHeader("Host")).isEqualTo("example.org");
-        assertThat(httpRequestHeaders.getHeader("Keep-Alive")).isEqualTo("115");
-        assertThat(httpRequestHeaders.getHeader("not exist")).isNull();
+        assertThat(requestHeader.getHeader("Host")).isEqualTo("example.org");
+        assertThat(requestHeader.getHeader("Keep-Alive")).isEqualTo("115");
+        assertThat(requestHeader.getHeader("not exist")).isNull();
     }
 }

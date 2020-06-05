@@ -10,7 +10,7 @@ public class HttpRequestParser {
 
         return HttpRequest.init(
                 RequestLineParser.parse(requestLine),
-                new HttpRequestHeaders(rawRequest.getHeaders())
+                new RequestHeader(rawRequest.getHeaders())
         );
     }
 }

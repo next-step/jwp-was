@@ -2,7 +2,7 @@ package controller;
 
 import db.DataBase;
 import http.HttpRequest;
-import http.HttpRequestHeaders;
+import http.RequestHeader;
 import http.RequestLineParser;
 import model.User;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +28,7 @@ class UserControllerTest {
     @Test
     @DisplayName("/user/create 호출시 유저를 메모리에 저장한다.")
     void create() {
-        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(RAW_GET_REQUEST), new HttpRequestHeaders(HEADER));
+        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(RAW_GET_REQUEST), new RequestHeader(HEADER));
         Collection<User> users = DataBase.findAll();
 
         assertThat(users).isEmpty();
@@ -41,7 +41,7 @@ class UserControllerTest {
     @Test
     @DisplayName("/user/create POST 호출시 유저를 메모리에 저장한다.")
     void createUsingPost() {
-        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(RAW_POST_REQUEST), new HttpRequestHeaders(HEADER));
+        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(RAW_POST_REQUEST), new RequestHeader(HEADER));
         Collection<User> users = DataBase.findAll();
 
         assertThat(users).isEmpty();

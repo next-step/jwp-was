@@ -2,7 +2,7 @@ package webserver.processor;
 
 
 import http.HttpRequest;
-import http.HttpRequestHeaders;
+import http.RequestHeader;
 import http.HttpResponse;
 import http.RequestLineParser;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +26,7 @@ class ResourceProcessorTest {
     @MethodSource
     @DisplayName("/js, /images, /fonts, /js 로 시작하는 요청이 resource processor와 매치하는지")
     void isMatch(final String requestLine, final boolean expected) {
-        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(requestLine), new HttpRequestHeaders(HEADER));
+        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(requestLine), new RequestHeader(HEADER));
 
         assertThat(resourceProcessor.isMatch(httpRequest)).isEqualTo(expected);
     }
@@ -46,7 +46,7 @@ class ResourceProcessorTest {
     @DisplayName("읽어온 resource 파일이 예상한 것과 같은지")
     void process(final String resource) throws IOException, URISyntaxException {
         String url = "GET " + resource + " HTTP/1.1";
-        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(url), new HttpRequestHeaders(HEADER));
+        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(url), new RequestHeader(HEADER));
         byte[] body = FileIoUtils.loadFileFromClasspath("./static" + resource);
 
         HttpResponse httpResponse = resourceProcessor.process(httpRequest);
