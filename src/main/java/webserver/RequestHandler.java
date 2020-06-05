@@ -1,5 +1,7 @@
 package webserver;
 
+import db.DataBase;
+import http.QueryString;
 import http.RequestLine;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -9,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -34,10 +37,19 @@ public class RequestHandler implements Runnable {
             logger.debug("request line : {}", line);
             RequestLine requestLine = RequestLine.of(line);
             while (!line.equals("")) {
-                logger.debug("header : {}", line);
                 line = br.readLine();
+                logger.debug("header : {}", line);
             }
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
+
+            if (requestLine.getPath().equals("/user/create")) {
+                QueryString queryString = requestLine.getQuery();
+                User user = new User(queryString.getPrameter("userId"), queryString.getPrameter("password"),
+                    queryString.getPrameter("name"), queryString.getPrameter("email"));
+                logger.debug("User : {}", user);
+                DataBase.addUser(user);
+            }
+
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + requestLine.getPath());
             response200Header(dos, body.length);

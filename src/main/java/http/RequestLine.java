@@ -41,6 +41,10 @@ public class RequestLine {
         return this.requestURI.getQueryString();
     }
 
+    public QueryString getQuery() {
+        return this.requestURI.getQuery();
+    }
+
     public String getProtocolVersion() {
         return this.protocolVersion.getHttpProtocol();
     }

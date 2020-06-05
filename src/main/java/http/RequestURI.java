@@ -35,6 +35,10 @@ public class RequestURI {
         return queryString.toString();
     }
 
+    public QueryString getQuery() {
+        return this.queryString;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
