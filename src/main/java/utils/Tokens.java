@@ -46,4 +46,8 @@ public class Tokens {
 
         return tokens;
     }
+
+    public int getSize() {
+        return stringTokenizer.countTokens();
+    }
 }
