@@ -1,6 +1,6 @@
 package http.parsers;
 
-import http.requests.RequestContext;
+import http.requests.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
@@ -15,7 +15,7 @@ public class RequestContextParser {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestContextParser.class);
 
-    public static RequestContext parse(InputStream input) {
+    public static HttpRequest parse(InputStream input) {
         try {
             // 습관적으로 try-with-resource를 사용했다가 소켓이 닫혔다. 인자가 parse 메소드의 inputstream이 옳은 것인지 의심해보자 'ㅅ'
             final BufferedReader br = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
@@ -44,7 +44,7 @@ public class RequestContextParser {
             logger.debug("parsed body: {}", parsedBody);
 
             // TODO: body가 string이라는 법은 없지만 지금은 string으로 하자 'ㅅ'
-            return new RequestContext(rawRequestLine, rawRequestHeaders, parsedBody);
+            return new HttpRequest(rawRequestLine, rawRequestHeaders, parsedBody);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

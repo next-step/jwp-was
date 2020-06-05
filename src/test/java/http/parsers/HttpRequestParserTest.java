@@ -1,6 +1,6 @@
 package http.parsers;
 
-import http.requests.RequestContext;
+import http.requests.HttpRequest;
 import http.types.HttpMethod;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import java.io.InputStream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("요청 컨텍스트를 파싱하는 클래스 테스트")
-class RequestContextParserTest {
+class HttpRequestParserTest {
 
     // =_= 수제(요)청. 아 라임청에이드 먹고싶다
     final String testRequest =
@@ -26,7 +26,7 @@ class RequestContextParserTest {
     @Test
     void test_request_including_body() throws Exception {
         try (final InputStream input = new ByteArrayInputStream(testRequest.getBytes())) {
-            final RequestContext ctx = RequestContextParser.parse(input);
+            final HttpRequest ctx = RequestContextParser.parse(input);
             assertThat(ctx.getMethod()).isEqualTo(HttpMethod.POST);
             assertThat(ctx.getPath()).isEqualTo("/user/create");
             assertThat(ctx.getBody()).isEqualTo("userId=hyeyoom&password=1234abcd&name=Chiho+Won&email=neoul_chw%40icloud.com");

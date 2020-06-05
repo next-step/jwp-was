@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RequestContext {
+public class HttpRequest {
 
     public static final String REQUEST_HEADER_DELIMITER = ":";
     private static final String KEY_VALUE_DELIMITER = "&";  // 2번째 중복
@@ -18,7 +18,7 @@ public class RequestContext {
     private final Map<String, String> formData;
     private final Cookie cookie;
 
-    public RequestContext(String rawRequestLine, List<String> rawRequestHeaders, String body) {
+    public HttpRequest(String rawRequestLine, List<String> rawRequestHeaders, String body) {
         this.requestLine = new RequestLine(rawRequestLine);
         this.requestHeaders = rawRequestHeaders.stream()
                 .map(this::splitRequestHeaderKeyAndValue)

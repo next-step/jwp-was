@@ -1,16 +1,12 @@
 package model;
 
 import http.parsers.RequestContextParser;
-import http.parsers.RequestParser;
-import http.requests.RequestContext;
-import http.types.HttpMethod;
+import http.requests.HttpRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,7 +25,7 @@ class UserParserTest {
                         "userId=hyeyoom&password=1234abcd&name=Chiho+Won&email=neoul_chw%40icloud.com";
 
         try (final InputStream input = new ByteArrayInputStream(testRequest.getBytes())) {
-            final RequestContext ctx = RequestContextParser.parse(input);
+            final HttpRequest ctx = RequestContextParser.parse(input);
             final User userFromRequest = UserParser.parse(ctx);
             final User userFromManual = new User("hyeyoom", "1234abcd", "Chiho Won", "neoul_chw@icloud.com");
             // 공장 생산 사용자와 수제 생산 사용자가 같으면 성공!

@@ -2,7 +2,7 @@ package http.controller;
 
 import db.DataBase;
 import http.requests.Cookie;
-import http.requests.RequestContext;
+import http.requests.HttpRequest;
 import http.responses.HttpStatus;
 import http.responses.ResponseContext;
 import model.User;
@@ -26,25 +26,25 @@ public class AmazingController {
 
     private static final Logger log = LoggerFactory.getLogger(AmazingController.class);
 
-    public static ResponseContext dispatch(RequestContext requestContext) {
-        final String branch = buildBranchString(requestContext);
+    public static ResponseContext dispatch(HttpRequest httpRequest) {
+        final String branch = buildBranchString(httpRequest);
 
         log.debug("branch: {}", branch);
 
         switch (branch) {
             case "[POST]/user/create":  // 하드코딩 실화니.. =ㅁ=..
-                return signUpHandler(requestContext);
+                return signUpHandler(httpRequest);
             case "[POST]/user/login":   // 실화다..
-                return signInHandler(requestContext);
+                return signInHandler(httpRequest);
             case "[GET]/user/list":     // 미래의 나야! 잘 치워봐!
-                return userListHandler(requestContext);
+                return userListHandler(httpRequest);
             default:
-                return defaultHandler(requestContext);
+                return defaultHandler(httpRequest);
         }
     }
 
-    private static ResponseContext userListHandler(RequestContext requestContext) {
-        final Cookie cookie = requestContext.getCookie();
+    private static ResponseContext userListHandler(HttpRequest httpRequest) {
+        final Cookie cookie = httpRequest.getCookie();
         final boolean logined = Boolean.parseBoolean(cookie.getValue("logined"));
 
         if (logined) {
@@ -52,7 +52,7 @@ public class AmazingController {
             log.debug("users: {}", users);
             final Map<String, Object> map = new HashMap<>();
             map.put("users", users);
-            final String rendered = TemplateRenderer.render(requestContext.getPath(), map);
+            final String rendered = TemplateRenderer.render(httpRequest.getPath(), map);
             log.debug("rendered: {}", rendered);
             return ResponseContext
                     .builder()
@@ -69,10 +69,10 @@ public class AmazingController {
                 .build();
     }
 
-    private static ResponseContext signInHandler(RequestContext requestContext) {
-        final String userId = requestContext.getAttributeFromForm("userId");
+    private static ResponseContext signInHandler(HttpRequest httpRequest) {
+        final String userId = httpRequest.getAttributeFromForm("userId");
         final User user = DataBase.findUserById(userId);
-        final String password = requestContext.getAttributeFromForm("password");
+        final String password = httpRequest.getAttributeFromForm("password");
         final boolean isRightPassword = Optional.ofNullable(user.getPassword()).orElse("").equals(password);
         if (isRightPassword) {
             log.debug("Correct password!");
@@ -91,8 +91,8 @@ public class AmazingController {
                 .build();
     }
 
-    private static ResponseContext signUpHandler(RequestContext requestContext) {
-        final User user = UserParser.parse(requestContext);
+    private static ResponseContext signUpHandler(HttpRequest httpRequest) {
+        final User user = UserParser.parse(httpRequest);
         DataBase.addUser(user);
         log.debug("user: {}", user);
         log.debug("from db: {}", DataBase.findUserById(user.getUserId()));
@@ -103,11 +103,11 @@ public class AmazingController {
                 .build();
     }
 
-    private static ResponseContext defaultHandler(RequestContext requestContext) {
-        final String accept = requestContext.getHeader("Accept");
+    private static ResponseContext defaultHandler(HttpRequest httpRequest) {
+        final String accept = httpRequest.getHeader("Accept");
         final String contentType = (accept != null && accept.contains("text/css")) ? "text/css" : "text/html;charset=utf-8";
-        System.out.println(requestContext.getPath());
-        final byte[] rawBody = convertFileToByte(requestContext.getPath());
+        System.out.println(httpRequest.getPath());
+        final byte[] rawBody = convertFileToByte(httpRequest.getPath());
         return ResponseContext
                 .builder()
                 .status(HttpStatus.OK)
@@ -131,7 +131,7 @@ public class AmazingController {
      * @param ctx http 요청 컨텍스트
      * @return 분기 문자열
      */
-    private static String buildBranchString(RequestContext ctx) {
+    private static String buildBranchString(HttpRequest ctx) {
         return String.format("[%s]%s", ctx.getMethod(), ctx.getPath());
     }
 }

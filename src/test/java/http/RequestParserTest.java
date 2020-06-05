@@ -1,7 +1,7 @@
 package http;
 
 import http.parsers.RequestParser;
-import http.requests.RequestContext;
+import http.requests.HttpRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +22,7 @@ public class RequestParserTest {
         rawRequestHeaders.add("Host: localhost:8080");
         rawRequestHeaders.add("Connection: keep-alive");
         rawRequestHeaders.add("Cache-Control: no-cache");
-        final RequestContext requestContext = RequestParser.parse(rawRequestLine, rawRequestHeaders);
-        assertThat(requestContext).isNotNull();
+        final HttpRequest httpRequest = RequestParser.parse(rawRequestLine, rawRequestHeaders);
+        assertThat(httpRequest).isNotNull();
     }
 }

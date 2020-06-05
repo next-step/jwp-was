@@ -2,7 +2,7 @@ package webserver;
 
 import http.controller.AmazingController;
 import http.parsers.RequestContextParser;
-import http.requests.RequestContext;
+import http.requests.HttpRequest;
 import http.responses.ResponseContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +34,12 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            final RequestContext requestContext = RequestContextParser.parse(in);
-            logger.debug("request context: {}", requestContext);
+            final HttpRequest httpRequest = RequestContextParser.parse(in);
+            logger.debug("request context: {}", httpRequest);
 
             final DataOutputStream dos = new DataOutputStream(out);
 
-            final ResponseContext responseContext = AmazingController.dispatch(requestContext);
+            final ResponseContext responseContext = AmazingController.dispatch(httpRequest);
             logger.debug("response: {}", responseContext);
 
             writeResponseContext(dos, responseContext);

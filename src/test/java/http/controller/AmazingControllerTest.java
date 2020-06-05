@@ -1,6 +1,6 @@
 package http.controller;
 
-import http.requests.RequestContext;
+import http.requests.HttpRequest;
 import http.responses.ResponseContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,9 +22,9 @@ class AmazingControllerTest {
         rawRequestHeaders.add("Connection: keep-alive");
         rawRequestHeaders.add("Cache-Control: no-cache");
 
-        final RequestContext requestContext = new RequestContext(rawRequestLine, rawRequestHeaders, "");
+        final HttpRequest httpRequest = new HttpRequest(rawRequestLine, rawRequestHeaders, "");
 
-        final ResponseContext responseContext = AmazingController.dispatch(requestContext);
+        final ResponseContext responseContext = AmazingController.dispatch(httpRequest);
         assertThat(responseContext).isNotNull();
     }
 }
