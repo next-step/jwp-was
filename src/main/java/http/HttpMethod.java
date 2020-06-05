@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public enum HttpMethod {
     GET("GET"), POST("POST");
 
-    protected static final String ILLEGAL_HTTP_METHOD = "유효하지 않은 Method 입니다.";
+    protected static final String ILLEGAL_HTTP_METHOD = "%s 은 유효하지 않은 Method 입니다.";
     private static final List<String> HTTP_METHODS = Arrays.stream(values())
         .map(Enum::toString)
         .collect(Collectors.toList());
@@ -26,7 +26,7 @@ public enum HttpMethod {
 
     public static HttpMethod of(String methodInput) {
         if (!isHttpMethod(methodInput)) {
-            throw new IllegalArgumentException(ILLEGAL_HTTP_METHOD);
+            throw new IllegalArgumentException(String.format(ILLEGAL_HTTP_METHOD, methodInput));
         }
         return HttpMethod.valueOf(methodInput);
     }

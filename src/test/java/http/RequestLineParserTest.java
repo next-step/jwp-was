@@ -53,6 +53,6 @@ public class RequestLineParserTest {
     void parseInvalidRequestMethodTest(String requestInput) {
         assertThatIllegalArgumentException().isThrownBy(() -> {
             RequestLineParser.parse(requestInput);
-        }).withMessage(HttpMethod.ILLEGAL_HTTP_METHOD);
+        }).withMessage(String.format(HttpMethod.ILLEGAL_HTTP_METHOD, requestInput.split(" ")[0]));
     }
 }
