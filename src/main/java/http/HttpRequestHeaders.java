@@ -1,12 +1,27 @@
 package http;
 
+import utils.Tokens;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class HttpRequestHeaders {
 
-    public HttpRequestHeaders(final String header) {
+    private final Map<String, String> HEADERS = new HashMap<>();
 
+    public HttpRequestHeaders(final String header) {
+        Tokens tokens = Tokens.init(header, "\n");
+        tokens.getAllTokens()
+                .forEach(this::addHeader);
     }
 
-    public String getHeader(String host) {
-        return null;
+    private void addHeader(final String token) {
+        Tokens tokens = Tokens.init(token, ":");
+
+        HEADERS.put(tokens.nextToken().trim(), tokens.nextToken().trim());
+    }
+
+    public String getHeader(final String headerName) {
+        return HEADERS.getOrDefault(headerName, null);
     }
 }

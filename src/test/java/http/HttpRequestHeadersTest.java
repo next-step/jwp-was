@@ -29,5 +29,6 @@ class HttpRequestHeadersTest {
 
         assertThat(httpRequestHeaders.getHeader("Host")).isEqualTo("example.org");
         assertThat(httpRequestHeaders.getHeader("Keep-Alive")).isEqualTo("115");
+        assertThat(httpRequestHeaders.getHeader("not exist")).isNull();
     }
 }
