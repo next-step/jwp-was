@@ -50,7 +50,6 @@ public class RequestHandler implements Runnable {
             String path = requestLine.getPath();
 
             if (isPost(httpMethod) && "/user/create".equals(path)) {
-
                 FormData formData = new FormData(requestBody);
                 String userId = formData.getValue("userId");
                 String password = formData.getValue("password");
@@ -62,12 +61,25 @@ public class RequestHandler implements Runnable {
                 byte[] body = null;
                 response302Header(dos, "/index.html");
                 responseBody(dos, body);
-            }
+            } else if (isPost(httpMethod) && "/user/login".equals(path)) {
+                FormData formData = new FormData(requestBody);
+                String userId = formData.getValue("userId");
+                String password = formData.getValue("password");
 
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = FileIoUtils.loadFileFromClasspath("./templates/" + path);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+                User user = DataBase.findUserById(userId);
+                if (user.getPassword() != null && user.getPassword().equals(password)) {
+                    DataOutputStream dos = new DataOutputStream(out);
+                    response302HeaderWithCookies(dos, "/index.html", "logined", "true");
+                } else {
+                    DataOutputStream dos = new DataOutputStream(out);
+                    response302HeaderWithCookies(dos, "/user/login_failed.html", "logined", "false");
+                }
+            } else {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./templates/" + path);
+                response200Header(dos, body.length);
+                responseBody(dos, body);
+            }
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
@@ -92,6 +104,17 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302HeaderWithCookies(DataOutputStream dos, String location, String cookieName, String cookieValue) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 FOUND \r\n");
+            dos.writeBytes("Location: " + location + "\r\n");
+            dos.writeBytes("Set-Cookie: " + cookieName + ": " + cookieValue + "; Path=/\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
