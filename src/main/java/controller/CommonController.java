@@ -3,9 +3,12 @@ package controller;
 import annotations.Controller;
 import annotations.RequestMapping;
 import db.DataBase;
+import http.HttpMethod;
 import http.HttpRequest;
 import http.HttpResponse;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import web.sevlet.View;
 import web.sevlet.view.HtmlView;
@@ -15,6 +18,8 @@ import java.net.URISyntaxException;
 
 @Controller
 public class CommonController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
 
     @RequestMapping("/index.html")
     public View index() {
@@ -26,7 +31,7 @@ public class CommonController {
         return new HtmlView("./templates/user/form.html");
     }
 
-    @RequestMapping("/user/create")
+    @RequestMapping(value = "/user/create", method = HttpMethod.POST)
     public View signUp(HttpRequest httpRequest) {
 
         String userId = httpRequest.getParameter("userId");
@@ -37,6 +42,34 @@ public class CommonController {
         User user = new User(userId, password, name, email);
         DataBase.addUser(user);
 
+        logger.info("회원가입 성공 user={}" + user);
+        return new HtmlView("redirect:/index.html");
+    }
+
+    @RequestMapping("/user/login.html")
+    public View loginView() {
+        return new HtmlView("./templates/user/login.html");
+    }
+
+    @RequestMapping("/user/login_failed.html")
+    public View loginFailView() {
+        return new HtmlView("./templates/user/login_failed.html");
+    }
+
+    @RequestMapping(value = "/user/login", method = HttpMethod.POST)
+    public View login(HttpRequest httpRequest) {
+
+        String userId = httpRequest.getParameter("userId");
+        String password = httpRequest.getParameter("password");
+
+        User user = DataBase.findUserById(userId);
+
+        if(user == null || !password.equals(user.getPassword())) {
+            logger.info("로그인 실패 id={}, pw={}", userId, password);
+            return new HtmlView("redirect:/user/login_failed.html");
+        }
+
+        logger.info("로그인 성공 id={}, pw={}", userId, password);
         return new HtmlView("redirect:/index.html");
     }
 }
