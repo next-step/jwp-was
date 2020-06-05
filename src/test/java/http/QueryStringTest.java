@@ -49,4 +49,14 @@ public class QueryStringTest {
                 .hasMessageContaining("queryString 자르기 실패");
     }
 
+
+    @Test
+    void URL인코딩된_queryString을_넣은_경우_가져올때에는_URL디코딩되어_나온다() {
+        final String input = "id=a%20b";
+        final QueryString queryString = new QueryString(input);
+
+        final String result = queryString.getParameterValue("id");
+
+        assertThat(result).isEqualTo("a b");
+    }
 }
