@@ -21,4 +21,8 @@ public enum StatusCode {
     public void writeResponse(final HttpResponse httpResponse, final DataOutputStream dataOutputStream) {
         templateClass.write(httpResponse, dataOutputStream);
     }
+
+    public int getCodeValue() {
+        return statusCode;
+    }
 }
