@@ -5,6 +5,8 @@ import http.HttpRequest;
 import http.HttpResponse;
 import model.User;
 
+import static utils.LoginUtil.LOGGED_IN;
+
 public class LoginController extends Controller {
 
     public LoginController() {
@@ -25,13 +27,13 @@ public class LoginController extends Controller {
 
         if (user == null || !user.isPasswordValid(password)) {
             HttpResponse httpResponse = HttpResponse.redirect("/user/login_failed.html");
-            httpResponse.setCookie("logined", "false");
+            httpResponse.setCookie(LOGGED_IN, "false");
 
             return httpResponse;
         }
 
         HttpResponse httpResponse = HttpResponse.redirect("/index.html");
-        httpResponse.setCookie("logined", "true");
+        httpResponse.setCookie(LOGGED_IN, "true");
 
         return httpResponse;
     }
