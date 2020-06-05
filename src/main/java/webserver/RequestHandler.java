@@ -105,6 +105,9 @@ public class RequestHandler implements Runnable {
                     byte[] body = template.apply(users).getBytes();
                     response200HtmlHeader(dos, body.length);
                     responseBody(dos, body);
+                } else {
+                    DataOutputStream dos = new DataOutputStream(out);
+                    response302Header(dos, "/index.html");
                 }
             } else {
                 if (path.endsWith(".css")) {
