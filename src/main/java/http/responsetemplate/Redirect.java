@@ -8,25 +8,20 @@ import java.io.IOException;
 public class Redirect extends ResponseTemplate {
 
     @Override
-    protected void writeResponseHeader(HttpResponse httpResponse, DataOutputStream dataOutputStream) {
-        try {
-            dataOutputStream.writeBytes("HTTP/1.1 302 Found \r\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    protected void writeResponseHeader(final HttpResponse httpResponse,
+                                       final DataOutputStream dataOutputStream) throws IOException {
+        dataOutputStream.writeBytes("HTTP/1.1 302 Found \r\n");
     }
 
     @Override
-    protected void writeBody(HttpResponse httpResponse, DataOutputStream dataOutputStream) {
+    protected void writeBody(final HttpResponse httpResponse,
+                             final DataOutputStream dataOutputStream) throws  IOException {
         // do nothing
     }
 
     @Override
-    protected void writeHeader(HttpResponse httpResponse, DataOutputStream dataOutputStream) {
-        try {
-            dataOutputStream.writeBytes("Location: " + httpResponse.getLocation() + "\r\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    protected void writeHeader(final HttpResponse httpResponse,
+                               final DataOutputStream dataOutputStream) throws IOException {
+        dataOutputStream.writeBytes("Location: " + httpResponse.getLocation() + "\r\n");
     }
 }
