@@ -1,5 +1,6 @@
 package http;
 
+import http.body.Body;
 import http.headers.Headers2;
 import http.requestline.requestLine2.RequestLine2;
 import org.slf4j.Logger;
@@ -29,6 +30,11 @@ public class RequestUtils {
 
     public Headers2 getHeaders() throws IOException {
         return new Headers2(getHeadersAsMap());
+    }
+
+    public Body getBody() throws IOException {
+
+        return new Body(getBodyAsString());
     }
 
     private String getRequestLineAsString() throws IOException {
@@ -63,6 +69,20 @@ public class RequestUtils {
             header = br.readLine();
         }
 
+        count++;
         return Collections.unmodifiableMap(headers);
+    }
+
+    private String getBodyAsString() throws IOException {
+        if (count != 2) {
+            throw new IllegalArgumentException("RequestHeaders should be serviced prior to getting RequestBody");
+        }
+
+        String body = br.readLine();
+        if (body == null) {
+            return "";
+        }
+
+        return body;
     }
 }
