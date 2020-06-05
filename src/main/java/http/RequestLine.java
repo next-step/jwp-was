@@ -16,7 +16,7 @@ public class RequestLine {
     }
 
     public String getHttpMethod() {
-        return this.httpMethod.toString();
+        return this.httpMethod.name();
     }
 
     public String getPath() {

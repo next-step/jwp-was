@@ -30,9 +30,4 @@ public enum HttpMethod {
         }
         return HttpMethod.valueOf(methodInput);
     }
-
-    @Override
-    public String toString() {
-        return httpMethod;
-    }
 }
