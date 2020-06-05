@@ -19,12 +19,9 @@ public class RequestHandler implements Runnable {
     private Socket connection;
     private AnnotationHandlerMapping annotationHandlerMapping;
 
-    public RequestHandler(Socket connectionSocket) {
+    public RequestHandler(Socket connectionSocket, AnnotationHandlerMapping annotationHandlerMapping) {
         this.connection = connectionSocket;
-
-        Map<Class<?>, Object> controllers = new LinkedHashMap<>();
-        controllers.put(CommonController.class, new CommonController());
-        this.annotationHandlerMapping = new AnnotationHandlerMapping(controllers);
+        this.annotationHandlerMapping = annotationHandlerMapping;
     }
 
     public void run() {
