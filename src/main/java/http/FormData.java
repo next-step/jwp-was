@@ -2,8 +2,6 @@ package http;
 
 import utils.UrlUtf8Decoder;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
