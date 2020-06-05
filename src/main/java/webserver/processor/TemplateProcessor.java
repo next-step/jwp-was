@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 public class TemplateProcessor implements Processor {
+    private static final String TEMPLATE_PREFIX = "./templates";
 
     @Override
     public boolean isMatch(final HttpRequest httpRequest) {
@@ -18,14 +19,11 @@ public class TemplateProcessor implements Processor {
 
     @Override
     public HttpResponse process(final HttpRequest httpRequest) {
-        String filePath = "./templates" + httpRequest.getPath();
-        byte[] body = new byte[0];
-        try {
-            body = FileIoUtils.loadFileFromClasspath(filePath);
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
+        String filePath = TEMPLATE_PREFIX + httpRequest.getPath();
 
-        return HttpResponse.ok(ContentType.of(httpRequest.getExtension()), body);
+        return HttpResponse.ok(
+                ContentType.of(httpRequest.getExtension()),
+                FileIoUtils.loadFileFromClasspath(filePath)
+        );
     }
 }

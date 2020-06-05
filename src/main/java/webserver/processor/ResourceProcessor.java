@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ResourceProcessor implements Processor {
+    private static final String STATIC_PREFIX = "./static";
+
     private static final List<String> RESOURCES_URL = Arrays.asList(
             "/js", "/images", "/fonts", "/css"
     );
@@ -22,15 +24,12 @@ public class ResourceProcessor implements Processor {
     }
 
     @Override
-    public HttpResponse process(HttpRequest httpRequest) {
-        String filePath = "./static" + httpRequest.getPath();
-        byte[] body = new byte[0];
-        try {
-            body = FileIoUtils.loadFileFromClasspath(filePath);
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
+    public HttpResponse process(final HttpRequest httpRequest) {
+        String filePath = STATIC_PREFIX + httpRequest.getPath();
 
-        return HttpResponse.ok(ContentType.of(httpRequest.getExtension()), body);
+        return HttpResponse.ok(
+                ContentType.of(httpRequest.getExtension()),
+                FileIoUtils.loadFileFromClasspath(filePath)
+        );
     }
 }

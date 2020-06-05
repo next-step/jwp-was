@@ -12,7 +12,7 @@ public enum HttpMethod {
     private static final Map<String, HttpMethod> HTTP_METHODS =
             Arrays.stream(values()).collect(Collectors.toMap(HttpMethod::getName, Function.identity()));
 
-    public static HttpMethod of(String methodString) {
+    public static HttpMethod of(final String methodString) {
         if (!HTTP_METHODS.containsKey(methodString)) {
             throw new IllegalArgumentException("Unknown method type : " + methodString);
         }

@@ -32,7 +32,7 @@ public class RequestBody {
         return origin;
     }
 
-    public String getBodyParameter(String parameter) {
+    public String getBodyParameter(final String parameter) {
         return PARAMS.get(parameter);
     }
 }

@@ -3,11 +3,15 @@ package utils;
 import http.HttpRequest;
 
 public class LoginUtil {
+
+    public static final String LOGGED_IN = "logined";
+    private static final String TRUE = "true";
+
     private LoginUtil() {}
 
-    public static boolean isLogedIn(final HttpRequest request) {
-        String logined = request.getCookie("logined");
+    public static boolean isLoggedIn(final HttpRequest request) {
+        String loggedInValue = request.getCookie(LOGGED_IN);
 
-        return "true".equals(logined);
+        return TRUE.equals(loggedInValue);
     }
 }

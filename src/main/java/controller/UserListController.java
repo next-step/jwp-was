@@ -33,7 +33,7 @@ public class UserListController extends Controller {
 
     @Override
     protected HttpResponse get(final HttpRequest request) throws IOException {
-        if (!LoginUtil.isLogedIn(request)) {
+        if (!LoginUtil.isLoggedIn(request)) {
             return HttpResponse.redirect("/user/login.html");
         }
 

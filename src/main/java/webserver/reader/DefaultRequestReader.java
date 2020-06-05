@@ -27,8 +27,7 @@ public class DefaultRequestReader implements RequestReader {
                 contentLength = Integer.parseInt(line.split(" ")[1]);
             }
 
-            stringBuilder.append(line)
-                    .append('\n');
+            stringBuilder.append(line).append('\n');
         }
 
         if (contentLength > 0) {
