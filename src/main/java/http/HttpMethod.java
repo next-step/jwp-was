@@ -20,13 +20,13 @@ public enum HttpMethod {
                 .collect(toMap(HttpMethod::name, entry -> entry));
     }
 
-    public static String resolve(String code) {
-        if (StringUtils.isEmpty(code)) {
-            throw new IllegalArgumentException();
-        }
+    public static HttpMethod resolve(String method) {
+        return Optional.ofNullable(method)
+            .map(httpMethodMap::get)
+            .orElse(null);
+    }
 
-        return Optional.ofNullable(httpMethodMap.get(code))
-            .map(HttpMethod::name)
-            .orElseThrow(IllegalArgumentException::new);
+    public boolean matches(String method) {
+        return (this == resolve(method));
     }
 }

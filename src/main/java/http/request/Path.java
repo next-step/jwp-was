@@ -11,7 +11,7 @@ import static java.util.stream.Collectors.toMap;
 
 @Getter
 public class Path {
-    static final String QUERY_STRING_DELIMITER = "?";
+    static final String QUERY_STRING_SPLITTER = "\\?";
     static final String PARAMETER_SPLITTER = "&";
     static final String KEY_VALUE_SPLITTER = "=";
 
@@ -23,15 +23,18 @@ public class Path {
             throw new IllegalArgumentException();
         }
 
-        int queryStringBeginIndex = path.indexOf(QUERY_STRING_DELIMITER);
+        String [] split = path.split(QUERY_STRING_SPLITTER);
 
-        if (queryStringBeginIndex < 0) {
-            return new Path(path, Collections.emptyMap());
+        if (split.length == 1) {
+            return new Path(
+                split[0],
+                Collections.emptyMap()
+            );
         }
 
         return new Path(
-            path.substring(0, queryStringBeginIndex),
-            buildQueryString(path.substring(queryStringBeginIndex + 1))
+            split[0],
+            buildQueryString(split[1])
         );
     }
 

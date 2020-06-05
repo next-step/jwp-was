@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toMap;
 @Slf4j
 public class RequestLine {
     @Getter
-    private String method;
+    private HttpMethod method;
     private Path path;
     private Protocol protocol;
 
@@ -36,7 +36,11 @@ public class RequestLine {
         return new RequestLine(HttpMethod.resolve(splitLine[0]), Path.of(splitLine[1]), Protocol.of(splitLine[2]));
     }
 
-    public RequestLine(String method, Path path, Protocol protocol) {
+    public RequestLine(HttpMethod method, Path path, Protocol protocol) {
+        if (Objects.isNull(method)) {
+            throw new IllegalArgumentException();
+        }
+
         this.method = method;
         this.path = path;
         this.protocol = protocol;
