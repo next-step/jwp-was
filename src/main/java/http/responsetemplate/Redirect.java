@@ -15,7 +15,7 @@ public class Redirect extends ResponseTemplate {
 
     @Override
     protected void writeBody(final HttpResponse httpResponse,
-                             final DataOutputStream dataOutputStream) throws  IOException {
+                             final DataOutputStream dataOutputStream) throws IOException {
         // do nothing
     }
 
