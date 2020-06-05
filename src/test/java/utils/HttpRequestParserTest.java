@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Http 요청을 파싱하는 클래스 테스트")
 class HttpRequestParserTest {
@@ -27,7 +26,6 @@ class HttpRequestParserTest {
     @DisplayName("요청으로부터 헤더를 파싱한다.")
     @Test
     void parse_headers_from_request() {
-
         final HttpRequestHeader header = HttpRequestParser.parseHeaders(rawRequestHeaders);
         assertThat(header).isNotNull();
     }
