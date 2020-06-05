@@ -9,9 +9,9 @@ import java.util.List;
 public class Processors {
 
     private static final List<Processor> processors = Arrays.asList(
+            new ControllerProcessor(),
             new TemplateProcessor(),
-            new ResourceProcessor(),
-            new ControllerProcessor()
+            new ResourceProcessor()
     );
 
     public HttpResponse process(final HttpRequest httpRequest) {

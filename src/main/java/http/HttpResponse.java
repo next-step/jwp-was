@@ -2,12 +2,15 @@ package http;
 
 import java.io.DataOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpResponse {
     private final StatusCode statusCode;
     private final ContentType contentType;
     private final byte[] responseBody;
     private String location;
+    private final Map<String, String> cookies = new HashMap<>();
 
     private HttpResponse(final StatusCode statusCode, final ContentType contentType, final byte[] responseBody) {
         this.statusCode = statusCode;
@@ -49,5 +52,13 @@ public class HttpResponse {
 
     public void writeResponse(final OutputStream outputStream) {
         statusCode.writeResponse(this, new DataOutputStream(outputStream));
+    }
+
+    public void setCookie(final String key, final String value) {
+        cookies.put(key, value);
+    }
+
+    public Map<String, String> getCookies() {
+        return cookies;
     }
 }

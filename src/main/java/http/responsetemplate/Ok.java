@@ -5,17 +5,25 @@ import http.HttpResponse;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class Ok implements ResponseTemplate {
+public class Ok extends ResponseTemplate {
 
     @Override
-    public void write(HttpResponse httpResponse, DataOutputStream dataOutputStream) {
+    protected void writeHeader(HttpResponse httpResponse, DataOutputStream dataOutputStream) {
         try {
             dataOutputStream.writeBytes("HTTP/1.1 200 OK \r\n");
             dataOutputStream.writeBytes("Content-Type: " + httpResponse.getContentType().getContentTypeStr() + ";charset=utf-8\r\n");
             dataOutputStream.writeBytes("Content-Length: " + httpResponse.getBodyLength() + "\r\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    protected void writeBody(HttpResponse httpResponse, DataOutputStream dataOutputStream) {
+        try {
             dataOutputStream.writeBytes("\r\n");
             dataOutputStream.write(httpResponse.getBody(), 0, httpResponse.getBodyLength());
-            dataOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
