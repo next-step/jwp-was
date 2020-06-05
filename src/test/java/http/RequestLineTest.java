@@ -1,5 +1,9 @@
 package http;
 
+import http.request.HttpMethod;
+import http.request.Protocol;
+import http.request.QueryString;
+import http.request.RequestLine;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
