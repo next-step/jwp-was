@@ -6,11 +6,10 @@ public class HttpRequestParser {
     public static HttpRequest parse(final String rawRequestStr) {
         RawRequest rawRequest = new RawRequest(rawRequestStr);
 
-        String requestLine = rawRequest.getRequestLine();
-
         return HttpRequest.init(
-                RequestLineParser.parse(requestLine),
-                new RequestHeader(rawRequest.getHeaders())
+                RequestLineParser.parse(rawRequest.getRequestLine()),
+                new RequestHeader(rawRequest.getHeaders()),
+                new RequestBody(rawRequest.getBody())
         );
     }
 }

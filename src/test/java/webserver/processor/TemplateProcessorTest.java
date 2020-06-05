@@ -1,9 +1,6 @@
 package webserver.processor;
 
-import http.HttpRequest;
-import http.RequestHeader;
-import http.HttpResponse;
-import http.RequestLineParser;
+import http.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import utils.FileIoUtils;
@@ -16,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("html로 끝나는 get 요청을 처리해주는 프로세서")
 class TemplateProcessorTest {
-    private static final HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse("GET /index.html HTTP/1.1"), new RequestHeader(HEADER));
+    private static final HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse("GET /index.html HTTP/1.1"), new RequestHeader(HEADER), new RequestBody(""));
     private static final TemplateProcessor templateProcessor = new TemplateProcessor();
 
     @Test

@@ -1,5 +1,6 @@
 package http;
 
+import utils.StringUtil;
 import utils.Tokens;
 
 import java.util.HashMap;
@@ -11,6 +12,10 @@ public class RequestBody {
 
     public RequestBody(final String origin) {
         this.origin = origin;
+
+        if (StringUtil.isEmpty(origin)) {
+            return;
+        }
 
         Tokens tokens = Tokens.init(origin, "&");
         tokens.getAllTokens()

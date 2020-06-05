@@ -14,6 +14,10 @@ public class UserController extends Controller {
 
     @Override
     public HttpResponse get(HttpRequest request) {
+        return saveUser(request);
+    }
+
+    private HttpResponse saveUser(HttpRequest request) {
         User newUser = User.init(request);
 
         DataBase.addUser(newUser);
@@ -23,8 +27,6 @@ public class UserController extends Controller {
 
     @Override
     public HttpResponse post(HttpRequest request) {
-        // request.getBody
-
-        return null;
+        return saveUser(request);
     }
 }

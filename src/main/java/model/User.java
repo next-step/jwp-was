@@ -1,5 +1,6 @@
 package model;
 
+import http.HttpMethod;
 import http.HttpRequest;
 
 public class User {
@@ -16,11 +17,20 @@ public class User {
     }
 
     public static User init(final HttpRequest request) {
+        if (request.getMethod() == HttpMethod.GET) {
+            return new User(
+                    request.getParameter("userId"),
+                    request.getParameter("password"),
+                    request.getParameter("name"),
+                    request.getParameter("email")
+            );
+        }
+
         return new User(
-                request.getParameter("userId"),
-                request.getParameter("password"),
-                request.getParameter("name"),
-                request.getParameter("email")
+                request.getBodyParameter("userId"),
+                request.getBodyParameter("password"),
+                request.getBodyParameter("name"),
+                request.getBodyParameter("email")
         );
     }
 

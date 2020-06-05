@@ -27,7 +27,6 @@ public class TokensTest {
                 Arguments.of(null, ""),
                 Arguments.of("origin", null),
                 Arguments.of("origin", ""),
-                Arguments.of("", ","),
                 Arguments.of("", ""),
                 Arguments.of(null, null)
         );
