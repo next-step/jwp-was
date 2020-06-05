@@ -1,6 +1,7 @@
 package webserver;
 
 import http.request.Request;
+import webserver.customhandler.StaticResourceHandler;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +14,12 @@ public class Handlers {
     }
 
     public static Handler findHandler(Request request) {
+        String url = request.getUrl();
+
+        if (StaticResources.match(url)) {
+            return new StaticResourceHandler();
+        }
+
         return handlers.stream()
                 .filter(handler -> handler.isSameUrl(request.getUrl()))
                 .findFirst()
