@@ -21,4 +21,8 @@ public abstract class Controller {
 
     protected abstract HttpResponse get(HttpRequest request);
     protected abstract HttpResponse post(HttpRequest request);
+
+    public String getPath() {
+        return path;
+    }
 }
