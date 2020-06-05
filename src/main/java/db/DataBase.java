@@ -8,17 +8,17 @@ import com.google.common.collect.Maps;
 import model.User;
 
 public class DataBase {
-    private static Map<String, User> users = Maps.newHashMap();
+    private static final Map<String, User> USERS = Maps.newHashMap();
 
     public static void addUser(User user) {
-        users.put(user.getUserId(), user);
+        USERS.put(user.getUserId(), user);
     }
 
-    public static User findUserById(String userId) {
-        return users.get(userId);
+    public static User findUserById(final String userId) {
+        return USERS.get(userId);
     }
 
     public static Collection<User> findAll() {
-        return users.values();
+        return USERS.values();
     }
 }
