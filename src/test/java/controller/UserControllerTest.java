@@ -2,6 +2,7 @@ package controller;
 
 import db.DataBase;
 import http.HttpRequest;
+import http.HttpRequestHeaders;
 import http.RequestLineParser;
 import model.User;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
+import static http.RawRequestTest.HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("유저 컨트롤러")
@@ -26,7 +28,7 @@ class UserControllerTest {
     @Test
     @DisplayName("/user/create 호출시 유저를 메모리에 저장한다.")
     void create() {
-        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(RAW_GET_REQUEST));
+        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(RAW_GET_REQUEST), new HttpRequestHeaders(HEADER));
         Collection<User> users = DataBase.findAll();
 
         assertThat(users).isEmpty();
@@ -39,7 +41,7 @@ class UserControllerTest {
     @Test
     @DisplayName("/user/create POST 호출시 유저를 메모리에 저장한다.")
     void createUsingPost() {
-        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(RAW_POST_REQUEST));
+        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(RAW_POST_REQUEST), new HttpRequestHeaders(HEADER));
         Collection<User> users = DataBase.findAll();
 
         assertThat(users).isEmpty();

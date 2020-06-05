@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("리퀘스트 스트링 클래스")
-class RawRequestTest {
+public class RawRequestTest {
     public static final String REQUEST_LINE = "GET /foo/bar?zoo=xoo HTTP/1.1\n";
     public static final String HEADER =
                     "Host: example.org\n" +

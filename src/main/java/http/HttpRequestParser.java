@@ -8,6 +8,9 @@ public class HttpRequestParser {
 
         String requestLine = rawRequest.getRequestLine();
 
-        return HttpRequest.init(RequestLineParser.parse(requestLine));
+        return HttpRequest.init(
+                RequestLineParser.parse(requestLine),
+                new HttpRequestHeaders(rawRequest.getHeaders())
+        );
     }
 }

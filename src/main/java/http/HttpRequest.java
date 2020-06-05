@@ -2,13 +2,15 @@ package http;
 
 public class HttpRequest {
     private final RequestLine requestLine;
+    private final HttpRequestHeaders httpRequestHeaders;
 
-    private HttpRequest(final RequestLine requestLine) {
+    private HttpRequest(final RequestLine requestLine, final HttpRequestHeaders httpRequestHeaders) {
         this.requestLine = requestLine;
+        this.httpRequestHeaders = httpRequestHeaders;
     }
 
-    public static HttpRequest init(final RequestLine requestLine) {
-        return new HttpRequest(requestLine);
+    public static HttpRequest init(final RequestLine requestLine, HttpRequestHeaders httpRequestHeaders) {
+        return new HttpRequest(requestLine, httpRequestHeaders);
     }
 
     public HttpMethod getMethod() {
@@ -33,5 +35,9 @@ public class HttpRequest {
 
     public String getVersion() {
         return requestLine.getVersion();
+    }
+
+    public String getHeader(final String headerName) {
+        return httpRequestHeaders.getHeader(headerName);
     }
 }
