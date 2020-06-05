@@ -17,9 +17,6 @@ import utils.IOUtils;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.stream.IntStream;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -48,8 +45,7 @@ public class RequestHandler implements Runnable {
                 line = br.readLine();
                 logger.debug("Header :: {}", line);
 
-                if (line.split(":")[0].contains("Content-Length")) {
-                    String s = line;
+                if (line.startsWith("Content-Length: ")) {
                     contentLength = Integer.parseInt(line.split(":")[1].trim());
                 }
                 if (line.startsWith("Cookie: ")) {
@@ -72,22 +68,23 @@ public class RequestHandler implements Runnable {
 
                 DataBase.addUser(new User(userId, password, name, email));
                 DataOutputStream dos = new DataOutputStream(out);
-                byte[] body = null;
                 response302Header(dos, "/index.html");
-                responseBody(dos, body);
+
             } else if (isPost(httpMethod) && "/user/login".equals(path)) {
                 FormData formData = new FormData(requestBody);
                 String userId = formData.getValue("userId");
                 String password = formData.getValue("password");
 
                 User user = DataBase.findUserById(userId);
-                if (user.getPassword() != null && user.getPassword().equals(password)) {
+
+                if (isSamePassword(user.getPassword(), password)) {
                     DataOutputStream dos = new DataOutputStream(out);
                     response302HeaderWithCookies(dos, "/index.html", "logined", "true");
                 } else {
                     DataOutputStream dos = new DataOutputStream(out);
                     response302HeaderWithCookies(dos, "/user/login_failed.html", "logined", "false");
                 }
+
             } else if (isGet(httpMethod) && "/user/list".equals(path)) {
                 if (isLogined(cookie)) {
                     Users users = new Users(DataBase.findAll());
@@ -109,6 +106,7 @@ public class RequestHandler implements Runnable {
                     DataOutputStream dos = new DataOutputStream(out);
                     response302Header(dos, "/index.html");
                 }
+
             } else {
                 if (path.endsWith(".css")) {
                     DataOutputStream dos = new DataOutputStream(out);
@@ -125,6 +123,13 @@ public class RequestHandler implements Runnable {
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private boolean isSamePassword(String password1, String password2) {
+        if (password1 == null) {
+            return false;
+        }
+        return password1.equals(password2);
     }
 
     private boolean isLogined(Cookie cookie) {
