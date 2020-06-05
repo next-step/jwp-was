@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 public enum Path2 {
-    URL(requestLine -> PathUtils.getUrl(requestLine)),
-    QUERIES(requestLine -> PathUtils.getQueries(requestLine));
+    URL(requestLine -> RequestUtils.getUrl(requestLine)),
+    QUERIES(requestLine -> RequestUtils.getQueries(requestLine));
 
     private Function<String, String> expression;
 
