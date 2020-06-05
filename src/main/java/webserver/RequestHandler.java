@@ -109,14 +109,21 @@ public class RequestHandler implements Runnable {
 
                     DataOutputStream dos = new DataOutputStream(out);
                     byte[] body = template.apply(users).getBytes();
-                    response200Header(dos, body.length);
+                    response200HtmlHeader(dos, body.length);
                     responseBody(dos, body);
                 }
             } else {
-                DataOutputStream dos = new DataOutputStream(out);
-                byte[] body = FileIoUtils.loadFileFromClasspath("./templates/" + path);
-                response200Header(dos, body.length);
-                responseBody(dos, body);
+                if (path.endsWith(".css")) {
+                    DataOutputStream dos = new DataOutputStream(out);
+                    byte[] body = FileIoUtils.loadFileFromClasspath("./static/" + path);
+                    response200StylesheetHeader(dos, body.length);
+                    responseBody(dos, body);
+                } else {
+                    DataOutputStream dos = new DataOutputStream(out);
+                    byte[] body = FileIoUtils.loadFileFromClasspath("./templates/" + path);
+                    response200HtmlHeader(dos, body.length);
+                    responseBody(dos, body);
+                }
             }
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
@@ -149,10 +156,21 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200HtmlHeader(DataOutputStream dos, int lengthOfBodyContent) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response200StylesheetHeader(DataOutputStream dos, int lengthOfBodyContent) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
