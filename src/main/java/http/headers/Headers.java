@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +39,7 @@ public class Headers {
         return headers;
     }
 
-    public String getValue(String key){
+    public String getValue(String key) {
         return headers.get(key);
     }
 }
