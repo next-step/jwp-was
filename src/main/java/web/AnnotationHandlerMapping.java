@@ -1,6 +1,5 @@
 package web;
 
-import annotations.Controller;
 import annotations.RequestMapping;
 import http.HttpRequest;
 import web.method.InvocableHandlerMethod;

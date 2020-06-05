@@ -4,6 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+
 public class RequestLine {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestLine.class);
@@ -20,7 +25,7 @@ public class RequestLine {
         this.protocol = protocol;
     }
 
-    public static RequestLine from(String requestLine) {
+    public static RequestLine from(String requestLine) throws IOException {
         logger.info(requestLine);
 
         String[] tokens = requestLine.split(" ");
@@ -34,7 +39,7 @@ public class RequestLine {
         boolean hasQueryString = pathAndQueryString.length > 1;
 
         if(hasQueryString) {
-            parameters = Parameters.from(pathAndQueryString[1]);
+            parameters = Parameters.from(URLDecoder.decode(pathAndQueryString[1], HttpRequest.CHAR_SET));
         }
 
         return new RequestLine(method, path, parameters, protocol);

@@ -1,23 +1,25 @@
-package web.sevlet.view;
+package web.servlet.view;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
 import http.HttpRequest;
 import http.HttpResponse;
 import org.springframework.util.StringUtils;
-import utils.FileIoUtils;
-import web.sevlet.View;
+import web.servlet.View;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Map;
 
-public class HtmlView implements View {
+public class HandleBarsView implements View {
 
     private String viewName;
+    private Handlebars handlebars;
     private byte[] body;
 
-    public HtmlView(String viewName) {
+    public HandleBarsView(String viewName, Handlebars handlebars) {
         this.viewName = viewName;
+        this.handlebars = handlebars;
         this.body = new byte[]{};
 
         if(StringUtils.isEmpty(viewName)) {
@@ -33,11 +35,8 @@ public class HtmlView implements View {
             return;
         }
 
-        try {
-            body = FileIoUtils.loadFileFromClasspath(viewName);
-        } catch (URISyntaxException e) {
-            throw new IOException(e.getMessage(), e);
-        }
+        Template template = handlebars.compile(viewName);
+        body = template.apply(model).getBytes();
 
         httpResponse.setContentType("text/html; charset=utf-8");
         httpResponse.setContentLength(body.length);

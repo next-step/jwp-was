@@ -1,24 +1,36 @@
-package web.sevlet.view;
+package web.servlet.view;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import http.HttpRequest;
 import http.HttpResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.FileIoUtils;
-import web.sevlet.view.HtmlView;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class HtmlViewTest {
+public class HandleBarsViewTest {
+
+    private Handlebars handlebars;
+
+    @BeforeEach
+    public void initHandleBars() {
+        TemplateLoader loader = new ClassPathTemplateLoader();
+        loader.setPrefix("/templates");
+        loader.setSuffix(".html");
+        this.handlebars = new Handlebars(loader);
+    }
 
     @Test
     public void initTest() {
-        HtmlView htmlView = new HtmlView("./templates/index.html");
+        HandleBarsView handleBarsView = new HandleBarsView("index", handlebars);
     }
 
     @Test
@@ -34,8 +46,8 @@ public class HtmlViewTest {
                 System.lineSeparator() +
                 new String(body);
 
-        HtmlView htmlView = new HtmlView("./templates/index.html");
-        htmlView.render(new HashMap<>(), httpRequest, httpResponse);
+        HandleBarsView handleBarsView = new HandleBarsView("index", handlebars);
+        handleBarsView.render(new HashMap<>(), httpRequest, httpResponse);
 
         String httpResult = new String(byteArrayOutputStream.toByteArray());
 

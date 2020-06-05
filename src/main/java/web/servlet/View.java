@@ -1,4 +1,4 @@
-package web.sevlet;
+package web.servlet;
 
 import http.HttpRequest;
 import http.HttpResponse;

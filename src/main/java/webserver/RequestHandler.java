@@ -2,26 +2,28 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.*;
 
-import controller.CommonController;
 import http.HttpRequest;
 import http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import web.AnnotationHandlerMapping;
 import web.method.InvocableHandlerMethod;
-import web.sevlet.View;
+import web.servlet.ModelAndView;
+import web.servlet.View;
+import web.servlet.ViewResolver;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
     private AnnotationHandlerMapping annotationHandlerMapping;
+    private ViewResolver viewResolver;
 
-    public RequestHandler(Socket connectionSocket, AnnotationHandlerMapping annotationHandlerMapping) {
+    public RequestHandler(Socket connectionSocket, AnnotationHandlerMapping annotationHandlerMapping, ViewResolver viewResolver) {
         this.connection = connectionSocket;
         this.annotationHandlerMapping = annotationHandlerMapping;
+        this.viewResolver = viewResolver;
     }
 
     public void run() {
@@ -41,8 +43,8 @@ public class RequestHandler implements Runnable {
 
                 Object object = handlerMethod.invoke(httpRequest, httpResponse);
 
-                if(object instanceof View) {
-                    render((View) object, httpRequest, httpResponse);
+                if(object instanceof ModelAndView) {
+                    render((ModelAndView) object, httpRequest, httpResponse);
                 }
                 return;
             }
@@ -66,8 +68,9 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void render(View view, HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
-        view.render(new HashMap<>(), httpRequest, httpResponse);
+    private void render(ModelAndView modelAndView, HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
+        View view = this.viewResolver.resolveViewName(modelAndView.getViewName());
+        view.render(modelAndView.getModel(), httpRequest, httpResponse);
         httpResponse.responseDone();
     }
 }

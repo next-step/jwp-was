@@ -7,9 +7,12 @@ import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.*;
 
 public class HttpRequest {
+
+    public static final String  CHAR_SET = "UTF-8";
 
     private RequestLine requestLine;
     private HttpHeaders httpHeaders;
@@ -56,7 +59,7 @@ public class HttpRequest {
             return;
         }
 
-        String body = IOUtils.readData(bufferedReader, Integer.parseInt(contentLength.trim()));
+        String body = URLDecoder.decode(IOUtils.readData(bufferedReader, Integer.parseInt(contentLength.trim())), HttpRequest.CHAR_SET);
 
         if(StringUtils.isEmpty(body)) {
             return;
