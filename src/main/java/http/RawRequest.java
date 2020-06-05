@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class RawRequest {
 
-    public static final String NEW_LINE = "\n";
+    private static final String NEW_LINE = "\n";
 
     private final String requestLine;
     private final String headers;
