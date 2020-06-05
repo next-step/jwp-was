@@ -1,6 +1,5 @@
 #TODO
 
-- QueryString 클래스에서 파싱 부분을 split() 이용하도록 수정
 -
 
 #DONE
@@ -9,4 +8,5 @@
 - HttpMethod Enum에서 toString() 오버라이드 대신 name() 사용하도록 수정
 - Test 코드에서 @DisplayName 을 도입하여 상세한 테스트 목적 제시
 - RequestLineParser의 parser기능을 RequestLine 생성자로 이동
+- QueryString 클래스에서 파싱 부분을 split() 이용하도록 수정
 -

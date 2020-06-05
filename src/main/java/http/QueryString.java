@@ -3,8 +3,6 @@ package http;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import utils.Args;
 
 /**
@@ -12,11 +10,9 @@ import utils.Args;
  */
 public class QueryString {
 
-    private static final String QUERY_DELIMITER = "&";
-    private static final String REQUEST_QUERY_FORMAT = "(?<key>.+)=(?<value>.+)";
-    private static final Pattern REQUEST_QUERY_PATTERN = Pattern.compile(REQUEST_QUERY_FORMAT);
     protected static final String ILLEGAL_QUERY = "유효하지 않은 Query 입니다.";
-
+    private static final String QUERY_DELIMITER = "&";
+    private static final String KEY_VALUE_DELIMITER = "=";
     private static final QueryString EMPTY_QUERY_STRING = new QueryString("");
 
     private final String queryString;
@@ -44,8 +40,9 @@ public class QueryString {
         }
         Map<String, String> queryMap = new HashMap<>();
         for (String keyValue : queryString.split(QUERY_DELIMITER)) {
-            Matcher keyValueMatcher = Args.checkPattern(REQUEST_QUERY_PATTERN.matcher(keyValue), ILLEGAL_QUERY);
-            queryMap.put(keyValueMatcher.group("key"), keyValueMatcher.group("value"));
+            String[] values = keyValue.split(KEY_VALUE_DELIMITER);
+            Args.check(values.length == 2, ILLEGAL_QUERY);
+            queryMap.put(values[0], values[1]);
         }
         return queryMap;
     }
