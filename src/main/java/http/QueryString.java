@@ -7,10 +7,19 @@ import java.util.Map;
 import java.util.Objects;
 
 public class QueryString {
-    private Map<String, String> queries = new HashMap<>();
-
     private static final String PARAMETER_NAME_VALUE_TOKENIZER = "=";
     private static final String QUERYSTRING_TOKENIZER = "&";
+
+    private Map<String, String> queries = new HashMap<>();
+
+    public String getParameterValue(String parameterName) {
+        String defaultValue = "";
+        return queries.getOrDefault(parameterName, defaultValue);
+    }
+
+    private String[] split(String values) {
+        return values.split(QUERYSTRING_TOKENIZER);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -40,14 +49,4 @@ public class QueryString {
             queries.put(parameterName, parameterValue);
         }
     }
-
-    public String getParameterValue(String parameterName) {
-        String defaultValue = "";
-        return queries.getOrDefault(parameterName, defaultValue);
-    }
-
-    private String[] split(String values) {
-        return values.split(QUERYSTRING_TOKENIZER);
-    }
-
 }
