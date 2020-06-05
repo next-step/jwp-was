@@ -11,12 +11,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 /**
  * Created by iltaek on 2020/06/03 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
  */
-public class RequestLineParserTest {
+public class RequestLineTest {
 
     @Test
     @DisplayName("유효한 입력값으로 RequestLine을 생성 시에 정확하게 RequestLine이 생성되는지 테스트 - GET")
     void parseGETTest() {
-        RequestLine requestLine = RequestLineParser.parse("GET /users HTTP/1.1");
+        RequestLine requestLine = RequestLine.of("GET /users HTTP/1.1");
         assertThat(requestLine.getHttpMethod()).isEqualTo("GET");
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocolVersion()).isEqualTo("HTTP");
@@ -26,7 +26,7 @@ public class RequestLineParserTest {
     @Test
     @DisplayName("유효한 입력값으로 RequestLine을 생성 시에 정확하게 RequestLine이 생성되는지 테스트 - POST")
     void parsePOSTTest() {
-        RequestLine requestLine = RequestLineParser.parse("POST /users HTTP/1.1");
+        RequestLine requestLine = RequestLine.of("POST /users HTTP/1.1");
         assertThat(requestLine.getHttpMethod()).isEqualTo("POST");
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocolVersion()).isEqualTo("HTTP");
@@ -36,7 +36,7 @@ public class RequestLineParserTest {
     @Test
     @DisplayName("유효한 입력값으로 RequestLine을 생성 시에 정확하게 RequestLine이 생성되는지 테스트 - GET with QueryString")
     void parserequestWithQueryStringTest() {
-        RequestLine requestLine = RequestLineParser.parse("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
+        RequestLine requestLine = RequestLine.of("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
         assertThat(requestLine.getHttpMethod()).isEqualTo("GET");
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getQueryString()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
@@ -49,8 +49,8 @@ public class RequestLineParserTest {
     @DisplayName("유효하지 않은 입력값으로 RequestLine 을 생성 시에 지정한 예외가 발생하는지 테스트")
     void parseInvalidRequestTest(String requestInput) {
         assertThatIllegalArgumentException().isThrownBy(() -> {
-            RequestLineParser.parse(requestInput);
-        }).withMessage(RequestLineParser.ILLEGAL_REQUEST_LINE);
+            RequestLine.of(requestInput);
+        }).withMessage(RequestLine.ILLEGAL_REQUEST_LINE);
     }
 
     @ParameterizedTest
@@ -58,7 +58,7 @@ public class RequestLineParserTest {
     @DisplayName("유효하지 않은 메서드로 RequestLine 을 생성 시에 지정한 예외가 발생하는지 테스트")
     void parseInvalidRequestMethodTest(String requestInput) {
         assertThatIllegalArgumentException().isThrownBy(() -> {
-            RequestLineParser.parse(requestInput);
+            RequestLine.of(requestInput);
         }).withMessage(String.format(HttpMethod.ILLEGAL_HTTP_METHOD, requestInput.split(" ")[0]));
     }
 }
