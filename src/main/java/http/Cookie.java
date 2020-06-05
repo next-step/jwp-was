@@ -17,7 +17,9 @@ public class Cookie {
             if (c.length != 2) {
                 throw new RuntimeException();
             }
-            cookies.put(c[0], c[1]);
+            String cookieName = c[0].trim();
+            String cookieValue = c[1].trim();
+            cookies.put(cookieName, cookieValue);
         }
     }
 
