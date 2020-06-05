@@ -16,7 +16,7 @@ public class ProtocolVersionTest {
     void createProtocolVersionTest(String protocolVersionInput) {
         ProtocolVersion protocolVersion = new ProtocolVersion(protocolVersionInput);
 
-        String[] values = protocolVersionInput.split("\\/");
+        String[] values = protocolVersionInput.split("/");
         assertThat(protocolVersion).isEqualTo(new ProtocolVersion(protocolVersionInput));
         assertThat(protocolVersion.getHttpProtocol()).isEqualTo(values[0]);
         assertThat(protocolVersion.getVersion()).isEqualTo(values[1]);
