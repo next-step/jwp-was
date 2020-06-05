@@ -6,6 +6,7 @@ import http.RequestBody;
 import http.RequestHeader;
 import http.RequestLineParser;
 import model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +26,11 @@ class UserControllerTest {
     private static final String RAW_POST_REQUEST = "POST" + RAW_REQUEST;
 
     private static final UserController USER_CONTROLLER = new UserController();
+
+    @BeforeEach
+    void clear() {
+        DataBase.deleteAll();
+    }
 
     @Test
     @DisplayName("/user/create 호출시 유저를 메모리에 저장한다.")
