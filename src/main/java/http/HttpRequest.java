@@ -50,4 +50,8 @@ public class HttpRequest {
     public String getBodyParameter(final String parameter) {
         return requestBody.getBodyParameter(parameter);
     }
+
+    public String getCookie(final String cookieName) {
+        return requestHeader.getCookie(cookieName);
+    }
 }
