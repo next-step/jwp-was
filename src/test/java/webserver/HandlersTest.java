@@ -54,7 +54,7 @@ public class HandlersTest {
 
     @DisplayName("요청의 url이 /login이면, LoginHandler 맵핑")
     @Test
-    void findHandlerWhenCreateUser() {
+    void findHandlerWhenLogin() {
         //given
         RequestLine2 requestLine = new RequestLine2("POST /login HTTP/1.1");
         Body body = new Body("body");
@@ -67,5 +67,22 @@ public class HandlersTest {
 
         //then
         assertThat(handler).isInstanceOf(LoginHandler.class);
+    }
+
+    @DisplayName("요청의 url이 /users이면, UserCreateHandler 맵핑")
+    @Test
+    void findHandlerWhenCreateUser(){
+        //given
+        RequestLine2 requestLine = new RequestLine2("POST /users HTTP/1.1");
+        Body body = new Body("body");
+        Headers2 headers = new Headers2(new HashMap<>());
+        Request request = new Request(requestLine, headers, body);
+        Handlers.addHandler(new UserCreateHandler("/users"));
+
+        //when
+        Handler handler = Handlers.findHandler(request);
+
+        //then
+        assertThat(handler).isInstanceOf(UserCreateHandler.class);
     }
 }
