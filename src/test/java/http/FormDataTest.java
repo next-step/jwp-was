@@ -14,7 +14,7 @@ class FormDataTest {
         final String userId = formData.getValue("userId");
         final String password = formData.getValue("password");
         final String name = formData.getValue("name");
-        final String email = formData.getValue("aa@aa.a");
+        final String email = formData.getValue("email");
 
         assertThat(userId).isEqualTo("userId1");
         assertThat(password).isEqualTo("password1");
