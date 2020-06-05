@@ -1,14 +1,12 @@
 package db;
 
-import java.util.Collection;
-import java.util.Map;
-
 import com.google.common.collect.Maps;
-
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.RequestHandler;
+
+import java.util.Collection;
+import java.util.Map;
 
 public class DataBase {
     private static final Logger logger = LoggerFactory.getLogger(DataBase.class);
