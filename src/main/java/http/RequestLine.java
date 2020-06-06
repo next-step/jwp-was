@@ -6,8 +6,8 @@ public class RequestLine {
     // 학습을 위해 spring에서 제공하고 있는 HTTPMethod 를 사용하지 않고, 만들어서 사용함
     private HttpMethod method;
     private String path;
-    private QueryStrings queryStrings;
     private HTTPProtocol protocol;
+    private QueryStrings queryStrings;
 
     public RequestLine(String method, String path, String protocol) {
         this.method = HttpMethod.valueOf(method);
@@ -19,6 +19,18 @@ public class RequestLine {
         }
 
         this.protocol = new HTTPProtocol(protocol);
+    }
+
+    public boolean matchPath(String requestPath) {
+        return this.path.equals(requestPath);
+    }
+
+    public boolean isGetRequest() {
+        return this.method.isGetRequest();
+    }
+
+    public boolean isPostRequest() {
+        return this.method.isPostRequest();
     }
 
     public String getPath() {
@@ -44,4 +56,5 @@ public class RequestLine {
     public int hashCode() {
         return Objects.hash(method, path, queryStrings, protocol);
     }
+
 }

@@ -11,4 +11,12 @@ public enum HttpMethod {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 HTTP method 이름이 존재하지 않습니다."));
     }
+
+    public boolean isGetRequest() {
+        return this == HttpMethod.GET;
+    }
+
+    public boolean isPostRequest() {
+        return this == HttpMethod.POST;
+    }
 }
