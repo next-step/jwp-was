@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TemplateHandlerTest {
+public class TemplateResourcesHandlerTest {
     @DisplayName("Template의 work메소드가 호출되면, url이 가리키는 template페이지 콘텐츠를 byte[]로 읽여온다.")
     @Test
     void work() throws IOException, URISyntaxException {

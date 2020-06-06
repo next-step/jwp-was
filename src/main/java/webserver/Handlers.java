@@ -4,7 +4,7 @@ import http.request.Request;
 import webserver.customhandler.StaticResourceHandler;
 import webserver.customhandler.TemplateHandler;
 import webserver.resources.StaticResources;
-import webserver.resources.Template;
+import webserver.resources.TemplateResources;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +23,7 @@ public class Handlers {
             return new StaticResourceHandler();
         }
 
-        if (Template.match(url)) {
+        if (TemplateResources.match(url)) {
             return new TemplateHandler();
         }
 

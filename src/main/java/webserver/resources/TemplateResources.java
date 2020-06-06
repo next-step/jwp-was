@@ -2,13 +2,13 @@ package webserver.resources;
 
 import java.util.Arrays;
 
-public enum Template {
+public enum TemplateResources {
     HTML(".html"),
     FAVICON(".ico");
 
     private String suffix;
 
-    Template(String suffix) {
+    TemplateResources(String suffix) {
         this.suffix = suffix;
     }
 

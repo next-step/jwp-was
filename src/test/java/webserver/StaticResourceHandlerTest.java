@@ -9,8 +9,6 @@ import http.response.HttpStatus;
 import http.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import utils.FileIoUtils;
 import webserver.customhandler.StaticResourceHandler;
 

@@ -3,11 +3,11 @@ package http.response;
 import java.util.Arrays;
 
 public enum ContentType {
-    CSS("text/css", ".css"),
+    CSS("text/css;charset=utf-8", ".css"),
     JAVASCRIPT("text/html;charset=utf-8", ".js"),
     WOFF("text/html;charset=utf-8", ".woff"),
     WOFF2("font/woff2", ".woff2"),
-    HTML("text/html", ".html");
+    HTML("text/html;charset=utf-8", ".html");
 
     private String contentType;
     private String suffix;
