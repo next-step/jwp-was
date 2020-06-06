@@ -1,23 +1,25 @@
 package http;
 
-import utils.Tokens;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 public class RequestHeader {
     private static final String COOKIE = "Cookie";
     private static final String COOKIE_KEY_VALUE_DELIMITER = "=";
     private static final String HEADER_DELIMITER = ": ";
     private static final String COOKIE_DELIMITER = ";";
+    public static final String NEW_LINE = "\n";
 
     private final Map<String, String> headers = new HashMap<>();
     private final Map<String, String> cookies = new HashMap<>();
 
     public RequestHeader(final String header) {
-        Tokens tokens = Tokens.init(header, "\n");
-        tokens.getAllTokens()
-                .forEach(this::addHeader);
+        StringTokenizer tokens = new StringTokenizer(header, NEW_LINE);
+
+        while (tokens.hasMoreTokens()) {
+            addHeader(tokens.nextToken());
+        }
     }
 
     private void addHeader(final String token) {
@@ -34,10 +36,11 @@ public class RequestHeader {
     }
 
     private void initCookies(final String cookies) {
-        Tokens tokens = Tokens.init(cookies, COOKIE_DELIMITER);
+        StringTokenizer tokens = new StringTokenizer(cookies, COOKIE_DELIMITER);
 
-        tokens.getAllTokens()
-                .forEach(this::addCookie);
+        while (tokens.hasMoreTokens()) {
+            addCookie(tokens.nextToken());
+        }
     }
 
     private void addCookie(final String token) {

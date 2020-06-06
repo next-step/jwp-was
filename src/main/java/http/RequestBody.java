@@ -1,12 +1,14 @@
 package http;
 
 import utils.StringUtil;
-import utils.Tokens;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 public class RequestBody {
+    public static final String PARAMETER_DELIMITER = "&";
+    public static final String KEY_VALUE_DELIMITER = "=";
     private final String origin;
     private final Map<String, String> PARAMS = new HashMap<>();
 
@@ -17,15 +19,21 @@ public class RequestBody {
             return;
         }
 
-        Tokens tokens = Tokens.init(origin, "&");
-        tokens.getAllTokens()
-                .forEach(this::addHeader);
+        StringTokenizer tokens = new StringTokenizer(origin, PARAMETER_DELIMITER);
+
+        while (tokens.hasMoreTokens()) {
+            addHeader(tokens.nextToken());
+        }
     }
 
     private void addHeader(final String token) {
-        Tokens tokens = Tokens.init(token, "=");
+        String[] tokens = token.split(KEY_VALUE_DELIMITER);
 
-        PARAMS.put(tokens.nextToken().trim(), tokens.nextToken().trim());
+        if (tokens.length != 2) {
+            throw new IllegalArgumentException("Header is invalid : " + token);
+        }
+
+        PARAMS.put(tokens[0], tokens[1]);
     }
 
     public String getOrigin() {

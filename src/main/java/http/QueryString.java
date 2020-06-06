@@ -1,10 +1,10 @@
 package http;
 
 import utils.StringUtil;
-import utils.Tokens;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 public class QueryString {
     private static final String PARAMETER_DELIMITER = "&";
@@ -24,9 +24,11 @@ public class QueryString {
             return;
         }
 
-        Tokens tokens = Tokens.init(queryString, PARAMETER_DELIMITER);
-        tokens.getAllTokens()
-                .forEach(this::parseQuery);
+        StringTokenizer tokens = new StringTokenizer(queryString, PARAMETER_DELIMITER);
+
+        while (tokens.hasMoreTokens()) {
+            parseQuery(tokens.nextToken());
+        }
     }
 
     private void parseQuery(final String query) {
