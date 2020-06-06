@@ -13,7 +13,13 @@ public class QueryString {
 
     private static final Map<String, String> parameters = new HashMap<>();
 
-    public QueryString(final String queryString) {
+    private QueryString() {}
+
+    public static QueryString init() {
+        return new QueryString();
+    }
+
+    public void update(final String queryString) {
         if (StringUtil.isEmpty(queryString)) {
             return;
         }

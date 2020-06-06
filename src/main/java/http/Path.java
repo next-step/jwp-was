@@ -1,21 +1,20 @@
 package http;
 
-import utils.Tokens;
-
 public class Path {
     private static final String PATH_AND_QUERY_STRING_DELIMITER = "\\?";
-    private static final int MINIMUM_REQUIRED_TOKEN_SIZE = 1;
     private static final char DOT = '.';
 
     private final String path;
-    private final QueryString queryString;
+    private final QueryString queryString = QueryString.init();
 
     public Path(final String pathStr) {
-        Tokens tokens = Tokens.init(pathStr, PATH_AND_QUERY_STRING_DELIMITER);
-        tokens.validate(MINIMUM_REQUIRED_TOKEN_SIZE);
+        String[] tokens = pathStr.split(PATH_AND_QUERY_STRING_DELIMITER);
 
-        this.path = tokens.nextToken();
-        this.queryString = new QueryString(tokens.nextToken());
+        this.path = tokens[0];
+
+        if (tokens.length > 1) {
+            queryString.update(tokens[1]);
+        }
     }
 
     public String getPath() {
