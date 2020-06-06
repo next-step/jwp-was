@@ -16,10 +16,7 @@ public class RequestLineTest {
         // when
         RequestLine requestLine = RequestLine.from(fullRequestLine);
         // then
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
-        assertThat(requestLine.getPath()).isEqualTo("/users");
-        assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
-        assertThat(requestLine.getVersion()).isEqualTo("1.1");
+        assertThat(requestLine.equals(RequestLine.of("GET", "/users", "HTTP", "1.1"))).isTrue();
     }
 
     @DisplayName("HTTP POST요청에 대한 RequestLine을 method, path, protocol, version으로 파싱")
@@ -30,9 +27,6 @@ public class RequestLineTest {
         // when
         RequestLine requestLine = RequestLine.from(fullRequestLine);
         // then
-        assertThat(requestLine.getMethod()).isEqualTo("POST");
-        assertThat(requestLine.getPath()).isEqualTo("/users");
-        assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
-        assertThat(requestLine.getVersion()).isEqualTo("1.1");
+        assertThat(requestLine.equals(RequestLine.of("POST", "/users", "HTTP", "1.1"))).isTrue();
     }
 }

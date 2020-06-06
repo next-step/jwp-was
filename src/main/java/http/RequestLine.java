@@ -2,6 +2,9 @@ package http;
 
 import org.springframework.http.HttpMethod;
 
+
+import java.util.Objects;
+
 public class RequestLine {
 
     private final String method;
@@ -22,19 +25,23 @@ public class RequestLine {
         return new RequestLine(splitedRequestLine[0], splitedRequestLine[1], splitedProtocol[0], splitedProtocol[1]);
     }
 
-    public String getMethod() {
-        return this.method;
+    public static RequestLine of(String method, String path, String protocol, String version) {
+        return new RequestLine(method, path, protocol, version);
     }
 
-    public String getPath() {
-        return this.path;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestLine that = (RequestLine) o;
+        return Objects.equals(method, that.method) &&
+                Objects.equals(path, that.path) &&
+                Objects.equals(protocol, that.protocol) &&
+                Objects.equals(version, that.version);
     }
 
-    public String getProtocol() {
-        return this.protocol;
-    }
-
-    public String getVersion() {
-        return this.version;
+    @Override
+    public int hashCode() {
+        return Objects.hash(method, path, protocol, version);
     }
 }
