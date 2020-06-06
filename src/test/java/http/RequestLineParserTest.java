@@ -10,14 +10,14 @@ public class RequestLineParserTest {
     void GET_RequestLine_parsing() {
         final String requestLineStr = "GET /users HTTP/1.1";
         RequestLine requestLine = RequestLineParser.parse(requestLineStr);
-        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.GET, "/users", new ProtocolAndVersion("HTTP", "1.1")));
+        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.GET, "/users", new QueryString(""), new ProtocolAndVersion("HTTP", "1.1")));
     }
 
     @Test
     void POST_RequestLine_parsing() {
         final String requestLineStr = "POST /users HTTP/1.1";
         RequestLine requestLine = RequestLineParser.parse(requestLineStr);
-        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.POST, "/users", new ProtocolAndVersion("HTTP", "1.1")));
+        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.POST, "/users", new QueryString(""), new ProtocolAndVersion("HTTP", "1.1")));
     }
 
     @Test

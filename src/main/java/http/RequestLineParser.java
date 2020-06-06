@@ -13,10 +13,12 @@ public class RequestLineParser {
         ProtocolAndVersion protocolAndVersion = new ProtocolAndVersion(value[2]);
         String path = pathAndQuerystring[0];
 
-        QueryString queryString = null;
-        if(pathAndQuerystring.length == 2) {
-             queryString = new QueryString(pathAndQuerystring[1]);
+        String queryStringStr = "";
+        if (pathAndQuerystring.length == 2) {
+            queryStringStr = pathAndQuerystring[1];
         }
+
+        QueryString queryString = new QueryString(queryStringStr);
 
         return new RequestLine(httpMethod, path, queryString, protocolAndVersion);
     }

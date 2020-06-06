@@ -8,12 +8,6 @@ public class RequestLine {
     private QueryString queryString;
     private ProtocolAndVersion protocolAndVersion;
 
-    public RequestLine(HttpMethod method, String path, ProtocolAndVersion protocolAndVersion) {
-        this.method = method;
-        this.path = path;
-        this.protocolAndVersion = protocolAndVersion;
-    }
-
     public RequestLine(HttpMethod method, String path, QueryString queryString, ProtocolAndVersion protocolAndVersion) {
         this.method = method;
         this.path = path;
