@@ -1,10 +1,12 @@
 package http.request;
 
 import http.request.body.Body;
+import http.request.headers.Headers;
 import http.request.headers.Headers2;
 import http.request.requestline.requestLine2.RequestLine2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +19,7 @@ public class RequestUtils {
     private static final String REGEX_HEADER_DELIMITER = ": ";
 
     private BufferedReader br;
+    private Headers2 headers;
     private int count = -1;
 
     public RequestUtils(BufferedReader br) {
@@ -74,6 +77,7 @@ public class RequestUtils {
         }
 
         count++;
+        this.headers = new Headers2(headers);
         return Collections.unmodifiableMap(headers);
     }
 
@@ -82,11 +86,11 @@ public class RequestUtils {
             throw new IllegalArgumentException("RequestHeaders should be serviced prior to getting RequestBody");
         }
 
-        String body = br.readLine();
-        if (body == null) {
+        String contentLength = headers.getParameter("Content-Length");
+        if (contentLength == null) {
             return "";
         }
 
-        return body;
+        return IOUtils.readData(br, Integer.parseInt(contentLength));
     }
 }

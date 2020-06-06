@@ -27,4 +27,8 @@ public enum ContentType {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Not found matched Content-Type!"));
     }
+
+    public String getContentType() {
+        return contentType;
+    }
 }

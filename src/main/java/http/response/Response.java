@@ -1,12 +1,12 @@
 package http.response;
 
-import http.request.headers.Headers;
+import http.request.headers.Headers2;
 
 public class Response {
     private HttpStatus status;
     private ContentType contentType;
     private ResponseBody body;
-    private Headers headers;
+    private Headers2 headers;
 
     public Response(HttpStatus status, ContentType contentType, ResponseBody body) {
         this.status = status;
@@ -14,7 +14,7 @@ public class Response {
         this.body = body;
     }
 
-    public Response(HttpStatus status, ContentType contentType, Headers headers, ResponseBody body) {
+    public Response(HttpStatus status, ContentType contentType, Headers2 headers, ResponseBody body) {
         this.status = status;
         this.contentType = contentType;
         this.headers = headers;
@@ -35,5 +35,9 @@ public class Response {
 
     public String getHeaderByKey(String key) {
         return headers.getParameter(key);
+    }
+
+    public Headers2 getHeaders() {
+        return headers;
     }
 }

@@ -3,6 +3,7 @@ package webserver.customhandler;
 import db.DataBase;
 import http.request.Request;
 import http.request.headers.Headers;
+import http.request.headers.Headers2;
 import http.request.requestline.requestLine2.QueryStrings;
 import http.response.ContentType;
 import http.response.HttpStatus;
@@ -38,12 +39,14 @@ public class LoginHandler implements Handler {
         if(isSuccess(queryStrings, user)){
             ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
             headers.put("Set-Cookie", "logined=true; Path=/");
-            return new Response(HttpStatus.OK, ContentType.HTML, new Headers(headers), body);
+            headers.put("Location", "/index.html");
+            return new Response(HttpStatus.REDIRECT, ContentType.HTML, new Headers2(headers), body);
         }
 
         headers.put("Set-Cookie", "logined=false");
+        headers.put("Location", "/user/login_failed.html");
         ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html"));
-        return new Response(HttpStatus.REDIRECT, ContentType.HTML, new Headers(headers), body);
+        return new Response(HttpStatus.REDIRECT, ContentType.HTML, new Headers2(headers), body);
     }
 
     @Override

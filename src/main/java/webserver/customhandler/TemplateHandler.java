@@ -16,6 +16,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TemplateHandler implements Handler {
     private static final String PREFIX_TEMPLATES = "./templates";
@@ -27,7 +29,16 @@ public class TemplateHandler implements Handler {
 
     @Override
     public Response work(Request request) throws URISyntaxException, IOException {
-        return new Response(HttpStatus.OK, ContentType.HTML, new ResponseBody(getBody(request)));
+        ResponseBody body = new ResponseBody(getBody(request));
+        return new Response(HttpStatus.OK, ContentType.HTML, getHeaders(body), body);
+    }
+
+    private Headers2 getHeaders(ResponseBody body){
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Length: ", String.valueOf(body.getBody().length));
+        headers.put("Content-Type: ", ContentType.HTML.getContentType());
+
+        return new Headers2(headers);
     }
 
     private byte[] getBody(Request request) throws IOException, URISyntaxException {

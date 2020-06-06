@@ -3,6 +3,7 @@ package http.request.headers;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Headers2 {
     private Map<String, String> headers = new HashMap<>();
@@ -17,5 +18,13 @@ public class Headers2 {
 
     public int getSize(){
         return this.headers.size();
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public Set<String> getKeySet(){
+        return headers.keySet();
     }
 }
