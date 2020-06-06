@@ -24,13 +24,16 @@ public class QueryString {
     }
 
     private void parseQuery(final String query) {
-        Tokens tokens = Tokens.init(query, KEY_AND_VALUE_DELIMITER);
-        tokens.validate(KEY_AND_VALUE_TOKEN_SIZE);
+        String[] tokens = query.split(KEY_AND_VALUE_DELIMITER);
 
-        parameters.put(tokens.nextToken(), tokens.nextToken());
+        if (tokens.length != KEY_AND_VALUE_TOKEN_SIZE) {
+            throw new IllegalArgumentException("Invalid query string : " + query);
+        }
+
+        parameters.put(tokens[0], tokens[1]);
     }
 
     public String get(final String parameter) {
-        return parameters.getOrDefault(parameter, null);
+        return parameters.get(parameter);
     }
 }
