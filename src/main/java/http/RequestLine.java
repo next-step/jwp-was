@@ -22,6 +22,10 @@ public class RequestLine {
         this.protocol = new Protocol(tokens[2]);
     }
 
+    public void addParameter(final String token) {
+        path.addParameter(token);
+    }
+
     public static RequestLine init(final String requestLineStr) {
         return new RequestLine(requestLineStr);
     }

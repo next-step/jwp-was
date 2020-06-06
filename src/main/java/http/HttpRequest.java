@@ -10,10 +10,8 @@ import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 public class HttpRequest {
-    private static final String PARAMETER_DELIMITER = "&";
 
     private RequestLine requestLine;
     private RequestHeader requestHeader = RequestHeader.init();
@@ -55,11 +53,7 @@ public class HttpRequest {
 
         int contentLength = Integer.parseInt(getHeader("Content-Length"));
         bodyOrigin = URLDecoder.decode(IOUtils.readData(bufferedReader, contentLength), "UTF-8");
-
-        StringTokenizer tokens = new StringTokenizer(bodyOrigin, PARAMETER_DELIMITER);
-        while (tokens.hasMoreTokens()) {
-            requestHeader.addHeader(tokens.nextToken());
-        }
+        requestLine.addParameter(bodyOrigin);
     }
 
     public HttpMethod getMethod() {

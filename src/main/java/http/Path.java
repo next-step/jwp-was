@@ -44,4 +44,8 @@ public class Path {
     public String getParameter(final String parameterName) {
         return queryString.get(parameterName);
     }
+
+    public void addParameter(String token) {
+        queryString.update(token);
+    }
 }

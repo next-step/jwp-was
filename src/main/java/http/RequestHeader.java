@@ -22,7 +22,6 @@ public class RequestHeader {
     }
 
     public RequestHeader(final String header) {
-        origin.append(header).append('\n');
         StringTokenizer tokens = new StringTokenizer(header, NEW_LINE);
 
         while (tokens.hasMoreTokens()) {
@@ -31,6 +30,7 @@ public class RequestHeader {
     }
 
     public void addHeader(final String token) {
+        origin.append(token).append('\n');
         String[] tokens = token.split(HEADER_DELIMITER);
         String key = tokens[0];
         String value = tokens[1];
