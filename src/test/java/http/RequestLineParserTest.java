@@ -10,21 +10,21 @@ public class RequestLineParserTest {
     void GET_RequestLine_parsing() {
         final String requestLineStr = "GET /users HTTP/1.1";
         RequestLine requestLine = RequestLineParser.parse(requestLineStr);
-        assertThat(requestLine).isEqualTo(new RequestLine("GET", "/users", new Protocol("HTTP", "1.1"), new QueryString("")));
+        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.GET, "/users", new ProtocolAndVersion("HTTP", "1.1")));
     }
 
     @Test
     void POST_RequestLine_parsing() {
         final String requestLineStr = "POST /users HTTP/1.1";
         RequestLine requestLine = RequestLineParser.parse(requestLineStr);
-        assertThat(requestLine).isEqualTo(new RequestLine("POST", "/users", new Protocol("HTTP", "1.1"), new QueryString("")));
+        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.POST, "/users", new ProtocolAndVersion("HTTP", "1.1")));
     }
 
     @Test
     void queryString_parsing() {
         final String requestLineStr = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
         RequestLine requestLine = RequestLineParser.parse(requestLineStr);
-        assertThat(requestLine).isEqualTo(new RequestLine("GET", "/users", new Protocol("HTTP", "1.1"), new QueryString("userId=javajigi&password=password&name=JaeSung")));
+        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.GET, "/users", new QueryString("userId=javajigi&password=password&name=JaeSung"), new ProtocolAndVersion("HTTP", "1.1")));
     }
 
 }

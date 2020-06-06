@@ -3,16 +3,34 @@ package http;
 import java.util.Objects;
 
 public class RequestLine {
-    private String method;
+    private HttpMethod method;
     private String path;
-    private Protocol protocol;
     private QueryString queryString;
+    private ProtocolAndVersion protocolAndVersion;
 
-    public RequestLine(String method, String path, Protocol protocol, QueryString queryString) {
+    public RequestLine(HttpMethod method, String path, ProtocolAndVersion protocolAndVersion) {
         this.method = method;
         this.path = path;
-        this.protocol = protocol;
+        this.protocolAndVersion = protocolAndVersion;
+    }
+
+    public RequestLine(HttpMethod method, String path, QueryString queryString, ProtocolAndVersion protocolAndVersion) {
+        this.method = method;
+        this.path = path;
         this.queryString = queryString;
+        this.protocolAndVersion = protocolAndVersion;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public QueryString getQueryString() {
+        return queryString;
+    }
+
+    public HttpMethod getHttpMethod() {
+        return method;
     }
 
     @Override
@@ -22,12 +40,13 @@ public class RequestLine {
         RequestLine that = (RequestLine) o;
         return Objects.equals(method, that.method) &&
                 Objects.equals(path, that.path) &&
-                Objects.equals(protocol, that.protocol) &&
+                Objects.equals(protocolAndVersion, that.protocolAndVersion) &&
                 Objects.equals(queryString, that.queryString);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(method, path, protocol, queryString);
+        return Objects.hash(method, path, protocolAndVersion, queryString);
     }
+
 }
