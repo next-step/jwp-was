@@ -1,31 +1,16 @@
 package http;
 
+import java.util.Map;
+
 public class QueryString {
-    private String method;
-    private String path;
-    private String parameterString;
-    public Protocol protocol;
 
-    public QueryString(String value, String s, String s1, Protocol protocol) {
-        this.method = value;
-        this.path = s;
-        this.parameterString = s1;
-        this.protocol = protocol;
+    private final Map<String, String> parameters;
+
+    public QueryString(Map<String, String> parameters) {
+        this.parameters = parameters;
     }
 
-    public String getMethod() {
-        return method;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public String getParameterString() {
-        return parameterString;
-    }
-
-    public String getParameter(String userId) {
-        return null;
+    public String getParameter(String key) {
+        return parameters.get(key);
     }
 }

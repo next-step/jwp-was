@@ -1,23 +1,24 @@
 package http;
 
-import java.util.Map;
-
 public class RequestLine {
-    final String method;
-    final String path;
-    final Protocol protocol;
+    private final String method;
+    private final String path;
+    private final Protocol protocol;
+    private final QueryString queryString;
 
-//    public RequestLine(String value, String value1, String s, String s1) {
-//        method = value;
-//        path = value1;
-//        protocol = s;
-//        version = s1;
-//    }
 
     public RequestLine(String value, String value1, Protocol protocol) {
         this.method = value;
         this.path = value1;
         this.protocol = protocol;
+        this.queryString = null;
+    }
+
+    public RequestLine(String value, String s, String s1, Protocol protocol) {
+        this.method = value;
+        this.path = s;
+        this.protocol = protocol;
+        this.queryString = QueryStringParser.parse(s1);
     }
 
     public String getMethod() {
@@ -28,20 +29,20 @@ public class RequestLine {
         return path;
     }
 
+    public String getProtocol() {
+        return protocol.getProtocol();
+    }
+
+    public String getVersion() {
+        return protocol.getVersion();
+    }
+
     public String getParameterString() {
         String[] split = this.path.split("\\?");
         return split[1];
     }
 
-//    public Map<String, String> getParameter() {
-//
-//    }
-
-//    public String getProtocol() {
-//        return protocol;
-//    }
-//
-//    public String getVersion() {
-//        return version;
-//    }
+    public String getParameter(String key) {
+        return queryString.getParameter(key);
+    }
 }

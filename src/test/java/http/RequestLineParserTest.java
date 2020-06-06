@@ -1,9 +1,6 @@
 package http;
 
-import com.google.common.collect.Maps;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,8 +14,8 @@ public class RequestLineParserTest {
         //그랬을때 결과를 작성하고
         assertThat(requestLine.getMethod()).isEqualTo("GET");
         assertThat(requestLine.getPath()).isEqualTo("/users");
-        assertThat(requestLine.protocol.getProtocol()).isEqualTo("HTTP");
-        assertThat(requestLine.protocol.getVersion()).isEqualTo("1.1");
+        assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
+        assertThat(requestLine.getVersion()).isEqualTo("1.1");
 
         //1. 컴파일 에러부터 해결
 
@@ -34,8 +31,28 @@ public class RequestLineParserTest {
 
         assertThat(requestLine.getMethod()).isEqualTo("POST");
         assertThat(requestLine.getPath()).isEqualTo("/users");
-        assertThat(requestLine.protocol.getProtocol()).isEqualTo("HTTP");
-        assertThat(requestLine.protocol.getVersion()).isEqualTo("1.1");
+        assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
+        assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }
 
+    @Test
+    void parserGetWithQueryString() {
+        RequestLine requestLine = RequestLineParser.parse3("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
+
+        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getPath()).isEqualTo("/users");
+        assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
+        assertThat(requestLine.getVersion()).isEqualTo("1.1");
+        assertThat(requestLine.getParameter("userId")).isEqualTo("javajigi");
+        assertThat(requestLine.getParameter("password")).isEqualTo("password");
+        assertThat(requestLine.getParameter("name")).isEqualTo("JaeSung");
+    }
+
+//    @Test
+//    void validEnum() {
+//        assertThatThrownBy(() -> {
+//            RequestLine requestLine = RequestLineParser.parse2("PUT /users HTTP/1.1");
+//        }).hasMessageContaining("No enum constant");
+//    }
 }
+
