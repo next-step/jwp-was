@@ -2,7 +2,7 @@ package http;
 
 import http.exceptions.UnsupportedHttpMethodException;
 import http.parsers.RequestLineParser;
-import http.requests.QueryString;
+import http.requests.parameters.QueryString;
 import http.requests.RequestLine;
 import http.types.HttpMethod;
 import org.junit.jupiter.api.DisplayName;

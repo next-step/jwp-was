@@ -1,5 +1,6 @@
 package http.requests;
 
+import http.requests.parameters.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

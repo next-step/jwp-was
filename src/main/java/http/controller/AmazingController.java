@@ -1,7 +1,7 @@
 package http.controller;
 
 import db.DataBase;
-import http.requests.Cookie;
+import http.requests.parameters.Cookie;
 import http.requests.HttpRequest;
 import http.responses.HttpStatus;
 import http.responses.ResponseContext;

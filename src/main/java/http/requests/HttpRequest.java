@@ -1,5 +1,6 @@
 package http.requests;
 
+import http.requests.parameters.Cookie;
 import http.types.HttpMethod;
 import utils.HttpRequestParser;
 
@@ -10,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class HttpRequest {
 
-    public static final String REQUEST_HEADER_DELIMITER = ":";
     private static final String KEY_VALUE_DELIMITER = "&";  // 2번째 중복
 
     private final RequestLine requestLine;

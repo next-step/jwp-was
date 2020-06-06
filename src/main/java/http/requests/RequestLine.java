@@ -1,6 +1,7 @@
 package http.requests;
 
 import http.exceptions.UnsupportedHttpMethodException;
+import http.requests.parameters.QueryString;
 import http.types.HttpMethod;
 
 public class RequestLine {
