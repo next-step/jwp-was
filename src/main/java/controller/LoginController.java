@@ -7,7 +7,7 @@ import model.User;
 
 import static utils.LoginUtil.LOGGED_IN;
 
-public class LoginController extends Controller {
+public class LoginController extends AbstractController {
 
     public LoginController() {
         super("/user/login");

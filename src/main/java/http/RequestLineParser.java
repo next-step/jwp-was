@@ -10,7 +10,7 @@ public class RequestLineParser {
         String[] tokens = requestLineStr.split(DELIMITER);
 
         if (tokens.length != REQUIRED_TOKEN_SIZE_TO_INIT_REQUEST_LINE) {
-            throw new IllegalArgumentException("Request line format is illegal");
+            throw new IllegalArgumentException("Request line format is illegal : [" + requestLineStr + "]");
         }
 
         HttpMethod httpMethod = HttpMethod.of(tokens[0]);

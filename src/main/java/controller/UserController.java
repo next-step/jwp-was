@@ -6,7 +6,7 @@ import http.HttpResponse;
 import model.User;
 import sun.plugin.dom.exception.InvalidAccessException;
 
-public class UserController extends Controller {
+public class UserController extends AbstractController {
 
     public UserController() {
         super("/user/create");

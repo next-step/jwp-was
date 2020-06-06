@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserListController extends Controller {
+public class UserListController extends AbstractController {
     private static final Handlebars HANDLEBARS;
 
     static {
