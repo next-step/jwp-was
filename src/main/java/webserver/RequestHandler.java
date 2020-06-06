@@ -2,7 +2,6 @@ package webserver;
 
 import controller.RequestController;
 import controller.UserController;
-import http.QueryString;
 import http.RequestLine;
 import http.RequestLineParser;
 import http.RequestUrl;
@@ -62,20 +61,28 @@ public class RequestHandler implements Runnable {
             }
 
             String methodName = requestUrl.getMethodName();
-            Method method = RequestController.class.getMethod(methodName, QueryString.class, ViewHandler.class);
-            Object viewHandlerObject = method.invoke(controller, new QueryString(request.getBody()), new ViewHandler());
+            Method method = RequestController.class.getMethod(methodName, Request.class, ViewHandler.class);
+            Object viewHandlerObject = method.invoke(controller, request, new ViewHandler());
             DataOutputStream dos = new DataOutputStream(out);
             ViewHandler viewHandler = (ViewHandler) viewHandlerObject;
 
-            if (requestUrl.isUserLogin()) {
-                bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + viewHandler.getReturnUrl());
+
+            if (viewHandler.isFile()) {
+                bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + viewHandler.getView());
                 Response response = Response.ofOk(bytes);
-                response.putCookie(viewHandler.getCookie());
+                response.putCookie(viewHandler.getCookie() + "; Path=/");
                 response(dos, response);
                 return;
             }
 
-            response(dos, Response.ofFound(viewHandler.getRedirectUrl()));
+            if (viewHandler.isTemplate()) {
+                bytes = viewHandler.getView().getBytes();
+                Response response = Response.ofOk(bytes);
+                response(dos, response);
+                return;
+            }
+
+            response(dos, Response.ofFound(viewHandler.getView()));
 
         } catch (IOException | URISyntaxException | NoSuchMethodException e) {
             logger.error(e.getMessage());

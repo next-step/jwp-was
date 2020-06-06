@@ -6,6 +6,7 @@ public enum RequestUrl {
 
     USER_CREATE("/user/create", "createUser"),
     USER_LOGIN("/user/login", "login"),
+    USER_LIST("/user/list", "userList"),
     NONE("", null);
 
     private final String url;
@@ -33,6 +34,10 @@ public enum RequestUrl {
 
     public boolean isUserLogin() {
         return this == USER_LOGIN;
+    }
+
+    public boolean isUserList() {
+        return this == USER_LIST;
     }
 
     public boolean isNone() {

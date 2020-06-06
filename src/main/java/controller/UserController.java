@@ -1,11 +1,14 @@
 package controller;
 
 import db.DataBase;
+import dto.Users;
 import http.QueryString;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import view.ViewHandler;
+
+import java.util.ArrayList;
 
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -22,10 +25,14 @@ public class UserController {
         boolean isLogin = user != null && user.getPassword().equals(queryString.getParam().get("password"));
         logger.info("login : {}", isLogin);
         if (isLogin) {
-            viewHandler.returnUrl("/index.html");
+            viewHandler.returnFile("/index.html");
         } else {
-            viewHandler.returnUrl("/user/login_failed.html");
+            viewHandler.returnFile("/user/login_failed.html");
         }
         return isLogin;
+    }
+
+    public Users userList(ViewHandler viewHandler) {
+        return new Users(new ArrayList<>(DataBase.findAll()));
     }
 }

@@ -44,4 +44,14 @@ public class Request {
     public String getPath() {
         return requestLine.getPath();
     }
+
+    public Map<String, String> getHeader() {
+        return header.getHeader();
+    }
+
+    public boolean isLogin() {
+        Map<String, String> cookies = header.getCookies();
+        String cookie = cookies.getOrDefault("logined", "false");
+        return Boolean.parseBoolean(cookie);
+    }
 }
