@@ -10,7 +10,7 @@ public class RequestLineTest {
 
     @DisplayName("HTTP GET요청에 대한 RequestLine을 method, path, protocol, version으로 파싱")
     @Test
-    void parse_requestline_about_get_shouldPass() {
+    void test_parsing_requestline_about_get_should_pass() {
         // given
         String fullRequestLine = "GET /users HTTP/1.1";
         // when
@@ -21,7 +21,7 @@ public class RequestLineTest {
 
     @DisplayName("HTTP POST요청에 대한 RequestLine을 method, path, protocol, version으로 파싱")
     @Test
-    void parse_requestline_about_post_shouldPass() {
+    void test_parsing_requestline_about_post_should_pass() {
         // given
         String fullRequestLine = "POST /users HTTP/1.1";
         // when
