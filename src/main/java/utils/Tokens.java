@@ -31,12 +31,6 @@ public class Tokens {
         return stringTokenizer.nextToken();
     }
 
-    public void validate(final int expectedTokenSize) {
-        if (stringTokenizer.countTokens() < expectedTokenSize) {
-            throw new IllegalArgumentException("Tokenized string is not enough");
-        }
-    }
-
     public List<String> getAllTokens() {
         List<String> tokens = new ArrayList<>();
 

@@ -43,23 +43,6 @@ public class TokensTest {
     }
 
     @Test
-    @DisplayName("문자열을 토큰화 했들때 토큰 갯수를 검증한다.")
-    void validate() {
-        Tokens tokens = new Tokens("a,b,c", ",");
-
-        assertThatCode(() -> tokens.validate(3)).doesNotThrowAnyException();
-    }
-
-    @Test
-    @DisplayName("문자열을 토큰화 했들때 토큰 갯수가 예상보다 적을때 예외 생성")
-    void validateThrowException() {
-        Tokens tokens = new Tokens("a,b,c", ",");
-
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> tokens.validate(4));
-    }
-
-    @Test
     @DisplayName("토큰을 한번에 가져오기")
     void getAllTokens() {
         Tokens tokens = new Tokens("a,b,c", ",");
