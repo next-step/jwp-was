@@ -17,9 +17,9 @@ public class RequestLine {
         return RequestLineParser.parse(value);
     }
 
-    public static RequestLine of(HttpMethod httpMethod, String path, Protocol protocol) {
-        
-    }
+//    public static RequestLine of(HttpMethod httpMethod, String path, Protocol protocol) {
+//
+//    }
 
 
     public String getMethod() {
