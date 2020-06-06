@@ -1,14 +1,21 @@
 package http;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class RequestMethodGet implements RequestMethod{
     private static final String METHOD_NAME = "GET";
 
     private final String path;
+    private final QueryStrings queryStrings;
 
     public RequestMethodGet(final String path) {
+        this(path, new QueryStrings(new HashMap<>()));
+    }
+
+    public RequestMethodGet(final String path, final QueryStrings queryStrings) {
         this.path = path;
+        this.queryStrings = queryStrings;
     }
 
     @Override
