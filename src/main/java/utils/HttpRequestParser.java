@@ -1,6 +1,7 @@
 package utils;
 
 import http.requests.HttpRequestHeader;
+import http.requests.parameters.FormData;
 
 import java.util.AbstractMap;
 import java.util.List;
@@ -27,5 +28,9 @@ public class HttpRequestParser {
     private static AbstractMap.SimpleImmutableEntry<String, String> splitKeyAndValue(String data, String delimiter) {
         final String[] split = data.split(delimiter, 2);    // delimiter를 포함하는 값이 올 수도 있으므로 명확히 키와 값만 나눔
         return new AbstractMap.SimpleImmutableEntry<>(split[0].trim(), split[1].trim());
+    }
+
+    public static FormData parseFormData(String formData) {
+        return null;
     }
 }
