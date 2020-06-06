@@ -1,4 +1,4 @@
-package http;
+package http.request;
 
 import java.util.Arrays;
 
@@ -32,15 +32,4 @@ public enum RequestUrl {
         return methodName;
     }
 
-    public boolean isUserLogin() {
-        return this == USER_LOGIN;
-    }
-
-    public boolean isUserList() {
-        return this == USER_LIST;
-    }
-
-    public boolean isNone() {
-        return this == NONE;
-    }
 }

@@ -1,6 +1,6 @@
-package http;
+package http.request;
 
-import static http.HttpMethod.*;
+import static http.request.HttpMethod.valueOf;
 
 public class RequestLine {
 
@@ -23,23 +23,8 @@ public class RequestLine {
         return this.path.getPath();
     }
 
-    public QueryString getQueryString() {
-        return this.path.getQueryString();
-    }
-
     public Protocol getProtocol() {
         return protocol;
     }
 
-    public boolean isExistQuery() {
-        return path.isExistQuery();
-    }
-
-    public void addQueryString(String body) {
-        this.path.addQueryString(body);
-    }
-
-    public boolean isPost() {
-        return this.method == POST;
-    }
 }

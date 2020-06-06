@@ -1,19 +1,23 @@
-package http;
+package http.request;
 
 import java.util.Objects;
 
 public class Path {
 
+    private static final String PATH_DELIMITER = "\\?";
+    private static final int PATH_INDEX = 0;
+    private static final int QUERY_STRING_INDEX = 1;
+
     private String path;
     private QueryString queryString;
 
     public Path(String value) {
-        String[] values = value.split("\\?");
-        this.path = values[0];
+        String[] values = value.split(PATH_DELIMITER);
         if (isNotExistQueryString(values)) {
             return;
         }
-        this.queryString = new QueryString(values[1]);
+        this.path = values[PATH_INDEX];
+        this.queryString = new QueryString(values[QUERY_STRING_INDEX]);
     }
 
     private boolean isNotExistQueryString(String[] values) {
@@ -27,7 +31,6 @@ public class Path {
     public QueryString getQueryString() {
         return queryString;
     }
-
 
     @Override
     public boolean equals(Object o) {

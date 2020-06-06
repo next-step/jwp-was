@@ -1,6 +1,6 @@
 package model;
 
-import http.QueryString;
+import http.request.QueryString;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -20,10 +20,14 @@ public class User {
 
     public User(QueryString queryString) {
         HashMap<String, String> param = queryString.getParam();
-        this.userId = param.get("userId");
-        this.email = param.get("email");
-        this.name = param.get("name");
-        this.password = param.get("password");
+        this.userId = getOfDefault(param, "userId");
+        this.email = getOfDefault(param, "email");
+        this.name = getOfDefault(param, "name");
+        this.password = getOfDefault(param, "password");
+    }
+
+    private String getOfDefault(HashMap<String, String> param, String userId) {
+        return param.getOrDefault(userId, "");
     }
 
     public String getUserId() {

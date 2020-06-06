@@ -1,4 +1,8 @@
-package http;
+package http.request;
+
+import http.request.Path;
+import http.request.Protocol;
+import http.request.RequestLine;
 
 public class RequestLineParser {
 

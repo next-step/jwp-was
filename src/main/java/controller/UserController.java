@@ -2,7 +2,7 @@ package controller;
 
 import db.DataBase;
 import dto.Users;
-import http.QueryString;
+import http.request.QueryString;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class UserController {
         return isLogin;
     }
 
-    public Users userList(ViewHandler viewHandler) {
+    public Users userList() {
         return new Users(new ArrayList<>(DataBase.findAll()));
     }
 }

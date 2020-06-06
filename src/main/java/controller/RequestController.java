@@ -5,16 +5,13 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import dto.Users;
-import http.QueryString;
+import http.request.QueryString;
 import http.request.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import view.ViewHandler;
 
 import java.io.IOException;
 
 public class RequestController {
-    private static final Logger logger = LoggerFactory.getLogger(RequestController.class);
 
     private UserController userController;
 
@@ -39,7 +36,7 @@ public class RequestController {
             loader.setPrefix("/templates");
             loader.setSuffix(".html");
             Handlebars handlebars = new Handlebars(loader);
-            Users users = userController.userList(viewHandler);
+            Users users = userController.userList();
             Template template = handlebars.compile("user/list");
             String listPage = template.apply(users);
             viewHandler.addTemplate(listPage);

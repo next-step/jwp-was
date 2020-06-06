@@ -1,8 +1,5 @@
 package http.request;
 
-import http.RequestLine;
-import http.RequestUrl;
-
 import java.util.Map;
 
 public class Request {

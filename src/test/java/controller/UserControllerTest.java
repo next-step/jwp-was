@@ -1,7 +1,7 @@
 package controller;
 
 import db.DataBase;
-import http.QueryString;
+import http.request.QueryString;
 import model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

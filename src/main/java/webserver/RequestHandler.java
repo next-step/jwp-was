@@ -2,9 +2,9 @@ package webserver;
 
 import controller.RequestController;
 import controller.UserController;
-import http.RequestLine;
-import http.RequestLineParser;
-import http.RequestUrl;
+import http.request.RequestLine;
+import http.request.RequestLineParser;
+import http.request.RequestUrl;
 import http.request.Request;
 import http.request.StyleSheet;
 import http.response.Response;

@@ -1,10 +1,14 @@
 package http;
 
+import http.request.Path;
+import http.request.Protocol;
+import http.request.RequestLine;
+import http.request.RequestLineParser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static http.HttpMethod.GET;
-import static http.HttpMethod.POST;
+import static http.request.HttpMethod.GET;
+import static http.request.HttpMethod.POST;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
