@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public enum TemplateResources {
     HTML(".html"),
-    FAVICON(".ico");
+    ICO(".ico");
 
     private String suffix;
 

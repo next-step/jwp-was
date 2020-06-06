@@ -34,9 +34,8 @@ public class StaticResourceHandler implements Handler {
 
     private Headers getHeaders(ResponseBody body, ContentType contentType) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type: ", contentType.getContentType());
-        headers.put("Content-Length: ", String.valueOf(body.getBody().length));
-
+        headers.put("Content-Type", contentType.getContentType());
+        headers.put("Content-Length", String.valueOf(body.getBody().length));
         return new Headers(headers);
     }
 

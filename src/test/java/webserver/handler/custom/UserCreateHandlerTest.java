@@ -35,7 +35,7 @@ public class UserCreateHandlerTest {
         //then
         assertThat(DataBase.findUserById("javajigi").getPassword()).isEqualTo("password");
         assertThat(response.getContentType()).isEqualTo(ContentType.HTML);
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(response.getBody())
                 .isEqualTo(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
     }

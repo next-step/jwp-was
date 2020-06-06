@@ -5,23 +5,20 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
-import http.request.Request;
 import http.request.Headers;
+import http.request.Request;
 import http.response.Response;
 import http.response.ResponseBody;
 import model.User;
 import webserver.handler.Handler;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static http.response.ContentType.HTML;
 import static http.response.HttpStatus.FOUND;
-import static http.response.HttpStatus.OK;
 
 public class UserListHandler implements Handler {
     private String url;
@@ -36,7 +33,7 @@ public class UserListHandler implements Handler {
     }
 
     @Override
-    public Response work(Request request) throws UnsupportedEncodingException, URISyntaxException, IOException {
+    public Response work(Request request) throws IOException {
         String cookie = request.getParameter("Cookie");
         Map<String, String> headers = new HashMap<>();
 
@@ -45,7 +42,7 @@ public class UserListHandler implements Handler {
             return new Response(FOUND, HTML, new Headers(headers), getBody("user/login"));
         }
 
-        return new Response(OK, HTML, new Headers(headers), getBody("user/list"));
+        return new Response(FOUND, HTML, new Headers(headers), getBody("user/list"));
     }
 
     @Override

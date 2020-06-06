@@ -7,7 +7,9 @@ public enum ContentType {
     JAVASCRIPT("text/html;charset=utf-8", ".js"),
     WOFF("text/html;charset=utf-8", ".woff"),
     WOFF2("font/woff2", ".woff2"),
-    HTML("text/html;charset=utf-8", ".html");
+    HTML("text/html;charset=utf-8", ".html"),
+    ICO("image/x-icon", ".ico"),
+    TTF("application/x-font-ttf", ".ttf");
 
     private String contentType;
     private String suffix;
@@ -19,6 +21,10 @@ public enum ContentType {
     ContentType(String contentType, String suffix) {
         this.contentType = contentType;
         this.suffix = suffix;
+    }
+
+    ContentType() {
+
     }
 
     public static ContentType findContentType(String url) {

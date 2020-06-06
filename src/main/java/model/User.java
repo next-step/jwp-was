@@ -2,7 +2,6 @@ package model;
 
 import http.request.QueryStrings;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 
 public class User {
@@ -21,7 +20,7 @@ public class User {
         this.email = email;
     }
 
-    public static User of(QueryStrings queryStrings) throws UnsupportedEncodingException {
+    public static User of(QueryStrings queryStrings) {
         return queryStrings.toUser();
     }
 
@@ -35,6 +34,10 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     @Override

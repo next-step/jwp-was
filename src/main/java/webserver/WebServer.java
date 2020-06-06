@@ -2,10 +2,8 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.handler.Handler;
 import webserver.handler.HandlerMapper;
 import webserver.handler.HandlerRegister;
-import webserver.handler.Handlers;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -34,9 +32,5 @@ public class WebServer {
                 thread.start();
             }
         }
-    }
-
-    private static void addHandler(Handler handler){
-        Handlers.addHandler(handler);
     }
 }

@@ -35,7 +35,7 @@ public class UserCreateHandler implements Handler {
         DataBase.addUser(User.of(new QueryStrings(queryStrings)));
         Map<String, String> headers = new HashMap<>();
         headers.put("Location", "/index.html");
-        return new Response(HttpStatus.OK, ContentType.HTML, new Headers(headers), new ResponseBody(getBody()));
+        return new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), new ResponseBody(getBody()));
     }
 
     @Override

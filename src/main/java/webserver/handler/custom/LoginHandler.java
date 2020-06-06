@@ -33,6 +33,8 @@ public class LoginHandler implements Handler {
     public Response work(Request request) throws IOException, URISyntaxException {
         Map<String, String> queryStrings = QueryStrings.parseQueryStrings(request.getRequestBody().getBody());
         User user = getUser(queryStrings);
+
+
         Map<String, String> headers = new HashMap<>();
 
         if(isSuccess(queryStrings, user)){
