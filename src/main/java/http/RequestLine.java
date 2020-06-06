@@ -6,24 +6,23 @@ public class RequestLine {
 
     private final String method;
     private final String path;
-    Protocol protocol;
+    private final String protocol;
+    private final String version;
 
-    public RequestLine(String method, String path, Protocol protocol) {
+    public RequestLine(String method, String path, String protocol, String version) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
-    }
-
-    public static RequestLine of(HttpMethod get, String s, Protocol protocol) {
-
+        this.version = version;
     }
 
     public String getMapping() {
         return this.method;
     }
 
-    public String getPath() {
-        return this.path;
-    }
+    public String getPath() { return this.path; }
 
+    public String getProtocol() { return this.protocol; }
+
+    public String getVersion() { return this.version;}
 }
