@@ -1,5 +1,9 @@
 package http;
 
+import utils.FileIoUtils;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -21,6 +25,11 @@ public class RequestMethodGet implements RequestMethod{
     @Override
     public String getPath() {
         return path;
+    }
+
+    @Override
+    public byte[] readFile() throws URISyntaxException, IOException {
+        return FileIoUtils.loadFileFromClasspath(String.format("./templates/%s", path));
     }
 
     @Override

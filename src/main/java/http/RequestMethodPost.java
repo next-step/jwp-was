@@ -1,5 +1,7 @@
 package http;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Objects;
 
 public class RequestMethodPost implements RequestMethod {
@@ -19,6 +21,11 @@ public class RequestMethodPost implements RequestMethod {
     @Override
     public String getMethodName() {
         return METHOD_NAME;
+    }
+
+    @Override
+    public byte[] readFile() throws IOException, URISyntaxException {
+        return new byte[0];
     }
 
     @Override

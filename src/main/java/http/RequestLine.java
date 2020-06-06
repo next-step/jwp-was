@@ -1,5 +1,7 @@
 package http;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Objects;
 
 public class RequestLine {
@@ -18,6 +20,10 @@ public class RequestLine {
 
     public String getMethodName() {
         return requestMethod.getMethodName();
+    }
+
+    public byte[] readFile() throws IOException, URISyntaxException {
+        return requestMethod.readFile();
     }
 
     public String getProtocolName() {
