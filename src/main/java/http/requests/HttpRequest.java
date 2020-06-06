@@ -19,8 +19,7 @@ public class HttpRequest {
         this.requestLine = new RequestLine(rawRequestLine);
         this.requestHeaders = HttpRequestParser.parseHeaders(rawRequestHeaders);
         this.body = body;
-        this.formData = body == null || body.isEmpty() ?
-                new FormData() : HttpRequestParser.parseFormData(body);
+        this.formData = HttpRequestParser.parseFormData(body);
         this.cookie = new Cookie(requestHeaders.getHeader("Cookie"));
     }
 
