@@ -34,4 +34,8 @@ public enum HeaderName {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 헤더 정보입니다."));
     }
+
+    public String getName() {
+        return name;
+    }
 }

@@ -22,7 +22,7 @@ public class Header {
     }
 
     public String getName() {
-        return this.name.name();
+        return this.name.getName();
     }
 
     public String getValue() {
