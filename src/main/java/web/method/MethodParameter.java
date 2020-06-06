@@ -10,11 +10,15 @@ public class MethodParameter {
 
     private Class<?> parameterType;
 
-    public MethodParameter(Method method, int parameterIndex) {
+    private MethodParameter(Method method, int parameterIndex) {
         this.method = method;
         this.parameterIndex = parameterIndex;
 
         this.parameterType = method.getParameterTypes()[this.parameterIndex];
+    }
+
+    public static MethodParameter of(Method method, int parameterIndex) {
+        return new MethodParameter(method, parameterIndex);
     }
 
     public Method getMethod() {

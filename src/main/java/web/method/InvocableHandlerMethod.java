@@ -29,13 +29,13 @@ public class InvocableHandlerMethod {
         MethodParameter[] result = new MethodParameter[count];
 
         for(int i = 0; i < count; i++) {
-            MethodParameter methodParameter = new MethodParameter(this.method, i);
+            MethodParameter methodParameter = MethodParameter.of(this.method, i);
             result[i] = methodParameter;
         }
         return result;
     }
 
-    public static InvocableHandlerMethod from(Object instance, Method method) {
+    public static InvocableHandlerMethod of(Object instance, Method method) {
         return new InvocableHandlerMethod(instance, method);
     }
 

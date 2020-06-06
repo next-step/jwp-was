@@ -2,6 +2,7 @@ package http;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.util.MultiValueMap;
+import utils.HttpStringBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -16,10 +17,10 @@ public class HttpResponseTest {
     public void setHeaderTest() {
         MultiValueMap<String, String> testHeaders = HttpHeaders.emptyHeaders();
         testHeaders.add(HttpHeaders.USER_AGENT, "Chrome/1.1");
-        testHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
+        testHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
 
         HttpResponse httpResponse = HttpResponse.from(new DataOutputStream(new ByteArrayOutputStream()));
-        httpResponse.setContentType("application/json");
+        httpResponse.setContentType(MediaType.APPLICATION_JSON);
         httpResponse.setHeader(HttpHeaders.USER_AGENT, "Chrome/1.1");
 
         assertThat(httpResponse.getHeaderMap()).isEqualTo(testHeaders);
@@ -29,24 +30,22 @@ public class HttpResponseTest {
     public void writeHeaderTest() throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
+        HttpStringBuilder builder = HttpStringBuilder.builder()
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .addHeader(HttpHeaders.ACCEPT, MediaType.TEXT_HTML)
+                .addHeader(HttpHeaders.USER_AGENT, "Chrome/1.1");
+
         HttpResponse httpResponse = HttpResponse.from(new DataOutputStream(byteArrayOutputStream));
-        httpResponse.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-        httpResponse.setHeader(HttpHeaders.ACCEPT, "text/html");
-        httpResponse.setHeader(HttpHeaders.USER_AGENT, "Chrome/1.1");
+        httpResponse.setHeaders(HttpHeaders.from(builder.buildHeaders()));
 
-        String result = "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: application/json\r\n" +
-                "Accept: text/html\r\n" +
-                "User-Agent: Chrome/1.1\r\n" +
-                System.lineSeparator();
-
+        String httpString = builder.buildResponse();
 
         httpResponse.writeHeader();;
         httpResponse.getDataOutputStream().flush();
 
         String httpResult = new String(byteArrayOutputStream.toByteArray());
 
-        assertThat(httpResult).isEqualTo(result);
+        assertThat(httpResult).isEqualTo(httpString);
     }
 
     @Test
@@ -54,11 +53,12 @@ public class HttpResponseTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         HttpResponse httpResponse = HttpResponse.from(new DataOutputStream(byteArrayOutputStream));
-        httpResponse.sendRedirect("/index.html");
+        httpResponse.sendRedirect("/test_view.html");
 
-        String result = "HTTP/1.1 302 Found\r\n" +
-                "Location: /index.html\r\n" +
-                System.lineSeparator();
+        String result = HttpStringBuilder.builder()
+                .httpStatus(HttpStatus.FOUND)
+                .addHeader(HttpHeaders.LOCATION, "/test_view.html")
+                .buildResponse();
 
         String httpResult = new String(byteArrayOutputStream.toByteArray());
 

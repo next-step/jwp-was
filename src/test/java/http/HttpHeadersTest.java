@@ -1,21 +1,23 @@
 package http;
 
 import org.junit.jupiter.api.Test;
+import utils.HttpStringBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpHeadersTest {
     @Test
     public void createTest() {
-        String headerString = "Content-Type: application/json\n" +
-                "Accept: application/json\n" +
-                "User-Agent: Mozilla/5.0";
+        String headerString = HttpStringBuilder.builder()
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .addHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0")
+                .buildHeaders();
 
         HttpHeaders httpHeaders = HttpHeaders.from(headerString);
 
-        assertThat(httpHeaders.getHeader("Content-Type")).isEqualTo("application/json");
-        assertThat(httpHeaders.getHeader("Accept")).isEqualTo("application/json");
-        assertThat(httpHeaders.getHeader("User-Agent")).isEqualTo("Mozilla/5.0");
+        assertThat(httpHeaders.getHeader(HttpHeaders.CONTENT_TYPE)).isEqualTo(MediaType.APPLICATION_JSON);
+        assertThat(httpHeaders.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.APPLICATION_JSON);
+        assertThat(httpHeaders.getHeader(HttpHeaders.USER_AGENT)).isEqualTo("Mozilla/5.0");
     }
-
 }

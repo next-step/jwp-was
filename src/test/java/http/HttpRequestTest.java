@@ -1,6 +1,7 @@
 package http;
 
 import org.junit.jupiter.api.Test;
+import utils.HttpStringBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,30 +13,34 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class HttpRequestTest {
     @Test
     public void parseTest() throws IOException {
+        String httpString = HttpStringBuilder.builder()
+                .httpMethod(HttpMethod.GET)
+                .path("/users")
+                .addParameter("key", "1")
+                .addHeader(HttpHeaders.ACCEPT, MediaType.TEXT_HTML)
+                .addHeader(HttpHeaders.USER_AGENT, "Chrome/1.1")
+                .buildRequest();
+        BufferedReader bufferedReader = new BufferedReader(new StringReader(httpString));
 
-        BufferedReader bufferedReader = new BufferedReader(new StringReader(
-                "GET /users?key=1 HTTP/1.1\n" +
-                        "Accept: text/html\n" +
-                        "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
-        ));
 
-
-        HttpRequest httpRequest = new HttpRequest(bufferedReader);
+        HttpRequest httpRequest = HttpRequest.from(bufferedReader);
 
         assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(httpRequest.getPath()).isEqualTo("/users");
-        assertThat(httpRequest.getHeader("Accept")).isEqualTo("text/html");
+        assertThat(httpRequest.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.TEXT_HTML);
         assertThat(httpRequest.getParameter("key")).isEqualTo("1");
     }
 
     @Test
     public void parseCookieTest() throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new StringReader(
-                "GET /users?key=1 HTTP/1.1\n" +
-                        "Cookie: cookie1=one; cookie2=two\n"
-        ));
+        String httpString = HttpStringBuilder.builder()
+                .path("/users")
+                .addParameter("key", "1")
+                .addHeader(HttpHeaders.COOKIE, "cookie1=one; cookie2=two")
+                .buildRequest();
+        BufferedReader bufferedReader = new BufferedReader(new StringReader(httpString));
 
-        HttpRequest httpRequest = new HttpRequest(bufferedReader);
+        HttpRequest httpRequest = HttpRequest.from(bufferedReader);
         Set<Cookie> cookies = httpRequest.getCookies();
 
         assertThat(cookies).contains(
@@ -47,15 +52,18 @@ public class HttpRequestTest {
     @Test
     public void parseBodyTest() throws IOException {
         String body = "userId=KingCjy&password=1234";
-        BufferedReader bufferedReader = new BufferedReader(new StringReader(
-                "POST /users/create?key=key HTTP/1.1\n" +
-                        "Accept: text/html\n" +
-                        "Content-Length: " + body.getBytes().length + "\n" +
-                        "\n" +
-                        body
-        ));
+        String httpString = HttpStringBuilder.builder()
+                .httpMethod(HttpMethod.POST)
+                .path("/users/create")
+                .addParameter("key", "key")
+                .addHeader(HttpHeaders.ACCEPT, MediaType.TEXT_HTML)
+                .addHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(body.getBytes().length))
+                .body(body)
+                .buildRequest();
 
-        HttpRequest httpRequest = new HttpRequest(bufferedReader);
+        BufferedReader bufferedReader = new BufferedReader(new StringReader(httpString));
+
+        HttpRequest httpRequest = HttpRequest.from(bufferedReader);
 
         assertThat(httpRequest.getParameter("userId")).isEqualTo("KingCjy");
         assertThat(httpRequest.getParameter("password")).isEqualTo("1234");

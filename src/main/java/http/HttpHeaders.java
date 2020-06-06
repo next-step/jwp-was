@@ -18,14 +18,17 @@ public class HttpHeaders extends LinkedMultiValueMap<String, String> {
     public static final String SET_COOKIE = "Set-Cookie";
     public static final String COOKIE = "Cookie";
 
+    public static final String LINE_DELIMITER = "\n";
+    public static final String NAME_VALUE_DELIMITER = ": ";
+
     private HttpHeaders(MultiValueMap<String, String> headers) {
         super(headers);
     }
 
     public static HttpHeaders from(String headerString) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        Arrays.stream(headerString.split("\n"))
-                .map(header -> header.split(": "))
+        Arrays.stream(headerString.split(LINE_DELIMITER))
+                .map(header -> header.trim().split(NAME_VALUE_DELIMITER))
                 .forEach(nameValue -> headers.add(nameValue[0], nameValue[1]));
 
         return new HttpHeaders(headers);

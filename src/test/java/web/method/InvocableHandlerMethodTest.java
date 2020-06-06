@@ -13,18 +13,18 @@ public class InvocableHandlerMethodTest {
 
     @Test
     public void initTest() throws NoSuchMethodException {
-        InvocableHandlerMethod invocableHandlerMethod = InvocableHandlerMethod.from(
+        InvocableHandlerMethod invocableHandlerMethod = InvocableHandlerMethod.of(
                 new InvokeTestClass(),
                 InvokeTestClass.class.getDeclaredMethod("getPath", HttpRequest.class));
 
-        MethodParameter methodParameter = new MethodParameter(InvokeTestClass.class.getDeclaredMethod("getPath", HttpRequest.class), 0);
+        MethodParameter methodParameter = MethodParameter.of(InvokeTestClass.class.getDeclaredMethod("getPath", HttpRequest.class), 0);
 
         assertThat(invocableHandlerMethod.getParameters()).contains(methodParameter);
     }
 
     @Test
     public void invokeTest() throws NoSuchMethodException {
-        InvocableHandlerMethod invocableHandlerMethod = InvocableHandlerMethod.from(
+        InvocableHandlerMethod invocableHandlerMethod = InvocableHandlerMethod.of(
                 new InvokeTestClass(),
                 InvokeTestClass.class.getDeclaredMethod("getMessage"));
 
@@ -35,7 +35,7 @@ public class InvocableHandlerMethodTest {
     public void invokeWithHttpRequestTest() throws IOException, NoSuchMethodException {
         HttpRequest httpRequest = HttpRequest.from(new BufferedReader(new StringReader("GET /users/info HTTP/1.1")));
 
-        InvocableHandlerMethod invocableHandlerMethod = InvocableHandlerMethod.from(
+        InvocableHandlerMethod invocableHandlerMethod = InvocableHandlerMethod.of(
                 new InvokeTestClass(),
                 InvokeTestClass.class.getDeclaredMethod("getPath", HttpRequest.class));
 

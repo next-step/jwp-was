@@ -24,7 +24,7 @@ public class AnnotationHandlerMappingTest {
         Map<Class<?>, Object> controllers = new LinkedHashMap<>();
         controllers.put(TestClass.class, testClass);
 
-        InvocableHandlerMethod testHandlerMethod = InvocableHandlerMethod.from(testClass, TestClass.class.getMethod("mypage"));
+        InvocableHandlerMethod testHandlerMethod = InvocableHandlerMethod.of(testClass, TestClass.class.getMethod("mypage"));
 
         AnnotationHandlerMapping annotationHandlerMapping = new AnnotationHandlerMapping(controllers);
         InvocableHandlerMethod invocableHandlerMethod = annotationHandlerMapping.getHandler(httpRequest);

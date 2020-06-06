@@ -4,11 +4,13 @@ import java.util.Objects;
 
 public class Protocol {
 
+    public static final String PROTOCOL_VERSION_DELIMITER = "/";
+
     private String protocol;
     private String version;
 
     private Protocol(String value) {
-        String[] values = value.split("/");
+        String[] values = value.split(PROTOCOL_VERSION_DELIMITER);
 
         if(values.length != 2) {
             throw new IllegalArgumentException();

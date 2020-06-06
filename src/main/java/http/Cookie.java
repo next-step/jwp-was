@@ -3,6 +3,7 @@ package http;
 import java.util.Objects;
 
 public class Cookie {
+
     private String name;
     private String value;
     private String path;

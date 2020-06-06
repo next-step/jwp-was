@@ -19,7 +19,7 @@ public class HttpRequest {
     private Parameters parameters;
     private Set<Cookie> cookies;
 
-    public HttpRequest(BufferedReader bufferedReader) throws IOException {
+    private HttpRequest(BufferedReader bufferedReader) throws IOException {
         this.requestLine = RequestLine.from(bufferedReader.readLine());
 
         setHttpHeaders(bufferedReader);

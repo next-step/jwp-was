@@ -38,6 +38,10 @@ public class HttpResponse {
         this.httpHeaders.add(name, value);
     }
 
+    public void setHeaders(MultiValueMap<String, String> headers) {
+        this.httpHeaders.addAll(headers);
+    }
+
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }

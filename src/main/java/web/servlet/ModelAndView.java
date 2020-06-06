@@ -8,9 +8,13 @@ public class ModelAndView {
     private String viewName;
     private Map<String, Object> model;
 
-    public ModelAndView(String viewName) {
+    private ModelAndView(String viewName) {
         this.viewName = viewName;
         this.model = new LinkedHashMap<>();
+    }
+
+    public static ModelAndView from(String viewName) {
+        return new ModelAndView(viewName);
     }
 
     public void addAttribute(String name, Object value) {

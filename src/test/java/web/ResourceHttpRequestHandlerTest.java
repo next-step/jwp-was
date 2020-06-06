@@ -1,9 +1,12 @@
 package web;
 
+import http.HttpHeaders;
 import http.HttpRequest;
 import http.HttpResponse;
+import http.MediaType;
 import org.junit.jupiter.api.Test;
 import utils.FileIoUtils;
+import utils.HttpStringBuilder;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -14,6 +17,7 @@ public class ResourceHttpRequestHandlerTest {
 
     @Test
     public void handleResourceTest() throws IOException, URISyntaxException {
+
         HttpRequest httpRequest = HttpRequest.from(new BufferedReader(new StringReader(
                 "GET /css/test-style.css HTTP/1.1\r\n" +
                 "Accept: text/css\r")));

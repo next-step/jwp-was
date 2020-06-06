@@ -1,6 +1,7 @@
 package http;
 
 import org.junit.jupiter.api.Test;
+import utils.HttpStringBuilder;
 
 import java.io.IOException;
 

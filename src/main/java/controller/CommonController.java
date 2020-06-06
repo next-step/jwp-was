@@ -19,12 +19,12 @@ public class CommonController {
 
     @RequestMapping("/index.html")
     public ModelAndView index() {
-        return new ModelAndView("index");
+        return ModelAndView.from("index");
     }
 
     @RequestMapping("/user/form.html")
     public ModelAndView userForm() {
-        return new ModelAndView("user/form");
+        return ModelAndView.from("user/form");
     }
 
     @RequestMapping(value = "/user/create", method = HttpMethod.POST)
@@ -39,17 +39,17 @@ public class CommonController {
         DataBase.addUser(user);
 
         logger.info("회원가입 성공 user={}" + user);
-        return new ModelAndView("redirect:/index.html");
+        return ModelAndView.from("redirect:/index.html");
     }
 
     @RequestMapping("/user/login.html")
     public ModelAndView loginView() {
-        return new ModelAndView("user/login");
+        return ModelAndView.from("user/login");
     }
 
     @RequestMapping("/user/login_failed.html")
     public ModelAndView loginFailView() {
-        return new ModelAndView("user/login_failed");
+        return ModelAndView.from("user/login_failed");
     }
 
     @RequestMapping(value = "/user/login", method = HttpMethod.POST)
@@ -62,12 +62,12 @@ public class CommonController {
 
         if(user == null || !password.equals(user.getPassword())) {
             logger.info("로그인 실패 id={}, pw={}", userId, password);
-            return new ModelAndView("redirect:/user/login_failed.html");
+            return ModelAndView.from("redirect:/user/login_failed.html");
         }
 
         httpResponse.addCookie(new Cookie("logined", "true"));
         logger.info("로그인 성공 id={}, pw={}", userId, password);
-        return new ModelAndView("redirect:/index.html");
+        return ModelAndView.from("redirect:/index.html");
     }
 
     @RequestMapping("/user/list.html")
@@ -76,10 +76,10 @@ public class CommonController {
         Cookie loginedCookie = httpRequest.getCookie("logined");
 
         if(loginedCookie == null || !"true".equals(loginedCookie.getValue())) {
-            return new ModelAndView("redirect:/user/login.html");
+            return ModelAndView.from("redirect:/user/login.html");
         }
 
-        ModelAndView modelAndView = new ModelAndView("user/list");
+        ModelAndView modelAndView = ModelAndView.from("user/list");
         modelAndView.addAttribute("users", DataBase.findAll());
         return modelAndView;
     }

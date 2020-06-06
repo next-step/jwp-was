@@ -13,6 +13,9 @@ public class RequestLine {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestLine.class);
 
+    private static final String REQUEST_LINE_DELIMITER = " ";
+    private static final String QUERY_STRING_DELIMITER = "\\?";
+
     private HttpMethod method;
     private String path;
     private Protocol protocol;
@@ -28,8 +31,8 @@ public class RequestLine {
     public static RequestLine from(String requestLine) throws IOException {
         logger.info(requestLine);
 
-        String[] tokens = requestLine.split(" ");
-        String[] pathAndQueryString= tokens[1].split("\\?");
+        String[] tokens = requestLine.trim().split(REQUEST_LINE_DELIMITER);
+        String[] pathAndQueryString= tokens[1].split(QUERY_STRING_DELIMITER);
 
         HttpMethod method = HttpMethod.valueOf(tokens[0]);
         String path = pathAndQueryString[0];

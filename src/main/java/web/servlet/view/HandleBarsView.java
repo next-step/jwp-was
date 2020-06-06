@@ -38,7 +38,7 @@ public class HandleBarsView implements View {
         Template template = handlebars.compile(viewName);
         body = template.apply(model).getBytes();
 
-        httpResponse.setContentType("text/html; charset=utf-8");
+        httpResponse.setContentType("text/html");
         httpResponse.setContentLength(body.length);
 
         httpResponse.writeHeader();

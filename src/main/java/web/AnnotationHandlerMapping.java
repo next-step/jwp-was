@@ -24,7 +24,7 @@ public class AnnotationHandlerMapping {
     private void initHandlers(Set<Method> requestMappingMethods) {
         requestMappingMethods.forEach(method -> {
             HandlerKey handlerKey = HandlerKey.from(method);
-            InvocableHandlerMethod invocableHandlerMethod = InvocableHandlerMethod.from(this.controllers.get(method.getDeclaringClass()), method);
+            InvocableHandlerMethod invocableHandlerMethod = InvocableHandlerMethod.of(this.controllers.get(method.getDeclaringClass()), method);
 
             handlers.put(handlerKey, invocableHandlerMethod);
         });
