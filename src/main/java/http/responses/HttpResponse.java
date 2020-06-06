@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * HTTP버전 상태코드 설명구문
  * 응답헤더(요청 헤더처럼)
  */
-public class ResponseContext {
+public class HttpResponse {
 
     private static final String DEFAULT_HTTP_VERSION = "1.1";
 
@@ -21,7 +21,7 @@ public class ResponseContext {
     private final byte[] body;
 
     // TODO: nullable 어떻게 표현할지 고민..
-    private ResponseContext(String httpVersion, HttpStatus status, Map<String, String> responseHeaders, byte[] body) {
+    private HttpResponse(String httpVersion, HttpStatus status, Map<String, String> responseHeaders, byte[] body) {
         this.httpVersion = httpVersion;
         this.status = status;
         this.responseHeaders = responseHeaders;
@@ -87,9 +87,9 @@ public class ResponseContext {
             return this;
         }
 
-        public ResponseContext build() {
+        public HttpResponse build() {
             final String version = this.version != null ? this.version : DEFAULT_HTTP_VERSION;
-            return new ResponseContext(version, status, responseHeaders, body);
+            return new HttpResponse(version, status, responseHeaders, body);
         }
 
     }

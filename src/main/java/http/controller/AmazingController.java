@@ -4,7 +4,7 @@ import db.DataBase;
 import http.requests.parameters.Cookie;
 import http.requests.HttpRequest;
 import http.responses.HttpStatus;
-import http.responses.ResponseContext;
+import http.responses.HttpResponse;
 import model.User;
 import model.UserParser;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class AmazingController {
 
     private static final Logger log = LoggerFactory.getLogger(AmazingController.class);
 
-    public static ResponseContext dispatch(HttpRequest httpRequest) {
+    public static HttpResponse dispatch(HttpRequest httpRequest) {
         final String branch = buildBranchString(httpRequest);
 
         log.debug("branch: {}", branch);
@@ -43,7 +43,7 @@ public class AmazingController {
         }
     }
 
-    private static ResponseContext userListHandler(HttpRequest httpRequest) {
+    private static HttpResponse userListHandler(HttpRequest httpRequest) {
         final Cookie cookie = httpRequest.getCookie();
         final boolean logined = Boolean.parseBoolean(cookie.getValue("logined"));
 
@@ -54,7 +54,7 @@ public class AmazingController {
             map.put("users", users);
             final String rendered = TemplateRenderer.render(httpRequest.getPath(), map);
             log.debug("rendered: {}", rendered);
-            return ResponseContext
+            return HttpResponse
                     .builder()
                     .status(HttpStatus.OK)
                     .addHeader("Content-Type", "text/html;charset=utf-8")
@@ -62,21 +62,21 @@ public class AmazingController {
                     .build();
         }
 
-        return ResponseContext
+        return HttpResponse
                 .builder()
                 .status(HttpStatus.FOUND)
                 .addHeader("Location", "/user/login.html")
                 .build();
     }
 
-    private static ResponseContext signInHandler(HttpRequest httpRequest) {
+    private static HttpResponse signInHandler(HttpRequest httpRequest) {
         final String userId = httpRequest.getAttributeFromForm("userId");
         final User user = DataBase.findUserById(userId);
         final String password = httpRequest.getAttributeFromForm("password");
         final boolean isRightPassword = Optional.ofNullable(user.getPassword()).orElse("").equals(password);
         if (isRightPassword) {
             log.debug("Correct password!");
-            return ResponseContext
+            return HttpResponse
                     .builder()
                     .status(HttpStatus.FOUND)
                     .addHeader("Set-Cookie", "logined=true; Path=/")
@@ -84,31 +84,31 @@ public class AmazingController {
                     .build();
         }
         log.debug("Hacker :'(");
-        return ResponseContext
+        return HttpResponse
                 .builder()
                 .status(HttpStatus.FOUND)
                 .addHeader("Location", "/user/login_failed.html")
                 .build();
     }
 
-    private static ResponseContext signUpHandler(HttpRequest httpRequest) {
+    private static HttpResponse signUpHandler(HttpRequest httpRequest) {
         final User user = UserParser.parse(httpRequest);
         DataBase.addUser(user);
         log.debug("user: {}", user);
         log.debug("from db: {}", DataBase.findUserById(user.getUserId()));
-        return ResponseContext
+        return HttpResponse
                 .builder()
                 .status(HttpStatus.FOUND)
                 .addHeader("Location", "/index.html")
                 .build();
     }
 
-    private static ResponseContext defaultHandler(HttpRequest httpRequest) {
+    private static HttpResponse defaultHandler(HttpRequest httpRequest) {
         final String accept = httpRequest.getHeader("Accept");
         final String contentType = (accept != null && accept.contains("text/css")) ? "text/css" : "text/html;charset=utf-8";
         System.out.println(httpRequest.getPath());
         final byte[] rawBody = convertFileToByte(httpRequest.getPath());
-        return ResponseContext
+        return HttpResponse
                 .builder()
                 .status(HttpStatus.OK)
                 .addHeader("Content-Type", contentType)

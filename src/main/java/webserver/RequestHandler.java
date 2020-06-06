@@ -3,7 +3,7 @@ package webserver;
 import http.controller.AmazingController;
 import http.parsers.RequestContextParser;
 import http.requests.HttpRequest;
-import http.responses.ResponseContext;
+import http.responses.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,16 +39,16 @@ public class RequestHandler implements Runnable {
 
             final DataOutputStream dos = new DataOutputStream(out);
 
-            final ResponseContext responseContext = AmazingController.dispatch(httpRequest);
-            logger.debug("response: {}", responseContext);
+            final HttpResponse httpResponse = AmazingController.dispatch(httpRequest);
+            logger.debug("response: {}", httpResponse);
 
-            writeResponseContext(dos, responseContext);
+            writeResponseContext(dos, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void writeResponseContext(DataOutputStream dos, ResponseContext context) {
+    private void writeResponseContext(DataOutputStream dos, HttpResponse context) {
         try {
             dos.writeBytes(context.getStatusLine());
             for (String header : context.getResponseHeaderList()) {

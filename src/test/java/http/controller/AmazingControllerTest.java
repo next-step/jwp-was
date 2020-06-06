@@ -1,7 +1,7 @@
 package http.controller;
 
 import http.requests.HttpRequest;
-import http.responses.ResponseContext;
+import http.responses.HttpResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ class AmazingControllerTest {
 
         final HttpRequest httpRequest = new HttpRequest(rawRequestLine, rawRequestHeaders, "");
 
-        final ResponseContext responseContext = AmazingController.dispatch(httpRequest);
-        assertThat(responseContext).isNotNull();
+        final HttpResponse httpResponse = AmazingController.dispatch(httpRequest);
+        assertThat(httpResponse).isNotNull();
     }
 }
