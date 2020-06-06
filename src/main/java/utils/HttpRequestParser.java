@@ -3,6 +3,7 @@ package utils;
 import http.requests.HttpRequestHeader;
 import http.requests.parameters.Cookie;
 import http.requests.parameters.FormData;
+import http.requests.parameters.QueryString;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -18,6 +19,8 @@ public class HttpRequestParser {
     private static final String FORM_DATA_PAIR_DELIMITER = "&";
     private static final String COOKIE_DATA_PAIR_DELIMITER = ";";
     private static final String KEY_VALUE_DELIMITER = "=";
+    private static final String QUERY_STRING_DELIMITER_REGEX = "\\?";
+    private static final String QUERY_STRING_DATA_PAIR_DELIMITER = FORM_DATA_PAIR_DELIMITER;
 
     public static HttpRequestHeader parseHeaders(List<String> rawRequestHeaders) {
         if (rawRequestHeaders == null || rawRequestHeaders.isEmpty()) {
@@ -59,6 +62,21 @@ public class HttpRequestParser {
                         AbstractMap.SimpleImmutableEntry::getValue)
                 );
         return new Cookie(parsedCookie);
+    }
+
+    public static QueryString parseQueryString(String pathWithQueryString) {
+        if (pathWithQueryString == null || pathWithQueryString.isEmpty() || !pathWithQueryString.contains("?")) {
+            return new QueryString(Collections.emptyMap());
+        }
+        final String[] pathAndQuery = pathWithQueryString.split(QUERY_STRING_DELIMITER_REGEX);
+        final String decodedPathString = URLDecoder.decode(pathAndQuery[1], StandardCharsets.UTF_8);
+        final Map<String, String> parsedQueryString = Arrays.stream(decodedPathString.split(QUERY_STRING_DATA_PAIR_DELIMITER))
+                .map(data -> splitKeyAndValue(data, KEY_VALUE_DELIMITER))
+                .collect(Collectors.toMap(
+                        AbstractMap.SimpleImmutableEntry::getKey,
+                        AbstractMap.SimpleImmutableEntry::getValue)
+                );
+        return new QueryString(parsedQueryString);
     }
 
     private static AbstractMap.SimpleImmutableEntry<String, String> splitKeyAndValue(String data, String delimiter) {

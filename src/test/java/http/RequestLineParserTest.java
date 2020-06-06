@@ -2,13 +2,15 @@ package http;
 
 import http.exceptions.UnsupportedHttpMethodException;
 import http.parsers.RequestLineParser;
-import http.requests.parameters.QueryString;
 import http.requests.RequestLine;
+import http.requests.parameters.QueryString;
 import http.types.HttpMethod;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import utils.HttpRequestParser;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class RequestLineParserTest {
 
@@ -45,7 +47,7 @@ public class RequestLineParserTest {
     void test_two_query_string_objects_are_identical() {
         final RequestLine requestLine = RequestLineParser.parse("GET /users?userId=hyeyoom&password=1234abcd&name=Chiho HTTP/1.1");
         final QueryString queryStringFromRequestLine = requestLine.getQueryString();
-        final QueryString queryString = new QueryString("/users?userId=hyeyoom&password=1234abcd&name=Chiho");
+        final QueryString queryString = HttpRequestParser.parseQueryString("/users?userId=hyeyoom&password=1234abcd&name=Chiho");
         assertThat(queryStringFromRequestLine).isEqualTo(queryString);
     }
 }
