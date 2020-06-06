@@ -2,6 +2,7 @@ package http;
 
 import utils.FieldNameUtils;
 
+import java.net.URLDecoder;
 import java.util.*;
 
 public class QueryString {
@@ -27,7 +28,7 @@ public class QueryString {
              throw new IllegalArgumentException();
          }
 
-         return values[1];
+         return URLDecoder.decode(values[1]);
     }
 
     @Override

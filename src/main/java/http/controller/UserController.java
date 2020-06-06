@@ -2,7 +2,9 @@ package http.controller;
 
 import com.sun.istack.internal.logging.Logger;
 import db.DataBase;
+import http.HttpHeaderInfo;
 import http.HttpRequest;
+import http.HttpResponse;
 import http.QueryString;
 import http.enums.HttpResponseCode;
 import model.User;
@@ -28,11 +30,10 @@ public class UserController extends PathController {
                 requestBodyQuery.getParameter("email"));
 
         DataBase.addUser(user);
-        return this.addRedirectLocation(HttpResponseCode.REDIRECT.makeHeader(), "http://localhost:8080/index.html")
-               .getBytes();
-    }
 
-    private String addRedirectLocation(String header ,String location) {
-        return header + "Location: " + location + System.lineSeparator();
+        HttpHeaderInfo headerInfo = new HttpHeaderInfo();
+        headerInfo.addKeyAndValue("Location", "http://localhost:8080/index.html");
+        HttpResponse httpResponse = new HttpResponse(HttpResponseCode.REDIRECT,new byte[0],headerInfo);
+        return httpResponse.makeResponseBody();
     }
 }

@@ -1,6 +1,8 @@
 package http.controller;
 
+import http.HttpHeaderInfo;
 import http.HttpRequest;
+import http.HttpResponse;
 import http.ResourcePathMaker;
 import http.enums.HttpResponseCode;
 import http.enums.Method;
@@ -41,17 +43,19 @@ public abstract class PathController {
 
     public byte[] get()  {
         log.info("default controller get method execute ========");
+        HttpHeaderInfo headerInfo = new HttpHeaderInfo();
         String resourcePath = ResourcePathMaker.makeTemplatePath(httpRequest.getRequestLine().getPath());
+        headerInfo.addKeyAndValue("Content-Type","text/html;charset=utf-8");
 
         try {
             byte[] body = FileIoUtils.loadFileFromClasspath(resourcePath);
-            byte[] headerByte = this.addHeaderContentLength(HttpResponseCode.OK.makeHeader() ,body.length)
-                    .getBytes();
-            byte[] data = new byte[body.length + headerByte.length];
-            System.arraycopy(headerByte, 0, data ,0, headerByte.length);
-            System.arraycopy(body, 0, data, headerByte.length, body.length);
 
-            return data;
+            if(body.length > 0) {
+                headerInfo.addKeyAndValue("Content-Length", String.valueOf(body.length));
+            }
+
+            HttpResponse httpResponse = new HttpResponse(HttpResponseCode.OK, body, headerInfo);
+            return httpResponse.makeResponseBody();
 
         } catch (IOException | URISyntaxException e) {
             log.error(e.getMessage());

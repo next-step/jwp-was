@@ -1,6 +1,7 @@
 package http;
 
 import http.controller.DefaultController;
+import http.controller.LoginController;
 import http.controller.PathController;
 import http.controller.UserController;
 
@@ -13,8 +14,8 @@ public class ControllerHandler {
         switch (httpRequest.getRequestLine().getPath()) {
             case "/user/create" :
                 return new UserController(httpRequest);
-            case "/index.html" :
-                return new DefaultController(httpRequest);
+            case "/user/login" :
+                return new LoginController(httpRequest);
             default:
                 return new DefaultController(httpRequest);
         }

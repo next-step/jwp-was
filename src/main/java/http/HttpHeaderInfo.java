@@ -1,6 +1,7 @@
 package http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import com.google.common.collect.Maps;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,8 +26,25 @@ public class HttpHeaderInfo {
         this.headerInfoMap.put(values[0].trim(), values[1].trim());
     }
 
+    public void addKeyAndValue(String key, String value) {
+        if(this.headerInfoMap == null) this.headerInfoMap = new HashMap<>();
+
+        headerInfoMap.put(key,value);
+    }
+
     public String getValue(String headerName) {
         return this.headerInfoMap.getOrDefault(headerName, StringUtils.EMPTY);
+    }
+
+    public String makeResponseHeader() {
+        String responseHeader = "";
+
+        for (String key : this.headerInfoMap.keySet()) {
+            responseHeader = responseHeader + key + ": " + headerInfoMap.get(key) + System.lineSeparator();
+        }
+        responseHeader = responseHeader + System.lineSeparator();
+
+        return responseHeader;
     }
 
 }
