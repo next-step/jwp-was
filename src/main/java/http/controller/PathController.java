@@ -43,19 +43,13 @@ public abstract class PathController {
 
     public byte[] get()  {
         log.info("default controller get method execute ========");
-        HttpHeaderInfo headerInfo = new HttpHeaderInfo();
-        String resourcePath = ResourcePathMaker.makeTemplatePath(httpRequest.getRequestLine().getPath());
-        headerInfo.addKeyAndValue("Content-Type","text/html;charset=utf-8");
 
         try {
-            byte[] body = FileIoUtils.loadFileFromClasspath(resourcePath);
 
-            if(body.length > 0) {
-                headerInfo.addKeyAndValue("Content-Length", String.valueOf(body.length));
+            if(this.httpRequest.isStaticResource()) {
+                return this.makeStaticResourceResponse().makeResponseBody();
             }
-
-            HttpResponse httpResponse = new HttpResponse(HttpResponseCode.OK, body, headerInfo);
-            return httpResponse.makeResponseBody();
+            return this.makeTemplateResponse().makeResponseBody();
 
         } catch (IOException | URISyntaxException e) {
             log.error(e.getMessage());
@@ -68,9 +62,35 @@ public abstract class PathController {
         return new byte[0];
     }
 
-    private String addHeaderContentLength(String header, int length) {
-        return header + "Content-Type: text/html;charset=utf-8" + System.lineSeparator() +
-                "Content-Length : "+ length + System.lineSeparator() + System.lineSeparator();
+    private HttpResponse makeTemplateResponse() throws IOException, URISyntaxException {
+        log.info("default make template resource ========");
+        String resourcePath = ResourcePathMaker.makeTemplatePath(httpRequest.getRequestLine().getPath());
+        HttpHeaderInfo headerInfo = new HttpHeaderInfo();
+        headerInfo.addKeyAndValue("Content-Type","text/html;charset=utf-8");
+
+        byte[] body = FileIoUtils.loadFileFromClasspath(resourcePath);
+
+        if(body.length > 0) {
+            headerInfo.addKeyAndValue("Content-Length", String.valueOf(body.length));
+        }
+
+        return new HttpResponse(HttpResponseCode.OK, body, headerInfo);
+    }
+
+    private HttpResponse makeStaticResourceResponse() throws IOException, URISyntaxException {
+        log.info("default make resource resource ========");
+        HttpHeaderInfo headerInfo = new HttpHeaderInfo();
+        String resourcePath = ResourcePathMaker.makeResourcePath(httpRequest.getRequestLine().getPath());
+
+        headerInfo.addKeyAndValue("Content-Type","text/css;charset=utf-8");
+
+        byte[] body = FileIoUtils.loadFileFromClasspath(resourcePath);
+
+        if(body.length > 0) {
+            headerInfo.addKeyAndValue("Content-Length", String.valueOf(body.length));
+        }
+
+        return new HttpResponse(HttpResponseCode.OK, body, headerInfo);
     }
 
 }

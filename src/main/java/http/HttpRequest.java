@@ -21,4 +21,9 @@ public class HttpRequest {
     public String getRequestBody() {
         return this.requestBody;
     }
+
+
+    public boolean isStaticResource() {
+        return this.headerInfo.getValue("Accept").contains("text/css");
+    }
 }
