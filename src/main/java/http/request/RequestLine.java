@@ -1,5 +1,6 @@
 package http.request;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
@@ -19,7 +20,7 @@ public class RequestLine {
         return Path.getUrl(this.requestLine);
     }
 
-    public Map<String, String> getQueries() {
+    public Map<String, String> getQueries() throws UnsupportedEncodingException {
         if (Method.isGet(this.requestLine)) {
             return Path.getQueries(requestLine);
         }

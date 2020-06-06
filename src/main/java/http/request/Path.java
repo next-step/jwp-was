@@ -2,6 +2,7 @@ package http.request;
 
 import utils.RequestLineUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -20,7 +21,7 @@ public enum Path {
                 .apply(requestLine);
     }
 
-    public static Map<String, String> getQueries(String requestLine) {
+    public static Map<String, String> getQueries(String requestLine) throws UnsupportedEncodingException {
         String queryStrings = QUERIES.expression
                 .apply(requestLine);
 

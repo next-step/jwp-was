@@ -5,6 +5,7 @@ import http.request.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,7 +40,7 @@ public class RequestLineTest {
 
     @DisplayName("QueryString 추출 - GET일 때")
     @Test
-    void getQueriesWhenGet() {
+    void getQueriesWhenGet() throws UnsupportedEncodingException {
         //given
         String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
 
@@ -56,7 +57,7 @@ public class RequestLineTest {
 
     @DisplayName("QueryString 추출 - GET이 아닐 때")
     @Test
-    void getQueriesWhenNotGet() {
+    void getQueriesWhenNotGet() throws UnsupportedEncodingException {
         //given
         String request = "POST /users HTTP/1.1";
 
