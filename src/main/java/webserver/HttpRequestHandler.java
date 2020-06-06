@@ -1,8 +1,10 @@
-package handler;
+package webserver;
 
-import http.response.HttpResponse;
+import handler.StaticResourceHandler;
+import handler.UserHandler;
 import http.Method;
 import http.request.HttpRequest;
+import http.response.HttpResponse;
 
 public class HttpRequestHandler {
 
@@ -11,6 +13,7 @@ public class HttpRequestHandler {
             UserHandler userHandler = new UserHandler();
             return userHandler.create(httpRequest);
         }
+
         return new StaticResourceHandler().get(httpRequest);
     }
 }

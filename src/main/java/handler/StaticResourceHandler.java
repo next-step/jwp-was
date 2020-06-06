@@ -1,14 +1,12 @@
 package handler;
 
-import http.response.HttpResponse;
 import http.request.HttpRequest;
-import http.response.StaticResourceHttpResponse;
-import java.io.File;
+import http.response.HttpResponse;
+import http.view.StaticResourceView;
 
 public class StaticResourceHandler {
 
-    HttpResponse get(HttpRequest httpRequest) {
-        String filePath = "./templates" + httpRequest.getPath();
-        return new StaticResourceHttpResponse(new File(filePath));
+    public HttpResponse get(HttpRequest httpRequest) {
+        return new HttpResponse(new StaticResourceView(httpRequest.getPath()));
     }
 }

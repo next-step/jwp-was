@@ -5,6 +5,7 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import utils.StringUtils;
 
@@ -13,6 +14,10 @@ public class Headers {
     private final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded";
 
     private Map<String, String> headers;
+
+    public Headers(){
+        this(new HashMap<>());
+    }
 
     public Headers(Map<String, String> headers) {
         this.headers = new HashMap<>(headers);
@@ -35,6 +40,10 @@ public class Headers {
         return new Headers(headers);
     }
 
+    public void add(String name, String value) {
+        this.headers.put(name, value);
+    }
+
     public int getContentLength() {
         String length = this.headers.getOrDefault(HeaderName.CONTENT_LENGTH.name, "0");
         return Integer.parseInt(length);
@@ -54,7 +63,7 @@ public class Headers {
         return Parameters.empty();
     }
 
-    public List<String> toLines(){
+    public List<String> toLines() {
         return this.headers.keySet().stream()
             .map(name -> name + ": " + headers.get(name))
             .collect(Collectors.toList());
@@ -66,12 +75,33 @@ public class Headers {
         for (String parameter : parameters) {
             String values[] = parameter.split("=");
             try {
-                map.put(URLDecoder.decode(values[0].trim(), "UTF-8"), URLDecoder.decode(values[1].trim(), "UTF-8"));
+                map.put(URLDecoder.decode(values[0].trim(), "UTF-8"),
+                    URLDecoder.decode(values[1].trim(), "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }
         return new Parameters(map);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Headers headers1 = (Headers) o;
+        return
+            Objects.equals(APPLICATION_FORM_URLENCODED, headers1.APPLICATION_FORM_URLENCODED)
+                &&
+                Objects.equals(headers, headers1.headers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(APPLICATION_FORM_URLENCODED, headers);
     }
 
     private enum HeaderName {

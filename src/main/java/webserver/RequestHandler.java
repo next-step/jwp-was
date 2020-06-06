@@ -1,7 +1,6 @@
 package webserver;
 
 import http.request.HttpRequest;
-import handler.HttpRequestHandler;
 import http.response.HttpResponse;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,8 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import java.util.List;
-import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,58 +30,11 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = HttpRequest.from(in);
             HttpResponse httpResponse = httpRequestHandler.handle(httpRequest);
 
-            DataOutputStream dos = new DataOutputStream(out);
-            response(dos, httpResponse);
 
-          /*  byte[] resBody = httpResponse.getBody();
-            response200Header(dos, resBody.length);
-            responseBody(dos, resBody);*/
+            httpResponse.response(out);
+
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
-
-    private void response(DataOutputStream dos, HttpResponse httpResponse) throws IOException {
-
-        dos.writeBytes(createResponseLine(httpResponse.getStatusMessage())+"\r\n");
-
-        List<String> headerLines = httpResponse.getHeaders().toLines();
-        for(String headerLine : headerLines){
-            dos.writeBytes(headerLine);
-            dos.writeBytes("\r\n");
-        }
-
-        byte[] body =httpResponse.getBody();
-        dos.writeBytes("Content-Length: " + httpResponse.getBody().length + "\r\n");
-        dos.writeBytes("\r\n");
-
-        dos.write(body, 0, body.length);
-        dos.flush();
-    }
-
-    private String createResponseLine(String httpStatusCode){
-        return String.format("HTTP/1.1 %s", httpStatusCode);
-    }
-
-
-
-   /* private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }*/
 }

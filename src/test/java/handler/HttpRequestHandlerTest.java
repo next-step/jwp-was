@@ -3,17 +3,17 @@ package handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import http.response.HttpResponse;
 import http.request.HttpRequest;
-import http.response.RedirectHttpResponse;
-import http.response.StaticResourceHttpResponse;
-import java.io.File;
+import http.response.HttpResponse;
+import http.view.RedirectView;
+import http.view.StaticResourceView;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import webserver.HttpRequestHandler;
 
 public class HttpRequestHandlerTest {
 
@@ -27,8 +27,8 @@ public class HttpRequestHandlerTest {
     @DisplayName("static resource 요청 처리")
     @ParameterizedTest
     @CsvSource({
-        "GET /index.html HTTP/1.1, ./templates/index.html",
-        "GET /index2.html HTTP/1.1, ./templates/index2.html"
+        "GET /index.html HTTP/1.1, /index.html",
+        "GET /index2.html HTTP/1.1, /index2.html"
     })
     void handleStaticResourceRequest(String line, String path) {
         HttpRequest httpRequest = HttpRequest.of(
@@ -38,8 +38,7 @@ public class HttpRequestHandlerTest {
         );
         HttpResponse response = httpRequestHandler.handle(httpRequest);
 
-        File file = new File(path);
-        assertThat(response).isEqualTo(new StaticResourceHttpResponse(file));
+        assertThat(response).isEqualTo(new HttpResponse(new StaticResourceView(path)));
     }
 
     @Test
@@ -51,6 +50,6 @@ public class HttpRequestHandlerTest {
         );
         HttpResponse response = httpRequestHandler.handle(httpRequest);
 
-        assertThat(response).isInstanceOf(RedirectHttpResponse.class);
+        assertThat(response).isEqualTo(new HttpResponse(new RedirectView("/index.html")));
     }
 }

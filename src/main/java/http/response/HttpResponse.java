@@ -1,13 +1,69 @@
 package http.response;
 
 import http.Headers;
+import http.view.View;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-public interface HttpResponse {
+public class HttpResponse {
 
-    byte[] getBody() throws IOException;
+    private final Headers headers = new Headers(new HashMap<>());
+    private final Map<String, String> cookies = new HashMap<>();
+    private final View view;
 
-    Headers getHeaders();
+    public HttpResponse(View view){
+        this.view =view;
+    }
 
-    String getStatusMessage();
+    public void addHeader(String name, String value) {
+        headers.add(name, value);
+    }
+
+    public void addCookie(String name, String value) {
+        this.cookies.put(name, value);
+    }
+
+    public void response(OutputStream out) throws IOException {
+        DataOutputStream dos = new DataOutputStream(out);
+        String responseLine = String.format("HTTP/1.1 %s", view.getHttpStatus().toString());
+        dos.writeBytes( responseLine+ "\r\n");
+
+        List<String> headerLines = this.headers.toLines();
+        headerLines.addAll(this.view.getHeaders().toLines());
+        for (String headerLine : headerLines) {
+            dos.writeBytes(headerLine);
+            dos.writeBytes("\r\n");
+        }
+
+        byte[] body = this.view.getBody();
+        dos.writeBytes("Content-Length: " + body.length + "\r\n");
+        dos.writeBytes("\r\n");
+
+        dos.write(body, 0, body.length);
+        dos.flush();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        HttpResponse that = (HttpResponse) o;
+        return Objects.equals(headers, that.headers) &&
+            Objects.equals(cookies, that.cookies) &&
+            Objects.equals(view, that.view);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(headers, cookies, view);
+    }
 }
