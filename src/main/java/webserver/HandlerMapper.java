@@ -10,6 +10,7 @@ import utils.IOUtils;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URISyntaxException;
 
 public class HandlerMapper implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(HandlerMapper.class);
@@ -32,7 +33,7 @@ public class HandlerMapper implements Runnable {
             Response response = handler.work(request);
 
             IOUtils.writeData(response, out);
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }

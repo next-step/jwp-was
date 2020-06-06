@@ -3,11 +3,18 @@ package webserver.customhandler;
 import db.DataBase;
 import http.request.Request;
 import http.request.requestline.requestLine2.QueryStrings;
+import http.response.ContentType;
+import http.response.HttpStatus;
 import http.response.Response;
+import http.response.ResponseBody;
 import model.User;
+import utils.FileIoUtils;
 import webserver.Handler;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 public class UserCreateHandler implements Handler {
@@ -23,16 +30,20 @@ public class UserCreateHandler implements Handler {
     }
 
     @Override
-    public Response work(Request request) throws UnsupportedEncodingException {
+    public Response work(Request request) throws IOException, URISyntaxException {
         Map<String, String> body = QueryStrings.parseQueryStrings(request.getBody().getBody());
         User user = new User(body.get("userId"), body.get("password"), body.get("name"), body.get("email"));
         DataBase.addUser(user);
 
-        return new Response("200 OK", "", "");
+        return new Response(HttpStatus.OK, ContentType.HTML, new ResponseBody(getBody()));
     }
 
     @Override
     public String getUrl() {
         return this.url;
+    }
+
+    private byte[] getBody() throws IOException, URISyntaxException {
+        return FileIoUtils.loadFileFromClasspath("./templates/index.html");
     }
 }

@@ -1,17 +1,25 @@
 package http.response;
 
 public class Response {
-    private String status;
-    private String contentType;
-    private String body;
+    private HttpStatus status;
+    private ContentType contentType;
+    private ResponseBody body;
 
-    public Response(String status, String contentType, String body) {
+    public Response(HttpStatus status, ContentType contentType, ResponseBody body) {
         this.status = status;
         this.contentType = contentType;
         this.body = body;
     }
 
-    public Byte[] getBody() {
-        return new Byte[0];
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public ContentType getContentType() {
+        return contentType;
+    }
+
+    public byte[] getBody() {
+        return body.getBody();
     }
 }
