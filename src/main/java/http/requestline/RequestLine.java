@@ -2,24 +2,23 @@ package http.requestline;
 
 import http.requestline.protocol.Protocol;
 import http.requestline.protocol.ProtocolSpec;
-import http.requestline.protocol.ProtocolSpecPool;
 import lombok.Builder;
 import lombok.Getter;
 
 public class RequestLine {
 
     @Getter
-    private final String method;
+    private final HttpMethod method;
 
     @Getter
     private final String path;
     private final ProtocolSpec protocolSpec;
 
     @Builder
-    public RequestLine(String method, String path, String protocolSpec) {
+    RequestLine(HttpMethod method, String path, ProtocolSpec protocolSpec) {
         this.method = method;
         this.path = path;
-        this.protocolSpec = ProtocolSpecPool.find(protocolSpec);
+        this.protocolSpec = protocolSpec;
     }
 
     public Protocol getProtocol() {

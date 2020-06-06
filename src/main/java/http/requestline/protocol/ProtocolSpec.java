@@ -2,6 +2,7 @@ package http.requestline.protocol;
 
 import http.requestline.exception.IllegalRequestLineParsingException;
 import lombok.Getter;
+import org.springframework.util.StringUtils;
 
 @Getter
 public class ProtocolSpec {
@@ -13,10 +14,11 @@ public class ProtocolSpec {
     private final ProtocolVersion version;
 
     ProtocolSpec(String protocolSpecText) {
-        String[] tokens = protocolSpecText.split(PROTOCOL_SPEC_DELIMITER);
-        if (tokens.length != TOKEN_SIZE) {
-            throw new IllegalRequestLineParsingException();
+        if (StringUtils.isEmpty(protocolSpecText)) {
+            throw new IllegalRequestLineParsingException("Parameter for creating ProtocolSpec is Empty.");
         }
+
+        String[] tokens = splitProtocolSpecText(protocolSpecText);
 
         this.protocol = Protocol.valueOf(tokens[0]);
         this.version = new ProtocolVersion(tokens[1]);
@@ -24,5 +26,13 @@ public class ProtocolSpec {
 
     public String getVersion() {
         return version.getVersion();
+    }
+
+    private String[] splitProtocolSpecText(String protocolSpecText) {
+        String[] tokens = protocolSpecText.split(PROTOCOL_SPEC_DELIMITER);
+        if (tokens.length != TOKEN_SIZE) {
+            throw new IllegalRequestLineParsingException();
+        }
+        return tokens;
     }
 }

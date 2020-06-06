@@ -1,8 +1,11 @@
 package http.requestline;
 
 import http.requestline.exception.IllegalRequestLineParsingException;
+import http.requestline.protocol.ProtocolSpec;
+import http.requestline.protocol.ProtocolSpecPool;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RequestLineParser {
@@ -11,19 +14,29 @@ public class RequestLineParser {
     private static final int TOKEN_SIZE = 3;
 
     public static RequestLine parse(String request) {
-        String[] tokens = request.split(REQUEST_LINE_DELIMITER);
-        if (tokens.length != TOKEN_SIZE) {
-            throw new IllegalRequestLineParsingException();
+        if (StringUtils.isEmpty(request)) {
+            throw new IllegalRequestLineParsingException("Parameter for creating RequestLine is Empty.");
         }
 
-        String method = tokens[0];
+        String[] tokens = splitRequestLine(request);
+
+        HttpMethod method = HttpMethod.valueOf(tokens[0]);
         String path = tokens[1];
-        String protocolSpec = tokens[2];
+        ProtocolSpec protocolSpec = ProtocolSpecPool.find(tokens[2]);
 
         return RequestLine.builder()
                 .method(method)
                 .path(path)
                 .protocolSpec(protocolSpec)
                 .build();
+    }
+
+    private static String[] splitRequestLine(String request) {
+        String[] tokens = request.split(REQUEST_LINE_DELIMITER);
+
+        if (tokens.length != TOKEN_SIZE) {
+            throw new IllegalRequestLineParsingException();
+        }
+        return tokens;
     }
 }
