@@ -32,34 +32,40 @@ public class LoginHandler implements Handler {
     @Override
     public Response work(Request request) throws IOException, URISyntaxException {
         Map<String, String> queryStrings = QueryStrings.parseQueryStrings(request.getBody().getBody());
+        User user = getUser(queryStrings);
+        Map<String, String> headers = new HashMap<>();
+
+        if(isSuccess(queryStrings, user)){
+            ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
+            headers.put("Set-Cookie", "logined=true; Path=/");
+            return new Response(HttpStatus.OK, ContentType.HTML, new Headers(headers), body);
+        }
+
+        headers.put("Set-Cookie", "logined=false");
+        ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html"));
+        return new Response(HttpStatus.REDIRECT, ContentType.HTML, new Headers(headers), body);
+    }
+
+    @Override
+    public String getUrl() {
+        return this.url;
+    }
+
+    private User getUser(Map<String, String> queryStrings){
         String userId = queryStrings.get("userId");
-        String password = queryStrings.get("password");
         User user;
 
-        HttpStatus status;
-        ResponseBody body;
-        Map<String, String> headers = new HashMap<>();
         try {
             user = DataBase.findUserById(userId);
         } catch (Exception e) {
             user = new User();
         }
 
-        if (user.getPassword().equals(password)) {
-            status = HttpStatus.OK;
-            body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
-            headers.put("Set-Cookie", "logined=true; Path=/");
-            return new Response(status, ContentType.HTML, new Headers(headers), body);
-        }
-
-        status = HttpStatus.REDIRECT;
-        headers.put("Set-Cookie", "logined=false");
-        body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html"));
-        return new Response(status, ContentType.HTML, new Headers(headers), body);
+        return user;
     }
 
-    @Override
-    public String getUrl() {
-        return this.url;
+    private boolean isSuccess(Map<String, String> queryStrings, User user){
+        String password = queryStrings.get("password");
+        return user.getPassword().equals(password);
     }
 }
