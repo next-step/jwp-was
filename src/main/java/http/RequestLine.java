@@ -5,11 +5,11 @@ import java.util.Objects;
 public class RequestLine {
     private static final String SPACE_DELIMITER = " ";
 
-    private final String method;
+    private final HttpMethod method;
     private final String path;
     private final Protocol protocol;
 
-    private RequestLine(String method, String path, Protocol protocol) {
+    private RequestLine(HttpMethod method, String path, Protocol protocol) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
@@ -17,11 +17,11 @@ public class RequestLine {
 
     public static RequestLine from(String fullRequestLine) {
         String[] splittedRequestLine = fullRequestLine.split(SPACE_DELIMITER);
-        return new RequestLine(splittedRequestLine[0], splittedRequestLine[1], Protocol.from(splittedRequestLine[2]));
+        return new RequestLine(HttpMethod.valueOf(splittedRequestLine[0]), splittedRequestLine[1], Protocol.from(splittedRequestLine[2]));
     }
 
     public static RequestLine of(String method, String path, String protocol, String version) {
-        return new RequestLine(method, path, Protocol.of(protocol, version));
+        return new RequestLine(HttpMethod.valueOf(method), path, Protocol.of(protocol, version));
     }
 
     @Override
