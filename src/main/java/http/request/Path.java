@@ -13,15 +13,14 @@ public class Path {
 
     public Path(String value) {
         String[] values = value.split(PATH_DELIMITER);
-        if (isNotExistQueryString(values)) {
-            return;
-        }
         this.path = values[PATH_INDEX];
-        this.queryString = new QueryString(values[QUERY_STRING_INDEX]);
+        if (isExistQueryString(values)) {
+            this.queryString = new QueryString(values[QUERY_STRING_INDEX]);
+        }
     }
 
-    private boolean isNotExistQueryString(String[] values) {
-        return values.length < 2;
+    private boolean isExistQueryString(String[] values) {
+        return values.length > 1;
     }
 
     public String getPath() {

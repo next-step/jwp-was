@@ -16,7 +16,7 @@ class PathTest {
 
         assertThat(path.getPath()).isEqualTo("/user/create");
         assertThat(path.getQueryString().getParam()).contains(
-                entry("userId", "1"), entry("password", "2"), entry("name", "sehee"), entry("email", "asdfasdfasdf.com"));
+                entry("userId", "1"), entry("password", "2"), entry("name", "sehee"), entry("email", "asdf@asdf.com"));
 
     }
 }
