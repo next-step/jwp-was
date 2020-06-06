@@ -5,6 +5,7 @@ import http.QueryString;
 import http.RequestLine;
 import http.RequestLineParser;
 import http.RequestUrl;
+import http.request.Request;
 import http.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,33 +46,20 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             BufferedReader br = new BufferedReader(new InputStreamReader(in, UTF_8));
-            Map<String, String> header = new HashMap<>();
 
-            String line = br.readLine();
-            RequestLine requestLine = RequestLineParser.parse(line);
-            logger.info(line);
-            while (isNotEmpty(line)) {
-                line = br.readLine();
-                logger.info(line);
-                putHeader(header, line);
-            }
+            Request request = readRequest(br);
 
-            if (requestLine.isPost()) {
-                String body = IOUtils.readData(br, Integer.parseInt(header.getOrDefault(CONTENT_LENGTH, "0")));
-                requestLine.addQueryString(body);
-                logger.info(body);
-            }
-
-            RequestUrl requestUrl = RequestUrl.findByPath(requestLine.getPath());
+            RequestUrl requestUrl = request.findRequestUrl();
             String methodName = requestUrl.getMethodName();
             boolean isLoginSuccess;
             byte[] bytes;
-            if (requestLine.isExistQuery() && StringUtils.hasText(methodName)) {
+            if (request.isExistBody()) {
                 Object instance = RequestController.class.newInstance();
                 Method method = RequestController.class.getMethod(methodName, QueryString.class);
-                Object invoke = method.invoke(instance, requestLine.getQueryString());
+                Object invoke = method.invoke(instance, new QueryString(request.getBody()));
                 logger.info("invoke : {}", invoke == null ? "" : invoke.toString());
                 DataOutputStream dos = new DataOutputStream(out);
+
                 if (requestUrl.isUserLogin() && invoke != null) {
                     isLoginSuccess = (boolean) invoke;
                     bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + (isLoginSuccess ? "/index.html" : "/user/login_failed.html"));
@@ -83,9 +71,8 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
-            logger.info("path : {}", requestLine.getPath());
-
-            bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + requestLine.getPath());
+            logger.info("path : {}", request.getPath());
+            bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + request.getPath());
 
             DataOutputStream dos = new DataOutputStream(out);
             response(dos, Response.ofOk(bytes));
@@ -94,6 +81,23 @@ public class RequestHandler implements Runnable {
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
             e.printStackTrace();
         }
+    }
+
+    private Request readRequest(BufferedReader br) throws IOException {
+        Map<String, String> header = new HashMap<>();
+
+        String line = br.readLine();
+        RequestLine requestLine = RequestLineParser.parse(line);
+        logger.info(line);
+        while (isNotEmpty(line)) {
+            line = br.readLine();
+            putHeader(header, line);
+            logger.info(line);
+        }
+
+        String body = IOUtils.readData(br, Integer.parseInt(header.getOrDefault(CONTENT_LENGTH, "0")));
+        logger.info(body);
+        return new Request(requestLine, header, body);
     }
 
     private void putHeader(Map<String, String> header, String line) {
