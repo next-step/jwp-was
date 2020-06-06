@@ -20,7 +20,8 @@ public class HttpRequest {
         this.requestHeaders = HttpRequestParser.parseHeaders(rawRequestHeaders);
         this.body = body;
         this.formData = HttpRequestParser.parseFormData(body);
-        this.cookie = new Cookie(requestHeaders.getHeader("Cookie"));
+        final String cookieData = requestHeaders.getHeader("Cookie");
+        this.cookie = HttpRequestParser.parseCookie(cookieData);
     }
 
     @Override
