@@ -1,8 +1,10 @@
 package http.response;
 
+import http.Headers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Objects;
 import utils.FileIoUtils;
 
@@ -21,6 +23,17 @@ public class StaticResourceHttpResponse implements HttpResponse {
         } catch (URISyntaxException e) {
             throw new IOException("file path invalid fail");
         }
+    }
+
+    @Override
+    public Headers getHeaders() {
+        String contentType = "Content-Type: text/html;charset=utf-8";
+        return Headers.from(Arrays.asList(contentType));
+    }
+
+    @Override
+    public String getStatusMessage() {
+        return "200 OK";
     }
 
     @Override

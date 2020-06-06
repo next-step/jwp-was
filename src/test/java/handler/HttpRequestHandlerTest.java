@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import http.response.HttpResponse;
 import http.request.HttpRequest;
-import http.response.EmptyHttpResponse;
+import http.response.RedirectHttpResponse;
 import http.response.StaticResourceHttpResponse;
 import java.io.File;
 import java.util.Arrays;
@@ -51,6 +51,6 @@ public class HttpRequestHandlerTest {
         );
         HttpResponse response = httpRequestHandler.handle(httpRequest);
 
-        assertThat(response).isInstanceOf(EmptyHttpResponse.class);
+        assertThat(response).isInstanceOf(RedirectHttpResponse.class);
     }
 }

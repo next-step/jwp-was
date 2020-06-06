@@ -5,6 +5,7 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import utils.StringUtils;
 
 public class Headers {
@@ -53,6 +54,12 @@ public class Headers {
         return Parameters.empty();
     }
 
+    public List<String> toLines(){
+        return this.headers.keySet().stream()
+            .map(name -> name + ": " + headers.get(name))
+            .collect(Collectors.toList());
+    }
+
     private Parameters parseForFormUrlEncoded(String body) {
         Map<String, String> map = new HashMap<>();
         String[] parameters = body.split("&");
@@ -77,5 +84,4 @@ public class Headers {
             this.name = name;
         }
     }
-
 }

@@ -3,7 +3,7 @@ package handler;
 import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import http.response.EmptyHttpResponse;
+import http.response.RedirectHttpResponse;
 import model.User;
 
 public class UserHandler {
@@ -19,6 +19,6 @@ public class UserHandler {
 
         DataBase.addUser(user);
 
-        return new EmptyHttpResponse();
+        return new RedirectHttpResponse("/index.html");
     }
 }
