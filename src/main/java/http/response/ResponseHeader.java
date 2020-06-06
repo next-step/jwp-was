@@ -11,8 +11,8 @@ public class ResponseHeader {
         this.header.put(key, value);
     }
 
-    public void putContentType() {
-        this.header.put("Content-Type", "text/html;charset=utf-8");
+    public void putContentType(String contentType) {
+        this.header.put("Content-Type", contentType);
     }
 
     public void putContentLength(int length) {

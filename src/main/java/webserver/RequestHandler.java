@@ -6,6 +6,7 @@ import http.RequestLine;
 import http.RequestLineParser;
 import http.RequestUrl;
 import http.request.Request;
+import http.request.StyleSheet;
 import http.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private static final String TEMPLATE_PATH = "./templates";
+    private static final String STATIC_PATH = "./static";
     private static final String CONTENT_LENGTH = "Content-Length";
     private Socket connection;
 
@@ -46,24 +48,24 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             BufferedReader br = new BufferedReader(new InputStreamReader(in, UTF_8));
+            DataOutputStream dos = new DataOutputStream(out);
             byte[] bytes;
 
             Request request = readRequest(br);
             RequestController controller = new RequestController();
             initController(controller);
 
-            RequestUrl requestUrl = request.findRequestUrl();
-            if (requestUrl.isNone()) {
-                logger.info("path : {}", request.getPath());
-                bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + request.getPath());
-                DataOutputStream dos = new DataOutputStream(out);
-                response(dos, Response.ofOk(bytes));
+            if (request.isStylesheet()) {
+                bytes = FileIoUtils.loadFileFromClasspath(STATIC_PATH + parsing(request.getPath()));
+                Response response = Response.ofStyleSheet(bytes);
+                response(dos, response);
+                return;
             }
+            RequestUrl requestUrl = request.findRequestUrl();
 
             String methodName = requestUrl.getMethodName();
             Method method = RequestController.class.getMethod(methodName, Request.class, ViewHandler.class);
             Object viewHandlerObject = method.invoke(controller, request, new ViewHandler());
-            DataOutputStream dos = new DataOutputStream(out);
             ViewHandler viewHandler = (ViewHandler) viewHandlerObject;
 
 
@@ -89,6 +91,13 @@ public class RequestHandler implements Runnable {
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    private String parsing(String path) {
+        // "/user" 가 prefix로 붙어서 제거하기 위한 parsing
+        String[] files = path.split("\\.");
+        StyleSheet styleSheet = StyleSheet.findByExtension(files[files.length - 1]);
+        return path.substring(path.indexOf(styleSheet.getLocation()));
     }
 
     private void initController(RequestController controller) {

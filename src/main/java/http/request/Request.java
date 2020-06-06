@@ -54,4 +54,8 @@ public class Request {
         String cookie = cookies.getOrDefault("logined", "false");
         return Boolean.parseBoolean(cookie);
     }
+
+    public boolean isStylesheet() {
+        return StyleSheet.isContain(getPath());
+    }
 }

@@ -4,6 +4,5 @@ public enum ReturnType {
 
     FILE,
     REDIRECT,
-    TEMPLATE
-
+    TEMPLATE;
 }

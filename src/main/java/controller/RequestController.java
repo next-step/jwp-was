@@ -49,4 +49,9 @@ public class RequestController {
         viewHandler.returnFile("/index.html");
         return viewHandler;
     }
+
+    public ViewHandler request(Request request, ViewHandler viewHandler) {
+        viewHandler.returnFile(request.getPath());
+        return viewHandler;
+    }
 }

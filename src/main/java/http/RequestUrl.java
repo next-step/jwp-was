@@ -7,7 +7,7 @@ public enum RequestUrl {
     USER_CREATE("/user/create", "createUser"),
     USER_LOGIN("/user/login", "login"),
     USER_LIST("/user/list", "userList"),
-    NONE("", null);
+    NONE("", "request");
 
     private final String url;
     private final String methodName;

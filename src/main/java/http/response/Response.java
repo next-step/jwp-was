@@ -23,7 +23,7 @@ public class Response {
 
     public static Response ofOk(byte[] bytes) {
         ResponseHeader header = new ResponseHeader();
-        header.putContentType();
+        header.putContentType("text/html;charset=utf-8");
         header.putContentLength(bytes.length);
         return new Response(OK, header, bytes);
     }
@@ -32,6 +32,13 @@ public class Response {
         ResponseHeader header = new ResponseHeader();
         header.putLocation(redirectUrl);
         return new Response(FOUND, header, new byte[0]);
+    }
+
+    public static Response ofStyleSheet(byte[] bytes) {
+        ResponseHeader header = new ResponseHeader();
+        header.putContentType("text/css");
+        header.putContentLength(bytes.length);
+        return new Response(OK, header, bytes);
     }
 
     public void putHeader(String key, String value) {
