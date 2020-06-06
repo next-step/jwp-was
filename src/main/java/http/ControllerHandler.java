@@ -1,9 +1,6 @@
 package http;
 
-import http.controller.DefaultController;
-import http.controller.LoginController;
-import http.controller.PathController;
-import http.controller.UserController;
+import http.controller.*;
 
 /**
  * Created By kjs4395 on 2020-06-05
@@ -16,6 +13,8 @@ public class ControllerHandler {
                 return new UserController(httpRequest);
             case "/user/login" :
                 return new LoginController(httpRequest);
+            case "/user/list" :
+                return new ListController(httpRequest);
             default:
                 return new DefaultController(httpRequest);
         }
