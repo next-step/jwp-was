@@ -9,6 +9,8 @@ public enum HttpStatus {
 
     FOUND(302, "Found"),
 
+    NOT_FOUND(404, "Not Found"),
+
     INTERNAL_SERVER_ERROR(500, "일어나선 안돼..")
     ;
 

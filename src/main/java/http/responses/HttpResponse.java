@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @see <a href=https://tools.ietf.org/html/rfc2616#section-6>Response Specification</a>
@@ -24,6 +25,7 @@ public class HttpResponse {
 
     private final DataOutputStream dos;
     private final Map<String, String> responseHeaders = new HashMap<>();
+    private HttpStatus status;
 
     public HttpResponse(OutputStream dos) {
         this.dos = new DataOutputStream(dos);
@@ -31,6 +33,10 @@ public class HttpResponse {
 
     public void addHeader(String key, String value) {
         this.responseHeaders.put(key, value);
+    }
+
+    public void setStatus(HttpStatus status) {
+        this.status = status;
     }
 
     public void sendRedirect(String uri) {
@@ -44,8 +50,9 @@ public class HttpResponse {
         final byte[] rawBody = convertFileToByte(path);
         final ResponseContext.ResponseContextBuilder builder = ResponseContext.builder();
         responseHeaders.forEach(builder::addHeader);
+        final HttpStatus httpStatus = Optional.ofNullable(status).orElse(HttpStatus.OK);
         final ResponseContext context = builder
-                .status(HttpStatus.OK)
+                .status(httpStatus)
                 .addHeader("Content-Length", String.valueOf(rawBody.length))
                 .body(rawBody)
                 .build();
@@ -56,8 +63,9 @@ public class HttpResponse {
         final String rendered = TemplateRenderer.render(path, model);
         final ResponseContext.ResponseContextBuilder builder = ResponseContext.builder();
         responseHeaders.forEach(builder::addHeader);
+        final HttpStatus httpStatus = Optional.ofNullable(status).orElse(HttpStatus.OK);
         final ResponseContext context = builder
-                .status(HttpStatus.OK)
+                .status(httpStatus)
                 .addHeader("Content-Type", "text/html;charset=utf-8")
                 .body(rendered.getBytes())
                 .build();

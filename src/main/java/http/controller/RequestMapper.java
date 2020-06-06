@@ -26,8 +26,7 @@ public class RequestMapper {
             controller = TEMPLATE_CONTROLLER;
         }
 
-        final String accept = request.getHeader("Accept");
-        if (controller == null && accept != null && accept.contains("text/css")) {
+        if (controller == null && isStaticPath(path)) {
             controller = STATIC_CONTROLLER;
         }
 
@@ -35,6 +34,13 @@ public class RequestMapper {
             controller = NOT_FOUND_CONTROLLER;
         }
         return controller;
+    }
+
+    private static boolean isStaticPath(String path) {
+        return path.startsWith("/css") ||
+                path.startsWith("/fonts") ||
+                path.startsWith("/images") ||
+                path.startsWith("/js");
     }
 
     private static class RequestBranch {
