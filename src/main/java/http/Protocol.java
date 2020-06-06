@@ -7,11 +7,17 @@ public class Protocol {
     private final String protocol;
     private final String version;
 
+    public Protocol(String protocol, String version) {
+        this.protocol = protocol;
+        this.version = version;
+    }
+
     public Protocol(String values) {
         String[] protocolAndVersion = values.split("/");
         this.protocol = protocolAndVersion[0];
         this.version = protocolAndVersion[1];
     }
+
 
     public String getProtocol() {
         return this.protocol;
