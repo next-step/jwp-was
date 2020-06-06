@@ -27,7 +27,7 @@ public class TemplateHandler implements Handler {
 
     @Override
     public Response work(Request request) throws URISyntaxException, IOException {
-        return new Response(HttpStatus.OK, ContentType.CSS, new ResponseBody(getBody(request)));
+        return new Response(HttpStatus.OK, ContentType.HTML, new ResponseBody(getBody(request)));
     }
 
     private byte[] getBody(Request request) throws IOException, URISyntaxException {

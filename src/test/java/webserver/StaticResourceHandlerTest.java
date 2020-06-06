@@ -10,7 +10,7 @@ import http.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import utils.FileIoUtils;
-import webserver.customhandler.TemplateHandler;
+import webserver.customhandler.StaticResourceHandler;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -18,24 +18,25 @@ import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TemplateHandlerTest {
-    @DisplayName("Template의 work메소드가 호출되면, url이 가리키는 template페이지 콘텐츠를 byte[]로 읽여온다.")
+public class StaticResourceHandlerTest {
+    @DisplayName("work메소드가 호출되면, url이 가리키는 static 자원 정보를 응답한다.")
     @Test
     void work() throws IOException, URISyntaxException {
+        // given
         //given
-        RequestLine2 requestLine = new RequestLine2("GET /index.html HTTP/1.1");
+        RequestLine2 requestLine = new RequestLine2("GET /css/style.css HTTP/1.1");
         Body body = new Body("");
         Headers2 headers = new Headers2(new HashMap<>());
         Request request = new Request(requestLine, headers, body);
-        TemplateHandler templateHandler = new TemplateHandler();
+        StaticResourceHandler handler = new StaticResourceHandler();
 
         //when
-        Response response = templateHandler.work(request);
+        Response response = handler.work(request);
 
         //then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getContentType()).isEqualTo(ContentType.HTML);
+        assertThat(response.getContentType()).isEqualTo(ContentType.CSS);
         assertThat(response.getBody())
-                .isEqualTo(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
+                .isEqualTo(FileIoUtils.loadFileFromClasspath("./statics/css/style.css"));
     }
 }
