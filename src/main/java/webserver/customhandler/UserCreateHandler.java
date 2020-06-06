@@ -31,9 +31,8 @@ public class UserCreateHandler implements Handler {
 
     @Override
     public Response work(Request request) throws IOException, URISyntaxException {
-        Map<String, String> body = QueryStrings.parseQueryStrings(request.getBody().getBody());
-        User user = new User(body.get("userId"), body.get("password"), body.get("name"), body.get("email"));
-        DataBase.addUser(user);
+        Map<String, String> queryStrings = QueryStrings.parseQueryStrings(request.getBody().getBody());
+        DataBase.addUser(User.of(new QueryStrings(queryStrings)));
 
         return new Response(HttpStatus.OK, ContentType.HTML, new ResponseBody(getBody()));
     }
