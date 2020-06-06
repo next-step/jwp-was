@@ -31,13 +31,13 @@ public class IOUtils {
         return String.copyValueOf(body);
     }
 
-    public static void writeData(Response response, OutputStream out){
+    public static void writeData(Response response, OutputStream out) throws IOException {
         DataOutputStream dos = new DataOutputStream(out);
         responseHeader(dos, response);
         responseBody(dos, response.getBody());
     }
 
-    private static void responseHeader(DataOutputStream dos, Response response){
+    private static void responseHeader(DataOutputStream dos, Response response) throws IOException {
         try {
             dos.writeBytes("HTTP/1.1" +  response.getStatus().toString() + ": " + response.getStatus().getStatusCode() + "\r\n");
             if(response.getHeaders() != null){
@@ -47,6 +47,7 @@ public class IOUtils {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+        dos.writeBytes("\r\n");
     }
 
     private static void writeHeaders(DataOutputStream dos, Headers2 headers) throws IOException {

@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public enum HttpStatus {
     OK(200),
-    REDIRECT(302);
+    FOUND(302);
 
     private int statusCode;
 

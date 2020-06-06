@@ -30,4 +30,8 @@ public class Request {
     public Body getBody() {
         return body;
     }
+
+    public String getParameter(String key){
+        return getHeaders().getParameter(key);
+    }
 }

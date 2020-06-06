@@ -1,7 +1,9 @@
 package db;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Maps;
 
@@ -20,5 +22,10 @@ public class DataBase {
 
     public static Collection<User> findAll() {
         return users.values();
+    }
+
+    public static List<User> getAllUsers(){
+        return findAll().stream()
+                .collect(Collectors.toList());
     }
 }

@@ -40,13 +40,13 @@ public class LoginHandler implements Handler {
             ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
             headers.put("Set-Cookie", "logined=true; Path=/");
             headers.put("Location", "/index.html");
-            return new Response(HttpStatus.REDIRECT, ContentType.HTML, new Headers2(headers), body);
+            return new Response(HttpStatus.FOUND, ContentType.HTML, new Headers2(headers), body);
         }
 
         headers.put("Set-Cookie", "logined=false");
         headers.put("Location", "/user/login_failed.html");
         ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html"));
-        return new Response(HttpStatus.REDIRECT, ContentType.HTML, new Headers2(headers), body);
+        return new Response(HttpStatus.FOUND, ContentType.HTML, new Headers2(headers), body);
     }
 
     @Override

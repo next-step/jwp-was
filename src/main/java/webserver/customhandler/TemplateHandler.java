@@ -35,9 +35,8 @@ public class TemplateHandler implements Handler {
 
     private Headers2 getHeaders(ResponseBody body){
         Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Length: ", String.valueOf(body.getBody().length));
-        headers.put("Content-Type: ", ContentType.HTML.getContentType());
-
+        headers.put("Content-Length", String.valueOf(body.getBody().length));
+        headers.put("Content-Type", ContentType.HTML.getContentType());
         return new Headers2(headers);
     }
 
