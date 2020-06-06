@@ -1,34 +1,34 @@
 package http.request;
 
-import http.request.body.Body;
-import http.request.headers.Headers2;
-import http.request.requestline.requestLine2.RequestLine2;
+import http.request.body.RequestBody;
+import http.request.headers.Headers;
+import http.request.requestline.RequestLine;
 
 public class Request {
-    private RequestLine2 requestLine;
-    private Headers2 headers;
-    private Body body;
+    private RequestLine requestLine;
+    private Headers headers;
+    private RequestBody requestBody;
 
-    public Request(RequestLine2 requestLine, Headers2 headers, Body body) {
+    public Request(RequestLine requestLine, Headers headers, RequestBody requestBody) {
         this.requestLine = requestLine;
         this.headers = headers;
-        this.body = body;
+        this.requestBody = requestBody;
     }
 
     public String getUrl() {
         return requestLine.getUrl();
     }
 
-    public RequestLine2 getRequestLine() {
+    public RequestLine getRequestLine() {
         return requestLine;
     }
 
-    public Headers2 getHeaders() {
+    public Headers getHeaders() {
         return headers;
     }
 
-    public Body getBody() {
-        return body;
+    public RequestBody getRequestBody() {
+        return requestBody;
     }
 
     public String getParameter(String key){

@@ -1,20 +1,21 @@
 package http.response;
 
-import http.request.headers.Headers2;
+import http.request.headers.Headers;
+import http.response.body.ResponseBody;
+import http.response.headers.ContentType;
+import http.response.responseline.HttpStatus;
 
 public class Response {
     private HttpStatus status;
     private ContentType contentType;
     private ResponseBody body;
-    private Headers2 headers;
+    private Headers headers;
 
     public Response(HttpStatus status, ContentType contentType, ResponseBody body) {
-        this.status = status;
-        this.contentType = contentType;
-        this.body = body;
+        new Response(status, contentType, null, body);
     }
 
-    public Response(HttpStatus status, ContentType contentType, Headers2 headers, ResponseBody body) {
+    public Response(HttpStatus status, ContentType contentType, Headers headers, ResponseBody body) {
         this.status = status;
         this.contentType = contentType;
         this.headers = headers;
@@ -37,7 +38,7 @@ public class Response {
         return headers.getParameter(key);
     }
 
-    public Headers2 getHeaders() {
+    public Headers getHeaders() {
         return headers;
     }
 }
