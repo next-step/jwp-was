@@ -2,11 +2,13 @@ package webserver.processor;
 
 import http.HttpRequest;
 import http.HttpResponse;
+import http.StatusCode;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class Processors {
+    private static final HttpResponse NOT_FOUND_404 = HttpResponse.of(StatusCode.NOT_FOUND);
 
     private static final List<Processor> processors = Arrays.asList(
             new ControllerProcessor(),
@@ -19,7 +21,7 @@ public class Processors {
                 .filter(processor -> processor.isMatch(httpRequest))
                 .findFirst()
                 .map(processor -> processor.process(httpRequest))
-                .orElseThrow(IllegalArgumentException::new);
+                .orElse(NOT_FOUND_404);
     }
 
 }

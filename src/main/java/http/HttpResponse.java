@@ -18,6 +18,10 @@ public class HttpResponse {
         this.responseBody = responseBody;
     }
 
+    public static HttpResponse of(final StatusCode statusCode) {
+        return new HttpResponse(statusCode, null, null);
+    }
+
     public static HttpResponse ok(final ContentType contentType, final byte[] responseBody) {
         return new HttpResponse(StatusCode.OK, contentType, responseBody);
     }
