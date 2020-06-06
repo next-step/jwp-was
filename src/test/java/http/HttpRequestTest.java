@@ -2,6 +2,9 @@ package http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import testutils.HttpRequestGenerator;
+
+import java.io.IOException;
 
 import static http.RawRequestTest.HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,9 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class HttpRequestTest {
 
     @Test
-    void parse() {
-        RequestLine requestLine = RequestLineParser.parse("GET /users?name1=value1&name2=value2 HTTP/1.1");
-        HttpRequest httpRequest = HttpRequest.init(requestLine, new RequestHeader(HEADER), new RequestBody(""));
+    void parse() throws IOException {
+        HttpRequest httpRequest = HttpRequestGenerator.init("GET /users?name1=value1&name2=value2 HTTP/1.1");
 
         assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(httpRequest.getPath()).isEqualTo("/users");

@@ -19,6 +19,13 @@ public class QueryString {
         return new QueryString();
     }
 
+    public static QueryString init(final String query) {
+        QueryString queryStr = new QueryString();
+        queryStr.update(query);
+
+        return queryStr;
+    }
+
     public void update(final String queryString) {
         if (StringUtil.isEmpty(queryString)) {
             return;

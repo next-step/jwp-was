@@ -14,7 +14,7 @@ public class QueryStringTest {
     @Test
     @DisplayName("쿼리 스트링 파싱")
     void parse() {
-        QueryString queryString = new QueryString("name1=value1&name2=value2");
+        QueryString queryString = QueryString.init("name1=value1&name2=value2");
 
         assertThat(queryString.get("name1")).isEqualTo("value1");
         assertThat(queryString.get("name2")).isEqualTo("value2");
@@ -25,6 +25,6 @@ public class QueryStringTest {
     @NullAndEmptySource
     @DisplayName("null 이나 빈 문자열이 전달되더라도 빈 Map을 가진 QueryString 객체를 리턴한다.")
     void parseNull(final String queryString) {
-        assertThatCode(() -> new QueryString(queryString)).doesNotThrowAnyException();
+        assertThatCode(() -> QueryString.init(queryString)).doesNotThrowAnyException();
     }
 }

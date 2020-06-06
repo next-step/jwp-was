@@ -1,34 +1,65 @@
 package http;
 
+import utils.IOUtils;
+import utils.StringUtil;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 public class HttpRequest {
-    private final RequestLine requestLine;
-    private final RequestHeader requestHeader;
-    private final RequestBody requestBody;
+    private static final String PARAMETER_DELIMITER = "&";
 
-    private HttpRequest(final RequestLine requestLine,
-                        final RequestHeader requestHeader,
-                        final RequestBody requestBody) {
-        this.requestLine = requestLine;
-        this.requestHeader = requestHeader;
-        this.requestBody = requestBody;
+    private RequestLine requestLine;
+    private RequestHeader requestHeader = RequestHeader.init();
+    private String bodyOrigin;
+
+    private HttpRequest(final InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader =
+                new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+
+        initRequestHeader(bufferedReader);
+        initHeaders(bufferedReader);
+        initBody(bufferedReader);
     }
 
-    public static HttpRequest parse(final String requestRawStr) {
-        RawRequest rawRequest = new RawRequest(requestRawStr);
-
-        return HttpRequest.init(
-                RequestLineParser.parse(rawRequest.getRequestLine()),
-                new RequestHeader(rawRequest.getHeaders()),
-                new RequestBody(rawRequest.getBody())
-        );
+    public static HttpRequest readRawRequest(final InputStream inputStream) throws IOException {
+        return new HttpRequest(inputStream);
     }
 
-    public static HttpRequest init(final RequestLine requestLine,
-                                   final RequestHeader requestHeader,
-                                   final RequestBody requestBody) {
-        return new HttpRequest(requestLine, requestHeader, requestBody);
+    private void initRequestHeader(final BufferedReader bufferedReader) throws IOException {
+        String requestLine = bufferedReader.readLine();
+        String decodedReadStream = URLDecoder.decode(requestLine, "UTF-8");
+
+        this.requestLine = RequestLine.init(decodedReadStream);
+    }
+
+    private void initHeaders(final BufferedReader bufferedReader) throws IOException {
+        String headerLine;
+
+        while (!StringUtil.isEmpty(headerLine = bufferedReader.readLine())) {
+            requestHeader.addHeader(headerLine);
+        }
+    }
+
+    private void initBody(final BufferedReader bufferedReader) throws IOException {
+        if (getHeader("Content-Length") == null) {
+            bodyOrigin = "";
+            return;
+        }
+
+        int contentLength = Integer.parseInt(getHeader("Content-Length"));
+        bodyOrigin = URLDecoder.decode(IOUtils.readData(bufferedReader, contentLength), "UTF-8");
+
+        StringTokenizer tokens = new StringTokenizer(bodyOrigin, PARAMETER_DELIMITER);
+        while (tokens.hasMoreTokens()) {
+            requestHeader.addHeader(tokens.nextToken());
+        }
     }
 
     public HttpMethod getMethod() {
@@ -59,15 +90,11 @@ public class HttpRequest {
         return requestHeader.getHeader(headerName);
     }
 
-    public String getBodyParameter(final String parameter) {
-        return requestBody.getBodyParameter(parameter);
-    }
-
     public String getCookie(final String cookieName) {
         return requestHeader.getCookie(cookieName);
     }
 
     public Map<String, String> getParameters() {
-        return requestBody.getParameters();
+        return requestHeader.getParameters();
     }
 }

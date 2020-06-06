@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import testutils.HttpRequestGenerator;
 import utils.FileIoUtils;
 
 import java.io.IOException;
@@ -22,8 +23,8 @@ class ResourceProcessorTest {
     @ParameterizedTest
     @MethodSource
     @DisplayName("/js, /images, /fonts, /js 로 시작하는 요청이 resource processor와 매치하는지")
-    void isMatch(final String requestLine, final boolean expected) {
-        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(requestLine), new RequestHeader(HEADER), new RequestBody(""));
+    void isMatch(final String requestLine, final boolean expected) throws IOException {
+        HttpRequest httpRequest = HttpRequestGenerator.init(requestLine);
 
         assertThat(resourceProcessor.isMatch(httpRequest)).isEqualTo(expected);
     }
@@ -41,9 +42,9 @@ class ResourceProcessorTest {
     @ParameterizedTest
     @MethodSource
     @DisplayName("읽어온 resource 파일이 예상한 것과 같은지")
-    void process(final String resource) throws IOException, URISyntaxException {
+    void process(final String resource) throws IOException {
         String url = "GET " + resource + " HTTP/1.1";
-        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(url), new RequestHeader(HEADER), new RequestBody(""));
+        HttpRequest httpRequest = HttpRequestGenerator.init(url);
         byte[] body = FileIoUtils.loadFileFromClasspath("./static" + resource);
 
         HttpResponse httpResponse = resourceProcessor.process(httpRequest);

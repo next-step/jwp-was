@@ -1,5 +1,7 @@
 package http;
 
+import java.util.Objects;
+
 public class Path {
     private static final String PATH_AND_QUERY_STRING_DELIMITER = "\\?";
     private static final char DOT = '.';
@@ -8,12 +10,20 @@ public class Path {
     private final QueryString queryString = QueryString.init();
 
     public Path(final String pathStr) {
+        validate(pathStr);
+
         String[] tokens = pathStr.split(PATH_AND_QUERY_STRING_DELIMITER);
 
         this.path = tokens[0];
 
         if (tokens.length > 1) {
             queryString.update(tokens[1]);
+        }
+    }
+
+    private void validate(String pathStr) {
+        if (Objects.isNull(pathStr)) {
+            throw new IllegalArgumentException("Path string is null");
         }
     }
 

@@ -2,19 +2,17 @@ package controller;
 
 import db.DataBase;
 import http.HttpRequest;
-import http.RequestBody;
-import http.RequestHeader;
-import http.RequestLineParser;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import sun.plugin.dom.exception.InvalidAccessException;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collection;
 
-import static http.RawRequestTest.HEADER;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("유저 컨트롤러")
 class UserControllerTest {
@@ -36,20 +34,16 @@ class UserControllerTest {
     @Test
     @DisplayName("/user/create 호출시 유저를 메모리에 저장한다.")
     void create() throws IOException {
-        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(RAW_GET_REQUEST), new RequestHeader(HEADER), new RequestBody(""));
-        Collection<User> users = DataBase.findAll();
+        HttpRequest httpRequest = HttpRequest.readRawRequest(new ByteArrayInputStream(RAW_GET_REQUEST.getBytes()));
 
-        assertThat(users).isEmpty();
-
-        USER_CONTROLLER.process(httpRequest);
-
-        assertThat(DataBase.findAll()).hasSize(1);
+        assertThatExceptionOfType(InvalidAccessException.class)
+                .isThrownBy(() -> USER_CONTROLLER.process(httpRequest));
     }
 
     @Test
     @DisplayName("/user/create POST 호출시 유저를 메모리에 저장한다.")
     void createUsingPost() throws IOException {
-        HttpRequest httpRequest = HttpRequest.init(RequestLineParser.parse(RAW_POST_REQUEST), new RequestHeader(HEADER), new RequestBody(""));
+        HttpRequest httpRequest = HttpRequest.readRawRequest(new ByteArrayInputStream(RAW_POST_REQUEST.getBytes()));
         Collection<User> users = DataBase.findAll();
 
         assertThat(users).isEmpty();

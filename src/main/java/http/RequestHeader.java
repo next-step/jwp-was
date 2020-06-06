@@ -14,6 +14,12 @@ public class RequestHeader {
     private final Map<String, String> headers = new HashMap<>();
     private final Map<String, String> cookies = new HashMap<>();
 
+    private RequestHeader() {}
+
+    public static RequestHeader init() {
+        return new RequestHeader();
+    }
+
     public RequestHeader(final String header) {
         StringTokenizer tokens = new StringTokenizer(header, NEW_LINE);
 
@@ -22,7 +28,7 @@ public class RequestHeader {
         }
     }
 
-    private void addHeader(final String token) {
+    public void addHeader(final String token) {
         String[] tokens = token.split(HEADER_DELIMITER);
         String key = tokens[0];
         String value = tokens[1];
@@ -44,13 +50,14 @@ public class RequestHeader {
     }
 
     private void addCookie(final String token) {
-        String[] tokens = token.split(COOKIE_KEY_VALUE_DELIMITER);
+        String[] tokens = token.trim()
+                .split(COOKIE_KEY_VALUE_DELIMITER);
 
         if (tokens.length < 2) {
             return;
         }
 
-        cookies.put(tokens[0], tokens[1]);
+        cookies.put(tokens[0].trim(), tokens[1].trim());
     }
 
     public String getHeader(final String headerName) {
@@ -59,5 +66,9 @@ public class RequestHeader {
 
     public String getCookie(final String cookieName) {
         return cookies.get(cookieName);
+    }
+
+    public Map<String, String> getParameters() {
+        return headers;
     }
 }

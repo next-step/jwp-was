@@ -20,8 +20,8 @@ public class LoginController extends AbstractController {
 
     @Override
     public HttpResponse post(final HttpRequest request) {
-        String id = request.getBodyParameter("userId");
-        String password = request.getBodyParameter("password");
+        String id = request.getParameter("userId");
+        String password = request.getParameter("password");
 
         User user = DataBase.findUserById(id);
 

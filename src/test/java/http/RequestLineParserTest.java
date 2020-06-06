@@ -11,7 +11,7 @@ public class RequestLineParserTest {
     @Test
     @DisplayName("Get 파싱")
     void parse() {
-        RequestLine requestLine = RequestLineParser.parse("GET /users HTTP/1.1");
+        RequestLine requestLine = RequestLine.init("GET /users HTTP/1.1");
 
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
@@ -22,7 +22,7 @@ public class RequestLineParserTest {
     @Test
     @DisplayName("Post 파싱")
     void parsePost() {
-        RequestLine requestLine = RequestLineParser.parse("POST /users HTTP/1.1");
+        RequestLine requestLine = RequestLine.init("POST /users HTTP/1.1");
 
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(requestLine.getPath()).isEqualTo("/users");
@@ -33,7 +33,7 @@ public class RequestLineParserTest {
     @Test
     @DisplayName("QueryString 파싱")
     void parseQueryString() {
-        RequestLine requestLine = RequestLineParser.parse("GET /users?name1=value1&name2=value2 HTTP/1.1");
+        RequestLine requestLine = RequestLine.init("GET /users?name1=value1&name2=value2 HTTP/1.1");
 
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
