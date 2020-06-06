@@ -1,6 +1,7 @@
 package http.controller;
 
 import http.requests.HttpRequest;
+import http.responses.HttpResponse;
 import http.types.HttpMethod;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +28,10 @@ class RequestMapperTest {
         assertThat(controller).isInstanceOf(MockController.class);
     }
 
-    private class MockController implements Controller {
+    private static class MockController implements Controller {
+        @Override
+        public void service(HttpRequest request, HttpResponse response) {
+            // no-op
+        }
     }
 }

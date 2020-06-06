@@ -1,9 +1,16 @@
 package http.responses;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.TemplateReader;
+import utils.TemplateRenderer;
+
+import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @see <a href=https://tools.ietf.org/html/rfc2616#section-6>Response Specification</a>
@@ -13,84 +20,72 @@ import java.util.stream.Collectors;
  */
 public class HttpResponse {
 
-    private static final String DEFAULT_HTTP_VERSION = "1.1";
+    private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
 
-    private final String httpVersion;
-    private final HttpStatus status;
-    private final Map<String, String> responseHeaders;
-    private final byte[] body;
+    private final DataOutputStream dos;
+    private final Map<String, String> responseHeaders = new HashMap<>();
 
-    // TODO: nullable 어떻게 표현할지 고민..
-    private HttpResponse(String httpVersion, HttpStatus status, Map<String, String> responseHeaders, byte[] body) {
-        this.httpVersion = httpVersion;
-        this.status = status;
-        this.responseHeaders = responseHeaders;
-        this.body = body;
+    public HttpResponse(OutputStream dos) {
+        this.dos = new DataOutputStream(dos);
     }
 
-    // TODO: 이 컨텍스트를 바탕으로 응답 렌더링 하는 부분은 외부로 빼자
-    public String getStatusLine() {
-        return String.format("HTTP/%s %d %s \r\n", httpVersion, status.getStatusCode(), status.getReasonPhrase());
+    public void addHeader(String key, String value) {
+        this.responseHeaders.put(key, value);
     }
 
-    // TODO: 이 컨텍스트를 바탕으로 응답 렌더링 하는 부분은 외부로 빼자
-    public List<String> getResponseHeaderList() {
-        return responseHeaders.entrySet().stream()
-                .map(e -> String.format("%s: %s\r\n", e.getKey(), e.getValue()))
-                .collect(Collectors.toList());
+    public void sendRedirect(String uri) {
+        final ResponseContext.ResponseContextBuilder builder = ResponseContext.builder();
+        responseHeaders.forEach(builder::addHeader);
+        final ResponseContext context = builder.status(HttpStatus.FOUND).addHeader("Location", uri).build();
+        renderResponseContext(dos, context);
     }
 
-    // TODO: 이 컨텍스트를 바탕으로 응답 렌더링 하는 부분은 외부로 빼자
-    public byte[] getResponseBody() {
-        return body;
+    public void render(String path) {
+        final byte[] rawBody = convertFileToByte(path);
+        final ResponseContext.ResponseContextBuilder builder = ResponseContext.builder();
+        responseHeaders.forEach(builder::addHeader);
+        final ResponseContext context = builder
+                .status(HttpStatus.OK)
+                .addHeader("Content-Length", String.valueOf(rawBody.length))
+                .body(rawBody)
+                .build();
+        renderResponseContext(dos, context);
     }
 
-    @Override
-    public String toString() {
-        return "ResponseContext{" +
-                "httpVersion='" + httpVersion + '\'' +
-                ", status=" + status +
-                ", responseHeaders=" + responseHeaders +
-                '}';
+    public void render(String path, Object model) {
+        final String rendered = TemplateRenderer.render(path, model);
+        final ResponseContext.ResponseContextBuilder builder = ResponseContext.builder();
+        responseHeaders.forEach(builder::addHeader);
+        final ResponseContext context = builder
+                .status(HttpStatus.OK)
+                .addHeader("Content-Type", "text/html;charset=utf-8")
+                .body(rendered.getBytes())
+                .build();
+        renderResponseContext(dos, context);
     }
 
-    public static ResponseContextBuilder builder() {
-        return new ResponseContextBuilder();
+    private void renderResponseContext(DataOutputStream dos, ResponseContext context) {
+        try {
+            dos.writeBytes(context.getStatusLine());
+            for (String header : context.getResponseHeaderList()) {
+                dos.writeBytes(header);
+            }
+            dos.writeBytes("\r\n");
+            final byte[] responseBody = context.getResponseBody();
+            if (responseBody != null) {
+                dos.write(responseBody, 0, responseBody.length);
+                dos.flush();
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
-    public static class ResponseContextBuilder {
-        private String version = DEFAULT_HTTP_VERSION;
-        private HttpStatus status;
-        private final Map<String, String> responseHeaders = new HashMap<>();
-        private byte[] body;
-
-        private ResponseContextBuilder() {
+    private static byte[] convertFileToByte(String path) {
+        try {
+            return TemplateReader.read(path);
+        } catch (FileNotFoundException e) {
+            throw new IllegalStateException(e);
         }
-
-        public ResponseContextBuilder version(String version) {
-            this.version = version;
-            return this;
-        }
-
-        public ResponseContextBuilder status(HttpStatus status) {
-            this.status = status;
-            return this;
-        }
-
-        public ResponseContextBuilder addHeader(String key, String value) {
-            this.responseHeaders.put(key, value);
-            return this;
-        }
-
-        public ResponseContextBuilder body(byte[] body) {
-            this.body = body;
-            return this;
-        }
-
-        public HttpResponse build() {
-            final String version = this.version != null ? this.version : DEFAULT_HTTP_VERSION;
-            return new HttpResponse(version, status, responseHeaders, body);
-        }
-
     }
 }
