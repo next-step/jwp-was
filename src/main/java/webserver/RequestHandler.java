@@ -47,17 +47,6 @@ public class RequestHandler implements Runnable {
             String url = RequestLine.of(br).getStringPath();
             Headers headers = new Headers(br);
 
-            RequestUtils requestUtils = new RequestUtils(br);
-            Body body1 = requestUtils.getBody();
-            RequestLine2 requestLine = requestUtils.getRequestLine();
-            Headers2 headers1 = requestUtils.getHeaders();
-            Request request = new Request(requestLine, headers1, body1);
-
-
-            Handler handler = Handlers.findHandler(request);
-            
-
-
             if (url.startsWith("/users")) {
                 String requestBody = IOUtils.readData(br, Integer.parseInt(headers.getValue("Content-Length")));
                 Map<String, String> map = QueryStrings.parseQueryStrings(requestBody);
