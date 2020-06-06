@@ -1,9 +1,5 @@
 package http.request;
 
-import http.request.body.RequestBody;
-import http.request.headers.Headers;
-import http.request.requestline.RequestLine;
-
 public class Request {
     private RequestLine requestLine;
     private Headers headers;
@@ -31,7 +27,7 @@ public class Request {
         return requestBody;
     }
 
-    public String getParameter(String key){
+    public String getParameter(String key) {
         return getHeaders().getParameter(key);
     }
 }

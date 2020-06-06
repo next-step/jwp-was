@@ -2,12 +2,12 @@ package webserver.handler.custom;
 
 import db.DataBase;
 import http.request.Request;
-import http.request.body.RequestBody;
-import http.request.headers.Headers;
-import http.request.requestline.RequestLine;
+import http.request.RequestBody;
+import http.request.Headers;
+import http.request.RequestLine;
 import http.response.Response;
-import http.response.headers.ContentType;
-import http.response.responseline.HttpStatus;
+import http.response.ContentType;
+import http.response.HttpStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import utils.FileIoUtils;

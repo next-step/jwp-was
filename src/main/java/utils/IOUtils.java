@@ -1,6 +1,6 @@
 package utils;
 
-import http.request.headers.Headers;
+import http.request.Headers;
 import http.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

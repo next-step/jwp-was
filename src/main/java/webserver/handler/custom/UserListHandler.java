@@ -6,9 +6,9 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import http.request.Request;
-import http.request.headers.Headers;
+import http.request.Headers;
 import http.response.Response;
-import http.response.body.ResponseBody;
+import http.response.ResponseBody;
 import model.User;
 import webserver.handler.Handler;
 
@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static http.response.headers.ContentType.HTML;
-import static http.response.responseline.HttpStatus.FOUND;
-import static http.response.responseline.HttpStatus.OK;
+import static http.response.ContentType.HTML;
+import static http.response.HttpStatus.FOUND;
+import static http.response.HttpStatus.OK;
 
 public class UserListHandler implements Handler {
     private String url;

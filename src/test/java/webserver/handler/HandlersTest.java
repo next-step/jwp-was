@@ -1,9 +1,9 @@
 package webserver.handler;
 
 import http.request.Request;
-import http.request.body.RequestBody;
-import http.request.headers.Headers;
-import http.request.requestline.RequestLine;
+import http.request.RequestBody;
+import http.request.Headers;
+import http.request.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

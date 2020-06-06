@@ -1,11 +1,11 @@
 package webserver.handler.custom;
 
 import http.request.Request;
-import http.request.headers.Headers;
-import http.response.headers.ContentType;
-import http.response.responseline.HttpStatus;
+import http.request.Headers;
+import http.response.ContentType;
+import http.response.HttpStatus;
 import http.response.Response;
-import http.response.body.ResponseBody;
+import http.response.ResponseBody;
 import utils.FileIoUtils;
 import webserver.handler.Handler;
 

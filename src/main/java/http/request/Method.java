@@ -1,4 +1,4 @@
-package http.request.requestline;
+package http.request;
 
 import java.util.Arrays;
 
@@ -12,14 +12,14 @@ public enum Method {
         this.method = method;
     }
 
-    public static Method match(String requestLine){
+    public static Method match(String requestLine) {
         return Arrays.stream(values())
                 .filter(m -> requestLine.startsWith(m.method))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Not Found Matched HTTP method!"));
     }
 
-    public static boolean isGet(String requestLine){
+    public static boolean isGet(String requestLine) {
         return GET.equals(match(requestLine));
     }
 }

@@ -1,8 +1,8 @@
 package utils;
 
-import http.request.body.RequestBody;
-import http.request.headers.Headers;
-import http.request.requestline.RequestLine;
+import http.request.RequestBody;
+import http.request.Headers;
+import http.request.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +54,7 @@ public class RequestUtilsTest {
         assertThat(headers.getSize()).isEqualTo(5);
         assertThat(headers.getParameter("Host")).isEqualTo("localhost:8080");
         assertThat(headers.getParameter("Connection")).isEqualTo("keep-alive");
-        assertThat(headers.getParameter("Content-Length")).isEqualTo("59");
+        assertThat(headers.getParameter("Content-Length")).isEqualTo("93");
         assertThat(headers.getParameter("Content-Type")).isEqualTo("application/x-www-form-urlencoded");
         assertThat(headers.getParameter("Accept")).isEqualTo("*/*");
     }

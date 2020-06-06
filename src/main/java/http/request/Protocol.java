@@ -1,4 +1,6 @@
-package http.request.requestline;
+package http.request;
+
+import utils.RequestLineUtils;
 
 import java.util.function.Function;
 

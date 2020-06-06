@@ -1,6 +1,6 @@
 package model;
 
-import http.request.requestline.QueryStrings;
+import http.request.QueryStrings;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

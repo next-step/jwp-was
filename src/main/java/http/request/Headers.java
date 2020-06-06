@@ -1,4 +1,4 @@
-package http.request.headers;
+package http.request;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ public class Headers {
         return this.headers.get(key);
     }
 
-    public int getSize(){
+    public int getSize() {
         return this.headers.size();
     }
 
@@ -24,7 +24,7 @@ public class Headers {
         return headers;
     }
 
-    public Set<String> getKeySet(){
+    public Set<String> getKeySet() {
         return headers.keySet();
     }
 }

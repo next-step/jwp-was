@@ -1,9 +1,9 @@
 package utils;
 
 import http.request.Request;
-import http.request.body.RequestBody;
-import http.request.headers.Headers;
-import http.request.requestline.RequestLine;
+import http.request.RequestBody;
+import http.request.Headers;
+import http.request.RequestLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

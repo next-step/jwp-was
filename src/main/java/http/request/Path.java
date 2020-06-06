@@ -1,4 +1,6 @@
-package http.request.requestline;
+package http.request;
+
+import utils.RequestLineUtils;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -13,12 +15,12 @@ public enum Path {
         this.expression = expression;
     }
 
-    public static String getUrl(String requestLine){
+    public static String getUrl(String requestLine) {
         return URL.expression
                 .apply(requestLine);
     }
 
-    public static Map<String, String> getQueries(String requestLine){
+    public static Map<String, String> getQueries(String requestLine) {
         String queryStrings = QUERIES.expression
                 .apply(requestLine);
 

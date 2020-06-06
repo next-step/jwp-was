@@ -1,9 +1,6 @@
 package http.response;
 
-import http.request.headers.Headers;
-import http.response.body.ResponseBody;
-import http.response.headers.ContentType;
-import http.response.responseline.HttpStatus;
+import http.request.Headers;
 
 public class Response {
     private HttpStatus status;

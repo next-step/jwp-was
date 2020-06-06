@@ -1,4 +1,4 @@
-package http.response.headers;
+package http.response;
 
 import java.util.Arrays;
 
