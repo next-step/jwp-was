@@ -22,11 +22,8 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader((new InputStreamReader(in, "UTF-8")));
             String line = br.readLine();
-            int lineNumber = 0;
-            while (line != null && !"".equals(line)) {
-                lineNumber++;
-                System.out.println(lineNumber + " : " + line);
-                line = br.readLine();
+            if (line != null && !"".equals(line)) {
+                System.out.println(line);
             }
 
             DataOutputStream dos = new DataOutputStream(out);
