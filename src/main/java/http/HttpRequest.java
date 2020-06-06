@@ -14,7 +14,7 @@ import java.util.Map;
 public class HttpRequest {
 
     private RequestLine requestLine;
-    private RequestHeader requestHeader = RequestHeader.init();
+    private RequestHeader requestHeader;
     private String bodyOrigin;
 
     private HttpRequest(final InputStream inputStream) throws IOException {
@@ -38,6 +38,7 @@ public class HttpRequest {
     }
 
     private void initHeaders(final BufferedReader bufferedReader) throws IOException {
+        requestHeader = RequestHeader.init();
         String headerLine;
 
         while (!StringUtil.isEmpty(headerLine = bufferedReader.readLine())) {
@@ -89,7 +90,7 @@ public class HttpRequest {
     }
 
     public Map<String, String> getParameters() {
-        return requestHeader.getParameters();
+        return requestLine.getParameters();
     }
 
     @Override

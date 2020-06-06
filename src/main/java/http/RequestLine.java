@@ -1,5 +1,7 @@
 package http;
 
+import java.util.Map;
+
 public class RequestLine {
     private static final int REQUIRED_TOKEN_SIZE_TO_INIT_REQUEST_LINE = 3;
     private static final String DELIMITER = " ";
@@ -57,5 +59,9 @@ public class RequestLine {
     @Override
     public String toString() {
         return origin;
+    }
+
+    public Map<String, String> getParameters() {
+        return path.getParameters();
     }
 }

@@ -51,4 +51,8 @@ public class QueryString {
     public String get(final String parameter) {
         return parameters.get(parameter);
     }
+
+    public Map<String, String> getAll() {
+        return parameters;
+    }
 }

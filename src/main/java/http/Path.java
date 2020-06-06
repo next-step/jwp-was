@@ -1,5 +1,6 @@
 package http;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class Path {
@@ -47,5 +48,9 @@ public class Path {
 
     public void addParameter(String token) {
         queryString.update(token);
+    }
+
+    public Map<String, String> getParameters() {
+        return queryString.getAll();
     }
 }
