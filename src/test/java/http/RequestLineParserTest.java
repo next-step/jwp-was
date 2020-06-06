@@ -3,6 +3,7 @@ package http;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class RequestLineParserTest {
 
@@ -12,7 +13,7 @@ public class RequestLineParserTest {
         RequestLine requestLine = RequestLineParser.parse2("GET /users HTTP/1.1");
 
         //그랬을때 결과를 작성하고
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
@@ -29,7 +30,7 @@ public class RequestLineParserTest {
     void parserPost(){
         RequestLine requestLine = RequestLineParser.parse2("POST /users HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo("POST");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
@@ -39,7 +40,7 @@ public class RequestLineParserTest {
     void parserGetWithQueryString() {
         RequestLine requestLine = RequestLineParser.parse3("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
@@ -48,11 +49,11 @@ public class RequestLineParserTest {
         assertThat(requestLine.getParameter("name")).isEqualTo("JaeSung");
     }
 
-//    @Test
-//    void validEnum() {
-//        assertThatThrownBy(() -> {
-//            RequestLine requestLine = RequestLineParser.parse2("PUT /users HTTP/1.1");
-//        }).hasMessageContaining("No enum constant");
-//    }
+    @Test
+    void validEnum() {
+        assertThatThrownBy(() -> {
+            RequestLine requestLine = RequestLineParser.parse2("PUT /users HTTP/1.1");
+        }).hasMessageContaining("No enum constant");
+    }
 }
 
