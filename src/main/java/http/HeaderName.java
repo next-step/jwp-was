@@ -2,7 +2,7 @@ package http;
 
 import java.util.Arrays;
 
-public enum HeaderType {
+public enum HeaderName {
     HOST("Host"),
     CONNECTION("Connection"),
     PRAGMA("Pragma"),
@@ -24,11 +24,11 @@ public enum HeaderType {
 
     private final String name;
 
-    HeaderType(String name) {
+    HeaderName(String name) {
         this.name = name;
     }
 
-    public static HeaderType findByName(String name) {
+    public static HeaderName findByName(String name) {
         return Arrays.stream(values())
                 .filter(value -> value.name.equals(name))
                 .findFirst()
