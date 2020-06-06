@@ -10,4 +10,8 @@ public class Response {
         this.contentType = contentType;
         this.body = body;
     }
+
+    public Byte[] getBody() {
+        return new Byte[0];
+    }
 }

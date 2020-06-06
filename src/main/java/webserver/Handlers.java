@@ -4,12 +4,10 @@ import http.request.Request;
 import webserver.customhandler.StaticResourceHandler;
 import webserver.customhandler.TemplateHandler;
 import webserver.resources.StaticResources;
-import webserver.resources.TemplateResources;
+import webserver.resources.Template;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public class Handlers {
     private static Set<Handler> handlers = new HashSet<>();
@@ -25,7 +23,7 @@ public class Handlers {
             return new StaticResourceHandler();
         }
 
-        if (TemplateResources.match(url)) {
+        if (Template.match(url)) {
             return new TemplateHandler();
         }
 
