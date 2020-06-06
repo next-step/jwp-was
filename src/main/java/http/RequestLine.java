@@ -4,18 +4,18 @@ import java.util.Objects;
 
 public class RequestLine {
 
-    private final String method;
-    private final String path;
+    private final Method method;
+    private final RequestUrl requestUrl;
     private final Protocol protocol;
 
-    private RequestLine(String method, String path, Protocol protocol) {
+    private RequestLine(Method method, RequestUrl requestUrl, Protocol protocol) {
         this.method = method;
-        this.path = path;
+        this.requestUrl = requestUrl;
         this.protocol = protocol;
     }
 
     public static RequestLine of(String method, String path, Protocol protocol) {
-        return new RequestLine(method, path, protocol);
+        return new RequestLine(Method.valueOf(method), RequestUrl.of(path), protocol);
     }
 
     public static RequestLine of(String method, String path, String protocol, String version) {
@@ -28,8 +28,16 @@ public class RequestLine {
         return RequestLine.of(values[0], values[1], protocol);
     }
 
-    String getPath() {
-        return path;
+    public String getPath() {
+        return requestUrl.getPath();
+    }
+
+    public QueryString getQueryString() {
+        return requestUrl.getQueryString();
+    }
+
+    public Method getMethod() {
+        return this.method;
     }
 
     @Override
@@ -42,12 +50,14 @@ public class RequestLine {
         }
         RequestLine that = (RequestLine) o;
         return Objects.equals(method, that.method) &&
-            Objects.equals(path, that.path) &&
+            Objects.equals(requestUrl, that.requestUrl) &&
             Objects.equals(protocol, that.protocol);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(method, path, protocol);
+        return Objects.hash(method, requestUrl, protocol);
     }
+
+
 }

@@ -1,7 +1,9 @@
-package http;
+package http.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import http.RequestLine;
+import http.request.HttpRequest;
 import org.junit.jupiter.api.Test;
 
 public class HttpRequestTest {

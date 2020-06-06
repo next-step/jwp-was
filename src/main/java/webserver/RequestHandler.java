@@ -1,7 +1,7 @@
 package webserver;
 
-import http.HttpRequest;
-import http.HttpRequestHandler;
+import http.request.HttpRequest;
+import handler.HttpRequestHandler;
 import http.HttpResponse;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +18,7 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private final HttpRequestHandler httpRequestHandler = new HttpRequestHandler();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -33,7 +33,7 @@ public class RequestHandler implements Runnable {
 
             String line = br.readLine();
             HttpRequest httpRequest = HttpRequest.of(line);
-            HttpResponse httpResponse = HttpRequestHandler.handle(httpRequest);
+            HttpResponse httpResponse = httpRequestHandler.handle(httpRequest);
 
             while (!line.trim().isEmpty()){
                 line = br.readLine();

@@ -1,5 +1,7 @@
-package http;
+package http.request;
 
+import http.Method;
+import http.RequestLine;
 import java.util.Objects;
 
 public class HttpRequest {
@@ -14,8 +16,16 @@ public class HttpRequest {
         return new HttpRequest(RequestLine.of(line));
     }
 
-    String getPath() {
+    public String getPath() {
         return requestLine.getPath();
+    }
+
+    public String getQueryParam(String name){
+        return requestLine.getQueryString().get(name);
+    }
+
+    public Method getMethod(){
+        return requestLine.getMethod();
     }
 
     @Override
