@@ -1,10 +1,10 @@
 package http;
 
-import static http.HttpMethodType.*;
+import static http.HttpMethod.*;
 
 public class RequestLine {
 
-    private HttpMethodType method;
+    private HttpMethod method;
     private Path path;
     private Protocol protocol;
 
@@ -15,7 +15,7 @@ public class RequestLine {
         this.protocol = protocol;
     }
 
-    public HttpMethodType getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 

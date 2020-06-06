@@ -2,8 +2,8 @@ package http;
 
 import org.junit.jupiter.api.Test;
 
-import static http.HttpMethodType.GET;
-import static http.HttpMethodType.POST;
+import static http.HttpMethod.GET;
+import static http.HttpMethod.POST;
 import static org.assertj.core.api.Assertions.assertThat;
 
 

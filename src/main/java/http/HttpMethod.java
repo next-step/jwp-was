@@ -1,5 +1,5 @@
 package http;
 
-public enum HttpMethodType {
+public enum HttpMethod {
     GET, POST;
 }

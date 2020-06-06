@@ -5,6 +5,7 @@ import http.QueryString;
 import http.RequestLine;
 import http.RequestLineParser;
 import http.RequestUrl;
+import http.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -22,6 +23,7 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -85,8 +87,11 @@ public class RequestHandler implements Runnable {
             bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + requestLine.getPath());
 
             DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, bytes.length);
-            responseBody(dos, bytes);
+//            response200Header(dos, bytes.length);
+//            responseBody(dos, bytes);
+
+            Response response = Response.ofOk(bytes);
+            response(dos, response);
         } catch (IOException | URISyntaxException | NoSuchMethodException e) {
             logger.error(e.getMessage());
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
@@ -115,6 +120,22 @@ public class RequestHandler implements Runnable {
             logger.error(e.getMessage());
         }
     }
+
+    private void response(DataOutputStream dos, Response response) {
+        try {
+            dos.writeBytes(response.makeStatus());
+            List<String> headers = response.makeHeader();
+            for (String header : headers) {
+                dos.writeBytes(header);
+            }
+            dos.writeBytes("\r\n");
+            dos.write(response.getBody(), 0, response.getBody().length);
+            dos.flush();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
 
     private void response302Header(DataOutputStream dos) {
         try {
