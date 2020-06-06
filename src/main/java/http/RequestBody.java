@@ -35,4 +35,8 @@ public class RequestBody {
     public String getBodyParameter(final String parameter) {
         return PARAMS.get(parameter);
     }
+
+    public Map<String, String> getParameters() {
+        return PARAMS;
+    }
 }

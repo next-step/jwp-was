@@ -1,5 +1,7 @@
 package http;
 
+import java.util.Map;
+
 public class HttpRequest {
     private final RequestLine requestLine;
     private final RequestHeader requestHeader;
@@ -53,5 +55,9 @@ public class HttpRequest {
 
     public String getCookie(final String cookieName) {
         return requestHeader.getCookie(cookieName);
+    }
+
+    public Map<String, String> getParameters() {
+        return requestBody.getParameters();
     }
 }

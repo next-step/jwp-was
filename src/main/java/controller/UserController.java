@@ -23,7 +23,7 @@ public class UserController extends Controller {
     }
 
     private HttpResponse saveUser(final HttpRequest request) {
-        User newUser = User.init(request);
+        User newUser = User.init(request.getParameters());
 
         DataBase.addUser(newUser);
 
