@@ -25,6 +25,10 @@ public class RequestLine {
         return this.path.equals(requestPath);
     }
 
+    public boolean pathEndsWith(String extension) {
+        return path.endsWith(extension);
+    }
+
     public boolean isGetRequest() {
         return this.method.isGetRequest();
     }
@@ -35,10 +39,6 @@ public class RequestLine {
 
     public String getPath() {
         return path;
-    }
-
-    public QueryStrings getQueryStrings() {
-        return queryStrings;
     }
 
     @Override
