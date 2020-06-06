@@ -2,13 +2,18 @@ package http;
 
 import org.apache.logging.log4j.util.Strings;
 
+import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class QueryStringParser {
-    public static QueryString parse(String s) {
-        String[] params = s.split("&");
+    public static QueryString parse(final String values) {
+        if (values == null) {
+            throw new InvalidParameterException();
+        }
+
+        String[] params = values.split("&");
 
         Map<String, String> map = map = Arrays.stream(params)
                 .filter(p -> p.contains("="))

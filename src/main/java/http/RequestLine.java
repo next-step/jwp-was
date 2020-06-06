@@ -6,19 +6,11 @@ public class RequestLine {
     private final Protocol protocol;
     private final QueryString queryString;
 
-
-    public RequestLine(HttpMethod value, String value1, Protocol protocol) {
-        this.method = value;
-        this.path = value1;
+    public RequestLine(final HttpMethod httpMethod, final String path, final QueryString queryString, final Protocol protocol) {
+        this.method = httpMethod;
+        this.path = path;
+        this.queryString = queryString;
         this.protocol = protocol;
-        this.queryString = null;
-    }
-
-    public RequestLine(HttpMethod value, String s, String s1, Protocol protocol) {
-        this.method = value;
-        this.path = s;
-        this.protocol = protocol;
-        this.queryString = QueryStringParser.parse(s1);
     }
 
     public HttpMethod getMethod() {
@@ -35,11 +27,6 @@ public class RequestLine {
 
     public String getVersion() {
         return protocol.getVersion();
-    }
-
-    public String getParameterString() {
-        String[] split = this.path.split("\\?");
-        return split[1];
     }
 
     public String getParameter(String key) {

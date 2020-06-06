@@ -2,7 +2,10 @@ package http;
 
 import org.junit.jupiter.api.Test;
 
+import java.security.InvalidParameterException;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class QueryStringParserTest {
 
@@ -45,5 +48,12 @@ public class QueryStringParserTest {
         assertThat(queryString.getParameter("userId")).isEqualTo(null);
         assertThat(queryString.getParameter("password")).isEqualTo(null);
         assertThat(queryString.getParameter("name")).isEqualTo(null);
+    }
+
+    @Test
+    void valid5() {
+        assertThatThrownBy(() -> {
+            QueryString queryString = QueryStringParser.parse(null);
+        }).isInstanceOf(InvalidParameterException.class);
     }
 }

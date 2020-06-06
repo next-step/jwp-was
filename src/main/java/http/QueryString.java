@@ -6,11 +6,11 @@ public class QueryString {
 
     private final Map<String, String> parameters;
 
-    public QueryString(Map<String, String> parameters) {
+    public QueryString(final Map<String, String> parameters) {
         this.parameters = parameters;
     }
 
-    public String getParameter(String key) {
+    public String getParameter(final String key) {
         return parameters.get(key);
     }
 }

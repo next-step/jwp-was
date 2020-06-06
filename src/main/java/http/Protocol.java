@@ -5,7 +5,8 @@ import java.util.Objects;
 public class Protocol {
     private final String protocol;
     private final String version;
-    public Protocol(String value) {
+
+    public Protocol(final String value) {
         String[] protocolAndVersion = value.split("/");
         if(protocolAndVersion.length != 2){
             throw new IllegalArgumentException();
@@ -14,7 +15,7 @@ public class Protocol {
         version = protocolAndVersion[1];
     }
 
-    public Protocol(String protocol, String version) {
+    public Protocol(final String protocol, final String version) {
         this.protocol = protocol;
         this.version = version;
     }

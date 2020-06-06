@@ -10,7 +10,7 @@ public class RequestLineParserTest {
     @Test
     void parser() {
         //input 과 output 먼저 검증
-        RequestLine requestLine = RequestLineParser.parse2("GET /users HTTP/1.1");
+        RequestLine requestLine = RequestLineParser.parse("GET /users HTTP/1.1");
 
         //그랬을때 결과를 작성하고
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
@@ -28,7 +28,7 @@ public class RequestLineParserTest {
 
     @Test
     void parserPost(){
-        RequestLine requestLine = RequestLineParser.parse2("POST /users HTTP/1.1");
+        RequestLine requestLine = RequestLineParser.parse("POST /users HTTP/1.1");
 
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(requestLine.getPath()).isEqualTo("/users");
@@ -38,7 +38,7 @@ public class RequestLineParserTest {
 
     @Test
     void parserGetWithQueryString() {
-        RequestLine requestLine = RequestLineParser.parse3("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
+        RequestLine requestLine = RequestLineParser.parse("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
 
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
@@ -52,7 +52,7 @@ public class RequestLineParserTest {
     @Test
     void validEnum() {
         assertThatThrownBy(() -> {
-            RequestLine requestLine = RequestLineParser.parse2("PUT /users HTTP/1.1");
+            RequestLine requestLine = RequestLineParser.parse("PUT /users HTTP/1.1");
         }).hasMessageContaining("No enum constant");
     }
 }
