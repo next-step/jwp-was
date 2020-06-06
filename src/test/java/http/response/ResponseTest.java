@@ -2,6 +2,7 @@ package http.response;
 
 import org.junit.jupiter.api.Test;
 
+import static http.response.ResponseStatus.FOUND;
 import static http.response.ResponseStatus.OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -9,7 +10,7 @@ import static org.assertj.core.api.Assertions.entry;
 class ResponseTest {
 
     @Test
-    void createResponse() {
+    void createOkResponse() {
         byte[] bytes = "Test".getBytes();
         Response response = Response.ofOk(bytes);
 
@@ -21,4 +22,18 @@ class ResponseTest {
         );
         assertThat(response.getBody()).isEqualTo(bytes);
     }
+
+    @Test
+    void createFoundResponse() {
+        Response response = Response.ofFound("/index.html");
+
+        assertThat(response.getStatus()).isEqualTo(FOUND);
+        assertThat(response.getHeader()).hasSize(1);
+        assertThat(response.getHeader()).contains(
+                entry("Location", "/index.html")
+                );
+        assertThat(response.getBody()).hasSize(0);
+    }
+
+
 }

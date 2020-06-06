@@ -19,7 +19,15 @@ public class ResponseHeader {
         this.header.put("Content-Length", String.valueOf(length));
     }
 
+    public void putLocation(String redirectUrl) {
+        this.header.put("Location", redirectUrl);
+    }
+
     public Map<String, String> getHeader() {
         return header;
+    }
+
+    public void putCookie(String cookie) {
+        this.header.put("Set-Cookie", cookie);
     }
 }

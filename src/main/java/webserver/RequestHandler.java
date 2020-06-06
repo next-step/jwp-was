@@ -64,7 +64,7 @@ public class RequestHandler implements Runnable {
 
             RequestUrl requestUrl = RequestUrl.findByPath(requestLine.getPath());
             String methodName = requestUrl.getMethodName();
-            boolean isLoginSuccess = false;
+            boolean isLoginSuccess;
             byte[] bytes;
             if (requestLine.isExistQuery() && StringUtils.hasText(methodName)) {
                 Object instance = RequestController.class.newInstance();
@@ -75,10 +75,11 @@ public class RequestHandler implements Runnable {
                 if (requestUrl.isUserLogin() && invoke != null) {
                     isLoginSuccess = (boolean) invoke;
                     bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + (isLoginSuccess ? "/index.html" : "/user/login_failed.html"));
-                    responseLoginHeader(dos, bytes.length, isLoginSuccess);
-                    responseBody(dos, bytes);
+                    Response response = Response.ofOk(bytes);
+                    response.putCookie(String.format("logined=%s", isLoginSuccess));
+                    response(dos, response);
                 }
-                response302Header(dos);
+                response(dos, Response.ofFound("/index.html"));
                 return;
             }
 
@@ -87,11 +88,7 @@ public class RequestHandler implements Runnable {
             bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + requestLine.getPath());
 
             DataOutputStream dos = new DataOutputStream(out);
-//            response200Header(dos, bytes.length);
-//            responseBody(dos, bytes);
-
-            Response response = Response.ofOk(bytes);
-            response(dos, response);
+            response(dos, Response.ofOk(bytes));
         } catch (IOException | URISyntaxException | NoSuchMethodException e) {
             logger.error(e.getMessage());
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
@@ -110,17 +107,6 @@ public class RequestHandler implements Runnable {
         return line != null && !"".equals(line);
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
     private void response(DataOutputStream dos, Response response) {
         try {
             dos.writeBytes(response.makeStatus());
@@ -129,46 +115,11 @@ public class RequestHandler implements Runnable {
                 dos.writeBytes(header);
             }
             dos.writeBytes("\r\n");
-            dos.write(response.getBody(), 0, response.getBody().length);
+            dos.write(response.getBody(), 0, response.getBodyLength());
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-
-    private void response302Header(DataOutputStream dos) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: /index.html \r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseLoginHeader(DataOutputStream dos, int lengthOfBodyContent, boolean isLoginSuccess) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            if (isLoginSuccess) {
-                dos.writeBytes("Set-Cookie: logined=true; Path=/ \r\n");
-            } else {
-                dos.writeBytes("Set-Cookie: logined=false; Path=/ \r\n");
-            }
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
 }
