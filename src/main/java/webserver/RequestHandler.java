@@ -7,23 +7,17 @@ import http.HttpRequest;
 import http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import web.AnnotationHandlerMapping;
-import web.method.InvocableHandlerMethod;
-import web.servlet.ModelAndView;
-import web.servlet.View;
-import web.servlet.ViewResolver;
+import web.HttpRequestHandler;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-    private AnnotationHandlerMapping annotationHandlerMapping;
-    private ViewResolver viewResolver;
+    private HttpRequestHandler httpRequestHandler;
 
-    public RequestHandler(Socket connectionSocket, AnnotationHandlerMapping annotationHandlerMapping, ViewResolver viewResolver) {
+    public RequestHandler(Socket connectionSocket, HttpRequestHandler httpRequestHandler) {
         this.connection = connectionSocket;
-        this.annotationHandlerMapping = annotationHandlerMapping;
-        this.viewResolver = viewResolver;
+        this.httpRequestHandler = httpRequestHandler;
     }
 
     public void run() {
@@ -37,17 +31,7 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = HttpRequest.from(bufferedReader);
             HttpResponse httpResponse = HttpResponse.from(dos);
 
-            InvocableHandlerMethod handlerMethod = annotationHandlerMapping.getHandler(httpRequest);
-
-            if(handlerMethod != null) {
-
-                Object object = handlerMethod.invoke(httpRequest, httpResponse);
-
-                if(object instanceof ModelAndView) {
-                    render((ModelAndView) object, httpRequest, httpResponse);
-                }
-                return;
-            }
+            httpRequestHandler.handleRequest(httpRequest, httpResponse);
 
             if(!httpResponse.isResponseDone()) {
                 response404(dos);
@@ -66,11 +50,5 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    private void render(ModelAndView modelAndView, HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
-        View view = this.viewResolver.resolveViewName(modelAndView.getViewName());
-        view.render(modelAndView.getModel(), httpRequest, httpResponse);
-        httpResponse.responseDone();
     }
 }

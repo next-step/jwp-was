@@ -2,17 +2,15 @@ package webserver;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import controller.CommonController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import web.AnnotationHandlerMapping;
+import web.*;
+import web.DefaultHttpRequestHandler;
+import web.ResourceHttpRequestHandler;
 import web.servlet.HandleBarsViewResolver;
-import web.servlet.ViewResolver;
 import web.servlet.ViewResolverComposite;
 
 public class WebServer {
@@ -30,11 +28,18 @@ public class WebServer {
 
         Map<Class<?>, Object> controllers = new LinkedHashMap<>();
         controllers.put(CommonController.class, new CommonController());
-        AnnotationHandlerMapping annotaitonHandlerMapping = new AnnotationHandlerMapping(controllers);
+        AnnotationHandlerMapping annotationHandlerMapping = new AnnotationHandlerMapping(controllers);
 
-        Set<ViewResolver> viewResolvers = new LinkedHashSet<>();
-        viewResolvers.add(new HandleBarsViewResolver());
-        ViewResolverComposite viewResolverComposite = new ViewResolverComposite(viewResolvers);
+        ViewResolverComposite viewResolverComposite = new ViewResolverComposite(
+                new LinkedHashSet<>(Arrays.asList(
+                        new HandleBarsViewResolver())
+                ));
+
+        HttpRequestHandlerComposite httpRequestHandlerComposite = new HttpRequestHandlerComposite(
+                new LinkedHashSet<>(Arrays.asList(
+                        new DefaultHttpRequestHandler(annotationHandlerMapping, viewResolverComposite),
+                        new ResourceHttpRequestHandler())
+                ));
 
         // 서버소켓을 생성한다. 웹서버는 기본적으로 8080번 포트를 사용한다.
         try (ServerSocket listenSocket = new ServerSocket(port)) {
@@ -43,7 +48,7 @@ public class WebServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection, annotaitonHandlerMapping, viewResolverComposite));
+                Thread thread = new Thread(new RequestHandler(connection, httpRequestHandlerComposite));
                 thread.start();
             }
         }
