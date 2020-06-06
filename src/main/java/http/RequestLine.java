@@ -28,6 +28,10 @@ public class RequestLine {
         return RequestLine.of(values[0], values[1], protocol);
     }
 
+    String getPath() {
+        return path;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

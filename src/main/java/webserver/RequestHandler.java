@@ -1,6 +1,8 @@
 package webserver;
 
-import java.io.BufferedInputStream;
+import http.HttpRequest;
+import http.HttpRequestHandler;
+import http.HttpResponse;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,13 +32,16 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
             String line = br.readLine();
+            HttpRequest httpRequest = HttpRequest.of(line);
+            HttpResponse httpResponse = HttpRequestHandler.handle(httpRequest);
+
             while (!line.trim().isEmpty()){
                 line = br.readLine();
                 logger.debug("request : {}", line);
             }
 
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
+            byte[] body = httpResponse.getBody();
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {

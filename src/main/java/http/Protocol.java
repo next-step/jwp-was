@@ -12,12 +12,12 @@ public class Protocol {
         this.version = version;
     }
 
-    static Protocol of(String value){
+    static Protocol of(String value) {
         String[] values = value.split("/");
         return of(values[0], values[1]);
     }
 
-    static Protocol of(String protocol, String version){
+    static Protocol of(String protocol, String version) {
         return new Protocol(protocol, version);
     }
 
