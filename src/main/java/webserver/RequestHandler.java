@@ -62,12 +62,10 @@ public class RequestHandler implements Runnable {
                 return;
             }
             RequestUrl requestUrl = request.findRequestUrl();
-
             String methodName = requestUrl.getMethodName();
             Method method = RequestController.class.getMethod(methodName, Request.class, ViewHandler.class);
             Object viewHandlerObject = method.invoke(controller, request, new ViewHandler());
             ViewHandler viewHandler = (ViewHandler) viewHandlerObject;
-
 
             if (viewHandler.isFile()) {
                 bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + viewHandler.getView());

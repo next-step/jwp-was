@@ -1,5 +1,6 @@
 package http.response;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static http.response.ResponseStatus.FOUND;
@@ -9,6 +10,7 @@ import static org.assertj.core.api.Assertions.entry;
 
 class ResponseTest {
 
+    @DisplayName("200 응답을 생성한다.")
     @Test
     void createOkResponse() {
         byte[] bytes = "Test".getBytes();
@@ -23,6 +25,7 @@ class ResponseTest {
         assertThat(response.getBody()).isEqualTo(bytes);
     }
 
+    @DisplayName("302 응답을 생성한다.")
     @Test
     void createFoundResponse() {
         Response response = Response.ofFound("/index.html");

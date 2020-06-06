@@ -2,7 +2,6 @@ package http.request;
 
 import http.RequestLine;
 import http.RequestUrl;
-import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
@@ -17,24 +16,8 @@ public class Request {
         this.body = body;
     }
 
-    public void addRequestLine(RequestLine requestLine) {
-        this.requestLine = requestLine;
-    }
-
-    public RequestLine getRequestLine() {
-        return requestLine;
-    }
-
-    public boolean isPost() {
-        return requestLine.isPost();
-    }
-
     public RequestUrl findRequestUrl() {
         return RequestUrl.findByPath(requestLine.getPath());
-    }
-
-    public boolean isExistBody() {
-        return StringUtils.hasText(body);
     }
 
     public String getBody() {
