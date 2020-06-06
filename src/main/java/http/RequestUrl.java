@@ -55,4 +55,8 @@ public class RequestUrl {
     public QueryString getQueryString() {
         return this.queryString;
     }
+
+    public Parameters getParameters(){
+        return new Parameters(this.queryString.getAll());
+    }
 }

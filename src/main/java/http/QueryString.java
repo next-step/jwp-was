@@ -26,8 +26,10 @@ public class QueryString {
             }
 
             try {
-                queryMap.put(URLDecoder.decode(queryValue[0], "UTF-8"), URLDecoder.decode(queryValue[1]));
-            } catch (UnsupportedEncodingException e) {}
+                queryMap.put(URLDecoder.decode(queryValue[0], "UTF-8"),
+                    URLDecoder.decode(queryValue[1]));
+            } catch (UnsupportedEncodingException e) {
+            }
         }
 
         return new QueryString(queryMap);
@@ -35,6 +37,10 @@ public class QueryString {
 
     public String get(String name) {
         return this.queryMap.get(name);
+    }
+
+    public Map<String, String> getAll() {
+        return new HashMap<>(queryMap);
     }
 
     @Override

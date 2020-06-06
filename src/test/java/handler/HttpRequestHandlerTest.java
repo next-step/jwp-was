@@ -3,12 +3,12 @@ package handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import handler.HttpRequestHandler;
-import http.HttpResponse;
+import http.response.HttpResponse;
 import http.request.HttpRequest;
 import http.response.EmptyHttpResponse;
 import http.response.StaticResourceHttpResponse;
 import java.io.File;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,11 @@ public class HttpRequestHandlerTest {
         "GET /index2.html HTTP/1.1, ./templates/index2.html"
     })
     void handleStaticResourceRequest(String line, String path) {
-        HttpRequest httpRequest = HttpRequest.of(line);
+        HttpRequest httpRequest = HttpRequest.of(
+            line,
+            Arrays.asList(),
+            null
+        );
         HttpResponse response = httpRequestHandler.handle(httpRequest);
 
         File file = new File(path);
@@ -40,7 +44,11 @@ public class HttpRequestHandlerTest {
 
     @Test
     void handleUserCreate(){
-        HttpRequest httpRequest = HttpRequest.of("GET /user/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net HTTP/1.1");
+        HttpRequest httpRequest = HttpRequest.of(
+            "POST /user/create HTTP/1.1",
+            Arrays.asList(),
+            null
+        );
         HttpResponse response = httpRequestHandler.handle(httpRequest);
 
         assertThat(response).isInstanceOf(EmptyHttpResponse.class);

@@ -2,18 +2,18 @@ package handler;
 
 import db.DataBase;
 import http.request.HttpRequest;
-import http.HttpResponse;
+import http.response.HttpResponse;
 import http.response.EmptyHttpResponse;
 import model.User;
 
 public class UserHandler {
 
     public HttpResponse create(HttpRequest httpRequest) {
-        String userId = httpRequest.getQueryParam("userId");
-        String password = httpRequest.getQueryParam("password");
+        String userId = httpRequest.getParameter("userId");
+        String password = httpRequest.getParameter("password");
 
-        String name = httpRequest.getQueryParam("name");
-        String email = httpRequest.getQueryParam("email");
+        String name = httpRequest.getParameter("name");
+        String email = httpRequest.getParameter("email");
 
         User user = new User(userId, password, name, email);
 

@@ -1,12 +1,10 @@
 package http.response;
 
-import http.HttpResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Objects;
 import utils.FileIoUtils;
-
 
 public class StaticResourceHttpResponse implements HttpResponse {
 

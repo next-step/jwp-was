@@ -1,6 +1,6 @@
 package handler;
 
-import http.HttpResponse;
+import http.response.HttpResponse;
 import http.request.HttpRequest;
 import http.response.StaticResourceHttpResponse;
 import java.io.File;

@@ -1,6 +1,6 @@
 package handler;
 
-import http.HttpResponse;
+import http.response.HttpResponse;
 import http.Method;
 import http.request.HttpRequest;
 import http.response.EmptyHttpResponse;
@@ -8,7 +8,7 @@ import http.response.EmptyHttpResponse;
 public class HttpRequestHandler {
 
     public HttpResponse handle(HttpRequest httpRequest) {
-        if (httpRequest.getMethod() == Method.GET && httpRequest.getPath().startsWith("/user/create")) {
+        if (httpRequest.getMethod() == Method.POST && httpRequest.getPath().startsWith("/user/create")) {
             UserHandler userHandler = new UserHandler();
             userHandler.create(httpRequest);
             return new EmptyHttpResponse();

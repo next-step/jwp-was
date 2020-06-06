@@ -32,10 +32,6 @@ public class RequestLine {
         return requestUrl.getPath();
     }
 
-    public QueryString getQueryString() {
-        return requestUrl.getQueryString();
-    }
-
     public Method getMethod() {
         return this.method;
     }
@@ -60,4 +56,7 @@ public class RequestLine {
     }
 
 
+    public Parameters getParameters() {
+        return requestUrl.getParameters();
+    }
 }

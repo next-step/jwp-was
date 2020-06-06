@@ -2,12 +2,10 @@ package webserver;
 
 import http.request.HttpRequest;
 import handler.HttpRequestHandler;
-import http.HttpResponse;
-import java.io.BufferedReader;
+import http.response.HttpResponse;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
@@ -29,21 +27,14 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
-            String line = br.readLine();
-            HttpRequest httpRequest = HttpRequest.of(line);
+            HttpRequest httpRequest = HttpRequest.from(in);
             HttpResponse httpResponse = httpRequestHandler.handle(httpRequest);
 
-            while (!line.trim().isEmpty()){
-                line = br.readLine();
-                logger.debug("request : {}", line);
-            }
-
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = httpResponse.getBody();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            byte[] resBody = httpResponse.getBody();
+            response200Header(dos, resBody.length);
+            responseBody(dos, resBody);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
