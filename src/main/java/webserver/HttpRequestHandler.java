@@ -1,19 +1,26 @@
 package webserver;
 
 import handler.StaticResourceHandler;
-import handler.UserHandler;
+import handler.UserCreateHandler;
+import handler.UserLoginHandler;
 import http.Method;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 
 public class HttpRequestHandler {
+    private final UserCreateHandler userCreateHandler = new UserCreateHandler();
+    private final UserLoginHandler userLoginHandler = new UserLoginHandler();
+    private final StaticResourceHandler staticResourceHandler = new StaticResourceHandler();
 
     public HttpResponse handle(HttpRequest httpRequest) {
         if (httpRequest.getMethod() == Method.POST && httpRequest.getPath().startsWith("/user/create")) {
-            UserHandler userHandler = new UserHandler();
-            return userHandler.create(httpRequest);
+            return userCreateHandler.handle(httpRequest);
         }
 
-        return new StaticResourceHandler().get(httpRequest);
+        if(httpRequest.getMethod() == Method.POST && httpRequest.getPath().startsWith("/user/login")){
+            return userLoginHandler.handle(httpRequest);
+        }
+
+        return staticResourceHandler.handle(httpRequest);
     }
 }

@@ -14,14 +14,14 @@ import java.util.Arrays;
 import model.User;
 import org.junit.jupiter.api.Test;
 
-class UserHandlerTest {
+class UserCreateHandlerTest {
 
     @Test
     void create() throws IOException {
         HttpRequest httpRequest = getCreateHttpRequest();
 
-        UserHandler handler = new UserHandler();
-        handler.create(httpRequest);
+        UserCreateHandler handler = new UserCreateHandler();
+        handler.handle(httpRequest);
 
         User user = DataBase.findUserById("javajigi");
         assertThat(user.getUserId()).isEqualTo("javajigi");
@@ -31,8 +31,8 @@ class UserHandlerTest {
     void create_redirect() throws IOException {
         HttpRequest httpRequest = getCreateHttpRequest();
 
-        UserHandler handler = new UserHandler();
-        HttpResponse httpResponse = handler.create(httpRequest);
+        UserCreateHandler handler = new UserCreateHandler();
+        HttpResponse httpResponse = handler.handle(httpRequest);
 
         assertThat(httpResponse).isEqualTo(new HttpResponse(new RedirectView("/index.html")));
     }
@@ -69,8 +69,8 @@ class UserHandlerTest {
             body
         );
 
-        UserHandler handler = new UserHandler();
-        return handler.login(httpRequest);
+        UserLoginHandler handler = new UserLoginHandler();
+        return handler.handle(httpRequest);
     }
 
     private HttpRequest getCreateHttpRequest() throws IOException {
