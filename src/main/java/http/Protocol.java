@@ -1,20 +1,20 @@
 package http;
 
-import utils.Tokens;
-
 public class Protocol {
     public static final String PROTOCOL_SPLITTER = "/";
-    public static final int PROTOCOL_STRING_TOKEN_SIZE = 2;
 
     private final String protocol;
     private final String version;
 
     public Protocol(final String protocolStr) {
-        Tokens tokens = Tokens.init(protocolStr, PROTOCOL_SPLITTER);
-        tokens.validate(PROTOCOL_STRING_TOKEN_SIZE);
+        String[] tokens = protocolStr.split(PROTOCOL_SPLITTER);
 
-        this.protocol = tokens.nextToken();
-        this.version = tokens.nextToken();
+        if (tokens.length != 2) {
+            throw new IllegalArgumentException("Protocol and version string is not illegal");
+        }
+
+        this.protocol = tokens[0];
+        this.version = tokens[1];
     }
 
     public String getProtocol() {
