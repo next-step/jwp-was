@@ -5,15 +5,9 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
-import http.request.Request;
-import http.request.RequestUtils;
-import http.request.body.Body;
-import http.request.headers.Headers2;
 import http.request.requestline.requestLine2.QueryStrings;
 import http.request.headers.Headers;
 import http.request.requestline.old.RequestLine;
-import http.request.requestline.requestLine2.RequestLine2;
-import http.response.Response;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +42,7 @@ public class RequestHandler implements Runnable {
             Headers headers = new Headers(br);
 
             if (url.startsWith("/users")) {
-                String requestBody = IOUtils.readData(br, Integer.parseInt(headers.getValue("Content-Length")));
+                String requestBody = IOUtils.readData(br, Integer.parseInt(headers.getParameter("Content-Length")));
                 Map<String, String> map = QueryStrings.parseQueryStrings(requestBody);
                 User user = new User(map.get("userId"), map.get("password"), map.get("name"), map.get("email"));
                 DataBase.addUser(user);
@@ -60,7 +54,7 @@ public class RequestHandler implements Runnable {
                 response302Header(dos, url);
                 responseBody(dos, body);
             } else if (url.equals("/login")) {
-                String requestBody = IOUtils.readData(br, Integer.parseInt(headers.getValue("Content-Length")));
+                String requestBody = IOUtils.readData(br, Integer.parseInt(headers.getParameter("Content-Length")));
                 Map<String, String> map = QueryStrings.parseQueryStrings(requestBody);
                 User userById = DataBase.findUserById(map.get("userId"));
                 if (userById.getPassword().equals(map.get("password"))) {
@@ -79,7 +73,7 @@ public class RequestHandler implements Runnable {
 
             } else if ("/user/list".equals(url)) {
                 DataOutputStream dos = new DataOutputStream(out);
-                String cookie = headers.getValue("Cookie");
+                String cookie = headers.getParameter("Cookie");
                 if (cookie.contains("logined=true")) {
                     Collection<User> users = DataBase.findAll();
                     url = "/user/list.html";

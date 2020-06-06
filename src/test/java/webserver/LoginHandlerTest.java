@@ -27,7 +27,6 @@ public class LoginHandlerTest {
     void workWhenValidUser() throws IOException, URISyntaxException {
         //given
         String requestLine = "POST /login HTTP/1.1";
-
         Headers2 headers = new Headers2(new HashMap<>());
         String body = "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
         DataBase.addUser(User.of(new QueryStrings(QueryStrings.parseQueryStrings(body))));
@@ -38,11 +37,11 @@ public class LoginHandlerTest {
         Response response = handler.work(request);
 
         //then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
         assertThat(response.getContentType()).isEqualTo(ContentType.HTML);
         assertThat(response.getHeaderByKey("Set-Cookie")).isEqualTo("logined=true; Path=/");
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody())
-                .isEqualTo(FileIoUtils.loadFileFromClasspath("./templates/user/login.html"));
+                .isEqualTo(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
     }
 
     @DisplayName("work() 호출 - DB와 아이디/이메일 불일치")
@@ -50,10 +49,8 @@ public class LoginHandlerTest {
     void workWhenInvalidUser() throws IOException, URISyntaxException {
         //given
         String requestLine = "POST /login HTTP/1.1";
-
         Headers2 headers = new Headers2(new HashMap<>());
         String body = "userId=javajigi&password=password2222&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
-        DataBase.addUser(User.of(new QueryStrings(QueryStrings.parseQueryStrings(body))));
         Request request = new Request(new RequestLine2(requestLine), headers, new Body(body));
         LoginHandler handler = new LoginHandler("/login");
 
@@ -61,9 +58,9 @@ public class LoginHandlerTest {
         Response response = handler.work(request);
 
         //then
-        assertThat(response.getHeaderByKey("Set-Cookie")).isEqualTo("logined=false");
-        assertThat(response.getContentType()).isEqualTo(ContentType.HTML);
         assertThat(response.getStatus()).isEqualTo(HttpStatus.REDIRECT);
+        assertThat(response.getContentType()).isEqualTo(ContentType.HTML);
+        assertThat(response.getHeaderByKey("Set-Cookie")).isEqualTo("logined=false");
         assertThat(response.getBody())
                 .isEqualTo(FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html"));
     }

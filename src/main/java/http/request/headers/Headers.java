@@ -39,7 +39,7 @@ public class Headers {
         return headers;
     }
 
-    public String getValue(String key) {
+    public String getParameter(String key) {
         return headers.get(key);
     }
 }
