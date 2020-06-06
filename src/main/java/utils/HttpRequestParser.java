@@ -1,6 +1,7 @@
 package utils;
 
 import http.requests.HttpRequestHeader;
+import http.requests.parameters.Cookie;
 import http.requests.parameters.FormData;
 
 import java.net.URLDecoder;
@@ -47,4 +48,7 @@ public class HttpRequestParser {
         return new AbstractMap.SimpleImmutableEntry<>(split[0].trim(), split[1].trim());
     }
 
+    public static Cookie parseCookie(String keyvalues) {
+        return null;
+    }
 }

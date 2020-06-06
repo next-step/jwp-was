@@ -1,6 +1,7 @@
 package utils;
 
 import http.requests.HttpRequestHeader;
+import http.requests.parameters.Cookie;
 import http.requests.parameters.FormData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -64,4 +65,15 @@ class HttpRequestParserTest {
         assertThat(form.get("name")).isEqualTo("Chiho Won");
         assertThat(form.get("email")).isEqualTo("neoul_chw@icloud.com");
     }
+
+    @DisplayName("쿠키 파싱이 제대로 되는지 확인해봐요!")
+    @Test
+    void parse_a_yummy_cookie() {
+        final String valueOfCookieRequestHeader = "yummy_cookie=choco; tasty_cookie=strawberry";
+        final Cookie cookie = HttpRequestParser.parseCookie(valueOfCookieRequestHeader);
+        assertThat(cookie.getValue("yummy_cookie")).isEqualTo("choco");
+        assertThat(cookie.getValue("tasty_cookie")).isEqualTo("strawberry");     // 팩트: 딸기 쿠키 노맛
+        assertThat(cookie.getValue("no_more_cookie")).isNull();
+    }
+
 }
