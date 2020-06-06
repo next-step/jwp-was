@@ -1,22 +1,27 @@
 package controller;
 
-import db.DataBase;
 import http.QueryString;
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import view.ViewHandler;
 
 public class RequestController {
     private static final Logger logger = LoggerFactory.getLogger(RequestController.class);
 
-    public void createUser(QueryString queryString) {
-        User user = new User(queryString);
-        DataBase.addUser(user);
-        logger.info("createUser :{}", user.toString());
+    private UserController userController;
+
+    public void setUserController(UserController userController) {
+        this.userController = userController;
     }
 
-    public boolean login(QueryString queryString) {
-        User user = DataBase.findUserById(queryString.getParam().get("userId"));
-        return user != null && user.getPassword().equals(queryString.getParam().get("password"));
+    public ViewHandler createUser(QueryString queryString, ViewHandler viewHandler) {
+        userController.createUser(queryString, viewHandler);
+        return viewHandler;
+    }
+
+    public ViewHandler login(QueryString queryString, ViewHandler viewHandler) {
+        boolean isSuccessLogin = userController.login(queryString, viewHandler);
+        viewHandler.addCookie(String.format("logined=%s", isSuccessLogin));
+        return viewHandler;
     }
 }

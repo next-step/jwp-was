@@ -1,6 +1,7 @@
 package webserver;
 
 import controller.RequestController;
+import controller.UserController;
 import http.QueryString;
 import http.RequestLine;
 import http.RequestLineParser;
@@ -9,9 +10,9 @@ import http.request.Request;
 import http.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 import utils.FileIoUtils;
 import utils.IOUtils;
+import view.ViewHandler;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -46,41 +47,45 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             BufferedReader br = new BufferedReader(new InputStreamReader(in, UTF_8));
+            byte[] bytes;
 
             Request request = readRequest(br);
+            RequestController controller = new RequestController();
+            initController(controller);
 
             RequestUrl requestUrl = request.findRequestUrl();
-            String methodName = requestUrl.getMethodName();
-            boolean isLoginSuccess;
-            byte[] bytes;
-            if (request.isExistBody()) {
-                Object instance = RequestController.class.newInstance();
-                Method method = RequestController.class.getMethod(methodName, QueryString.class);
-                Object invoke = method.invoke(instance, new QueryString(request.getBody()));
-                logger.info("invoke : {}", invoke == null ? "" : invoke.toString());
+            if (requestUrl.isNone()) {
+                logger.info("path : {}", request.getPath());
+                bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + request.getPath());
                 DataOutputStream dos = new DataOutputStream(out);
+                response(dos, Response.ofOk(bytes));
+            }
 
-                if (requestUrl.isUserLogin() && invoke != null) {
-                    isLoginSuccess = (boolean) invoke;
-                    bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + (isLoginSuccess ? "/index.html" : "/user/login_failed.html"));
-                    Response response = Response.ofOk(bytes);
-                    response.putCookie(String.format("logined=%s", isLoginSuccess));
-                    response(dos, response);
-                }
-                response(dos, Response.ofFound("/index.html"));
+            String methodName = requestUrl.getMethodName();
+            Method method = RequestController.class.getMethod(methodName, QueryString.class, ViewHandler.class);
+            Object viewHandlerObject = method.invoke(controller, new QueryString(request.getBody()), new ViewHandler());
+            DataOutputStream dos = new DataOutputStream(out);
+            ViewHandler viewHandler = (ViewHandler) viewHandlerObject;
+
+            if (requestUrl.isUserLogin()) {
+                bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + viewHandler.getReturnUrl());
+                Response response = Response.ofOk(bytes);
+                response.putCookie(viewHandler.getCookie());
+                response(dos, response);
                 return;
             }
 
-            logger.info("path : {}", request.getPath());
-            bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + request.getPath());
+            response(dos, Response.ofFound(viewHandler.getRedirectUrl()));
 
-            DataOutputStream dos = new DataOutputStream(out);
-            response(dos, Response.ofOk(bytes));
         } catch (IOException | URISyntaxException | NoSuchMethodException e) {
             logger.error(e.getMessage());
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    private void initController(RequestController controller) {
+        controller.setUserController(new UserController());
     }
 
     private Request readRequest(BufferedReader br) throws IOException {

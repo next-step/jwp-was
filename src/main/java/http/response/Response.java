@@ -10,6 +10,7 @@ import static http.response.ResponseStatus.OK;
 public class Response {
 
     private static final String STATUS_PREFIX = "HTTP/1.1";
+
     private ResponseStatus status;
     private ResponseHeader header;
     private byte[] body;

@@ -31,9 +31,8 @@ class ResponseTest {
         assertThat(response.getHeader()).hasSize(1);
         assertThat(response.getHeader()).contains(
                 entry("Location", "/index.html")
-                );
+        );
         assertThat(response.getBody()).hasSize(0);
     }
-
 
 }

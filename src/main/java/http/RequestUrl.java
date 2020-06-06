@@ -6,7 +6,7 @@ public enum RequestUrl {
 
     USER_CREATE("/user/create", "createUser"),
     USER_LOGIN("/user/login", "login"),
-    OTHER("", null);
+    NONE("", null);
 
     private final String url;
     private final String methodName;
@@ -20,7 +20,7 @@ public enum RequestUrl {
         return Arrays.stream(RequestUrl.values())
                 .filter(u -> path.equals(u.url))
                 .findAny()
-                .orElse(OTHER);
+                .orElse(NONE);
     }
 
     public String getUrl() {
@@ -33,5 +33,9 @@ public enum RequestUrl {
 
     public boolean isUserLogin() {
         return this == USER_LOGIN;
+    }
+
+    public boolean isNone() {
+        return this == NONE;
     }
 }

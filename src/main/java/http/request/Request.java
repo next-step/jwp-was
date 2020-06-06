@@ -40,4 +40,8 @@ public class Request {
     public String getBody() {
         return body;
     }
+
+    public String getPath() {
+        return requestLine.getPath();
+    }
 }
