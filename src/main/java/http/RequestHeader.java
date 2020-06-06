@@ -13,6 +13,7 @@ public class RequestHeader {
 
     private final Map<String, String> headers = new HashMap<>();
     private final Map<String, String> cookies = new HashMap<>();
+    private StringBuilder origin = new StringBuilder();
 
     private RequestHeader() {}
 
@@ -21,6 +22,7 @@ public class RequestHeader {
     }
 
     public RequestHeader(final String header) {
+        origin.append(header).append('\n');
         StringTokenizer tokens = new StringTokenizer(header, NEW_LINE);
 
         while (tokens.hasMoreTokens()) {
@@ -70,5 +72,10 @@ public class RequestHeader {
 
     public Map<String, String> getParameters() {
         return headers;
+    }
+
+    @Override
+    public String toString() {
+        return origin.toString();
     }
 }

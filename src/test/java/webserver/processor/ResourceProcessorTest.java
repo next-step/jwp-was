@@ -45,9 +45,10 @@ class ResourceProcessorTest {
     void process(final String resource) throws IOException {
         String url = "GET " + resource + " HTTP/1.1";
         HttpRequest httpRequest = HttpRequestGenerator.init(url);
+        HttpResponse httpResponse = HttpResponse.init();
         byte[] body = FileIoUtils.loadFileFromClasspath("./static" + resource);
 
-        HttpResponse httpResponse = resourceProcessor.process(httpRequest);
+        resourceProcessor.process(httpRequest, httpResponse);
         assertThat(httpResponse.getBody()).isEqualTo(body);
     }
 

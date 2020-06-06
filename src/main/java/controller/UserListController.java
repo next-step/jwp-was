@@ -5,11 +5,9 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
-import http.ContentType;
 import http.HttpRequest;
 import http.HttpResponse;
 import model.User;
-import sun.plugin.dom.exception.InvalidAccessException;
 import utils.LoginUtil;
 
 import java.io.IOException;
@@ -32,9 +30,10 @@ public class UserListController extends AbstractController {
     }
 
     @Override
-    protected HttpResponse get(final HttpRequest request) throws IOException {
+    protected void get(final HttpRequest request, final HttpResponse httpResponse) throws IOException {
         if (!LoginUtil.isLoggedIn(request)) {
-            return HttpResponse.redirect("/user/login.html");
+            httpResponse.sendRedirect("/user/login.html");
+            return;
         }
 
         Template template = HANDLEBARS.compile("user/profile");
@@ -45,11 +44,6 @@ public class UserListController extends AbstractController {
         map.put("users", users);
         String profilePage = template.apply(map);
 
-        return HttpResponse.ok(ContentType.HTML, profilePage.getBytes());
-    }
-
-    @Override
-    protected HttpResponse post(final HttpRequest request) {
-        throw new InvalidAccessException("Post not support");
+        httpResponse.updateBody(profilePage.getBytes());
     }
 }

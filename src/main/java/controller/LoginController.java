@@ -14,27 +14,25 @@ public class LoginController extends AbstractController {
     }
 
     @Override
-    public HttpResponse get(final HttpRequest request) {
-        return HttpResponse.redirect("/login.html");
+    public void get(final HttpRequest httpRequest, final HttpResponse httpResponse) {
+        httpResponse.sendRedirect("/login.html");
     }
 
     @Override
-    public HttpResponse post(final HttpRequest request) {
+    public void post(final HttpRequest request, final HttpResponse httpResponse) {
         String id = request.getParameter("userId");
         String password = request.getParameter("password");
 
         User user = DataBase.findUserById(id);
 
         if (user == null || !user.isPasswordValid(password)) {
-            HttpResponse httpResponse = HttpResponse.redirect("/user/login_failed.html");
+            httpResponse.sendRedirect("/user/login_failed.html");
             httpResponse.setCookie(LOGGED_IN, "false");
 
-            return httpResponse;
+            return;
         }
 
-        HttpResponse httpResponse = HttpResponse.redirect("/index.html");
+        httpResponse.sendRedirect("/index.html");
         httpResponse.setCookie(LOGGED_IN, "true");
-
-        return httpResponse;
     }
 }

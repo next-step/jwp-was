@@ -3,26 +3,39 @@ package controller;
 import http.HttpMethod;
 import http.HttpRequest;
 import http.HttpResponse;
+import http.StatusCode;
+import sun.plugin.dom.exception.InvalidAccessException;
 
 import java.io.IOException;
 
-public abstract class AbstractController {
+public abstract class AbstractController implements Controller {
     protected final String path;
 
     protected AbstractController(final String path) {
         this.path = path;
     }
 
-    public HttpResponse process(final HttpRequest request) throws IOException {
-        if (request.getMethod() == HttpMethod.GET) {
-            return get(request);
+    public void process(final HttpRequest httpRequest, final HttpResponse httpResponse) throws IOException {
+        if (httpRequest.getMethod() == HttpMethod.GET) {
+            get(httpRequest, httpResponse);
+            return;
         }
 
-        return post(request);
+        post(httpRequest, httpResponse);
     }
 
-    protected abstract HttpResponse get(final HttpRequest request) throws IOException;
-    protected abstract HttpResponse post(final HttpRequest request);
+    protected void get(final HttpRequest httpRequest, final HttpResponse httpResponse) throws IOException {
+        notFound(httpResponse);
+    }
+
+    protected void post(final HttpRequest httpRequest, final HttpResponse httpResponse) {
+        notFound(httpResponse);
+    }
+
+    private void notFound(final HttpResponse httpResponse) {
+        httpResponse.updateStatus(StatusCode.NOT_FOUND);
+        throw new InvalidAccessException("404 NOT FOUND");
+    }
 
     public String getPath() {
         return path;

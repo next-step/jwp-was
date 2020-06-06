@@ -31,15 +31,9 @@ public class ControllerProcessor implements Processor {
     }
 
     @Override
-    public HttpResponse process(final HttpRequest httpRequest) {
+    public void process(final HttpRequest httpRequest, final HttpResponse httpResponse) throws IOException {
         AbstractController controller = PATH_AND_CONTROLLER.get(httpRequest.getPath());
 
-        HttpResponse httpResponse = null;
-        try {
-            httpResponse = controller.process(httpRequest);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return httpResponse;
+        controller.process(httpRequest, httpResponse);
     }
 }

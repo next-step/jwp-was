@@ -3,7 +3,9 @@ package webserver.processor;
 import http.HttpRequest;
 import http.HttpResponse;
 
+import java.io.IOException;
+
 public interface Processor {
     boolean isMatch(HttpRequest httpRequest);
-    HttpResponse process(HttpRequest httpRequest);
+    void process(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException;
 }

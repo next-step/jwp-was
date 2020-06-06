@@ -4,28 +4,26 @@ public class RequestLine {
     private static final int REQUIRED_TOKEN_SIZE_TO_INIT_REQUEST_LINE = 3;
     private static final String DELIMITER = " ";
 
+    private final String origin;
     private final HttpMethod httpMethod;
     private final Path path;
     private final Protocol protocol;
 
-    public RequestLine(final HttpMethod httpMethod, final Path path, final Protocol protocol) {
-        this.httpMethod = httpMethod;
-        this.path = path;
-        this.protocol = protocol;
-    }
-
-    public static RequestLine init(final String requestLineStr) {
+    public RequestLine(final String requestLineStr) {
         String[] tokens = requestLineStr.split(DELIMITER);
 
         if (tokens.length != REQUIRED_TOKEN_SIZE_TO_INIT_REQUEST_LINE) {
             throw new IllegalArgumentException("Request line format is illegal : [" + requestLineStr + "]");
         }
 
-        HttpMethod httpMethod = HttpMethod.of(tokens[0]);
-        Path path = new Path(tokens[1]);
-        Protocol protocol = new Protocol(tokens[2]);
+        this.origin = requestLineStr;
+        this.httpMethod = HttpMethod.of(tokens[0]);
+        this.path = new Path(tokens[1]);
+        this.protocol = new Protocol(tokens[2]);
+    }
 
-        return new RequestLine(httpMethod, path, protocol);
+    public static RequestLine init(final String requestLineStr) {
+        return new RequestLine(requestLineStr);
     }
 
     public HttpMethod getMethod() {
@@ -50,5 +48,10 @@ public class RequestLine {
 
     public String getExtension() {
         return path.getExtension();
+    }
+
+    @Override
+    public String toString() {
+        return origin;
     }
 }

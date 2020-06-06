@@ -22,12 +22,10 @@ public class TemplateProcessor implements Processor {
     }
 
     @Override
-    public HttpResponse process(final HttpRequest httpRequest) {
+    public void process(HttpRequest httpRequest, HttpResponse httpResponse) {
         String filePath = TEMPLATE_PREFIX + httpRequest.getPath();
 
-        return HttpResponse.ok(
-                ContentType.of(httpRequest.getExtension()),
-                FileIoUtils.loadFileFromClasspath(filePath)
-        );
+        httpResponse.updateType(ContentType.of(httpRequest.getExtension()));
+        httpResponse.updateBody(FileIoUtils.loadFileFromClasspath(filePath));
     }
 }

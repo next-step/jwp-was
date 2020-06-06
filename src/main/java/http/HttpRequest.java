@@ -97,4 +97,11 @@ public class HttpRequest {
     public Map<String, String> getParameters() {
         return requestHeader.getParameters();
     }
+
+    @Override
+    public String toString() {
+        return requestLine.toString() + "\n" +
+                requestHeader.toString() + "\n\n" +
+                bodyOrigin;
+    }
 }

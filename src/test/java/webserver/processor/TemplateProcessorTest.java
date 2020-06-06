@@ -33,8 +33,9 @@ class TemplateProcessorTest {
     @DisplayName("읽어온 html파일이 예상한 것과 같은지")
     void process() throws IOException, URISyntaxException {
         byte[] body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
+        HttpResponse httpResponse = HttpResponse.init();
 
-        HttpResponse httpResponse = templateProcessor.process(httpRequest);
+        templateProcessor.process(httpRequest, httpResponse);
         assertThat(httpResponse.getBody()).isEqualTo(body);
     }
 }

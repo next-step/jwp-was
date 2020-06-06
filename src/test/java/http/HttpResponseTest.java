@@ -11,14 +11,15 @@ class HttpResponseTest {
     @Test
     @DisplayName("ok 는 200 response를 보낸다.")
     void ok() {
-        assertThat(HttpResponse.ok(null, null).getStatusCode()).isEqualTo(200);
+        assertThat(HttpResponse.init().getStatusCode()).isEqualTo(200);
     }
 
     @Test
     @DisplayName("redirect 는 302 response를 보낸다.")
     void redirect() {
         String location = "http://localhost:8080/index.html";
-        HttpResponse httpResponse = HttpResponse.redirect(location);
+        HttpResponse httpResponse = HttpResponse.init();
+        httpResponse.sendRedirect(location);
 
         assertThat(httpResponse.getLocation()).isEqualTo(location);
         assertThat(httpResponse.getStatusCode()).isEqualTo(302);

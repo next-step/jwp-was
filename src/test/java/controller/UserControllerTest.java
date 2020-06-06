@@ -2,6 +2,7 @@ package controller;
 
 import db.DataBase;
 import http.HttpRequest;
+import http.HttpResponse;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +38,7 @@ class UserControllerTest {
         HttpRequest httpRequest = HttpRequest.readRawRequest(new ByteArrayInputStream(RAW_GET_REQUEST.getBytes()));
 
         assertThatExceptionOfType(InvalidAccessException.class)
-                .isThrownBy(() -> USER_CONTROLLER.process(httpRequest));
+                .isThrownBy(() -> USER_CONTROLLER.process(httpRequest, HttpResponse.init()));
     }
 
     @Test
@@ -48,7 +49,7 @@ class UserControllerTest {
 
         assertThat(users).isEmpty();
 
-        USER_CONTROLLER.process(httpRequest);
+        USER_CONTROLLER.process(httpRequest, HttpResponse.init());
 
         assertThat(DataBase.findAll()).hasSize(1);
     }

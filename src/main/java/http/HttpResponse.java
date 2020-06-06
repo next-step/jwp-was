@@ -1,37 +1,34 @@
 package http;
 
+import utils.StringUtil;
+
 import java.io.DataOutputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public class HttpResponse {
-    private final StatusCode statusCode;
-    private final ContentType contentType;
-    private final byte[] responseBody;
+    private StatusCode statusCode;
+    private ContentType contentType = ContentType.HTML;
+    private byte[] responseBody = new byte[0];
     private String location;
     private final Map<String, String> cookies = new HashMap<>();
 
-    private HttpResponse(final StatusCode statusCode, final ContentType contentType, final byte[] responseBody) {
+    private HttpResponse(final StatusCode statusCode) {
         this.statusCode = statusCode;
-        this.contentType = contentType;
-        this.responseBody = responseBody;
     }
 
-    public static HttpResponse of(final StatusCode statusCode) {
-        return new HttpResponse(statusCode, null, null);
+    public static HttpResponse init() {
+        return new HttpResponse(StatusCode.OK);
     }
 
-    public static HttpResponse ok(final ContentType contentType, final byte[] responseBody) {
-        return new HttpResponse(StatusCode.OK, contentType, responseBody);
-    }
+    public void sendRedirect(final String location) {
+        if (StringUtil.isEmpty(location)) {
+            throw new IllegalArgumentException("Redirect path is null or empty");
+        }
 
-    public static HttpResponse redirect(final String location) {
-        HttpResponse httpResponse = new HttpResponse(StatusCode.REDIRECT, null, null);
-
-        httpResponse.location = location;
-
-        return httpResponse;
+        statusCode = StatusCode.REDIRECT;
+        this.location = location;
     }
 
     public ContentType getContentType() {
@@ -64,5 +61,17 @@ public class HttpResponse {
 
     public Map<String, String> getCookies() {
         return cookies;
+    }
+
+    public void updateStatus(final StatusCode statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public void updateBody(final byte[] responseBody) {
+        this.responseBody = responseBody;
+    }
+
+    public void updateType(final ContentType contentType) {
+        this.contentType = contentType;
     }
 }
