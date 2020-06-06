@@ -16,8 +16,7 @@ public enum Protocol {
 
     public static String getProtocol(String requestLine) {
         return PROTOCOL.expression
-                .apply(requestLine)
-                .toUpperCase();
+                .apply(requestLine);
     }
 
     public static String getVersion(String requestLine) {
