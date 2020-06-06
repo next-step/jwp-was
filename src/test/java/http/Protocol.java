@@ -1,5 +1,7 @@
 package http;
 
+import java.util.Objects;
+
 public class Protocol {
     private final String protocol;
     private final String version;
@@ -25,4 +27,12 @@ public class Protocol {
         return version;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Protocol protocol1 = (Protocol) o;
+        return Objects.equals(protocol, protocol1.protocol) &&
+                Objects.equals(version, protocol1.version);
+    }
 }

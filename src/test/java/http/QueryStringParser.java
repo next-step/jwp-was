@@ -1,11 +1,20 @@
 package http;
 
+import org.apache.logging.log4j.util.Strings;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class QueryStringParser {
-
     public static QueryString parse(String s) {
-        String[] values = s.split(" ");
-        String[] urlparam = values[1].split("\\?");
+        String[] params = s.split("&");
 
-        return new QueryString(values[0], urlparam[0], urlparam[1], new Protocol(values[2]));
+        Map<String, String> map = map = Arrays.stream(params)
+                .filter(p -> p.contains("="))
+                .map(p -> p.split("="))
+                .collect(Collectors
+                        .toMap(e -> e[0], e -> (e.length > 1 ? e[1] : Strings.EMPTY)));
+        return new QueryString(map);
     }
 }

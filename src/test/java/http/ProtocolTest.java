@@ -17,9 +17,8 @@ public class ProtocolTest {
     @Test
     void create(){
         Protocol protocol = new Protocol("HTTP/1.1");
-
-//        assertThat(protocol.getProtocol()).isEqualTo("HTTP");
-//        assertThat(protocol.getVersion()).isEqualTo("1.1");
+        assertThat(protocol.getProtocol()).isEqualTo("HTTP");
+        assertThat(protocol.getVersion()).isEqualTo("1.1");
         assertThat(protocol).isEqualTo(new Protocol("HTTP", "1.1"));
     }
 }
