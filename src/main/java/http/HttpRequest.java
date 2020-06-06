@@ -15,6 +15,16 @@ public class HttpRequest {
         this.requestBody = requestBody;
     }
 
+    public static HttpRequest parse(final String requestRawStr) {
+        RawRequest rawRequest = new RawRequest(requestRawStr);
+
+        return HttpRequest.init(
+                RequestLineParser.parse(rawRequest.getRequestLine()),
+                new RequestHeader(rawRequest.getHeaders()),
+                new RequestBody(rawRequest.getBody())
+        );
+    }
+
     public static HttpRequest init(final RequestLine requestLine,
                                    final RequestHeader requestHeader,
                                    final RequestBody requestBody) {

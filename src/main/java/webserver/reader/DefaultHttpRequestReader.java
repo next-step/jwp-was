@@ -1,7 +1,6 @@
 package webserver.reader;
 
 import http.HttpRequest;
-import http.HttpRequestParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +14,6 @@ public class DefaultHttpRequestReader implements HttpRequestReader {
         String readStream = DEFAULT_REQUEST_READER.readStream(inputStream);
         String decodedReadStream = URLDecoder.decode(readStream, "UTF-8");
 
-        return HttpRequestParser.parse(decodedReadStream);
+        return HttpRequest.parse(decodedReadStream);
     }
 }
