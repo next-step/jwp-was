@@ -62,18 +62,27 @@ public class RequestHandler implements Runnable {
 
             RequestUrl requestUrl = RequestUrl.findByPath(requestLine.getPath());
             String methodName = requestUrl.getMethodName();
-
+            boolean isLoginSuccess = false;
+            byte[] bytes;
             if (requestLine.isExistQuery() && StringUtils.hasText(methodName)) {
-                Object object = RequestController.class.newInstance();
+                Object instance = RequestController.class.newInstance();
                 Method method = RequestController.class.getMethod(methodName, QueryString.class);
-                method.invoke(object, requestLine.getQueryString());
+                Object invoke = method.invoke(instance, requestLine.getQueryString());
+                logger.info("invoke : {}", invoke == null ? "" : invoke.toString());
                 DataOutputStream dos = new DataOutputStream(out);
+                if (requestUrl.isUserLogin() && invoke != null) {
+                    isLoginSuccess = (boolean) invoke;
+                    bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + (isLoginSuccess ? "/index.html" : "/user/login_failed.html"));
+                    responseLoginHeader(dos, bytes.length, isLoginSuccess);
+                    responseBody(dos, bytes);
+                }
                 response302Header(dos);
                 return;
             }
 
             logger.info("path : {}", requestLine.getPath());
-            byte[] bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + requestLine.getPath());
+
+            bytes = FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + requestLine.getPath());
 
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, bytes.length);
@@ -111,6 +120,22 @@ public class RequestHandler implements Runnable {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
             dos.writeBytes("Location: /index.html \r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void responseLoginHeader(DataOutputStream dos, int lengthOfBodyContent, boolean isLoginSuccess) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            if (isLoginSuccess) {
+                dos.writeBytes("Set-Cookie: logined=true; Path=/ \r\n");
+            } else {
+                dos.writeBytes("Set-Cookie: logined=false; Path=/ \r\n");
+            }
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());

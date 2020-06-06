@@ -5,6 +5,7 @@ import java.util.Arrays;
 public enum RequestUrl {
 
     USER_CREATE("/user/create", "createUser"),
+    USER_LOGIN("/user/login", "login"),
     OTHER("", null);
 
     private final String url;
@@ -28,5 +29,9 @@ public enum RequestUrl {
 
     public String getMethodName() {
         return methodName;
+    }
+
+    public boolean isUserLogin() {
+        return this == USER_LOGIN;
     }
 }
