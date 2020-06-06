@@ -2,18 +2,18 @@ package http;
 
 import org.springframework.http.HttpMethod;
 
+import java.applet.Applet;
+
 public class RequestLine {
 
     private final String method;
     private final String path;
-    private final String protocol;
-    private final String version;
+    private final Protocol protocol;
 
-    public RequestLine(String method, String path, String protocol, String version) {
+    public RequestLine(String method, String path, Protocol protocol) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
-        this.version = version;
     }
 
     public String getMapping() {
@@ -22,7 +22,5 @@ public class RequestLine {
 
     public String getPath() { return this.path; }
 
-    public String getProtocol() { return this.protocol; }
-
-    public String getVersion() { return this.version;}
+    public Protocol getProtocol() { return this.protocol;}
 }
