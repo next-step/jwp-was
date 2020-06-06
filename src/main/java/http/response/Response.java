@@ -22,4 +22,8 @@ public class Response {
     public byte[] getBody() {
         return body.getBody();
     }
+
+    public String getHeaderByKey(String s) {
+        return "";
+    }
 }

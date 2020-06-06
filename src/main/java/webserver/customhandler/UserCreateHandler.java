@@ -11,9 +11,7 @@ import model.User;
 import utils.FileIoUtils;
 import webserver.Handler;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.Map;
 
