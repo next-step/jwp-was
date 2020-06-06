@@ -4,13 +4,21 @@ import java.util.Objects;
 
 public class Protocol {
     private static final String SLASH_DELIMITER = "/";
+    private static final String HTTP = "HTTP";
 
     private final String name;
     private final String version;
 
     private Protocol(String name, String version) {
+        verify(name);
         this.name = name;
         this.version = version;
+    }
+
+    private void verify(String name) {
+        if(!HTTP.equals(name)) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public static Protocol from(String fullProtocol) {

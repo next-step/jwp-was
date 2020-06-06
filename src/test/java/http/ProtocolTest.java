@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ProtocolTest {
 
@@ -17,5 +18,17 @@ public class ProtocolTest {
         Protocol protocol = Protocol.from(protocolInfo);
         // then
         assertThat(protocol.equals(Protocol.of("HTTP", "1.1"))).isTrue();
+    }
+
+    @DisplayName("유효하지 않은 프로토콜명인 경우 IllegalArgumentException 발생")
+    @Test
+    void test_parsing_invalid_protocol_should_fail() {
+        // given
+        String protocolInfo = "HTDP/1.1";
+        // when
+        // then
+        assertThatThrownBy(() -> {
+            Protocol protocol = Protocol.from(protocolInfo);
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 }
