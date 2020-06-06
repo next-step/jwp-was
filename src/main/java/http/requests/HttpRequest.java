@@ -53,8 +53,4 @@ public class HttpRequest {
         return cookie;
     }
 
-    public String getHeader(String key) {
-        return requestHeaders.getHeader(key);
-    }
-
 }
