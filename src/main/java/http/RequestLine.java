@@ -1,25 +1,22 @@
 package http;
 
 public class RequestLine {
-
-    private final String method;
-    private final String path;
-    private final String queryString;
+    private final HttpMethod httpMethod;
+    private final Path path;
     private final Protocol protocol;
 
-    public RequestLine(String method, String path, String queryString, Protocol protocol) {
-        this.method = method;
+    public RequestLine(final HttpMethod httpMethod, final Path path, final Protocol protocol) {
+        this.httpMethod = httpMethod;
         this.path = path;
-        this.queryString = queryString;
         this.protocol = protocol;
     }
 
-    public String getMethod() {
-        return method;
+    public HttpMethod getMethod() {
+        return httpMethod;
     }
 
     public String getPath() {
-        return path;
+        return path.getPath();
     }
 
     public String getProtocol() {
@@ -30,7 +27,11 @@ public class RequestLine {
         return protocol.getVersion();
     }
 
-    public String getQueryString() {
-        return queryString;
+    public String getParameter(final String parameter) {
+        return path.getParameter(parameter);
+    }
+
+    public String getExtension() {
+        return path.getExtension();
     }
 }

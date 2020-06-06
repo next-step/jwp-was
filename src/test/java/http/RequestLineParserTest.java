@@ -13,7 +13,7 @@ public class RequestLineParserTest {
     void parse() {
         RequestLine requestLine = RequestLineParser.parse("GET /users HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
@@ -24,7 +24,7 @@ public class RequestLineParserTest {
     void parsePost() {
         RequestLine requestLine = RequestLineParser.parse("POST /users HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo("POST");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
@@ -35,9 +35,10 @@ public class RequestLineParserTest {
     void parseQueryString() {
         RequestLine requestLine = RequestLineParser.parse("GET /users?name1=value1&name2=value2 HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
-        assertThat(requestLine.getQueryString()).isEqualTo("name1=value1&name2=value2");
+        assertThat(requestLine.getParameter("name1")).isEqualTo("value1");
+        assertThat(requestLine.getParameter("name2")).isEqualTo("value2");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }

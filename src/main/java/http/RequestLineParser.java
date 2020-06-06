@@ -1,11 +1,21 @@
 package http;
 
-public class RequestLineParser {
-    public static RequestLine parse(final String requestLineStr) {
-        String[] values = requestLineStr.split(" ");
-        String[] pathAndQueryString = values[1].split("\\?");
-        Protocol protocol = new Protocol(values[2]);
+import utils.Tokens;
 
-        return new RequestLine(values[0], pathAndQueryString[0], pathAndQueryString.length < 2 ? "" : pathAndQueryString[1], protocol);
+public class RequestLineParser {
+    private static final int REQUIRED_TOKEN_SIZE_TO_INIT_REQUEST_LIEN = 3;
+    private static final String DELIMITER = " ";
+
+    private RequestLineParser() {}
+
+    public static RequestLine parse(final String requestLineStr) {
+        Tokens tokens = Tokens.init(requestLineStr, DELIMITER);
+        tokens.validate(REQUIRED_TOKEN_SIZE_TO_INIT_REQUEST_LIEN);
+
+        HttpMethod httpMethod = HttpMethod.of(tokens.nextToken());
+        Path path = new Path(tokens.nextToken());
+        Protocol protocol = new Protocol(tokens.nextToken());
+
+        return new RequestLine(httpMethod, path, protocol);
     }
 }

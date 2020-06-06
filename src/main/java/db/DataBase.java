@@ -1,24 +1,33 @@
 package db;
 
+import com.google.common.collect.Maps;
+import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collection;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
-
-import model.User;
-
 public class DataBase {
-    private static Map<String, User> users = Maps.newHashMap();
+    private static final Logger logger = LoggerFactory.getLogger(DataBase.class);
 
-    public static void addUser(User user) {
-        users.put(user.getUserId(), user);
+    private static final Map<String, User> USERS = Maps.newHashMap();
+
+    public static void addUser(final User user) {
+        logger.debug("New user add in memory db " + user);
+
+        USERS.put(user.getUserId(), user);
     }
 
-    public static User findUserById(String userId) {
-        return users.get(userId);
+    public static User findUserById(final String userId) {
+        return USERS.get(userId);
+    }
+
+    public static void deleteAll() {
+        USERS.clear();
     }
 
     public static Collection<User> findAll() {
-        return users.values();
+        return USERS.values();
     }
 }
