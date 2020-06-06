@@ -11,10 +11,10 @@ public class RequestLine {
     private final QueryStrings queryStrings;
     private final Protocol protocol;
 
-    public RequestLine(String method, String path, String queryString, Protocol protocol) {
+    public RequestLine(String method, PathAndString pathAndString, Protocol protocol) {
         this.method = method;
-        this.path = path;
-        this.queryStrings = new QueryStrings(queryString);
+        this.path = pathAndString.getPath();
+        this.queryStrings = new QueryStrings(pathAndString.getQueryStrings());
         this.protocol = protocol;
     }
 

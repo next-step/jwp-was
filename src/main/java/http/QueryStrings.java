@@ -1,5 +1,7 @@
 package http;
 
+import org.apache.tomcat.util.buf.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,12 +14,13 @@ public class QueryStrings {
         Map<String, String> query_pair = new HashMap<>();
         String[] pairs = queryStrings.split("&");
 
-        for(String pair : pairs) {
-            String key = pair.split("=")[0];
-            String value = pair.split("=")[1];
-            query_pair.put(key, value);
+        if(pairs.length > 1) {
+            for(String pair : pairs) {
+                String key = pair.split("=")[0];
+                String value = pair.split("=")[1];
+                query_pair.put(key, value);
+            }
         }
-
         this.queryMap = query_pair;
     }
 
