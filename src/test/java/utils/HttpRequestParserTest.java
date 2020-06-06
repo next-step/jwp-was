@@ -3,9 +3,12 @@ package utils;
 import http.requests.HttpRequestHeader;
 import http.requests.parameters.Cookie;
 import http.requests.parameters.FormData;
+import http.requests.parameters.QueryString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,4 +79,17 @@ class HttpRequestParserTest {
         assertThat(cookie.getValue("no_more_cookie")).isNull();
     }
 
+    @DisplayName("파싱을 제대로 하는지 테스트 해보자")
+    @ParameterizedTest
+    @CsvSource(value = {
+            "userId,hyeyoom",
+            "password,1234abcd",
+            "name,Chiho",
+            "nope,"
+    })
+    void parse_querystring(String key, String value) {
+        final String pathWithQueryString = "/users?userId=hyeyoom&password=1234abcd&name=Chiho";
+        final QueryString queryString = HttpRequestParser.parseQueryString(pathWithQueryString);
+        assertThat(queryString.getParameter(key)).isEqualTo(value);
+    }
 }
