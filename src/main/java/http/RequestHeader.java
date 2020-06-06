@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestHeader {
+    private static final String COOKIE = "Cookie";
+    private static final String COOKIE_KEY_VALUE_DELIMITER = "=";
+    private static final String HEADER_DELIMITER = ": ";
+    private static final String COOKIE_DELIMITER = ";";
 
     private final Map<String, String> headers = new HashMap<>();
     private final Map<String, String> cookies = new HashMap<>();
@@ -17,11 +21,11 @@ public class RequestHeader {
     }
 
     private void addHeader(final String token) {
-        Tokens tokens = Tokens.init(token, ":");
-        String key = tokens.nextToken().trim();
-        String value = tokens.nextToken().trim();
+        String[] tokens = token.split(HEADER_DELIMITER);
+        String key = tokens[0];
+        String value = tokens[1];
 
-        if (key.startsWith("Cookie")) {
+        if (COOKIE.equals(key)) {
             initCookies(value);
             return;
         }
@@ -30,23 +34,24 @@ public class RequestHeader {
     }
 
     private void initCookies(final String cookies) {
-        Tokens tokens = Tokens.init(cookies, ";");
+        Tokens tokens = Tokens.init(cookies, COOKIE_DELIMITER);
 
         tokens.getAllTokens()
                 .forEach(this::addCookie);
     }
 
     private void addCookie(final String token) {
-        Tokens tokens = Tokens.init(token, "=");
-        if (tokens.getSize() < 2) {
+        String[] tokens = token.split(COOKIE_KEY_VALUE_DELIMITER);
+
+        if (tokens.length < 2) {
             return;
         }
 
-        cookies.put(tokens.nextToken().trim(), tokens.nextToken().trim());
+        cookies.put(tokens[0], tokens[1]);
     }
 
     public String getHeader(final String headerName) {
-        return headers.getOrDefault(headerName, null);
+        return headers.get(headerName);
     }
 
     public String getCookie(final String cookieName) {
