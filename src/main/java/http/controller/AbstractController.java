@@ -1,19 +1,31 @@
 package http.controller;
 
 import http.HttpMethod;
-
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import http.HttpStatus;
+import http.exception.HttpException;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
 
 public abstract class AbstractController implements Controller {
 
     @Override
     public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (HttpMethod.GET.name().equals(httpRequest.method())) {
-            doGet(httpRequest, httpResponse);
+        try {
+            if (HttpMethod.GET.equals(httpRequest.getMethod())) {
+                doGet(httpRequest, httpResponse);
+                return;
+            }
+
+            if (HttpMethod.POST.equals(httpRequest.getMethod())) {
+                doPost(httpRequest, httpResponse);
+                return;
+            }
         }
-        else if(HttpMethod.POST.name().equals(httpRequest.method())) {
-            doPost(httpRequest, httpResponse);
+        catch (HttpException e) {
+            doException(httpRequest, httpResponse);
+        }
+        catch (Exception e) {
+            doException(httpRequest, new HttpResponse(HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -22,6 +34,10 @@ public abstract class AbstractController implements Controller {
     }
 
     public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+
+    }
+
+    protected void doException(HttpRequest httpRequest, HttpResponse httpResponse) {
 
     }
 }

@@ -1,7 +1,7 @@
 package http.controller;
 
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
 
 public interface Controller {
     void service(HttpRequest httpRequest, HttpResponse httpResponse);

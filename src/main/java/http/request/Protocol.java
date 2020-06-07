@@ -1,6 +1,9 @@
 package http.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import http.HttpStatus;
+import http.exception.BadRequestException;
+import http.exception.HttpException;
 import lombok.Getter;
 
 import java.util.*;
@@ -17,13 +20,13 @@ public class Protocol {
 
     public static Protocol of(String protocolAndVersion) {
         if (StringUtils.isEmpty(protocolAndVersion)) {
-            throw new IllegalArgumentException();
+            throw new BadRequestException();
         }
 
-        String[] split = protocolAndVersion.split(SPLITTER);
+        String[] split = protocolAndVersion.split(SPLITTER, 2);
 
         if (split.length != 2) {
-            throw new IllegalArgumentException();
+            throw new BadRequestException();
         }
 
         return new Protocol(split[0], split[1]);
@@ -31,7 +34,7 @@ public class Protocol {
 
     public Protocol(String protocol, String version) {
         if (!HTTP.equals(protocol) || !ALLOWED_HTTP_VERSION.contains(version)) {
-            throw new IllegalArgumentException();
+            throw new BadRequestException();
         }
 
         this.protocol = protocol;

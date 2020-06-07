@@ -1,5 +1,8 @@
 package http.request;
 
+import http.HttpStatus;
+import http.exception.BadRequestException;
+import http.exception.HttpException;
 import lombok.Getter;
 import utils.StringUtils;
 
@@ -20,10 +23,10 @@ public class Path {
 
     public static Path of(String path) {
         if (StringUtils.isEmpty(path)) {
-            throw new IllegalArgumentException();
+            throw new BadRequestException();
         }
 
-        String [] split = path.split(QUERY_STRING_SPLITTER);
+        String [] split = path.split(QUERY_STRING_SPLITTER, 2);
 
         if (split.length == 1) {
             return new Path(
@@ -49,7 +52,7 @@ public class Path {
     private static Map<String, String> collectQueryStringMap(String queryString) {
         return Arrays.stream(queryString.split(PARAMETER_SPLITTER))
             .filter(param -> param.contains(KEY_VALUE_SPLITTER))
-            .map(param -> param.split(KEY_VALUE_SPLITTER))
+            .map(param -> param.split(KEY_VALUE_SPLITTER, 2))
             .collect(toMap(entry -> entry[0], entry -> entry[1]));
     }
 

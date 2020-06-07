@@ -1,5 +1,8 @@
 package http;
 
+import http.exception.BadRequestException;
+import http.exception.HttpException;
+
 import java.util.Map;
 import java.util.Objects;
 
@@ -8,7 +11,7 @@ public class HttpHeaders {
 
     public HttpHeaders(Map<String, String> headers) {
         if (Objects.isNull(headers)) {
-            throw new IllegalArgumentException();
+            throw new BadRequestException();
         }
 
         this.headers = headers;

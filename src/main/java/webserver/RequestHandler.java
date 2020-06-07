@@ -1,5 +1,7 @@
 package webserver;
 
+import com.google.common.collect.Maps;
+import http.HttpHeader;
 import http.request.RequestLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +10,7 @@ import utils.FileIoUtils;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -15,7 +18,10 @@ public class RequestHandler implements Runnable {
     private Socket connection;
     private RequestLine requestLine;
 
-    private static final String BASE_HTML_PATH = "./templates";
+    private static final String HANDLE_BAR_PREFIX = "./templates";
+    private static final String HTML_SUFFIX = ".html";
+    private static final String JS_SUFFIX = ".html";
+    private static final String CSS_SUFFIX = ".css";
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -36,20 +42,38 @@ public class RequestHandler implements Runnable {
             log.debug("path: {}", requestLine.getPath());
             log.debug("---------------------------------");
 
-            //log.info("body: {}", this.requestLine.toString());
+            Map<String, String> httpHeaders = getHttpHeaders(br, request);
 
-            while (!"".equals(request)) {
-                request = br.readLine();
-                log.debug("request: {}", request);
+            if (endsWithHtmlSuffix(requestLine.getPath())) {
+
             }
 
-            byte[] body = FileIoUtils.loadFileFromClasspath(BASE_HTML_PATH + this.requestLine.getPath());
+            byte[] body = FileIoUtils.loadFileFromClasspath(HANDLE_BAR_PREFIX + this.requestLine.getPath());
 
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             log.error(e.getMessage());
         }
+    }
+
+    private boolean endsWithHtmlSuffix(String path) {
+        return path.toLowerCase().endsWith(HTML_SUFFIX);
+    }
+
+
+    private Map<String, String> getHttpHeaders(BufferedReader br, String httpHeaderLine) throws IOException {
+        Map<String, String> httpHeaders = Maps.newHashMap();
+
+        while (!"".equals(httpHeaderLine)) {
+            httpHeaderLine = br.readLine();
+            log.debug("httpHeader: {}", httpHeaderLine);
+
+            HttpHeader header = HttpHeader.of(httpHeaderLine);
+            httpHeaders.put(header.getHeaderName(), header.getHeaderValue());
+        }
+
+        return httpHeaders;
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {

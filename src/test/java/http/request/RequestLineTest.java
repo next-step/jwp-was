@@ -2,6 +2,7 @@ package http.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import http.HttpMethod;
+import http.exception.BadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -25,7 +26,7 @@ class RequestLineTest {
     })
     @NullAndEmptySource
     public void testRequestLine(String requestLine) {
-        assertThrows(IllegalArgumentException.class, () -> RequestLine.of(requestLine));
+        assertThrows(BadRequestException.class, () -> RequestLine.of(requestLine));
     }
 
     @DisplayName("QueryString 없는 RequestLine 테스트")

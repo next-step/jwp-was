@@ -1,11 +1,11 @@
 package http.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
 
-public class CreateUserController {
+public class CreateUserController extends AbstractController {
 
-    public void doService(HttpServletRequest httpServletRequest, HttpServletResponse response) {
+    public void doService(HttpRequest httpRequest, HttpResponse response) {
 
     }
 }

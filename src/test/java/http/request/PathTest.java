@@ -1,5 +1,6 @@
 package http.request;
 
+import http.exception.BadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,7 +17,7 @@ class PathTest {
     @ParameterizedTest
     @NullAndEmptySource
     void ofForException(String path) {
-        assertThrows(IllegalArgumentException.class, () -> Path.of(path));
+        assertThrows(BadRequestException.class, () -> Path.of(path));
     }
 
     @DisplayName("QueryString 없는 Path 테스트")

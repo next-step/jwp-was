@@ -1,5 +1,7 @@
 package http.request;
 
+import http.exception.BadRequestException;
+import http.exception.HttpException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -22,7 +24,7 @@ class ProtocolTest {
     })
     @NullAndEmptySource
     void ofForException(String protocolAndVersion) {
-        assertThrows(IllegalArgumentException.class, () -> Protocol.of(protocolAndVersion));
+        assertThrows(BadRequestException.class, () -> Protocol.of(protocolAndVersion));
     }
 
     @DisplayName("Protocol/Version 테스트")

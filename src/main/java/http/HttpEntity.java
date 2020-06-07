@@ -1,10 +1,8 @@
 package http;
 
-public class HttpEntity<T> {
-    private static final HttpEntity EMPTY = new HttpEntity<>();
-
+public class HttpEntity {
     private final HttpHeaders httpHeaders;
-    private final T Body;
+    private final String body;
 
     public HttpEntity() {
         this(null, null);
@@ -14,14 +12,12 @@ public class HttpEntity<T> {
         this(httpHeaders, null);
     }
 
-    public HttpEntity(T body) {
+    public HttpEntity(String body) {
         this(null, body);
     }
 
-    public HttpEntity(HttpHeaders httpHeaders, T body) {
+    public HttpEntity(HttpHeaders httpHeaders, String body) {
         this.httpHeaders = httpHeaders;
-        Body = body;
+        this.body = body;
     }
-
-
 }
