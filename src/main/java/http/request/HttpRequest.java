@@ -30,16 +30,16 @@ public class HttpRequest {
         this(requestLine, requestHeader, null);
     }
 
-    public static HttpRequest getInstance(InputStream inputStream) throws IOException {
+    public static HttpRequest parse(InputStream inputStream) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, Charset.forName(StandardCharsets.UTF_8.name())));
 
-        RequestLine requestLine = RequestLine.getInstance(br.readLine());
-        RequestHeader requestHeader = RequestHeader.getInstance(br);
+        RequestLine requestLine = RequestLine.parse(br.readLine());
+        RequestHeader requestHeader = RequestHeader.parse(br);
 
         if (requestLine.getMethod() == HttpMethod.POST) {
             String body = IOUtils.readData(br, requestHeader.getContentLength());
 
-            RequestBody requestBody = RequestBody.getInstance(URLDecoder.decode(body, CHAR_SET));
+            RequestBody requestBody = RequestBody.parse(URLDecoder.decode(body, CHAR_SET));
             return new HttpRequest(requestLine, requestHeader, requestBody);
         }
 

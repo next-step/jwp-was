@@ -29,7 +29,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            HttpRequest request = HttpRequest.getInstance(in);
+            HttpRequest request = HttpRequest.parse(in);
             HttpResponse response = new HttpResponse();
 
             Controllers controllers = addControllers();

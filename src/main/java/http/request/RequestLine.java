@@ -26,17 +26,17 @@ public class RequestLine {
     }
 
     private RequestLine(HttpMethod httpMethod, String path, Protocol protocol) throws UnsupportedEncodingException {
-        this(httpMethod, path, protocol, QueryString.getInstance(""));
+        this(httpMethod, path, protocol, QueryString.parse(""));
     }
 
-    public static RequestLine getInstance(String requestLine) throws UnsupportedEncodingException {
+    public static RequestLine parse(String requestLine) throws UnsupportedEncodingException {
         String[] values = requestLine.split(" ");
         String[] pathValues = values[1].split(PATH_REGEX);
-        Protocol protocol = Protocol.getInstance(values[2]);
+        Protocol protocol = Protocol.parse(values[2]);
         HttpMethod method = HttpMethod.valueOf(values[0]);
 
         if (method == HttpMethod.GET && pathValues.length > 1) {
-            return new RequestLine(method, pathValues[0], protocol, QueryString.getInstance(pathValues[1]));
+            return new RequestLine(method, pathValues[0], protocol, QueryString.parse(pathValues[1]));
         }
 
         return new RequestLine(method, pathValues[0], protocol);

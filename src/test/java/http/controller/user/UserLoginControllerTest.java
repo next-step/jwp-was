@@ -22,7 +22,7 @@ public class UserLoginControllerTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        request = HttpRequest.getInstance(new ByteArrayInputStream(TestConstant.USER_LOGIN_REQUEST.getBytes()));
+        request = HttpRequest.parse(new ByteArrayInputStream(TestConstant.USER_LOGIN_REQUEST.getBytes()));
         response = new HttpResponse();
         user = new User("seul", "test", "Eeseul Park", "seul");
         UserData.save(user);

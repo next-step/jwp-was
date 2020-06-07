@@ -16,7 +16,7 @@ public class RequestBody {
         this.bodyMap = bodyMap;
     }
 
-    public static RequestBody getInstance(String value) {
+    public static RequestBody parse(String value) {
         Map<String, String> bodyMap = new HashMap<>();
 
         String[] bodyValues = value.split(QUERY_STRING_REGEX);

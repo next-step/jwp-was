@@ -12,7 +12,7 @@ public class RequestCookieTest {
 
     @BeforeEach
     void setUp() {
-        cookie = RequestCookie.getInstance("logined=true; Path=/");
+        cookie = RequestCookie.parse("logined=true; Path=/");
     }
 
 

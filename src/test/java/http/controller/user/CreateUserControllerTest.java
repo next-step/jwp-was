@@ -22,7 +22,7 @@ public class CreateUserControllerTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        request = HttpRequest.getInstance(new ByteArrayInputStream(TestConstant.CREATE_USER_REQUEST.getBytes()));
+        request = HttpRequest.parse(new ByteArrayInputStream(TestConstant.CREATE_USER_REQUEST.getBytes()));
         response = new HttpResponse();
         user = new User("seul", "test", "Eeseul Park", "seul");
     }

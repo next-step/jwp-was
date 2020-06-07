@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RequestLineTest {
     @Test
     void of_get() throws UnsupportedEncodingException {
-        RequestLine requestLine = RequestLine.getInstance("GET /users HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
         Protocol protocol = requestLine.getProtocol();
         QueryString queryString = requestLine.getQueryString();
 
@@ -22,7 +22,7 @@ public class RequestLineTest {
 
     @Test
     void of_post() throws UnsupportedEncodingException {
-        RequestLine requestLine = RequestLine.getInstance("POST /users HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse("POST /users HTTP/1.1");
         Protocol protocol = requestLine.getProtocol();
         QueryString queryString = requestLine.getQueryString();
 
@@ -35,7 +35,7 @@ public class RequestLineTest {
 
     @Test
     void of_queryString() throws UnsupportedEncodingException {
-        RequestLine requestLine = RequestLine.getInstance("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
         Protocol protocol = requestLine.getProtocol();
         QueryString queryString = requestLine.getQueryString();
 
@@ -50,7 +50,7 @@ public class RequestLineTest {
 
     @Test
     void getFilePath() throws UnsupportedEncodingException {
-        RequestLine requestLine = RequestLine.getInstance("GET /index.html HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse("GET /index.html HTTP/1.1");
 
         assertThat(requestLine.getFilePath()).isEqualTo("./templates/index.html");
     }

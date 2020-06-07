@@ -19,7 +19,7 @@ public class QueryString {
         this.queryStringMap = queryStringMap;
     }
 
-    public static QueryString getInstance(String value) throws UnsupportedEncodingException {
+    public static QueryString parse(String value) throws UnsupportedEncodingException {
         Map<String, String> queryStringMap = new HashMap<>();
         if (value.equals("")) {
             return new QueryString(queryStringMap);

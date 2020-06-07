@@ -17,7 +17,7 @@ public class RequestCookie {
         this.cookieMap = cookieMap;
     }
 
-    public static RequestCookie getInstance(String value) {
+    public static RequestCookie parse(String value) {
         Map<String, String> cookieMap = new HashMap<>();
 
         String[] cookies = value.split(COOKIES_REGEX);

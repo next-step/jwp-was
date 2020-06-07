@@ -28,7 +28,7 @@ public class RequestHeader {
         this(headerMap, null);
     }
 
-    public static RequestHeader getInstance(BufferedReader br) throws IOException {
+    public static RequestHeader parse(BufferedReader br) throws IOException {
         Map<String, String> headerMap = new HashMap<>();
 
         String line;
@@ -38,7 +38,7 @@ public class RequestHeader {
         }
 
         if (headerMap.containsKey(COOKIE_HEADER)) {
-            return new RequestHeader(headerMap, RequestCookie.getInstance(headerMap.get(COOKIE_HEADER)));
+            return new RequestHeader(headerMap, RequestCookie.parse(headerMap.get(COOKIE_HEADER)));
         }
 
         return new RequestHeader(headerMap);

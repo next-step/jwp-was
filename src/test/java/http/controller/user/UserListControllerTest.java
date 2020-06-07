@@ -22,7 +22,7 @@ public class UserListControllerTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        request = HttpRequest.getInstance(new ByteArrayInputStream(TestConstant.USER_LIST_REQUEST.getBytes()));
+        request = HttpRequest.parse(new ByteArrayInputStream(TestConstant.USER_LIST_REQUEST.getBytes()));
         response = new HttpResponse();
         user = new User("seul", "test", "Eeseul Park", "seul");
 
