@@ -1,5 +1,6 @@
 package http;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -7,7 +8,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FormDataTest {
 
     @Test
-    void FormData를_넣으면_이름으로_값을_가져올_수_있다() {
+    @DisplayName("FormData를 넣으면 이름으로 값을 가져올 수 있다")
+    void test1() {
         final String input = "userId=userId1&password=password1&name=name1&email=aa1%40aa.a";
         final FormData formData = new FormData(input);
 

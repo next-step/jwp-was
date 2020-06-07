@@ -1,5 +1,6 @@
 package http;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -12,13 +13,15 @@ public class QueryStringTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    void 비어있는_queryString으로_QueryString_객체를_만든다(String input) {
+    @DisplayName("비어있는 queryString으로 QueryString 객체를 만든다")
+    void test1(String input) {
         final QueryString queryString = new QueryString(input);
         assertThat(queryString).isNotNull();
     }
 
     @Test
-    void queryString의_parameterName으로_parameterValue를_정상적으로_가져온다() {
+    @DisplayName("queryString의 parameterName으로 parameterValue를 정상적으로 가져온다")
+    void test2() {
         final String input = "id=30&content=hi";
         final QueryString queryString = new QueryString(input);
 
@@ -30,7 +33,8 @@ public class QueryStringTest {
     }
 
     @Test
-    void queryString에_동일한_parameterName이_존재할경우_parameterValue는_뒤에있는_값을_반환한다() {
+    @DisplayName("queryString에 동일한 parameterName이 존재할 경우 parameterValue는 뒤에있는 값을 반환한다")
+    void test3() {
         final String input = "id=30&id=100";
         final QueryString queryString = new QueryString(input);
 
@@ -40,7 +44,8 @@ public class QueryStringTest {
     }
 
     @Test
-    void 유효하지않은_queryString_값이_올_경우_에러반환한다() {
+    @DisplayName("유효하지 않은 queryString 값이 올 경우 에러를 반환한다")
+    void test4() {
         final String input = "id30";
         final Throwable thrown = catchThrowable(() ->new QueryString(input));
 
@@ -51,7 +56,8 @@ public class QueryStringTest {
 
 
     @Test
-    void URL인코딩된_queryString을_넣은_경우_가져올때에는_URL디코딩되어_나온다() {
+    @DisplayName("URL인코딩된 queryString을 넣은 경우 가져올 때에는 URL디코딩되어 나온다")
+    void test5() {
         final String input = "id=a%20b";
         final QueryString queryString = new QueryString(input);
 

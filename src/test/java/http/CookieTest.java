@@ -1,5 +1,6 @@
 package http;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -8,7 +9,8 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 class CookieTest {
 
     @Test
-    void 쿠키헤더를_넣으면_쿠키이름으로_값을_가져올_수_있다() {
+    @DisplayName("쿠키 헤더를 넣으면 쿠키이름으로 값을 가져올 수 있다")
+    void test1() {
         final String input = "Cookie: logined=true; Path=/";
         final Cookie cookie = new Cookie(input);
 
@@ -20,7 +22,8 @@ class CookieTest {
     }
 
     @Test
-    void 쿠키객체_생성시_밸류가_존재하지_않는_것이_하나라도_있을_경우_에러반환() {
+    @DisplayName("밸류가 하나라도 존재하지 않는 쿠키헤더로 쿠키 객체 생성시 에러를 반환한다")
+    void test2() {
         final String input = "Cookie: logined=true; Path=";
 
         final Throwable thrown = catchThrowable(() -> new Cookie(input));
@@ -31,7 +34,8 @@ class CookieTest {
     }
 
     @Test
-    void 쿠키객체_생성시_공백인_밸류가_하나라도_있을_경우_에러반환() {
+    @DisplayName("공백인 밸류가 하나라도 존재하는 쿠키헤더로 쿠키 객체 생성시 에러를 반환한다")
+    void test3() {
         final String input = "Cookie: logined=true; Path= ";
 
         final Throwable thrown = catchThrowable(() -> new Cookie(input));
@@ -42,7 +46,8 @@ class CookieTest {
     }
 
     @Test
-    void 쿠키객체_생성시_쿠키헤더가_아닌_다른_헤더가_파라미터로_올_경우_에러반환() {
+    @DisplayName("쿠키헤더가 아닌 다른 헤더로 쿠키 객체 생성시 에러를 반환한다")
+    void test4() {
         final String input = "content-type: text/css; charset=utf-8";
 
         final Throwable thrown = catchThrowable(() -> new Cookie(input));
