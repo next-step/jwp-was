@@ -1,15 +1,23 @@
 package http;
 
+import org.apache.logging.log4j.util.Strings;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class Cookie {
+public class Cookies {
     private static final String COOKIE_TOKENIZER = ";";
     private static final String COOKIE_NAME_VALUE_TOKENIZER = "=";
 
-    private Map<String, String> cookies = new HashMap<>();
+    private Map<String, String> cookies;
+    private String path = Strings.EMPTY;
 
-    public Cookie(String values) {
+    public Cookies() {
+        cookies = new HashMap<>();
+    }
+
+    public Cookies(String values) {
         for (String cookie : values.split(COOKIE_TOKENIZER)) {
             String[] c = cookie.split(COOKIE_NAME_VALUE_TOKENIZER);
             if (c.length != 2) {
@@ -24,6 +32,29 @@ public class Cookie {
     public String getValue(String name) {
         String defaultValue = "";
         return cookies.getOrDefault(name, defaultValue);
+    }
+
+    public void addCookie(String cookieName, String cookieValue) {
+        cookies.put(cookieName, cookieValue);
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String stringify() {
+        String cookiesStr = cookies.keySet().stream()
+                .map(cookieName -> (cookieName + "="+cookies.get(cookieName)))
+                .collect(Collectors.joining("; "));
+
+        if (!Strings.EMPTY.equals(path)) {
+            cookiesStr += "; Path=" + path;
+        }
+        return cookiesStr;
+    }
+
+    public boolean isEmpty() {
+        return cookies.isEmpty();
     }
 
     @Override

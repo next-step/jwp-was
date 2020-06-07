@@ -10,6 +10,7 @@ import http.parser.RequestHeaderParser;
 import http.parser.RequestLineParser;
 import http.request.HttpRequest;
 import http.request.RequestLine;
+import http.response.HttpResponse;
 import model.User;
 import model.Users;
 import org.apache.logging.log4j.util.Strings;
@@ -23,6 +24,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class RequestHandler implements Runnable {
@@ -43,6 +45,9 @@ public class RequestHandler implements Runnable {
 
             String path = httpRequest.getPath();
 
+            DataOutputStream dos = new DataOutputStream(out);
+            HttpResponse httpResponse = new HttpResponse();
+
             if (isPost(httpRequest) && "/user/create".equals(path)) {
                 FormData formData = new FormData(httpRequest.getBody());
                 String userId = formData.getValue("userId");
@@ -51,9 +56,8 @@ public class RequestHandler implements Runnable {
                 String email = formData.getValue("email");
 
                 DataBase.addUser(new User(userId, password, name, email));
-                DataOutputStream dos = new DataOutputStream(out);
-                response302Header(dos, "/index.html");
 
+                httpResponse.response302("/index.html");
             } else if (isPost(httpRequest) && "/user/login".equals(path)) {
                 FormData formData = new FormData(httpRequest.getBody());
                 String userId = formData.getValue("userId");
@@ -62,13 +66,14 @@ public class RequestHandler implements Runnable {
                 User user = DataBase.findUserById(userId);
 
                 if (isSamePassword(user.getPassword(), password)) {
-                    DataOutputStream dos = new DataOutputStream(out);
-                    response302HeaderWithCookies(dos, "/index.html", "logined", "true");
+                    httpResponse.response302("/index.html");
+                    httpResponse.addCookie("logined", "true");
+                    httpResponse.addCookiePath("/");
                 } else {
-                    DataOutputStream dos = new DataOutputStream(out);
-                    response302HeaderWithCookies(dos, "/user/login_failed.html", "logined", "false");
+                    httpResponse.response302("/user/login_failed.html");
+                    httpResponse.addCookie("logined", "false");
+                    httpResponse.addCookiePath("/");
                 }
-
             } else if (isGet(httpRequest) && "/user/list".equals(path)) {
                 if (isLogined(httpRequest)) {
                     Users users = new Users(DataBase.findAll());
@@ -82,31 +87,63 @@ public class RequestHandler implements Runnable {
 
                     Template template = handlebars.compile("user/list");
 
-                    DataOutputStream dos = new DataOutputStream(out);
-                    byte[] body = template.apply(users).getBytes();
-                    response200HtmlHeader(dos, body.length);
-                    responseBody(dos, body);
+                    byte[] htmlFile = template.apply(users).getBytes();
+                    httpResponse.response200HTML(htmlFile);
                 } else {
-                    DataOutputStream dos = new DataOutputStream(out);
-                    response302Header(dos, "/index.html");
+                    httpResponse.response302("/index.html");
                 }
-
             } else {
                 if (path.endsWith(".css")) {
-                    DataOutputStream dos = new DataOutputStream(out);
                     byte[] body = FileIoUtils.loadFileFromClasspath("./static/" + path);
                     response200StylesheetHeader(dos, body.length);
                     responseBody(dos, body);
                 } else {
-                    DataOutputStream dos = new DataOutputStream(out);
-                    byte[] body = FileIoUtils.loadFileFromClasspath("./templates/" + path);
-                    response200HtmlHeader(dos, body.length);
-                    responseBody(dos, body);
+                    byte[] html = FileIoUtils.loadFileFromClasspath("./templates/" + path);
+                    httpResponse.response200HTML(html);
                 }
             }
+
+            writeResponse(dos, httpResponse);
+
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private void writeResponse(DataOutputStream dos, HttpResponse httpResponse) {
+        try {
+            writeResponseLine(dos, httpResponse);
+            writeCookie(dos, httpResponse);
+            writeHeader(dos, httpResponse);
+            writeResponseBody(dos, httpResponse);
+            dos.flush();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void writeResponseLine(DataOutputStream dos, HttpResponse httpResponse) throws IOException {
+        dos.writeBytes("HTTP/1.1 " + httpResponse.getStatusCode() + " FOUND \r\n");
+    }
+
+    private void writeHeader(DataOutputStream dos, HttpResponse httpResponse) throws IOException {
+        for (Iterator it = httpResponse.getHeaders().iterator(); it.hasNext(); ) {
+            String headerName = (String) it.next();
+            String headerValue = httpResponse.getHeader(headerName);
+            dos.writeBytes(headerName + ": " + headerValue + "\r\n");
+        }
+        dos.writeBytes("\r\n");
+    }
+
+    private void writeCookie(DataOutputStream dos, HttpResponse httpResponse) throws IOException {
+        Cookies cookies = httpResponse.getCookie();
+        if (!cookies.isEmpty()) {
+            dos.writeBytes("Set-Cookie: " + cookies.stringify() + "\r\n");
+        }
+    }
+
+    private void writeResponseBody(DataOutputStream dos, HttpResponse httpResponse) throws IOException {
+        dos.write(httpResponse.getBody(), 0, httpResponse.getBody().length);
     }
 
     private HttpRequest readRequest(InputStream in) throws IOException {

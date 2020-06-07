@@ -1,6 +1,6 @@
 package http.request;
 
-import http.Cookie;
+import http.Cookies;
 import http.Headers;
 import http.HttpMethod;
 
@@ -29,7 +29,7 @@ public class HttpRequest {
 
     public String getCookie(String cookieName) {
         String cookieStr = headers.getValue("Cookie");
-        Cookie cookie = new Cookie(cookieStr);
-        return cookie.getValue(cookieName);
+        Cookies cookies = new Cookies(cookieStr);
+        return cookies.getValue(cookieName);
     }
 }

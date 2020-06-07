@@ -8,16 +8,16 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-class CookieTest {
+class CookiesTest {
 
     @Test
     @DisplayName("쿠키을 넣으면 쿠키이름으로 값을 가져올 수 있다")
     void test1() {
         final String input = "logined=true; Path=/";
-        final Cookie cookie = new Cookie(input);
+        final Cookies cookies = new Cookies(input);
 
-        final String loginedValue = cookie.getValue("logined");
-        final String pathValue = cookie.getValue("Path");
+        final String loginedValue = cookies.getValue("logined");
+        final String pathValue = cookies.getValue("Path");
 
         assertThat(loginedValue).isEqualTo("true");
         assertThat(pathValue).isEqualTo("/");
@@ -27,7 +27,7 @@ class CookieTest {
     @ParameterizedTest
     @ValueSource(strings = {"logined=true; Path= ", "logined=true; Path="})
     void testasd(String input) {
-        final Throwable thrown = catchThrowable(() -> new Cookie(input));
+        final Throwable thrown = catchThrowable(() -> new Cookies(input));
 
         assertThat(thrown)
                 .isInstanceOf(RuntimeException.class)
