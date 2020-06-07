@@ -3,8 +3,8 @@ package http;
 public class RequestLineParser {
 
     public static RequestLine parse(String requestLine) {
-
-        String[] values = requestLine.split(" ");
-        return new RequestLine(values[0], values[1], new Protocol(values[2]));
+        String[] requestLineElements = requestLine.split(" ");
+        return new RequestLine(requestLineElements[0], requestLineElements[1], requestLineElements[2]);
     }
+
 }

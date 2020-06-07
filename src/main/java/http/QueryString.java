@@ -1,24 +1,35 @@
 package http;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
 public class QueryString {
-    private Map<String, String> params = new HashMap<>();
+    private final String key;
+    private final String value;
 
-    public QueryString(String queryString) {
-        String[] queryStrings = queryString.split("&");
-        Arrays.stream(queryStrings)
-                .forEach(queryString1 -> {
-                    String[] values = queryString1.split("=");
-                    String key = values[0];
-                    String value = values[1];
-                    params.put(key, value);
-                });
+    public QueryString(String key, String value) {
+        this.key = key;
+        this.value = value;
     }
 
-    public String getValue(String key) {
-        return params.get(key);
+    public boolean exists(String key) {
+        return this.key.equals(key);
+    }
+
+    public String getValue() {
+        return this.value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        QueryString that = (QueryString) o;
+        return Objects.equals(key, that.key) &&
+                Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(key, value);
     }
 }
