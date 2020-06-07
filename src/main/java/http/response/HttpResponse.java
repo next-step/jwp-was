@@ -37,6 +37,10 @@ public class HttpResponse {
         this.header = ResponseHeader.of(HttpStatus.FOUND, "text/html", 0, location);
     }
 
+    public void methodNotAllowed(HttpRequest request) {
+        this.header = ResponseHeader.of(HttpStatus.METHOD_NOT_ALLOWED, request.getContentType(), 0);
+    }
+
     public void setCookie(String cookie) {
         this.header.setCookie(cookie);
     }

@@ -5,7 +5,6 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import model.user.User;
 import model.user.UserRequestView;
-import utils.ConvertUtils;
 import utils.UserData;
 
 import java.util.Objects;
@@ -15,6 +14,7 @@ public class LoginController extends AbstractController {
 
     @Override
     public void doGet(HttpRequest request, HttpResponse response) {
+        response.methodNotAllowed(request);
     }
 
     @Override

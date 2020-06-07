@@ -27,6 +27,7 @@ public class UserListController extends AbstractController {
 
     @Override
     public void doPost(HttpRequest request, HttpResponse response) {
+        response.methodNotAllowed(request);
     }
 
     @Override
