@@ -36,4 +36,16 @@ class HandlerMatcherTest {
         HandlerMatcher handlerMatcher = new HandlerMatcher(Method.GET, pattern);
         assertThat(handlerMatcher.isMatch(Method.GET, path)).isEqualTo(result);
     }
+
+    @ParameterizedTest
+    @CsvSource({
+        "\\/$,/, true",
+        "\\/$,/a, false"
+    })
+    void default_path_pattern(String pattern, String path, boolean result) {
+        HandlerMatcher handlerMatcher = new HandlerMatcher(Method.GET, pattern);
+        assertThat(handlerMatcher.isMatch(Method.GET, path)).isEqualTo(result);
+    }
+
+
 }

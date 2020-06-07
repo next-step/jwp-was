@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class QueryStringTest {
 
     @Test
-    void parseQueryString(){
+    void parse_query_string(){
         QueryString queryString = QueryString.of("a=1&b=2");
         assertThat(queryString.get("a")).isEqualTo("1");
         assertThat(queryString.get("b")).isEqualTo("2");
@@ -20,7 +20,7 @@ public class QueryStringTest {
     }
 
     @Test
-    void notContain(){
+    void not_contain(){
         QueryString queryString = QueryString.of("a=1&b=2");
         assertThat(queryString.get("c")).isNull();
     }

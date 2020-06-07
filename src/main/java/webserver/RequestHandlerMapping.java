@@ -8,6 +8,7 @@ import handler.UserHandler;
 import http.Method;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
+import http.view.RedirectView;
 
 public class RequestHandlerMapping {
     private static final HandlerRegister handlerRegister = new HandlerRegister();
@@ -35,6 +36,11 @@ public class RequestHandlerMapping {
         handlerRegister.add(
             new HandlerMatcher(Method.GET, "\\/(css|fonts|images|js)\\/.+"),
             new StaticResourceHandler("static")
+        );
+
+        handlerRegister.add(
+            new HandlerMatcher(Method.GET, "\\/$"),
+            httpRequest -> new HttpResponse(new RedirectView("/index.html"))
         );
 
         handlerRegister.add(
