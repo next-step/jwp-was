@@ -21,13 +21,12 @@ public class QueryString {
 
     public static QueryString getInstance(String value) throws UnsupportedEncodingException {
         Map<String, String> queryStringMap = new HashMap<>();
-        value = URLDecoder.decode(value, CHAR_SET);
-
-        String[] queryStrings = value.split(QUERY_STRING_REGEX);
-
-        if (queryStrings.length < 2) {
+        if (value.equals("")) {
             return new QueryString(queryStringMap);
         }
+
+        value = URLDecoder.decode(value, CHAR_SET);
+        String[] queryStrings = value.split(QUERY_STRING_REGEX);
 
         for (int i = 0; i < queryStrings.length; i++) {
             String[] values = queryStrings[i].split(KEY_VALUE_REGEX);
@@ -37,7 +36,7 @@ public class QueryString {
         return new QueryString(queryStringMap);
     }
 
-    public Object getValue(String key) {
+    public String getValue(String key) {
         return this.queryStringMap.get(key);
     }
 }

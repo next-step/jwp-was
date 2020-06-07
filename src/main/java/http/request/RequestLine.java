@@ -52,4 +52,8 @@ public class RequestLine {
         }
         return STATIC_PATH + this.path;
     }
+
+    public String getParameter(String key) {
+        return this.queryString.getValue(key);
+    }
 }

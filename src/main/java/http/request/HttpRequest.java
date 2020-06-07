@@ -69,4 +69,8 @@ public class HttpRequest {
     public boolean loggedIn() {
         return this.requestHeader.loggedIn();
     }
+
+    public String getParameter(String key) {
+        return this.requestLine.getParameter(key);
+    }
 }
