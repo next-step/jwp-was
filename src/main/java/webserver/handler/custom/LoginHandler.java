@@ -23,7 +23,6 @@ public class LoginHandler implements Handler {
     private static final String KEY_USER_ID = "userId";
     private static final String KEY_PASSWORD = "password";
 
-
     private String url;
 
     public LoginHandler(String url) {

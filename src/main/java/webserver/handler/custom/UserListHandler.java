@@ -10,6 +10,8 @@ import http.request.Request;
 import http.response.Response;
 import http.response.ResponseBody;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.handler.Handler;
 
 import java.io.IOException;
@@ -21,6 +23,8 @@ import static http.response.ContentType.HTML;
 import static http.response.HttpStatus.FOUND;
 
 public class UserListHandler implements Handler {
+    private static final Logger logger = LoggerFactory.getLogger(UserListHandler.class);
+
     private static final String LOCATION = "Location";
     private static final String USERS = "users";
     private static final String PREFIX_TEMPLATES = "/templates";
@@ -49,7 +53,6 @@ public class UserListHandler implements Handler {
             return new Response(FOUND, HTML, new Headers(headers), getBody("user/login_failed"));
         }
 
-        headers.put(LOCATION, "/user/list.html");
         return new Response(FOUND, HTML, new Headers(headers), getBody("user/list"));
     }
 
@@ -60,8 +63,12 @@ public class UserListHandler implements Handler {
 
     private ResponseBody getBody(String location) throws IOException {
         Map<String, List<User>> map = new HashMap<>();
-        map.put(USERS, DataBase.getAllUsers());
+        if(!location.contains("fail")){
+            map.put(USERS, DataBase.getAllUsers());
+        }
         String profile = compileTemplate(location).apply(map);
+        logger.debug("profile : {}", profile);
+
         return new ResponseBody(profile.getBytes());
     }
 
