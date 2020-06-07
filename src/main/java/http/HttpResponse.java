@@ -1,5 +1,6 @@
 package http;
 
+import http.response.ResponseHeader;
 import utils.StringUtil;
 
 import java.io.DataOutputStream;
@@ -11,8 +12,8 @@ public class HttpResponse {
     private StatusCode statusCode;
     private ContentType contentType = ContentType.HTML;
     private byte[] responseBody = new byte[0];
-    private String location;
     private String forward;
+    private final ResponseHeader header = ResponseHeader.init();
     private final Map<String, String> cookies = new HashMap<>();
     private final Map<String, Object> models = new HashMap<>();
 
@@ -25,12 +26,8 @@ public class HttpResponse {
     }
 
     public void sendRedirect(final String location) {
-        if (StringUtil.isEmpty(location)) {
-            throw new IllegalArgumentException("Redirect path is null or empty");
-        }
-
+        header.setLocation(location);
         statusCode = StatusCode.REDIRECT;
-        this.location = location;
     }
 
     public ContentType getContentType() {
@@ -50,7 +47,7 @@ public class HttpResponse {
     }
 
     public String getLocation() {
-        return location;
+        return header.getLocation();
     }
 
     public void writeResponse(final OutputStream outputStream) {
