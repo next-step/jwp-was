@@ -9,7 +9,7 @@ import java.util.Set;
 public class HandlerRegister {
 
     private Map<HandlerMatcher, Handler> map = new LinkedHashMap<>();
-    
+
     public void add(HandlerMatcher matcher, Handler handler) {
         this.map.put(matcher, handler);
     }

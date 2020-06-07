@@ -17,4 +17,8 @@ public class FileIoUtils {
         Path path = Paths.get(FileIoUtils.class.getClassLoader().getResource(filePath).toURI());
         return path.toFile();
     }
+
+    public static byte[] loadFile(File file) throws IOException {
+        return Files.readAllBytes(file.toPath());
+    }
 }

@@ -30,7 +30,7 @@ class UserListHandlerTest {
         Collection<User> users = DataBase.findAll();
         TemplateModel templateModel = new TemplateModel();
         templateModel.add("users", users);
-        HttpResponse expect = new HttpResponse(new TemplateView("/user/list.html", templateModel));
+        HttpResponse expect = new HttpResponse(new TemplateView("user/list", templateModel));
         assertThat(httpResponse).isEqualTo(expect);
     }
 
@@ -39,7 +39,7 @@ class UserListHandlerTest {
         HttpRequest httpRequest = createRequest(false);
         HttpResponse httpResponse = handler.handle(httpRequest);
 
-        HttpResponse expect = new HttpResponse(new StaticResourceView("/login.html"));
+        HttpResponse expect = new HttpResponse(new TemplateView("login"));
         assertThat(httpResponse).isEqualTo(expect);
     }
 

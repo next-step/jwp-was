@@ -14,6 +14,9 @@ import http.response.HttpResponse;
 public class RequestHandlerMapping {
     private static final HandlerRegister handlerRegister = new HandlerRegister();
     static {
+        register();
+    }
+    private static void register(){
         handlerRegister.add(
             new HandlerMatcher(Method.POST, "\\/user\\/create"),
             new UserCreateHandler()
@@ -30,8 +33,13 @@ public class RequestHandlerMapping {
         );
 
         handlerRegister.add(
+            new HandlerMatcher(Method.GET, "\\/(css|fonts|images|js)\\/.+"),
+            new StaticResourceHandler("static")
+        );
+
+        handlerRegister.add(
             new HandlerMatcher(Method.GET, ".*"),
-            new StaticResourceHandler()
+            new StaticResourceHandler("templates")
         );
     }
 

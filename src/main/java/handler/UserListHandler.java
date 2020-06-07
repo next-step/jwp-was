@@ -13,7 +13,7 @@ public class UserListHandler implements Handler{
     @Override
     public HttpResponse handle(HttpRequest httpRequest) {
         if(!isLogin(httpRequest)){
-            return new HttpResponse(new StaticResourceView("/login.html"));
+            return new HttpResponse(new TemplateView("login"));
         }
 
         TemplateModel templateModel = new TemplateModel();

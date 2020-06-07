@@ -4,6 +4,7 @@ import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.view.StaticResourceView;
+import http.view.TemplateView;
 import java.util.Optional;
 
 public class UserLoginHandler implements Handler {
@@ -19,7 +20,7 @@ public class UserLoginHandler implements Handler {
 
         boolean isLoginSuccess = login(userId, password);
         if (!isLoginSuccess) {
-            return new HttpResponse(new StaticResourceView("/user/login_failed.html"));
+            return new HttpResponse(new TemplateView("user/login_failed"));
         }
 
         HttpResponse httpResponse = new HttpResponse(new StaticResourceView("/index.html"));

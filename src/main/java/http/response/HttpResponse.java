@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiConsumer;
 
 public class HttpResponse {
 
@@ -19,10 +18,6 @@ public class HttpResponse {
 
     public HttpResponse(View view){
         this.view =view;
-    }
-
-    public void addHeader(String name, String value) {
-        headers.add(name, value);
     }
 
     public void addCookie(String name, String value) {

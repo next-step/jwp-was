@@ -27,6 +27,10 @@ public class TemplateView implements View {
         this.model = model;
     }
 
+    public TemplateView(String path) {
+        this(path, new TemplateModel());
+    }
+
     @Override
     public HttpStatus getHttpStatus() {
         return HttpStatus._200;

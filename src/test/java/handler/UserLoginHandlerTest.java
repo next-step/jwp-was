@@ -7,6 +7,7 @@ import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.view.StaticResourceView;
+import http.view.TemplateView;
 import java.io.IOException;
 import java.util.Arrays;
 import model.User;
@@ -28,7 +29,7 @@ class UserLoginHandlerTest {
     void login_fail() {
         HttpResponse httpResponse = login("javajigi", "password");
 
-        HttpResponse expect = new HttpResponse(new StaticResourceView("/user/login_failed.html"));
+        HttpResponse expect = new HttpResponse(new TemplateView("user/login_failed"));
         assertThat(httpResponse).isEqualTo(expect);
     }
 

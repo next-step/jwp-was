@@ -22,4 +22,18 @@ class HandlerMatcherTest {
         HandlerMatcher handlerMatcher = new HandlerMatcher(Method.GET, pattern);
         assertThat(handlerMatcher.isMatch(Method.GET, path)).isEqualTo(result);
     }
+    @ParameterizedTest
+    @CsvSource({
+
+        "\\/(css|fonts|images|js)\\/.+,/css/a, true",
+        "\\/(css|fonts|images|js)\\/.+,/css,false",
+        "\\/(css|fonts|images|js)\\/.+,/css/,false",
+        "\\/(css|fonts|images|js)\\/.+,/fonts/a, true",
+        "\\/(css|fonts|images|js)\\/.+,/images/a, true",
+        "\\/(css|fonts|images|js)\\/.+,/js/a, true",
+    })
+    void static_path_pattern(String pattern, String path, boolean result) {
+        HandlerMatcher handlerMatcher = new HandlerMatcher(Method.GET, pattern);
+        assertThat(handlerMatcher.isMatch(Method.GET, path)).isEqualTo(result);
+    }
 }

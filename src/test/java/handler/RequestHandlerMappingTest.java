@@ -27,8 +27,8 @@ public class RequestHandlerMappingTest {
     @DisplayName("static resource 요청 처리")
     @ParameterizedTest
     @CsvSource({
-        "GET /index.html HTTP/1.1, /index.html",
-        "GET /index2.html HTTP/1.1, /index2.html"
+        "GET /index.html HTTP/1.1, templates/index.html",
+        "GET /index2.html HTTP/1.1, templates/index2.html"
     })
     void handleStaticResourceRequest(String line, String path) {
         HttpRequest httpRequest = HttpRequest.of(
@@ -37,8 +37,9 @@ public class RequestHandlerMappingTest {
             null
         );
         HttpResponse response = requestHandlerMapping.handle(httpRequest);
+        HttpResponse expect = new HttpResponse(new StaticResourceView(path));
 
-        assertThat(response).isEqualTo(new HttpResponse(new StaticResourceView(path)));
+        assertThat(response).isEqualTo(expect);
     }
 
     @Test
