@@ -16,27 +16,37 @@ public class RequestLineParser {
         String method = lines[METHOD_INDEX];
         String path = lines[PATH_INDEX];
         String protocol = lines[PROTOCOL_INDEX];
-        return new RequestLine(createMethod(method, path), new Protocol(protocol));
+
+        if (method.equals(GET_METHOD)) {
+            return new RequestLine(createMethodGetByPath(path), new Protocol(protocol));
+        }
+
+        return new RequestLine(new RequestMethodPost(path), new Protocol(protocol));
     }
 
-    private static RequestMethod createMethod(String method, String path) {
-        if (method.equals(GET_METHOD)) {
-            return createMethodGetByPath(path);
-        }
-
+    public static RequestLine parse(final String line, String requestBody) {
+        String[] lines = line.split(SEPARATOR);
+        String method = lines[METHOD_INDEX];
+        String path = lines[PATH_INDEX];
+        String protocol = lines[PROTOCOL_INDEX];
         if (method.equals(POST_METHOD)) {
-            return new RequestMethodPost(path);
+            return new RequestLine(createMethodPostByRequestBody(path, requestBody), new Protocol(protocol));
         }
+        throw new IllegalArgumentException("잘 못된 요청입니다.");
+    }
 
-        throw new IllegalArgumentException("잘 못된 요청 입니다.");
+
+    private static RequestMethod createMethodPostByRequestBody(String path, String requestBody) {
+        RequestParametersTranslator requestParametersTranslator = new DefaultRequestParametersTranslator(requestBody);
+        return new RequestMethodPost(path, new RequestParameters(requestParametersTranslator.create()));
     }
 
     private static RequestMethod createMethodGetByPath(String path) {
         String[] queryString = path.split(SEPARATOR_URI);
 
         if (queryString.length > MIN_QUERY_STRING_SIZE) {
-            QueryStringsTranslator queryStringsTranslator = new DefaultQueryStringsTranslator(queryString[1]);
-            return new RequestMethodGet(queryString[0], new QueryStrings(queryStringsTranslator.create()));
+            RequestParametersTranslator requestParametersTranslator = new DefaultRequestParametersTranslator(queryString[1]);
+            return new RequestMethodGet(queryString[0], new RequestParameters(requestParametersTranslator.create()));
         }
         return new RequestMethodGet(path);
     }

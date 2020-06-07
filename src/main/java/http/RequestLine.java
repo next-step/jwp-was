@@ -30,11 +30,7 @@ public class RequestLine {
     }
 
     public Map<String, String> getParams() {
-        if (requestMethod instanceof RequestMethodGet) {
-            return ((RequestMethodGet) requestMethod).getQueryStrings()
-                    .getQueryStrings();
-        }
-        return null;
+        return requestMethod.getRequestParameters();
     }
 
     @Override
