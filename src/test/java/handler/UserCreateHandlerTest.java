@@ -6,21 +6,20 @@ import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.view.RedirectView;
-import http.view.StaticResourceView;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import model.User;
 import org.junit.jupiter.api.Test;
 
 class UserCreateHandlerTest {
+    private Handler handler = httpRequest -> new UserHandler().create(httpRequest);
+
 
     @Test
     void create() throws IOException {
         HttpRequest httpRequest = getCreateHttpRequest();
 
-        UserCreateHandler handler = new UserCreateHandler();
         handler.handle(httpRequest);
 
         User user = DataBase.findUserById("javajigi");
@@ -31,7 +30,6 @@ class UserCreateHandlerTest {
     void create_redirect() throws IOException {
         HttpRequest httpRequest = getCreateHttpRequest();
 
-        UserCreateHandler handler = new UserCreateHandler();
         HttpResponse httpResponse = handler.handle(httpRequest);
 
         assertThat(httpResponse).isEqualTo(new HttpResponse(new RedirectView("/index.html")));

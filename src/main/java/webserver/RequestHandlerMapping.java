@@ -4,9 +4,7 @@ import handler.Handler;
 import handler.HandlerMatcher;
 import handler.HandlerRegister;
 import handler.StaticResourceHandler;
-import handler.UserCreateHandler;
-import handler.UserListHandler;
-import handler.UserLoginHandler;
+import handler.UserHandler;
 import http.Method;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
@@ -17,19 +15,21 @@ public class RequestHandlerMapping {
         register();
     }
     private static void register(){
+        UserHandler userHandler = new UserHandler();
+
         handlerRegister.add(
             new HandlerMatcher(Method.POST, "\\/user\\/create"),
-            new UserCreateHandler()
+            httpRequest -> userHandler.create(httpRequest)
         );
 
         handlerRegister.add(
             new HandlerMatcher(Method.POST, "\\/user\\/login"),
-            new UserLoginHandler()
+            httpRequest -> userHandler.login(httpRequest)
         );
 
         handlerRegister.add(
             new HandlerMatcher(Method.GET, "\\/user\\/list\\.html"),
-            new UserListHandler()
+            httpRequest -> userHandler.list(httpRequest)
         );
 
         handlerRegister.add(

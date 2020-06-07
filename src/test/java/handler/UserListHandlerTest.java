@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import http.view.StaticResourceView;
 import http.view.TemplateModel;
 import http.view.TemplateView;
 import java.io.ByteArrayInputStream;
@@ -16,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 class UserListHandlerTest {
 
-    private Handler handler = new UserListHandler();
+    private Handler handler = httpRequest -> new UserHandler().list(httpRequest);
 
     @Test
     void list_success() throws IOException {

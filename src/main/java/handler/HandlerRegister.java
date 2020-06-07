@@ -1,6 +1,5 @@
 package handler;
 
-
 import http.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;

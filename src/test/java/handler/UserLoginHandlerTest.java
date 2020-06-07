@@ -1,7 +1,6 @@
 package handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import db.DataBase;
 import http.request.HttpRequest;
@@ -46,7 +45,6 @@ class UserLoginHandlerTest {
             body
         );
 
-        UserLoginHandler handler = new UserLoginHandler();
-        return handler.handle(httpRequest);
+        return new UserHandler().login(httpRequest);
     }
 }
