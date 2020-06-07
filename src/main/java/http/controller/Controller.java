@@ -7,4 +7,6 @@ public interface Controller {
     void service(HttpRequest request, HttpResponse response) throws Exception;
 
     boolean useAuthentication();
+
+    String getRequestMappingValue();
 }

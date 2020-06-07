@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 public class UserListController extends AbstractController {
+    private static final String REQUEST_MAPPING_VALUE = "/user/list.html";
+
     @Override
     public void doGet(HttpRequest request, HttpResponse response) throws Exception {
         Map<String, Object> userMap = new HashMap<>();
@@ -25,11 +27,15 @@ public class UserListController extends AbstractController {
 
     @Override
     public void doPost(HttpRequest request, HttpResponse response) {
-
     }
 
     @Override
     public boolean useAuthentication() {
         return true;
+    }
+
+    @Override
+    public String getRequestMappingValue() {
+        return REQUEST_MAPPING_VALUE;
     }
 }

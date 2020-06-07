@@ -11,9 +11,10 @@ import utils.UserData;
 import java.util.Objects;
 
 public class LoginController extends AbstractController {
+    private static final String REQUEST_MAPPING_VALUE = "/user/login";
+
     @Override
     public void doGet(HttpRequest request, HttpResponse response) {
-
     }
 
     @Override
@@ -34,5 +35,10 @@ public class LoginController extends AbstractController {
     @Override
     public boolean useAuthentication() {
         return false;
+    }
+
+    @Override
+    public String getRequestMappingValue() {
+        return REQUEST_MAPPING_VALUE;
     }
 }

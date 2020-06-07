@@ -8,9 +8,10 @@ import utils.ConvertUtils;
 import utils.UserData;
 
 public class CreateUserController extends AbstractController {
+    private static final String REQUEST_MAPPING_VALUE = "/user/create";
+
     @Override
     public void doGet(HttpRequest request, HttpResponse response) {
-
     }
 
     @Override
@@ -24,5 +25,10 @@ public class CreateUserController extends AbstractController {
     @Override
     public boolean useAuthentication() {
         return false;
+    }
+
+    @Override
+    public String getRequestMappingValue() {
+        return REQUEST_MAPPING_VALUE;
     }
 }

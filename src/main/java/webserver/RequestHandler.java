@@ -2,6 +2,9 @@ package webserver;
 
 import http.controller.Controller;
 import http.controller.Controllers;
+import http.controller.user.CreateUserController;
+import http.controller.user.LoginController;
+import http.controller.user.UserListController;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import org.slf4j.Logger;
@@ -31,7 +34,7 @@ public class RequestHandler implements Runnable {
             HttpRequest request = HttpRequest.getInstance(in);
             HttpResponse response = new HttpResponse();
 
-            Controllers controllers = new Controllers();
+            Controllers controllers = addControllers();
             if (controllers.containsKey(request.getPath())) {
                 Controller controller = controllers.get(request.getPath());
                 controller.service(request, response);
@@ -72,5 +75,13 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private Controllers addControllers() {
+        Controllers controllers = new Controllers();
+        controllers.addController(new CreateUserController());
+        controllers.addController(new LoginController());
+        controllers.addController(new UserListController());
+        return controllers;
     }
 }
