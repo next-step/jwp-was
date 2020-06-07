@@ -43,26 +43,4 @@ class ResponseHeaderTest {
         responseHeader.setLocation("some location");
         assertThat(responseHeader.getHeaders()).hasSize(1);
     }
-
-    @Test
-    @DisplayName("forward 쓰기")
-    void forward() {
-        responseHeader.setForward("some path");
-
-        assertThat(responseHeader.getForward()).isEqualTo("some path");
-        assertThat(responseHeader.getHeaders()).isEmpty();
-    }
-
-    @Test
-    @DisplayName("forward 쓰기를 하면 기존의 헤더들은 그대로")
-    void forwardNotRemoveHeaders() {
-        responseHeader.setHeader("key0", "value");
-        responseHeader.setHeader("key1", "value");
-        responseHeader.setHeader("key2", "value");
-        responseHeader.setHeader("key3", "value");
-
-        assertThat(responseHeader.getHeaders()).hasSize(4);
-        responseHeader.setForward("some location");
-        assertThat(responseHeader.getHeaders()).hasSize(5);
-    }
 }

@@ -1,5 +1,6 @@
 package http;
 
+import http.response.Forward;
 import http.response.Models;
 import http.response.ResponseHeader;
 
@@ -15,6 +16,7 @@ public class HttpResponse {
     private final Cookies cookies = Cookies.init();
     private final ResponseHeader header = ResponseHeader.init();
     private final Models models = Models.init();
+    private final Forward forward = Forward.init();
 
     private HttpResponse(final StatusCode statusCode) {
         this.statusCode = statusCode;
@@ -74,11 +76,11 @@ public class HttpResponse {
     }
 
     public void forward(final String path) {
-        header.setForward(path);
+        forward.setForward(path);
     }
 
     public String getForward() {
-        return header.getForward();
+        return forward.getForward();
     }
 
     public void addModel(final String key, final Object value) {
@@ -87,5 +89,9 @@ public class HttpResponse {
 
     public Map<String, Object> getModels() {
         return models.getModels();
+    }
+
+    public boolean isForward() {
+        return forward.isForward();
     }
 }

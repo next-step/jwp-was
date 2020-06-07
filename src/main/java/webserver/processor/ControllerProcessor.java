@@ -35,7 +35,7 @@ public class ControllerProcessor implements Processor {
     }
 
     @Override
-    public void process(final HttpRequest httpRequest, final HttpResponse httpResponse) throws IOException {
+    public void process(final HttpRequest httpRequest, final HttpResponse httpResponse) {
         AbstractController controller = PATH_AND_CONTROLLER.get(httpRequest.getPath());
 
         controller.process(httpRequest, httpResponse);
@@ -44,6 +44,8 @@ public class ControllerProcessor implements Processor {
     }
 
     private void render(final HttpRequest httpRequest, final HttpResponse httpResponse) {
-        handleBarEngine.render(httpRequest, httpResponse);
+        if (httpResponse.isForward()) {
+            handleBarEngine.render(httpRequest, httpResponse);
+        }
     }
 }
