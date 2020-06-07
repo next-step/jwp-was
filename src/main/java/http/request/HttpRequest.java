@@ -1,6 +1,7 @@
 package http.request;
 
 import lombok.Getter;
+import utils.ConvertUtils;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -10,7 +11,6 @@ import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 @Getter
 public class HttpRequest {
@@ -58,8 +58,8 @@ public class HttpRequest {
         return this.requestHeader.getContentType();
     }
 
-    public Map<String, String> getBody() {
-        return this.requestBody.getBodyMap();
+    public <T> T getBody(Class<T> valueType) {
+        return ConvertUtils.convertValue(this.requestBody.getBodyMap(), valueType);
     }
 
     public HttpMethod getMethod() {

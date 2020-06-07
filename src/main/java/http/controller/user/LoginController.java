@@ -19,7 +19,7 @@ public class LoginController extends AbstractController {
 
     @Override
     public void doPost(HttpRequest request, HttpResponse response) {
-        UserRequestView userRequestView = ConvertUtils.convertValue(request.getBody(), UserRequestView.class);
+        UserRequestView userRequestView = request.getBody(UserRequestView.class);
         User user = UserData.getUser(userRequestView.getUserId());
 
         if (Objects.isNull(user) || !user.login(userRequestView.getPassword())) {
