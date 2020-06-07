@@ -56,7 +56,7 @@ public class HttpRequest {
         return this.requestHeader.getContentType();
     }
 
-    public Map getBody() {
+    public Map<String, String> getBody() {
         return this.requestBody.getBodyMap();
     }
 
