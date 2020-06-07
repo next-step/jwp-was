@@ -32,7 +32,7 @@ public class UserLoginController extends AbstractController {
 
         User user = DataBase.findUserById(userId);
 
-        if (isSamePassword(user.getPassword(), password)) {
+        if (user.checkSamePassword(password)) {
             httpResponse.response302("/index.html");
             httpResponse.addCookie("logined", "true");
             httpResponse.addCookiePath("/");
@@ -42,12 +42,4 @@ public class UserLoginController extends AbstractController {
             httpResponse.addCookiePath("/");
         }
     }
-
-    private boolean isSamePassword(String password1, String password2) {
-        if (password1 == null) {
-            return false;
-        }
-        return password1.equals(password2);
-    }
-
 }

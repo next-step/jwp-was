@@ -17,10 +17,6 @@ public class User {
         return userId;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public String getName() {
         return name;
     }
@@ -33,4 +29,12 @@ public class User {
     public String toString() {
         return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
     }
+
+    public boolean checkSamePassword(String password) {
+        if (this.password == null) {
+            return false;
+        }
+        return this.password.equals(password);
+    }
+
 }
