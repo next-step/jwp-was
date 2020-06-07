@@ -10,7 +10,7 @@ class ProtocolTest {
     @Test
     void create() {
         Protocol protocol = Protocol.of("HTTP/1.1");
-        
+
         assertThat(protocol)
             .isEqualTo(Protocol.of("HTTP", "1.1"));
     }
