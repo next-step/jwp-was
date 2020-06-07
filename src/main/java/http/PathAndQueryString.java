@@ -1,11 +1,14 @@
 package http;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import model.User;
+
 public class PathAndQueryString {
 
-    private String queryString;
+    private QueryString queryString;
     private String path;
 
-    public PathAndQueryString(String path, String queryString) {
+    public PathAndQueryString(String path, QueryString queryString) {
         this.path = path;
         this.queryString = queryString;
     }
@@ -14,7 +17,11 @@ public class PathAndQueryString {
         return this.path;
     }
 
-    public String getQeuryString() {
+    public QueryString getQueryString() {
         return this.queryString;
+    }
+
+    public boolean isSignUrl() {
+        return "/user/create".equals(this.path) && StringUtils.isNotEmpty(this.queryString.getFullQueryString()) && this.queryString.isContainAllField(User.class);
     }
 }

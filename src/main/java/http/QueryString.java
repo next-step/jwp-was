@@ -1,25 +1,56 @@
 package http;
 
-import java.util.Arrays;
+import utils.FieldNameUtils;
+
+import java.net.URLDecoder;
+import java.util.*;
 
 public class QueryString {
-    private final String queryString;
+    private final String fullQueryString;
 
     public QueryString(String queryString) {
-        this.queryString = queryString;
+        this.fullQueryString = queryString;
+    }
+
+    public String getFullQueryString() {
+        return this.fullQueryString;
     }
 
     public String getParameter(String name) {
-        String parameterValue = "";
-        String[] values = name.split("&");
-        for (String value : values) {
-            if(value.startsWith(name)) {
-                String[] namesAndValue = value.split("=");
-                parameterValue = namesAndValue[1];
-                break;
-            }
-        }
+        Optional<String> nameValueOptional = Arrays.stream(this.fullQueryString.split("&"))
+                .filter(value -> value.startsWith(name))
+                .findFirst();
 
-        return parameterValue;
+         String[] values = nameValueOptional.orElseThrow(NoSuchElementException::new)
+                 .split("=");
+
+         if(values.length < 2) {
+             throw new IllegalArgumentException();
+         }
+
+         return URLDecoder.decode(values[1]);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof QueryString)) return false;
+        QueryString that = (QueryString) o;
+        return Objects.equals(fullQueryString, that.fullQueryString);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fullQueryString);
+    }
+
+    public boolean isContainAllField(Class clazz) {
+        try {
+            FieldNameUtils.classFieldNames(clazz)
+                    .forEach(this::getParameter);
+            return true;
+        } catch (NoSuchElementException | IllegalAccessError e) {
+            return false;
+        }
     }
 }

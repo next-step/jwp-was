@@ -10,6 +10,9 @@ public class Protocol {
 
     public Protocol(String s) {
         String[] values = s.split("/");
+        if(values.length != 2) {
+            throw new IllegalArgumentException();
+        }
         this.protocol = values[0];
         this.version = values[1];
     }
@@ -20,11 +23,11 @@ public class Protocol {
     }
 
     public String getProtocol() {
-        return null;
+        return this.protocol;
     }
 
     public String getVersion() {
-        return null;
+        return this.version;
     }
 
     @Override

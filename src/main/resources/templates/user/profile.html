@@ -80,14 +80,14 @@
             <div class="panel-body">
                 <div class="well well-sm">
                     <div class="media">
-                        <a class="thumbnail pull-left" href="#">
-                            <img class="media-object" src="../images/80-text.png">
-                        </a>
+                        {{#userList}}
                         <div class="media-body">
-                            <h4 class="media-heading">자바지기</h4>
+                            <h4 class="media-heading">{{userId}}</h4>
+                            <h4 class="media-heading">{{name}}</h4>
                             <p>
-                                <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-envelope"></span>&nbsp;javajigi@slipp.net</a>
+                                <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-envelope"></span>{{email}}</a>
                             </p>
+                         {{/userList}}
                         </div>
                     </div>
                 </div>
