@@ -1,7 +1,7 @@
 package webserver.processor;
 
 import http.ContentType;
-import http.HttpRequest;
+import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.StatusCode;
 import org.slf4j.Logger;

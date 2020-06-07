@@ -1,6 +1,6 @@
 package testutils;
 
-import http.HttpRequest;
+import http.request.HttpRequest;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

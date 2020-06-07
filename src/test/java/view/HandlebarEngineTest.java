@@ -1,6 +1,6 @@
 package view;
 
-import http.HttpRequest;
+import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.StatusCode;
 import org.junit.jupiter.api.DisplayName;

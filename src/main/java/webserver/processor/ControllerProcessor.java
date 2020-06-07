@@ -4,7 +4,7 @@ import controller.AbstractController;
 import controller.LoginController;
 import controller.UserController;
 import controller.UserListController;
-import http.HttpRequest;
+import http.request.HttpRequest;
 import http.response.HttpResponse;
 import view.HandlebarEngine;
 import view.View;

@@ -1,6 +1,6 @@
 package utils;
 
-import http.HttpRequest;
+import http.request.HttpRequest;
 
 public class LoginUtil {
 

@@ -1,6 +1,6 @@
 package view;
 
-import http.HttpRequest;
+import http.request.HttpRequest;
 import http.response.HttpResponse;
 
 public interface View {

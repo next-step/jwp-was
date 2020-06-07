@@ -1,5 +1,7 @@
-package http;
+package http.request;
 
+import http.HttpMethod;
+import http.Statics;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import testutils.HttpRequestGenerator;
