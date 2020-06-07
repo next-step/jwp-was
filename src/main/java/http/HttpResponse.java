@@ -12,7 +12,9 @@ public class HttpResponse {
     private ContentType contentType = ContentType.HTML;
     private byte[] responseBody = new byte[0];
     private String location;
+    private String forward;
     private final Map<String, String> cookies = new HashMap<>();
+    private final Map<String, Object> models = new HashMap<>();
 
     private HttpResponse(final StatusCode statusCode) {
         this.statusCode = statusCode;
@@ -73,5 +75,21 @@ public class HttpResponse {
 
     public void updateType(final ContentType contentType) {
         this.contentType = contentType;
+    }
+
+    public void forward(final String path) {
+        this.forward = path;
+    }
+
+    public String getForward() {
+        return forward;
+    }
+
+    public void addModel(final String key, final Object value) {
+        models.put(key, value);
+    }
+
+    public Map<String, Object> getModels() {
+        return models;
     }
 }

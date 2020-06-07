@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
@@ -38,4 +40,26 @@ class HttpResponseTest {
                 .isThrownBy(() -> httpResponse.sendRedirect(location));
     }
 
+    @Test
+    @DisplayName("forward 는 200 ok response 이며 forward 경로가 존재한다")
+    void forward() {
+        HttpResponse httpResponse = HttpResponse.init();
+
+        httpResponse.forward("test");
+
+        assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.OK);
+        assertThat(httpResponse.getForward()).isEqualTo("test");
+    }
+
+    @Test
+    @DisplayName("response 에 model 값들을 담을 수 있다")
+    void model() {
+        HttpResponse httpResponse = HttpResponse.init();
+
+        httpResponse.addModel("key", "value");
+
+        Map<String, Object> models = httpResponse.getModels();
+        assertThat(models).hasSize(1);
+        assertThat(models.get("key")).isEqualTo("value");
+    }
 }
