@@ -1,7 +1,6 @@
 package http;
 
 import http.response.ResponseHeader;
-import utils.StringUtil;
 
 import java.io.DataOutputStream;
 import java.io.OutputStream;
@@ -12,7 +11,6 @@ public class HttpResponse {
     private StatusCode statusCode;
     private ContentType contentType = ContentType.HTML;
     private byte[] responseBody = new byte[0];
-    private String forward;
     private final ResponseHeader header = ResponseHeader.init();
     private final Map<String, String> cookies = new HashMap<>();
     private final Map<String, Object> models = new HashMap<>();
@@ -75,11 +73,11 @@ public class HttpResponse {
     }
 
     public void forward(final String path) {
-        this.forward = path;
+        header.setForward(path);
     }
 
     public String getForward() {
-        return forward;
+        return header.getForward();
     }
 
     public void addModel(final String key, final Object value) {
