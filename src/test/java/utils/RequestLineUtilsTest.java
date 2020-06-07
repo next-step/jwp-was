@@ -25,7 +25,7 @@ public class RequestLineUtilsTest {
 
     @DisplayName("QueryString 추출")
     @Test
-    void getQueries(){
+    void getQueries() {
         //given
         String requestLine = "POST /user/create HTTP/1.1";
         String requestLine2 = "GET /user?userId=palmseung&name=seunghee HTTP/1.1";
@@ -41,7 +41,7 @@ public class RequestLineUtilsTest {
 
     @DisplayName("Protocol 추출")
     @Test
-    void getProtocol(){
+    void getProtocol() {
         //given
         String requestLine = "POST /user/create HTTP/1.1";
         String requestLine2 = "GET /user?userId=palmseung&name=seunghee HTTP/1.1";
@@ -57,7 +57,7 @@ public class RequestLineUtilsTest {
 
     @DisplayName("Version 추출")
     @Test
-    void getVersion(){
+    void getVersion() {
         //given
         String requestLine = "POST /user/create HTTP/1.1";
         String requestLine2 = "GET /user?userId=palmseung&name=seunghee HTTP/1.1";
@@ -69,5 +69,21 @@ public class RequestLineUtilsTest {
         //then
         assertThat(version).isEqualTo("1.1");
         assertThat(version2).isEqualTo("1.1");
+    }
+
+    @DisplayName("Query String 보유 여부 검증")
+    @Test
+    void hasQueryStrings() {
+        //given
+        String requestLine = "POST /user/create HTTP/1.1";
+        String requestLine2 = "GET /user?userId=palmseung&name=seunghee HTTP/1.1";
+
+        //when
+        boolean hasQueryStrings = RequestLineUtils.hasQueryStrings(requestLine);
+        boolean hasQueryStrings2 = RequestLineUtils.hasQueryStrings(requestLine2);
+
+        //then
+        assertThat(hasQueryStrings).isFalse();
+        assertThat(hasQueryStrings2).isTrue();
     }
 }
