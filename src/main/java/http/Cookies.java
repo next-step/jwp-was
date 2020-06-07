@@ -3,6 +3,7 @@ package http;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Cookies {
@@ -20,11 +21,10 @@ public class Cookies {
                 .collect(Collectors.toList()));
     }
 
-    public Cookie getValue(String name) {
+    public Optional<Cookie> getValue(String name) {
         return cookies.stream()
                 .filter(cookie -> cookie.exists(name))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 
     @Override
