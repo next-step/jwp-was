@@ -6,8 +6,6 @@ import http.HttpResponse;
 import http.StatusCode;
 import sun.plugin.dom.exception.InvalidAccessException;
 
-import java.io.IOException;
-
 public abstract class AbstractController implements Controller {
     protected final String path;
 
@@ -15,7 +13,7 @@ public abstract class AbstractController implements Controller {
         this.path = path;
     }
 
-    public void process(final HttpRequest httpRequest, final HttpResponse httpResponse) throws IOException {
+    public void process(final HttpRequest httpRequest, final HttpResponse httpResponse) {
         if (httpRequest.getMethod() == HttpMethod.GET) {
             get(httpRequest, httpResponse);
             return;
@@ -24,7 +22,7 @@ public abstract class AbstractController implements Controller {
         post(httpRequest, httpResponse);
     }
 
-    protected void get(final HttpRequest httpRequest, final HttpResponse httpResponse) throws IOException {
+    protected void get(final HttpRequest httpRequest, final HttpResponse httpResponse) {
         notFound(httpResponse);
     }
 
