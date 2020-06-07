@@ -3,14 +3,9 @@ package utils;
 public class StringUtils {
 
     public static boolean isEmpty(String val) {
-        if (val == null) {
+        if (val == null || val.trim().isEmpty()) {
             return true;
         }
-
-        if (val.trim().isEmpty()) {
-            return true;
-        }
-
         return false;
     }
 

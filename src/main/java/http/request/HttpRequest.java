@@ -67,6 +67,10 @@ public class HttpRequest {
         return requestLine.getMethod();
     }
 
+    public String getCookie(String name) {
+        return this.headers.getCookies().get(name);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -83,4 +87,6 @@ public class HttpRequest {
     public int hashCode() {
         return Objects.hash(requestLine);
     }
+
+
 }

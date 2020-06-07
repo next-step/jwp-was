@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 
 public class HttpResponse {
 
@@ -42,8 +43,17 @@ public class HttpResponse {
 
         byte[] body = this.view.getBody();
         dos.writeBytes("Content-Length: " + body.length + "\r\n");
-        dos.writeBytes("\r\n");
 
+        this.cookies.forEach(
+            (name, value) -> {
+                try {
+                    dos.writeBytes(String.format("Set-Cookie: %s=%s; Path=/\r\n", name, value));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+        dos.writeBytes("\r\n");
         dos.write(body, 0, body.length);
         dos.flush();
     }

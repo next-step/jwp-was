@@ -8,6 +8,11 @@ import model.User;
 
 public class UserCreateHandler implements Handler {
 
+    @Override
+    public HttpResponse handle(HttpRequest httpRequest) {
+        return create(httpRequest);
+    }
+
     private HttpResponse create(HttpRequest httpRequest) {
         String userId = httpRequest.getParameter("userId");
         String password = httpRequest.getParameter("password");
@@ -21,10 +26,5 @@ public class UserCreateHandler implements Handler {
 
         HttpResponse httpResponse = new HttpResponse(new RedirectView("/index.html"));
         return httpResponse;
-    }
-
-    @Override
-    public HttpResponse handle(HttpRequest httpRequest) {
-        return create(httpRequest);
     }
 }

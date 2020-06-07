@@ -49,6 +49,11 @@ public class Headers {
         return Integer.parseInt(length);
     }
 
+    public Map<String, String> getCookies(){
+        String cookies =this.headers.getOrDefault("Cookie", "");
+        return Cookie.from(cookies).getCookies();
+    }
+
     public Parameters parseBody(String body) {
         if (StringUtils.isEmpty(body)) {
             return Parameters.empty();
