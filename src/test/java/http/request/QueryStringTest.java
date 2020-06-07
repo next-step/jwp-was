@@ -1,6 +1,5 @@
-package http;
+package http.request;
 
-import http.request.QueryString;
 import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
