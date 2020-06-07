@@ -5,11 +5,8 @@ import http.Response;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import webserver.RequestHandler;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Map;
 
 public class UserController {
@@ -37,10 +34,6 @@ public class UserController {
             return new Response("HTTP", 200, "OK", "text/html;charset=utf-8", "", false, String.format("./templates/%s", path));
         }
 
-        if (path.equals("/user/create")) {
-
-        }
-
         return null;
     }
 
@@ -54,7 +47,6 @@ public class UserController {
             String name = requestParams.getOrDefault("name", "");
             User user = new User(userId, password, email, name);
             logger.debug(user.toString());
-            return new Response("HTTP", 302, "OK", "text/html", "", true, "index.html");
         }
 
         return null;

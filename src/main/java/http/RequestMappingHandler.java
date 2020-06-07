@@ -61,6 +61,13 @@ public class RequestMappingHandler {
     private void handler(String readLine) {
         RequestLine requestLine = RequestLineParser.parse(readLine);
         String path = requestLine.getPath();
+
+        if (path.equals("/index.html")) {
+            byte[] body = getUserForm("./templates/index.html");
+            response200Header(body.length);
+            responseBody(body);
+        }
+
         if (path.matches("/user/.*")) {
             handlerByUserController(requestLine);
         }
@@ -68,10 +75,24 @@ public class RequestMappingHandler {
 
     private void handlerByUserController(RequestLine requestLine) {
         Response response = new UserController(requestLine).mapping();
-        if (response.getCode() == 200) {
-            byte[] body = getUserForm(response.getPath());
-            response200Header(body.length);
-            responseBody(body);
+
+        if (response == null) {
+            response302Header();
+            return;
+        }
+
+        byte[] body = getUserForm(response.getPath());
+        response200Header(body.length);
+        responseBody(body);
+    }
+
+    private void response302Header() {
+        try {
+            dataOutputStream.writeBytes("HTTP/1.1 302 Found \r\n");
+            dataOutputStream.writeBytes("Location: /index.html \r\n");
+            dataOutputStream.writeBytes("\r\n");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
