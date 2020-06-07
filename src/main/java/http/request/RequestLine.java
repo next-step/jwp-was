@@ -1,4 +1,8 @@
-package http;
+package http.request;
+
+import http.HttpMethod;
+import http.ProtocolAndVersion;
+import http.QueryString;
 
 import java.util.Objects;
 

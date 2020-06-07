@@ -6,6 +6,10 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import http.*;
+import http.parser.RequestHeaderParser;
+import http.parser.RequestLineParser;
+import http.request.HttpRequest;
+import http.request.RequestLine;
 import model.User;
 import model.Users;
 import org.apache.logging.log4j.util.Strings;
@@ -35,38 +39,12 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            HttpRequest httpRequest = readRequest(in);
 
-            String line = br.readLine();
-            logger.debug("Request Line :: {}", line);
-            RequestLine requestLine = RequestLineParser.parse(line);
+            String path = httpRequest.getPath();
 
-            List<String> headers = new ArrayList<>();
-
-            line = br.readLine();
-            while (!line.equals("")) {
-                logger.debug("Header :: {}", line);
-                headers.add(line);
-                line = br.readLine();
-            }
-
-            Header header = new Header(headers.toArray(new String[headers.size()]));
-            Cookie cookie = new Cookie(header.getValue("Cookie"));
-
-            String contentLengthStr = header.getValue("Content-Length");
-            int contentLength = 0;
-            if (!Strings.isBlank(contentLengthStr)) {
-                contentLength = Integer.parseInt(contentLengthStr);
-            }
-
-            String requestBody = IOUtils.readData(br, contentLength);
-            logger.debug("Body :: {}", requestBody);
-
-            HttpMethod httpMethod = requestLine.getHttpMethod();
-            String path = requestLine.getPath();
-
-            if (isPost(httpMethod) && "/user/create".equals(path)) {
-                FormData formData = new FormData(requestBody);
+            if (isPost(httpRequest) && "/user/create".equals(path)) {
+                FormData formData = new FormData(httpRequest.getBody());
                 String userId = formData.getValue("userId");
                 String password = formData.getValue("password");
                 String name = formData.getValue("name");
@@ -76,8 +54,8 @@ public class RequestHandler implements Runnable {
                 DataOutputStream dos = new DataOutputStream(out);
                 response302Header(dos, "/index.html");
 
-            } else if (isPost(httpMethod) && "/user/login".equals(path)) {
-                FormData formData = new FormData(requestBody);
+            } else if (isPost(httpRequest) && "/user/login".equals(path)) {
+                FormData formData = new FormData(httpRequest.getBody());
                 String userId = formData.getValue("userId");
                 String password = formData.getValue("password");
 
@@ -91,8 +69,8 @@ public class RequestHandler implements Runnable {
                     response302HeaderWithCookies(dos, "/user/login_failed.html", "logined", "false");
                 }
 
-            } else if (isGet(httpMethod) && "/user/list".equals(path)) {
-                if (isLogined(cookie)) {
+            } else if (isGet(httpRequest) && "/user/list".equals(path)) {
+                if (isLogined(httpRequest)) {
                     Users users = new Users(DataBase.findAll());
 
                     TemplateLoader loader = new ClassPathTemplateLoader();
@@ -131,6 +109,35 @@ public class RequestHandler implements Runnable {
         }
     }
 
+    private HttpRequest readRequest(InputStream in) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+
+        String requestLineStr = br.readLine();
+        logger.debug("Request Line :: {}", requestLineStr);
+        RequestLine requestLine = RequestLineParser.parse(requestLineStr);
+
+        List<String> headerList = new ArrayList<>();
+        String headerStr = br.readLine();
+        while (!headerStr.equals("")) {
+            logger.debug("Header :: {}", headerStr);
+            headerList.add(headerStr);
+            headerStr = br.readLine();
+        }
+        Headers headers = RequestHeaderParser.parse(headerList);
+
+        String contentLengthStr = headers.getValue("Content-Length");
+        int contentLength = 0;
+        if (!Strings.isBlank(contentLengthStr)) {
+            contentLength = Integer.parseInt(contentLengthStr);
+        }
+
+        String requestBody = IOUtils.readData(br, contentLength);
+        logger.debug("Body :: {}", requestBody);
+
+        return new HttpRequest(requestLine, headers, requestBody);
+
+    }
+
     private boolean isSamePassword(String password1, String password2) {
         if (password1 == null) {
             return false;
@@ -138,20 +145,20 @@ public class RequestHandler implements Runnable {
         return password1.equals(password2);
     }
 
-    private boolean isLogined(Cookie cookie) {
-        String logined = cookie.getValue("logined");
+    private boolean isLogined(HttpRequest httpRequest) {
+        String logined = httpRequest.getCookie("logined");
         if ("true".equals(logined)) {
            return true;
         }
         return false;
     }
 
-    private boolean isGet(HttpMethod httpMethod) {
-        return HttpMethod.GET.equals(httpMethod);
+    private boolean isGet(HttpRequest httpRequest) {
+        return HttpMethod.GET.equals(httpRequest.getMethod());
     }
 
-    private boolean isPost(HttpMethod httpMethod) {
-        return HttpMethod.POST.equals(httpMethod);
+    private boolean isPost(HttpRequest httpRequest) {
+        return HttpMethod.POST.equals(httpRequest.getMethod());
     }
 
     private void response302Header(DataOutputStream dos, String location) {
