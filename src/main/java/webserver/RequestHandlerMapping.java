@@ -1,5 +1,8 @@
 package webserver;
 
+import handler.Handler;
+import handler.HandlerMatcher;
+import handler.HandlerRegister;
 import handler.StaticResourceHandler;
 import handler.UserCreateHandler;
 import handler.UserListHandler;
@@ -9,24 +12,32 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 
 public class RequestHandlerMapping {
-    private final UserCreateHandler userCreateHandler = new UserCreateHandler();
-    private final UserLoginHandler userLoginHandler = new UserLoginHandler();
-    private final UserListHandler userListHandler = new UserListHandler();
-    private final StaticResourceHandler staticResourceHandler = new StaticResourceHandler();
+    private static final HandlerRegister handlerRegister = new HandlerRegister();
+    static {
+        handlerRegister.add(
+            new HandlerMatcher(Method.POST, "\\/user\\/create"),
+            new UserCreateHandler()
+        );
+
+        handlerRegister.add(
+            new HandlerMatcher(Method.POST, "\\/user\\/login"),
+            new UserLoginHandler()
+        );
+
+        handlerRegister.add(
+            new HandlerMatcher(Method.GET, "\\/user\\/list\\.html"),
+            new UserListHandler()
+        );
+
+        handlerRegister.add(
+            new HandlerMatcher(Method.GET, ".*"),
+            new StaticResourceHandler()
+        );
+    }
 
     public HttpResponse handle(HttpRequest httpRequest) {
-        if (httpRequest.getMethod() == Method.POST && httpRequest.getPath().startsWith("/user/create")) {
-            return userCreateHandler.handle(httpRequest);
-        }
-
-        if(httpRequest.getMethod() == Method.POST && httpRequest.getPath().startsWith("/user/login")){
-            return userLoginHandler.handle(httpRequest);
-        }
-
-        if(httpRequest.getMethod() == Method.GET && httpRequest.getPath().startsWith("/user/list.html")){
-            return userListHandler.handle(httpRequest);
-        }
-
-        return staticResourceHandler.handle(httpRequest);
+        Handler handler = handlerRegister.find(httpRequest.getMethod(), httpRequest.getPath());
+        return handler.handle(httpRequest);
     }
+
 }
