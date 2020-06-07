@@ -10,7 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.handler.custom.LoginHandler;
 import webserver.handler.custom.StaticResourceHandler;
-import webserver.handler.custom.TemplateHandler;
+import webserver.handler.custom.TemplateResourceHandler;
 import webserver.handler.custom.UserCreateHandler;
 
 import java.util.HashMap;
@@ -49,7 +49,7 @@ public class HandlersTest {
         Handler handler = Handlers.findHandler(request);
 
         //then
-        assertThat(handler).isInstanceOf(TemplateHandler.class);
+        assertThat(handler).isInstanceOf(TemplateResourceHandler.class);
     }
 
     @DisplayName("요청의 url이 /login이면, LoginHandler 맵핑")

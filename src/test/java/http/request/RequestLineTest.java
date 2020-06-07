@@ -1,7 +1,5 @@
-package http.requestLine;
+package http.request;
 
-import http.request.Method;
-import http.request.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

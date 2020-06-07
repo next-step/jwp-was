@@ -26,10 +26,10 @@ public class TemplateResourcesHandlerTest {
         RequestBody requestBody = new RequestBody("");
         Headers headers = new Headers(new HashMap<>());
         Request request = new Request(requestLine, headers, requestBody);
-        TemplateHandler templateHandler = new TemplateHandler();
+        TemplateResourceHandler templateResourceHandler = new TemplateResourceHandler();
 
         //when
-        Response response = templateHandler.work(request);
+        Response response = templateResourceHandler.work(request);
 
         //then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);

@@ -16,6 +16,8 @@ import java.util.Map;
 
 public class StaticResourceHandler implements Handler {
     private static final String PREFIX_STATIC = "./static";
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String CONTENT_LENGTH = "Content-Length";
 
     @Override
     public boolean isSameUrl(String url) {
@@ -34,8 +36,8 @@ public class StaticResourceHandler implements Handler {
 
     private Headers getHeaders(ResponseBody body, ContentType contentType) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", contentType.getContentType());
-        headers.put("Content-Length", String.valueOf(body.getBody().length));
+        headers.put(CONTENT_TYPE, contentType.getContentType());
+        headers.put(CONTENT_LENGTH, String.valueOf(body.getBody().length));
         return new Headers(headers);
     }
 
