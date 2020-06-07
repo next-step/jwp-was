@@ -11,10 +11,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
 
@@ -36,22 +39,31 @@ public class RequestHandler implements Runnable {
             String line = br.readLine();
             logger.debug("request line : {}", line);
             RequestLine requestLine = RequestLine.of(line);
+            String path = requestLine.getPath();
+            Map<String, String> headers = new HashMap<>();
             while (!line.equals("")) {
                 line = br.readLine();
                 logger.debug("header : {}", line);
+                String[] headerValues = line.split(": ");
+                if (headerValues.length == 2) {
+                    headers.put(headerValues[0], headerValues[1]);
+                }
             }
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
 
-            if (requestLine.getPath().equals("/user/create")) {
-                QueryString queryString = requestLine.getQuery();
+            logger.debug("Content-Length: {}", headers.get("Content-Length"));
+
+            if ("/user/create".equals(path)) {
+                String requestBody = IOUtils.readData(br, Integer.parseInt(headers.get("Content-Length")));
+                QueryString queryString = QueryString.of(requestBody);
                 User user = new User(queryString.getPrameter("userId"), queryString.getPrameter("password"),
                     queryString.getPrameter("name"), queryString.getPrameter("email"));
                 logger.debug("User : {}", user);
                 DataBase.addUser(user);
+                path = "/index.html";
             }
 
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + requestLine.getPath());
+            byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + path);
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
