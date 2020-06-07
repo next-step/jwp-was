@@ -28,6 +28,10 @@ public class RequestMethodGet implements RequestMethod {
         return METHOD_NAME;
     }
 
+    public QueryStrings getQueryStrings() {
+        return queryStrings;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
