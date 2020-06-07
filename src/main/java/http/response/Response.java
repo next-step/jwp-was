@@ -1,5 +1,10 @@
 package http.response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +13,7 @@ import static http.response.ResponseStatus.FOUND;
 import static http.response.ResponseStatus.OK;
 
 public class Response {
-
+    private static final Logger logger = LoggerFactory.getLogger(Response.class);
     private static final String STATUS_PREFIX = "HTTP/1.1";
 
     private ResponseStatus status;
@@ -75,5 +80,20 @@ public class Response {
 
     public void putCookie(String cookie) {
         this.header.putCookie(cookie);
+    }
+
+    public void write(DataOutputStream dos) {
+        try {
+            dos.writeBytes(makeStatus());
+            List<String> headers = makeHeader();
+            for (String header : headers) {
+                dos.writeBytes(header);
+            }
+            dos.writeBytes("\r\n");
+            dos.write(body, 0, getBodyLength());
+            dos.flush();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 }

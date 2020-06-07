@@ -21,8 +21,8 @@ public class UserController {
     }
 
     public boolean login(QueryString queryString, ViewHandler viewHandler) {
-        User user = DataBase.findUserById(queryString.getParam().get("userId"));
-        boolean isLogin = user != null && user.getPassword().equals(queryString.getParam().get("password"));
+        User user = DataBase.findUserById(queryString.getUserId());
+        boolean isLogin = user != null && user.equalsPassword(queryString.getPassword());
         logger.info("login : {}", isLogin);
         if (isLogin) {
             viewHandler.returnFile("/index.html");

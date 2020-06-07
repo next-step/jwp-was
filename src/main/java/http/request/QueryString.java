@@ -22,4 +22,12 @@ public class QueryString {
     public HashMap<String, String> getParam() {
         return param;
     }
+
+    public String getUserId() {
+        return param.getOrDefault("userId", "");
+    }
+
+    public String getPassword() {
+        return param.getOrDefault("password", "");
+    }
 }

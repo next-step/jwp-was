@@ -1,4 +1,4 @@
-package http;
+package http.request;
 
 import http.request.Protocol;
 import org.junit.jupiter.api.DisplayName;
