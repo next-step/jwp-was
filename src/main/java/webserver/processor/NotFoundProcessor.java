@@ -7,7 +7,7 @@ import http.StatusCode;
 public class NotFoundProcessor implements Processor {
     @Override
     public boolean isMatch(final HttpRequest httpRequest) {
-        return false;
+        return true;
     }
 
     @Override
