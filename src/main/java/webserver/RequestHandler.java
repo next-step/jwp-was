@@ -7,8 +7,10 @@ import java.nio.charset.StandardCharsets;
 
 import http.RequestLine;
 import http.RequestLineParser;
+import http.RequestMappingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -26,35 +28,9 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            String readLine = bufferedReader.readLine();
-            RequestLine requestLine = RequestLineParser.parse(readLine);
-            logger.debug(readLine);
-            logger.debug(new String(requestLine.readFile()));
+            RequestMappingHandler requestMappingHandler = new RequestMappingHandler(bufferedReader, new DataOutputStream(out));
+            requestMappingHandler.read();
 
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = requestLine.readFile();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-        } catch (IOException | URISyntaxException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
