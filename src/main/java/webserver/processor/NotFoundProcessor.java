@@ -6,12 +6,12 @@ import http.StatusCode;
 
 public class NotFoundProcessor implements Processor {
     @Override
-    public boolean isMatch(HttpRequest httpRequest) {
+    public boolean isMatch(final HttpRequest httpRequest) {
         return false;
     }
 
     @Override
-    public void process(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void process(final HttpRequest httpRequest, final HttpResponse httpResponse) {
         httpResponse.updateStatus(StatusCode.NOT_FOUND);
     }
 }

@@ -42,7 +42,7 @@ class ResourceProcessorTest {
     @ParameterizedTest
     @MethodSource
     @DisplayName("읽어온 resource 파일이 예상한 것과 같은지")
-    void process(final String resource) throws IOException {
+    void process(final String resource) throws IOException, URISyntaxException {
         String url = "GET " + resource + " HTTP/1.1";
         HttpRequest httpRequest = HttpRequestGenerator.init(url);
         HttpResponse httpResponse = HttpResponse.init();

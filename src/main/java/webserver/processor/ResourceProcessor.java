@@ -5,6 +5,8 @@ import http.HttpRequest;
 import http.HttpResponse;
 import utils.FileIoUtils;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,10 +24,14 @@ public class ResourceProcessor implements Processor {
     }
 
     @Override
-    public void process(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void process(final HttpRequest httpRequest, final HttpResponse httpResponse) {
         String filePath = STATIC_PREFIX + httpRequest.getPath();
 
         httpResponse.updateType(ContentType.of(httpRequest.getExtension()));
-        httpResponse.updateBody(FileIoUtils.loadFileFromClasspath(filePath));
+        try {
+            httpResponse.updateBody(FileIoUtils.loadFileFromClasspath(filePath));
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 }
