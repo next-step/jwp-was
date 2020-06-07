@@ -2,6 +2,7 @@ package http;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Headers {
     private List<Header> headers = new ArrayList<>();
@@ -10,11 +11,10 @@ public class Headers {
         headers.add(new Header(headerLine));
     }
 
-    public Header getHeader(HeaderName headerType) {
-        return headers.stream()
+    public Optional<Header> getHeader(HeaderName headerType) {
+        return this.headers.stream()
                 .filter(header -> header.exists(headerType))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 
     public List<Header> getHeaders() {

@@ -3,6 +3,8 @@ package http;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Headers 테스트")
@@ -24,6 +26,6 @@ public class HeadersTest {
         Headers headers = new Headers();
         headers.add("Host: localhost:8080");
 
-        assertThat(headers.getHeader(HeaderName.HOST)).isEqualTo(new Header("Host: localhost:8080"));
+        assertThat(headers.getHeader(HeaderName.HOST)).isEqualTo(Optional.of(new Header("Host: localhost:8080")));
     }
 }
