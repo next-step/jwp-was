@@ -25,7 +25,7 @@ class HandlebarEngineTest {
         HttpResponse httpResponse = HttpResponse.init();
         httpResponse.forward("do not exist");
 
-        HANDLEBAR_ENGINE.draw(httpRequest, httpResponse);
+        HANDLEBAR_ENGINE.render(httpRequest, httpResponse);
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.NOT_FOUND);
     }
@@ -37,7 +37,7 @@ class HandlebarEngineTest {
         HttpResponse httpResponse = HttpResponse.init();
         httpResponse.forward("/user/list");
 
-        HANDLEBAR_ENGINE.draw(httpRequest, httpResponse);
+        HANDLEBAR_ENGINE.render(httpRequest, httpResponse);
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.OK);
         assertThat(httpResponse.getBodyLength()).isNotZero();
@@ -51,7 +51,7 @@ class HandlebarEngineTest {
         HttpResponse httpResponse = HttpResponse.init();
         httpResponse.forward("/index");
 
-        HANDLEBAR_ENGINE.draw(httpRequest, httpResponse);
+        HANDLEBAR_ENGINE.render(httpRequest, httpResponse);
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.OK);
         assertThat(httpResponse.getBodyLength()).isNotZero();

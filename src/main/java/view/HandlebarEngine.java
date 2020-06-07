@@ -37,7 +37,7 @@ public class HandlebarEngine implements View {
     }
 
     @Override
-    public void draw(final HttpRequest httpRequest, final HttpResponse httpResponse) {
+    public void render(final HttpRequest httpRequest, final HttpResponse httpResponse) {
         try {
             Template template = loadTemplate(httpResponse.getForward());
             String body = template.apply(httpResponse.getModels());
