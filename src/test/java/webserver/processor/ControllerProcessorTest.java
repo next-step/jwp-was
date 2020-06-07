@@ -1,7 +1,10 @@
 package webserver.processor;
 
 import http.HttpRequest;
+import http.HttpResponse;
+import http.StatusCode;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -31,5 +34,18 @@ class ControllerProcessorTest {
                 Arguments.of(HttpRequestGenerator.init("GET /user/list HTTP/1.1"), true),
                 Arguments.of(HttpRequestGenerator.init("GET /not/exist HTTP/1.1"), false)
         );
+    }
+
+    @Test
+    @DisplayName("process 결과 확인")
+    void process() throws IOException {
+        HttpRequest httpRequest = HttpRequestGenerator.init("POST /user/login HTTP/1.1");
+        HttpResponse httpResponse = HttpResponse.init();
+
+        assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.OK);
+
+        controllerProcessor.process(httpRequest, httpResponse);
+
+        assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.REDIRECT);
     }
 }
