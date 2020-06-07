@@ -9,11 +9,11 @@ public class RequestHeader {
     private static final String COOKIE_KEY_VALUE_DELIMITER = "=";
     private static final String HEADER_DELIMITER = ": ";
     private static final String COOKIE_DELIMITER = ";";
-    public static final String NEW_LINE = "\n";
+    private static final String NEW_LINE = "\n";
 
     private final Map<String, String> headers = new HashMap<>();
     private final Map<String, String> cookies = new HashMap<>();
-    private StringBuilder origin = new StringBuilder();
+    private final StringBuilder origin = new StringBuilder();
 
     private RequestHeader() {}
 
@@ -70,7 +70,7 @@ public class RequestHeader {
         return cookies.get(cookieName);
     }
 
-    public Map<String, String> getParameters() {
+    public Map<String, String> getHeaders() {
         return headers;
     }
 

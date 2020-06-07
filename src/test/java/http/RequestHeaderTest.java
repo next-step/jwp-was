@@ -32,5 +32,6 @@ class RequestHeaderTest {
         assertThat(requestHeader.getHeader("not exist")).isNull();
         assertThat(requestHeader.getCookie("foo")).isEqualTo("bar");
         assertThat(requestHeader.getCookie("lorem")).isEqualTo("ipsum");
+        assertThat(requestHeader.getHeaders()).hasSize(11);
     }
 }
