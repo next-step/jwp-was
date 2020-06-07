@@ -19,7 +19,7 @@ public class QueryString {
         this.queryStringMap = queryStringMap;
     }
 
-    public static QueryString of(String value) throws UnsupportedEncodingException {
+    public static QueryString getInstance(String value) throws UnsupportedEncodingException {
         Map<String, String> queryStringMap = new HashMap<>();
         value = URLDecoder.decode(value, CHAR_SET);
 

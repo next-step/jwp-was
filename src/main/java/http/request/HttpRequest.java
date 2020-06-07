@@ -28,16 +28,16 @@ public class HttpRequest {
         this(requestLine, requestHeader, null);
     }
 
-    public static HttpRequest of(InputStream inputStream) throws IOException {
+    public static HttpRequest getInstance(InputStream inputStream) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, CHAR_SET));
 
-        RequestLine requestLine = RequestLine.of(br.readLine());
-        RequestHeader requestHeader = RequestHeader.of(br);
+        RequestLine requestLine = RequestLine.getInstance(br.readLine());
+        RequestHeader requestHeader = RequestHeader.getInstance(br);
 
         if (requestLine.getMethod() == HttpMethod.POST) {
             String body = IOUtils.readData(br, requestHeader.getContentLength());
 
-            RequestBody requestBody = RequestBody.of(URLDecoder.decode(body, CHAR_SET));
+            RequestBody requestBody = RequestBody.getInstance(URLDecoder.decode(body, CHAR_SET));
             return new HttpRequest(requestLine, requestHeader, requestBody);
         }
 

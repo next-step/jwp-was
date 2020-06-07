@@ -28,7 +28,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            HttpRequest httpRequest = HttpRequest.of(in);
+            HttpRequest httpRequest = HttpRequest.getInstance(in);
             HttpResponse response = Controller.requestMapping(httpRequest);
 
             DataOutputStream dos = new DataOutputStream(out);

@@ -26,16 +26,16 @@ public class RequestLine {
     }
 
     private RequestLine(HttpMethod httpMethod, String path, Protocol protocol) throws UnsupportedEncodingException {
-        this(httpMethod, path, protocol, QueryString.of(""));
+        this(httpMethod, path, protocol, QueryString.getInstance(""));
     }
 
-    public static RequestLine of(String requestLine) throws UnsupportedEncodingException {
+    public static RequestLine getInstance(String requestLine) throws UnsupportedEncodingException {
         String[] values = requestLine.split(" ");
         String[] pathValues = values[1].split(PATH_REGEX);
-        Protocol protocol = Protocol.of(values[2]);
+        Protocol protocol = Protocol.getInstance(values[2]);
 
         if (pathValues.length > 1) {
-            return new RequestLine(HttpMethod.valueOf(values[0]), pathValues[0], protocol, QueryString.of(pathValues[1]));
+            return new RequestLine(HttpMethod.valueOf(values[0]), pathValues[0], protocol, QueryString.getInstance(pathValues[1]));
         }
 
         return new RequestLine(HttpMethod.valueOf(values[0]), pathValues[0], protocol);
