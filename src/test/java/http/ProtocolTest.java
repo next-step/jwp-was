@@ -9,14 +9,14 @@ public class ProtocolTest {
 
     @Test
     void invalid() {
-        assertThatThrownBy(() -> new Protocol("HTTP"))
+        assertThatThrownBy(() -> Protocol.fromString("HTTP"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void create() {
-        Protocol protocol = new Protocol("HTTP/1.1");
+        Protocol protocol = Protocol.fromString("HTTP/1.1");
 
-        assertThat(protocol).isEqualTo(new Protocol("HTTP", "1.1"));
+        assertThat(protocol).isEqualTo(Protocol.of("HTTP", "1.1"));
     }
 }
