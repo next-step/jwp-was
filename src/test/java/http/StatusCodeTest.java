@@ -26,4 +26,19 @@ class StatusCodeTest {
                 Arguments.of(StatusCode.REDIRECT, 302)
         );
     }
+
+    @ParameterizedTest
+    @MethodSource
+    @DisplayName("상태 별 응답 상태줄")
+    void getStatusCodeResponseLine(final StatusCode statusCode, final String expected) {
+        assertThat(statusCode.getResponseLine()).isEqualTo(expected);
+    }
+
+    private static Stream<Arguments> getStatusCodeResponseLine() {
+        return Stream.of(
+                Arguments.of(StatusCode.OK, "HTTP/1.1 200 OK"),
+                Arguments.of(StatusCode.NOT_FOUND, "HTTP/1.1 404 Not Found"),
+                Arguments.of(StatusCode.REDIRECT, "HTTP/1.1 302 Found")
+        );
+    }
 }

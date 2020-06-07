@@ -8,15 +8,17 @@ import http.responsetemplate.ResponseTemplate;
 import java.io.DataOutputStream;
 
 public enum StatusCode {
-    OK(200, new Ok()),
-    REDIRECT(302, new Redirect()),
-    NOT_FOUND(404, new NotFound());
+    OK(200, "OK", new Ok()),
+    REDIRECT(302, "Found", new Redirect()),
+    NOT_FOUND(404, "Not Found", new NotFound());
 
     private final int statusCode;
+    private final String statusText;
     private final ResponseTemplate templateClass;
 
-    StatusCode(final int statusCode, final ResponseTemplate templateClass) {
+    StatusCode(final int statusCode, final String statusText, final ResponseTemplate templateClass) {
         this.statusCode = statusCode;
+        this.statusText = statusText;
         this.templateClass = templateClass;
     }
 
@@ -26,5 +28,9 @@ public enum StatusCode {
 
     public int getCodeValue() {
         return statusCode;
+    }
+
+    public String getResponseLine() {
+        return "HTTP/1.1 " + statusCode + " " + statusText;
     }
 }
