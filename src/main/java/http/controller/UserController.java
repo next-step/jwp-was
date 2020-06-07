@@ -34,15 +34,12 @@ public class UserController {
         return response;
     }
 
-    public static HttpResponse list(boolean loggedIn) throws IOException {
-        if (loggedIn) {
-            Map<String, Object> userMap = new HashMap<>();
-            List<User> users = UserData.findAll();
-            userMap.put("users", users);
+    public static HttpResponse list() throws IOException {
+        Map<String, Object> userMap = new HashMap<>();
+        List<User> users = UserData.findAll();
+        userMap.put("users", users);
 
-            String listPage = TemplateUtils.getTemplate("user/list", userMap);
-            return HttpResponse.body(HttpStatus.OK, listPage.getBytes(), "text/html");
-        }
-        return HttpResponse.redirect("/index.html");
+        String listPage = TemplateUtils.getTemplate("user/list", userMap);
+        return HttpResponse.body(HttpStatus.OK, listPage.getBytes(), "text/html");
     }
 }

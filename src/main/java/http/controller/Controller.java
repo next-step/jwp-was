@@ -20,7 +20,10 @@ public class Controller {
         }
 
         if (httpRequest.getPath().equals("/user/list.html")) {
-            return UserController.list(httpRequest.loggedIn());
+            if (httpRequest.loggedIn()) {
+                return UserController.list();
+            }
+            return HttpResponse.redirect("/index.html");
         }
 
         return HttpResponse.loadFile(httpRequest);
