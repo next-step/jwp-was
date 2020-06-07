@@ -2,10 +2,13 @@ package http.response;
 
 import utils.StringUtil;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ResponseHeader {
+    private static final String HEADER_FORMAT = "%s: %s \r\n";
     private static final String LOCATION = "Location";
     private final Map<String, String> headers = new HashMap<>();
 
@@ -34,5 +37,11 @@ public class ResponseHeader {
 
     public void setHeader(final String key, final String value) {
         headers.put(key, value);
+    }
+
+    public void writeHeaders(final DataOutputStream dataOutputStream) throws IOException {
+        for (String key : headers.keySet()) {
+            dataOutputStream.writeBytes(String.format(HEADER_FORMAT, key, headers.get(key)));
+        }
     }
 }

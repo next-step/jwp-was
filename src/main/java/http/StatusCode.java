@@ -1,30 +1,20 @@
 package http;
 
-import http.response.HttpResponse;
-import http.responsetemplate.NotFound;
-import http.responsetemplate.Ok;
-import http.responsetemplate.Redirect;
-import http.responsetemplate.ResponseTemplate;
-
-import java.io.DataOutputStream;
-
 public enum StatusCode {
-    OK(200, "OK", new Ok()),
-    REDIRECT(302, "Found", new Redirect()),
-    NOT_FOUND(404, "Not Found", new NotFound());
+    OK(200, "OK"),
+    REDIRECT(302, "Found"),
+    NOT_FOUND(404, "Not Found");
 
     private final int statusCode;
     private final String statusText;
-    private final ResponseTemplate templateClass;
 
-    StatusCode(final int statusCode, final String statusText, final ResponseTemplate templateClass) {
+    StatusCode(final int statusCode, final String statusText) {
         this.statusCode = statusCode;
         this.statusText = statusText;
-        this.templateClass = templateClass;
     }
 
-    public void writeResponse(final HttpResponse httpResponse, final DataOutputStream dataOutputStream) {
-        templateClass.write(httpResponse, dataOutputStream);
+    public boolean isOK() {
+        return this == OK;
     }
 
     public int getCodeValue() {
