@@ -5,10 +5,7 @@ import http.request.Request;
 import http.request.RequestBody;
 import http.request.RequestLine;
 import http.response.Response;
-import model.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -37,7 +34,7 @@ public class UserListHandlerTest {
         assertThat(response.getHeaderByKey("Location")).isEqualTo(location);
     }
 
-    private Headers createRequestHeader(String cookie){
+    private Headers createRequestHeader(String cookie) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Cookie", cookie);
         return new Headers(headers);
