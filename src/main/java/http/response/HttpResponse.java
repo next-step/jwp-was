@@ -1,8 +1,8 @@
-package http;
+package http.response;
 
-import http.response.Forward;
-import http.response.Models;
-import http.response.ResponseHeader;
+import http.ContentType;
+import http.Cookies;
+import http.StatusCode;
 
 import java.io.DataOutputStream;
 import java.io.OutputStream;

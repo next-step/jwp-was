@@ -1,5 +1,7 @@
-package http;
+package http.response;
 
+import http.StatusCode;
+import http.response.HttpResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

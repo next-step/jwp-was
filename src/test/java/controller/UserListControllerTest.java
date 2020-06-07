@@ -2,7 +2,7 @@ package controller;
 
 import db.DataBase;
 import http.HttpRequest;
-import http.HttpResponse;
+import http.response.HttpResponse;
 import http.StatusCode;
 import model.User;
 import org.junit.jupiter.api.DisplayName;

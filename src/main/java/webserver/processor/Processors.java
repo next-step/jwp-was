@@ -1,7 +1,7 @@
 package webserver.processor;
 
 import http.HttpRequest;
-import http.HttpResponse;
+import http.response.HttpResponse;
 
 import java.io.IOException;
 import java.util.Arrays;

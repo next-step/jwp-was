@@ -1,7 +1,7 @@
 package controller;
 
 import http.HttpRequest;
-import http.HttpResponse;
+import http.response.HttpResponse;
 
 import java.io.IOException;
 

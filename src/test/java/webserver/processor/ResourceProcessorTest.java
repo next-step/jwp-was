@@ -2,7 +2,7 @@ package webserver.processor;
 
 
 import http.HttpRequest;
-import http.HttpResponse;
+import http.response.HttpResponse;
 import http.StatusCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

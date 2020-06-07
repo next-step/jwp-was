@@ -1,5 +1,6 @@
 package http;
 
+import http.response.HttpResponse;
 import http.responsetemplate.NotFound;
 import http.responsetemplate.Ok;
 import http.responsetemplate.Redirect;

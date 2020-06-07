@@ -5,11 +5,10 @@ import controller.LoginController;
 import controller.UserController;
 import controller.UserListController;
 import http.HttpRequest;
-import http.HttpResponse;
+import http.response.HttpResponse;
 import view.HandlebarEngine;
 import view.View;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

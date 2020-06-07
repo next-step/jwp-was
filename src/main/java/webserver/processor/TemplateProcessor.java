@@ -2,15 +2,12 @@ package webserver.processor;
 
 import http.ContentType;
 import http.HttpRequest;
-import http.HttpResponse;
+import http.response.HttpResponse;
 import http.StatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import webserver.RequestHandler;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 

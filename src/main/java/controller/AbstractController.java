@@ -2,7 +2,7 @@ package controller;
 
 import http.HttpMethod;
 import http.HttpRequest;
-import http.HttpResponse;
+import http.response.HttpResponse;
 import http.StatusCode;
 import sun.plugin.dom.exception.InvalidAccessException;
 

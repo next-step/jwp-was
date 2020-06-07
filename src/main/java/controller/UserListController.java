@@ -2,7 +2,7 @@ package controller;
 
 import db.DataBase;
 import http.HttpRequest;
-import http.HttpResponse;
+import http.response.HttpResponse;
 import utils.LoginUtil;
 
 public class UserListController extends AbstractController {

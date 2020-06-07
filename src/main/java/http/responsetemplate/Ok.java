@@ -1,6 +1,6 @@
 package http.responsetemplate;
 
-import http.HttpResponse;
+import http.response.HttpResponse;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
