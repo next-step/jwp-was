@@ -2,7 +2,9 @@ package webserver.processor;
 
 
 import http.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,6 +21,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("html로 끝나는 get 요청을 처리해주는 프로세서")
 class ResourceProcessorTest {
     private static final ResourceProcessor resourceProcessor = new ResourceProcessor();
+    private HttpResponse httpResponse;
+
+    @BeforeEach
+    void init() throws IOException {
+        httpResponse = HttpResponse.init();
+    }
 
     @ParameterizedTest
     @MethodSource
@@ -59,5 +67,15 @@ class ResourceProcessorTest {
                 "/fonts/glyphicons-halflings-regular.ttf",
                 "/css/styles.css"
         );
+    }
+
+    @Test
+    @DisplayName(".js, .css, 등으로 끝나는 요청인데 해당하는 파일이 없는경우")
+    void matchButNotExist() throws IOException {
+        HttpRequest httpRequest = HttpRequestGenerator.init("GET /not-exist.js HTTP/1.1");
+
+        resourceProcessor.process(httpRequest, httpResponse);
+
+        assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.NOT_FOUND.getCodeValue());
     }
 }
