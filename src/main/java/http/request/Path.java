@@ -1,9 +1,8 @@
-package http;
+package http.request;
 
 import utils.StringUtil;
 
 import java.util.Map;
-import java.util.Objects;
 
 public class Path {
     private static final String PATH_AND_QUERY_STRING_DELIMITER = "\\?";

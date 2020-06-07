@@ -1,8 +1,5 @@
 package http.request;
 
-import http.HttpMethod;
-import http.RequestHeader;
-import http.RequestLine;
 import utils.IOUtils;
 import utils.StringUtil;
 
