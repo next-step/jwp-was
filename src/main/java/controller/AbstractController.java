@@ -13,6 +13,7 @@ public abstract class AbstractController implements Controller {
         this.path = path;
     }
 
+    @Override
     public void process(final HttpRequest httpRequest, final HttpResponse httpResponse) {
         if (httpRequest.getMethod() == HttpMethod.GET) {
             get(httpRequest, httpResponse);
@@ -35,6 +36,7 @@ public abstract class AbstractController implements Controller {
         throw new InvalidAccessException("404 NOT FOUND");
     }
 
+    @Override
     public String getPath() {
         return path;
     }

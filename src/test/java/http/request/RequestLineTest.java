@@ -1,7 +1,5 @@
 package http.request;
 
-import http.request.HttpMethod;
-import http.request.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,7 +18,7 @@ public class RequestLineTest {
     @DisplayName("request line 포멧에 맞지 않을경우 예외 발생")
     void initFail(final String requestLine) {
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> RequestLine.init(requestLine));
+                .isThrownBy(() -> RequestLine.parse(requestLine));
     }
 
     private static Stream<String> initFail() {
@@ -36,7 +34,7 @@ public class RequestLineTest {
     @Test
     @DisplayName("Get 파싱")
     void parse() {
-        RequestLine requestLine = RequestLine.init("GET /users HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
 
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
@@ -47,7 +45,7 @@ public class RequestLineTest {
     @Test
     @DisplayName("Post 파싱")
     void parsePost() {
-        RequestLine requestLine = RequestLine.init("POST /users HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse("POST /users HTTP/1.1");
 
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(requestLine.getPath()).isEqualTo("/users");
@@ -58,7 +56,7 @@ public class RequestLineTest {
     @Test
     @DisplayName("QueryString 파싱")
     void parseQueryString() {
-        RequestLine requestLine = RequestLine.init("GET /users?name1=value1&name2=value2 HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse("GET /users?name1=value1&name2=value2 HTTP/1.1");
 
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");

@@ -1,9 +1,6 @@
 package webserver.processor;
 
-import controller.AbstractController;
-import controller.LoginController;
-import controller.UserController;
-import controller.UserListController;
+import controller.*;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import view.HandlebarEngine;
@@ -18,15 +15,15 @@ import java.util.stream.Collectors;
 public class ControllerProcessor implements Processor {
     private static final View handleBarEngine = new HandlebarEngine();
 
-    private static final List<? extends AbstractController> CONTROLLERS = Arrays.asList(
+    private static final List<Controller> CONTROLLERS = Arrays.asList(
             new UserController(),
             new LoginController(),
             new UserListController()
     );
 
-    private static final Map<String, ? extends AbstractController> PATH_AND_CONTROLLER =
+    private static final Map<String, Controller> PATH_AND_CONTROLLER =
             CONTROLLERS.stream()
-                    .collect(Collectors.toMap(AbstractController::getPath, Function.identity()));
+                    .collect(Collectors.toMap(Controller::getPath, Function.identity()));
 
     @Override
     public boolean isMatch(final HttpRequest httpRequest) {
@@ -35,7 +32,7 @@ public class ControllerProcessor implements Processor {
 
     @Override
     public void process(final HttpRequest httpRequest, final HttpResponse httpResponse) {
-        AbstractController controller = PATH_AND_CONTROLLER.get(httpRequest.getPath());
+        Controller controller = PATH_AND_CONTROLLER.get(httpRequest.getPath());
 
         controller.process(httpRequest, httpResponse);
 
