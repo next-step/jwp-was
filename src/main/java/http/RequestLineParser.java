@@ -36,7 +36,7 @@ public class RequestLineParser {
 
         if (queryString.length > MIN_QUERY_STRING_SIZE) {
             QueryStringsTranslator queryStringsTranslator = new DefaultQueryStringsTranslator(queryString[1]);
-            return new RequestMethodGet(path, new QueryStrings(queryStringsTranslator.create()));
+            return new RequestMethodGet(queryString[0], new QueryStrings(queryStringsTranslator.create()));
         }
         return new RequestMethodGet(path);
     }

@@ -1,5 +1,6 @@
 package http;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -8,6 +9,10 @@ public class QueryStrings {
 
     public QueryStrings(final Map<String, String> queryStrings) {
         this.queryStrings = queryStrings;
+    }
+
+    public Map<String, String> getQueryStrings() {
+        return new HashMap<>(queryStrings);
     }
 
     @Override

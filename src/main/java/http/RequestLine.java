@@ -1,10 +1,9 @@
 package http;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class RequestLine {
-
-    private static final String BASE_URL = "./template/index.html";
 
     private final RequestMethod requestMethod;
     private final Protocol protocol;
@@ -28,6 +27,14 @@ public class RequestLine {
 
     public String getProtocolVersion() {
         return protocol.getVersion();
+    }
+
+    public Map<String, String> getParams() {
+        if (requestMethod instanceof RequestMethodGet) {
+            return ((RequestMethodGet) requestMethod).getQueryStrings()
+                    .getQueryStrings();
+        }
+        return null;
     }
 
     @Override
