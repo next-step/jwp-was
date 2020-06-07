@@ -5,13 +5,13 @@
     <meta charset="utf-8">
     <title>SLiPP Java Web Programming</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <!--[if lt IE 9]>
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link href="../css/styles.css" rel="stylesheet">
+    <link href="../css/styles.css" rel="stylesheet" type="text/css">
 </head>
-<body>
+<requestBody>
 <nav class="navbar navbar-fixed-top header">
     <div class="col-md-12">
         <div class="navbar-header">
@@ -79,16 +79,21 @@
           <table class="table table-hover">
               <thead>
                 <tr>
-                    <th>#</th> <th>사용자 아이디</th> <th>이름</th> <th>이메일</th><th></th>
+                    <th>사용자 아이디</th>
+                    <th>이름</th>
+                    <th>이메일</th>
+                    <th>수정</th>
                 </tr>
               </thead>
               <tbody>
+              {{#users}}
                 <tr>
-                    <th scope="row">1</th> <td>javajigi</td> <td>자바지기</td> <td>javajigi@sample.net</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
+                    <td>{{userId}}</td>
+                    <td>{{name}}</td>
+                    <td>{{email}}</td>
+                    <td><a href="#" class="btn btn-success" role="button">수정</a></td>
                 </tr>
-                <tr>
-                    <th scope="row">2</th> <td>slipp</td> <td>슬립</td> <td>slipp@sample.net</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
-                </tr>
+              {{/users}}
               </tbody>
           </table>
         </div>
@@ -99,5 +104,5 @@
 <script src="../js/jquery-2.2.0.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/scripts.js"></script>
-	</body>
+	</requestBody>
 </html>
