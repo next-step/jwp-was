@@ -3,7 +3,6 @@ package http;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
@@ -11,8 +10,8 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-@DisplayName("리퀘스트 라인 파서 테스트")
-public class RequestLineParserTest {
+@DisplayName("리퀘스트 라인 테스트")
+public class RequestLineTest {
 
     @ParameterizedTest
     @MethodSource
