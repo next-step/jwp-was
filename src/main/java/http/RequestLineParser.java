@@ -4,6 +4,6 @@ public class RequestLineParser {
     public static RequestLine parse(String requestLine) {
         String[] values = requestLine.split(" ");
         String protocolAndVersion = values[2];
-        return new RequestLine(values[0], PathAndString.splitPath(values[1]), new Protocol(protocolAndVersion));
+        return new RequestLine(HttpMethod.valueOf(values[0]), PathAndString.splitPath(values[1]), new Protocol(protocolAndVersion));
     }
 }
