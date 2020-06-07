@@ -31,9 +31,11 @@ public class RequestLineUtils {
 
     public static boolean hasQueryStrings(String requestLine) {
         String[] strings = splitPath(extractPath(requestLine));
+
         if (strings.length == 2) {
             return true;
         }
+
         return false;
     }
 

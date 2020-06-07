@@ -54,4 +54,20 @@ public class RequestLineUtilsTest {
         assertThat(protocol).isEqualTo("HTTP");
         assertThat(protocol2).isEqualTo("HTTP");
     }
+
+    @DisplayName("Version 추출")
+    @Test
+    void getVersion(){
+        //given
+        String requestLine = "POST /user/create HTTP/1.1";
+        String requestLine2 = "GET /user?userId=palmseung&name=seunghee HTTP/1.1";
+
+        //when
+        String version = RequestLineUtils.getVersion(requestLine);
+        String version2 = RequestLineUtils.getVersion(requestLine2);
+
+        //then
+        assertThat(version).isEqualTo("1.1");
+        assertThat(version2).isEqualTo("1.1");
+    }
 }
