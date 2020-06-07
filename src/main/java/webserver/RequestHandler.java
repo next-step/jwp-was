@@ -2,7 +2,6 @@ package webserver;
 
 import http.Cookies;
 import http.Headers;
-import http.HttpMethod;
 import http.parser.RequestHeaderParser;
 import http.parser.RequestLineParser;
 import http.request.HttpRequest;
@@ -126,51 +125,11 @@ public class RequestHandler implements Runnable {
 
     }
 
-    private boolean isGet(HttpRequest httpRequest) {
-        return HttpMethod.GET.equals(httpRequest.getMethod());
-    }
-
-    private boolean isPost(HttpRequest httpRequest) {
-        return HttpMethod.POST.equals(httpRequest.getMethod());
-    }
-
-    private void response302Header(DataOutputStream dos, String location) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 FOUND \r\n");
-            dos.writeBytes("Location: " + location + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200HtmlHeader(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
     private void response200StylesheetHeader(DataOutputStream dos, int lengthOfBodyContent) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response302HeaderWithCookies(DataOutputStream dos, String location, String cookieName, String cookieValue) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 FOUND \r\n");
-            dos.writeBytes("Location: " + location + "\r\n");
-            dos.writeBytes("Set-Cookie: " + cookieName + "=" + cookieValue + "; Path=/\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
