@@ -34,7 +34,7 @@ public class HttpRequest {
         String requestLine = bufferedReader.readLine();
         String decodedReadStream = URLDecoder.decode(requestLine, "UTF-8");
 
-        this.requestLine = RequestLine.init(decodedReadStream);
+        this.requestLine = RequestLine.parse(decodedReadStream);
     }
 
     private void initHeaders(final BufferedReader bufferedReader) throws IOException {

@@ -28,7 +28,7 @@ public class RequestLine {
         path.addParameter(token);
     }
 
-    public static RequestLine init(final String requestLineStr) {
+    public static RequestLine parse(final String requestLineStr) {
         return new RequestLine(requestLineStr);
     }
 
