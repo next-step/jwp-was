@@ -7,16 +7,16 @@ import utils.FileIoUtils;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class StylesheetController implements Controller {
+public class StaticResourceController implements Controller {
 
-    private StylesheetController() {}
+    private StaticResourceController() {}
 
     private static class Singleton {
-        private static final StylesheetController instance = new StylesheetController();
+        private static final StaticResourceController instance = new StaticResourceController();
     }
 
-    public static StylesheetController getInstance() {
-        return StylesheetController.Singleton.instance;
+    public static StaticResourceController getInstance() {
+        return StaticResourceController.Singleton.instance;
     }
 
     @Override
