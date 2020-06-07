@@ -1,5 +1,7 @@
 package http;
 
+import utils.RequestHeaderUtils;
+
 import java.util.Objects;
 
 public class RequestLine {
@@ -13,9 +15,9 @@ public class RequestLine {
         this.protocol = protocol;
     }
 
-    public static RequestLine of(String value) {
-        return RequestLineParser.parse(value);
-    }
+//    public static RequestLine of(String value) {
+//        return RequestHeaderUtils.parser(value);
+//    }
 
 //    public static RequestLine of(HttpMethod httpMethod, String path, Protocol protocol) {
 //

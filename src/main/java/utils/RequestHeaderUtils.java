@@ -1,8 +1,10 @@
 package utils;
 
+import http.RequestHeaderFirstLine;
+
 public class RequestHeaderUtils {
-    public static String parser(String requestHeaderFirstLine) {
+    public static RequestHeaderFirstLine parse(String requestHeaderFirstLine) {
         String[] values = requestHeaderFirstLine.split(" ");
-        return values[1];
+        return new RequestHeaderFirstLine(values[0], values[1], values[2]);
     }
 }

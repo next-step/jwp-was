@@ -27,8 +27,9 @@ public class RequestHandler implements Runnable {
             String path = null;
             if (line != null && !"".equals(line)) {
                 System.out.println(line);
-                path = RequestHeaderUtils.parser(line);
+                path = RequestHeaderUtils.parse(line).getPath();
             }
+            logger.debug("path String : {}", path);
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = FileIoUtils.loadFileFromClasspath("./templates"+path);
             response200Header(dos, body.length);
