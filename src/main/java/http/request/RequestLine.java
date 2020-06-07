@@ -21,7 +21,7 @@ public class RequestLine {
     }
 
     public Map<String, String> getQueries() throws UnsupportedEncodingException {
-        if (Method.isGet(this.requestLine)) {
+        if (Method.hasQueryString(this.requestLine)) {
             return Path.getQueries(requestLine);
         }
         return Collections.EMPTY_MAP;
