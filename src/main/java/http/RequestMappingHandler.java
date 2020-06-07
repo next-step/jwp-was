@@ -4,12 +4,14 @@ import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import user.ui.UserController;
+import utils.FileIoUtils;
 import utils.IOUtils;
 import webserver.RequestHandler;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Objects;
 
 public class RequestMappingHandler {
@@ -19,7 +21,7 @@ public class RequestMappingHandler {
     private final BufferedReader bufferedReader;
     private final DataOutputStream dataOutputStream;
 
-    public RequestMappingHandler(final BufferedReader bufferedReader, final DataOutputStream dataOutputStream) throws IOException {
+    public RequestMappingHandler(final BufferedReader bufferedReader, final DataOutputStream dataOutputStream) {
         this.bufferedReader = bufferedReader;
         this.dataOutputStream = dataOutputStream;
     }
@@ -65,9 +67,12 @@ public class RequestMappingHandler {
     }
 
     private void handlerByUserController(RequestLine requestLine) {
-        byte[] view = new UserController(requestLine).mapping();
-        response200Header(view.length);
-        responseBody(view);
+        Response response = new UserController(requestLine).mapping();
+        if (response.getCode() == 200) {
+            byte[] body = getUserForm(response.getPath());
+            response200Header(body.length);
+            responseBody(body);
+        }
     }
 
     private void response200Header(int lengthOfBodyContent) {
@@ -88,6 +93,19 @@ public class RequestMappingHandler {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private byte[] getUserForm(String filePath) {
+        try {
+            return viewByUserForm(filePath);
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Not Found Path");
+        }
+    }
+
+    private byte[] viewByUserForm(String path) throws IOException, URISyntaxException {
+        return FileIoUtils.loadFileFromClasspath(path);
     }
 
     @Override
