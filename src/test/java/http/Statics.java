@@ -4,7 +4,7 @@ public class Statics {
     private Statics() {}
     public static final String REQUEST_LINE = "GET /foo/bar?zoo=xoo HTTP/1.1\n";
     public static final String HEADER =
-            "Host: example.org\n" +
+                    "Host: example.org\n" +
                     "User-Agent: Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; fr; rv:1.9.2.8) Gecko/20100722 Firefox/3.6.8\n" +
                     "Accept: */*\n" +
                     "Accept-Language: fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3\n" +
@@ -13,12 +13,12 @@ public class Statics {
                     "Keep-Alive: 115\n" +
                     "Connection: keep-alive\n" +
                     "Content-Type: application/x-www-form-urlencoded\n" +
+                    "Content-Length: 11\n" +
                     "X-Requested-With: XMLHttpRequest\n" +
                     "Referer: http://example.org/test\n" +
                     "Cookie: foo=bar; lorem=ipsum;\n" +
-                    "\n" +
-                    "some body contents\n";
-    public static final String BODY = "some body contents\n";
+                    "\n";
+    public static final String BODY = "x=1&y=2&z=3";
 
     public static final String RAW_REQUEST_STR = REQUEST_LINE + HEADER + BODY;
 }
