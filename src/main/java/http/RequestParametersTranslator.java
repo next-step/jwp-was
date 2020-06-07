@@ -2,6 +2,6 @@ package http;
 
 import java.util.Map;
 
-public interface QueryStringsTranslator {
+public interface RequestParametersTranslator {
     Map<String, String> create();
 }

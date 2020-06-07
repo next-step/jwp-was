@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class QueryStringsTest {
+class RequestParametersTest {
 
     private Map<String, String> queryString;
 
@@ -23,9 +23,9 @@ class QueryStringsTest {
     @DisplayName("생성")
     void create() {
         // give
-        QueryStrings queryStrings = new QueryStrings(queryString);
+        RequestParameters requestParameters = new RequestParameters(queryString);
         // when
-        boolean same = queryStrings.equals(new QueryStrings(queryString));
+        boolean same = requestParameters.equals(new RequestParameters(queryString));
         // then
         assertThat(same).isTrue();
     }

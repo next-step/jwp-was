@@ -4,27 +4,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class QueryStrings {
-    private Map<String, String> queryStrings;
+public class RequestParameters {
+    private Map<String, String> requestParameters;
 
-    public QueryStrings(final Map<String, String> queryStrings) {
-        this.queryStrings = queryStrings;
+    public RequestParameters(final Map<String, String> requestParameters) {
+        this.requestParameters = requestParameters;
     }
 
-    public Map<String, String> getQueryStrings() {
-        return new HashMap<>(queryStrings);
+    public Map<String, String> getRequestParameters() {
+        return new HashMap<>(requestParameters);
     }
 
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final QueryStrings that = (QueryStrings) o;
-        return Objects.equals(queryStrings, that.queryStrings);
+        final RequestParameters that = (RequestParameters) o;
+        return Objects.equals(requestParameters, that.requestParameters);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(queryStrings);
+        return Objects.hash(requestParameters);
     }
 }
