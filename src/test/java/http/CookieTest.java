@@ -2,6 +2,8 @@ package http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -21,23 +23,10 @@ class CookieTest {
         assertThat(pathValue).isEqualTo("/");
     }
 
-    @Test
-    @DisplayName("밸류가 하나라도 존재하지 않는 쿠키헤더로 쿠키 객체 생성시 에러를 반환한다")
-    void test2() {
-        final String input = "Cookie: logined=true; Path=";
-
-        final Throwable thrown = catchThrowable(() -> new Cookie(input));
-
-        assertThat(thrown)
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("유효하지 않은 Cookie 헤더임. header :: [" + input + "]");
-    }
-
-    @Test
-    @DisplayName("공백인 밸류가 하나라도 존재하는 쿠키헤더로 쿠키 객체 생성시 에러를 반환한다")
-    void test3() {
-        final String input = "Cookie: logined=true; Path= ";
-
+    @DisplayName("밸류가 공백이거나 존재하지 않는 쿠키헤더로 쿠키 객체 생성시 에러를 반환한다")
+    @ParameterizedTest
+    @ValueSource(strings = {"Cookie: logined=true; Path= ", "Cookie: logined=true; Path="})
+    void testasd(String input) {
         final Throwable thrown = catchThrowable(() -> new Cookie(input));
 
         assertThat(thrown)
