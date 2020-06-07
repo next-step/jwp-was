@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import sun.plugin.dom.exception.InvalidAccessException;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -50,7 +51,10 @@ class UserListControllerTest {
 
         assertThat(DataBase.findAll()).hasSize(1);
         assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.OK);
-        assertThat(httpResponse.getBodyLength()).isNotZero();
+        assertThat(httpResponse.getForward()).isEqualTo("user/profile");
+        assertThat(httpResponse.getModels()).hasSize(1);
+        assertThat((Collection)httpResponse.getModels().get("users")).hasSize(1);
+        assertThat(httpResponse.getBodyLength()).isZero();
     }
 
     @ParameterizedTest
