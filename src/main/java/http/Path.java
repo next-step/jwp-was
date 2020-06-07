@@ -21,4 +21,5 @@ public class Path {
     public String getRequestParameter() {
         return requestParameter;
     }
+
 }

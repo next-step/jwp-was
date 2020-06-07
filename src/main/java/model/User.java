@@ -1,5 +1,8 @@
 package model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class User {
     private String userId;
     private String password;
@@ -11,6 +14,19 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public static User of(String requestParameter) {
+        String[] parameters = requestParameter.split("&");
+        int index = 0;
+        Map parameterMap = new HashMap();
+        while(index < parameters.length) {
+            String[] keyvalue = parameters[index].split("=");
+            parameterMap.put(keyvalue[0], keyvalue[1]);
+            index++;
+        }
+        return new User(parameterMap.get("userId").toString(), parameterMap.get("password").toString(),
+                parameterMap.get("name").toString(), parameterMap.get("email").toString());
     }
 
     public String getUserId() {
