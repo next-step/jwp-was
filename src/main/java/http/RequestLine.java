@@ -1,10 +1,10 @@
 package http;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Objects;
 
 public class RequestLine {
+
+    private static final String BASE_URL = "./template/index.html";
 
     private final RequestMethod requestMethod;
     private final Protocol protocol;
@@ -20,10 +20,6 @@ public class RequestLine {
 
     public String getMethodName() {
         return requestMethod.getMethodName();
-    }
-
-    public byte[] readFile() throws IOException, URISyntaxException {
-        return requestMethod.readFile();
     }
 
     public String getProtocolName() {
