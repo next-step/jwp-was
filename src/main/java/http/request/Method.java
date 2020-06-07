@@ -1,5 +1,7 @@
 package http.request;
 
+import utils.RequestLineUtils;
+
 import java.util.Arrays;
 
 public enum Method {
@@ -24,6 +26,6 @@ public enum Method {
     }
 
     public static boolean hasQueryString(String requestLine) {
-        return false;
+        return RequestLineUtils.hasQueryStrings(requestLine);
     }
 }

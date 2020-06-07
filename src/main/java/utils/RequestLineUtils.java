@@ -21,6 +21,14 @@ public class RequestLineUtils {
         return splitProtocol(extractProtocol(requestLine))[1];
     }
 
+    public static boolean hasQueryStrings(String requestLine){
+        String[] strings = splitPath(extractPath(requestLine));
+        if(strings.length == 2){
+            return true;
+        }
+        return false;
+    }
+
     private static String[] splitProtocol(String protocol) {
         return protocol.split(REGEX_PROTOCOL_DELIMITER);
     }

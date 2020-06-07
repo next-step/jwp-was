@@ -23,7 +23,7 @@ public class MethodTest {
         assertThat(method).isEqualTo(Method.GET);
     }
 
-    @DisplayName("RequestLine이 QueryString 을 가지고 있는지 검증")
+    @DisplayName("QueryString 보유 여부 검증 - QueryString 있을 때")
     @ParameterizedTest
     @ValueSource(strings = {"GET", "POST", "PUT", "DELETE"})
     void hasQueryStrings(String method){
@@ -35,5 +35,19 @@ public class MethodTest {
 
         //then
         assertThat(hasQueryString).isTrue();
+    }
+
+    @DisplayName("QueryString 보유 여부 검증 - QueryString 없을 때")
+    @ParameterizedTest
+    @ValueSource(strings = {"GET", "POST", "PUT", "DELETE"})
+    void hasQueryStringsWhenNot(String method){
+        //given
+        String requestLine = method + " /user/create HTTP/1.1";
+
+        //when
+        boolean hasQueryString = Method.hasQueryString(requestLine);
+
+        //then
+        assertThat(hasQueryString).isFalse();
     }
 }
