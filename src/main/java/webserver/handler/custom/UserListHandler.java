@@ -21,6 +21,13 @@ import static http.response.ContentType.HTML;
 import static http.response.HttpStatus.FOUND;
 
 public class UserListHandler implements Handler {
+    private static final String LOCATION = "Location";
+    private static final String USERS = "users";
+    private static final String PREFIX_TEMPLATES = "/templates";
+    private static final String SUFFIX_HTML = ".html";
+    private static final String COOKIE = "Cookie";
+    private static final String COOKIE_LOGIN_SUCCESS = "logined=true";
+
     private String url;
 
     public UserListHandler(String url) {
@@ -34,14 +41,15 @@ public class UserListHandler implements Handler {
 
     @Override
     public Response work(Request request) throws IOException {
-        String cookie = request.getParameter("Cookie");
+        String cookie = request.getParameter(COOKIE);
         Map<String, String> headers = new HashMap<>();
 
-        if (cookie == null || !cookie.contains("logined=true")) {
-            headers.put("Location", "/user/login.html");
-            return new Response(FOUND, HTML, new Headers(headers), getBody("user/login"));
+        if (cookie == null || !cookie.contains(COOKIE_LOGIN_SUCCESS)) {
+            headers.put(LOCATION, "/user/login_failed.html");
+            return new Response(FOUND, HTML, new Headers(headers), getBody("user/login_failed"));
         }
 
+        headers.put(LOCATION, "/user/list.html");
         return new Response(FOUND, HTML, new Headers(headers), getBody("user/list"));
     }
 
@@ -52,15 +60,15 @@ public class UserListHandler implements Handler {
 
     private ResponseBody getBody(String location) throws IOException {
         Map<String, List<User>> map = new HashMap<>();
-        map.put("users", DataBase.getAllUsers());
+        map.put(USERS, DataBase.getAllUsers());
         String profile = compileTemplate(location).apply(map);
         return new ResponseBody(profile.getBytes());
     }
 
     private Template compileTemplate(String location) throws IOException {
         TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".html");
+        loader.setPrefix(PREFIX_TEMPLATES);
+        loader.setSuffix(SUFFIX_HTML);
         return new Handlebars(loader).compile(location);
     }
 }
