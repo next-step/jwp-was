@@ -40,11 +40,4 @@ public class Path {
                 Objects.equals(queryString, path1.queryString);
     }
 
-    public boolean isExistQuery() {
-        return queryString != null;
-    }
-
-    public void addQueryString(String queryString) {
-        this.queryString = new QueryString((queryString));
-    }
 }

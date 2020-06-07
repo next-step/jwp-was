@@ -2,14 +2,11 @@ package webserver;
 
 import controller.RequestController;
 import controller.UserController;
-import http.request.Request;
+import http.request.HttpRequest;
 import http.request.RequestUrl;
-import http.request.StyleSheet;
-import http.response.Response;
+import http.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
-import view.ViewHandler;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -20,13 +17,11 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
-import java.net.URISyntaxException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final String STATIC_PATH = "./static";
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -41,43 +36,28 @@ public class RequestHandler implements Runnable {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             BufferedReader br = new BufferedReader(new InputStreamReader(in, UTF_8));
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] bytes;
 
-            Request request = new Request(br);
-            RequestController controller = new RequestController();
-            initController(controller);
+            HttpRequest request = new HttpRequest(br);
+            HttpResponse response = new HttpResponse(dos);
 
-            if (request.isStylesheet()) {
-                bytes = FileIoUtils.loadFileFromClasspath(STATIC_PATH + parsing(request.getPath()));
-                Response response = Response.ofStyleSheet(bytes);
-                response.write(dos);
-                return;
-            }
+            RequestController controller = initController();
+
             RequestUrl requestUrl = request.findRequestUrl();
             String methodName = requestUrl.getMethodName();
-            Method method = RequestController.class.getMethod(methodName, Request.class, ViewHandler.class);
-            Object viewHandlerObject = method.invoke(controller, request, new ViewHandler());
-            ViewHandler viewHandler = (ViewHandler) viewHandlerObject;
+            Method method = RequestController.class.getMethod(methodName, HttpRequest.class, HttpResponse.class);
+            method.invoke(controller, request, response);
 
-            Response response = viewHandler.handle();
-            response.write(dos);
-
-        } catch (IOException | URISyntaxException | NoSuchMethodException e) {
+        } catch (IOException | NoSuchMethodException e) {
             logger.error(e.getMessage());
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }
 
-    private String parsing(String path) {
-        // "/user" 가 prefix로 붙어서 제거하기 위한 parsing
-        String[] files = path.split("\\.");
-        StyleSheet styleSheet = StyleSheet.findByExtension(files[files.length - 1]);
-        return path.substring(path.indexOf(styleSheet.getLocation()));
-    }
-
-    private void initController(RequestController controller) {
-        controller.setUserController(new UserController());
+    private RequestController initController() {
+        RequestController requestController = new RequestController();
+        requestController.setUserController(new UserController());
+        return requestController;
     }
 
 }

@@ -9,15 +9,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Request {
-    private static final Logger logger = LoggerFactory.getLogger(Request.class);
+public class HttpRequest {
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
     private static final String CONTENT_LENGTH = "Content-Length";
     private RequestLine requestLine;
     private RequestHeader header;
     private String body;
 
-    public Request(BufferedReader br) throws IOException {
-
+    public HttpRequest(BufferedReader br) throws IOException {
         Map<String, String> header = new HashMap<>();
         String line = br.readLine();
         this.requestLine = new RequestLine(line);
