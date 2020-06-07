@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RequestBodyTest {
     @Test
     void of() {
-        RequestBody requestBody = RequestBody.of("userId=parkeeseul&password=password&name=박이슬&email=parkeeseul@slipp.net");
+        RequestBody requestBody = RequestBody.getInstance("userId=parkeeseul&password=password&name=박이슬&email=parkeeseul@slipp.net");
         Map bodyMap = requestBody.getBodyMap();
 
         assertThat(bodyMap.get("userId")).isEqualTo("parkeeseul");
