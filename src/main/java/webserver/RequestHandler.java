@@ -27,7 +27,7 @@ public class RequestHandler implements Runnable {
             String path = null;
             if (line != null && !"".equals(line)) {
                 System.out.println(line);
-                path = RequestHeaderUtils.parse(line).getPath();
+                path = RequestHeaderUtils.parse(line).getPath().getUrl();
             }
             logger.debug("path String : {}", path);
             DataOutputStream dos = new DataOutputStream(out);

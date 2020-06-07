@@ -2,16 +2,16 @@ package http;
 
 public class RequestHeaderFirstLine {
     private final String method;
-    private final String path;
+    private final Path path;
     private final String protocol;
 
     public RequestHeaderFirstLine(String method, String path, String protocol) {
         this.method = method;
-        this.path = path;
+        this.path = Path.of(path);
         this.protocol = protocol;
     }
 
-    public String getPath() {
+    public Path getPath() {
         return path;
     }
 
