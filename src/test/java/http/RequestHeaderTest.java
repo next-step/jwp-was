@@ -23,7 +23,7 @@ class RequestHeaderTest {
     @Test
     @DisplayName("리퀘스트 헤더들을 받으면 key, value로 나눠준다.")
     void parse() {
-        String header = RawRequestTest.HEADER;
+        String header = Statics.HEADER;
 
         RequestHeader requestHeader = new RequestHeader(header);
 

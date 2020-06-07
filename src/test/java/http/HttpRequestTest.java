@@ -6,7 +6,6 @@ import testutils.HttpRequestGenerator;
 
 import java.io.IOException;
 
-import static http.RawRequestTest.HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("요청에 대한 객체")

@@ -1,7 +1,9 @@
 package webserver.processor;
 
 
-import http.*;
+import http.HttpRequest;
+import http.HttpResponse;
+import http.StatusCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +17,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.stream.Stream;
 
-import static http.RawRequestTest.HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("html로 끝나는 get 요청을 처리해주는 프로세서")
