@@ -8,6 +8,7 @@ import utils.FileIoUtils;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Objects;
 
 @Getter
 public class HttpResponse {
@@ -23,13 +24,9 @@ public class HttpResponse {
     }
 
     public void loadFile(HttpRequest request) throws IOException, URISyntaxException {
-        try {
-            byte[] dataByte = FileIoUtils.loadFileFromClasspath(request.getFilePath());
-            this.body = dataByte;
-            this.header = ResponseHeader.of(HttpStatus.OK, request.getContentType(), dataByte.length);
-        } catch (NullPointerException e) {
-            notFound(request);
-        }
+        byte[] dataByte = FileIoUtils.loadFileFromClasspath(request.getFilePath());
+        this.body = dataByte;
+        this.header = ResponseHeader.of(HttpStatus.OK, request.getContentType(), dataByte.length);
     }
 
     public void redirect(String location) {
@@ -39,6 +36,10 @@ public class HttpResponse {
 
     public void methodNotAllowed(HttpRequest request) {
         this.header = ResponseHeader.of(HttpStatus.METHOD_NOT_ALLOWED, request.getContentType(), 0);
+    }
+
+    public void notFound(HttpRequest request) {
+        this.header = ResponseHeader.of(HttpStatus.NOT_FOUND, request.getContentType(), 0);
     }
 
     public void setCookie(String cookie) {
@@ -65,7 +66,7 @@ public class HttpResponse {
         return this.header.getCustomHeader();
     }
 
-    private void notFound(HttpRequest request) {
-        this.header = ResponseHeader.of(HttpStatus.NOT_FOUND, request.getContentType(), 0);
+    public boolean headerIsNull() {
+        return Objects.isNull(this.header);
     }
 }
