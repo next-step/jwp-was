@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.util.Map;
 
 public class ResponseHandler {
@@ -25,7 +24,7 @@ public class ResponseHandler {
         this.response = response;
     }
 
-    public void doResponse(HttpRequest request) throws IOException, URISyntaxException {
+    public void doResponse(HttpRequest request) {
         if (response.headerIsNull()) {
             loadFile(request);
         }
@@ -34,7 +33,7 @@ public class ResponseHandler {
         responseBody(dos, response);
     }
 
-    private void loadFile(HttpRequest request) throws IOException, URISyntaxException {
+    private void loadFile(HttpRequest request) {
         try {
             response.loadFile(request);
         } catch (NullPointerException e) {

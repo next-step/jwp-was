@@ -10,6 +10,7 @@ import http.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -39,7 +40,7 @@ public class RequestHandler implements Runnable {
 
             ResponseHandler responseHandler = new ResponseHandler(out, response);
             responseHandler.doResponse(request);
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }

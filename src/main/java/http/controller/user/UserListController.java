@@ -1,5 +1,6 @@
 package http.controller.user;
 
+import exception.JwpException;
 import http.HttpStatus;
 import http.controller.AbstractController;
 import http.request.HttpRequest;
@@ -8,6 +9,7 @@ import model.user.User;
 import utils.TemplateUtils;
 import utils.UserData;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,13 +18,17 @@ public class UserListController extends AbstractController {
     private static final String REQUEST_MAPPING_VALUE = "/user/list.html";
 
     @Override
-    public void doGet(HttpRequest request, HttpResponse response) throws Exception {
+    public void doGet(HttpRequest request, HttpResponse response) {
         Map<String, Object> userMap = new HashMap<>();
         List<User> users = UserData.findAll();
         userMap.put("users", users);
 
-        String listPage = TemplateUtils.getTemplate("user/list", userMap);
-        response.body(HttpStatus.OK, listPage.getBytes(), "text/html");
+        try {
+            String listPage = TemplateUtils.getTemplate("user/list", userMap);
+            response.body(HttpStatus.OK, listPage.getBytes(), "text/html");
+        } catch (IOException e) {
+            throw new JwpException("get template fail", e);
+        }
     }
 
     @Override

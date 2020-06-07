@@ -1,5 +1,6 @@
 package http.response;
 
+import exception.JwpException;
 import http.HttpStatus;
 import http.request.HttpRequest;
 import lombok.Getter;
@@ -23,10 +24,14 @@ public class HttpResponse {
         this.header = ResponseHeader.of(httpStatus, contentType, data.length);
     }
 
-    public void loadFile(HttpRequest request) throws IOException, URISyntaxException {
-        byte[] dataByte = FileIoUtils.loadFileFromClasspath(request.getFilePath());
-        this.body = dataByte;
-        this.header = ResponseHeader.of(HttpStatus.OK, request.getContentType(), dataByte.length);
+    public void loadFile(HttpRequest request) {
+        try {
+            byte[] dataByte = FileIoUtils.loadFileFromClasspath(request.getFilePath());
+            this.body = dataByte;
+            this.header = ResponseHeader.of(HttpStatus.OK, request.getContentType(), dataByte.length);
+        } catch (IOException | URISyntaxException e) {
+            throw new JwpException("load file from classpath fail", e);
+        }
     }
 
     public void redirect(String location) {
