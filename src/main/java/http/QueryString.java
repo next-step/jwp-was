@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import utils.HttpUtils;
 
 public class QueryString {
 
@@ -16,23 +17,7 @@ public class QueryString {
     }
 
     public static QueryString of(String queryString) {
-        String[] queries = queryString.split("&");
-
-        Map<String, String> queryMap = new HashMap<>();
-        for (String query : queries) {
-            String[] queryValue = query.split("=");
-            if (queryValue.length != 2) {
-                continue;
-            }
-
-            try {
-                queryMap.put(URLDecoder.decode(queryValue[0], "UTF-8"),
-                    URLDecoder.decode(queryValue[1]));
-            } catch (UnsupportedEncodingException e) {
-            }
-        }
-
-        return new QueryString(queryMap);
+        return new QueryString(HttpUtils.getPairs(queryString,"&", "="));
     }
 
     public String get(String name) {

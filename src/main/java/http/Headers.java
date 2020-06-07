@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import utils.HttpUtils;
 import utils.StringUtils;
 
 public class Headers {
@@ -25,17 +26,8 @@ public class Headers {
 
     public static Headers from(List<String> headerLines) {
         Map<String, String> headers = new HashMap<>();
-
         for (String line : headerLines) {
-            if (StringUtils.isEmpty(line)) {
-                continue;
-            }
-            String[] values = line.split(":");
-            if (values.length != 2) {
-                continue;
-            }
-
-            headers.put(values[0].trim(), values[1].trim());
+            headers.putAll(HttpUtils.getPair(line,":"));
         }
         return new Headers(headers);
     }
@@ -75,18 +67,7 @@ public class Headers {
     }
 
     private Parameters parseForFormUrlEncoded(String body) {
-        Map<String, String> map = new HashMap<>();
-        String[] parameters = body.split("&");
-        for (String parameter : parameters) {
-            String values[] = parameter.split("=");
-            try {
-                map.put(URLDecoder.decode(values[0].trim(), "UTF-8"),
-                    URLDecoder.decode(values[1].trim(), "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }
-        return new Parameters(map);
+        return new Parameters(HttpUtils.getPairs(body,"&", "="));
     }
 
     @Override

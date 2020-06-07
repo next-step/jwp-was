@@ -30,6 +30,10 @@ public class RequestUrl {
         return new RequestUrl(path, QueryString.of(queryString));
     }
 
+    public Parameters getParameters() {
+        return new Parameters(this.queryString.getAll());
+    }
+
     public String getPath() {
         return path;
     }
@@ -52,11 +56,4 @@ public class RequestUrl {
         return Objects.hash(path, queryString);
     }
 
-    public QueryString getQueryString() {
-        return this.queryString;
-    }
-
-    public Parameters getParameters(){
-        return new Parameters(this.queryString.getAll());
-    }
 }

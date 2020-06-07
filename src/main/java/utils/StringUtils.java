@@ -1,5 +1,8 @@
 package utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class StringUtils {
 
     public static boolean isEmpty(String val) {
@@ -12,4 +15,6 @@ public class StringUtils {
     public static boolean isNotEmpty(String val) {
         return !isEmpty(val);
     }
+
+
 }
