@@ -11,8 +11,9 @@ public class HttpResponse {
     private StatusCode statusCode;
     private ContentType contentType = ContentType.HTML;
     private byte[] responseBody = new byte[0];
+
+    private final Cookies cookies = Cookies.init();
     private final ResponseHeader header = ResponseHeader.init();
-    private final Map<String, String> cookies = new HashMap<>();
     private final Map<String, Object> models = new HashMap<>();
 
     private HttpResponse(final StatusCode statusCode) {
@@ -53,11 +54,11 @@ public class HttpResponse {
     }
 
     public void setCookie(final String key, final String value) {
-        cookies.put(key, value);
+        cookies.setCookie(key, value);
     }
 
     public Map<String, String> getCookies() {
-        return cookies;
+        return cookies.getCookies();
     }
 
     public void updateStatus(final StatusCode statusCode) {
