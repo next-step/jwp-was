@@ -1,6 +1,6 @@
 package http.requestline.protocol;
 
-import http.requestline.exception.IllegalRequestLineParsingException;
+import http.requestline.exception.RequestLineParsingException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -14,7 +14,7 @@ public class ProtocolVersion {
 
     ProtocolVersion(String version) {
         if (isIllegalPattern(version)) {
-            throw new IllegalRequestLineParsingException();
+            throw new RequestLineParsingException();
         }
 
         this.version = version;

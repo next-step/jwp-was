@@ -1,6 +1,6 @@
 package http.requestline.protocol;
 
-import http.requestline.exception.IllegalRequestLineParsingException;
+import http.requestline.exception.RequestLineParsingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,6 +35,6 @@ class ProtocolVersionTest {
     @ValueSource(strings = {"1,1", "1", "1.", "1.11"})
     void regex(String version) { /* given */
         /* when */ /* then */
-        assertThrows(IllegalRequestLineParsingException.class, () -> new ProtocolVersion(version));
+        assertThrows(RequestLineParsingException.class, () -> new ProtocolVersion(version));
     }
 }

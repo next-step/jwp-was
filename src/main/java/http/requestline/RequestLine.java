@@ -1,5 +1,6 @@
 package http.requestline;
 
+import http.method.HttpMethod;
 import http.requestline.protocol.Protocol;
 import http.requestline.protocol.ProtocolSpec;
 import lombok.Builder;

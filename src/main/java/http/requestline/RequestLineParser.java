@@ -1,6 +1,7 @@
 package http.requestline;
 
-import http.requestline.exception.IllegalRequestLineParsingException;
+import http.method.HttpMethod;
+import http.requestline.exception.RequestLineParsingException;
 import http.requestline.protocol.ProtocolSpec;
 import http.requestline.protocol.ProtocolSpecPool;
 import lombok.AccessLevel;
@@ -15,7 +16,7 @@ public class RequestLineParser {
 
     public static RequestLine parse(String request) {
         if (StringUtils.isEmpty(request)) {
-            throw new IllegalRequestLineParsingException("Parameter for creating RequestLine is Empty.");
+            throw new RequestLineParsingException("Parameter for creating RequestLine is Empty.");
         }
 
         String[] tokens = splitRequestLine(request);
@@ -32,10 +33,10 @@ public class RequestLineParser {
     }
 
     private static String[] splitRequestLine(String request) {
-        String[] tokens = request.split(REQUEST_LINE_DELIMITER);
+        String[] tokens = request.trim().split(REQUEST_LINE_DELIMITER);
 
         if (tokens.length != TOKEN_SIZE) {
-            throw new IllegalRequestLineParsingException();
+            throw new RequestLineParsingException();
         }
         return tokens;
     }

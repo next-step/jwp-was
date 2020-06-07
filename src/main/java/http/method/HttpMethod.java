@@ -1,4 +1,4 @@
-package http.requestline;
+package http.method;
 
 public enum HttpMethod {
 
