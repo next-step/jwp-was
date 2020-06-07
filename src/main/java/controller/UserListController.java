@@ -3,10 +3,7 @@ package controller;
 import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
-import model.User;
 import utils.LoginUtil;
-
-import java.util.Collection;
 
 public class UserListController extends AbstractController {
 
