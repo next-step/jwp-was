@@ -1,10 +1,10 @@
 package webserver.handler;
 
 import http.request.Request;
-import webserver.handler.custom.StaticResourceHandler;
-import webserver.handler.custom.TemplateResourceHandler;
 import http.response.resources.StaticResources;
 import http.response.resources.TemplateResources;
+import webserver.handler.custom.StaticResourceHandler;
+import webserver.handler.custom.TemplateResourceHandler;
 
 import java.util.HashSet;
 import java.util.Set;

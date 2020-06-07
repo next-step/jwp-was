@@ -11,8 +11,6 @@ import java.nio.file.Paths;
 
 public class FileIoUtils {
     private static final Logger logger = LoggerFactory.getLogger(FileIoUtils.class);
-    private static final String PREFIX_TEMPLATES = "./templates";
-    private static final String PREFIX_STATIC = "./static";
 
     public static byte[] loadFileFromClasspath(String filePath) throws IOException, URISyntaxException {
         Path path = Paths.get(FileIoUtils.class.getClassLoader().getResource(filePath).toURI());

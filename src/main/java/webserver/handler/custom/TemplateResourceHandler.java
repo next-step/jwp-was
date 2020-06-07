@@ -2,7 +2,6 @@ package webserver.handler.custom;
 
 import http.request.Headers;
 import http.request.Request;
-import http.response.HttpStatus;
 import http.response.Response;
 import http.response.ResponseBody;
 import utils.FileIoUtils;

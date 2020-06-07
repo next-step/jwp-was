@@ -1,9 +1,9 @@
 package webserver.handler.custom;
 
 import db.DataBase;
-import http.request.Request;
 import http.request.Headers;
 import http.request.QueryStrings;
+import http.request.Request;
 import http.response.ContentType;
 import http.response.HttpStatus;
 import http.response.Response;
@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserCreateHandler implements Handler {
+    private static final String HEADER_LOCATION = "Location";
+
     private String url;
 
     public UserCreateHandler(String url) {
@@ -34,7 +36,7 @@ public class UserCreateHandler implements Handler {
         Map<String, String> queryStrings = QueryStrings.parseQueryStrings(request.getRequestBody().getBody());
         DataBase.addUser(User.of(new QueryStrings(queryStrings)));
         Map<String, String> headers = new HashMap<>();
-        headers.put("Location", "/index.html");
+        headers.put(HEADER_LOCATION, "/index.html");
         return new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), new ResponseBody(getBody()));
     }
 
