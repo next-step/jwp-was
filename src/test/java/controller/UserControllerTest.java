@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import sun.plugin.dom.exception.InvalidAccessException;
+import testutils.FileLoader;
 
 import java.io.IOException;
 import java.util.Collection;

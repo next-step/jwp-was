@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import testutils.FileLoader;
 import testutils.HttpRequestGenerator;
 
 import java.io.IOException;
@@ -18,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("컨트롤러 요청을 모아둔 프로세서 테스트")
 class ControllerProcessorTest {
+    private static final Logger logger = LoggerFactory.getLogger(ControllerProcessorTest.class);
     private final ControllerProcessor controllerProcessor = new ControllerProcessor();
 
     @ParameterizedTest
@@ -47,5 +51,20 @@ class ControllerProcessorTest {
         controllerProcessor.process(httpRequest, httpResponse);
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.REDIRECT);
+    }
+
+    @Test
+    @DisplayName("render 결과 확인")
+    void render() throws IOException {
+        HttpRequest httpRequest = HttpRequest.readRawRequest(FileLoader.load("user-list-get-loggedin.txt"));
+        HttpResponse httpResponse = HttpResponse.init();
+
+        assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.OK);
+
+        controllerProcessor.process(httpRequest, httpResponse);
+
+        assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.OK);
+        assertThat(httpResponse.getBodyLength()).isNotZero();
+        logger.info(new String(httpResponse.getBody()));
     }
 }

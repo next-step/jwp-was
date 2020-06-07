@@ -6,6 +6,8 @@ import controller.UserController;
 import controller.UserListController;
 import http.HttpRequest;
 import http.HttpResponse;
+import view.HandlebarEngine;
+import view.View;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -15,6 +17,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ControllerProcessor implements Processor {
+    private static final View handleBarEngine = new HandlebarEngine();
+
     private static final List<? extends AbstractController> CONTROLLERS = Arrays.asList(
             new UserController(),
             new LoginController(),
@@ -35,5 +39,11 @@ public class ControllerProcessor implements Processor {
         AbstractController controller = PATH_AND_CONTROLLER.get(httpRequest.getPath());
 
         controller.process(httpRequest, httpResponse);
+
+        render(httpRequest, httpResponse);
+    }
+
+    private void render(final HttpRequest httpRequest, final HttpResponse httpResponse) {
+        handleBarEngine.render(httpRequest, httpResponse);
     }
 }

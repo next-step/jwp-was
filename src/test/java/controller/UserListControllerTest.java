@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import sun.plugin.dom.exception.InvalidAccessException;
+import testutils.FileLoader;
 
 import java.io.IOException;
 import java.util.Collection;
