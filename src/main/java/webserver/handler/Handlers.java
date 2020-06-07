@@ -1,10 +1,10 @@
 package webserver.handler;
 
 import http.request.Request;
-import webserver.handler.custom.StaticResourceHandler;
-import webserver.handler.custom.TemplateHandler;
 import http.response.resources.StaticResources;
 import http.response.resources.TemplateResources;
+import webserver.handler.custom.StaticResourceHandler;
+import webserver.handler.custom.TemplateResourceHandler;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +24,7 @@ public class Handlers {
         }
 
         if (TemplateResources.match(url)) {
-            return new TemplateHandler();
+            return new TemplateResourceHandler();
         }
 
         return handlers.stream()

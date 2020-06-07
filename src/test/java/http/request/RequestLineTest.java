@@ -1,9 +1,9 @@
-package http.requestLine;
+package http.request;
 
-import http.request.Method;
-import http.request.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -38,11 +38,12 @@ public class RequestLineTest {
         assertThat(url).isEqualTo("/users");
     }
 
-    @DisplayName("QueryString 추출 - GET일 때")
-    @Test
-    void getQueriesWhenGet() throws UnsupportedEncodingException {
+    @DisplayName("QueryString 추출 - QueryString 있을 때")
+    @ParameterizedTest
+    @ValueSource(strings = {"GET", "POST", "PUT", "DELETE", "OPTION"})
+    void getQueriesWhenExistQueries(String method) throws UnsupportedEncodingException {
         //given
-        String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+        String request = method + " /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
 
         //when
         RequestLine requestLine = new RequestLine(request);
@@ -55,11 +56,12 @@ public class RequestLineTest {
         assertThat(queries.get("name")).isEqualTo("JaeSung");
     }
 
-    @DisplayName("QueryString 추출 - GET이 아닐 때")
-    @Test
-    void getQueriesWhenNotGet() throws UnsupportedEncodingException {
+    @DisplayName("QueryString 추출 - QueryString 없을 때")
+    @ParameterizedTest
+    @ValueSource(strings = {"GET", "POST", "PUT", "DELETE", "OPTION"})
+    void getQueriesWhenNotExistQueries(String method) throws UnsupportedEncodingException {
         //given
-        String request = "POST /users HTTP/1.1";
+        String request = method + " /users HTTP/1.1";
 
         //when
         RequestLine requestLine = new RequestLine(request);

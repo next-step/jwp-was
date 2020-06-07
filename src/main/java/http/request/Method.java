@@ -1,5 +1,7 @@
 package http.request;
 
+import utils.RequestLineUtils;
+
 import java.util.Arrays;
 
 public enum Method {
@@ -21,5 +23,9 @@ public enum Method {
 
     public static boolean isGet(String requestLine) {
         return GET.equals(match(requestLine));
+    }
+
+    public static boolean hasQueryString(String requestLine) {
+        return RequestLineUtils.hasQueryStrings(requestLine);
     }
 }

@@ -6,6 +6,7 @@ public enum StaticResources {
     JAVASCRIPT(".js"),
     CSS(".css"),
     WOFF(".woff"),
+    WOFF2(".woff2"),
     TTF(".ttf");
 
     private String suffix;

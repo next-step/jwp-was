@@ -1,9 +1,9 @@
 package webserver.handler.custom;
 
 import db.DataBase;
-import http.request.Request;
 import http.request.Headers;
 import http.request.QueryStrings;
+import http.request.Request;
 import http.response.ContentType;
 import http.response.HttpStatus;
 import http.response.Response;
@@ -18,6 +18,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginHandler implements Handler {
+    private static final String HEADER_SET_COOKIE = "Set-Cookie";
+    private static final String HEADER_LOCATION = "Location";
+    private static final String KEY_USER_ID = "userId";
+    private static final String KEY_PASSWORD = "password";
+
     private String url;
 
     public LoginHandler(String url) {
@@ -37,15 +42,15 @@ public class LoginHandler implements Handler {
 
         Map<String, String> headers = new HashMap<>();
 
-        if(isSuccess(queryStrings, user)){
+        if (isSuccess(queryStrings, user)) {
             ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
-            headers.put("Set-Cookie", "logined=true; Path=/");
-            headers.put("Location", "/index.html");
+            headers.put(HEADER_SET_COOKIE, "logined=true; Path=/");
+            headers.put(HEADER_LOCATION, "/index.html");
             return new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), body);
         }
 
-        headers.put("Set-Cookie", "logined=false");
-        headers.put("Location", "/user/login_failed.html");
+        headers.put(HEADER_SET_COOKIE, "logined=false");
+        headers.put(HEADER_LOCATION, "/user/login_failed.html");
         ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html"));
         return new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), body);
     }
@@ -55,8 +60,8 @@ public class LoginHandler implements Handler {
         return this.url;
     }
 
-    private User getUser(Map<String, String> queryStrings){
-        String userId = queryStrings.get("userId");
+    private User getUser(Map<String, String> queryStrings) {
+        String userId = queryStrings.get(KEY_USER_ID);
         User user;
 
         try {
@@ -68,8 +73,8 @@ public class LoginHandler implements Handler {
         return user;
     }
 
-    private boolean isSuccess(Map<String, String> queryStrings, User user){
-        String password = queryStrings.get("password");
+    private boolean isSuccess(Map<String, String> queryStrings, User user) {
+        String password = queryStrings.get(KEY_PASSWORD);
         return user.getPassword().equals(password);
     }
 }

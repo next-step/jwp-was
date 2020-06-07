@@ -14,17 +14,9 @@ public enum ContentType {
     private String contentType;
     private String suffix;
 
-    ContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
     ContentType(String contentType, String suffix) {
         this.contentType = contentType;
         this.suffix = suffix;
-    }
-
-    ContentType() {
-
     }
 
     public static ContentType findContentType(String url) {

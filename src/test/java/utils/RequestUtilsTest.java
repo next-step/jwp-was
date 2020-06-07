@@ -52,11 +52,11 @@ public class RequestUtilsTest {
 
         //then
         assertThat(headers.getSize()).isEqualTo(5);
-        assertThat(headers.getParameter("Host")).isEqualTo("localhost:8080");
-        assertThat(headers.getParameter("Connection")).isEqualTo("keep-alive");
-        assertThat(headers.getParameter("Content-Length")).isEqualTo("93");
-        assertThat(headers.getParameter("Content-Type")).isEqualTo("application/x-www-form-urlencoded");
-        assertThat(headers.getParameter("Accept")).isEqualTo("*/*");
+        assertThat(headers.getHeader("Host")).isEqualTo("localhost:8080");
+        assertThat(headers.getHeader("Connection")).isEqualTo("keep-alive");
+        assertThat(headers.getHeader("Content-Length")).isEqualTo("93");
+        assertThat(headers.getHeader("Content-Type")).isEqualTo("application/x-www-form-urlencoded");
+        assertThat(headers.getHeader("Accept")).isEqualTo("*/*");
     }
 
     @DisplayName("Body 추출")

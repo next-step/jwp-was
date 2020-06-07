@@ -1,11 +1,11 @@
 package webserver.handler;
 
 import http.request.Request;
-import utils.RequestUtils;
 import http.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
+import utils.RequestUtils;
 
 import java.io.*;
 import java.net.Socket;

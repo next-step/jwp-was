@@ -1,9 +1,10 @@
 package utils;
 
+import http.request.Headers;
 import http.request.Request;
 import http.request.RequestBody;
-import http.request.Headers;
 import http.request.RequestLine;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,12 @@ import java.util.Map;
 public class RequestUtils {
     private static final Logger logger = LoggerFactory.getLogger(RequestUtils.class);
     private static final String REGEX_HEADER_DELIMITER = ": ";
+    private static final int COUNT_ZERO = 0;
+    private static final int COUNT_ONE = 1;
+    private static final int COUNT_TWO = 2;
+    private static final int LENGTH_TWO = 2;
+    private static final int INDEX_FIRST = 0;
+    private static final int INDEX_SECOND = 1;
 
     private BufferedReader br;
     private Headers headers;
@@ -43,7 +50,7 @@ public class RequestUtils {
     }
 
     private String getRequestLineAsString() throws IOException {
-        if (count != 0) {
+        if (count != COUNT_ZERO) {
             throw new IllegalArgumentException("Appropriate BufferedReader is not injected!");
         }
 
@@ -59,17 +66,17 @@ public class RequestUtils {
     }
 
     private Map<String, String> getHeadersAsMap() throws IOException {
-        if (count != 1) {
+        if (count != COUNT_ONE) {
             throw new IllegalArgumentException("RequestLine should be serviced prior to getting Headers!");
         }
 
         Map<String, String> headers = new HashMap<>();
         String header = br.readLine();
 
-        while (!"".equals(header)) {
+        while (!Strings.EMPTY.equals(header)) {
             String[] split = header.split(REGEX_HEADER_DELIMITER);
-            if (split.length == 2) {
-                headers.put(split[0], split[1]);
+            if (split.length == LENGTH_TWO) {
+                headers.put(split[INDEX_FIRST], split[INDEX_SECOND]);
             }
             header = br.readLine();
         }
@@ -80,11 +87,11 @@ public class RequestUtils {
     }
 
     private String getBodyAsString() throws IOException {
-        if (count != 2) {
+        if (count != COUNT_TWO) {
             throw new IllegalArgumentException("RequestHeaders should be serviced prior to getting RequestBody");
         }
 
-        String contentLength = headers.getParameter("Content-Length");
+        String contentLength = headers.getHeader("Content-Length");
         if (contentLength == null) {
             return "";
         }

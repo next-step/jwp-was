@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class IOUtils {
     private static final Logger logger = LoggerFactory.getLogger(IOUtils.class);
+    private static final String PROTOCOL = "HTTP/1.1";
+    private static final String DELIMITER_HEADER = ": ";
+
     /**
-     * @param BufferedReader는
-     *            Request Body를 시작하는 시점이어야
-     * @param contentLength는
-     *            Request Header의 Content-Length 값이다.
+     * @param BufferedReader는 Request Body를 시작하는 시점이어야
+     * @param contentLength는  Request Header의 Content-Length 값이다.
      * @return
      * @throws IOException
      */
@@ -37,8 +39,11 @@ public class IOUtils {
 
     private static void responseHeader(DataOutputStream dos, Response response) throws IOException {
         try {
-            dos.writeBytes("HTTP/1.1" +  response.getStatus().toString() + ": " + response.getStatus().getStatusCode() + "\r\n");
-            if(response.getHeaders() != null){
+            dos.writeBytes(PROTOCOL
+                    + response.getStatus().toString()
+                    + DELIMITER_HEADER
+                    + response.getStatus().getStatusCode() + "\r\n");
+            if (response.getHeaders() != null) {
                 writeHeaders(dos, response.getHeaders());
                 dos.writeBytes("\r\n");
             }
@@ -50,10 +55,10 @@ public class IOUtils {
 
     private static void writeHeaders(DataOutputStream dos, Headers headers) throws IOException {
         Set<String> keySet = headers.getKeySet();
-        List<String> collect = keySet.stream().collect(Collectors.toList());
+        List<String> collect = keySet.stream().collect(toList());
 
-        for (int i=0; i<keySet.size(); i++){
-            dos.writeBytes(collect.get(i) + ": " + headers.getParameter(collect.get(i)) + "\r\n");
+        for (int i = 0; i < keySet.size(); i++) {
+            dos.writeBytes(collect.get(i) + ": " + headers.getHeader(collect.get(i)) + "\r\n");
         }
     }
 
