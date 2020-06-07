@@ -6,22 +6,22 @@ public class RequestLine {
     private static final String SPACE_DELIMITER = " ";
 
     private final HttpMethod method;
-    private final String path;
+    private final Uri uri;
     private final Protocol protocol;
 
-    private RequestLine(HttpMethod method, String path, Protocol protocol) {
+    private RequestLine(HttpMethod method, Uri uri, Protocol protocol) {
         this.method = method;
-        this.path = path;
+        this.uri = uri;
         this.protocol = protocol;
     }
 
     public static RequestLine from(String fullRequestLine) {
         String[] splittedRequestLine = fullRequestLine.split(SPACE_DELIMITER);
-        return new RequestLine(HttpMethod.valueOf(splittedRequestLine[0]), splittedRequestLine[1], Protocol.from(splittedRequestLine[2]));
+        return new RequestLine(HttpMethod.valueOf(splittedRequestLine[0]), Uri.from(splittedRequestLine[1]), Protocol.from(splittedRequestLine[2]));
     }
 
-    public static RequestLine of(String method, String path, String protocol, String version) {
-        return new RequestLine(HttpMethod.valueOf(method), path, Protocol.of(protocol, version));
+    public static RequestLine of(String method, String uri, String protocol, String version) {
+        return new RequestLine(HttpMethod.valueOf(method), Uri.from(uri), Protocol.of(protocol, version));
     }
 
     @Override
@@ -29,13 +29,13 @@ public class RequestLine {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RequestLine that = (RequestLine) o;
-        return Objects.equals(method, that.method) &&
-                Objects.equals(path, that.path) &&
+        return method == that.method &&
+                Objects.equals(uri, that.uri) &&
                 Objects.equals(protocol, that.protocol);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(method, path, protocol);
+        return Objects.hash(method, uri, protocol);
     }
 }
