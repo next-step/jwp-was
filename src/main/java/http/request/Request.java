@@ -27,7 +27,7 @@ public class Request {
         return requestBody;
     }
 
-    public String getParameter(String key) {
+    public String getHeader(String key) {
         return getHeaders().getHeader(key);
     }
 }

@@ -45,7 +45,7 @@ public class UserListHandler implements Handler {
 
     @Override
     public Response work(Request request) throws IOException {
-        String cookie = request.getParameter(COOKIE);
+        String cookie = request.getHeader(COOKIE);
         Map<String, String> headers = new HashMap<>();
 
         if (cookie == null || !cookie.contains(COOKIE_LOGIN_SUCCESS)) {
