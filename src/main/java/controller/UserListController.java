@@ -21,9 +21,7 @@ public class UserListController extends AbstractController {
             return;
         }
 
-        Collection<User> users = DataBase.findAll();
-
         httpResponse.forward("user/profile");
-        httpResponse.addModel("users", users);
+        httpResponse.addModel("users", DataBase.findAll());
     }
 }
