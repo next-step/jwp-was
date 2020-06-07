@@ -1,6 +1,7 @@
 package webserver;
 
 import http.controller.Controller;
+import http.controller.Controllers;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import org.slf4j.Logger;
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.URISyntaxException;
 import java.util.Map;
 
 public class RequestHandler implements Runnable {
@@ -28,13 +28,21 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            HttpRequest httpRequest = HttpRequest.getInstance(in);
-            HttpResponse response = Controller.requestMapping(httpRequest);
+            HttpRequest request = HttpRequest.getInstance(in);
+            HttpResponse response = new HttpResponse();
+
+            Controllers controllers = new Controllers();
+            if (controllers.containsKey(request.getPath())) {
+                Controller controller = controllers.get(request.getPath());
+                controller.service(request, response);
+            } else {
+                response.loadFile(request);
+            }
 
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, response);
             responseBody(dos, response);
-        } catch (IOException | URISyntaxException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }

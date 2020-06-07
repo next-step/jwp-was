@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Getter
@@ -29,7 +31,7 @@ public class HttpRequest {
     }
 
     public static HttpRequest getInstance(InputStream inputStream) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, CHAR_SET));
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, Charset.forName(StandardCharsets.UTF_8.name())));
 
         RequestLine requestLine = RequestLine.getInstance(br.readLine());
         RequestHeader requestHeader = RequestHeader.getInstance(br);

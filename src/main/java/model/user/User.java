@@ -22,7 +22,7 @@ public class User {
     }
 
     public boolean login(String password) {
-        return this.password.equals(password);
+        return this.password.equals(password.trim());
     }
 
     @Override
