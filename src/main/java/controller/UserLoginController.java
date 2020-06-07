@@ -1,17 +1,11 @@
 package controller;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
+import http.FormData;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import model.Users;
-import utils.HandlebarsHelper;
+import model.User;
 import webserver.controller.AbstractController;
-
-import java.io.IOException;
 
 public class UserLoginController extends AbstractController {
 
@@ -28,38 +22,32 @@ public class UserLoginController extends AbstractController {
 
     @Override
     protected void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (isLogined(httpRequest)) {
-            Users users = new Users(DataBase.findAll());
-
-            TemplateLoader loader = new ClassPathTemplateLoader();
-            loader.setPrefix("/templates");
-            loader.setSuffix(".html");
-
-            Handlebars handlebars = new Handlebars(loader);
-            handlebars.registerHelpers(new HandlebarsHelper());
-
-            try {
-                Template template = handlebars.compile("user/list");
-                byte[] htmlFile = template.apply(users).getBytes();
-                httpResponse.response200HTML(htmlFile);
-            } catch (IOException e) {
-                httpResponse.response302("/index.html");
-            }
-
-        } else {
-            httpResponse.response302("/index.html");
-        }
-    }
-
-    private boolean isLogined(HttpRequest httpRequest) {
-        String logined = httpRequest.getCookie("logined");
-        if ("true".equals(logined)) {
-            return true;
-        }
-        return false;
     }
 
     @Override
     protected void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+        FormData formData = new FormData(httpRequest.getBody());
+        String userId = formData.getValue("userId");
+        String password = formData.getValue("password");
+
+        User user = DataBase.findUserById(userId);
+
+        if (isSamePassword(user.getPassword(), password)) {
+            httpResponse.response302("/index.html");
+            httpResponse.addCookie("logined", "true");
+            httpResponse.addCookiePath("/");
+        } else {
+            httpResponse.response302("/user/login_failed.html");
+            httpResponse.addCookie("logined", "false");
+            httpResponse.addCookiePath("/");
+        }
     }
+
+    private boolean isSamePassword(String password1, String password2) {
+        if (password1 == null) {
+            return false;
+        }
+        return password1.equals(password2);
+    }
+
 }
