@@ -6,18 +6,22 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpResponse {
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
+
 
     private final Headers headers = new Headers(new HashMap<>());
     private final Map<String, String> cookies = new HashMap<>();
     private final View view;
 
-    public HttpResponse(View view){
-        this.view =view;
+    public HttpResponse(View view) {
+        this.view = view;
     }
 
     public void addCookie(String name, String value) {
@@ -26,31 +30,29 @@ public class HttpResponse {
 
     public void response(OutputStream out) throws IOException {
         DataOutputStream dos = new DataOutputStream(out);
-        String responseLine = String.format("HTTP/1.1 %s", view.getHttpStatus().toString());
-        dos.writeBytes( responseLine+ "\r\n");
+        responseToStatus(dos);
+        responseToHeader(dos);
 
-        List<String> headerLines = this.headers.toLines();
-        headerLines.addAll(this.view.getHeaders().toLines());
-        for (String headerLine : headerLines) {
-            dos.writeBytes(headerLine);
-            dos.writeBytes("\r\n");
-        }
+        view.response(out);
 
-        byte[] body = this.view.getBody();
-        dos.writeBytes("Content-Length: " + body.length + "\r\n");
-
-        this.cookies.forEach(
-            (name, value) -> {
-                try {
-                    dos.writeBytes(String.format("Set-Cookie: %s=%s; Path=/\r\n", name, value));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
-        dos.writeBytes("\r\n");
-        dos.write(body, 0, body.length);
         dos.flush();
+    }
+
+    private void responseToHeader(DataOutputStream dos) throws IOException {
+        this.headers.response(dos);
+
+        this.cookies.forEach((name, value) -> {
+            try {
+                dos.writeBytes(String.format("Set-Cookie: %s=%s; Path=/\r\n", name, value));
+            } catch (IOException e) {
+                logger.error(e.getMessage(), e);
+            }
+        });
+    }
+
+    private void responseToStatus(DataOutputStream dos) throws IOException {
+        String responseLine = String.format("HTTP/1.1 %s", view.getHttpStatus().toString());
+        dos.writeBytes(responseLine + "\r\n");
     }
 
     @Override

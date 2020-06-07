@@ -3,12 +3,12 @@ package http.view;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import http.Headers;
 import http.HttpStatus;
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-public class TemplateView implements View {
+public class TemplateView extends FileResourceView {
 
     private final static Handlebars handlebars;
 
@@ -37,15 +37,10 @@ public class TemplateView implements View {
     }
 
     @Override
-    public byte[] getBody() throws IOException {
-        return handlebars.compile(path).apply(model.getModel()).getBytes();
-    }
-
-    @Override
-    public Headers getHeaders() {
-        Headers headers = new Headers();
-        headers.add("Content-Type", "text/html;charset=utf-8");
-        return headers;
+    protected BodyFile getBodyFile() throws IOException {
+        byte body[] = handlebars.compile(path).apply(model.getModel()).getBytes();
+        String fileName = new File(path).getName();
+        return new BodyFile(fileName, body);
     }
 
     @Override

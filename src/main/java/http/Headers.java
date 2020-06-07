@@ -1,11 +1,14 @@
 package http;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import utils.HttpUtils;
 import utils.StringUtils;
@@ -60,12 +63,14 @@ public class Headers {
         return Parameters.empty();
     }
 
-    public List<String> toLines() {
-        return this.headers.keySet().stream()
-            .map(name -> name + ": " + headers.get(name))
-            .collect(Collectors.toList());
+    public void response(OutputStream out) throws IOException {
+        DataOutputStream dos = new DataOutputStream(out);
+        for (Entry<String, String> entry : this.headers.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            dos.writeBytes(key + ": " + value + "\r\n");
+        }
     }
-
     private Parameters parseForFormUrlEncoded(String body) {
         return new Parameters(HttpUtils.getPairs(body,"&", "="));
     }
@@ -89,6 +94,8 @@ public class Headers {
     public int hashCode() {
         return Objects.hash(APPLICATION_FORM_URLENCODED, headers);
     }
+
+
 
     private enum HeaderName {
         CONTENT_LENGTH("Content-Length"),

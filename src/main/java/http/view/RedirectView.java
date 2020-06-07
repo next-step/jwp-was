@@ -1,7 +1,9 @@
 package http.view;
 
-import http.Headers;
 import http.HttpStatus;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Objects;
 
 public class RedirectView implements View{
@@ -18,15 +20,9 @@ public class RedirectView implements View{
     }
 
     @Override
-    public byte[] getBody() {
-        return new byte[0];
-    }
-
-    @Override
-    public Headers getHeaders() {
-        Headers headers = new Headers();
-        headers.add("Location", path);
-        return headers;
+    public void response(OutputStream out) throws IOException {
+        DataOutputStream dos = new DataOutputStream(out);
+        dos.writeBytes("Location: " + this.path);
     }
 
     @Override

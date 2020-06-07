@@ -1,15 +1,13 @@
 package http.view;
 
-import http.Headers;
 import http.HttpStatus;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Objects;
 import utils.FileIoUtils;
-import utils.HttpUtils;
 
-public class StaticResourceView implements View {
+public class StaticResourceView extends FileResourceView {
 
     private final String path;
 
@@ -23,22 +21,12 @@ public class StaticResourceView implements View {
     }
 
     @Override
-    public byte[] getBody() throws IOException {
-        return FileIoUtils.loadFile(getFile());
-    }
-
-    @Override
-    public Headers getHeaders() {
-        Headers headers = new Headers();
-        headers.add("Content-Type", HttpUtils.getMimeType(this.getFile().getName()));
-        return headers;
-    }
-
-    private File getFile() {
+    protected BodyFile getBodyFile() throws IOException {
+        String fileName = new File(path).getName();
         try {
-            return FileIoUtils.getFileFromClasspath(this.path);
+            return new BodyFile(fileName, FileIoUtils.loadFileFromClasspath(this.path));
         } catch (URISyntaxException e) {
-            return null;
+            throw new IOException(e.getMessage(), e);
         }
     }
 
@@ -58,4 +46,6 @@ public class StaticResourceView implements View {
     public int hashCode() {
         return Objects.hash(path);
     }
+
+
 }
