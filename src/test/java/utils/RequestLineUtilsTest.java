@@ -12,7 +12,7 @@ public class RequestLineUtilsTest {
     void getUrl() {
         //given
         String requestLine = "POST /user/create HTTP/1.1";
-        String requestLine2 = "GET /user?userId=palmseung&name=seunghee";
+        String requestLine2 = "GET /user?userId=palmseung&name=seunghee HTTP/1.1";
 
         //when
         String url = RequestLineUtils.getUrl(requestLine);
@@ -28,7 +28,7 @@ public class RequestLineUtilsTest {
     void getQueries(){
         //given
         String requestLine = "POST /user/create HTTP/1.1";
-        String requestLine2 = "GET /user?userId=palmseung&name=seunghee";
+        String requestLine2 = "GET /user?userId=palmseung&name=seunghee HTTP/1.1";
 
         //when
         String queries = RequestLineUtils.getQueries(requestLine);
@@ -37,5 +37,21 @@ public class RequestLineUtilsTest {
         //then
         assertThat(queries).isEqualTo(Strings.EMPTY);
         assertThat(queries2).isEqualTo("userId=palmseung&name=seunghee");
+    }
+
+    @DisplayName("Protocol 추출")
+    @Test
+    void getProtocol(){
+        //given
+        String requestLine = "POST /user/create HTTP/1.1";
+        String requestLine2 = "GET /user?userId=palmseung&name=seunghee HTTP/1.1";
+
+        //when
+        String protocol = RequestLineUtils.getProtocol(requestLine);
+        String protocol2 = RequestLineUtils.getProtocol(requestLine2);
+
+        //then
+        assertThat(protocol).isEqualTo("HTTP");
+        assertThat(protocol2).isEqualTo("HTTP");
     }
 }
