@@ -21,7 +21,7 @@ public class HttpRequest {
         BufferedReader bufferedReader =
                 new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
-        initRequestHeader(bufferedReader);
+        initRequestLine(bufferedReader);
         initHeaders(bufferedReader);
         initBody(bufferedReader);
     }
@@ -30,7 +30,7 @@ public class HttpRequest {
         return new HttpRequest(inputStream);
     }
 
-    private void initRequestHeader(final BufferedReader bufferedReader) throws IOException {
+    private void initRequestLine(final BufferedReader bufferedReader) throws IOException {
         String requestLine = bufferedReader.readLine();
         String decodedReadStream = URLDecoder.decode(requestLine, "UTF-8");
 
