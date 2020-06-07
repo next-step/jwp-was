@@ -1,5 +1,7 @@
 package http;
 
+import utils.StringUtil;
+
 import java.util.Map;
 import java.util.Objects;
 
@@ -23,7 +25,7 @@ public class Path {
     }
 
     private void validate(String pathStr) {
-        if (Objects.isNull(pathStr)) {
+        if (StringUtil.isEmpty(pathStr)) {
             throw new IllegalArgumentException("Path string is null");
         }
     }
