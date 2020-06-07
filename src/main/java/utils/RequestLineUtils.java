@@ -1,5 +1,7 @@
 package utils;
 
+import org.apache.logging.log4j.util.Strings;
+
 public class RequestLineUtils {
     private static final String REGEX_PROTOCOL_DELIMITER = "/";
     private static final String REGEX_PATH_DELIMITER = "\\?";
@@ -10,7 +12,13 @@ public class RequestLineUtils {
     }
 
     public static String getQueries(String requestLine) {
-        return splitPath(extractPath(requestLine))[1];
+        String[] pathAndQuery = splitPath(extractPath(requestLine));
+
+        if (pathAndQuery.length == 2) {
+            return pathAndQuery[1];
+        }
+
+        return Strings.EMPTY;
     }
 
     public static String getProtocol(String requestLine) {
@@ -21,9 +29,9 @@ public class RequestLineUtils {
         return splitProtocol(extractProtocol(requestLine))[1];
     }
 
-    public static boolean hasQueryStrings(String requestLine){
+    public static boolean hasQueryStrings(String requestLine) {
         String[] strings = splitPath(extractPath(requestLine));
-        if(strings.length == 2){
+        if (strings.length == 2) {
             return true;
         }
         return false;
