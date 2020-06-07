@@ -11,7 +11,7 @@ class HttpResponseTest {
     @Test
     @DisplayName("ok 는 200 response를 보낸다.")
     void ok() {
-        assertThat(HttpResponse.init().getStatusCode()).isEqualTo(200);
+        assertThat(HttpResponse.init().getStatusCode()).isEqualTo(StatusCode.OK);
     }
 
     @Test
@@ -22,6 +22,6 @@ class HttpResponseTest {
         httpResponse.sendRedirect(location);
 
         assertThat(httpResponse.getLocation()).isEqualTo(location);
-        assertThat(httpResponse.getStatusCode()).isEqualTo(302);
+        assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.REDIRECT);
     }
 }

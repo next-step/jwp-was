@@ -76,6 +76,6 @@ class ResourceProcessorTest {
 
         resourceProcessor.process(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.NOT_FOUND.getCodeValue());
+        assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.NOT_FOUND);
     }
 }

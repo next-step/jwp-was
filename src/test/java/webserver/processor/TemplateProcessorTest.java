@@ -53,7 +53,7 @@ class TemplateProcessorTest {
 
         templateProcessor.process(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.NOT_FOUND.getCodeValue());
+        assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.NOT_FOUND);
     }
 
     @Test

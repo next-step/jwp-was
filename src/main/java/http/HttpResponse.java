@@ -35,8 +35,8 @@ public class HttpResponse {
         return contentType;
     }
 
-    public int getStatusCode() {
-        return statusCode.getCodeValue();
+    public StatusCode getStatusCode() {
+        return statusCode;
     }
 
     public int getBodyLength() {
