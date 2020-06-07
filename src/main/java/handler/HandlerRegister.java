@@ -13,12 +13,11 @@ public class HandlerRegister {
         this.map.put(matcher, handler);
     }
 
-    public Handler find(final Method method , final String path) {
+    public Handler find(final Method method, final String path) {
         Set<HandlerMatcher> handlerMatchers = this.map.keySet();
         return handlerMatchers.stream()
             .filter(matcher -> matcher.isMatch(method, path))
             .map(matcher -> map.get(matcher)).findFirst()
             .orElse(null);
     }
-
 }

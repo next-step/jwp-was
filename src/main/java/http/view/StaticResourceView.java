@@ -46,6 +46,4 @@ public class StaticResourceView extends FileResourceView {
     public int hashCode() {
         return Objects.hash(path);
     }
-
-
 }

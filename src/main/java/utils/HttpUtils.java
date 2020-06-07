@@ -1,6 +1,5 @@
 package utils;
 
-import http.Headers;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;

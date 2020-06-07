@@ -44,7 +44,7 @@ public class HttpRequest {
 
         List<String> headerLines = new ArrayList<>();
         String line = br.readLine();
-        while(StringUtils.isNotEmpty(line)){
+        while (StringUtils.isNotEmpty(line)) {
             headerLines.add(line);
             line = br.readLine();
         }
@@ -87,6 +87,4 @@ public class HttpRequest {
     public int hashCode() {
         return Objects.hash(requestLine);
     }
-
-
 }

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class RequestUrlTest {
 
     @Test
-    void parse_path(){
+    void parse_path() {
         RequestUrl requestUrl = RequestUrl.of("/test/index.html");
         assertThat(requestUrl).isEqualTo(RequestUrl.of("/test/index.html", ""));
     }

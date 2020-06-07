@@ -13,8 +13,8 @@ import model.User;
 import org.junit.jupiter.api.Test;
 
 class UserCreateHandlerTest {
-    private Handler handler = httpRequest -> new UserHandler().create(httpRequest);
 
+    private Handler handler = httpRequest -> new UserHandler().create(httpRequest);
 
     @Test
     void create() throws IOException {
@@ -34,8 +34,6 @@ class UserCreateHandlerTest {
 
         assertThat(httpResponse).isEqualTo(new HttpResponse(new RedirectView("/index.html")));
     }
-
-
 
     private HttpRequest getCreateHttpRequest() throws IOException {
         String line = "POST /user/create HTTP/1.1";

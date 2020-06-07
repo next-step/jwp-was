@@ -21,13 +21,14 @@ public abstract class FileResourceView implements View {
 
     protected abstract BodyFile getBodyFile() throws IOException;
 
-     static class BodyFile{
-         private String fileName;
-         private byte[] bytes;
+    static class BodyFile {
 
-         public BodyFile(String fileName, byte[] bytes) {
-             this.fileName = fileName;
-             this.bytes = bytes;
-         }
-     }
+        private String fileName;
+        private byte[] bytes;
+
+        public BodyFile(String fileName, byte[] bytes) {
+            this.fileName = fileName;
+            this.bytes = bytes;
+        }
+    }
 }

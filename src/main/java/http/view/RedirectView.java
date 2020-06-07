@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
 
-public class RedirectView implements View{
+public class RedirectView implements View {
 
     private String path;
 

@@ -3,7 +3,6 @@ package handler;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import http.Method;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -22,6 +21,7 @@ class HandlerMatcherTest {
         HandlerMatcher handlerMatcher = new HandlerMatcher(Method.GET, pattern);
         assertThat(handlerMatcher.isMatch(Method.GET, path)).isEqualTo(result);
     }
+
     @ParameterizedTest
     @CsvSource({
 
@@ -46,6 +46,4 @@ class HandlerMatcherTest {
         HandlerMatcher handlerMatcher = new HandlerMatcher(Method.GET, pattern);
         assertThat(handlerMatcher.isMatch(Method.GET, path)).isEqualTo(result);
     }
-
-
 }

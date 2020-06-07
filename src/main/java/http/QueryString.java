@@ -15,7 +15,7 @@ public class QueryString {
     }
 
     public static QueryString of(String queryString) {
-        return new QueryString(HttpUtils.getPairs(queryString,"&", "="));
+        return new QueryString(HttpUtils.getPairs(queryString, "&", "="));
     }
 
     public String get(String name) {

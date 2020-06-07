@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 import utils.HttpUtils;
 import utils.StringUtils;
 
@@ -19,7 +17,7 @@ public class Headers {
 
     private Map<String, String> headers;
 
-    public Headers(){
+    public Headers() {
         this(new HashMap<>());
     }
 
@@ -30,7 +28,7 @@ public class Headers {
     public static Headers from(List<String> headerLines) {
         Map<String, String> headers = new HashMap<>();
         for (String line : headerLines) {
-            headers.putAll(HttpUtils.getPair(line,":"));
+            headers.putAll(HttpUtils.getPair(line, ":"));
         }
         return new Headers(headers);
     }
@@ -44,8 +42,8 @@ public class Headers {
         return Integer.parseInt(length);
     }
 
-    public Map<String, String> getCookies(){
-        String cookies =this.headers.getOrDefault("Cookie", "");
+    public Map<String, String> getCookies() {
+        String cookies = this.headers.getOrDefault("Cookie", "");
         return Cookie.from(cookies).getCookies();
     }
 
@@ -71,8 +69,9 @@ public class Headers {
             dos.writeBytes(key + ": " + value + "\r\n");
         }
     }
+
     private Parameters parseForFormUrlEncoded(String body) {
-        return new Parameters(HttpUtils.getPairs(body,"&", "="));
+        return new Parameters(HttpUtils.getPairs(body, "&", "="));
     }
 
     @Override
@@ -94,7 +93,6 @@ public class Headers {
     public int hashCode() {
         return Objects.hash(APPLICATION_FORM_URLENCODED, headers);
     }
-
 
 
     private enum HeaderName {

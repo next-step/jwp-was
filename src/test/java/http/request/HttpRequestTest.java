@@ -26,7 +26,7 @@ public class HttpRequestTest {
         String header = "Content-Length: 59";
         String body = "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
 
-        String raw = line+"\n" +header +"\n\n"+ body;
+        String raw = line + "\n" + header + "\n\n" + body;
         InputStream in = new ByteArrayInputStream(raw.getBytes());
 
         HttpRequest httpRequest = HttpRequest.from(in);
@@ -39,7 +39,7 @@ public class HttpRequestTest {
         String line = "GET /user/create?userId=javajigi HTTP/1.1";
         String header = "Content-Length: 0";
 
-        String raw = line+"\n" +header;
+        String raw = line + "\n" + header;
         InputStream in = new ByteArrayInputStream(raw.getBytes());
 
         HttpRequest httpRequest = HttpRequest.from(in);
@@ -61,9 +61,7 @@ public class HttpRequestTest {
         String header = "Content-Length: 91\nContent-Type: application/x-www-form-urlencoded";
         String body = "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
 
-        String raw = line+"\n" +header +"\n\n"+ body;
+        String raw = line + "\n" + header + "\n\n" + body;
         return new ByteArrayInputStream(raw.getBytes());
     }
-
-
 }

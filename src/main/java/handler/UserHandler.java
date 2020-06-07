@@ -27,8 +27,8 @@ public class UserHandler {
         return httpResponse;
     }
 
-    public HttpResponse list(HttpRequest httpRequest){
-        if(!isLogin(httpRequest)){
+    public HttpResponse list(HttpRequest httpRequest) {
+        if (!isLogin(httpRequest)) {
             return new HttpResponse(new TemplateView("login"));
         }
 
@@ -40,7 +40,7 @@ public class UserHandler {
 
     private boolean isLogin(HttpRequest httpRequest) {
         return Optional.ofNullable(httpRequest.getCookie("logined"))
-            .filter(val->val.equals(Boolean.TRUE.toString()))
+            .filter(val -> val.equals(Boolean.TRUE.toString()))
             .isPresent();
     }
 

@@ -10,14 +10,14 @@ class StringUtilsTest {
 
     @ParameterizedTest
     @NullAndEmptySource
-    @ValueSource(strings = {"  ", "\n","\t"})
-    void empty(String val){
+    @ValueSource(strings = {"  ", "\n", "\t"})
+    void empty(String val) {
         assertThat(StringUtils.isEmpty(val)).isEqualTo(true);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"abc ", "\na","\ta"})
-    void notEmpty(String val){
+    @ValueSource(strings = {"abc ", "\na", "\ta"})
+    void notEmpty(String val) {
         assertThat(StringUtils.isNotEmpty(val)).isEqualTo(true);
     }
 }

@@ -11,11 +11,14 @@ import http.response.HttpResponse;
 import http.view.RedirectView;
 
 public class RequestHandlerMapping {
+
     private static final HandlerRegister handlerRegister = new HandlerRegister();
+
     static {
         register();
     }
-    private static void register(){
+
+    private static void register() {
         UserHandler userHandler = new UserHandler();
 
         handlerRegister.add(
@@ -53,5 +56,4 @@ public class RequestHandlerMapping {
         Handler handler = handlerRegister.find(httpRequest.getMethod(), httpRequest.getPath());
         return handler.handle(httpRequest);
     }
-
 }

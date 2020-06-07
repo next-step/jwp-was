@@ -21,5 +21,4 @@ public class RequestLineTest {
         assertThat(requestLine)
             .isEqualTo(RequestLine.of("POST", "/users", "HTTP", "1.1"));
     }
-
 }

@@ -20,7 +20,7 @@ public class RequestHandlerMappingTest {
     private RequestHandlerMapping requestHandlerMapping;
 
     @BeforeEach
-    void init(){
+    void init() {
         this.requestHandlerMapping = new RequestHandlerMapping();
     }
 
@@ -43,7 +43,7 @@ public class RequestHandlerMappingTest {
     }
 
     @Test
-    void handleUserCreate(){
+    void handleUserCreate() {
         HttpRequest httpRequest = HttpRequest.of(
             "POST /user/create HTTP/1.1",
             Arrays.asList(),

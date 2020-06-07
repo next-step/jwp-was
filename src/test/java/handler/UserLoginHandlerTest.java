@@ -13,6 +13,7 @@ import model.User;
 import org.junit.jupiter.api.Test;
 
 class UserLoginHandlerTest {
+
     @Test
     void login_success() throws IOException {
         DataBase.addUser(new User("javajigi", "password", "", ""));
