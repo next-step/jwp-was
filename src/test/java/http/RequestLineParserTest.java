@@ -32,5 +32,6 @@ public class RequestLineParserTest {
         assertThat(requestLine.getQueryString().getParameter("name")).isEqualTo("Wonbo");
         assertThat(requestLine.getProtocol()).isEqualTo(new Protocol("HTTP/1.1"));
     }
+
 }
 
