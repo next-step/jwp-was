@@ -8,6 +8,7 @@ import db.DataBase;
 import http.*;
 import model.User;
 import model.Users;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -17,6 +18,8 @@ import utils.IOUtils;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -38,19 +41,22 @@ public class RequestHandler implements Runnable {
             logger.debug("Request Line :: {}", line);
             RequestLine requestLine = RequestLineParser.parse(line);
 
-            int contentLength = 0;
-            Cookie cookie = null;
+            List<String> headers = new ArrayList<>();
 
+            line = br.readLine();
             while (!line.equals("")) {
-                line = br.readLine();
                 logger.debug("Header :: {}", line);
+                headers.add(line);
+                line = br.readLine();
+            }
 
-                if (line.startsWith("Content-Length: ")) {
-                    contentLength = Integer.parseInt(line.split(":")[1].trim());
-                }
-                if (line.startsWith("Cookie: ")) {
-                    cookie = new Cookie(line);
-                }
+            Header header = new Header(headers.toArray(new String[headers.size()]));
+            Cookie cookie = new Cookie(header.getValue("Cookie"));
+
+            String contentLengthStr = header.getValue("Content-Length");
+            int contentLength = 0;
+            if (!Strings.isBlank(contentLengthStr)) {
+                contentLength = Integer.parseInt(contentLengthStr);
             }
 
             String requestBody = IOUtils.readData(br, contentLength);
