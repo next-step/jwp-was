@@ -1,10 +1,10 @@
 package http;
 
+import http.response.Models;
 import http.response.ResponseHeader;
 
 import java.io.DataOutputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 public class HttpResponse {
@@ -14,7 +14,7 @@ public class HttpResponse {
 
     private final Cookies cookies = Cookies.init();
     private final ResponseHeader header = ResponseHeader.init();
-    private final Map<String, Object> models = new HashMap<>();
+    private final Models models = Models.init();
 
     private HttpResponse(final StatusCode statusCode) {
         this.statusCode = statusCode;
@@ -82,10 +82,10 @@ public class HttpResponse {
     }
 
     public void addModel(final String key, final Object value) {
-        models.put(key, value);
+        models.addModel(key, value);
     }
 
     public Map<String, Object> getModels() {
-        return models;
+        return models.getModels();
     }
 }
