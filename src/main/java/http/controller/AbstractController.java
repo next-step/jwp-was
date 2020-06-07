@@ -6,10 +6,12 @@ import http.exception.HttpException;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 
+import java.io.IOException;
+
 public abstract class AbstractController implements Controller {
 
     @Override
-    public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void service(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
         try {
             if (HttpMethod.GET.equals(httpRequest.getMethod())) {
                 doGet(httpRequest, httpResponse);

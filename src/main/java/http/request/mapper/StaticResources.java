@@ -1,6 +1,9 @@
 package http.request.mapper;
 
 public class StaticResources {
+    public static String TEMPLATE_PREFIX = "/templates";
+    public static String STATIC_PREFIX = "/static";
+
     public static String HTML_SUFFIX = ".html";
     public static String JPG_SUFFIX = ".jpg";
     public static String PNG_SUFFIX = ".png";
@@ -14,13 +17,9 @@ public class StaticResources {
     public static String WOFF2_SUFFIX = ".woff2";
     public static String ICON_SUFFIX = ".ico";
 
-    public static final String STATIC = "/static";
-    public static final String TEMPLATES = "/templates";
-
-    public static final String HTML_PATH = TEMPLATES;
-    public static final String ICON_PATH = TEMPLATES;
-    public static final String IMAGE_PATH = STATIC + "/images";
-    public static final String FONT_PATH = STATIC + "/fonts";
-    public static final String CSS_PATH = STATIC + "/css";
-    public static final String JS_PATH = STATIC + "/js";
+    public static final String ROOT_PATH = "/";
+    public static final String IMAGE_PATH = "/images";
+    public static final String FONT_PATH = "/fonts";
+    public static final String CSS_PATH = "/css";
+    public static final String JS_PATH = "/js";
 }

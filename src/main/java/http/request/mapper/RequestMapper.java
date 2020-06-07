@@ -1,10 +1,12 @@
 package http.request.mapper;
 
 import http.controller.Controller;
+import http.exception.NotFoundException;
 import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 
 import static http.controller.Controllers.*;
 import static java.util.stream.Collectors.toMap;
@@ -34,10 +36,14 @@ public enum RequestMapper {
     }
 
     public static Controller mapRequest(String url) {
-        return requestMap.getOrDefault(url, getStaticController(url));
-    }
+        if (StaticResourceMapper.isStaticResource(url)) {
+            return StaticResourceMapper.getStaticResourceController(url);
+        }
 
-    private static Controller getStaticController(String url) {
+        if (requestMap.containsKey(url)) {
+            return requestMap.get(url);
+        }
 
+        throw new NotFoundException();
     }
 }
