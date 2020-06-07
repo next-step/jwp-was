@@ -33,12 +33,13 @@ public class RequestLine {
         String[] values = requestLine.split(" ");
         String[] pathValues = values[1].split(PATH_REGEX);
         Protocol protocol = Protocol.getInstance(values[2]);
+        HttpMethod method = HttpMethod.valueOf(values[0]);
 
-        if (pathValues.length > 1) {
-            return new RequestLine(HttpMethod.valueOf(values[0]), pathValues[0], protocol, QueryString.getInstance(pathValues[1]));
+        if (method == HttpMethod.GET && pathValues.length > 1) {
+            return new RequestLine(method, pathValues[0], protocol, QueryString.getInstance(pathValues[1]));
         }
 
-        return new RequestLine(HttpMethod.valueOf(values[0]), pathValues[0], protocol);
+        return new RequestLine(method, pathValues[0], protocol);
     }
 
     public String getFilePath() {
