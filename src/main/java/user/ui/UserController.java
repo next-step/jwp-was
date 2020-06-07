@@ -18,20 +18,42 @@ public class UserController {
     private final RequestLine requestLine;
 
     public UserController(final RequestLine requestLine) {
-        this.requestLine= requestLine;
+        this.requestLine = requestLine;
     }
 
     public byte[] mapping() {
+        String method = requestLine.getMethodName();
+
+        if (method.equals("GET")) {
+            return mappingByGetMethod();
+        }
+        return mappingByPostMethod();
+    }
+
+    private byte[] mappingByGetMethod() {
         String path = requestLine.getPath();
         if (path.equals("/user/form.html")) {
             return getUserForm(String.format("./templates/%s", path));
         }
 
         if (path.equals("/user/create")) {
-            final Map<String, String> params = requestLine.getParams();
-            User user = new User(params.get("userId"), params.get("password"), params.get("name"), params.get("email"));
-            logger.debug(user.toString());
             return "test".getBytes();
+        }
+
+        return null;
+    }
+
+    private byte[] mappingByPostMethod() {
+        String path = requestLine.getPath();
+        if (path.equals("/user/create")) {
+            Map<String, String> requestParams = requestLine.getParams();
+            String userId = requestParams.getOrDefault("userId", "");
+            String password = requestParams.getOrDefault("password", "");
+            String email = requestParams.getOrDefault("email", "");
+            String name = requestParams.getOrDefault("name", "");
+            User user = new User(userId, password, email, name);
+            logger.debug(user.toString());
+            return user.toString().getBytes();
         }
 
         return null;

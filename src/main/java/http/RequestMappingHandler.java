@@ -1,8 +1,10 @@
 package http;
 
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import user.ui.UserController;
+import utils.IOUtils;
 import webserver.RequestHandler;
 
 import java.io.BufferedReader;
@@ -24,23 +26,48 @@ public class RequestMappingHandler {
 
     public void read() throws IOException {
         String readLine = bufferedReader.readLine();
+        String firstLine = readLine;
+        int contentLength = 0;
         logger.debug(readLine);
-        handler(readLine);
+
         while (!"".equals(readLine)) {
             readLine = bufferedReader.readLine();
+            if (readLine.matches("Content-Length:.*")) {
+                String[] lengths = readLine.split(":");
+                contentLength = Integer.valueOf(lengths[1].trim());
+            }
             logger.debug(readLine);
+        }
+
+        String requestBody = IOUtils.readData(bufferedReader, contentLength);
+        if (Strings.isBlank(requestBody)) {
+            handler(firstLine);
+            return;
+        }
+        handler(firstLine, requestBody);
+
+    }
+
+    private void handler(String readLine, String requestBody) {
+        RequestLine requestLine = RequestLineParser.parse(readLine, requestBody);
+        String path = requestLine.getPath();
+        if (path.matches("/user/.*")) {
+            handlerByUserController(requestLine);
         }
     }
 
     private void handler(String readLine) {
         RequestLine requestLine = RequestLineParser.parse(readLine);
         String path = requestLine.getPath();
-
         if (path.matches("/user/.*")) {
-            byte[] view = new UserController(requestLine).mapping();
-            response200Header(view.length);
-            responseBody(view);
+            handlerByUserController(requestLine);
         }
+    }
+
+    private void handlerByUserController(RequestLine requestLine) {
+        byte[] view = new UserController(requestLine).mapping();
+        response200Header(view.length);
+        responseBody(view);
     }
 
     private void response200Header(int lengthOfBodyContent) {
