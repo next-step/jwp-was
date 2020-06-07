@@ -23,9 +23,13 @@ public class HttpResponse {
     }
 
     public void loadFile(HttpRequest request) throws IOException, URISyntaxException {
-        byte[] dataByte = FileIoUtils.loadFileFromClasspath(request.getFilePath());
-        this.body = dataByte;
-        this.header = ResponseHeader.of(HttpStatus.OK, request.getContentType(), dataByte.length);
+        try {
+            byte[] dataByte = FileIoUtils.loadFileFromClasspath(request.getFilePath());
+            this.body = dataByte;
+            this.header = ResponseHeader.of(HttpStatus.OK, request.getContentType(), dataByte.length);
+        } catch (NullPointerException e) {
+            notFound(request);
+        }
     }
 
     public void redirect(String location) {
@@ -55,5 +59,9 @@ public class HttpResponse {
 
     public Map<String, String> getCustomHeader() {
         return this.header.getCustomHeader();
+    }
+
+    private void notFound(HttpRequest request) {
+        this.header = ResponseHeader.of(HttpStatus.NOT_FOUND, request.getContentType(), 0);
     }
 }
