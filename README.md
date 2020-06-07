@@ -13,3 +13,10 @@
 #### HTTP RequestLine 파싱
 * GET, POST 요청에 대한 RequestLine 파싱
 * Query String 파싱
+
+### STEP2
+#### 요구사항 1: HTTP Request를 받아 처리 후 리소스를 HTTP Response로 반환
+> http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
+* 수신한 inputstream을 requestHeader로 읽기
+* RequestLine에서 path 추출
+* path에 대응하는 파일 읽어 outputstream통해 응답
