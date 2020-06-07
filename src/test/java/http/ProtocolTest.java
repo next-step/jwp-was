@@ -24,6 +24,8 @@ public class ProtocolTest {
 
     private static Stream<String> parsingFail() {
         return Stream.of(
+                null,
+                "",
                 "HTTP",
                 "HTTP/1.1/1.2",
                 "HTTP?1.1"
