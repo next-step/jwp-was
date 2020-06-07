@@ -3,7 +3,10 @@ package http;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -11,11 +14,20 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 @DisplayName("프로토콜 클래스")
 public class ProtocolTest {
 
-    @Test
+    @ParameterizedTest
+    @MethodSource
     @DisplayName("프로토콜 문자열이 정상적이지 않으면 예외를 발생시킨다")
-    void parsingFail() {
+    void parsingFail(final String protocolStr) {
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> new Protocol("HTTP"));
+                .isThrownBy(() -> new Protocol(protocolStr));
+    }
+
+    private static Stream<String> parsingFail() {
+        return Stream.of(
+                "HTTP",
+                "HTTP/1.1/1.2",
+                "HTTP?1.1"
+        );
     }
 
     @ParameterizedTest
