@@ -2,26 +2,58 @@ package http;
 
 import org.junit.jupiter.api.Test;
 
+import java.security.InvalidParameterException;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class QueryStringParserTest {
-    @Test
-    void parser(){
-        QueryString requestLine = QueryStringParser.parse("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
-        assertThat(requestLine.getPath()).isEqualTo("/users");
-        assertThat(requestLine.getParameterString()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
-        assertThat(requestLine.protocol.getProtocol()).isEqualTo("HTTP");
-        assertThat(requestLine.protocol.getVersion()).isEqualTo("1.1");
+    @Test
+    void getParameter() {
+        QueryString queryString = QueryStringParser.parse("userId=javajigi&password=password&name=JaeSung");
+        assertThat(queryString.getParameter("userId")).isEqualTo("javajigi");
+        assertThat(queryString.getParameter("password")).isEqualTo("password");
+        assertThat(queryString.getParameter("name")).isEqualTo("JaeSung");
+    }
+
+    @Test
+    void valid1() {
+        QueryString queryString = QueryStringParser.parse("userId=javajigi&password=password&name=");
+        assertThat(queryString.getParameter("userId")).isEqualTo("javajigi");
+        assertThat(queryString.getParameter("password")).isEqualTo("password");
+        assertThat(queryString.getParameter("name")).isEqualTo("");
     }
 
 
     @Test
-    void getParameter(){
-//        QueryString queryString = new QueryString("userId=javajigi&password=password&name=JaeSung");
-//        assertThat(queryString.getParameter("userId")).isEqualTo("javajigi");
-//        assertThat(queryString.getParameter("password")).isEqualTo("password");
-//        assertThat(queryString.getParameter("name")).isEqualTo("JaeSung");
+    void valid2() {
+        QueryString queryString = QueryStringParser.parse("userId=javajigi&password=password&name");
+        assertThat(queryString.getParameter("userId")).isEqualTo("javajigi");
+        assertThat(queryString.getParameter("password")).isEqualTo("password");
+        assertThat(queryString.getParameter("name")).isEqualTo(null);
+    }
+
+    @Test
+    void valid3() {
+        QueryString queryString = QueryStringParser.parse("userId=javajigi&password=password&");
+        assertThat(queryString.getParameter("userId")).isEqualTo("javajigi");
+        assertThat(queryString.getParameter("password")).isEqualTo("password");
+        assertThat(queryString.getParameter("name")).isEqualTo(null);
+    }
+
+    @Test
+    void valid4() {
+        QueryString queryString = QueryStringParser.parse("");
+        assertThat(queryString.getParameter("userId")).isEqualTo(null);
+        assertThat(queryString.getParameter("password")).isEqualTo(null);
+        assertThat(queryString.getParameter("name")).isEqualTo(null);
+    }
+
+    @Test
+    void valid5() {
+        assertThatThrownBy(() -> {
+            QueryString queryString = QueryStringParser.parse(null);
+        }).isInstanceOf(InvalidParameterException.class);
     }
 }

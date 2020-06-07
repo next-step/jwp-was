@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class StringTest {
@@ -27,6 +27,6 @@ public class StringTest {
                 .isThrownBy(() -> {
                     List<String> list = Arrays.asList(data.split(","));
                     list.get(2);
-                }).withMessageContaining("String index out of");
+                });
     }
 }
