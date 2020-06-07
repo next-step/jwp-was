@@ -22,4 +22,8 @@ public enum Method {
     public static boolean isGet(String requestLine) {
         return GET.equals(match(requestLine));
     }
+
+    public static boolean hasQueryString(String requestLine) {
+        return false;
+    }
 }
