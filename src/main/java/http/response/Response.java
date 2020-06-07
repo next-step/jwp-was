@@ -32,7 +32,7 @@ public class Response {
     }
 
     public String getHeaderByKey(String key) {
-        return headers.getParameter(key);
+        return headers.getHeader(key);
     }
 
     public Headers getHeaders() {

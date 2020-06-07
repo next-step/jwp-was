@@ -84,7 +84,7 @@ public class RequestUtils {
             throw new IllegalArgumentException("RequestHeaders should be serviced prior to getting RequestBody");
         }
 
-        String contentLength = headers.getParameter("Content-Length");
+        String contentLength = headers.getHeader("Content-Length");
         if (contentLength == null) {
             return "";
         }

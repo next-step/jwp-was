@@ -53,7 +53,7 @@ public class IOUtils {
         List<String> collect = keySet.stream().collect(Collectors.toList());
 
         for (int i=0; i<keySet.size(); i++){
-            dos.writeBytes(collect.get(i) + ": " + headers.getParameter(collect.get(i)) + "\r\n");
+            dos.writeBytes(collect.get(i) + ": " + headers.getHeader(collect.get(i)) + "\r\n");
         }
     }
 

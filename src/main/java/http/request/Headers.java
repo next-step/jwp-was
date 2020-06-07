@@ -12,16 +12,12 @@ public class Headers {
         this.headers = Collections.unmodifiableMap(headers);
     }
 
-    public String getParameter(String key) {
+    public String getHeader(String key) {
         return this.headers.get(key);
     }
 
     public int getSize() {
         return this.headers.size();
-    }
-
-    public Map<String, String> getHeaders() {
-        return headers;
     }
 
     public Set<String> getKeySet() {
