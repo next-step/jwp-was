@@ -70,7 +70,7 @@ class ResourceProcessorTest {
     }
 
     @Test
-    @DisplayName(".js, .css, 등으로 끝나는 요청인데 해당하는 파일이 없는경우")
+    @DisplayName(".js, .css 등으로 끝나는 요청인데 해당하는 파일이 없는경우")
     void matchButNotExist() throws IOException {
         HttpRequest httpRequest = HttpRequestGenerator.init("GET /not-exist.js HTTP/1.1");
 
