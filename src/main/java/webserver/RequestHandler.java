@@ -1,24 +1,19 @@
 package webserver;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
-import db.DataBase;
-import http.*;
+import http.Cookies;
+import http.Headers;
+import http.HttpMethod;
 import http.parser.RequestHeaderParser;
 import http.parser.RequestLineParser;
 import http.request.HttpRequest;
 import http.request.RequestLine;
 import http.response.HttpResponse;
-import model.User;
-import model.Users;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import utils.HandlebarsHelper;
 import utils.IOUtils;
+import webserver.controller.Controller;
 
 import java.io.*;
 import java.net.Socket;
@@ -48,63 +43,19 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
             HttpResponse httpResponse = new HttpResponse();
 
-            if (isPost(httpRequest) && "/user/create".equals(path)) {
-                FormData formData = new FormData(httpRequest.getBody());
-                String userId = formData.getValue("userId");
-                String password = formData.getValue("password");
-                String name = formData.getValue("name");
-                String email = formData.getValue("email");
-
-                DataBase.addUser(new User(userId, password, name, email));
-
-                httpResponse.response302("/index.html");
-            } else if (isPost(httpRequest) && "/user/login".equals(path)) {
-                FormData formData = new FormData(httpRequest.getBody());
-                String userId = formData.getValue("userId");
-                String password = formData.getValue("password");
-
-                User user = DataBase.findUserById(userId);
-
-                if (isSamePassword(user.getPassword(), password)) {
-                    httpResponse.response302("/index.html");
-                    httpResponse.addCookie("logined", "true");
-                    httpResponse.addCookiePath("/");
-                } else {
-                    httpResponse.response302("/user/login_failed.html");
-                    httpResponse.addCookie("logined", "false");
-                    httpResponse.addCookiePath("/");
-                }
-            } else if (isGet(httpRequest) && "/user/list".equals(path)) {
-                if (isLogined(httpRequest)) {
-                    Users users = new Users(DataBase.findAll());
-
-                    TemplateLoader loader = new ClassPathTemplateLoader();
-                    loader.setPrefix("/templates");
-                    loader.setSuffix(".html");
-
-                    Handlebars handlebars = new Handlebars(loader);
-                    handlebars.registerHelpers(new HandlebarsHelper());
-
-                    Template template = handlebars.compile("user/list");
-
-                    byte[] htmlFile = template.apply(users).getBytes();
-                    httpResponse.response200HTML(htmlFile);
-                } else {
-                    httpResponse.response302("/index.html");
-                }
+            if (path.endsWith(".css")) {
+                byte[] body = FileIoUtils.loadFileFromClasspath("./static/" + path);
+                response200StylesheetHeader(dos, body.length);
+                responseBody(dos, body);
+            } else if (path.endsWith(".html")) {
+                byte[] html = FileIoUtils.loadFileFromClasspath("./templates/" + path);
+                httpResponse.response200HTML(html);
             } else {
-                if (path.endsWith(".css")) {
-                    byte[] body = FileIoUtils.loadFileFromClasspath("./static/" + path);
-                    response200StylesheetHeader(dos, body.length);
-                    responseBody(dos, body);
-                } else {
-                    byte[] html = FileIoUtils.loadFileFromClasspath("./templates/" + path);
-                    httpResponse.response200HTML(html);
-                }
+                Controller controller = FrontController.controllerMapping(path);
+                controller.service(httpRequest, httpResponse);
             }
 
             writeResponse(dos, httpResponse);
-
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
@@ -173,21 +124,6 @@ public class RequestHandler implements Runnable {
 
         return new HttpRequest(requestLine, headers, requestBody);
 
-    }
-
-    private boolean isSamePassword(String password1, String password2) {
-        if (password1 == null) {
-            return false;
-        }
-        return password1.equals(password2);
-    }
-
-    private boolean isLogined(HttpRequest httpRequest) {
-        String logined = httpRequest.getCookie("logined");
-        if ("true".equals(logined)) {
-           return true;
-        }
-        return false;
     }
 
     private boolean isGet(HttpRequest httpRequest) {
