@@ -2,11 +2,35 @@ package http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 @DisplayName("리퀘스트 라인 파서 테스트")
 public class RequestLineParserTest {
+
+    @ParameterizedTest
+    @MethodSource
+    @DisplayName("request line 포멧에 맞지 않을경우 예외 발생")
+    void initFail(final String requestLine) {
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> RequestLine.init(requestLine));
+    }
+
+    private static Stream<String> initFail() {
+        return Stream.of(
+                "GETS test HTTP/1.1",
+                "GET test HTTP",
+                "GET test 1.1",
+                "GET test 1.1 other",
+                "GET test?wweoifjoi HTTP/1.1"
+        );
+    }
 
     @Test
     @DisplayName("Get 파싱")
