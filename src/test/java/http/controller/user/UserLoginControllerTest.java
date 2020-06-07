@@ -1,7 +1,6 @@
 package http.controller.user;
 
 import http.HttpStatus;
-import http.TestConstant;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.response.ResponseHeader;
@@ -10,19 +9,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.UserData;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserLoginControllerTest {
+    private String testFilePath = "./src/test/resources/UserLoginRequest.txt";
     private HttpRequest request;
     private HttpResponse response;
     private User user;
 
     @BeforeEach
     void setUp() throws IOException {
-        request = HttpRequest.parse(new ByteArrayInputStream(TestConstant.USER_LOGIN_REQUEST.getBytes()));
+        InputStream in = new FileInputStream(new File(testFilePath));
+        request = HttpRequest.parse(in);
         response = new HttpResponse();
         user = new User("seul", "test", "Eeseul Park", "seul");
         UserData.save(user);
