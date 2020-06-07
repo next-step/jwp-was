@@ -10,13 +10,11 @@ import http.response.HttpResponse;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import utils.IOUtils;
 import webserver.controller.Controller;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,26 +34,15 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = readRequest(in);
-
-            String path = httpRequest.getPath();
-
-            DataOutputStream dos = new DataOutputStream(out);
             HttpResponse httpResponse = new HttpResponse();
 
-            if (path.endsWith(".css")) {
-                byte[] body = FileIoUtils.loadFileFromClasspath("./static/" + path);
-                response200StylesheetHeader(dos, body.length);
-                responseBody(dos, body);
-            } else if (path.endsWith(".html")) {
-                byte[] html = FileIoUtils.loadFileFromClasspath("./templates/" + path);
-                httpResponse.response200HTML(html);
-            } else {
-                Controller controller = FrontController.controllerMapping(path);
-                controller.service(httpRequest, httpResponse);
-            }
+            String path = httpRequest.getPath();
+            Controller controller = FrontController.controllerMapping(path);
+            controller.service(httpRequest, httpResponse);
 
+            DataOutputStream dos = new DataOutputStream(out);
             writeResponse(dos, httpResponse);
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
@@ -122,26 +109,5 @@ public class RequestHandler implements Runnable {
         logger.debug("Body :: {}", requestBody);
 
         return new HttpRequest(requestLine, headers, requestBody);
-
-    }
-
-    private void response200StylesheetHeader(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
     }
 }

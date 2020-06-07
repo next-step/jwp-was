@@ -4,6 +4,8 @@ import http.Cookies;
 import http.Header;
 import http.Headers;
 
+import java.io.IOException;
+
 
 public class HttpResponse {
 
@@ -58,4 +60,12 @@ public class HttpResponse {
     public void addCookiePath(String path) {
         this.cookies.setPath(path);
     }
+
+    public void response200CSS(byte[] cssFile) {
+        this.statusCode = 200;
+        headers.addHeader(new Header("Content-Type", "text/css;charset=utf-8"));
+        headers.addHeader(new Header("Content-Length", String.valueOf(cssFile.length)));
+        this.responseBody = cssFile;
+    }
+
 }
