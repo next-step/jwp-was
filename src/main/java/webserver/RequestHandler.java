@@ -4,6 +4,8 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import session.InMemorySessionHolder;
+import session.SessionManager;
 import webserver.processor.Processors;
 
 import java.io.IOException;
@@ -15,6 +17,7 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private final Socket connection;
+    private final SessionManager sessionManager = new SessionManager(new InMemorySessionHolder());
     private final Processors processors = new Processors();
 
     public RequestHandler(Socket connectionSocket) {
@@ -30,6 +33,7 @@ public class RequestHandler implements Runnable {
             HttpResponse httpResponse = HttpResponse.init();
             logger.debug("{}", httpRequest.toString());
 
+            sessionManager.loadSession(httpRequest, httpResponse); // using filter?
             processors.process(httpRequest, httpResponse);
 
             httpResponse.writeResponse(out);
