@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("세션 attribute 를 관리하는 세션 객체")
 class DefaultHttpSessionTest {
@@ -27,4 +26,14 @@ class DefaultHttpSessionTest {
                 .isThrownBy(() -> DefaultHttpSession.of(sessionId));
     }
 
+
+    @Test
+    @DisplayName("세션의 ID 는 초기화 했을때의 ID 와 같다")
+    void getId() {
+        String sessionId = "origin";
+
+        DefaultHttpSession httpSession = DefaultHttpSession.of(sessionId);
+
+        assertThat(httpSession.getId()).isEqualTo(sessionId);
+    }
 }
