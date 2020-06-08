@@ -21,7 +21,7 @@ public class RequestTest {
         RequestLine requestLine = new RequestLine("GET /index.html HTTP/1.1");
         Headers headers = new Headers(createHeadersWithSession(new HttpSession()));
         RequestBody body = new RequestBody(Strings.EMPTY);
-        Request request = createRequest();
+        Request request = new Request(requestLine, headers, body);
 
         //when
         HttpSession session = request.getSession();

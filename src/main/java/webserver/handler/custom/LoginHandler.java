@@ -4,10 +4,7 @@ import db.DataBase;
 import http.request.Headers;
 import http.request.QueryStrings;
 import http.request.Request;
-import http.response.ContentType;
-import http.response.HttpStatus;
-import http.response.Response;
-import http.response.ResponseBody;
+import http.response.*;
 import model.User;
 import utils.FileIoUtils;
 import webserver.handler.Handler;
@@ -42,9 +39,9 @@ public class LoginHandler implements Handler {
 
         if (isAuthenticatedUser(queryStrings, user)) {
             ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
-            headers.put(HEADER_SET_COOKIE, "logined=true; Path=/");
+            request.addCookie(new Cookie("logined=true", "/", false));
             headers.put(HEADER_LOCATION, "/index.html");
-            return new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), body);
+            new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), body);
         }
 
         headers.put(HEADER_SET_COOKIE, "logined=false");
