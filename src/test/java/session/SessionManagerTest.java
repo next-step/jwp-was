@@ -23,8 +23,12 @@ class SessionManagerTest {
     void setEnv() {
         InMemorySessionHolder inMemorySessionHolder = new InMemorySessionHolder();
         sessionManager = new SessionManager(inMemorySessionHolder);
-        inMemorySessionHolder.save(DefaultHttpSession.of(sessionId));
+
+        HttpSession httpSession = DefaultHttpSession.of(sessionId);
+        httpSession.setAttribute("key", "value");
+
         httpResponse = HttpResponse.init();
+        inMemorySessionHolder.save(httpSession);
     }
 
     @Test
@@ -50,5 +54,16 @@ class SessionManagerTest {
         assertThat(sessionId).isEqualTo(this.sessionId);
         sessionManager.loadSession(httpRequest, httpResponse);
         assertThat(httpRequest.getSession()).isNotNull();
+    }
+
+    @Test
+    @DisplayName("서로 다른 요청에 대해서도 세션으로 부터 같은 값을 받아 올 수 있다.")
+    void loadSameAttribute() throws IOException {
+        HttpRequest httpRequest = HttpRequest.readRawRequest(FileLoader.load("suid-contained-request.txt"));
+        sessionManager.loadSession(httpRequest, httpResponse);
+
+        HttpSession session = httpRequest.getSession();
+
+        assertThat(session.getAttribute("key")).isEqualTo("value");
     }
 }
