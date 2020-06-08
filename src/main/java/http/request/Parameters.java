@@ -2,6 +2,7 @@ package http.request;
 
 import utils.StringUtil;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -21,14 +22,15 @@ public class Parameters {
         return new Parameters();
     }
 
-    public static Parameters parse(final String query) {
+    public static Parameters parse(final RequestLine requestLine) {
         Parameters parameters = Parameters.newInstance();
-        parameters.update(query);
+
+        parameters.addParameters(requestLine.getQueryString());
 
         return parameters;
     }
 
-    public void update(final String query) {
+    public void addParameters(final String query) {
         if (StringUtil.isEmpty(query)) {
             return;
         }
@@ -36,11 +38,11 @@ public class Parameters {
         StringTokenizer tokens = new StringTokenizer(query, PARAMETER_DELIMITER);
 
         while (tokens.hasMoreTokens()) {
-            parseQuery(tokens.nextToken());
+            addParameter(tokens.nextToken());
         }
     }
 
-    private void parseQuery(final String query) {
+    private void addParameter(final String query) {
         String[] tokens = query.split(KEY_AND_VALUE_DELIMITER);
 
         if (tokens.length != KEY_AND_VALUE_TOKEN_SIZE) {
@@ -50,7 +52,11 @@ public class Parameters {
         parameters.put(tokens[0], tokens[1]);
     }
 
-    public String get(final String parameterName) {
+    public String getParameter(final String parameterName) {
         return parameters.get(parameterName);
+    }
+
+    public Map<String, String> getParameters() {
+        return Collections.unmodifiableMap(parameters);
     }
 }

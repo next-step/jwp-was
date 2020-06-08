@@ -23,11 +23,11 @@ public class PathTest {
 
     @Test
     void parse() {
-        Path path = Path.parse("/users?name1=value1&name2=value2");
+        String pathString = "/users?name1=value1&name2=value2";
+        Path path = Path.parse(pathString);
 
         assertThat(path.getPath()).isEqualTo("/users");
-        assertThat(path.getParameter("name1")).isEqualTo("value1");
-        assertThat(path.getParameter("name2")).isEqualTo("value2");
+        assertThat(path.getQueryString()).isEqualTo("name1=value1&name2=value2");
     }
 
     @ParameterizedTest

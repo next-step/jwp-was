@@ -15,6 +15,7 @@ public class HttpRequest {
 
     private RequestLine requestLine;
     private RequestHeader requestHeader;
+    private Parameters parameters;
     private String bodyOrigin;
 
     private HttpRequest(final InputStream inputStream) throws IOException {
@@ -35,6 +36,7 @@ public class HttpRequest {
         String decodedReadStream = URLDecoder.decode(requestLine, "UTF-8");
 
         this.requestLine = RequestLine.parse(decodedReadStream);
+        this.parameters = Parameters.parse(this.requestLine);
     }
 
     private void initHeaders(final BufferedReader bufferedReader) throws IOException {
@@ -54,7 +56,7 @@ public class HttpRequest {
 
         int contentLength = Integer.parseInt(getHeader("Content-Length"));
         bodyOrigin = URLDecoder.decode(IOUtils.readData(bufferedReader, contentLength), "UTF-8");
-        requestLine.addParameter(bodyOrigin);
+        parameters.addParameters(bodyOrigin);
     }
 
     public HttpMethod getMethod() {
@@ -70,7 +72,7 @@ public class HttpRequest {
     }
 
     public String getParameter(final String parameter) {
-        return requestLine.getParameter(parameter);
+        return parameters.getParameter(parameter);
     }
 
     public String getProtocol() {
@@ -90,7 +92,7 @@ public class HttpRequest {
     }
 
     public Map<String, String> getParameters() {
-        return requestLine.getParameters();
+        return parameters.getParameters();
     }
 
     @Override

@@ -26,8 +26,7 @@ public class RequestLineTest {
                 "GETS test HTTP/1.1",
                 "GET test HTTP",
                 "GET test 1.1",
-                "GET test 1.1 other",
-                "GET test?wweoifjoi HTTP/1.1"
+                "GET test 1.1 other"
         );
     }
 
@@ -60,8 +59,6 @@ public class RequestLineTest {
 
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
-        assertThat(requestLine.getParameter("name1")).isEqualTo("value1");
-        assertThat(requestLine.getParameter("name2")).isEqualTo("value2");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }

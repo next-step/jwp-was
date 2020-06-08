@@ -1,7 +1,5 @@
 package http.request;
 
-import java.util.Map;
-
 public class RequestLine {
     private static final int REQUIRED_TOKEN_SIZE_TO_INIT_REQUEST_LINE = 3;
     private static final String DELIMITER = " ";
@@ -11,25 +9,21 @@ public class RequestLine {
     private final Path path;
     private final Protocol protocol;
 
-    public RequestLine(final String requestLine) {
-        String[] tokens = requestLine.split(DELIMITER);
+    private RequestLine(final String line) {
+        String[] tokens = line.split(DELIMITER);
 
         if (tokens.length != REQUIRED_TOKEN_SIZE_TO_INIT_REQUEST_LINE) {
-            throw new IllegalArgumentException("Request line format is illegal : [" + requestLine + "]");
+            throw new IllegalArgumentException("Request line format is illegal : [" + line + "]");
         }
 
-        this.origin = requestLine;
+        this.origin = line;
         this.httpMethod = HttpMethod.of(tokens[0]);
         this.path = Path.parse(tokens[1]);
         this.protocol = Protocol.parse(tokens[2]);
     }
 
-    public void addParameter(final String token) {
-        path.addParameter(token);
-    }
-
-    public static RequestLine parse(final String requestLine) {
-        return new RequestLine(requestLine);
+    public static RequestLine parse(final String line) {
+        return new RequestLine(line);
     }
 
     public HttpMethod getMethod() {
@@ -48,20 +42,16 @@ public class RequestLine {
         return protocol.getVersion();
     }
 
-    public String getParameter(final String parameter) {
-        return path.getParameter(parameter);
-    }
-
     public String getExtension() {
         return path.getExtension();
+    }
+
+    public String getQueryString() {
+        return path.getQueryString();
     }
 
     @Override
     public String toString() {
         return origin;
-    }
-
-    public Map<String, String> getParameters() {
-        return path.getParameters();
     }
 }

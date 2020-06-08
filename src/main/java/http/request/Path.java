@@ -2,18 +2,16 @@ package http.request;
 
 import utils.StringUtil;
 
-import java.util.Map;
-
 public class Path {
     private static final String PATH_AND_QUERY_STRING_DELIMITER = "\\?";
     private static final char DOT = '.';
 
     private final String path;
-    private final QueryString queryString = QueryString.newInstance();
+    private final QueryString queryString;
 
     private Path(final String path, final String query) {
         this.path = path;
-        this.queryString.update(query);
+        this.queryString = new QueryString(query);
     }
 
     public static Path parse(final String path) {
@@ -40,6 +38,10 @@ public class Path {
         return path;
     }
 
+    public String getQueryString() {
+        return queryString.getQueryString();
+    }
+
     public String getExtension() {
         int lastIndexOfDot = path.lastIndexOf(DOT);
 
@@ -50,15 +52,4 @@ public class Path {
         return path.substring(lastIndexOfDot + 1);
     }
 
-    public String getParameter(final String parameterName) {
-        return queryString.get(parameterName);
-    }
-
-    public void addParameter(String token) {
-        queryString.update(token);
-    }
-
-    public Map<String, String> getParameters() {
-        return queryString.getAll();
-    }
 }
