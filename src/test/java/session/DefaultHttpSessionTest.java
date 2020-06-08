@@ -1,5 +1,6 @@
 package session;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -9,6 +10,12 @@ import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("세션 attribute 를 관리하는 세션 객체")
 class DefaultHttpSessionTest {
+    private HttpSession httpSession;
+
+    @BeforeEach
+    void setEnv() {
+        httpSession = DefaultHttpSession.of("session key");
+    }
 
     @Test
     @DisplayName("초기화")
@@ -42,7 +49,6 @@ class DefaultHttpSessionTest {
     void setAndGetAttribute() {
         String key = "key";
         String value = "value";
-        DefaultHttpSession httpSession = DefaultHttpSession.of("session key");
 
         assertThat(httpSession.getAttribute(key)).isNull();
         httpSession.setAttribute(key, value);
@@ -54,12 +60,29 @@ class DefaultHttpSessionTest {
     void removeAttribute() {
         String key = "key";
         String value = "value";
-        DefaultHttpSession httpSession = DefaultHttpSession.of("session key");
 
         httpSession.setAttribute(key, value);
         assertThat(httpSession.getAttribute(key)).isEqualTo(value);
 
         httpSession.removeAttribute("key");
         assertThat(httpSession.getAttribute(key)).isNull();
+    }
+
+    @Test
+    @DisplayName("무효화")
+    void invalidate() {
+        for (int i = 1 ; i <= 5 ; ++i) {
+            httpSession.setAttribute("key" + i, "value" + i);
+        }
+
+        for (int i = 1 ; i <= 5 ; ++i) {
+            assertThat(httpSession.getAttribute("key" + i)).isNotNull();
+        }
+
+        httpSession.invalidate();
+
+        for (int i = 1 ; i <= 5 ; ++i) {
+            assertThat(httpSession.getAttribute("key" + i)).isNull();
+        }
     }
 }
