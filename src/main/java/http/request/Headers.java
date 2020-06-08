@@ -28,8 +28,8 @@ public class Headers {
         return headers.keySet();
     }
 
-    public Headers addSession(HttpSession session) {
-        this.headers.put(JSESSIONID, session.getId());
+    public Headers addHeader(String key, String value) {
+        this.headers.put(key, value);
         return new Headers(Collections.unmodifiableMap(this.headers));
     }
 }

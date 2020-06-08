@@ -41,7 +41,7 @@ public class Request {
 
         if (sessionId == null) {
             HttpSession session = new HttpSession();
-            this.headers.addSession(session);
+            this.headers.addHeader(JSESSIONID, session.getId());
             return session;
         }
 

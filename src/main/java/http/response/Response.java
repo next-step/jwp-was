@@ -3,6 +3,9 @@ package http.response;
 import http.request.Headers;
 
 public class Response {
+    private static final String JSESSIONID = "JSESSIONID";
+    private static final String SET_COOKIE = "Set-Cookie";
+
     private HttpStatus status;
     private ContentType contentType;
     private ResponseBody body;
