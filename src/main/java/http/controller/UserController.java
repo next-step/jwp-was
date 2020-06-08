@@ -2,7 +2,7 @@ package http.controller;
 
 import com.sun.istack.internal.logging.Logger;
 import db.DataBase;
-import http.HttpHeaderInfo;
+import http.Header;
 import http.HttpRequest;
 import http.HttpResponse;
 import http.QueryString;
@@ -31,7 +31,7 @@ public class UserController extends PathController {
 
         DataBase.addUser(user);
 
-        HttpHeaderInfo headerInfo = new HttpHeaderInfo();
+        Header headerInfo = new Header();
         headerInfo.addKeyAndValue("Location", "http://localhost:8080/index.html");
         HttpResponse httpResponse = new HttpResponse(HttpResponseCode.REDIRECT,new byte[0],headerInfo);
         return httpResponse.makeResponseBody();

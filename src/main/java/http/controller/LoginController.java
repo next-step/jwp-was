@@ -22,7 +22,7 @@ public class LoginController extends PathController{
     public byte[] post() {
         log.info("login controller post method ===========");
 
-        HttpHeaderInfo headerInfo = new HttpHeaderInfo();
+        Header headerInfo = new Header();
         headerInfo.addKeyAndValue("Content-Type","text/html;charset=utf-8");
 
         QueryString requestBodyString = new QueryString(httpRequest.getRequestBody());

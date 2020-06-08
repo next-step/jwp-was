@@ -6,7 +6,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 
 import db.DataBase;
-import http.HttpHeaderInfo;
+import http.Header;
 import http.HttpRequest;
 import http.HttpResponse;
 import http.enums.HttpResponseCode;
@@ -26,7 +26,7 @@ public class ListController extends PathController{
 
     public byte[] get()  {
         log.info("list controller get method execute ========");
-        HttpHeaderInfo headerInfo = new HttpHeaderInfo();
+        Header headerInfo = new Header();
 
         try {
             headerInfo.addKeyAndValue("Content-Type","text/html;charset=utf-8");

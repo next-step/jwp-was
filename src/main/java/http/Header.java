@@ -9,10 +9,10 @@ import java.util.Map;
 /**
  * Created By kjs4395 on 2020-06-05
  */
-public class HttpHeaderInfo {
+public class Header {
     private Map<String, String> headers;
 
-    public HttpHeaderInfo() {
+    public Header() {
         this.headers = new HashMap<>();
     }
 
@@ -34,6 +34,10 @@ public class HttpHeaderInfo {
 
     public String getValue(String headerName) {
         return this.headers.getOrDefault(headerName, StringUtils.EMPTY);
+    }
+
+    public boolean isContainsKey(String key) {
+        return this.headers.containsKey(key);
     }
 
     public String makeResponseHeader() {

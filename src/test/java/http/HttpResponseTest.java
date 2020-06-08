@@ -1,7 +1,6 @@
 package http;
 
 import http.enums.HttpResponseCode;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,7 +9,7 @@ public class HttpResponseTest {
 
     @Test
     void makeResponseHeaderTest() {
-        HttpHeaderInfo httpHeaderInfo = new HttpHeaderInfo();
+        Header httpHeaderInfo = new Header();
         httpHeaderInfo.addKeyAndValue("Location", "http://www.iana.org/domains/example/");
         String response = "HTTP/1.1 302 Found\n" +
                 "Location: http://www.iana.org/domains/example/\n\n";

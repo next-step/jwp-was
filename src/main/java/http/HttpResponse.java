@@ -5,9 +5,9 @@ import http.enums.HttpResponseCode;
 public class HttpResponse {
     private HttpResponseCode responseCode;
     private byte[] responseBody;
-    private HttpHeaderInfo headerInfo;
+    private Header headerInfo;
 
-    public HttpResponse(HttpResponseCode code, byte[] responseBody, HttpHeaderInfo headerInfo) {
+    public HttpResponse(HttpResponseCode code, byte[] responseBody, Header headerInfo) {
         this.responseCode = code;
         this.responseBody = responseBody;
         this.headerInfo = headerInfo;

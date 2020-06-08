@@ -1,6 +1,6 @@
 package http.controller;
 
-import http.HttpHeaderInfo;
+import http.Header;
 import http.HttpRequest;
 import http.HttpResponse;
 import http.ResourcePathMaker;
@@ -66,7 +66,7 @@ public abstract class PathController {
     private HttpResponse makeTemplateResponse() throws IOException, URISyntaxException {
         log.info("default make template resource ========");
         String resourcePath = ResourcePathMaker.makeTemplatePath(httpRequest.getRequestLine().getPath());
-        HttpHeaderInfo headerInfo = new HttpHeaderInfo();
+        Header headerInfo = new Header();
         headerInfo.addKeyAndValue("Content-Type","text/html;charset=utf-8");
 
         byte[] body = FileIoUtils.loadFileFromClasspath(resourcePath);
@@ -80,7 +80,7 @@ public abstract class PathController {
 
     private HttpResponse makeStaticResourceResponse() throws IOException, URISyntaxException {
         log.info("default make resource resource ========");
-        HttpHeaderInfo headerInfo = new HttpHeaderInfo();
+        Header headerInfo = new Header();
         String resourcePath = ResourcePathMaker.makeResourcePath(httpRequest.getRequestLine().getPath());
 
         headerInfo.addKeyAndValue("Content-Type","text/css;charset=utf-8");

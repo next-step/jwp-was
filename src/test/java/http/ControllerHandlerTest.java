@@ -15,7 +15,7 @@ public class ControllerHandlerTest {
     @Test
     void geUserControllerTest() {
         RequestLine requestLine = RequestLineParser.parse("GET /user/create HTTP/1.1");
-        HttpRequest httpRequest = new HttpRequest(requestLine, new HttpHeaderInfo(), StringUtils.EMPTY);
+        HttpRequest httpRequest = new HttpRequest(requestLine, new Header(), StringUtils.EMPTY);
 
         assertThat(ControllerHandler.getPathController(httpRequest)).isInstanceOf(UserController.class);
     }
