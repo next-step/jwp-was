@@ -13,6 +13,7 @@ class InMemorySessionHolderTest {
     private static final InMemorySessionHolder SESSION_HOLDER = new InMemorySessionHolder();
 
     @Test
+    @DisplayName("세션 홀더에 세션을 저장하고, 세션키르 이용해 세션을 가져온다")
     void saveAndLoadSession() {
         HttpSession session = TestHttpSession.of("sessionId");
 
@@ -35,7 +36,6 @@ class InMemorySessionHolderTest {
 
             return testHttpSession;
         }
-
 
         @Override
         public String getId() {
