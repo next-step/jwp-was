@@ -39,25 +39,32 @@ public class LoginHandler implements Handler {
         Map<String, String> headers = new HashMap<>();
 
         if (isAuthenticatedUser(queryStrings, user)) {
-            ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
-            headers.put(HEADER_LOCATION, "/index.html");
-            Response response = new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), body);
-            response.addCookie(new Cookie("logined=true", "/", false));
-
-            return response;
+            return makeResponseWhenUserIsAuthenticated(headers);
         }
 
-        headers.put(HEADER_LOCATION, "/user/login_failed.html");
-        ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html"));
-        Response response = new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), body);
-        response.addCookie(new Cookie("logined=false", Strings.EMPTY, false));
-
-        return response;
+        return makeResponseWhenUserIsNotAuthenticated(headers);
     }
 
     @Override
     public String getUrl() {
         return this.url;
+    }
+
+    private Response makeResponseWhenUserIsAuthenticated(Map<String, String> headers)
+            throws IOException, URISyntaxException {
+        ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
+        headers.put(HEADER_LOCATION, "/index.html");
+        Response response = new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), body);
+        response.addCookie(new Cookie("logined=true", "/", false));
+        return response;
+    }
+
+    private Response makeResponseWhenUserIsNotAuthenticated(Map<String, String> headers) throws IOException, URISyntaxException {
+        headers.put(HEADER_LOCATION, "/user/login_failed.html");
+        ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html"));
+        Response response = new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), body);
+        response.addCookie(new Cookie("logined=false", Strings.EMPTY, false));
+        return response;
     }
 
     private User getUser(Map<String, String> queryStrings) {

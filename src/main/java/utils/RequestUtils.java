@@ -93,7 +93,7 @@ public class RequestUtils {
 
         String contentLength = headers.getHeader("Content-Length");
         if (contentLength == null) {
-            return "";
+            return Strings.EMPTY;
         }
 
         return IOUtils.readData(br, Integer.parseInt(contentLength));
