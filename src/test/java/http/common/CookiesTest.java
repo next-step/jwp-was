@@ -1,6 +1,5 @@
-package http;
+package http.common;
 
-import http.common.Cookies;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,7 +31,7 @@ class CookiesTest {
 
         assertThat(thrown)
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("유효하지 않은 Cookie 헤더임. header :: [" + input + "]");
+                .hasMessageContaining("유효하지 않은 Cookie 헤더임. header :: [ Cookie: " + input + "]");
     }
 
 }
