@@ -40,8 +40,30 @@ public class ResponseTest {
         response.addCookie(cookie);
 
         //then
-        assertThat(response.getCookies().getSize()).isEqualTo(1);
-        assertThat(response.getCookies().toString()).isEqualTo("logined=true; Path=/; HttpOnly");
+        assertThat(response.getCookies().getSize())
+                .isEqualTo(1);
+        assertThat(response.getCookies().toString())
+                .isEqualTo("logined=true; Path=/; HttpOnly");
+    }
+
+    @DisplayName("Response에 Cookie 추가 - 저장된 Cookie가 이미 존재할 때 추가하는 경우")
+    @Test
+    void addCookieWhenOtherCookiesExist() {
+        //given
+        Cookie cookie = new Cookie("logined=true", "/", true);
+        Cookie cookie2 = new Cookie("logined=false", "/index.html", false);
+        Response response = createResponse();
+        response.addCookie(cookie);
+
+        //when
+        response.addCookie(cookie2);
+
+        //then
+        assertThat(response.getCookies().getSize())
+                .isEqualTo(2);
+        assertThat(response.getCookies().toString())
+                .isEqualTo("logined=true; Path=/; HttpOnly&"
+                        + "logined=false; Path=/index.html; ");
     }
 
     private Response createResponse() {
