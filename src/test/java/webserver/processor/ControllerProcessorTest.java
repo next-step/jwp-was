@@ -1,5 +1,8 @@
 package webserver.processor;
 
+import controller.LoginController;
+import controller.UserController;
+import controller.UserListController;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.StatusCode;
@@ -14,6 +17,7 @@ import testutils.FileLoader;
 import testutils.HttpRequestGenerator;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +26,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("컨트롤러 요청을 모아둔 프로세서 테스트")
 class ControllerProcessorTest {
     private static final Logger logger = LoggerFactory.getLogger(ControllerProcessorTest.class);
-    private final ControllerProcessor controllerProcessor = new ControllerProcessor();
+    private final ControllerProcessor controllerProcessor = new ControllerProcessor(
+            Arrays.asList(new UserController(), new LoginController(), new UserListController())
+    );
 
     @ParameterizedTest
     @MethodSource
