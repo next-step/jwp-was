@@ -2,6 +2,8 @@ package http.response;
 
 import org.apache.logging.log4j.util.Strings;
 
+import java.util.Objects;
+
 public class Cookie {
     private String cookie;
     private String path;
@@ -37,6 +39,13 @@ public class Cookie {
         return httpOnly;
     }
 
+    private String assignHttpOnlyValue(boolean isHttpOnly) {
+        if (isHttpOnly) {
+            return "HttpOnly";
+        }
+        return Strings.EMPTY;
+    }
+
     @Override
     public String toString() {
         return cookie + "; "
@@ -44,10 +53,18 @@ public class Cookie {
                 + httpOnly;
     }
 
-    private String assignHttpOnlyValue(boolean isHttpOnly) {
-        if (isHttpOnly) {
-            return "HttpOnly";
-        }
-        return Strings.EMPTY;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cookie cookie1 = (Cookie) o;
+        return Objects.equals(cookie, cookie1.cookie) &&
+                Objects.equals(path, cookie1.path) &&
+                Objects.equals(httpOnly, cookie1.httpOnly);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cookie, path, httpOnly);
     }
 }

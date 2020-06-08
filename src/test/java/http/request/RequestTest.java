@@ -1,6 +1,7 @@
 package http.request;
 
 import http.response.Cookie;
+import http.response.Cookies;
 import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -95,7 +96,7 @@ public class RequestTest {
         request.addCookie(cookie2);
 
         //then
-        assertThat(request.getCookies()).isEqualTo(Arrays.asList(cookie1, cookie2));
+        assertThat(request.getCookies()).isEqualTo(new Cookies(Arrays.asList(cookie1, cookie2)));
     }
 
     private Request createRequest() {

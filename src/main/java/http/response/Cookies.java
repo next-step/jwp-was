@@ -3,6 +3,7 @@ package http.response;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.collectingAndThen;
@@ -39,5 +40,18 @@ public class Cookies {
         return cookies.stream()
                 .map(c -> c.toString())
                 .collect(Collectors.joining("&"));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cookies cookies1 = (Cookies) o;
+        return Objects.equals(cookies, cookies1.cookies);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cookies);
     }
 }

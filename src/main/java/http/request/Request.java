@@ -64,6 +64,7 @@ public class Request {
     }
 
     public Cookies getCookies() {
-
+        String cookieValue = this.getHeader("Set-Cookie");
+        return Cookies.parseCookies(cookieValue);
     }
 }
