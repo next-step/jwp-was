@@ -1,16 +1,12 @@
 package webserver;
 
-import java.io.*;
-import java.net.Socket;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-
-import http.RequestLine;
-import http.RequestLineParser;
 import http.RequestMappingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.IOUtils;
+
+import java.io.*;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);

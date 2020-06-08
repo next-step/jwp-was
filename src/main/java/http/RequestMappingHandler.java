@@ -19,11 +19,11 @@ public class RequestMappingHandler {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private final BufferedReader bufferedReader;
-    private final DataOutputStream dataOutputStream;
+    private final Response response;
 
     public RequestMappingHandler(final BufferedReader bufferedReader, final DataOutputStream dataOutputStream) {
         this.bufferedReader = bufferedReader;
-        this.dataOutputStream = dataOutputStream;
+        this.response = new Response(dataOutputStream);
     }
 
     public void read() throws IOException {
@@ -64,8 +64,8 @@ public class RequestMappingHandler {
 
         if (path.equals("/index.html")) {
             byte[] body = getUserForm("./templates/index.html");
-            response200Header(body.length);
-            responseBody(body);
+            response.response200Header(body.length);
+            response.responseBody(body);
         }
 
         if (path.matches("/user/.*")) {
@@ -74,53 +74,49 @@ public class RequestMappingHandler {
     }
 
     private void handlerByUserController(RequestLine requestLine) {
-        Response response = new UserController(requestLine).mapping();
+        ResponseObject responseObject = new UserController(requestLine).mapping();
+        String method = requestLine.getMethodName();
+        String path = requestLine.getPath();
+        if (method.equals("GET")) {
+            if (path.equals("/user/login")) {
+                if (responseObject.getCode() == 200) {
+                    response.responseHeaderByLoginSuccess();
+                    return;
+                }
+            }
+            handlerGetMethod(responseObject);
+            return;
+        }
+        handlerPostMethod(responseObject, requestLine.getPath());
+    }
 
-        if (response == null) {
-            response302Header();
+    private void handlerGetMethod(ResponseObject responseObject) {
+        byte[] body = getUserForm(responseObject.getRequestPath());
+        response.response200Header(body.length);
+        response.responseBody(body);
+    }
+
+    private void handlerPostMethod(ResponseObject responseObject, String path) {
+        if (path.equals("/user/login")) {
+            if (responseObject.getCode() == 200) {
+                response.responseHeaderByLoginSuccess();
+                return;
+            }
+            response.response302HeaderByLoginFail(responseObject.getLocation());
             return;
         }
 
-        byte[] body = getUserForm(response.getPath());
-        response200Header(body.length);
-        responseBody(body);
-    }
-
-    private void response302Header() {
-        try {
-            dataOutputStream.writeBytes("HTTP/1.1 302 Found \r\n");
-            dataOutputStream.writeBytes("Location: /index.html \r\n");
-            dataOutputStream.writeBytes("\r\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void response200Header(int lengthOfBodyContent) {
-        try {
-            dataOutputStream.writeBytes("HTTP/1.1 200 OK \r\n");
-            dataOutputStream.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dataOutputStream.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dataOutputStream.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(byte[] body) {
-        try {
-            dataOutputStream.write(body, 0, body.length);
-            dataOutputStream.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+        if (path.equals("/user/create")) {
+            if (responseObject.getCode() == 302) {
+                response.response302Header(responseObject.getLocation());
+            }
         }
     }
 
     private byte[] getUserForm(String filePath) {
         try {
             return viewByUserForm(filePath);
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
+        } catch (IOException | URISyntaxException | NullPointerException e) {
             throw new IllegalArgumentException("Not Found Path");
         }
     }
@@ -135,11 +131,11 @@ public class RequestMappingHandler {
         if (o == null || getClass() != o.getClass()) return false;
         final RequestMappingHandler that = (RequestMappingHandler) o;
         return Objects.equals(bufferedReader, that.bufferedReader) &&
-                Objects.equals(dataOutputStream, that.dataOutputStream);
+                Objects.equals(response, that.response);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bufferedReader, dataOutputStream);
+        return Objects.hash(bufferedReader, response);
     }
 }

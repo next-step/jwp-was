@@ -1,49 +1,74 @@
 package http;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.RequestHandler;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class Response {
-    private final String protocol;
-    private final int code;
-    private final String status;
-    private final String contentType;
-    private final String cookie;
-    private final boolean logined;
-    private final String path;
 
-    public Response(final String protocol, final int code, final String status, final String contentType, final String cookie, final boolean logined, final String path) {
-        this.protocol = protocol;
-        this.code = code;
-        this.status = status;
-        this.contentType = contentType;
-        this.cookie = cookie;
-        this.logined = logined;
-        this.path = path;
+    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+
+    private final DataOutputStream dataOutputStream;
+
+    public Response(final DataOutputStream dataOutputStream) {
+        this.dataOutputStream = dataOutputStream;
     }
 
-    public String getProtocol() {
-        return protocol;
+    public void response302Header(String location) {
+        try {
+            dataOutputStream.writeBytes("HTTP/1.1 302 Found \r\n");
+            dataOutputStream.writeBytes("Location: " + location + " \r\n");
+            dataOutputStream.writeBytes("\r\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public int getCode() {
-        return code;
+    public void responseHeaderByLoginSuccess() {
+        try {
+            dataOutputStream.writeBytes("HTTP/1.1 302 Found \r\n");
+            dataOutputStream.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dataOutputStream.writeBytes("Set-Cookie: logined=true; Path=/ \r\n");
+            dataOutputStream.writeBytes("Location: /index.html \r\n");
+            dataOutputStream.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 
-    public String getStatus() {
-        return status;
+    public void response302HeaderByLoginFail(String location) {
+        try {
+            dataOutputStream.writeBytes("HTTP/1.1 302 Found \r\n");
+            dataOutputStream.writeBytes("Set-Cookie: logined=false; Path=/ \r\n");
+            dataOutputStream.writeBytes("Location: " + location + " \r\n");
+            dataOutputStream.writeBytes("\r\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public String getContentType() {
-        return contentType;
+    public void response200Header(int lengthOfBodyContent) {
+        try {
+            dataOutputStream.writeBytes("HTTP/1.1 200 OK \r\n");
+            dataOutputStream.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dataOutputStream.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dataOutputStream.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 
-    public String getCookie() {
-        return cookie;
+    public void responseBody(byte[] body) {
+        try {
+            dataOutputStream.write(body, 0, body.length);
+            dataOutputStream.flush();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 
-    public boolean isLogined() {
-        return logined;
-    }
 
-    public String getPath() {
-        return path;
-    }
 }
