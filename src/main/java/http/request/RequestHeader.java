@@ -17,7 +17,7 @@ public class RequestHeader {
 
     private RequestHeader() {}
 
-    public static RequestHeader init() {
+    public static RequestHeader newInstance() {
         return new RequestHeader();
     }
 
