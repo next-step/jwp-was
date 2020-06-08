@@ -13,13 +13,13 @@ public class CookieTest {
         String key = "JSESSIONID";
         String value = "abc1234";
         String path = "/";
-        boolean httpOnly = true;
+        boolean isHttpOnly = true;
 
         //when
-        Cookie cookie = new Cookie(key, value, path, httpOnly);
+        Cookie cookie = new Cookie(key, value, path, isHttpOnly);
 
         //then
         assertThat(cookie.toString())
-                .isEqualTo("JSESSIONID=abc1234; Path=/; httpOnly=true");
+                .isEqualTo("JSESSIONID=abc1234; Path=/; HttpOnly");
     }
 }
