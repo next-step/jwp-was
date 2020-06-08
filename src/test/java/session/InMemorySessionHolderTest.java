@@ -16,7 +16,7 @@ class InMemorySessionHolderTest {
     void saveAndLoadSession() {
         HttpSession session = TestHttpSession.of("sessionId");
 
-        SESSION_HOLDER.save("sessionId", session);
+        SESSION_HOLDER.save(session);
 
         HttpSession sessionFromStore = SESSION_HOLDER.load("sessionId");
 

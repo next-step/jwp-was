@@ -9,8 +9,8 @@ public class InMemorySessionHolder {
     public InMemorySessionHolder() {}
 
 
-    public void save(final String sessionId, final HttpSession session) {
-        SESSIONS.put(sessionId, session);
+    public void save(final HttpSession session) {
+        SESSIONS.put(session.getId(), session);
     }
 
     public HttpSession load(final String sessionId) {
