@@ -11,15 +11,18 @@ public class RequestLine {
 
     private RequestLine(final String line) {
         String[] tokens = line.split(DELIMITER);
-
-        if (tokens.length != REQUIRED_TOKEN_SIZE_TO_INIT_REQUEST_LINE) {
-            throw new IllegalArgumentException("Request line format is illegal : [" + line + "]");
-        }
+        validate(line, tokens);
 
         this.origin = line;
         this.httpMethod = HttpMethod.of(tokens[0]);
         this.path = Path.parse(tokens[1]);
         this.protocol = Protocol.parse(tokens[2]);
+    }
+
+    private void validate(String line, String[] tokens) {
+        if (tokens.length != REQUIRED_TOKEN_SIZE_TO_INIT_REQUEST_LINE) {
+            throw new IllegalArgumentException("Request line format is illegal : [" + line + "]");
+        }
     }
 
     public static RequestLine parse(final String line) {

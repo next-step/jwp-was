@@ -40,7 +40,7 @@ public class HttpRequest {
     }
 
     private void initHeaders(final BufferedReader bufferedReader) throws IOException {
-        requestHeader = RequestHeader.newInstance();
+        requestHeader = new RequestHeader();
         String headerLine;
 
         while (!StringUtil.isEmpty(headerLine = bufferedReader.readLine())) {

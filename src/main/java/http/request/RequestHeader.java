@@ -9,25 +9,12 @@ public class RequestHeader {
     private static final String COOKIE_KEY_VALUE_DELIMITER = "=";
     private static final String HEADER_DELIMITER = ": ";
     private static final String COOKIE_DELIMITER = ";";
-    private static final String NEW_LINE = "\n";
 
     private final Map<String, String> headers = new HashMap<>();
     private final Map<String, String> cookies = new HashMap<>();
     private final StringBuilder origin = new StringBuilder();
 
-    private RequestHeader() {}
-
-    public static RequestHeader newInstance() {
-        return new RequestHeader();
-    }
-
-    public RequestHeader(final String header) {
-        StringTokenizer tokens = new StringTokenizer(header, NEW_LINE);
-
-        while (tokens.hasMoreTokens()) {
-            addHeader(tokens.nextToken());
-        }
-    }
+    public RequestHeader() {}
 
     public void addHeader(final String token) {
         origin.append(token).append('\n');

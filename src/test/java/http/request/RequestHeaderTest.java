@@ -5,6 +5,8 @@ import http.request.RequestHeader;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.StringTokenizer;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("리퀘스트 해더들을 관리하는 class")
@@ -27,7 +29,11 @@ class RequestHeaderTest {
     void parse() {
         String header = Statics.HEADER;
 
-        RequestHeader requestHeader = new RequestHeader(header);
+        RequestHeader requestHeader = new RequestHeader();
+        StringTokenizer stringTokenizer = new StringTokenizer(header, "\n");
+        while (stringTokenizer.hasMoreTokens()) {
+            requestHeader.addHeader(stringTokenizer.nextToken());
+        }
 
         assertThat(requestHeader.getHeader("Host")).isEqualTo("example.org");
         assertThat(requestHeader.getHeader("Keep-Alive")).isEqualTo("115");
