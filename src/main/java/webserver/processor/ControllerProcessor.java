@@ -6,24 +6,20 @@ import http.response.HttpResponse;
 import view.HandlebarEngine;
 import view.View;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ControllerProcessor implements Processor {
-    private static final View handleBarEngine = new HandlebarEngine();
+    private static final View HANDLEBAR_ENGINE = new HandlebarEngine();
 
-    private static final List<Controller> CONTROLLERS = Arrays.asList(
-            new UserController(),
-            new LoginController(),
-            new UserListController()
-    );
+    private final Map<String, Controller> PATH_AND_CONTROLLER;
 
-    private static final Map<String, Controller> PATH_AND_CONTROLLER =
-            CONTROLLERS.stream()
-                    .collect(Collectors.toMap(Controller::getPath, Function.identity()));
+    public ControllerProcessor(List<Controller> controllers) {
+        PATH_AND_CONTROLLER = controllers.stream()
+                .collect(Collectors.toMap(Controller::getPath, Function.identity()));
+    }
 
     @Override
     public boolean isMatch(final HttpRequest httpRequest) {
@@ -41,7 +37,7 @@ public class ControllerProcessor implements Processor {
 
     private void render(final HttpRequest httpRequest, final HttpResponse httpResponse) {
         if (httpResponse.isForward()) {
-            handleBarEngine.render(httpRequest, httpResponse);
+            HANDLEBAR_ENGINE.render(httpRequest, httpResponse);
         }
     }
 }

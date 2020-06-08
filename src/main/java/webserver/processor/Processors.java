@@ -1,5 +1,8 @@
 package webserver.processor;
 
+import controller.LoginController;
+import controller.UserController;
+import controller.UserListController;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 
@@ -10,7 +13,9 @@ import java.util.List;
 public class Processors {
     private static final NotFoundProcessor NOT_FOUND_PROCESSOR = new NotFoundProcessor();
     private static final List<Processor> processors = Arrays.asList(
-            new ControllerProcessor(),
+            new ControllerProcessor(
+                    Arrays.asList(new UserController(), new LoginController(), new UserListController())
+            ),
             new TemplateProcessor(),
             new ResourceProcessor()
     );
