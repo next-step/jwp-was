@@ -20,7 +20,7 @@ public class Cookies {
     public Cookies(String values) {
         cookies = new HashMap<>();
         for (String cookie : values.split(COOKIE_TOKENIZER)) {
-            String[] c = cookie.split(COOKIE_NAME_VALUE_TOKENIZER);
+            String[] c = cookie.trim().split(COOKIE_NAME_VALUE_TOKENIZER);
             if (c.length != 2) {
                 throw new RuntimeException("유효하지 않은 Cookie 헤더임. header :: [ Cookie: " + values + "]");
             }
