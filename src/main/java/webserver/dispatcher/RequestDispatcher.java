@@ -47,14 +47,15 @@ public class RequestDispatcher {
             if (isStaticPath(path)) {
                 return STATIC_CONTROLLER;
             }
+
             return NOT_FOUND_CONTROLLER;
         }
 
         private static boolean isStaticPath(String path) {
-            return path.startsWith("/css") ||
+            return path.endsWith(".css") ||
                     path.startsWith("/fonts") ||
-                    path.startsWith("/images") ||
-                    path.startsWith("/js");
+                    path.startsWith(".png") ||
+                    path.endsWith(".js");
         }
     }
 }

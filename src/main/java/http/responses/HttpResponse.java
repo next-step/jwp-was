@@ -1,12 +1,13 @@
 package http.responses;
 
+import http.requests.HttpRequest;
+import http.view.TemplateViewResolver;
+import http.view.View;
+import http.view.ViewResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.TemplateReader;
-import utils.TemplateRenderer;
 
 import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -23,12 +24,24 @@ public class HttpResponse {
 
     private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
 
+    private final HttpRequest request;
     private final DataOutputStream dos;
     private final Map<String, String> responseHeaders = new HashMap<>();
     private HttpStatus status;
 
-    public HttpResponse(OutputStream dos) {
+    private final Map<String, Object> attribute = new HashMap<>();
+
+    public HttpResponse(HttpRequest request, OutputStream dos) {
+        this.request = request;
         this.dos = new DataOutputStream(dos);
+    }
+
+    public void addAttribute(String key, Object value) {
+        attribute.put(key, value);
+    }
+
+    public Map<String, Object> getAttribute() {
+        return attribute;
     }
 
     public void addHeader(String key, String value) {
@@ -43,36 +56,41 @@ public class HttpResponse {
         final ResponseContext.ResponseContextBuilder builder = ResponseContext.builder();
         responseHeaders.forEach(builder::addHeader);
         final ResponseContext context = builder.status(HttpStatus.FOUND).addHeader("Location", uri).build();
-        renderResponseContext(dos, context);
+        renderResponseContext(context);
     }
 
-    public void render(String path) {
-        final byte[] rawBody = convertFileToByte(path);
+    public void renderTemplate(String path) {
+        final ViewResolver resolver = new TemplateViewResolver();
+        final View view = resolver.resolve(path);
+        try {
+            view.render(request, this);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            response500Error();
+        }
+    }
+
+    public void responseNotFound() {
+        renderResponseContext(ResponseContext.of(HttpStatus.NOT_FOUND));
+    }
+
+    public void response500Error() {
+        renderResponseContext(ResponseContext.of(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    public void responseBody(byte[] body) {
         final ResponseContext.ResponseContextBuilder builder = ResponseContext.builder();
         responseHeaders.forEach(builder::addHeader);
         final HttpStatus httpStatus = Optional.ofNullable(status).orElse(HttpStatus.OK);
         final ResponseContext context = builder
                 .status(httpStatus)
-                .addHeader("Content-Length", String.valueOf(rawBody.length))
-                .body(rawBody)
+                .addHeader("Content-Length", String.valueOf(body.length))
+                .body(body)
                 .build();
-        renderResponseContext(dos, context);
+        renderResponseContext(context);
     }
 
-    public void render(String path, Object model) {
-        final String rendered = TemplateRenderer.render(path, model);
-        final ResponseContext.ResponseContextBuilder builder = ResponseContext.builder();
-        responseHeaders.forEach(builder::addHeader);
-        final HttpStatus httpStatus = Optional.ofNullable(status).orElse(HttpStatus.OK);
-        final ResponseContext context = builder
-                .status(httpStatus)
-                .addHeader("Content-Type", "text/html;charset=utf-8")
-                .body(rendered.getBytes())
-                .build();
-        renderResponseContext(dos, context);
-    }
-
-    private void renderResponseContext(DataOutputStream dos, ResponseContext context) {
+    private void renderResponseContext(ResponseContext context) {
         try {
             dos.writeBytes(context.getStatusLine());
             for (String header : context.getResponseHeaderList()) {
@@ -86,14 +104,6 @@ public class HttpResponse {
             }
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-        }
-    }
-
-    private static byte[] convertFileToByte(String path) {
-        try {
-            return TemplateReader.read(path);
-        } catch (FileNotFoundException e) {
-            throw new IllegalStateException(e);
         }
     }
 }

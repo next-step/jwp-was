@@ -21,6 +21,10 @@ public class ResponseContext {
         this.body = body;
     }
 
+    public static ResponseContext of(HttpStatus status) {
+        return ResponseContextFactory.getResponseContext(status);
+    }
+
     public String getStatusLine() {
         return String.format("HTTP/%s %d %s \r\n", version, status.getStatusCode(), status.getReasonPhrase());
     }
@@ -37,6 +41,26 @@ public class ResponseContext {
 
     public static ResponseContextBuilder builder() {
         return new ResponseContextBuilder();
+    }
+
+    private enum ResponseContextFactory {
+        NOT_FOUND(builder().status(HttpStatus.NOT_FOUND).build()),
+        INTERNAL_SERVER_ERROR(builder().status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+
+        private final ResponseContext context;
+
+        ResponseContextFactory(ResponseContext context) {
+            this.context = context;
+        }
+
+        private static ResponseContext getResponseContext(HttpStatus status) {
+            switch (status) {
+                case INTERNAL_SERVER_ERROR:
+                    return INTERNAL_SERVER_ERROR.context;
+                default:
+                    return NOT_FOUND.context;
+            }
+        }
     }
 
     public static class ResponseContextBuilder {

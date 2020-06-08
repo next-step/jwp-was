@@ -9,8 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserListController implements Controller {
 
@@ -20,10 +18,10 @@ public class UserListController implements Controller {
     public void service(HttpRequest request, HttpResponse response) {
         if (isSignedIn(request)) {
             final Collection<User> users = DataBase.findAll();
-            final Map<String, Object> map = new HashMap<>();
-            map.put("users", users);
-            log.debug("map to be rendered: {}", map);
-            response.render(request.getPath(), map);
+            log.debug("user list: {}", users);
+            response.addAttribute("users", users);
+            response.renderTemplate("/user/list");
+            return;
         }
         response.sendRedirect("/user/login.html");
     }
