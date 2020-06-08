@@ -14,4 +14,12 @@ public class HttpSession {
     public UUID getId() {
         return (UUID) session.get("uuid");
     }
+
+    public void setAttribute(String name, Object value) {
+
+    }
+
+    public Object getAttribute(String name) {
+        return null;
+    }
 }

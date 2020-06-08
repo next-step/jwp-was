@@ -15,4 +15,17 @@ public class HttpSessionTest {
         //then
         assertThat(httpSession.getId()).isNotNull();
     }
+
+    @DisplayName("Session에 Value 객체 저장")
+    @Test
+    void setAttribute() {
+        //given
+        HttpSession session = new HttpSession();
+
+        //when
+        session.setAttribute("isAdmin", true);
+
+        //then
+        assertThat((boolean) session.getAttribute("isAdmin")).isTrue();
+    }
 }
