@@ -1,6 +1,5 @@
 package http.response;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +22,7 @@ public class CookiesTest {
         assertThat(cookies.getSize()).isEqualTo(2);
         assertThat(cookies.toString())
                 .isEqualTo("JSESSIONID=abc1234; Path=/; HttpOnly"
-                        +"&"
-                        +"JSESSIONID2=abc12345; Path=/index; ");
+                        + "&"
+                        + "JSESSIONID2=abc12345; Path=/index; ");
     }
 }
