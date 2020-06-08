@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.session.HttpSession;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,6 +81,21 @@ public class RequestTest {
         assertThat(request.getHeader("Set-Cookie"))
                 .isEqualTo(
                         "logined=true; Path=/; HttpOnly" + "&" + "logined=false; Path=/; ");
+    }
+
+    @DisplayName("Request에서 Cookie 문자열 추출")
+    @Test
+    void getCookie() {
+        Request request = createRequest();
+        Cookie cookie1 = new Cookie("logined=true", "/", true);
+        Cookie cookie2 = new Cookie("logined=false", "/", false);
+
+        //when
+        request.addCookie(cookie1);
+        request.addCookie(cookie2);
+
+        //then
+        assertThat(request.getCookies()).isEqualTo(Arrays.asList(cookie1, cookie2));
     }
 
     private Request createRequest() {

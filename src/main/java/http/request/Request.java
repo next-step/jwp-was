@@ -62,4 +62,8 @@ public class Request {
             this.headers.replaceHeader("Set-Cookie", cookies.toString());
         }
     }
+
+    public Cookies getCookies() {
+
+    }
 }
