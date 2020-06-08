@@ -1,5 +1,7 @@
 package http;
 
+import java.util.Map;
+
 public class HttpRequest {
 
     private final RequestLine requestLine;
@@ -10,6 +12,10 @@ public class HttpRequest {
 
     public String getPath(){
         return requestLine.getPath();
+    }
+
+    public String getParameter(String param){
+        return requestLine.getQueryString().getParameter(param);
     }
 
 }

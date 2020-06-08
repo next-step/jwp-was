@@ -3,12 +3,16 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import http.HttpRequest;
 import http.HttpResponse;
+import http.QueryStrings;
 import http.RequestLineParser;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -33,22 +37,37 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = new HttpRequest(RequestLineParser.parse(line));
 
             String path = httpRequest.getPath();
-
+            int contentLength = 0;
             while(!line.equals("")) {
                 line = br.readLine();
                 logger.debug("header : {}", line);
+                if(line.contains("Content-Length")) {
+                    String value = line.split(" ")[1];
+                    contentLength = Integer.parseInt(value);
+                }
             }
 
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = HttpResponse.getBody(path);
+            if(path.equals("/user/create")) {
+                String body = IOUtils.readData(br, contentLength);
 
-            //byte[] body = "Hello World".getBytes();
+                QueryStrings queryStrings = new QueryStrings(body);
 
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+                User user = new User(queryStrings.getParameter("userId"),
+                        queryStrings.getParameter("password"), queryStrings.getParameter("name"),
+                        queryStrings.getParameter("email"));
+                /*User user = new User(httpRequest.getParameter("userId"),
+                        httpRequest.getParameter("password"), httpRequest.getParameter("name"),
+                        httpRequest.getParameter("email"));*/
+                logger.debug("User : {}", user);
+            } else {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = HttpResponse.getBody(path);
+
+                //byte[] body = "Hello World".getBytes();
+                response200Header(dos, body.length);
+                responseBody(dos, body);
+            }
         } catch (IOException e) {
-            logger.error(e.getMessage());
-        } catch (URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
