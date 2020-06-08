@@ -45,6 +45,7 @@ public class SessionManager {
 
         if (Objects.isNull(httpSession)) {
             httpSession = DefaultHttpSession.of(sessionId);
+            inMemorySessionHolder.save(httpSession);
         }
 
         return httpSession;
