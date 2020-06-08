@@ -4,7 +4,6 @@ import http.ContentType;
 import http.Cookies;
 import http.StatusCode;
 
-import javax.xml.ws.Response;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
