@@ -26,4 +26,32 @@ class HttpMethodTest {
         // then
         assertThat(httpMethods).isEqualTo(Arrays.asList(HttpMethod.GET, HttpMethod.POST));
     }
+
+    @DisplayName("Http Method 반환 - 파라미터가 null인 경우")
+    @Test
+    void resolve_null() {
+
+        // given
+        String httpMethodText = null;
+
+        // when
+        HttpMethod httpMethod = HttpMethod.resolve(httpMethodText);
+
+        // then
+        assertThat(httpMethod).isNull();
+    }
+
+    @DisplayName("Http Method 반환 - 일치하는 Http method가 없는 경우")
+    @Test
+    void resolve_mismatch() {
+
+        // given
+        String httpMethodText = "NOT_HTTP_METHOD";
+
+        // when
+        HttpMethod httpMethod = HttpMethod.resolve(httpMethodText);
+
+        // then
+        assertThat(httpMethod).isNull();
+    }
 }
