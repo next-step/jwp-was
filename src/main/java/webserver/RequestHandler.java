@@ -31,13 +31,11 @@ public class RequestHandler implements Runnable {
 
             HttpRequest httpRequest = new HttpRequest(in);
             HttpResponse httpResponse = new HttpResponse(new DataOutputStream(out));
-            /*PathController controller = ControllerHandler.getPathController(httpRequest);
 
-            //controller 수행
-            byte[] body = controller.execute();
+            PathController controller = ControllerHandler.getControllerProcess(httpRequest);
 
-            DataOutputStream dos = new DataOutputStream(out);
-            responseBody(dos, body);*/
+            controller.service(httpRequest, httpResponse);
+
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

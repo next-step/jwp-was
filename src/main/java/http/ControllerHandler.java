@@ -1,22 +1,28 @@
 package http;
 
+
 import http.controller.*;
 
 /**
  * Created By kjs4395 on 2020-06-05
  */
 public class ControllerHandler {
+    public static final PathController DEFAULT = new DefaultController();
+    public static final PathController LIST_CONTROLLER = new ListController();
+    public static final PathController LOGIN_CONTROLLER = new LoginController();
+    public static final PathController USER_CONTROLLER = new UserController();
 
-    public static PathController getPathController(HttpRequest httpRequest){
-        switch (httpRequest.getRequestLine().getPath()) {
+
+    public static PathController getControllerProcess(HttpRequest request) {
+        switch (request.getPath()) {
             case "/user/create" :
-                return new UserController(httpRequest);
+                return USER_CONTROLLER;
             case "/user/login" :
-                return new LoginController(httpRequest);
+                return LOGIN_CONTROLLER;
             case "/user/list" :
-                return new ListController(httpRequest);
+                return LIST_CONTROLLER;
             default:
-                return new DefaultController(httpRequest);
+                return DEFAULT;
         }
     }
 }

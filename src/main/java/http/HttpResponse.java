@@ -4,10 +4,12 @@ import http.enums.HttpResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import utils.HandlebarLoadUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.logging.Handler;
 
 public class HttpResponse {
     private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
@@ -23,13 +25,10 @@ public class HttpResponse {
 
     private void sendResponse() {
         try {
-            byte[] responseHeader = (responseCode.makeHeader() + headers.makeResponseHeader()).getBytes();
-            byte[] response = new byte[responseHeader.length + responseBody.length];
-            System.arraycopy(responseHeader,0,response,0, responseHeader.length);
-            System.arraycopy(responseBody,0,response,responseHeader.length, responseBody.length);
-
-            this.outputStream.write(response, 0, response.length);
+            this.outputStream.writeBytes(responseCode.makeHeader() + headers.makeResponseHeader());
+            this.outputStream.write(this.responseBody, 0, responseBody.length);
             this.outputStream.flush();
+
         } catch (IOException e) {
             log.error("send Response Error : {}", e);
         }
@@ -50,6 +49,13 @@ public class HttpResponse {
         } catch (IOException | URISyntaxException e) {
             log.error("read File Exception  : {} - {}", path, e);
         }
+    }
+
+    public void forwordHandleBar(String template) {
+        this.responseBody = template.getBytes();
+        this.responseCode = HttpResponseCode.OK;
+        addHeader("Content-Length", String.valueOf(responseBody.length));
+        this.sendResponse();
     }
 
     public void sendRedirect(String location) {

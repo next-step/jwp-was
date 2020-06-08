@@ -15,38 +15,24 @@ public class LoginController extends PathController{
 
     private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
-    public byte[] post() {
+    public void doPost(HttpRequest request, HttpResponse response) {
         log.info("login controller post method ===========");
 
         Header headerInfo = new Header();
         headerInfo.addKeyAndValue("Content-Type","text/html;charset=utf-8");
 
-        QueryString requestBodyString = new QueryString(httpRequest.getRequestBody());
+        QueryString requestBodyString = new QueryString(request.getRequestBody());
         User loginUser = new User(requestBodyString.getParameter("userId"), requestBodyString.getParameter("password"));
         User findUser = DataBase.findUserById(requestBodyString.getParameter("userId"));
-        try {
-            if (loginUser.equals(findUser)) {
-                log.info("login success");
-                String resourcePath = ResourcePathMaker.makeTemplatePath("/index.html");
-                byte[] responseBody = FileIoUtils.loadFileFromClasspath(resourcePath);
-                headerInfo.addKeyAndValue("Set-Cookie", "logined=true; Path=/");
 
-                HttpResponse response = new HttpResponse(HttpResponseCode.OK, responseBody, headerInfo);
-                return response.makeResponseBody();
-            }
-            log.info("login fail");
-            String resourcePath = ResourcePathMaker.makeTemplatePath("/user/login_failed.html");
-            byte[] responseBody = FileIoUtils.loadFileFromClasspath(resourcePath);
-            headerInfo.addKeyAndValue("Set-Cookie", "logined=false");
-
-            HttpResponse response = new HttpResponse(HttpResponseCode.OK, responseBody, headerInfo);
-            return response.makeResponseBody();
-        } catch(IOException e){
-            e.printStackTrace();
-        } catch(URISyntaxException e){
-            e.printStackTrace();
+        if(loginUser.equals(findUser)) {
+            response.addHeader("Set-Cookie","logined=true; Path=/");
+            response.sendRedirect("/index.html");
+            return;
         }
 
-        return new byte[0];
+        response.addHeader("Set-Cookie", "logined=false");
+        response.sendRedirect("/user/login_failed.html");
+
     }
 }

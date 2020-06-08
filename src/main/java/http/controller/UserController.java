@@ -2,11 +2,9 @@ package http.controller;
 
 import com.sun.istack.internal.logging.Logger;
 import db.DataBase;
-import http.Header;
 import http.HttpRequest;
 import http.HttpResponse;
 import http.QueryString;
-import http.enums.HttpResponseCode;
 import model.User;
 
 /**

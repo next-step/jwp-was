@@ -20,7 +20,7 @@ public class Header {
         String[] values = headerLine.split(HttpConst.HEADER_SEPARATOR,2);
 
         if(values.length < 2) {
-            throw new IllegalArgumentException("Invalid header format : " + headerLine);
+            throw new IllegalArgumentException("Invalid header format");
         }
 
         this.headers.put(values[0].trim(), values[1].trim());

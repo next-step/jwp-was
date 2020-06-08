@@ -30,11 +30,14 @@ public class HttpRequest {
 
             while(!StringUtils.EMPTY.equals(line)) {
                 line = br.readLine().trim();
-                header.addHeaderValue(line);
+                if(StringUtils.isNotEmpty(line)) {
+                    header.addHeaderValue(line);
+                }
             }
             if(header.isContainsKey("Content-Length")) {
                 this.requestBody = IOUtils.readData(br, Integer.parseInt(header.getValue("Content-Length")));
             }
+
         } catch (IOException e) {
             logger.error("read http request error : {}", e);
         }
@@ -52,7 +55,18 @@ public class HttpRequest {
         return this.requestBody;
     }
 
-    private boolean isStaticResource() {
+    public String getPath() {
+        return this.requestLine.getPath();
+    }
+
+    public boolean isLoggedIn() {
+        if(header.isContainsKey("Cookie")) {
+            return header.getValue("Cookie").contains("logined=true");
+        }
+        return false;
+    }
+
+    public boolean isStaticResource() {
         if(this.header.isContainsKey("Accept")) {
             return this.header.getValue("Accept").contains("text/css");
         }
