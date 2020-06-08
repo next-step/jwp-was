@@ -42,6 +42,13 @@ public class Response {
         return headers;
     }
 
+    public void addCookie(Cookie cookie) {
+        String cookieValue = this.getHeaderByKey("Set-Cookie");
+        if(cookieValue == null){
+            this.headers.addHeader("Set-Cookie", cookie.toString());
+        }
+    }
+
     public void addCookies(Cookies cookies) {
         this.headers.addHeader(SET_COOKIE, cookies.toString());
     }
@@ -49,9 +56,5 @@ public class Response {
     public Cookies getCookies() {
         String headerByKey = this.getHeaderByKey(SET_COOKIE);
         return Cookies.parseCookies(headerByKey);
-    }
-
-    public void addCookie(Cookie cookie) {
-
     }
 }
