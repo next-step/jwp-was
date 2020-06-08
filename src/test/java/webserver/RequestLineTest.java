@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static webserver.HttpMethod.GET;
+import static webserver.HttpMethod.POST;
 
 public class RequestLineTest {
 
@@ -22,7 +24,7 @@ public class RequestLineTest {
 
         // then
         assertThat(requestLine)
-                .isEqualTo(new RequestLine("GET", "/docs/index.html", new Protocol("HTTP", "1.1")));
+                .isEqualTo(new RequestLine(GET, "/docs/index.html", new Protocol("HTTP", "1.1")));
     }
 
     @DisplayName("[POST] HTTP 요청의 requestLine 파싱")
@@ -37,7 +39,7 @@ public class RequestLineTest {
 
         // then
         assertThat(requestLine)
-                .isEqualTo(new RequestLine("POST", "/docs/index.html", new Protocol("HTTP", "1.1")));
+                .isEqualTo(new RequestLine(POST, "/docs/index.html", new Protocol("HTTP", "1.1")));
     }
 
     @DisplayName("HTTP 요청의 query string 파싱 - query string이 있을 경우")

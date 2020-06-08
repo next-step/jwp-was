@@ -17,12 +17,12 @@ public class RequestLine {
     private static final String ENTRY_SEPARATOR = "&";
     private static final String KEY_VALUE_SEPARATOR = "=";
 
-    private String method;
+    private HttpMethod method;
     private String path;
     private Protocol protocol;
     private Map<String, String> queryParameters;
 
-    public RequestLine(String method, String path, Protocol protocol) {
+    public RequestLine(HttpMethod method, String path, Protocol protocol) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
@@ -31,7 +31,7 @@ public class RequestLine {
 
     public RequestLine(String requestLine) {
         String[] split = requestLine.split(BLANK);
-        this.method = split[0];
+        this.method = HttpMethod.valueOf(split[0]);
         this.path = split[1];
 
         String protocolNameAndVersion = split[2];
