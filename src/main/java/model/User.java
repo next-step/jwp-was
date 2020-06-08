@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class User {
     private String userId;
@@ -29,6 +30,12 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public boolean checkPassword(String password) {
+        return Optional
+                .ofNullable(this.password)
+                .orElse("").equals(password);
     }
 
     @Override

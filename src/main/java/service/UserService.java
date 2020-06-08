@@ -4,8 +4,6 @@ import db.DataBase;
 import model.User;
 import service.exceptions.UserNotFoundException;
 
-import java.util.Optional;
-
 public class UserService {
 
     public void signUp(User user) {
@@ -17,8 +15,6 @@ public class UserService {
         if (user == null) {
             throw new UserNotFoundException("No such user in database!");
         }
-        return Optional
-                .ofNullable(user.getPassword())
-                .orElse("").equals(password);
+        return user.checkPassword(password);
     }
 }
