@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
+import http.view.RedirectView;
 import http.view.TemplateModel;
 import http.view.TemplateView;
 import java.io.ByteArrayInputStream;
@@ -38,7 +39,7 @@ class UserListHandlerTest {
         HttpRequest httpRequest = createRequest(false);
         HttpResponse httpResponse = handler.handle(httpRequest);
 
-        HttpResponse expect = new HttpResponse(new TemplateView("login"));
+        HttpResponse expect = new HttpResponse(new RedirectView("/user/login.html"));
         assertThat(httpResponse).isEqualTo(expect);
     }
 

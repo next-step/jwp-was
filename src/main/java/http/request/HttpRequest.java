@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,7 +40,7 @@ public class HttpRequest {
     }
 
     public static HttpRequest from(InputStream in) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         String requestLine = br.readLine();
 
         List<String> headerLines = new ArrayList<>();
@@ -68,7 +69,7 @@ public class HttpRequest {
     }
 
     public String getCookie(String name) {
-        return this.headers.getCookies().get(name);
+        return this.headers.getCookie(name);
     }
 
     @Override

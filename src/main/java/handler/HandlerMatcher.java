@@ -19,7 +19,7 @@ public class HandlerMatcher {
     }
 
     public boolean isMatch(Method method, String path) {
-        if (!this.method.equals(method)) {
+        if (this.method != method) {
             return false;
         }
 

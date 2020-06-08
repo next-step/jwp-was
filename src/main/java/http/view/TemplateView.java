@@ -1,6 +1,7 @@
 package http.view;
 
 import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import http.HttpStatus;
@@ -38,8 +39,9 @@ public class TemplateView extends FileResourceView {
 
     @Override
     protected BodyFile getBodyFile() throws IOException {
-        byte body[] = handlebars.compile(path).apply(model.getModel()).getBytes();
-        String fileName = new File(path).getName();
+        Template template = handlebars.compile(path);
+        byte[] body = template.apply(model.getModel()).getBytes();
+        String fileName = new File(template.filename()).getName();
         return new BodyFile(fileName, body);
     }
 

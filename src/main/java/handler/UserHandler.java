@@ -4,7 +4,6 @@ import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.view.RedirectView;
-import http.view.StaticResourceView;
 import http.view.TemplateModel;
 import http.view.TemplateView;
 import java.util.Optional;
@@ -15,7 +14,6 @@ public class UserHandler {
     public HttpResponse create(HttpRequest httpRequest) {
         String userId = httpRequest.getParameter("userId");
         String password = httpRequest.getParameter("password");
-
         String name = httpRequest.getParameter("name");
         String email = httpRequest.getParameter("email");
 
@@ -29,7 +27,7 @@ public class UserHandler {
 
     public HttpResponse list(HttpRequest httpRequest) {
         if (!isLogin(httpRequest)) {
-            return new HttpResponse(new TemplateView("login"));
+            return new HttpResponse(new RedirectView("/user/login.html"));
         }
 
         TemplateModel templateModel = new TemplateModel();
@@ -50,10 +48,10 @@ public class UserHandler {
 
         boolean isLoginSuccess = login(userId, password);
         if (!isLoginSuccess) {
-            return new HttpResponse(new TemplateView("user/login_failed"));
+            return new HttpResponse(new RedirectView("/user/login_failed.html"));
         }
 
-        HttpResponse httpResponse = new HttpResponse(new StaticResourceView("/index.html"));
+        HttpResponse httpResponse = new HttpResponse(new RedirectView("/index.html"));
         httpResponse.addCookie("logined", Boolean.TRUE.toString());
         return httpResponse;
     }

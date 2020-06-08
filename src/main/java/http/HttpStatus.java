@@ -3,7 +3,6 @@ package http;
 public enum HttpStatus {
 
     _200(200, "OK"),
-
     _302(302, "FOUND");
 
     private int code;

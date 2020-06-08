@@ -23,7 +23,7 @@ public class HttpUtils {
             }
 
             try {
-                pairs.put(URLDecoder.decode(values[0], "UTF-8"),
+                pairs.put(URLDecoder.decode(values[0].trim(), "UTF-8"),
                     URLDecoder.decode(values[1].trim(), "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 continue;

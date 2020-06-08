@@ -5,6 +5,8 @@ import utils.StringUtils;
 
 public class RequestUrl {
 
+    private static final String SPLITTER = "\\?";
+
     private final String path;
     private final QueryString queryString;
 
@@ -18,7 +20,7 @@ public class RequestUrl {
             throw new IllegalArgumentException("empty value");
         }
 
-        String[] values = value.split("\\?");
+        String[] values = value.split(SPLITTER);
         if (values.length == 2) {
             return of(values[0], values[1]);
         }
