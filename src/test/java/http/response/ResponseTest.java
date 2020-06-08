@@ -34,8 +34,8 @@ public class ResponseTest {
     }
 
     private Cookies createCookies() {
-        Cookie cookie = new Cookie("JSESSIONID", "abc1234", "/", true);
-        Cookie cookie2 = new Cookie("JSESSIONID2", "abc12345", "/index", false);
+        Cookie cookie = new Cookie("JSESSIONID=abc1234", "/", true);
+        Cookie cookie2 = new Cookie("JSESSIONID2=abc12345", "/index", false);
         return new Cookies(Arrays.asList(cookie, cookie2));
     }
 }

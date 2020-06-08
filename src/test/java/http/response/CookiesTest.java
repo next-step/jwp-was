@@ -12,8 +12,8 @@ public class CookiesTest {
     @Test
     void create() {
         //given
-        Cookie cookie = new Cookie("JSESSIONID", "abc1234", "/", true);
-        Cookie cookie2 = new Cookie("JSESSIONID2", "abc12345", "/index", false);
+        Cookie cookie = new Cookie("JSESSIONID=abc1234", "/", true);
+        Cookie cookie2 = new Cookie("JSESSIONID2=abc12345", "/index", false);
 
         //when
         Cookies cookies = new Cookies(Arrays.asList(cookie, cookie2));
@@ -30,8 +30,8 @@ public class CookiesTest {
     @Test
     void addCookie(){
         //given
-        Cookie cookie = new Cookie("JSESSIONID", "abc1234", "/", true);
-        Cookie cookie2 = new Cookie("JSESSIONID2", "abc12345", "/index", false);
+        Cookie cookie = new Cookie("JSESSIONID=abc1234", "/", true);
+        Cookie cookie2 = new Cookie("JSESSIONID2=abc12345", "/index", false);
         Cookies cookies = new Cookies(Arrays.asList(cookie));
 
         //when

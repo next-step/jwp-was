@@ -10,13 +10,12 @@ public class CookieTest {
     @Test
     void createCookie() {
         //given
-        String key = "JSESSIONID";
-        String value = "abc1234";
+        String cookieValue = "JSESSIONID=abc1234";
         String path = "/";
         boolean isHttpOnly = true;
 
         //when
-        Cookie cookie = new Cookie(key, value, path, isHttpOnly);
+        Cookie cookie = new Cookie(cookieValue, path, isHttpOnly);
 
         //then
         assertThat(cookie.toString())
