@@ -1,9 +1,6 @@
 package webserver;
 
-import http.QueryString;
-import http.QueryStringParser;
-import http.RequestLine;
-import http.RequestLineParser;
+import http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,32 +19,32 @@ public class HttpRequestReader {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             String requestLineString = reader.readLine();
             RequestLine requestLine = RequestLineParser.parse(requestLineString);
-            Map<String, String> requestHeader = new HashMap<>();
+            Map<String, String> requestHeaders = new HashMap<>();
             Map<String, String> parameters = new HashMap<>();
 
             String sep = ": ";
             String line = reader.readLine();
-            String prevLine = null;
 
-            while (line != null && "".equals(line)) {
+            while (!"".equals(line) && line != null) {
                 if (line.contains(sep)) {
                     String[] split = line.split(sep);
-                    requestHeader.put(split[0], split[1]);
+                    requestHeaders.put(split[0], split[1]);
                 }
 
                 line = reader.readLine();
             }
 
-            if (line != null) {
+            if (HttpMethod.POST.equals(requestLine.getMethod())) {
                 line = reader.readLine();
-
-                QueryString queryString = QueryStringParser.parse(line);
-                if (queryString != null) {
-                    parameters = queryString.getParameters();
+                if (line != null) {
+                    QueryString queryString = QueryStringParser.parse(line);
+                    if (queryString != null) {
+                        parameters = queryString.getParameters();
+                    }
                 }
             }
 
-            return new HttpRequest(requestLine, requestHeader, parameters);
+            return new HttpRequest(requestLine, requestHeaders, parameters);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
         }
