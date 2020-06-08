@@ -17,4 +17,8 @@ public class Parameters {
     public void parse(final String query) {
 
     }
+
+    public String get(final String parameterName) {
+        return null;
+    }
 }

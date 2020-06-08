@@ -3,6 +3,7 @@ package http.request;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,5 +23,8 @@ class ParametersTest {
 
         Parameters parameters = Parameters.newInstance();
         parameters.parse(query);
+
+        assertThat(parameters.get("name1")).isEqualTo("value1");
+        assertThat(parameters.get("name2")).isEqualTo("value2");
     }
 }
