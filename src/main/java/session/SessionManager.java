@@ -14,6 +14,7 @@ public class SessionManager {
     public SessionManager(final InMemorySessionHolder inMemorySessionHolder) {
         this.inMemorySessionHolder = inMemorySessionHolder;
     }
+
     public void loadSession(final HttpRequest httpRequest, final HttpResponse httpResponse) {
         String sessionId = loadSessionId(httpRequest, httpResponse);
 
