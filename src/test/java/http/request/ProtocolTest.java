@@ -1,6 +1,5 @@
 package http.request;
 
-import http.request.Protocol;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,7 +19,7 @@ public class ProtocolTest {
     @DisplayName("프로토콜 문자열이 정상적이지 않으면 예외를 발생시킨다")
     void parsingFail(final String protocolStr) {
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> new Protocol(protocolStr));
+                .isThrownBy(() -> Protocol.parse(protocolStr));
     }
 
     private static Stream<String> parsingFail() {
@@ -38,13 +37,13 @@ public class ProtocolTest {
     @DisplayName("프로토콜 문자열이 null이거나비어있다면 예외를 발생시킨다")
     void parsingFailWithNullOrEmptyStr(final String protocolStr) {
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> new Protocol(protocolStr));
+                .isThrownBy(() -> Protocol.parse(protocolStr));
     }
 
     @Test
     @DisplayName("프로토콜 문자열 파싱")
     void parse() {
-        Protocol protocol = new Protocol("HTTP/1.1");
+        Protocol protocol = Protocol.parse("HTTP/1.1");
 
         assertThat(protocol.getProtocol()).isEqualTo("HTTP");
         assertThat(protocol.getVersion()).isEqualTo("1.1");

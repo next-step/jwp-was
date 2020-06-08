@@ -21,8 +21,19 @@ class ParametersTest {
     void parse() {
         String query = "name1=value1&name2=value2";
 
-        Parameters parameters = Parameters.newInstance();
-        parameters.parse(query);
+        Parameters parameters = Parameters.parse(query);
+
+        assertThat(parameters.get("name1")).isEqualTo("value1");
+        assertThat(parameters.get("name2")).isEqualTo("value2");
+    }
+
+    @Test
+    @DisplayName("쿼리 스트링, 혹은 body를 받아서 업데이트")
+    void update() {
+        String body = "name1=value1&name2=value2";
+
+        Parameters parameters = Parameters.parse("");
+        parameters.update(body);
 
         assertThat(parameters.get("name1")).isEqualTo("value1");
         assertThat(parameters.get("name2")).isEqualTo("value2");

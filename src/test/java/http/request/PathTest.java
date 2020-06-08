@@ -1,6 +1,5 @@
 package http.request;
 
-import http.request.Path;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,12 +18,12 @@ public class PathTest {
     @DisplayName("Path가 null 혹은 빈문자열인 경우 예외가 발생한다.")
     void parseException(final String pathStr) {
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> new Path(pathStr));
+                .isThrownBy(() -> Path.parse(pathStr));
     }
 
     @Test
     void parse() {
-        Path path = new Path("/users?name1=value1&name2=value2");
+        Path path = Path.parse("/users?name1=value1&name2=value2");
 
         assertThat(path.getPath()).isEqualTo("/users");
         assertThat(path.getParameter("name1")).isEqualTo("value1");
@@ -35,7 +34,7 @@ public class PathTest {
     @CsvSource(value = {"/index.html,html", "/style.css,css", "/test.img,img", "/test.test.js,js"}, delimiter = ',')
     @DisplayName("path 내부에 확장자가 존재한다면 잘 추출하는지")
     void getExtension(final String pathStr, final String expected) {
-        Path path = new Path(pathStr);
+        Path path = Path.parse(pathStr);
 
         assertThat(path.getExtension()).isEqualTo(expected);
     }
@@ -44,7 +43,7 @@ public class PathTest {
     @ValueSource(strings = {"/test", "/wowwwww"})
     @DisplayName("path 내부에서 확장자가 존재하지 않을때는 null 을 리턴한다")
     void getExtensionReturnNull(final String pathStr) {
-        Path path = new Path(pathStr);
+        Path path = Path.parse(pathStr);
 
         assertThat(path.getExtension()).isNull();
     }
