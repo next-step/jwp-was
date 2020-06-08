@@ -1,8 +1,8 @@
 package http.request.parser;
 
-import http.HttpMethod;
-import http.ProtocolAndVersion;
-import http.QueryString;
+import http.request.HttpMethod;
+import http.common.ProtocolAndVersion;
+import http.request.QueryString;
 import http.request.RequestLine;
 
 public class RequestLineParser {

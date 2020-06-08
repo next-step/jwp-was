@@ -1,4 +1,4 @@
-package http;
+package http.request;
 
 import utils.UrlUtf8Decoder;
 

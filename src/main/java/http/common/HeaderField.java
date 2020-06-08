@@ -1,4 +1,6 @@
-package http;
+package http.common;
+
+import http.common.HeaderFieldName;
 
 public class HeaderField {
     private final String name;

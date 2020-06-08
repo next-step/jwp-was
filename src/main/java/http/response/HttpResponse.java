@@ -1,8 +1,8 @@
 package http.response;
 
-import http.Cookies;
-import http.HeaderField;
-import http.HeaderFieldName;
+import http.common.Cookies;
+import http.common.HeaderField;
+import http.common.HeaderFieldName;
 
 public class HttpResponse {
 

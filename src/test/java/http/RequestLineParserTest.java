@@ -1,6 +1,9 @@
 package http;
 
-import http.parser.RequestLineParser;
+import http.common.ProtocolAndVersion;
+import http.request.HttpMethod;
+import http.request.QueryString;
+import http.request.parser.RequestLineParser;
 import http.request.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

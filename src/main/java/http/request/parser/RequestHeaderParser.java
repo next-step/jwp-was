@@ -1,6 +1,6 @@
 package http.request.parser;
 
-import http.HeaderField;
+import http.common.HeaderField;
 import http.request.Header;
 import org.apache.logging.log4j.util.Strings;
 

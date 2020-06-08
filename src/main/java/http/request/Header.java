@@ -1,8 +1,8 @@
 package http.request;
 
 
-import http.HeaderField;
-import http.HeaderFieldName;
+import http.common.HeaderField;
+import http.common.HeaderFieldName;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.Map;

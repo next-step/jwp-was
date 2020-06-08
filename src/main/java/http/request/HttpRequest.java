@@ -1,8 +1,7 @@
 package http.request;
 
-import http.Cookies;
-import http.HeaderFieldName;
-import http.HttpMethod;
+import http.common.Cookies;
+import http.common.HeaderFieldName;
 
 public class HttpRequest {
     private final RequestLine requestLine;

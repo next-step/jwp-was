@@ -1,7 +1,5 @@
-package webserver;
+package http.request.parser;
 
-import http.request.parser.RequestHeaderParser;
-import http.request.parser.RequestLineParser;
 import http.request.Header;
 import http.request.HttpRequest;
 import http.request.RequestLine;

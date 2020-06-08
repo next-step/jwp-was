@@ -1,7 +1,7 @@
 package controller;
 
 import db.DataBase;
-import http.FormData;
+import http.request.FormData;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import model.User;
