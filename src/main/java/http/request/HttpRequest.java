@@ -96,9 +96,13 @@ public class HttpRequest {
 
     private static HttpSession findSession(RequestHeader requestHeader, Map<String, HttpSession> sessionMap) {
         RequestCookie cookie = requestHeader.getRequestCookie();
-        String sessionId = cookie.get(SESSION_ID);
+        if(Objects.isNull(cookie)) {
+            return null;
+        }
 
         HttpSession session = null;
+        String sessionId = cookie.get(SESSION_ID);
+
         if (Objects.nonNull(sessionId) && sessionMap.containsKey(sessionId)) {
             session = sessionMap.get(sessionId);
         }
