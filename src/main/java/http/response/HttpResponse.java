@@ -4,12 +4,9 @@ import http.Cookies;
 import http.Header;
 import http.Headers;
 
-import java.io.IOException;
-
-
 public class HttpResponse {
 
-    private int statusCode;
+    private StatusCode statusCode;
     private final Headers headers;
     private final Cookies cookies;
     private byte[] responseBody;
@@ -21,7 +18,11 @@ public class HttpResponse {
     }
 
     public int getStatusCode() {
-        return statusCode;
+        return statusCode.getCode();
+    }
+
+    public String getStatusMessage() {
+        return statusCode.getMessage();
     }
 
     public void addCookie(String cookieName, String cookieValue) {
@@ -33,7 +34,7 @@ public class HttpResponse {
     }
 
     public void response302(String locationUrl) {
-        this.statusCode = 302;
+        this.statusCode = StatusCode.FOUND;
         Header locationHeader = new Header("Location", locationUrl);
         headers.addHeader(locationHeader);
     }
@@ -51,7 +52,7 @@ public class HttpResponse {
     }
 
     public void response200HTML(byte[] htmlFile) {
-        this.statusCode = 200;
+        this.statusCode = StatusCode.OK;
         headers.addHeader(new Header("Content-Type", "text/html;charset=utf-8"));
         headers.addHeader(new Header("Content-Length", String.valueOf(htmlFile.length)));
         this.responseBody = htmlFile;
@@ -62,7 +63,7 @@ public class HttpResponse {
     }
 
     public void response200CSS(byte[] cssFile) {
-        this.statusCode = 200;
+        this.statusCode = StatusCode.OK;
         headers.addHeader(new Header("Content-Type", "text/css;charset=utf-8"));
         headers.addHeader(new Header("Content-Length", String.valueOf(cssFile.length)));
         this.responseBody = cssFile;

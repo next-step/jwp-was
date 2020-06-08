@@ -60,7 +60,7 @@ public class RequestHandler implements Runnable {
     }
 
     private void writeResponseLine(DataOutputStream dos, HttpResponse httpResponse) throws IOException {
-        dos.writeBytes("HTTP/1.1 " + httpResponse.getStatusCode() + " FOUND \r\n");
+        dos.writeBytes("HTTP/1.1 " + httpResponse.getStatusCode() + " " + httpResponse.getStatusMessage() + "\r\n");
     }
 
     private void writeHeader(DataOutputStream dos, HttpResponse httpResponse) throws IOException {
