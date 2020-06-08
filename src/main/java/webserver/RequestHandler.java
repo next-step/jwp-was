@@ -1,7 +1,6 @@
 package webserver;
 
-import http.requestline.RequestLine;
-import http.requestline.RequestLineParser;
+import http.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import utils.FileIoUtils;
@@ -31,21 +30,28 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
-            String line = bufferedReader.readLine();
-            RequestLine requestLine = RequestLineParser.parse(line);
-            while (!StringUtils.isEmpty(line)) {
-                log.debug(line);
-                line = bufferedReader.readLine();
-            }
+            HttpRequest httpRequest = readHttpRequest(bufferedReader);
 
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + requestLine.getPath());
+            byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + httpRequest.getPath());
 
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             log.error(e.getMessage());
         }
+    }
+
+    private HttpRequest readHttpRequest(BufferedReader bufferedReader) throws IOException {
+        String line = bufferedReader.readLine();
+        HttpRequest httpRequest = new HttpRequest(line);
+
+        while (!StringUtils.isEmpty(line)) {
+            log.debug(line);
+            httpRequest.registerHeader(line);
+            line = bufferedReader.readLine();
+        }
+        return httpRequest;
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
