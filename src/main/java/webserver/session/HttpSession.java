@@ -22,4 +22,12 @@ public class HttpSession {
     public Object getAttribute(String name) {
         return session.get(name);
     }
+
+    public void invalidate() {
+
+    }
+
+    public int getSize() {
+        return null;
+    }
 }

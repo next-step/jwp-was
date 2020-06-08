@@ -28,4 +28,17 @@ public class HttpSessionTest {
         //then
         assertThat((boolean) session.getAttribute("isAdmin")).isTrue();
     }
+
+    @DisplayName("Session에 저장된 모든 값 삭제")
+    @Test
+    void invalidate(){
+        //given
+        HttpSession session = new HttpSession();
+
+        //when
+        session.invalidate();
+
+        //then
+        assertThat(session.getSize()).isZero();
+    }
 }
