@@ -107,4 +107,8 @@ public class HttpRequest {
     public void setSession(final HttpSession httpSession) {
         this.httpSession = httpSession;
     }
+
+    public HttpSession getSession() {
+        return httpSession;
+    }
 }
