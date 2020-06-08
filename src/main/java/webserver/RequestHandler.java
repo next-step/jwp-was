@@ -1,11 +1,11 @@
 package webserver;
 
 import http.controller.Controller;
-import http.controller.RequestMapper;
 import http.requests.HttpRequest;
 import http.responses.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.dispatcher.RequestDispatcher;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +27,7 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             final HttpRequest httpRequest = new HttpRequest(in);
             final HttpResponse httpResponse = new HttpResponse(out);
-            final Controller controller = RequestMapper.dispatch(httpRequest);
+            final Controller controller = RequestDispatcher.dispatch(httpRequest);
             controller.service(httpRequest, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
