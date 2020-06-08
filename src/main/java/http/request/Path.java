@@ -11,19 +11,26 @@ public class Path {
     private final String path;
     private final QueryString queryString = QueryString.newInstance();
 
-    public Path(final String pathStr) {
-        validate(pathStr);
-
-        String[] tokens = pathStr.split(PATH_AND_QUERY_STRING_DELIMITER);
-
-        this.path = tokens[0];
-
-        if (tokens.length > 1) {
-            queryString.update(tokens[1]);
-        }
+    private Path(final String path, final String query) {
+        this.path = path;
+        this.queryString.update(query);
     }
 
-    private void validate(String pathStr) {
+    public static Path parse(final String path) {
+        validate(path);
+        String[] tokens = path.split(PATH_AND_QUERY_STRING_DELIMITER);
+
+        String pathToken = tokens[0];
+        String queryToken = "";
+
+        if (tokens.length > 1) {
+            queryToken = tokens[1];
+        }
+
+        return new Path(pathToken, queryToken);
+    }
+
+    private static void validate(String pathStr) {
         if (StringUtil.isEmpty(pathStr)) {
             throw new IllegalArgumentException("Path string is null");
         }

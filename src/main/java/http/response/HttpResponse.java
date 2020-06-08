@@ -16,9 +16,9 @@ public class HttpResponse {
     private byte[] responseBody = new byte[0];
 
     private final Cookies cookies = Cookies.init();
-    private final ResponseHeader header = ResponseHeader.init();
+    private final ResponseHeader header = ResponseHeader.newInstance();
     private final Models models = Models.init();
-    private final Forward forward = Forward.init();
+    private final Forward forward = Forward.newInstance();
 
     private HttpResponse(final StatusCode statusCode) {
         this.statusCode = statusCode;

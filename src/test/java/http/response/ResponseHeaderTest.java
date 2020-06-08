@@ -13,13 +13,13 @@ class ResponseHeaderTest {
 
     @BeforeEach
     void initEnv() {
-        responseHeader = ResponseHeader.init();
+        responseHeader = ResponseHeader.newInstance();
     }
 
     @Test
     @DisplayName("초기화")
     void init() {
-        assertThatCode(ResponseHeader::init).doesNotThrowAnyException();
+        assertThatCode(ResponseHeader::newInstance).doesNotThrowAnyException();
     }
 
     @Test

@@ -9,7 +9,7 @@ public class Forward {
         this.forward = "";
     }
 
-    public static Forward init() {
+    public static Forward newInstance() {
         return new Forward();
     }
 

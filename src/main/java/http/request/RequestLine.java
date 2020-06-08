@@ -20,8 +20,8 @@ public class RequestLine {
 
         this.origin = requestLine;
         this.httpMethod = HttpMethod.of(tokens[0]);
-        this.path = new Path(tokens[1]);
-        this.protocol = new Protocol(tokens[2]);
+        this.path = Path.parse(tokens[1]);
+        this.protocol = Protocol.parse(tokens[2]);
     }
 
     public void addParameter(final String token) {

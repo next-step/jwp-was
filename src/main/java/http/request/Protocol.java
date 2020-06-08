@@ -8,7 +8,7 @@ public class Protocol {
     private final String protocol;
     private final String version;
 
-    public Protocol(final String protocol, final String version) {
+    private Protocol(final String protocol, final String version) {
         this.protocol = protocol;
         this.version = version;
     }

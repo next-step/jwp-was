@@ -14,7 +14,7 @@ public class ResponseHeader {
 
     private ResponseHeader() {}
 
-    public static ResponseHeader init() {
+    public static ResponseHeader newInstance() {
         return new ResponseHeader();
     }
 
