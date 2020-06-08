@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import utils.UserData;
 
 import java.io.*;
+import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +23,7 @@ public class CreateUserControllerTest {
     @BeforeEach
     void setUp() throws IOException {
         InputStream in = new FileInputStream(new File(testFilePath));
-        request = HttpRequest.parse(in);
+        request = HttpRequest.parse(in, new HashMap<>());
         response = new HttpResponse();
         user = new User("seul", "test", "Eeseul Park", "seul");
     }

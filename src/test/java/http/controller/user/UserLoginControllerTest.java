@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import utils.UserData;
 
 import java.io.*;
+import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +23,7 @@ public class UserLoginControllerTest {
     @BeforeEach
     void setUp() throws IOException {
         InputStream in = new FileInputStream(new File(testFilePath));
-        request = HttpRequest.parse(in);
+        request = HttpRequest.parse(in, new HashMap<>());
         response = new HttpResponse();
         user = new User("seul", "test", "Eeseul Park", "seul");
         UserData.save(user);
@@ -40,7 +41,8 @@ public class UserLoginControllerTest {
 
         assertThat(responseHeader.getHttpStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(responseHeader.getContentType()).isEqualTo("text/html");
-        assertThat(responseHeader.getCustomHeader().get("Set-Cookie")).isEqualTo("logined=true; Path=/");
+        assertThat(responseHeader.getCustomHeader().get("Set-Cookie")).contains("logined=true; Path=/");
+        assertThat(responseHeader.getCustomHeader().get("Set-Cookie")).contains("JSESSONID");
     }
 
     @Test
