@@ -1,7 +1,6 @@
 package model;
 
-import http.HttpMethod;
-import http.HttpRequest;
+import java.util.Map;
 
 public class User {
     private final String userId;
@@ -9,28 +8,20 @@ public class User {
     private final String name;
     private final String email;
 
-    public User(String userId, String password, String name, String email) {
+    public User(final String userId, final String password, final String name, final String email) {
         this.userId = userId;
         this.password = password;
         this.name = name;
         this.email = email;
     }
 
-    public static User init(final HttpRequest request) {
-        if (request.getMethod() == HttpMethod.GET) {
-            return new User(
-                    request.getParameter("userId"),
-                    request.getParameter("password"),
-                    request.getParameter("name"),
-                    request.getParameter("email")
-            );
-        }
+    public static User init(final Map<String, String> parameters) {
 
         return new User(
-                request.getBodyParameter("userId"),
-                request.getBodyParameter("password"),
-                request.getBodyParameter("name"),
-                request.getBodyParameter("email")
+                parameters.get("userId"),
+                parameters.get("password"),
+                parameters.get("name"),
+                parameters.get("email")
         );
     }
 

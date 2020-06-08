@@ -1,29 +1,25 @@
 package webserver.processor;
 
-import controller.Controller;
-import controller.LoginController;
-import controller.UserController;
-import controller.UserListController;
-import http.HttpRequest;
-import http.HttpResponse;
+import controller.*;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
+import view.HandlebarEngine;
+import view.View;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ControllerProcessor implements Processor {
-    private static final List<? extends Controller> CONTROLLERS = Arrays.asList(
-            new UserController(),
-            new LoginController(),
-            new UserListController()
-    );
+    private static final View HANDLEBAR_ENGINE = new HandlebarEngine();
 
-    private static final Map<String, ? extends Controller> PATH_AND_CONTROLLER =
-            CONTROLLERS.stream()
-                    .collect(Collectors.toMap(Controller::getPath, Function.identity()));
+    private final Map<String, Controller> PATH_AND_CONTROLLER;
+
+    public ControllerProcessor(List<Controller> controllers) {
+        PATH_AND_CONTROLLER = controllers.stream()
+                .collect(Collectors.toMap(Controller::getPath, Function.identity()));
+    }
 
     @Override
     public boolean isMatch(final HttpRequest httpRequest) {
@@ -31,15 +27,17 @@ public class ControllerProcessor implements Processor {
     }
 
     @Override
-    public HttpResponse process(final HttpRequest httpRequest) {
+    public void process(final HttpRequest httpRequest, final HttpResponse httpResponse) {
         Controller controller = PATH_AND_CONTROLLER.get(httpRequest.getPath());
 
-        HttpResponse process = null;
-        try {
-            process = controller.process(httpRequest);
-        } catch (IOException e) {
-            e.printStackTrace();
+        controller.process(httpRequest, httpResponse);
+
+        render(httpRequest, httpResponse);
+    }
+
+    private void render(final HttpRequest httpRequest, final HttpResponse httpResponse) {
+        if (httpResponse.isForward()) {
+            HANDLEBAR_ENGINE.render(httpRequest, httpResponse);
         }
-        return process;
     }
 }

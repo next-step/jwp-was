@@ -1,28 +1,27 @@
 package http;
 
-import http.responsetemplate.Ok;
-import http.responsetemplate.Redirect;
-import http.responsetemplate.ResponseTemplate;
-
-import java.io.DataOutputStream;
-
 public enum StatusCode {
-    OK(200, new Ok()),
-    REDIRECT(302, new Redirect());
+    OK(200, "OK"),
+    REDIRECT(302, "Found"),
+    NOT_FOUND(404, "Not Found");
 
     private final int statusCode;
-    private final ResponseTemplate templateClass;
+    private final String statusText;
 
-    StatusCode(final int statusCode, final ResponseTemplate templateClass) {
+    StatusCode(final int statusCode, final String statusText) {
         this.statusCode = statusCode;
-        this.templateClass = templateClass;
+        this.statusText = statusText;
     }
 
-    public void writeResponse(final HttpResponse httpResponse, final DataOutputStream dataOutputStream) {
-        templateClass.write(httpResponse, dataOutputStream);
+    public boolean isOK() {
+        return this == OK;
     }
 
     public int getCodeValue() {
         return statusCode;
+    }
+
+    public String getResponseLine() {
+        return "HTTP/1.1 " + statusCode + " " + statusText;
     }
 }

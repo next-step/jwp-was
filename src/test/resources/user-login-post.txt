@@ -1,0 +1,4 @@
+POST /user/login HTTP/1.1
+Content-Length: 25
+
+userId=test&password=1234
