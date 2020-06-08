@@ -1,14 +1,14 @@
 package controller;
 
 import db.DataBase;
+import exception.InvalidAccessException;
+import http.StatusCode;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import http.StatusCode;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import sun.plugin.dom.exception.InvalidAccessException;
 import testutils.FileLoader;
 
 import java.io.IOException;
