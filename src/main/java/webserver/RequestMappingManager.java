@@ -1,6 +1,10 @@
 package webserver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import controller.UserController;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
@@ -44,7 +48,7 @@ public class RequestMappingManager {
         HttpResponse httpResponse;
 
         byte[] body = new byte[0];
-        logger.debug("request url: {}", httpRequest.getPath());
+        logger.debug("request url: {} - cookie{}", httpRequest.getPath(), httpRequest.getHeader("Cookie"));
         switch (httpRequest.getPath()) {
             case "/user/create":
                 User user = convertMapToObject(httpRequest.getParameters(), User.class);
@@ -63,6 +67,26 @@ public class RequestMappingManager {
                     httpResponse.addHeader("Set-Cookie", "logined=true; Path=/");
                 } else {
                     httpResponse = new HttpResponse302("http://localhost:8080/user/login_failed.html", "1.1");
+                }
+                break;
+            case "/user/list":
+                logger.debug("cookie{}", httpRequest.getHeader("Cookie"));
+
+                try {
+                    TemplateLoader loader = new ClassPathTemplateLoader();
+                    loader.setPrefix("/templates");
+                    loader.setSuffix(".html");
+                    Handlebars handlebars = new Handlebars(loader);
+
+                    Template template = handlebars.compile("user/list");
+
+                    User user2 = new User("javajigi", "password", "자바지기", "javajigi@gmail.com");
+                    String profilePage = template.apply(user2);
+
+                    httpResponse = new HttpResponse200("1.1");
+                    body = profilePage.getBytes();
+                } catch (Exception ex) {
+                    httpResponse = new HttpResponse200("1.1");
                 }
                 break;
             default:

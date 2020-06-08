@@ -12,4 +12,5 @@ public class UserController {
     public static boolean login(User user) {
         return UserService.login(user.getUserId(), user.getPassword());
     }
+
 }
