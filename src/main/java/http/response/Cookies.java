@@ -10,6 +10,8 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
 public class Cookies {
+    private static final String REGEX_COOKIE_DELIMITER = "&";
+
     private List<Cookie> cookies = new ArrayList<>();
 
     public Cookies(List<Cookie> cookies) {
@@ -25,21 +27,21 @@ public class Cookies {
     }
 
     public static Cookies parseCookies(String value) {
-        if(!value.contains("&")){
+        if (!value.contains(REGEX_COOKIE_DELIMITER)) {
             return new Cookies(Arrays.asList(Cookie.parse(value)));
         }
 
-        String[] cookies = value.split("&");
+        String[] cookies = value.split(REGEX_COOKIE_DELIMITER);
         return Arrays.stream(cookies)
-                .map(c -> Cookie.parse(c))
+                .map(Cookie::parse)
                 .collect(collectingAndThen(toList(), Cookies::new));
     }
 
     @Override
     public String toString() {
         return cookies.stream()
-                .map(c -> c.toString())
-                .collect(Collectors.joining("&"));
+                .map(Cookie::toString)
+                .collect(Collectors.joining(REGEX_COOKIE_DELIMITER));
     }
 
     @Override

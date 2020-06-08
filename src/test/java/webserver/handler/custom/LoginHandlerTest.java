@@ -53,9 +53,12 @@ public class LoginHandlerTest {
         Response response = handler.work(request);
 
         //then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
-        assertThat(response.getContentType()).isEqualTo(ContentType.HTML);
-        assertThat(response.getHeaderByKey("Set-Cookie")).isEqualTo("logined=false; Path=; ");
+        assertThat(response.getStatus())
+                .isEqualTo(HttpStatus.FOUND);
+        assertThat(response.getContentType())
+                .isEqualTo(ContentType.HTML);
+        assertThat(response.getHeaderByKey("Set-Cookie"))
+                .isEqualTo("logined=false; Path=; ");
         assertThat(response.getBody())
                 .isEqualTo(FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html"));
     }
