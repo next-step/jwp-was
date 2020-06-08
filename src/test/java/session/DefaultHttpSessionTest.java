@@ -42,10 +42,24 @@ class DefaultHttpSessionTest {
     void setAndGetAttribute() {
         String key = "key";
         String value = "value";
-        DefaultHttpSession httpSession = DefaultHttpSession.of("session kek");
+        DefaultHttpSession httpSession = DefaultHttpSession.of("session key");
 
         assertThat(httpSession.getAttribute(key)).isNull();
         httpSession.setAttribute(key, value);
         assertThat(httpSession.getAttribute(key)).isEqualTo(value);
+    }
+
+    @Test
+    @DisplayName("attribute 삭제")
+    void removeAttribute() {
+        String key = "key";
+        String value = "value";
+        DefaultHttpSession httpSession = DefaultHttpSession.of("session key");
+
+        httpSession.setAttribute(key, value);
+        assertThat(httpSession.getAttribute(key)).isEqualTo(value);
+
+        httpSession.removeAttribute("key");
+        assertThat(httpSession.getAttribute(key)).isNull();
     }
 }
