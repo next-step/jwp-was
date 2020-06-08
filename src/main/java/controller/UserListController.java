@@ -18,7 +18,7 @@ public class UserListController extends AbstractController {
             return;
         }
 
-        httpResponse.forward("user/profile");
+        httpResponse.setForward("user/profile");
         httpResponse.addModel("users", DataBase.findAll());
     }
 }

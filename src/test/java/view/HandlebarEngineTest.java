@@ -23,7 +23,7 @@ class HandlebarEngineTest {
     void drawFail() throws IOException {
         HttpRequest httpRequest = HttpRequestGenerator.init("GET /user/login HTTP/1.1");
         HttpResponse httpResponse = HttpResponse.init();
-        httpResponse.forward("do not exist");
+        httpResponse.setForward("do not exist");
 
         HANDLEBAR_ENGINE.render(httpRequest, httpResponse);
 
@@ -35,7 +35,7 @@ class HandlebarEngineTest {
     void draw() throws IOException {
         HttpRequest httpRequest = HttpRequestGenerator.init("GET /user/login HTTP/1.1");
         HttpResponse httpResponse = HttpResponse.init();
-        httpResponse.forward("/user/list");
+        httpResponse.setForward("/user/list");
 
         HANDLEBAR_ENGINE.render(httpRequest, httpResponse);
 
@@ -49,7 +49,7 @@ class HandlebarEngineTest {
     void drawIndex() throws IOException {
         HttpRequest httpRequest = HttpRequestGenerator.init("GET /user/login HTTP/1.1");
         HttpResponse httpResponse = HttpResponse.init();
-        httpResponse.forward("/index");
+        httpResponse.setForward("/index");
 
         HANDLEBAR_ENGINE.render(httpRequest, httpResponse);
 

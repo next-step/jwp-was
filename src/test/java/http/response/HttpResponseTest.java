@@ -46,7 +46,7 @@ class HttpResponseTest {
     void forward() {
         HttpResponse httpResponse = HttpResponse.init();
 
-        httpResponse.forward("test");
+        httpResponse.setForward("test");
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.OK);
         assertThat(httpResponse.getForward()).isEqualTo("test");

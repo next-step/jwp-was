@@ -119,7 +119,7 @@ public class HttpResponse {
         this.contentType = contentType;
     }
 
-    public void forward(final String path) {
+    public void setForward(final String path) {
         forward.setForward(path);
     }
 
