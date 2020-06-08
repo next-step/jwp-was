@@ -37,9 +37,8 @@ public abstract class AbstractHandler implements Handler {
     }
 
     @Override
-    public void writeResponse(OutputStream out, HttpResponse httpResponse) {
+    public void writeResponse(DataOutputStream dos, HttpResponse httpResponse) {
         try {
-            DataOutputStream dos = new DataOutputStream(out);
             dos.writeBytes(httpResponse.getStatusLine() + NEW_LINE_STRING);
 
             if (httpResponse.hasHttpHeaders()) {

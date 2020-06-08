@@ -3,15 +3,13 @@ package webserver;
 import com.google.common.collect.Maps;
 import http.HttpHeader;
 import http.HttpMethod;
-import http.handler.Handler;
 import http.exception.MethodNotAllowedException;
+import http.handler.Handler;
 import http.request.HttpRequest;
 import http.request.mapper.HandlerMapper;
-import http.request.requestline.Protocol;
 import http.request.requestline.RequestLine;
 import http.response.HttpResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import utils.StringUtils;
 
 import java.io.*;
@@ -19,16 +17,12 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import static http.HttpHeader.CONTENT_LENGTH_NAME;
 
+@Slf4j
 public class RequestHandler implements Runnable {
-    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
-
     private Socket connection;
-    private HttpRequest httpRequest;
-    private HttpResponse httpResponse;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -51,23 +45,15 @@ public class RequestHandler implements Runnable {
             RequestLine requestLine = RequestLine.of(request);
             log.debug("path: {}", requestLine.getPath());
 
-            Map<String, String> httpHeaders = getHttpHeaders(br);
-            HttpRequest httpRequest = getHttpRequest(br, requestLine, httpHeaders);
+            HttpRequest httpRequest = getHttpRequest(br, requestLine, getHttpHeaders(br));
 
             Handler handler = HandlerMapper.getHandler(requestLine.getPath());
             HttpResponse httpResponse = handler.getResponse(httpRequest);
-            handler.writeResponse(out, httpResponse);
-/*
-            //byte[] body = FileIoUtils.loadFileFromClasspath(HANDLE_BAR_PREFIX + this.requestLine.getPath());
-            byte[] responseBody = "Hello World".getBytes();
-            response200Header(dos, responseBody.length);
-            responseBody(dos, responseBody);
-*/
+            handler.writeResponse(dos, httpResponse);
         }
         catch (IOException | URISyntaxException e) {
             log.error(e.getMessage());
         }
-
     }
 
     private Map<String, String> getHttpHeaders(BufferedReader br) throws IOException {
@@ -105,25 +91,5 @@ public class RequestHandler implements Runnable {
         String httpBody = new String(buffer, 0, buffer.length);
         log.debug("httpBody: {}", httpBody);
         return httpBody;
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
     }
 }
