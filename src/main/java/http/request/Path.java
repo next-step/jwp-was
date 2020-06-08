@@ -9,7 +9,7 @@ public class Path {
     private static final char DOT = '.';
 
     private final String path;
-    private final QueryString queryString = QueryString.init();
+    private final QueryString queryString = QueryString.newInstance();
 
     public Path(final String pathStr) {
         validate(pathStr);

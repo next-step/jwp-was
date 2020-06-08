@@ -15,11 +15,11 @@ public class QueryString {
 
     private QueryString() {}
 
-    public static QueryString init() {
+    public static QueryString newInstance() {
         return new QueryString();
     }
 
-    public static QueryString init(final String query) {
+    public static QueryString parse(final String query) {
         QueryString queryStr = new QueryString();
         queryStr.update(query);
 
