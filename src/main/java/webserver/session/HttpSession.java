@@ -5,9 +5,13 @@ import java.util.Map;
 import java.util.UUID;
 
 public class HttpSession {
-    private Map<String, String> session = new HashMap<>();
+    private Map<String, Object> session = new HashMap<>();
+
+    public HttpSession() {
+        session.put("uuid", UUID.randomUUID());
+    }
 
     public UUID getId() {
-        return null;
+        return (UUID) session.get("uuid");
     }
 }
