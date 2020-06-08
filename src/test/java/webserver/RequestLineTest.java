@@ -10,6 +10,7 @@ public class RequestLineTest {
     @DisplayName("[GET] HTTP 요청의 requestLine 파싱")
     @Test
     void parse_get() {
+
         // given
         String requestLineText = "GET /docs/index.html HTTP/1.1";
 
@@ -19,5 +20,21 @@ public class RequestLineTest {
         // then
         assertThat(requestLine)
                 .isEqualTo(new RequestLine("GET", "/docs/index.html", new Protocol("HTTP", "1.1")));
+    }
+
+    @DisplayName("[POST] HTTP 요청의 requestLine 파싱")
+    @Test
+    void parse_post() {
+
+        // given
+        String requestLineText = "POST /docs/index.html HTTP/1.1";
+
+        // when
+        RequestLine requestLine = new RequestLine(requestLineText);
+
+        // then
+        assertThat(requestLine)
+                .isEqualTo(new RequestLine("POST", "/docs/index.html", new Protocol("HTTP", "1.1")));
+
     }
 }
