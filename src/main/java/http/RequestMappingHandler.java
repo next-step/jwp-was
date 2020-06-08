@@ -77,7 +77,7 @@ public class RequestMappingHandler {
         String path = requestLine.getPath();
 
         if (path.equals("/index.html")) {
-            byte[] body = getUserForm("./templates/index.html");
+            byte[] body = getForm("./templates/index.html");
             response.response200Header(body.length);
             response.responseBody(body);
         }
@@ -87,6 +87,12 @@ public class RequestMappingHandler {
                 middleware();
             }
             handlerByUserController(requestLine);
+        }
+
+        if (path.matches("/css/.*")) {
+            byte[] body = getForm("./static/" + path);
+            response.responseHeaderByCss();
+            response.responseBody(body);
         }
     }
 
@@ -123,7 +129,7 @@ public class RequestMappingHandler {
     }
 
     private void handlerGetMethod(ResponseObject responseObject) {
-        byte[] body = getUserForm(responseObject.getRequestPath());
+        byte[] body = getForm(responseObject.getRequestPath());
         response.response200Header(body.length);
         response.responseBody(body);
     }
@@ -143,7 +149,7 @@ public class RequestMappingHandler {
         }
     }
 
-    private byte[] getUserForm(String filePath) {
+    private byte[] getForm(String filePath) {
         try {
             return viewByUserForm(filePath);
         } catch (IOException | URISyntaxException | NullPointerException e) {

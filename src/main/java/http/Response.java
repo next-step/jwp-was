@@ -16,6 +16,18 @@ public class Response {
         this.dataOutputStream = dataOutputStream;
     }
 
+    public void responseHeaderByCss() {
+        try {
+            dataOutputStream.writeBytes("HTTP/1.1 200 OK \r\n");
+            dataOutputStream.writeBytes("Host: localhost:8080 \r\n");
+            dataOutputStream.writeBytes("Accept: text/css,*/*;q=0.1 \r\n");
+            dataOutputStream.writeBytes("Connection: keep-alive \r\n");
+            dataOutputStream.writeBytes("\r\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void response302Header(String location) {
         try {
             dataOutputStream.writeBytes("HTTP/1.1 302 Found \r\n");
