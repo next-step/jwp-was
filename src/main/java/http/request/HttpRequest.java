@@ -1,6 +1,7 @@
 package http.request;
 
 import lombok.Getter;
+import utils.ConvertUtils;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -8,7 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
-import java.util.Map;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 @Getter
 public class HttpRequest {
@@ -28,16 +30,16 @@ public class HttpRequest {
         this(requestLine, requestHeader, null);
     }
 
-    public static HttpRequest of(InputStream inputStream) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, CHAR_SET));
+    public static HttpRequest parse(InputStream inputStream) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, Charset.forName(StandardCharsets.UTF_8.name())));
 
-        RequestLine requestLine = RequestLine.of(br.readLine());
-        RequestHeader requestHeader = RequestHeader.of(br);
+        RequestLine requestLine = RequestLine.parse(br.readLine());
+        RequestHeader requestHeader = RequestHeader.parse(br);
 
         if (requestLine.getMethod() == HttpMethod.POST) {
             String body = IOUtils.readData(br, requestHeader.getContentLength());
 
-            RequestBody requestBody = RequestBody.of(URLDecoder.decode(body, CHAR_SET));
+            RequestBody requestBody = RequestBody.parse(URLDecoder.decode(body, CHAR_SET));
             return new HttpRequest(requestLine, requestHeader, requestBody);
         }
 
@@ -56,8 +58,8 @@ public class HttpRequest {
         return this.requestHeader.getContentType();
     }
 
-    public Map getBody() {
-        return this.requestBody.getBodyMap();
+    public <T> T getBody(Class<T> valueType) {
+        return ConvertUtils.convertValue(this.requestBody.getBodyMap(), valueType);
     }
 
     public HttpMethod getMethod() {
@@ -66,5 +68,9 @@ public class HttpRequest {
 
     public boolean loggedIn() {
         return this.requestHeader.loggedIn();
+    }
+
+    public String getParameter(String key) {
+        return this.requestLine.getParameter(key);
     }
 }

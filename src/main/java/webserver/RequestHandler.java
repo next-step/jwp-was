@@ -1,18 +1,19 @@
 package webserver;
 
 import http.controller.Controller;
+import http.controller.Controllers;
+import http.controller.user.CreateUserController;
+import http.controller.user.LoginController;
+import http.controller.user.UserListController;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.URISyntaxException;
-import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -28,41 +29,27 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            HttpRequest httpRequest = HttpRequest.of(in);
-            HttpResponse response = Controller.requestMapping(httpRequest);
+            HttpRequest request = HttpRequest.parse(in);
+            HttpResponse response = new HttpResponse();
 
-            DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, response);
-            responseBody(dos, response);
-        } catch (IOException | URISyntaxException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, HttpResponse response) {
-        try {
-            dos.writeBytes("HTTP/1.1 " + response.getStatusCode() + " " + response.getStatusName() + " \r\n");
-            dos.writeBytes("Content-Type: " + response.getContentType() + "\r\n");
-            dos.writeBytes("Content-Length: " + response.getContentLength() + "\r\n");
-
-            for (Map.Entry<String, String> headerEntry : response.getCustomHeader().entrySet()) {
-                String key = headerEntry.getKey();
-                String value = headerEntry.getValue();
-                dos.writeBytes(key + ": " + value + "\r\n");
+            Controllers controllers = addControllers();
+            if (controllers.containsKey(request.getPath())) {
+                Controller controller = controllers.get(request.getPath());
+                controller.service(request, response);
             }
 
-            dos.writeBytes("\r\n");
+            ResponseHandler responseHandler = new ResponseHandler(out, response);
+            responseHandler.doResponse(request);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void responseBody(DataOutputStream dos, HttpResponse response) {
-        try {
-            dos.write(response.getBody(), 0, response.getContentLength());
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+    private Controllers addControllers() {
+        Controllers controllers = new Controllers();
+        controllers.addController(new CreateUserController());
+        controllers.addController(new LoginController());
+        controllers.addController(new UserListController());
+        return controllers;
     }
 }

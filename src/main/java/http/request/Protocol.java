@@ -13,7 +13,7 @@ public class Protocol {
         this.version = version;
     }
 
-    public static Protocol of(String value) {
+    public static Protocol parse(String value) {
         String[] protocolValues = value.split(PROTOCOL_REGEX);
         return new Protocol(protocolValues[0], protocolValues[1]);
     }

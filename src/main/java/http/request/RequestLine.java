@@ -26,19 +26,20 @@ public class RequestLine {
     }
 
     private RequestLine(HttpMethod httpMethod, String path, Protocol protocol) throws UnsupportedEncodingException {
-        this(httpMethod, path, protocol, QueryString.of(""));
+        this(httpMethod, path, protocol, QueryString.parse(""));
     }
 
-    public static RequestLine of(String requestLine) throws UnsupportedEncodingException {
+    public static RequestLine parse(String requestLine) throws UnsupportedEncodingException {
         String[] values = requestLine.split(" ");
         String[] pathValues = values[1].split(PATH_REGEX);
-        Protocol protocol = Protocol.of(values[2]);
+        Protocol protocol = Protocol.parse(values[2]);
+        HttpMethod method = HttpMethod.valueOf(values[0]);
 
-        if (pathValues.length > 1) {
-            return new RequestLine(HttpMethod.valueOf(values[0]), pathValues[0], protocol, QueryString.of(pathValues[1]));
+        if (method == HttpMethod.GET && pathValues.length > 1) {
+            return new RequestLine(method, pathValues[0], protocol, QueryString.parse(pathValues[1]));
         }
 
-        return new RequestLine(HttpMethod.valueOf(values[0]), pathValues[0], protocol);
+        return new RequestLine(method, pathValues[0], protocol);
     }
 
     public String getFilePath() {
@@ -51,5 +52,9 @@ public class RequestLine {
             return TEMPLATES_PATH + this.path;
         }
         return STATIC_PATH + this.path;
+    }
+
+    public String getParameter(String key) {
+        return this.queryString.getValue(key);
     }
 }

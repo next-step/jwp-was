@@ -1,18 +1,18 @@
-package http;
+package http.request;
 
-import http.request.RequestCookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class RequestCookieTest {
     private RequestCookie cookie;
+
     @BeforeEach
     void setUp() {
-        cookie = RequestCookie.of("logined=true; Path=/");
+        cookie = RequestCookie.parse("logined=true; Path=/");
     }
 
 
