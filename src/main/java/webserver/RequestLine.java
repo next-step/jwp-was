@@ -31,7 +31,7 @@ public class RequestLine {
 
     public RequestLine(String requestLine) {
         String[] split = requestLine.split(BLANK);
-        this.method = HttpMethod.valueOf(split[0]);
+        this.method = HttpMethod.resolve(split[0]);
         this.path = split[1];
 
         String protocolNameAndVersion = split[2];
