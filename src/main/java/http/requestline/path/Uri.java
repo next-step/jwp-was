@@ -23,7 +23,7 @@ public class Uri {
 
     public String getFilePath() {
         return findFileExtension()
-                .map(extension -> extension.getFilePath(value))
+                .map(fileExtension -> fileExtension.getFilePath(value))
                 .orElse(value);
     }
 
@@ -36,5 +36,11 @@ public class Uri {
     private String extractFileExtension() {
         String[] tokens = value.split(FILE_EXTENSION_DELIMITER);
         return tokens[tokens.length - 1];
+    }
+
+    public String getMimeType() {
+        return findFileExtension()
+                .map(FileExtension::getMimeType)
+                .get();
     }
 }

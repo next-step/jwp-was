@@ -1,6 +1,7 @@
 package http;
 
 import http.exception.HttpHeaderRegistrationException;
+import http.method.HttpMethod;
 import http.requestline.RequestLine;
 import http.requestline.RequestLineParser;
 import http.requestline.path.Path;
@@ -44,7 +45,15 @@ public class HttpRequest {
         return httpHeaders.get(headerKey);
     }
 
+    public HttpMethod getHttpMethod() {
+        return requestLine.getMethod();
+    }
+
     public Path getPath() {
         return requestLine.getPath();
+    }
+
+    public String getMimeType() {
+        return requestLine.getMimeType();
     }
 }

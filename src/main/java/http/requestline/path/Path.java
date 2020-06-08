@@ -41,11 +41,19 @@ public class Path {
         return uri.getValue();
     }
 
+    public String getQueryStringValue(String key) {
+        return queryString.get(key);
+    }
+
     private String extractQuery(String[] tokens) {
         return existsQueryString(tokens) ? tokens[1] : "";
     }
 
     private boolean existsQueryString(String[] tokens) {
         return tokens.length == QUERY_STRING_EXISTENCE_SIZE;
+    }
+
+    public String getMimeType() {
+        return uri.getMimeType();
     }
 }

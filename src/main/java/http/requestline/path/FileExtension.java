@@ -15,13 +15,15 @@ import static http.requestline.path.FileExtension.FilePrefix.STATIC_FILE_PREFIX;
 @RequiredArgsConstructor
 public enum FileExtension {
 
-    HTML("html", DEFAULT_FILE_PREFIX),
-    CSS("css", STATIC_FILE_PREFIX),
-    JS("js", STATIC_FILE_PREFIX),
-    ICO("ico", DEFAULT_FILE_PREFIX);
+    HTML("html", DEFAULT_FILE_PREFIX, "text/html"),
+    CSS("css", STATIC_FILE_PREFIX, "text/css"),
+    JS("js", STATIC_FILE_PREFIX, "application/js"),
+    ICO("ico", DEFAULT_FILE_PREFIX, "image/x-icon"),
+    WOFF("woff", STATIC_FILE_PREFIX, "application/x-font-woff");
 
     private final String extension;
     private final String filePrefix;
+    private final String mimeType;
 
     public static boolean isFileExtension(String text) {
         return Arrays.stream(values())

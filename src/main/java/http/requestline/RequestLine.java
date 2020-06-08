@@ -38,4 +38,8 @@ public class RequestLine {
     public String getProtocolVersion() {
         return protocolSpec.getVersion();
     }
+
+    public String getMimeType() {
+        return path.getMimeType();
+    }
 }

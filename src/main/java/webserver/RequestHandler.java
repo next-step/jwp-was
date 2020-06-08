@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class RequestHandler implements Runnable {
 
+    private static final String NEW_LINE = "\r\n";
     private static final ControllerMapper CONTROLLER_MAPPER = new ControllerMapper();
 
     private Socket connection;
@@ -34,15 +35,14 @@ public class RequestHandler implements Runnable {
         log.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+            DataOutputStream dos = new DataOutputStream(out);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
             HttpRequest httpRequest = readHttpRequest(bufferedReader);
-            DataOutputStream dos = new DataOutputStream(out);
-
             if (httpRequest.hasPathFileExtension()) {
                 byte[] body = FileIoUtils.loadFileFromClasspath(httpRequest.getFilePath());
 
-                response200Header(dos, body.length);
+                response200Header(dos, httpRequest.getMimeType(), body.length);
                 responseBody(dos, body);
                 return;
             }
@@ -70,15 +70,15 @@ public class RequestHandler implements Runnable {
     }
 
     private void response200Header(DataOutputStream dos) {
-        response200Header(dos, 0);
+        response200Header(dos, "text/html", 0);
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dos, String mimeType, int lengthOfBodyContent) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
+            dos.writeBytes("HTTP/1.1 200 OK " + NEW_LINE);
+            dos.writeBytes(String.format("Content-Type: %s", mimeType) + NEW_LINE);
+            dos.writeBytes(String.format("Content-Length: %s", lengthOfBodyContent) + NEW_LINE);
+            dos.writeBytes(NEW_LINE);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
