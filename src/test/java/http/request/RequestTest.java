@@ -1,15 +1,12 @@
 package http.request;
 
-import http.response.ContentType;
 import org.apache.logging.log4j.util.Strings;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.session.HttpSession;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,7 +16,7 @@ public class RequestTest {
     void getSession() {
         //given
         RequestLine requestLine = new RequestLine("GET /index.html HTTP/1.1");
-        Headers headers = new Headers(createHeaders());
+        Headers headers = new Headers(createHeadersWithSession(new HttpSession()));
         RequestBody body = new RequestBody(Strings.EMPTY);
         Request request = new Request(requestLine, headers, body);
 
@@ -28,13 +25,13 @@ public class RequestTest {
 
         //then
         assertThat(session.getId())
-                .isEqualTo(UUID.fromString(headers.getHeader("JSESSION")));
+                .isEqualTo(headers.getHeader("JSESSIONID"));
     }
 
-    private Map<String, String> createHeaders(){
+    private Map<String, String> createHeadersWithSession(HttpSession session) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "text/html");
-        headers.put("JSESSIONID", UUID.randomUUID().toString());
+        headers.put("JSESSIONID", session.getId());
 
         return headers;
     }

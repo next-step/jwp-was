@@ -9,10 +9,11 @@ public class HttpSession {
 
     public HttpSession() {
         session.put("uuid", UUID.randomUUID());
+        Sessions.addSession(this);
     }
 
-    public UUID getId() {
-        return (UUID) session.get("uuid");
+    public String getId() {
+        return session.get("uuid").toString();
     }
 
     public void setAttribute(String name, Object value) {

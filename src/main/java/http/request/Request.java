@@ -1,8 +1,11 @@
 package http.request;
 
 import webserver.session.HttpSession;
+import webserver.session.Sessions;
 
 public class Request {
+    private static final String JSESSIONID = "JSESSIONID";
+
     private final RequestLine requestLine;
     private final Headers headers;
     private final RequestBody requestBody;
@@ -34,6 +37,7 @@ public class Request {
     }
 
     public HttpSession getSession() {
-        return null;
+        String sessionId = this.headers.getHeader(JSESSIONID);
+        return Sessions.findById(sessionId);
     }
 }
