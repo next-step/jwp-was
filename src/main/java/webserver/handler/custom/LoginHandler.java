@@ -6,6 +6,7 @@ import http.request.QueryStrings;
 import http.request.Request;
 import http.response.*;
 import model.User;
+import org.apache.logging.log4j.util.Strings;
 import utils.FileIoUtils;
 import webserver.handler.Handler;
 
@@ -39,15 +40,19 @@ public class LoginHandler implements Handler {
 
         if (isAuthenticatedUser(queryStrings, user)) {
             ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
-            request.addCookie(new Cookie("logined=true", "/", false));
             headers.put(HEADER_LOCATION, "/index.html");
-            new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), body);
+            Response response = new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), body);
+            response.addCookie(new Cookie("logined=true", "/", false));
+
+            return response;
         }
 
-        headers.put(HEADER_SET_COOKIE, "logined=false");
         headers.put(HEADER_LOCATION, "/user/login_failed.html");
         ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html"));
-        return new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), body);
+        Response response = new Response(HttpStatus.FOUND, ContentType.HTML, new Headers(headers), body);
+        response.addCookie(new Cookie("logined=false", Strings.EMPTY, false));
+
+        return response;
     }
 
     @Override

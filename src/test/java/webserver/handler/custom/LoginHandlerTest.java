@@ -1,11 +1,7 @@
 package webserver.handler.custom;
 
 import db.DataBase;
-import http.request.Request;
-import http.request.RequestBody;
-import http.request.Headers;
-import http.request.QueryStrings;
-import http.request.RequestLine;
+import http.request.*;
 import http.response.ContentType;
 import http.response.HttpStatus;
 import http.response.Response;
@@ -59,7 +55,7 @@ public class LoginHandlerTest {
         //then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(response.getContentType()).isEqualTo(ContentType.HTML);
-        assertThat(response.getHeaderByKey("Set-Cookie")).isEqualTo("logined=false");
+        assertThat(response.getHeaderByKey("Set-Cookie")).isEqualTo("logined=false; Path=; ");
         assertThat(response.getBody())
                 .isEqualTo(FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html"));
     }
