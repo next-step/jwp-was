@@ -2,7 +2,6 @@ package webserver;
 
 import http.controller.Controller;
 import http.controller.RequestMapper;
-import http.parsers.RequestContextParser;
 import http.requests.HttpRequest;
 import http.responses.HttpResponse;
 import org.slf4j.Logger;
@@ -23,11 +22,10 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
+        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            final HttpRequest httpRequest = RequestContextParser.parse(in);
+            final HttpRequest httpRequest = new HttpRequest(in);
             final HttpResponse httpResponse = new HttpResponse(out);
             final Controller controller = RequestMapper.dispatch(httpRequest);
             controller.service(httpRequest, httpResponse);

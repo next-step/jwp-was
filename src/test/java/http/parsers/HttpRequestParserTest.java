@@ -26,10 +26,10 @@ class HttpRequestParserTest {
     @Test
     void test_request_including_body() throws Exception {
         try (final InputStream input = new ByteArrayInputStream(testRequest.getBytes())) {
-            final HttpRequest ctx = RequestContextParser.parse(input);
-            assertThat(ctx.getMethod()).isEqualTo(HttpMethod.POST);
-            assertThat(ctx.getPath()).isEqualTo("/user/create");
-            assertThat(ctx.getBody()).isEqualTo("userId=hyeyoom&password=1234abcd&name=Chiho+Won&email=neoul_chw%40icloud.com");
+            final HttpRequest request = new HttpRequest(input);
+            assertThat(request.getMethod()).isEqualTo(HttpMethod.POST);
+            assertThat(request.getPath()).isEqualTo("/user/create");
+            assertThat(request.getBody()).isEqualTo("userId=hyeyoom&password=1234abcd&name=Chiho+Won&email=neoul_chw%40icloud.com");
         }
     }
 }
