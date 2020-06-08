@@ -24,13 +24,15 @@ import java.util.Map;
 public class RequestMappingManager {
     private static final Logger logger = LoggerFactory.getLogger(RequestMappingManager.class);
 
-    private final static String PHYSICAL_DEFAULT_PATH = "./templates";
+    private final static String PHYSICAL_DEFAULT_TEMPLATES_PATH = "./templates";
+    private final static String PHYSICAL_DEFAULT_STATIC_PATH = "./static";
 
     private final Map<String, String> requestMap = new HashMap<>();
 
     public static byte[] fileLoadFromPath(String uri) {
         try {
-            String path = PHYSICAL_DEFAULT_PATH.concat(uri);
+            String fileExtension = getExtension(uri);
+            String path = getPhysicalPath(fileExtension).concat(uri);
             return FileIoUtils.loadFileFromClasspath(path);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
@@ -44,11 +46,34 @@ public class RequestMappingManager {
         return object;
     }
 
+    private static String getPhysicalPath(final String extension) {
+        switch (extension) {
+            case "js":
+            case "css":
+            case "ttf":
+            case "woff":
+            case "png":
+            case "jpeg":
+                return PHYSICAL_DEFAULT_STATIC_PATH;
+            case "html":
+            case "ico":
+                return PHYSICAL_DEFAULT_TEMPLATES_PATH;
+            default:
+                return PHYSICAL_DEFAULT_TEMPLATES_PATH;
+        }
+    }
+
+    private static String getExtension(final String filePath) {
+        if (filePath.contains("\\.")) return "";
+        String[] split = filePath.split("\\.");
+        return split[split.length - 1];
+    }
+
     public static void execute(HttpRequest httpRequest, DataOutputStream dos) {
         HttpResponse httpResponse;
 
         byte[] body = new byte[0];
-        logger.debug("request url: {} - cookie{}", httpRequest.getPath(), httpRequest.getHeader("Cookie"));
+        logger.debug("request url: {} - cookie{}", httpRequest.getPath(), httpRequest.getHeaders());
         switch (httpRequest.getPath()) {
             case "/user/create":
                 User user = convertMapToObject(httpRequest.getParameters(), User.class);
@@ -58,7 +83,6 @@ public class RequestMappingManager {
                 httpResponse = new HttpResponse302("http://localhost:8080/index.html", "1.1");
                 break;
             case "/user/login":
-
                 User user1 = convertMapToObject(httpRequest.getParameters(), User.class);
                 boolean isLogined = UserController.login(user1);
 
@@ -70,23 +94,27 @@ public class RequestMappingManager {
                 }
                 break;
             case "/user/list":
-                logger.debug("cookie{}", httpRequest.getHeader("Cookie"));
+                String cookie = httpRequest.getHeader("Cookie");
+                boolean logined = false;
+                if (cookie.contains("logined=true")) {
+                    try {
+                        TemplateLoader loader = new ClassPathTemplateLoader();
+                        loader.setPrefix("/templates");
+                        loader.setSuffix(".html");
+                        Handlebars handlebars = new Handlebars(loader);
 
-                try {
-                    TemplateLoader loader = new ClassPathTemplateLoader();
-                    loader.setPrefix("/templates");
-                    loader.setSuffix(".html");
-                    Handlebars handlebars = new Handlebars(loader);
+                        Template template = handlebars.compile("user/list");
 
-                    Template template = handlebars.compile("user/list");
+                        User user2 = new User("javajigi", "password", "자바지기", "javajigi@gmail.com");
+                        String profilePage = template.apply(user2);
 
-                    User user2 = new User("javajigi", "password", "자바지기", "javajigi@gmail.com");
-                    String profilePage = template.apply(user2);
-
-                    httpResponse = new HttpResponse200("1.1");
-                    body = profilePage.getBytes();
-                } catch (Exception ex) {
-                    httpResponse = new HttpResponse200("1.1");
+                        httpResponse = new HttpResponse200("1.1");
+                        body = profilePage.getBytes();
+                    } catch (Exception ex) {
+                        httpResponse = new HttpResponse302("http://localhost:8080/index.html", "1.1");
+                    }
+                } else {
+                    httpResponse = new HttpResponse302("http://localhost:8080/index.html", "1.1");
                 }
                 break;
             default:

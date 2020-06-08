@@ -51,4 +51,8 @@ public class HttpRequest {
         }
         return parameters;
     }
+
+    public Map<String, String> getHeaders() {
+        return requestHeaders;
+    }
 }
