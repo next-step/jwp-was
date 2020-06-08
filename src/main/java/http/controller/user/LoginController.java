@@ -1,5 +1,6 @@
 package http.controller.user;
 
+import http.HttpSession;
 import http.controller.AbstractController;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
@@ -11,6 +12,7 @@ import java.util.Objects;
 
 public class LoginController extends AbstractController {
     private static final String REQUEST_MAPPING_VALUE = "/user/login";
+    private static final String SESSION_ID = "JSESSONID";
 
     @Override
     public void doGet(HttpRequest request, HttpResponse response) {
@@ -24,12 +26,17 @@ public class LoginController extends AbstractController {
 
         if (Objects.isNull(user) || !user.login(userRequestView.getPassword())) {
             response.redirect("/user/login_failed.html");
-            response.setCookie("logined=false; Path=/");
+            response.addCookie("logined", "false");
+            response.addCookie("Path", "/");
             return;
         }
 
+        HttpSession session = request.getSession();
+
         response.redirect("/index.html");
-        response.setCookie("logined=true; Path=/");
+        response.addCookie(SESSION_ID, session.getId());
+        response.addCookie("logined", "true");
+        response.addCookie("Path", "/");
     }
 
     @Override
@@ -42,3 +49,4 @@ public class LoginController extends AbstractController {
         return REQUEST_MAPPING_VALUE;
     }
 }
+

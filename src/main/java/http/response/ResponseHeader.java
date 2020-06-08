@@ -41,7 +41,12 @@ public class ResponseHeader {
         return this.httpStatus.getName();
     }
 
-    public void setCookie(String cookie) {
+    public void setCookie(String key, String value) {
+        String cookie = key.concat("=").concat(value);
+        if (customHeader.containsKey(SET_COOKIE_HEADER)) {
+            cookie = customHeader.get(SET_COOKIE_HEADER).concat("; ").concat(cookie);
+        }
+
         customHeader.put(SET_COOKIE_HEADER, cookie);
     }
 
