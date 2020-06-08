@@ -12,7 +12,7 @@ class HeadersTest {
     void test1() {
         String[] input = {"Host: localhost:8080", "Connection: keep-alive", "Origin: http://localhost:8080"};
 
-        Headers header = new Headers(input);
+        Headers header = new Headers();
 
         assertThat(header).isNotNull();
     }
@@ -21,7 +21,7 @@ class HeadersTest {
     @DisplayName("Header 객체에서 헤더 이름으로 값을 가져올 수 있다")
     void test2() {
         final String[] input = {"Host: localhost:8080", "Connection: keep-alive", "Origin: http://localhost:8080"};
-        final Headers header = new Headers(input);
+        final Headers header = new Headers();
 
         final String HostValue = header.getValue("Host");
         final String ConnectionValue = header.getValue("Connection");

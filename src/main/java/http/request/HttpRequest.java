@@ -1,17 +1,17 @@
 package http.request;
 
 import http.Cookies;
-import http.Headers;
+import http.HeaderFieldName;
 import http.HttpMethod;
 
 public class HttpRequest {
     private final RequestLine requestLine;
-    private final Headers headers;
+    private final Header header;
     private final String body;
 
-    public HttpRequest(RequestLine requestLine, Headers headers, String body) {
+    public HttpRequest(RequestLine requestLine, Header header, String body) {
         this.requestLine = requestLine;
-        this.headers = headers;
+        this.header = header;
         this.body = body;
     }
 
@@ -28,7 +28,7 @@ public class HttpRequest {
     }
 
     public String getCookie(String cookieName) {
-        String cookieStr = headers.getValue("Cookie");
+        String cookieStr = header.getValue(HeaderFieldName.COOKIE);
         Cookies cookies = new Cookies(cookieStr);
         return cookies.getValue(cookieName);
     }

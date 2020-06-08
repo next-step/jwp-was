@@ -1,18 +1,18 @@
 package http.response;
 
 import http.Cookies;
-import http.Header;
-import http.Headers;
+import http.HeaderField;
+import http.HeaderFieldName;
 
 public class HttpResponse {
 
     private StatusCode statusCode;
-    private final Headers headers;
+    private final Header header;
     private final Cookies cookies;
     private byte[] responseBody;
 
     public HttpResponse() {
-        headers = new Headers();
+        header = new Header();
         cookies = new Cookies();
         responseBody = new byte[0];
     }
@@ -35,16 +35,16 @@ public class HttpResponse {
 
     public void response302(String locationUrl) {
         this.statusCode = StatusCode.FOUND;
-        Header locationHeader = new Header("Location", locationUrl);
-        headers.addHeader(locationHeader);
+        HeaderField locationHeader = new HeaderField(HeaderFieldName.LOCATION, locationUrl);
+        header.addHeader(locationHeader);
     }
 
-    public Headers getHeaders() {
-        return headers;
+    public Header getHeader() {
+        return header;
     }
 
     public String getHeader(String headerName) {
-        return headers.getValue(headerName);
+        return header.getValue(headerName);
     }
 
     public byte[] getBody() {
@@ -53,8 +53,8 @@ public class HttpResponse {
 
     public void response200HTML(byte[] htmlFile) {
         this.statusCode = StatusCode.OK;
-        headers.addHeader(new Header("Content-Type", "text/html;charset=utf-8"));
-        headers.addHeader(new Header("Content-Length", String.valueOf(htmlFile.length)));
+        header.addHeader(new HeaderField(HeaderFieldName.CONTENT_TYPE, "text/html;charset=utf-8"));
+        header.addHeader(new HeaderField(HeaderFieldName.CONTENT_LENGTH, String.valueOf(htmlFile.length)));
         this.responseBody = htmlFile;
     }
 
@@ -64,8 +64,8 @@ public class HttpResponse {
 
     public void response200CSS(byte[] cssFile) {
         this.statusCode = StatusCode.OK;
-        headers.addHeader(new Header("Content-Type", "text/css;charset=utf-8"));
-        headers.addHeader(new Header("Content-Length", String.valueOf(cssFile.length)));
+        header.addHeader(new HeaderField(HeaderFieldName.CONTENT_TYPE, "text/css;charset=utf-8"));
+        header.addHeader(new HeaderField(HeaderFieldName.CONTENT_LENGTH, String.valueOf(cssFile.length)));
         this.responseBody = cssFile;
     }
 

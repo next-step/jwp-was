@@ -1,4 +1,4 @@
-package http.parser;
+package http.request.parser;
 
 import http.HttpMethod;
 import http.ProtocolAndVersion;

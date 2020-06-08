@@ -31,7 +31,7 @@ public class ResponseWriter {
     }
 
     private static void writeHeader(DataOutputStream dos, HttpResponse httpResponse) throws IOException {
-        for (Iterator it = httpResponse.getHeaders().iterator(); it.hasNext(); ) {
+        for (Iterator it = httpResponse.getHeader().iterator(); it.hasNext(); ) {
             String headerName = (String) it.next();
             String headerValue = httpResponse.getHeader(headerName);
             dos.writeBytes(headerName + ": " + headerValue + "\r\n");
