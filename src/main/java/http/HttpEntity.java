@@ -1,19 +1,19 @@
 package http;
 
-public class HttpEntity {
-    private final HttpHeaders httpHeaders;
-    private final String body;
+import lombok.Getter;
+import utils.MapParameterUtil;
 
-    public HttpEntity() {
-        this(null, null);
-    }
+import java.util.Map;
+
+public class HttpEntity {
+    @Getter
+    private final HttpHeaders httpHeaders;
+
+    @Getter
+    private final String body;
 
     public HttpEntity(HttpHeaders httpHeaders) {
         this(httpHeaders, null);
-    }
-
-    public HttpEntity(String body) {
-        this(null, body);
     }
 
     public HttpEntity(HttpHeaders httpHeaders, String body) {

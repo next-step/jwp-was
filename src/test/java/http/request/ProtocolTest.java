@@ -1,7 +1,7 @@
 package http.request;
 
 import http.exception.BadRequestException;
-import http.exception.HttpException;
+import http.request.requestline.Protocol;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

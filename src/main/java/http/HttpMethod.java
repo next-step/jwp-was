@@ -1,7 +1,5 @@
 package http;
 
-import utils.StringUtils;
-
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -17,7 +15,7 @@ public enum HttpMethod {
 
     private static Map<String, HttpMethod> initHttpMethodMap() {
         return Arrays.stream(values())
-                .collect(toMap(HttpMethod::name, entry -> entry));
+            .collect(toMap(HttpMethod::name, entry -> entry));
     }
 
     public static HttpMethod resolve(String method) {

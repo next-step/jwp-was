@@ -1,9 +1,7 @@
-package http.request;
+package http.request.requestline;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
-import http.HttpStatus;
 import http.exception.BadRequestException;
-import http.exception.HttpException;
 import lombok.Getter;
 
 import java.util.*;
@@ -13,10 +11,19 @@ public class Protocol {
     static final String HTTP = "HTTP";
     static final Set<String> ALLOWED_HTTP_VERSION = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("1.0", "1.1")));
 
-    private static final String SPLITTER = "\\/";
+    private static final String SPLITTER = "/";
 
     private final String protocol;
     private final String version;
+
+    public Protocol(String protocol, String version) {
+        if (!HTTP.equals(protocol) || !ALLOWED_HTTP_VERSION.contains(version)) {
+            throw new BadRequestException();
+        }
+
+        this.protocol = protocol;
+        this.version = version;
+    }
 
     public static Protocol of(String protocolAndVersion) {
         if (StringUtils.isEmpty(protocolAndVersion)) {
@@ -30,15 +37,6 @@ public class Protocol {
         }
 
         return new Protocol(split[0], split[1]);
-    }
-
-    public Protocol(String protocol, String version) {
-        if (!HTTP.equals(protocol) || !ALLOWED_HTTP_VERSION.contains(version)) {
-            throw new BadRequestException();
-        }
-
-        this.protocol = protocol;
-        this.version = version;
     }
 
     @Override
@@ -57,10 +55,6 @@ public class Protocol {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("protocol은 ").append(protocol).append("\r\n");
-        sb.append("version은 ").append(version);
-
-        return sb.toString();
+        return protocol + SPLITTER + version;
     }
 }

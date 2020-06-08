@@ -1,22 +1,14 @@
-package http.request;
+package http.request.requestline;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import http.HttpMethod;
-import http.HttpStatus;
 import http.exception.BadRequestException;
-import http.exception.HttpException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.*;
-
-import static java.util.stream.Collectors.toMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 public class RequestLine {
@@ -24,6 +16,16 @@ public class RequestLine {
     private HttpMethod method;
     private Path path;
     private Protocol protocol;
+
+    public RequestLine(HttpMethod method, Path path, Protocol protocol) {
+        if (Objects.isNull(method)) {
+            throw new BadRequestException();
+        }
+
+        this.method = method;
+        this.path = path;
+        this.protocol = protocol;
+    }
 
     public static RequestLine of(String requestLine) {
         if (StringUtils.isEmpty(requestLine)) {
@@ -37,16 +39,6 @@ public class RequestLine {
         }
 
         return new RequestLine(HttpMethod.resolve(splitLine[0]), Path.of(splitLine[1]), Protocol.of(splitLine[2]));
-    }
-
-    public RequestLine(HttpMethod method, Path path, Protocol protocol) {
-        if (Objects.isNull(method)) {
-            throw new BadRequestException();
-        }
-
-        this.method = method;
-        this.path = path;
-        this.protocol = protocol;
     }
 
     @Override
@@ -72,7 +64,7 @@ public class RequestLine {
             .orElse(null);
     }
 
-    public String getProtocol() {
+    public String getProtocolStr() {
         return Optional.ofNullable(protocol)
             .map(Protocol::getProtocol)
             .orElse(null);
@@ -82,5 +74,9 @@ public class RequestLine {
         return Optional.ofNullable(protocol)
             .map(Protocol::getVersion)
             .orElse(null);
+    }
+
+    public Protocol getProtocol() {
+        return protocol;
     }
 }

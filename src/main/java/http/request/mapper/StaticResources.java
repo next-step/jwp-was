@@ -1,25 +1,44 @@
 package http.request.mapper;
 
-public class StaticResources {
-    public static String TEMPLATE_PREFIX = "/templates";
-    public static String STATIC_PREFIX = "/static";
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
-    public static String HTML_SUFFIX = ".html";
-    public static String JPG_SUFFIX = ".jpg";
-    public static String PNG_SUFFIX = ".png";
-    public static String GIF_SUFFIX = ".gif";
-    public static String CSS_SUFFIX = ".css";
-    public static String JS_SUFFIX = ".js";
-    public static String EOT_SUFFIX = ".eot";
-    public static String SVG_SUFFIX = ".svg";
-    public static String TTF_SUFFIX = ".ttf";
-    public static String WOFF_SUFFIX = ".woff";
-    public static String WOFF2_SUFFIX = ".woff2";
-    public static String ICON_SUFFIX = ".ico";
+import java.util.Arrays;
 
-    public static final String ROOT_PATH = "/";
-    public static final String IMAGE_PATH = "/images";
-    public static final String FONT_PATH = "/fonts";
-    public static final String CSS_PATH = "/css";
-    public static final String JS_PATH = "/js";
+@Slf4j
+public enum StaticResources {
+    JS("text/html;charset=utf-8", ".js"),
+    CSS("text/css;charset=utf-8", ".css"),
+    TTF("application/x-font-ttf", ".ttf"),
+    WOFF("text/html;charset=utf-8", ".woff"),
+    WOFF2("font/woff2", ".woff2"),
+    ;
+
+    @Getter
+    private String contentType;
+
+    @Getter
+    private String suffix;
+
+    StaticResources(String prefix, String suffix) {
+        this.contentType = prefix;
+        this.suffix = suffix;
+    }
+
+    public static boolean matches(String url) {
+        return Arrays.stream(values())
+            .anyMatch(resource -> endsWithSuffix(url, resource.getSuffix()));
+    }
+
+    private static boolean endsWithSuffix(String url, String suffix) {
+        return url.toLowerCase().endsWith(suffix);
+    }
+
+    public static String getContentType(String url) {
+        return Arrays.stream(values())
+            .filter(resource -> endsWithSuffix(url, resource.getSuffix()))
+            .findFirst()
+            .map(StaticResources::getContentType)
+            .orElse("");
+    }
 }

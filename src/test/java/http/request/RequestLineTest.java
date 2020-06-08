@@ -3,6 +3,7 @@ package http.request;
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import http.HttpMethod;
 import http.exception.BadRequestException;
+import http.request.requestline.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -44,7 +45,7 @@ class RequestLineTest {
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.resolve(method));
         assertThat(requestLine.getPath()).isEqualTo(path);
         assertThat(requestLine.getQueryString()).isEmpty();
-        assertThat(requestLine.getProtocol()).isEqualTo(protocol);
+        assertThat(requestLine.getProtocolStr()).isEqualTo(protocol);
         assertThat(requestLine.getVersion()).isEqualTo(version);
     }
 
@@ -69,7 +70,7 @@ class RequestLineTest {
             entry("name", "JaeSung")
         );
 
-        assertThat(requestLine.getProtocol()).isEqualTo(protocol);
+        assertThat(requestLine.getProtocolStr()).isEqualTo(protocol);
         assertThat(requestLine.getVersion()).isEqualTo(version);
     }
 

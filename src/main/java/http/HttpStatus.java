@@ -1,7 +1,6 @@
 package http;
 
 import lombok.Getter;
-import org.springframework.lang.Nullable;
 
 public enum HttpStatus {
     OK(200, "OK"),
@@ -28,5 +27,10 @@ public enum HttpStatus {
 
     public int value() {
         return this.value;
+    }
+
+    @Override
+    public String toString() {
+        return value + " " + reasonPhrase;
     }
 }

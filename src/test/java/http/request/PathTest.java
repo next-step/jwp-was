@@ -1,6 +1,7 @@
 package http.request;
 
 import http.exception.BadRequestException;
+import http.request.requestline.Path;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
