@@ -6,8 +6,6 @@ import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.view.RedirectView;
-import http.view.StaticResourceView;
-import http.view.TemplateView;
 import java.io.IOException;
 import java.util.Arrays;
 import model.User;

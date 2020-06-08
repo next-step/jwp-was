@@ -14,7 +14,6 @@ public class UserHandler {
     public HttpResponse create(HttpRequest httpRequest) {
         String userId = httpRequest.getParameter("userId");
         String password = httpRequest.getParameter("password");
-
         String name = httpRequest.getParameter("name");
         String email = httpRequest.getParameter("email");
 

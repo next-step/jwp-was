@@ -40,7 +40,7 @@ public class TemplateView extends FileResourceView {
     @Override
     protected BodyFile getBodyFile() throws IOException {
         Template template = handlebars.compile(path);
-        byte body[] = template.apply(model.getModel()).getBytes();
+        byte[] body = template.apply(model.getModel()).getBytes();
         String fileName = new File(template.filename()).getName();
         return new BodyFile(fileName, body);
     }

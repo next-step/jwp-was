@@ -4,6 +4,8 @@ import java.util.Objects;
 
 public class Protocol {
 
+    public static final Protocol HTTP_1_1 = Protocol.of("HTTP/1.1");
+
     private String protocol;
     private String version;
 
@@ -12,7 +14,7 @@ public class Protocol {
         this.version = version;
     }
 
-    static Protocol of(String value) {
+    public static Protocol of(String value) {
         String[] values = value.split("/");
         return of(values[0], values[1]);
     }
@@ -21,6 +23,10 @@ public class Protocol {
         return new Protocol(protocol, version);
     }
 
+    @Override
+    public String toString() {
+        return protocol + "/" + version;
+    }
 
     @Override
     public boolean equals(Object o) {

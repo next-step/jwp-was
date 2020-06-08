@@ -1,8 +1,13 @@
 package http;
 
+import static http.HeaderName.CONTENT_LENGTH;
+import static http.HeaderName.CONTENT_TYPE;
+import static http.HeaderName.REQUEST_COOKIE;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,16 +18,14 @@ import utils.StringUtils;
 
 public class Headers {
 
-    private final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded";
+    private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded";
 
-    private Map<String, String> headers;
+    private final Map<String, String> headers;
+    private final Cookie cookie;
 
-    public Headers() {
-        this(new HashMap<>());
-    }
-
-    public Headers(Map<String, String> headers) {
+    private Headers(Map<String, String> headers, Cookie cookie) {
         this.headers = new HashMap<>(headers);
+        this.cookie = cookie;
     }
 
     public static Headers from(List<String> headerLines) {
@@ -30,21 +33,25 @@ public class Headers {
         for (String line : headerLines) {
             headers.putAll(HttpUtils.getPair(line, ":"));
         }
-        return new Headers(headers);
+        Cookie cookie = Cookie.from(headers.getOrDefault(REQUEST_COOKIE.getKey(), ""));
+        return new Headers(headers, cookie);
     }
 
-    public void add(String name, String value) {
-        this.headers.put(name, value);
+    public static Headers newInstance(){
+        return from(Arrays.asList());
     }
 
     public int getContentLength() {
-        String length = this.headers.getOrDefault(HeaderName.CONTENT_LENGTH.name, "0");
+        String length = this.headers.getOrDefault(CONTENT_LENGTH.getKey(), "0");
         return Integer.parseInt(length);
     }
 
-    public Map<String, String> getCookies() {
-        String cookies = this.headers.getOrDefault("Cookie", "");
-        return Cookie.from(cookies).getCookies();
+    public String getCookie(String key) {
+        return this.cookie.get(key);
+    }
+
+    public void addCookie(String name, String value) {
+        this.cookie.put(name, value);
     }
 
     public Parameters parseBody(String body) {
@@ -52,7 +59,7 @@ public class Headers {
             return Parameters.empty();
         }
 
-        String contentType = this.headers.getOrDefault(HeaderName.CONTENT_TYPE.name, "");
+        String contentType = this.headers.getOrDefault(CONTENT_TYPE.getKey(), "");
 
         if (contentType.equals(APPLICATION_FORM_URLENCODED)) {
             return parseForFormUrlEncoded(body);
@@ -68,6 +75,8 @@ public class Headers {
             String value = entry.getValue();
             dos.writeBytes(key + ": " + value + "\r\n");
         }
+
+        this.cookie.response(out);
     }
 
     private Parameters parseForFormUrlEncoded(String body) {
@@ -83,26 +92,13 @@ public class Headers {
             return false;
         }
         Headers headers1 = (Headers) o;
-        return
-            Objects.equals(APPLICATION_FORM_URLENCODED, headers1.APPLICATION_FORM_URLENCODED)
-                &&
-                Objects.equals(headers, headers1.headers);
+        return Objects.equals(headers, headers1.headers) &&
+            Objects.equals(cookie, headers1.cookie);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(APPLICATION_FORM_URLENCODED, headers);
+        return Objects.hash(headers, cookie);
     }
 
-
-    private enum HeaderName {
-        CONTENT_LENGTH("Content-Length"),
-        CONTENT_TYPE("Content-Type");
-
-        private final String name;
-
-        HeaderName(String name) {
-            this.name = name;
-        }
-    }
 }

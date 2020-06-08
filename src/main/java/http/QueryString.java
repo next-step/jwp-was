@@ -8,6 +8,9 @@ import utils.HttpUtils;
 
 public class QueryString {
 
+    private static final String QUERY_SPLITTER = "&";
+    private static final String KEY_VALUE_SPLITTER = "=";
+
     private final Map<String, String> queryMap;
 
     QueryString(Map<String, String> queryMap) {
@@ -15,7 +18,7 @@ public class QueryString {
     }
 
     public static QueryString of(String queryString) {
-        return new QueryString(HttpUtils.getPairs(queryString, "&", "="));
+        return new QueryString(HttpUtils.getPairs(queryString, QUERY_SPLITTER, KEY_VALUE_SPLITTER));
     }
 
     public String get(String name) {
