@@ -50,4 +50,8 @@ public class Response {
         String headerByKey = this.getHeaderByKey(SET_COOKIE);
         return Cookies.parseCookies(headerByKey);
     }
+
+    public void addCookie(Cookie cookie) {
+
+    }
 }

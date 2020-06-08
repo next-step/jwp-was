@@ -13,7 +13,7 @@ import static http.response.HttpStatus.OK;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ResponseTest {
-    @DisplayName("Response에 Cookie(s) 추가")
+    @DisplayName("Response에 Cookies 추가")
     @Test
     void addCookies() {
         //given
@@ -27,6 +27,21 @@ public class ResponseTest {
         assertThat(response.getCookies().getSize()).isEqualTo(2);
         assertThat(response.getCookies().toString())
                 .isEqualTo(cookies.toString());
+    }
+
+    @DisplayName("Response에 Cookie 추가 - 저장된 Cookie가 없을 때 추가하는 경우")
+    @Test
+    void addCookie() {
+        //given
+        Cookie cookie = new Cookie("logined=true", "/", true);
+        Response response = createResponse();
+
+        //when
+        response.addCookie(cookie);
+
+        //then
+        assertThat(response.getCookies().getSize()).isEqualTo(1);
+        assertThat(response.getCookies().toString()).isEqualTo("logined=true; Path=/; HttpOnly");
     }
 
     private Response createResponse() {
