@@ -47,4 +47,8 @@ public class Request {
 
         return Sessions.findById(sessionId);
     }
+
+    public void addCookie(String cookie, String path, boolean isHttpOnly) {
+
+    }
 }

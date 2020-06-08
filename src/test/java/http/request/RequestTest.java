@@ -1,6 +1,7 @@
 package http.request;
 
 import org.apache.logging.log4j.util.Strings;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.session.HttpSession;
@@ -18,7 +19,7 @@ public class RequestTest {
         RequestLine requestLine = new RequestLine("GET /index.html HTTP/1.1");
         Headers headers = new Headers(createHeadersWithSession(new HttpSession()));
         RequestBody body = new RequestBody(Strings.EMPTY);
-        Request request = new Request(requestLine, headers, body);
+        Request request = createRequest();
 
         //when
         HttpSession session = request.getSession();
@@ -43,6 +44,30 @@ public class RequestTest {
 
         //then
         assertThat(session.getId()).isNotNull();
+    }
+
+    @DisplayName("Request에 Cookie 저장 - Cookie 1개일 때")
+    @Test
+    void addCookie() {
+        //given
+        Request request = createRequest();
+        String cookie = "logind=true";
+        String path = "/";
+        boolean isHttpOnly = true;
+
+        //when
+        request.addCookie(cookie, path, isHttpOnly);
+
+        //then
+        assertThat(request.getHeader("Set-Cookie"))
+                .isEqualTo("logined=true; Path=/; HttpOnly");
+    }
+
+    private Request createRequest() {
+        RequestLine requestLine = new RequestLine("GET /index.html HTTP/1.1");
+        Headers headers = new Headers(createHeadersWithSession(new HttpSession()));
+        RequestBody body = new RequestBody(Strings.EMPTY);
+        return new Request(requestLine, headers, body);
     }
 
     private Map<String, String> createHeadersWithSession(HttpSession session) {
