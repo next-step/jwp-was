@@ -3,8 +3,13 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.Map;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
@@ -39,12 +44,16 @@ public class RequestHandler implements Runnable {
 
             String path = httpRequest.getPath();
             int contentLength = 0;
+            boolean loginStatus = false;
             while(!line.equals("")) {
                 line = br.readLine();
                 logger.debug("header : {}", line);
                 if(line.contains("Content-Length")) {
                     String value = line.split(" ")[1];
                     contentLength = Integer.parseInt(value);
+                }
+                if(line.contains("Cookie")) {
+                    loginStatus = loginCheck(line);
                 }
             }
 
@@ -63,6 +72,11 @@ public class RequestHandler implements Runnable {
                 DataBase.addUser(user);
                 DataOutputStream dos = new DataOutputStream(out);
                 response302Header(dos, "/index.html" );
+            } else if(path.endsWith("css")){
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = HttpResponse.getCss(path);
+                responseCssHeader(dos, body.length);
+                responseBody(dos, body);
             } else if(path.equals("/user/login")) {
                 String body = IOUtils.readData(br, contentLength);
 
@@ -82,12 +96,41 @@ public class RequestHandler implements Runnable {
                     responseResource(out, path);
                 }
 
-            } else {
+            } else if(path.equals("/user/list")) {
+                if(!loginStatus) {
+                    responseResource(out, "/login.html");
+                    return;
+                }
+                TemplateLoader loader = new ClassPathTemplateLoader();
+                loader.setPrefix("/templates");
+                loader.setSuffix(".html");
+                Handlebars handlebars = new Handlebars(loader);
+
+                Template template = handlebars.compile("user/list");
+                Collection<User> users = DataBase.findAll();
+
+                String profilePage = template.apply(users);
+
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = profilePage.getBytes();
+                response200Header(dos, body.length);
+                responseBody(dos, body);
+            } else{
                 responseResource(out, path);
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private boolean loginCheck(String line) {
+        boolean result = false;
+        String loginStatus = line.split("=")[1];
+
+        if(loginStatus.equals("true"))
+            result = true;
+
+        return result;
     }
 
     private void responseResource(OutputStream out, String url) throws IOException {
@@ -112,6 +155,17 @@ public class RequestHandler implements Runnable {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void responseCssHeader(DataOutputStream dos, int lengthOfBodyContent) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
