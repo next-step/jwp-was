@@ -1,13 +1,14 @@
 package webserver;
 
+import utils.StringUtils;
+
 import java.util.Arrays;
-import java.util.Objects;
 
 public enum HttpMethod {
     GET, POST;
 
     public static HttpMethod resolve(String method) {
-        if (Objects.isNull(method)) {
+        if (StringUtils.isBlank(method)) {
             return null;
         }
 

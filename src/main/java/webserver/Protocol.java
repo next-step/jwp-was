@@ -2,6 +2,7 @@ package webserver;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import utils.StringUtils;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -13,6 +14,8 @@ public class Protocol {
     private String version;
 
     public Protocol(String protocol) {
+        StringUtils.isBlank(protocol);
+
         String[] split = protocol.split(PROTOCOL_SEPARATOR);
         this.name = split[0];
         this.version = split[1];
