@@ -36,14 +36,8 @@ public class RequestHandler implements Runnable {
 
             controller.service(httpRequest, httpResponse);
 
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
+            httpResponse.send();
+
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

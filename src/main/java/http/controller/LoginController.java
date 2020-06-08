@@ -18,14 +18,13 @@ public class LoginController extends PathController{
     public void doPost(HttpRequest request, HttpResponse response) {
         log.info("login controller post method ===========");
 
-        Header headerInfo = new Header();
-        headerInfo.addKeyAndValue("Content-Type","text/html;charset=utf-8");
+        response.addHeader("Content-Type","text/html;charset=utf-8");
 
         QueryString requestBodyString = new QueryString(request.getRequestBody());
         User loginUser = new User(requestBodyString.getParameter("userId"), requestBodyString.getParameter("password"));
         User findUser = DataBase.findUserById(requestBodyString.getParameter("userId"));
 
-        if(loginUser.equals(findUser)) {
+        if(findUser != null && findUser.equals(loginUser)) {
             response.addHeader("Set-Cookie","logined=true; Path=/");
             response.sendRedirect("/index.html");
             return;

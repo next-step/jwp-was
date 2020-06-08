@@ -23,6 +23,9 @@ public class RequestLine {
         return this.pathAndQueryString.getPath();
     }
 
+    public String getParameter(String name) {
+        return this.pathAndQueryString.getQueryString().getParameter(name);
+    }
     public String getProtocol() {
         return this.protocol.getProtocol();
     }

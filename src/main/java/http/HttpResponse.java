@@ -8,6 +8,7 @@ import utils.HandlebarLoadUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.logging.Handler;
 
@@ -23,12 +24,20 @@ public class HttpResponse {
         this.headers = new Header();
     }
 
-    private void sendResponse() {
+    private void writeResponse() {
         try {
-            this.outputStream.writeBytes(responseCode.makeHeader() + headers.makeResponseHeader());
+            this.outputStream.writeBytes(responseCode.makeHeader());
+            this.outputStream.writeBytes(headers.makeResponseHeader());
             this.outputStream.write(this.responseBody, 0, responseBody.length);
-            this.outputStream.flush();
 
+        } catch (IOException e) {
+            log.error("write Response Error : {}", e);
+        }
+    }
+
+    public void send() {
+        try {
+            this.outputStream.flush();
         } catch (IOException e) {
             log.error("send Response Error : {}", e);
         }
@@ -45,7 +54,7 @@ public class HttpResponse {
             this.responseCode = HttpResponseCode.OK;
             addHeader("Content-Length", String.valueOf(responseBody.length));
 
-            this.sendResponse();
+            this.writeResponse();
         } catch (IOException | URISyntaxException e) {
             log.error("read File Exception  : {} - {}", path, e);
         }
@@ -55,13 +64,17 @@ public class HttpResponse {
         this.responseBody = template.getBytes();
         this.responseCode = HttpResponseCode.OK;
         addHeader("Content-Length", String.valueOf(responseBody.length));
-        this.sendResponse();
+        this.writeResponse();
     }
 
     public void sendRedirect(String location) {
         // redirect 시키는 메소드;
         this.responseCode = HttpResponseCode.REDIRECT;
         addHeader("Location", location);
-        this.sendResponse();
+        this.writeResponse();
+    }
+
+    public HttpResponseCode getResponseCode() {
+        return responseCode;
     }
 }

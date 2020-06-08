@@ -47,16 +47,16 @@ public class HttpRequest {
         return this.requestLine.getMethod();
     }
 
-    public RequestLine getRequestLine() {
-        return this.requestLine;
-    }
-
     public String getRequestBody() {
         return this.requestBody;
     }
 
     public String getPath() {
         return this.requestLine.getPath();
+    }
+
+    public String getParameter(String name) {
+        return this.requestLine.getParameter(name);
     }
 
     public boolean isLoggedIn() {
