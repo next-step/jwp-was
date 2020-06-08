@@ -26,9 +26,15 @@ public class SessionManager {
         String sessionId = httpRequest.getCookie(SUID);
 
         if (StringUtil.isEmpty(sessionId)) {
-            sessionId = UUID.randomUUID().toString();
-            httpResponse.setCookie(SUID, sessionId);
+            sessionId = generateSUID(httpResponse);
         }
+
+        return sessionId;
+    }
+
+    private String generateSUID(final HttpResponse httpResponse) {
+        String sessionId = UUID.randomUUID().toString();
+        httpResponse.setCookie(SUID, sessionId);
 
         return sessionId;
     }
