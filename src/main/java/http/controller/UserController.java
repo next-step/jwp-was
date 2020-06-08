@@ -16,13 +16,9 @@ public class UserController extends PathController {
 
     private static final Logger log = Logger.getLogger(UserController.class);
 
-    public UserController(HttpRequest httpRequest) {
-        super(httpRequest);
-    }
-
-    public byte[] post() {
+    public void doPost(HttpRequest request, HttpResponse response) {
         log.info("user controller post method ===========");
-        QueryString requestBodyQuery = new QueryString(httpRequest.getRequestBody());
+        QueryString requestBodyQuery = new QueryString(request.getRequestBody());
 
         User user = new User(requestBodyQuery.getParameter("userId"),
                 requestBodyQuery.getParameter("password"),
@@ -31,9 +27,6 @@ public class UserController extends PathController {
 
         DataBase.addUser(user);
 
-        Header headerInfo = new Header();
-        headerInfo.addKeyAndValue("Location", "http://localhost:8080/index.html");
-        HttpResponse httpResponse = new HttpResponse(HttpResponseCode.REDIRECT,new byte[0],headerInfo);
-        return httpResponse.makeResponseBody();
+        response.sendRedirect("/index.html");
     }
 }

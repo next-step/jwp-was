@@ -18,35 +18,21 @@ import java.net.URISyntaxException;
 /**
  * Created By kjs4395 on 2020-06-05
  */
-public abstract class PathController {
+public abstract class PathController implements Controller{
     private static final Logger log = LoggerFactory.getLogger(PathController.class);
 
-    HttpRequest httpRequest;
-
-    public PathController(HttpRequest httpRequest) {
-        this.httpRequest = httpRequest;
+    @Override
+    public void service(HttpRequest request, HttpResponse response) {
+        if(request.getMethod().equals(Method.GET)) {
+            doGet(request, response);
+        }
+        doPost(request, response);
     }
 
-    public byte[] execute() {
-        if(this.httpRequest.getRequestLine().getMethod().equals(Method.GET)) {
-            log.info("get method execute ---------");
-            return this.get();
-        }
-
-        if(this.httpRequest.getRequestLine().getMethod().equals(Method.POST)) {
-            log.info("post method execute ========");
-            return this.post();
-        }
-
-        return new byte[0];
-    }
-
-
-    public byte[] get()  {
+    public void doGet(HttpRequest request, HttpResponse response)  {
         log.info("default controller get method execute ========");
 
         try {
-
             if(this.httpRequest.isStaticResource()) {
                 return this.makeStaticResourceResponse().makeResponseBody();
             }
@@ -58,7 +44,7 @@ public abstract class PathController {
         }
     }
 
-    public byte[] post() {
+    public void doPost(HttpRequest request, HttpResponse response) {
         log.info("default controller post method execute ========");
         return new byte[0];
     }

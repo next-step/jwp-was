@@ -20,9 +20,6 @@ import java.util.ArrayList;
 public class ListController extends PathController{
     private static final Logger log = LoggerFactory.getLogger(ListController.class);
 
-    public ListController(HttpRequest httpRequest) {
-        super(httpRequest);
-    }
 
     public byte[] get()  {
         log.info("list controller get method execute ========");

@@ -15,10 +15,6 @@ public class LoginController extends PathController{
 
     private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
-    public LoginController(HttpRequest httpRequest) {
-        super(httpRequest);
-    }
-
     public byte[] post() {
         log.info("login controller post method ===========");
 

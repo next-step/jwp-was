@@ -1,6 +1,7 @@
 package http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import http.enums.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
@@ -15,7 +16,6 @@ import java.io.InputStreamReader;
  */
 public class HttpRequest {
     private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
-
     private RequestLine requestLine;
     private Header header;
     private String requestBody;
@@ -40,6 +40,10 @@ public class HttpRequest {
         }
     }
 
+    public Method getMethod() {
+        return this.requestLine.getMethod();
+    }
+
     public RequestLine getRequestLine() {
         return this.requestLine;
     }
@@ -48,7 +52,10 @@ public class HttpRequest {
         return this.requestBody;
     }
 
-    public boolean isStaticResource() {
-        return this.header.getValue("Accept").contains("text/css");
+    private boolean isStaticResource() {
+        if(this.header.isContainsKey("Accept")) {
+            return this.header.getValue("Accept").contains("text/css");
+        }
+        return this.requestLine.getPath().contains("css");
     }
 }
