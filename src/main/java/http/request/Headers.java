@@ -32,4 +32,8 @@ public class Headers {
         this.headers.put(key, value);
         return new Headers(Collections.unmodifiableMap(this.headers));
     }
+
+    public void replaceHeader(String key, String newValue){
+        this.headers.replace(key, newValue);
+    }
 }

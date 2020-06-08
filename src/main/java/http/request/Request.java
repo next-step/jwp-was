@@ -1,5 +1,7 @@
 package http.request;
 
+import http.response.Cookie;
+import http.response.Cookies;
 import webserver.session.HttpSession;
 import webserver.session.Sessions;
 
@@ -49,6 +51,15 @@ public class Request {
     }
 
     public void addCookie(String cookie, String path, boolean isHttpOnly) {
+        String header = headers.getHeader("Set-Cookie");
+        if(header == null){
+            this.headers.addHeader("Set-Cookie", new Cookie(cookie, path, isHttpOnly).toString());
+        }
 
+        if(header != null){
+            Cookies cookies = Cookies.parseCookies(header);
+            cookies.addCookie(new Cookie(cookie, path, isHttpOnly));
+            this.headers.replaceHeader("Set-Cookie", cookies.toString());
+        }
     }
 }

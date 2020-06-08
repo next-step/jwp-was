@@ -1,7 +1,6 @@
 package http.request;
 
 import org.apache.logging.log4j.util.Strings;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.session.HttpSession;
@@ -51,7 +50,7 @@ public class RequestTest {
     void addCookie() {
         //given
         Request request = createRequest();
-        String cookie = "logind=true";
+        String cookie = "logined=true";
         String path = "/";
         boolean isHttpOnly = true;
 

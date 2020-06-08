@@ -24,6 +24,10 @@ public class Cookies {
     }
 
     public static Cookies parseCookies(String value) {
+        if(!value.contains("&")){
+            return new Cookies(Arrays.asList(Cookie.parse(value)));
+        }
+
         String[] cookies = value.split("&");
         return Arrays.stream(cookies)
                 .map(c -> Cookie.parse(c))
