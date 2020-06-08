@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.RequestHandler;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class UserController {
@@ -31,6 +32,9 @@ public class UserController {
 
     private ResponseObject mappingByGetMethod() {
         String path = requestLine.getPath();
+        if (path.equals("/user/list")) {
+            return new ResponseObject(200, "/index.html", path, new ArrayList<>(DataBase.findAll()));
+        }
         return new ResponseObject(200, "/index.html", String.format("./templates%s", path));
     }
 
