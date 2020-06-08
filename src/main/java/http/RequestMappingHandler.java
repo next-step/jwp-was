@@ -1,32 +1,39 @@
 package http;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
+import model.User;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import user.ui.UserController;
 import utils.FileIoUtils;
 import utils.IOUtils;
-import webserver.RequestHandler;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Objects;
 
 public class RequestMappingHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(RequestMappingHandler.class);
 
     private final BufferedReader bufferedReader;
     private final Response response;
+    private CookieTranslator cookieTranslator;
 
-    public RequestMappingHandler(final BufferedReader bufferedReader, final DataOutputStream dataOutputStream) {
+    public RequestMappingHandler(final BufferedReader bufferedReader, final DataOutputStream dataOutputStream) throws IOException {
         this.bufferedReader = bufferedReader;
         this.response = new Response(dataOutputStream);
+        read();
     }
 
-    public void read() throws IOException {
+    private void read() throws IOException {
         String readLine = bufferedReader.readLine();
         String firstLine = readLine;
         int contentLength = 0;
@@ -38,6 +45,13 @@ public class RequestMappingHandler {
                 String[] lengths = readLine.split(":");
                 contentLength = Integer.valueOf(lengths[1].trim());
             }
+
+            if (readLine.matches("Cookie:.*")) {
+                String[] cookies = readLine.split(":");
+                String cookieValues = cookies[1];
+                cookieTranslator = new CookieTranslator(cookieValues);
+            }
+
             logger.debug(readLine);
         }
 
@@ -69,6 +83,9 @@ public class RequestMappingHandler {
         }
 
         if (path.matches("/user/.*")) {
+            if (path.matches("/user/list.*")) {
+                middleware();
+            }
             handlerByUserController(requestLine);
         }
     }
@@ -81,13 +98,28 @@ public class RequestMappingHandler {
             if (path.equals("/user/login")) {
                 if (responseObject.getCode() == 200) {
                     response.responseHeaderByLoginSuccess();
-                    return;
                 }
             }
+
+            if (path.equals("/user/list")) {
+                byte[] body = viewListByTemplate(responseObject);
+                response.response200Header(body.length);
+                response.responseBody(body);
+            }
+
             handlerGetMethod(responseObject);
-            return;
         }
         handlerPostMethod(responseObject, requestLine.getPath());
+    }
+
+    private void middleware() {
+        if (Objects.isNull(cookieTranslator)) {
+            response.response302Header("/user/login.html");
+        }
+
+        if (!cookieTranslator.isLogined()) {
+            response.response302Header("/user/login.html");
+        }
     }
 
     private void handlerGetMethod(ResponseObject responseObject) {
@@ -100,10 +132,8 @@ public class RequestMappingHandler {
         if (path.equals("/user/login")) {
             if (responseObject.getCode() == 200) {
                 response.responseHeaderByLoginSuccess();
-                return;
             }
             response.response302HeaderByLoginFail(responseObject.getLocation());
-            return;
         }
 
         if (path.equals("/user/create")) {
@@ -123,6 +153,23 @@ public class RequestMappingHandler {
 
     private byte[] viewByUserForm(String path) throws IOException, URISyntaxException {
         return FileIoUtils.loadFileFromClasspath(path);
+    }
+
+    private byte[] viewListByTemplate(ResponseObject responseObject) {
+        TemplateLoader loader = new ClassPathTemplateLoader();
+        loader.setPrefix("/templates");
+        loader.setSuffix(".html");
+        Handlebars handlebars = new Handlebars(loader);
+
+        Template template = null;
+        try {
+            template = handlebars.compile(responseObject.getRequestPath());
+            List<User> users = (List<User>) responseObject.getData();
+            String listPage = template.apply(users);
+            return listPage.getBytes();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("template error");
+        }
     }
 
     @Override
