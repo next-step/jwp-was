@@ -7,13 +7,13 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 public class Protocol {
 
-    private static final String SLASH = "/";
+    private static final String PROTOCOL_SEPARATOR = "/";
 
     private String name;
     private String version;
 
     public Protocol(String protocol) {
-        String[] split = protocol.split(SLASH);
+        String[] split = protocol.split(PROTOCOL_SEPARATOR);
         this.name = split[0];
         this.version = split[1];
     }
