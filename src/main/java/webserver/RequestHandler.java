@@ -38,14 +38,16 @@ public class RequestHandler implements Runnable {
                 User user = mapper.convertValue(httpRequest.getParameters(), User.class);
                 UserController.create(user);
                 body = user.toString().getBytes();
+
+                response302Header(dos);
             } else {
                 body = RequestMappingManager.fileLoadFromPath(httpRequest.getPath());
-            }
 
-            if (body.length > 0) {
-                response200Header(dos, body.length);
-            } else {
-                response400Header(dos, body.length);
+                if (body.length > 0) {
+                    response200Header(dos, body.length);
+                } else {
+                    response400Header(dos, body.length);
+                }
             }
 
             responseBody(dos, body);
@@ -71,6 +73,17 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(DataOutputStream dos) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Location: http://localhost:8080/index.html\r\n");
+            dos.writeBytes("\r\n");
+
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
