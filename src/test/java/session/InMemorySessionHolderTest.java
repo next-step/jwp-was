@@ -24,6 +24,14 @@ class InMemorySessionHolderTest {
         assertThat(session).isEqualTo(sessionFromStore);
     }
 
+    @Test
+    @DisplayName("세션 키가 null 일 경우에는 null 을 리턴한다.")
+    void loadSessionUsingNull() {
+        HttpSession session = SESSION_HOLDER.load(null);
+
+        assertThat(session).isNull();
+    }
+
     private static class TestHttpSession implements HttpSession {
         private String sessionId;
         private Map<String, Object> attributes = new HashMap<>();
