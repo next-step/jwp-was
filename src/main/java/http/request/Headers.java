@@ -1,15 +1,19 @@
 package http.request;
 
+import webserver.session.HttpSession;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class Headers {
+    private static final String JSESSIONID = "JSESSIONID";
+
     private Map<String, String> headers = new HashMap<>();
 
     public Headers(Map<String, String> headers) {
-        this.headers = Collections.unmodifiableMap(headers);
+        this.headers = headers;
     }
 
     public String getHeader(String key) {
@@ -22,5 +26,10 @@ public class Headers {
 
     public Set<String> getKeySet() {
         return headers.keySet();
+    }
+
+    public Headers addSession(HttpSession session) {
+        this.headers.put(JSESSIONID, session.getId());
+        return new Headers(Collections.unmodifiableMap(this.headers));
     }
 }

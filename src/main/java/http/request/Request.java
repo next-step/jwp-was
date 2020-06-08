@@ -38,6 +38,13 @@ public class Request {
 
     public HttpSession getSession() {
         String sessionId = this.headers.getHeader(JSESSIONID);
+
+        if (sessionId == null) {
+            HttpSession session = new HttpSession();
+            this.headers.addSession(session);
+            return session;
+        }
+
         return Sessions.findById(sessionId);
     }
 }
