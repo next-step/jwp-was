@@ -14,7 +14,7 @@ public class HttpRequest {
     private static final String CONTENT_LENGTH = "Content-Length";
     private RequestLine requestLine;
     private RequestHeader header;
-    private String body;
+    private RequestBody body;
 
     public HttpRequest(BufferedReader br) throws IOException {
         Map<String, String> header = new HashMap<>();
@@ -27,7 +27,8 @@ public class HttpRequest {
             logger.info(line);
         }
         this.header = new RequestHeader((header));
-        this.body = IOUtils.readData(br, Integer.parseInt(header.getOrDefault(CONTENT_LENGTH, "0")));
+        String body = IOUtils.readData(br, Integer.parseInt(header.getOrDefault(CONTENT_LENGTH, "0")));
+        this.body = new RequestBody(body);
         logger.info(body);
     }
 
@@ -36,7 +37,7 @@ public class HttpRequest {
     }
 
     public String getBody() {
-        return body;
+        return body.getBody();
     }
 
     public String getPath() {

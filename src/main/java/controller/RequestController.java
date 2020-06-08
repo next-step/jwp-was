@@ -9,9 +9,9 @@ import java.io.IOException;
 
 public class RequestController {
 
-    private UserController userController;
+    private final UserController userController;
 
-    public void setUserController(UserController userController) {
+    public RequestController(UserController userController) {
         this.userController = userController;
     }
 

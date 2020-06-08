@@ -21,8 +21,8 @@ public class UserController {
     }
 
     public boolean login(QueryString queryString, HttpResponse httpResponse) {
-        User user = DataBase.findUserById(queryString.getUserId());
-        boolean isLogin = user != null && user.equalsPassword(queryString.getPassword());
+        User user = DataBase.findUserById(queryString.getParameter("userId"));
+        boolean isLogin = user != null && user.equalsPassword(queryString.getParameter("password"));
         logger.info("login : {}", isLogin);
         if (isLogin) {
             httpResponse.returnFile("/index.html");

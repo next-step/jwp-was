@@ -55,8 +55,7 @@ public class RequestHandler implements Runnable {
     }
 
     private RequestController initController() {
-        RequestController requestController = new RequestController();
-        requestController.setUserController(new UserController());
+        RequestController requestController = new RequestController(new UserController());
         return requestController;
     }
 
