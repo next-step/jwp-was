@@ -22,4 +22,8 @@ public class Cookies {
                 .map(c -> c.toString())
                 .collect(Collectors.joining("&"));
     }
+
+    public void addCookie(Cookie cookie) {
+
+    }
 }

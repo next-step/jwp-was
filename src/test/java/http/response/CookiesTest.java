@@ -25,4 +25,23 @@ public class CookiesTest {
                         + "&"
                         + "JSESSIONID2=abc12345; Path=/index; ");
     }
+
+    @DisplayName("Cookie 추가")
+    @Test
+    void addCookie(){
+        //given
+        Cookie cookie = new Cookie("JSESSIONID", "abc1234", "/", true);
+        Cookie cookie2 = new Cookie("JSESSIONID2", "abc12345", "/index", false);
+        Cookies cookies = new Cookies(Arrays.asList(cookie));
+
+        //when
+        cookies.addCookie(cookie2);
+
+        //then
+        assertThat(cookies.getSize()).isEqualTo(2);
+        assertThat(cookies.toString())
+                .isEqualTo("JSESSIONID=abc1234; Path=/; HttpOnly"
+                        + "&"
+                        + "JSESSIONID2=abc12345; Path=/index; ");
+    }
 }
