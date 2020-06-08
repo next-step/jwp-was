@@ -4,6 +4,7 @@ import http.QueryString;
 import http.QueryStringParser;
 import http.RequestLine;
 import http.RequestLineParser;
+import http.request.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;

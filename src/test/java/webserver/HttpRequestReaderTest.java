@@ -1,6 +1,7 @@
 package webserver;
 
 import http.HttpMethod;
+import http.request.HttpRequest;
 import mock.MockSocket;
 import org.junit.jupiter.api.Test;
 import utils.FileIoUtils;

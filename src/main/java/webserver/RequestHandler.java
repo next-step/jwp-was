@@ -1,8 +1,6 @@
 package webserver;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import controller.UserController;
-import model.User;
+import http.request.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,42 +24,11 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             DataOutputStream dos = new DataOutputStream(out);
 
             HttpRequest httpRequest = HttpRequestReader.read(in);
+            RequestMappingManager.execute(httpRequest, dos);
 
-
-            byte[] body = new byte[0];
-            if ("/user/create".equals(httpRequest.getPath())) {
-                ObjectMapper mapper = new ObjectMapper();
-                User user = mapper.convertValue(httpRequest.getParameters(), User.class);
-                UserController.create(user);
-                body = user.toString().getBytes();
-
-                response302Header(dos, "/index.html");
-            } else if ("/user/login".equals(httpRequest.getPath())) {
-                ObjectMapper mapper = new ObjectMapper();
-                User user = mapper.convertValue(httpRequest.getParameters(), User.class);
-                boolean isLogined = UserController.login(user);
-
-                if (isLogined) {
-                    response302Header(dos, "/index.html");
-                    dos.writeBytes("Set-Cookie: logined=true; Path=/");
-                } else {
-                    response302Header(dos, "/user/login_failed.html");
-                }
-            } else {
-                body = RequestMappingManager.fileLoadFromPath(httpRequest.getPath());
-
-                if (body.length > 0) {
-                    response200Header(dos, body.length);
-                } else {
-                    response400Header(dos, body.length);
-                }
-            }
-
-            responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -95,15 +62,6 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("Location: http://localhost:8080" + path + "\r\n");
             dos.writeBytes("\r\n");
 
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
