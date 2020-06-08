@@ -1,10 +1,10 @@
 package controller;
 
+import exception.InvalidAccessException;
+import http.StatusCode;
 import http.request.HttpMethod;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import http.StatusCode;
-import sun.plugin.dom.exception.InvalidAccessException;
 
 public abstract class AbstractController implements Controller {
     protected final String path;
