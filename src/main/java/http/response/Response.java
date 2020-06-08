@@ -3,6 +3,8 @@ package http.response;
 import http.request.Headers;
 
 public class Response {
+    private static final String SET_COOKIE = "Set-Cookie";
+
     private HttpStatus status;
     private ContentType contentType;
     private ResponseBody body;
@@ -37,5 +39,23 @@ public class Response {
 
     public Headers getHeaders() {
         return headers;
+    }
+
+    public void addCookie(Cookie cookie) {
+        String cookieValue = this.getHeaderByKey(SET_COOKIE);
+        if (cookieValue == null) {
+            this.headers.addHeader(SET_COOKIE, cookie.toString());
+        }
+
+        if (cookieValue != null) {
+            Cookies cookies = Cookies.parseCookies(cookieValue);
+            cookies.addCookie(cookie);
+            this.headers.replaceHeader(SET_COOKIE, cookies.toString());
+        }
+    }
+
+    public Cookies getCookies() {
+        String headerByKey = this.getHeaderByKey(SET_COOKIE);
+        return Cookies.parseCookies(headerByKey);
     }
 }

@@ -27,6 +27,7 @@ public class HandlerMapper implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             RequestUtils requestUtils = new RequestUtils(new BufferedReader(new InputStreamReader(in, "UTF-8")));
             Request request = requestUtils.getRequest();
+            request.getSession();
 
             Handler handler = Handlers.findHandler(request);
             Response response = handler.work(request);
