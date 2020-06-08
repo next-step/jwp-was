@@ -4,9 +4,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
-import controller.CommonController;
+import common.CommonController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import user.UserController;
+import user.UserService;
 import web.*;
 import web.DefaultHttpRequestHandler;
 import web.ResourceHttpRequestHandler;
@@ -28,6 +30,7 @@ public class WebServer {
 
         Map<Class<?>, Object> controllers = new LinkedHashMap<>();
         controllers.put(CommonController.class, new CommonController());
+        controllers.put(UserController.class, new UserController(new UserService()));
         AnnotationHandlerMapping annotationHandlerMapping = new AnnotationHandlerMapping(controllers);
 
         ViewResolverComposite viewResolverComposite = new ViewResolverComposite(

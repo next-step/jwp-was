@@ -1,33 +1,35 @@
-package controller;
+package user;
 
 import annotations.Controller;
 import annotations.RequestMapping;
-import db.DataBase;
-import http.Cookie;
 import http.HttpMethod;
 import http.HttpRequest;
 import http.HttpResponse;
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import web.servlet.ModelAndView;
 
+/**
+ * @author KingCjy
+ */
 @Controller
-public class CommonController {
+@RequestMapping("/user")
+public class UserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @RequestMapping("/index.html")
-    public ModelAndView index() {
-        return ModelAndView.from("index");
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @RequestMapping("/user/form.html")
+    @RequestMapping("/form.html")
     public ModelAndView userForm() {
         return ModelAndView.from("user/form");
     }
 
-    @RequestMapping(value = "/user/create", method = HttpMethod.POST)
+    @RequestMapping(value = "/create", method = HttpMethod.POST)
     public ModelAndView signUp(HttpRequest httpRequest) {
 
         String userId = httpRequest.getParameter("userId");
@@ -35,52 +37,46 @@ public class CommonController {
         String name = httpRequest.getParameter("name");
         String email = httpRequest.getParameter("email");
 
-        User user = new User(userId, password, name, email);
-        DataBase.addUser(user);
+        userService.signUp(userId, password, name, email);
 
-        logger.info("회원가입 성공 user={}" + user);
         return ModelAndView.from("redirect:/index.html");
     }
 
-    @RequestMapping("/user/login.html")
+    @RequestMapping("/login.html")
     public ModelAndView loginView() {
         return ModelAndView.from("user/login");
     }
 
-    @RequestMapping("/user/login_failed.html")
+    @RequestMapping("/login_failed.html")
     public ModelAndView loginFailView() {
         return ModelAndView.from("user/login_failed");
     }
 
-    @RequestMapping(value = "/user/login", method = HttpMethod.POST)
+    @RequestMapping(value = "/login", method = HttpMethod.POST)
     public ModelAndView login(HttpRequest httpRequest, HttpResponse httpResponse) {
 
         String userId = httpRequest.getParameter("userId");
         String password = httpRequest.getParameter("password");
 
-        User user = DataBase.findUserById(userId);
+        boolean login = userService.login(httpResponse, userId, password);
 
-        if(user == null || !password.equals(user.getPassword())) {
-            logger.info("로그인 실패 id={}, pw={}", userId, password);
+        if(!login) {
             return ModelAndView.from("redirect:/user/login_failed.html");
         }
 
-        httpResponse.addCookie(new Cookie("logined", "true"));
-        logger.info("로그인 성공 id={}, pw={}", userId, password);
         return ModelAndView.from("redirect:/index.html");
     }
 
-    @RequestMapping("/user/list.html")
+    @RequestMapping("/list.html")
     public ModelAndView userListView(HttpRequest httpRequest) {
 
-        Cookie loginedCookie = httpRequest.getCookie("logined");
-
-        if(loginedCookie == null || !"true".equals(loginedCookie.getValue())) {
+        boolean isLoggedIn = userService.isLoggedIn(httpRequest);
+        if(!isLoggedIn) {
             return ModelAndView.from("redirect:/user/login.html");
         }
 
         ModelAndView modelAndView = ModelAndView.from("user/list");
-        modelAndView.addAttribute("users", DataBase.findAll());
+        modelAndView.addAttribute("users", userService.findAllUsers());
         return modelAndView;
     }
 }
