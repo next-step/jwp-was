@@ -5,7 +5,7 @@ import utils.StringUtil;
 public class Forward {
     private String forward;
 
-    private Forward() {
+    public Forward() {
         this.forward = "";
     }
 
