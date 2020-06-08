@@ -29,6 +29,18 @@ public class Path {
         queryString = new QueryString(query);
     }
 
+    public boolean hasExtension() {
+        return uri.hasExtension();
+    }
+
+    public String getFilePath() {
+        return uri.getFilePath();
+    }
+
+    public String getUri() {
+        return uri.getValue();
+    }
+
     private String extractQuery(String[] tokens) {
         return existsQueryString(tokens) ? tokens[1] : "";
     }

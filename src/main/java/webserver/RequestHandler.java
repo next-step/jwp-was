@@ -1,6 +1,9 @@
 package webserver;
 
+import controller.Controller;
+import controller.ControllerMapper;
 import http.HttpRequest;
+import http.requestline.path.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import utils.FileIoUtils;
@@ -17,6 +20,9 @@ import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class RequestHandler implements Runnable {
+
+    private static final ControllerMapper CONTROLLER_MAPPER = new ControllerMapper();
+
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -31,12 +37,21 @@ public class RequestHandler implements Runnable {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
             HttpRequest httpRequest = readHttpRequest(bufferedReader);
-
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + httpRequest.getPath());
 
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            if (httpRequest.hasPathFileExtension()) {
+                byte[] body = FileIoUtils.loadFileFromClasspath(httpRequest.getFilePath());
+
+                response200Header(dos, body.length);
+                responseBody(dos, body);
+                return;
+            }
+
+            Path requestPath = httpRequest.getPath();
+            Controller controller = CONTROLLER_MAPPER.findController(requestPath.getUri());
+            controller.execute(httpRequest);
+
+            response200Header(dos);
         } catch (IOException | URISyntaxException e) {
             log.error(e.getMessage());
         }
@@ -48,10 +63,14 @@ public class RequestHandler implements Runnable {
 
         while (!StringUtils.isEmpty(line)) {
             log.debug(line);
-            httpRequest.registerHeader(line);
             line = bufferedReader.readLine();
+            httpRequest.registerHeader(line);
         }
         return httpRequest;
+    }
+
+    private void response200Header(DataOutputStream dos) {
+        response200Header(dos, 0);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {

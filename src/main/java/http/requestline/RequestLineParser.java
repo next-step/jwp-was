@@ -2,6 +2,7 @@ package http.requestline;
 
 import http.method.HttpMethod;
 import http.requestline.exception.RequestLineParsingException;
+import http.requestline.path.Path;
 import http.requestline.protocol.ProtocolSpec;
 import http.requestline.protocol.ProtocolSpecPool;
 import lombok.AccessLevel;
@@ -22,7 +23,7 @@ public class RequestLineParser {
         String[] tokens = splitRequestLine(request);
 
         HttpMethod method = HttpMethod.valueOf(tokens[0]);
-        String path = tokens[1];
+        Path path = new Path(tokens[1]);
         ProtocolSpec protocolSpec = ProtocolSpecPool.find(tokens[2]);
 
         return RequestLine.builder()

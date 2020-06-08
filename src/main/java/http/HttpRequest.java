@@ -3,6 +3,7 @@ package http;
 import http.exception.HttpHeaderRegistrationException;
 import http.requestline.RequestLine;
 import http.requestline.RequestLineParser;
+import http.requestline.path.Path;
 import org.springframework.util.StringUtils;
 
 public class HttpRequest {
@@ -31,11 +32,19 @@ public class HttpRequest {
         httpHeaders.put(tokens[0].trim(), tokens[1].trim());
     }
 
+    public boolean hasPathFileExtension() {
+        return requestLine.hasPathFileExtension();
+    }
+
+    public String getFilePath() {
+        return requestLine.getFilePath();
+    }
+
     public String getHeader(String headerKey) {
         return httpHeaders.get(headerKey);
     }
 
-    public String getPath() {
+    public Path getPath() {
         return requestLine.getPath();
     }
 }

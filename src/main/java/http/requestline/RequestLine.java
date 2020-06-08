@@ -1,6 +1,7 @@
 package http.requestline;
 
 import http.method.HttpMethod;
+import http.requestline.path.Path;
 import http.requestline.protocol.Protocol;
 import http.requestline.protocol.ProtocolSpec;
 import lombok.Builder;
@@ -12,14 +13,22 @@ public class RequestLine {
     private final HttpMethod method;
 
     @Getter
-    private final String path;
+    private final Path path;
     private final ProtocolSpec protocolSpec;
 
     @Builder
-    RequestLine(HttpMethod method, String path, ProtocolSpec protocolSpec) {
+    RequestLine(HttpMethod method, Path path, ProtocolSpec protocolSpec) {
         this.method = method;
         this.path = path;
         this.protocolSpec = protocolSpec;
+    }
+
+    public boolean hasPathFileExtension() {
+        return path.hasExtension();
+    }
+
+    public String getFilePath() {
+        return path.getFilePath();
     }
 
     public Protocol getProtocol() {
