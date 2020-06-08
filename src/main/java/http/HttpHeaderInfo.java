@@ -1,7 +1,7 @@
 package http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
-import com.google.common.collect.Maps;
+import http.Const.HttpConst;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,41 +10,41 @@ import java.util.Map;
  * Created By kjs4395 on 2020-06-05
  */
 public class HttpHeaderInfo {
-    private Map<String, String> headerInfoMap;
+    private Map<String, String> headers;
 
     public HttpHeaderInfo() {
-        this.headerInfoMap = new HashMap<>();
+        this.headers = new HashMap<>();
     }
 
     public void addHeaderValue(String headerLine) {
-        String[] values = headerLine.split(":",2);
+        String[] values = headerLine.split(HttpConst.HEADER_SEPARATOR,2);
 
         if(values.length < 2) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid header format : " + headerLine);
         }
 
-        this.headerInfoMap.put(values[0].trim(), values[1].trim());
+        this.headers.put(values[0].trim(), values[1].trim());
     }
 
     public void addKeyAndValue(String key, String value) {
-        if(this.headerInfoMap == null) this.headerInfoMap = new HashMap<>();
+        if(this.headers == null) this.headers = new HashMap<>();
 
-        headerInfoMap.put(key,value);
+        headers.put(key,value);
     }
 
     public String getValue(String headerName) {
-        return this.headerInfoMap.getOrDefault(headerName, StringUtils.EMPTY);
+        return this.headers.getOrDefault(headerName, StringUtils.EMPTY);
     }
 
     public String makeResponseHeader() {
-        String responseHeader = "";
+        StringBuilder responseHeader = new StringBuilder();
 
-        for (String key : this.headerInfoMap.keySet()) {
-            responseHeader = responseHeader + key + ": " + headerInfoMap.get(key) + System.lineSeparator();
+        for (String key : this.headers.keySet()) {
+            responseHeader.append(key).append(HttpConst.HEADER_SEPARATOR).append(headers.get(key)).append(HttpConst.CRLF);
         }
-        responseHeader = responseHeader + System.lineSeparator();
+        responseHeader.append(HttpConst.CRLF);
 
-        return responseHeader;
+        return responseHeader.toString();
     }
 
 }

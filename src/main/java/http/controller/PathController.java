@@ -6,9 +6,10 @@ import http.HttpResponse;
 import http.ResourcePathMaker;
 import http.enums.HttpResponseCode;
 import http.enums.Method;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 import utils.FileIoUtils;
 
 import java.io.IOException;
@@ -92,5 +93,4 @@ public abstract class PathController {
 
         return new HttpResponse(HttpResponseCode.OK, body, headerInfo);
     }
-//step3 시작
 }

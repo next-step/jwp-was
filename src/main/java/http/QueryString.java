@@ -1,15 +1,27 @@
 package http;
 
+import http.Const.HttpConst;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.FieldNameUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
 
 public class QueryString {
+    private static final Logger log = LoggerFactory.getLogger(QueryString.class);
+
     private final String fullQueryString;
 
     public QueryString(String queryString) {
-        this.fullQueryString = queryString;
+        String decodeQuery = queryString;
+        try {
+            decodeQuery = URLDecoder.decode(queryString, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.error("url decode error : {}" , queryString);
+        }
+        this.fullQueryString = decodeQuery;
     }
 
     public String getFullQueryString() {
@@ -17,18 +29,18 @@ public class QueryString {
     }
 
     public String getParameter(String name) {
-        Optional<String> nameValueOptional = Arrays.stream(this.fullQueryString.split("&"))
+        Optional<String> nameValueOptional = Arrays.stream(this.fullQueryString.split(HttpConst.QUERY_SEPARATOR))
                 .filter(value -> value.startsWith(name))
                 .findFirst();
 
          String[] values = nameValueOptional.orElseThrow(NoSuchElementException::new)
-                 .split("=");
+                 .split(HttpConst.QUERY_VALUE_SEPARATOR);
 
          if(values.length < 2) {
-             throw new IllegalArgumentException();
+             throw new IllegalArgumentException("Invalid Body String : " + name);
          }
 
-         return URLDecoder.decode(values[1]);
+         return values[1];
     }
 
     @Override

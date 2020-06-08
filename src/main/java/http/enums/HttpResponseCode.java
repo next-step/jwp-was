@@ -1,5 +1,7 @@
 package http.enums;
 
+import http.Const.HttpConst;
+
 /**
  * Created By kjs4395 on 2020-06-05
  */
@@ -15,6 +17,6 @@ public enum HttpResponseCode {
     }
 
     public String makeHeader() {
-        return "HTTP/1.1 " + this.code.toString() + " " + this.message + System.lineSeparator();
+        return "HTTP/1.1 " + this.code.toString() + " " + this.message + HttpConst.CRLF;
     }
 }

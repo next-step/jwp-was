@@ -1,10 +1,11 @@
 package http.controller;
 
-import com.sun.istack.internal.logging.Logger;
 import db.DataBase;
 import http.*;
 import http.enums.HttpResponseCode;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.net.URISyntaxException;
 
 public class LoginController extends PathController{
 
-    private static final Logger log = Logger.getLogger(LoginController.class);
+    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
     public LoginController(HttpRequest httpRequest) {
         super(httpRequest);

@@ -4,19 +4,21 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import com.sun.istack.internal.logging.Logger;
+
 import db.DataBase;
 import http.HttpHeaderInfo;
 import http.HttpRequest;
 import http.HttpResponse;
 import http.enums.HttpResponseCode;
 import model.UserList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class ListController extends PathController{
-    private static final Logger log = Logger.getLogger(ListController.class);
+    private static final Logger log = LoggerFactory.getLogger(ListController.class);
 
     public ListController(HttpRequest httpRequest) {
         super(httpRequest);
