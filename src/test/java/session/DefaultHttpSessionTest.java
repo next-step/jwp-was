@@ -36,4 +36,16 @@ class DefaultHttpSessionTest {
 
         assertThat(httpSession.getId()).isEqualTo(sessionId);
     }
+
+    @Test
+    @DisplayName("attribute 저장하고 불러오기")
+    void setAndGetAttribute() {
+        String key = "key";
+        String value = "value";
+        DefaultHttpSession httpSession = DefaultHttpSession.of("session kek");
+
+        assertThat(httpSession.getAttribute(key)).isNull();
+        httpSession.setAttribute(key, value);
+        assertThat(httpSession.getAttribute(key)).isEqualTo(value);
+    }
 }
