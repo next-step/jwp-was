@@ -1,7 +1,7 @@
 package http.request.parser;
 
 import http.common.HeaderField;
-import http.request.Header;
+import http.request.RequestHeader;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.HashMap;
@@ -11,7 +11,7 @@ public class RequestHeaderParser {
 
     private static final String HEADER_NAME_VALUE_TOKENIZER = ":";
 
-    public static Header parse(String headerLines) {
+    public static RequestHeader parse(String headerLines) {
         Map<String, HeaderField> header = new HashMap<>();
 
         String[] headersStr = headerLines.split("\n");
@@ -27,6 +27,6 @@ public class RequestHeaderParser {
             HeaderField headerField = new HeaderField(headerName, headerValue);
             header.put(headerName, headerField);
         }
-        return new Header(header);
+        return new RequestHeader(header);
     }
 }

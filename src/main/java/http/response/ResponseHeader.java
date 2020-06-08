@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Header implements Iterable {
+public class ResponseHeader implements Iterable {
     private final Map<String, HeaderField> header;
 
-    public Header() {
+    public ResponseHeader() {
         this.header = new HashMap<>();
     }
 

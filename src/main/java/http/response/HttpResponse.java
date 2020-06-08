@@ -7,12 +7,12 @@ import http.common.HeaderFieldName;
 public class HttpResponse {
 
     private StatusCode statusCode;
-    private final Header header;
+    private final ResponseHeader header;
     private final Cookies cookies;
     private byte[] responseBody;
 
     public HttpResponse() {
-        header = new Header();
+        header = new ResponseHeader();
         cookies = new Cookies();
         responseBody = new byte[0];
     }
@@ -39,7 +39,7 @@ public class HttpResponse {
         header.addHeader(locationHeader);
     }
 
-    public Header getHeader() {
+    public ResponseHeader getHeader() {
         return header;
     }
 

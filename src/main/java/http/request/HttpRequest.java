@@ -5,10 +5,10 @@ import http.common.HeaderFieldName;
 
 public class HttpRequest {
     private final RequestLine requestLine;
-    private final Header header;
+    private final RequestHeader header;
     private final String body;
 
-    public HttpRequest(RequestLine requestLine, Header header, String body) {
+    public HttpRequest(RequestLine requestLine, RequestHeader header, String body) {
         this.requestLine = requestLine;
         this.header = header;
         this.body = body;

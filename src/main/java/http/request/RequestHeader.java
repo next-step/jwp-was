@@ -7,10 +7,10 @@ import org.apache.logging.log4j.util.Strings;
 
 import java.util.Map;
 
-public class Header {
+public class RequestHeader {
     private final Map<String, HeaderField> header;
 
-    public Header(Map<String, HeaderField> header) {
+    public RequestHeader(Map<String, HeaderField> header) {
         this.header = header;
     }
 

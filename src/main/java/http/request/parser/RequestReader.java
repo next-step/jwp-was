@@ -1,6 +1,6 @@
 package http.request.parser;
 
-import http.request.Header;
+import http.request.RequestHeader;
 import http.request.HttpRequest;
 import http.request.RequestLine;
 import org.apache.logging.log4j.util.Strings;
@@ -30,7 +30,7 @@ public class RequestReader {
             logger.debug("Header :: {}", line);
             sb.append(line).append("\n");
         }
-        Header header = RequestHeaderParser.parse(sb.toString());
+        RequestHeader header = RequestHeaderParser.parse(sb.toString());
 
         String contentLengthStr = header.getValue("Content-Length");
         int contentLength = 0;
