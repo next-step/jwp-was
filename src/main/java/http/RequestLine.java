@@ -1,5 +1,7 @@
 package http;
 
+import java.util.Map;
+
 public class RequestLine {
     private final HttpMethod method;
     private final String path;
@@ -31,5 +33,9 @@ public class RequestLine {
 
     public String getParameter(String key) {
         return queryString.getParameter(key);
+    }
+
+    public Map<String, String> getParameters() {
+        return queryString.getParameters();
     }
 }

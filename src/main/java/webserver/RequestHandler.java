@@ -1,5 +1,8 @@
 package webserver;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.UserController;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +31,17 @@ public class RequestHandler implements Runnable {
 
             HttpRequest httpRequest = HttpRequestReader.read(in);
 
-            byte[] body = RequestMappingManager.fileLoadFromPath(httpRequest.getPath());
+
+            byte[] body = new byte[0];
+            if ("/user/create".equals(httpRequest.getPath())) {
+                ObjectMapper mapper = new ObjectMapper();
+                User user = mapper.convertValue(httpRequest.getParameters(), User.class);
+                UserController.create(user);
+                body = user.toString().getBytes();
+            } else {
+                body = RequestMappingManager.fileLoadFromPath(httpRequest.getPath());
+            }
+
             if (body.length > 0) {
                 response200Header(dos, body.length);
             } else {

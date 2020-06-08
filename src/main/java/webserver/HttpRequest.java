@@ -44,4 +44,11 @@ public class HttpRequest {
         }
         return parameters.get(key);
     }
+
+    public Map<String, String> getParameters() {
+        if (HttpMethod.GET.equals(requestLine.getMethod())) {
+            return requestLine.getParameters();
+        }
+        return parameters;
+    }
 }

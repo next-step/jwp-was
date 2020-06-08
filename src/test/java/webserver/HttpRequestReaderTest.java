@@ -52,6 +52,7 @@ public class HttpRequestReaderTest {
         assertThat(body).isEqualTo(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
     }
 
+
     @Test
     void readRequestParameterGet() {
         String request = "GET /user/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net HTTP/1.1\n" +
@@ -77,4 +78,6 @@ public class HttpRequestReaderTest {
         assertThat(httpRequest.getParameter("name")).isEqualTo("박재성");
         assertThat(httpRequest.getParameter("email")).isEqualTo("javajigi@slipp.net");
     }
+
+
 }
