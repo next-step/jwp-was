@@ -7,6 +7,7 @@ import webserver.session.Sessions;
 
 public class Request {
     private static final String JSESSIONID = "JSESSIONID";
+    private static final String SET_COOKIE = "Set-Cookie";
 
     private final RequestLine requestLine;
     private final Headers headers;
@@ -51,20 +52,20 @@ public class Request {
     }
 
     public void addCookie(Cookie cookie) {
-        String header = headers.getHeader("Set-Cookie");
-        if(header == null){
-            this.headers.addHeader("Set-Cookie", cookie.toString());
+        String cookieValue = headers.getHeader(SET_COOKIE);
+        if (cookieValue == null) {
+            this.headers.addHeader(SET_COOKIE, cookie.toString());
         }
 
-        if(header != null){
-            Cookies cookies = Cookies.parseCookies(header);
+        if (cookieValue != null) {
+            Cookies cookies = Cookies.parseCookies(cookieValue);
             cookies.addCookie(cookie);
-            this.headers.replaceHeader("Set-Cookie", cookies.toString());
+            this.headers.replaceHeader(SET_COOKIE, cookies.toString());
         }
     }
 
     public Cookies getCookies() {
-        String cookieValue = this.getHeader("Set-Cookie");
+        String cookieValue = this.getHeader(SET_COOKIE);
         return Cookies.parseCookies(cookieValue);
     }
 }
