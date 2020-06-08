@@ -11,7 +11,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import model.User;
 import org.slf4j.Logger;
@@ -63,6 +66,21 @@ public class RequestHandler implements Runnable {
 
                 DataOutputStream dos = new DataOutputStream(out);
                 response302Header(dos, path);
+            } else if (path.endsWith(".css")) {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./static" + path);
+                response200HeaderCSS(dos, body.length);
+                responseBody(dos, body);
+            } else if (path.endsWith(".js")) {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./static" + path);
+                response200HeaderJS(dos, body.length);
+                responseBody(dos, body);
+            } else if (path.endsWith("woff")) {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./static" + path);
+                response200HeaderWoff(dos, body.length);
+                responseBody(dos, body);
             } else {
                 DataOutputStream dos = new DataOutputStream(out);
                 byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + path);
@@ -71,6 +89,28 @@ public class RequestHandler implements Runnable {
             }
 
         } catch (IOException | URISyntaxException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response200HeaderWoff(DataOutputStream dos, int lengthOfBodyContent) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: font/woff\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response200HeaderJS(DataOutputStream dos, int lengthOfBodyContent) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: application/javascript\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
@@ -89,6 +129,17 @@ public class RequestHandler implements Runnable {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response200HeaderCSS(DataOutputStream dos, int lengthOfBodyContent) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
