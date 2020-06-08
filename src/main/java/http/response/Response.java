@@ -41,4 +41,12 @@ public class Response {
     public Headers getHeaders() {
         return headers;
     }
+
+    public void addCookies(Cookies cookies) {
+
+    }
+
+    public Cookies getCookies() {
+        return null;
+    }
 }
