@@ -34,6 +34,9 @@ public class HttpSessionTest {
     void invalidate(){
         //given
         HttpSession session = new HttpSession();
+        session.setAttribute("isAdmin", true);
+        session.setAttribute("hasValidJsessionId", false);
+        assertThat(session.getSize()).isNotZero();
 
         //when
         session.invalidate();

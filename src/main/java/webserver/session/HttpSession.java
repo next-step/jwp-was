@@ -24,10 +24,10 @@ public class HttpSession {
     }
 
     public void invalidate() {
-
+        session.clear();
     }
 
     public int getSize() {
-        return null;
+        return session.size();
     }
 }
