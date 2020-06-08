@@ -13,4 +13,8 @@ public class QueryString {
     public String getParameter(final String key) {
         return parameters.get(key);
     }
+
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
 }
