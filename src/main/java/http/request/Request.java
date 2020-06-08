@@ -19,15 +19,15 @@ public class Request {
         return requestLine;
     }
 
+    public String getHeader(String key) {
+        return this.headers.getHeader(key);
+    }
+
     public Headers getHeaders() {
         return headers;
     }
 
     public RequestBody getRequestBody() {
         return requestBody;
-    }
-
-    public String getHeader(String key) {
-        return getHeaders().getHeader(key);
     }
 }

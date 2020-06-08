@@ -35,12 +35,7 @@ public class RequestLineUtils {
 
     public static boolean hasQueryStrings(String requestLine) {
         String[] strings = splitPath(extractPath(requestLine));
-
-        if (strings.length == LENGTH_TWO) {
-            return true;
-        }
-
-        return false;
+        return strings.length == LENGTH_TWO;
     }
 
     private static String[] splitProtocol(String protocol) {

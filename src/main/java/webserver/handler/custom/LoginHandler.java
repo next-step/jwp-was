@@ -38,11 +38,9 @@ public class LoginHandler implements Handler {
     public Response work(Request request) throws IOException, URISyntaxException {
         Map<String, String> queryStrings = QueryStrings.parseQueryStrings(request.getRequestBody().getBody());
         User user = getUser(queryStrings);
-
-
         Map<String, String> headers = new HashMap<>();
 
-        if (isSuccess(queryStrings, user)) {
+        if (isAuthenticatedUser(queryStrings, user)) {
             ResponseBody body = new ResponseBody(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
             headers.put(HEADER_SET_COOKIE, "logined=true; Path=/");
             headers.put(HEADER_LOCATION, "/index.html");
@@ -61,19 +59,14 @@ public class LoginHandler implements Handler {
     }
 
     private User getUser(Map<String, String> queryStrings) {
-        String userId = queryStrings.get(KEY_USER_ID);
-        User user;
-
         try {
-            user = DataBase.findUserById(userId);
+            return DataBase.findUserById(queryStrings.get(KEY_USER_ID));
         } catch (Exception e) {
-            user = new User();
+            return new User();
         }
-
-        return user;
     }
 
-    private boolean isSuccess(Map<String, String> queryStrings, User user) {
+    private boolean isAuthenticatedUser(Map<String, String> queryStrings, User user) {
         String password = queryStrings.get(KEY_PASSWORD);
         return user.getPassword().equals(password);
     }
