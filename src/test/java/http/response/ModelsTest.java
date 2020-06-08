@@ -11,7 +11,7 @@ class ModelsTest {
     @Test
     @DisplayName("모델 추가")
     void addModels() {
-        Models models = Models.init();
+        Models models = new Models();
 
         models.addModel("key", "value");
 

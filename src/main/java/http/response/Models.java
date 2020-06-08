@@ -6,11 +6,7 @@ import java.util.Map;
 public class Models {
     private final Map<String, Object> models = new HashMap<>();
 
-    private Models() {}
-
-    public static Models init() {
-        return new Models();
-    }
+    public Models() {}
 
     public void addModel(final String key, final Object value) {
         models.put(key, value);

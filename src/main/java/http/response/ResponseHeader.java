@@ -12,11 +12,7 @@ public class ResponseHeader {
     private static final String LOCATION = "Location";
     private final Map<String, String> headers = new HashMap<>();
 
-    private ResponseHeader() {}
-
-    public static ResponseHeader newInstance() {
-        return new ResponseHeader();
-    }
+    public ResponseHeader() {}
 
     public void setLocation(final String location) {
         if (StringUtil.isEmpty(location)) {

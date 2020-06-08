@@ -10,11 +10,7 @@ public class Cookies {
 
     private final Map<String, String> cookies = new HashMap<>();
 
-    private Cookies() {}
-
-    public static Cookies init() {
-        return new Cookies();
-    }
+    public Cookies() {}
 
     public void setCookie(final String key, final String value) {
         cookies.put(key, value);

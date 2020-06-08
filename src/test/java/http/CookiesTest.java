@@ -12,7 +12,7 @@ class CookiesTest {
 
     @BeforeEach
     void initEnv() {
-        cookies = Cookies.init();
+        cookies = new Cookies();
     }
 
     @Test

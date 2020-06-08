@@ -4,20 +4,22 @@ import http.ContentType;
 import http.Cookies;
 import http.StatusCode;
 
+import javax.xml.ws.Response;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
 public class HttpResponse {
-    public static final String NEW_LINE = "\r\n";
+    private static final String NEW_LINE = "\r\n";
+
     private StatusCode statusCode;
     private ContentType contentType = ContentType.HTML;
     private byte[] responseBody = new byte[0];
 
-    private final Cookies cookies = Cookies.init();
-    private final ResponseHeader header = ResponseHeader.newInstance();
-    private final Models models = Models.init();
+    private final Cookies cookies = new Cookies();
+    private final ResponseHeader header = new ResponseHeader();
+    private final Models models = new Models();
     private final Forward forward = new Forward();
 
     private HttpResponse(final StatusCode statusCode) {
