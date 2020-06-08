@@ -1,5 +1,6 @@
 package http.request;
 
+import http.response.Cookie;
 import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,11 +56,30 @@ public class RequestTest {
         boolean isHttpOnly = true;
 
         //when
-        request.addCookie(cookie, path, isHttpOnly);
+        request.addCookie(new Cookie(cookie, path, isHttpOnly));
 
         //then
         assertThat(request.getHeader("Set-Cookie"))
                 .isEqualTo("logined=true; Path=/; HttpOnly");
+    }
+
+    @DisplayName("Request에 Cookie 저장 - Cookie가 2개 이상일 때")
+    @Test
+    void addCookieWhenCookiesAreMoreThanOne() {
+        //given
+        Request request = createRequest();
+        Cookie cookie1 = new Cookie("logined=true", "/", true);
+        Cookie cookie2 = new Cookie("logined=false", "/", false);
+
+
+        //when
+        request.addCookie(cookie1);
+        request.addCookie(cookie2);
+
+        //then
+        assertThat(request.getHeader("Set-Cookie"))
+                .isEqualTo(
+                        "logined=true; Path=/; HttpOnly" + "&" + "logined=false; Path=/; ");
     }
 
     private Request createRequest() {

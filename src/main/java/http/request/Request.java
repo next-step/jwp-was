@@ -50,15 +50,15 @@ public class Request {
         return Sessions.findById(sessionId);
     }
 
-    public void addCookie(String cookie, String path, boolean isHttpOnly) {
+    public void addCookie(Cookie cookie) {
         String header = headers.getHeader("Set-Cookie");
         if(header == null){
-            this.headers.addHeader("Set-Cookie", new Cookie(cookie, path, isHttpOnly).toString());
+            this.headers.addHeader("Set-Cookie", cookie.toString());
         }
 
         if(header != null){
             Cookies cookies = Cookies.parseCookies(header);
-            cookies.addCookie(new Cookie(cookie, path, isHttpOnly));
+            cookies.addCookie(cookie);
             this.headers.replaceHeader("Set-Cookie", cookies.toString());
         }
     }

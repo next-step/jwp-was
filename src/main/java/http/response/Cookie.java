@@ -25,6 +25,18 @@ public class Cookie {
         return new Cookie(cookie, path, true);
     }
 
+    public String getCookie() {
+        return cookie;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public String getHttpOnly() {
+        return httpOnly;
+    }
+
     @Override
     public String toString() {
         return cookie + "; "
