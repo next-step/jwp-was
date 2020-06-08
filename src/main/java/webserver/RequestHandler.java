@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
 import http.QueryStrings;
@@ -59,16 +60,49 @@ public class RequestHandler implements Runnable {
                         httpRequest.getParameter("password"), httpRequest.getParameter("name"),
                         httpRequest.getParameter("email"));*/
                 logger.debug("User : {}", user);
+                DataBase.addUser(user);
                 DataOutputStream dos = new DataOutputStream(out);
                 response302Header(dos, "/index.html" );
-            } else {
-                DataOutputStream dos = new DataOutputStream(out);
-                byte[] body = HttpResponse.getBody(path);
+            } else if(path.equals("/user/login")) {
+                String body = IOUtils.readData(br, contentLength);
 
-                //byte[] body = "Hello World".getBytes();
-                response200Header(dos, body.length);
-                responseBody(dos, body);
+                QueryStrings queryStrings = new QueryStrings(body);
+
+                User user = DataBase.findUserById(queryStrings.getParameter("userId"));
+
+                if(user == null) {
+                    responseResource(out, path);
+                    return;
+                }
+
+                if(user.getPassword().equals(queryStrings.getParameter("password"))) {
+                    DataOutputStream dos = new DataOutputStream(out);
+                    responseLoginHeader(dos);
+                } else {
+                    responseResource(out, path);
+                }
+
+            } else {
+                responseResource(out, path);
             }
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void responseResource(OutputStream out, String url) throws IOException {
+        DataOutputStream dos = new DataOutputStream(out);
+        byte[] body = HttpResponse.getBody(url);
+        response200Header(dos, body.length);
+        responseBody(dos, body);
+    }
+
+    private void responseLoginHeader(DataOutputStream dos) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/html;\r\n");
+            dos.writeBytes("Set-Cookie: logined=true; path=/ \r\n");
+            dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
