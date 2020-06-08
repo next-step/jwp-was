@@ -15,10 +15,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("모든 request 에 대해서 세션을 셍상히고 로드하는 작업을 함")
 class SessionManagerTest {
     private SessionManager sessionManager;
+    private final String sessionId = "default";
 
     @BeforeEach
     void setEnv() {
-        sessionManager = new SessionManager();
+        InMemorySessionHolder inMemorySessionHolder = new InMemorySessionHolder();
+        sessionManager = new SessionManager(inMemorySessionHolder);
+        inMemorySessionHolder.save(DefaultHttpSession.of(sessionId));
     }
 
     @Test
