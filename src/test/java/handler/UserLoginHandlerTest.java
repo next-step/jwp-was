@@ -6,7 +6,6 @@ import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.view.RedirectView;
-import java.io.IOException;
 import java.util.Arrays;
 import model.User;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,7 @@ import org.junit.jupiter.api.Test;
 class UserLoginHandlerTest {
 
     @Test
-    void login_success() throws IOException {
+    void login_success() {
         DataBase.addUser(new User("javajigi", "password", "", ""));
         HttpResponse httpResponse = login("javajigi", "password");
 

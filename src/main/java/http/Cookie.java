@@ -2,11 +2,13 @@ package http;
 
 import static http.HeaderName.RESPONSE_COOKIE;
 
+import http.session.HttpSessionStorage;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.HttpUtils;
@@ -14,6 +16,7 @@ import utils.HttpUtils;
 public class Cookie {
 
     private static final Logger logger = LoggerFactory.getLogger(Cookie.class);
+    private static final String SESSION_ID_NAME = "SESSION-ID";
 
     private static final String COOKIE_SPLITTER = ";";
     private static final String KEY_VALUE_SPLITTER = "=";
@@ -63,5 +66,11 @@ public class Cookie {
     @Override
     public int hashCode() {
         return Objects.hash(cookies);
+    }
+
+    public HttpSession getHttpSession(HttpSessionStorage httpSessionStorage) {
+        String sessionId = this.cookies.get(SESSION_ID_NAME);
+        return httpSessionStorage.getHttpSession(sessionId)
+            .orElseGet(() -> httpSessionStorage.newHttpSession(UUID.randomUUID().toString()));
     }
 }

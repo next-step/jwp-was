@@ -4,6 +4,7 @@ import static http.HeaderName.CONTENT_LENGTH;
 import static http.HeaderName.CONTENT_TYPE;
 import static http.HeaderName.REQUEST_COOKIE;
 
+import http.session.HttpSessionStorage;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.UUID;
 import utils.HttpUtils;
 import utils.StringUtils;
 
@@ -101,4 +103,7 @@ public class Headers {
         return Objects.hash(headers, cookie);
     }
 
+    public HttpSession getHttpSession(HttpSessionStorage httpSessionStorage) {
+        return this.cookie.getHttpSession(httpSessionStorage);
+    }
 }
