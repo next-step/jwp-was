@@ -11,14 +11,14 @@ public class RequestLine {
     private final Path path;
     private final Protocol protocol;
 
-    public RequestLine(final String requestLineStr) {
-        String[] tokens = requestLineStr.split(DELIMITER);
+    public RequestLine(final String requestLine) {
+        String[] tokens = requestLine.split(DELIMITER);
 
         if (tokens.length != REQUIRED_TOKEN_SIZE_TO_INIT_REQUEST_LINE) {
-            throw new IllegalArgumentException("Request line format is illegal : [" + requestLineStr + "]");
+            throw new IllegalArgumentException("Request line format is illegal : [" + requestLine + "]");
         }
 
-        this.origin = requestLineStr;
+        this.origin = requestLine;
         this.httpMethod = HttpMethod.of(tokens[0]);
         this.path = new Path(tokens[1]);
         this.protocol = new Protocol(tokens[2]);
@@ -28,8 +28,8 @@ public class RequestLine {
         path.addParameter(token);
     }
 
-    public static RequestLine parse(final String requestLineStr) {
-        return new RequestLine(requestLineStr);
+    public static RequestLine parse(final String requestLine) {
+        return new RequestLine(requestLine);
     }
 
     public HttpMethod getMethod() {
