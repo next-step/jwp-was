@@ -54,13 +54,13 @@ public class ResponseTest {
         Cookie cookie2 = new Cookie("logined=false", "/index.html", false);
         Response response = createResponse();
         response.addCookie(cookie);
+        assertThat(response.getCookies().toString())
+                .isEqualTo("logined=true; Path=/; HttpOnly");
 
         //when
         response.addCookie(cookie2);
 
         //then
-        assertThat(response.getCookies().getSize())
-                .isEqualTo(2);
         assertThat(response.getCookies().toString())
                 .isEqualTo("logined=true; Path=/; HttpOnly&"
                         + "logined=false; Path=/index.html; ");

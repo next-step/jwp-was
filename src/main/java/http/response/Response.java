@@ -44,8 +44,14 @@ public class Response {
 
     public void addCookie(Cookie cookie) {
         String cookieValue = this.getHeaderByKey("Set-Cookie");
-        if(cookieValue == null){
+        if (cookieValue == null) {
             this.headers.addHeader("Set-Cookie", cookie.toString());
+        }
+
+        if (cookieValue != null) {
+            Cookies cookies = Cookies.parseCookies(cookieValue);
+            cookies.addCookie(cookie);
+            this.headers.replaceHeader("Set-Cookie", cookies.toString());
         }
     }
 
