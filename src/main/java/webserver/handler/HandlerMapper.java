@@ -31,7 +31,6 @@ public class HandlerMapper implements Runnable {
 
             Handler handler = Handlers.findHandler(request);
             Response response = handler.work(request);
-            response.addCookies(request.getCookies());
 
             IOUtils.writeData(response, out);
         } catch (IOException | URISyntaxException e) {
