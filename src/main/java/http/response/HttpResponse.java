@@ -74,7 +74,7 @@ public class HttpResponse {
         dataOutputStream.writeBytes(statusCode.getResponseLine() + NEW_LINE);
     }
 
-    public void sendRedirect(final String location) {
+    public void setRedirect(final String location) {
         header.setLocation(location);
         statusCode = StatusCode.REDIRECT;
     }

@@ -14,7 +14,7 @@ public class UserListController extends AbstractController {
     @Override
     protected void get(final HttpRequest request, final HttpResponse httpResponse) {
         if (!LoginUtil.isLoggedIn(request)) {
-            httpResponse.sendRedirect("/user/login.html");
+            httpResponse.setRedirect("/user/login.html");
             return;
         }
 

@@ -16,6 +16,6 @@ public class UserController extends AbstractController {
         User newUser = User.init(request.getParameters());
         DataBase.addUser(newUser);
 
-        httpResponse.sendRedirect("/index.html");
+        httpResponse.setRedirect("/index.html");
     }
 }

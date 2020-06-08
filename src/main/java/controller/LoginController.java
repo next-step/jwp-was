@@ -15,7 +15,7 @@ public class LoginController extends AbstractController {
 
     @Override
     public void get(final HttpRequest httpRequest, final HttpResponse httpResponse) {
-        httpResponse.sendRedirect("/login.html");
+        httpResponse.setRedirect("/login.html");
     }
 
     @Override
@@ -26,13 +26,13 @@ public class LoginController extends AbstractController {
         User user = DataBase.findUserById(id);
 
         if (user == null || !user.isPasswordValid(password)) {
-            httpResponse.sendRedirect("/user/login_failed.html");
+            httpResponse.setRedirect("/user/login_failed.html");
             httpResponse.setCookie(LOGGED_IN, "false");
 
             return;
         }
 
-        httpResponse.sendRedirect("/index.html");
+        httpResponse.setRedirect("/index.html");
         httpResponse.setCookie(LOGGED_IN, "true");
     }
 }

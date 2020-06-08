@@ -1,7 +1,6 @@
 package http.response;
 
 import http.StatusCode;
-import http.response.HttpResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,7 +25,7 @@ class HttpResponseTest {
     void redirect() {
         String location = "http://localhost:8080/index.html";
         HttpResponse httpResponse = HttpResponse.init();
-        httpResponse.sendRedirect(location);
+        httpResponse.setRedirect(location);
 
         assertThat(httpResponse.getLocation()).isEqualTo(location);
         assertThat(httpResponse.getStatusCode()).isEqualTo(StatusCode.REDIRECT);
@@ -39,7 +38,7 @@ class HttpResponseTest {
         HttpResponse httpResponse = HttpResponse.init();
 
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> httpResponse.sendRedirect(location));
+                .isThrownBy(() -> httpResponse.setRedirect(location));
     }
 
     @Test
