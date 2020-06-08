@@ -43,10 +43,11 @@ public class Response {
     }
 
     public void addCookies(Cookies cookies) {
-
+        this.headers.addHeader(SET_COOKIE, cookies.toString());
     }
 
     public Cookies getCookies() {
-        return null;
+        String headerByKey = this.getHeaderByKey(SET_COOKIE);
+        return Cookies.parseCookies(headerByKey);
     }
 }

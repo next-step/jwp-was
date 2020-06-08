@@ -25,6 +25,8 @@ public class ResponseTest {
 
         //then
         assertThat(response.getCookies().getSize()).isEqualTo(2);
+        assertThat(response.getCookies().toString())
+                .isEqualTo(cookies.toString());
     }
 
     private Response createResponse() {
