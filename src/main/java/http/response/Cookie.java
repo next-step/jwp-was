@@ -5,6 +5,12 @@ import org.apache.logging.log4j.util.Strings;
 import java.util.Objects;
 
 public class Cookie {
+    private static final String REGEX_COOKIE_DELIMITER = "; ";
+    private static final String REGEX_KEY_VALUE_DELIMITER = "=";
+    private static final int INDEX_FIRST = 0;
+    private static final int INDEX_SECOND = 1;
+    private static final int LENGTH_TWO = 2;
+
     private String cookie;
     private String path;
     private String httpOnly;
@@ -16,11 +22,11 @@ public class Cookie {
     }
 
     public static Cookie parse(String value) {
-        String[] split = value.split("; ");
-        String cookie = split[0];
-        String path = split[1].split("=")[1];
+        String[] split = value.split(REGEX_COOKIE_DELIMITER);
+        String cookie = split[INDEX_FIRST];
+        String path = split[INDEX_SECOND].split(REGEX_KEY_VALUE_DELIMITER)[INDEX_SECOND];
 
-        if (split.length == 2) {
+        if (split.length == LENGTH_TWO) {
             return new Cookie(cookie, path, false);
         }
 
