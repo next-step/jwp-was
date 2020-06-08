@@ -13,7 +13,7 @@ public class Headers {
     private Map<String, String> headers = new HashMap<>();
 
     public Headers(Map<String, String> headers) {
-        this.headers = headers;
+        this.headers = new HashMap<>(headers);
     }
 
     public String getHeader(String key) {
