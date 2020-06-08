@@ -6,7 +6,7 @@ import http.HttpMethod;
 import http.exception.MethodNotAllowedException;
 import http.handler.Handler;
 import http.request.HttpRequest;
-import http.request.mapper.HandlerMapper;
+import http.handler.mapper.HandlerMapper;
 import http.request.requestline.RequestLine;
 import http.response.HttpResponse;
 import lombok.extern.slf4j.Slf4j;

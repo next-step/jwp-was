@@ -1,13 +1,7 @@
 package http.handler;
 
 import com.google.common.collect.Maps;
-import http.HttpEntity;
 import http.HttpHeaders;
-import http.HttpStatus;
-import http.request.HttpRequest;
-import http.request.mapper.StaticResources;
-import http.response.HttpResponse;
-import http.response.StatusLine;
 import lombok.extern.slf4j.Slf4j;
 import utils.FileIoUtils;
 
@@ -20,8 +14,6 @@ import static http.HttpHeader.CONTENT_TYPE_NAME;
 
 @Slf4j
 public class TemplateResourceHandler extends AbstractHandler {
-    private static final String TEMPLATE_PATH = "./templates";
-
     protected String contentType;
 
     public TemplateResourceHandler(String contentType) {

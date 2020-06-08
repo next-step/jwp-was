@@ -15,6 +15,9 @@ import java.net.URISyntaxException;
 
 @Slf4j
 public abstract class AbstractHandler implements Handler {
+    public static final String NEW_LINE_STRING = "\r\n";
+    public static final String TEMPLATE_PATH = "./templates";
+    public static final String STATIC_PATH = "./static";
 
     @Override
     public HttpResponse getResponse(HttpRequest httpRequest) throws IOException, URISyntaxException {
@@ -28,12 +31,16 @@ public abstract class AbstractHandler implements Handler {
         return httpResponse;
     }
 
-    protected abstract HttpHeaders getHttpHeaders(int length);
-
-
     @Override
     public byte[] getHttpBody(String path) throws IOException, URISyntaxException {
         return new byte[0];
+    }
+
+    protected abstract HttpHeaders getHttpHeaders(int length);
+
+    @Override
+    public void doService(HttpRequest httpRequest, HttpResponse httpResponse) {
+        return;
     }
 
     @Override

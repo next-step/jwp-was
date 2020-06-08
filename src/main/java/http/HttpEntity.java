@@ -20,4 +20,8 @@ public class HttpEntity {
         this.httpHeaders = httpHeaders;
         this.body = body;
     }
+
+    public Map<String, String> getBodyMap() {
+        return MapParameterUtil.buildParameters(body);
+    }
 }

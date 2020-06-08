@@ -23,8 +23,4 @@ public enum HttpMethod {
             .map(httpMethodMap::get)
             .orElse(null);
     }
-
-    public boolean matches(String method) {
-        return (this == resolve(method));
-    }
 }

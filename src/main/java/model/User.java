@@ -1,6 +1,10 @@
 package model;
 
 import lombok.Getter;
+import utils.MapParameterUtil;
+import utils.MapUtil;
+
+import java.util.Map;
 
 @Getter
 public class User {
@@ -14,6 +18,10 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public static User of(Map<String, String> queryString) {
+        return MapParameterUtil.toObject(queryString, User.class);
     }
 
     @Override

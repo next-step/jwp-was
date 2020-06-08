@@ -1,4 +1,4 @@
-package http.request.mapper;
+package http.handler.mapper;
 
 import http.HttpStatus;
 import http.handler.ExceptionHandler;

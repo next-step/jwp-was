@@ -6,7 +6,9 @@ import http.HttpMethod;
 import http.request.requestline.Protocol;
 import http.request.requestline.RequestLine;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 public class HttpRequest {
     private final RequestLine requestLine;
@@ -46,5 +48,15 @@ public class HttpRequest {
 
     public String getPath() {
         return requestLine.getPath();
+    }
+
+    public Map<String, String> getQueryString() {
+        return requestLine.getQueryString();
+    }
+
+    public Map<String, String> getBodyMap() {
+        return Optional.ofNullable(httpEntity)
+                .map(HttpEntity::getBodyMap)
+                .orElse(Collections.emptyMap());
     }
 }

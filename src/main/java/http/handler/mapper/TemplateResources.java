@@ -1,4 +1,4 @@
-package http.request.mapper;
+package http.handler.mapper;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

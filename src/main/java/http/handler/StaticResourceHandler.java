@@ -8,8 +8,6 @@ import java.net.URISyntaxException;
 
 @Slf4j
 public class StaticResourceHandler extends TemplateResourceHandler {
-    private static final String STATIC_PATH = "./static";
-
     public StaticResourceHandler(String contentType) {
         super(contentType);
     }
