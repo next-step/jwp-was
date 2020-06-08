@@ -1,6 +1,7 @@
 package webserver;
 
 import lombok.EqualsAndHashCode;
+import utils.ValidUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,34 +14,42 @@ import static java.util.stream.Collectors.toMap;
 public class RequestLine {
 
     private static final String BLANK = " ";
-    private static final String PATH_SEPARATOR = "\\?";
+    private static final String URL_SEPARATOR = "\\?";
     private static final String ENTRY_SEPARATOR = "&";
     private static final String KEY_VALUE_SEPARATOR = "=";
 
     private HttpMethod method;
-    private String path;
+    private String url;
     private Protocol protocol;
     private Map<String, String> queryParameters;
 
-    public RequestLine(HttpMethod method, String path, Protocol protocol) {
+    public RequestLine(HttpMethod method, String url, Protocol protocol) {
+        ValidUtils.notNull(method, "http method는 null일 수 없습니다");
+        ValidUtils.notBlank(url, "http url은 blank일 수 없습니다");
+        ValidUtils.notNull(protocol, "프로토콜 정보가 null일 수 없습니다");
+
         this.method = method;
-        this.path = path;
+        this.url = url;
         this.protocol = protocol;
         queryParameters = new HashMap<>();
     }
 
     public RequestLine(String requestLine) {
+        ValidUtils.notBlank(requestLine, "http request line은 null일 수 없습니다");
+
         String[] split = requestLine.split(BLANK);
         this.method = HttpMethod.resolve(split[0]);
-        this.path = split[1];
+        this.url = split[1];
 
         String protocolNameAndVersion = split[2];
         this.protocol = new Protocol(protocolNameAndVersion);
-        this.queryParameters = parseQueryString(path);
+        this.queryParameters = parseQueryString(url);
     }
 
-    private Map<String, String> parseQueryString(String path) {
-        String[] queryString = path.split(PATH_SEPARATOR);
+    private Map<String, String> parseQueryString(String url) {
+        ValidUtils.notBlank(url, "http url은 blank일 수 없습니다");
+
+        String[] queryString = url.split(URL_SEPARATOR);
         if (isNonExistent(queryString)) {
             return Collections.emptyMap();
         }
@@ -51,6 +60,7 @@ public class RequestLine {
     }
 
     private boolean isNonExistent(String[] queryString) {
+        ValidUtils.notNull(queryString);
         return queryString.length <= 1;
     }
 
