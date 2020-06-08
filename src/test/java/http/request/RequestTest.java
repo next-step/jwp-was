@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RequestTest {
     @DisplayName("Request에서 Session 추출 - JSESSIONID가 있을 때")
     @Test
-    void getSession() {
+    void getSessionWhenSessionExist() {
         //given
         RequestLine requestLine = new RequestLine("GET /index.html HTTP/1.1");
         Headers headers = new Headers(createHeadersWithSession(new HttpSession()));
@@ -26,6 +26,23 @@ public class RequestTest {
         //then
         assertThat(session.getId())
                 .isEqualTo(headers.getHeader("JSESSIONID"));
+    }
+
+    @DisplayName("Request에서 Session 추출 - JSESSIONID가 없을 때")
+    @Test
+    void getSessionWhenSessionNotExist() {
+        //given
+        RequestLine requestLine = new RequestLine("GET /index.html HTTP/1.1");
+        Headers headers = new Headers(new HashMap<>());
+        RequestBody body = new RequestBody(Strings.EMPTY);
+        Request request = new Request(requestLine, headers, body);
+        assertThat(headers.getHeader("JSESSIONID")).isNull();
+
+        //when
+        HttpSession session = request.getSession();
+
+        //then
+        assertThat(session.getId()).isNotNull();
     }
 
     private Map<String, String> createHeadersWithSession(HttpSession session) {
