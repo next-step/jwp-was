@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
+import http.view.RedirectView;
 import http.view.StaticResourceView;
 import http.view.TemplateView;
 import java.io.IOException;
@@ -19,7 +20,7 @@ class UserLoginHandlerTest {
         DataBase.addUser(new User("javajigi", "password", "", ""));
         HttpResponse httpResponse = login("javajigi", "password");
 
-        HttpResponse expect = new HttpResponse(new StaticResourceView("/index.html"));
+        HttpResponse expect = new HttpResponse(new RedirectView("/index.html"));
         expect.addCookie("logined", "true");
 
         assertThat(httpResponse).isEqualTo(expect);
@@ -29,7 +30,7 @@ class UserLoginHandlerTest {
     void login_fail() {
         HttpResponse httpResponse = login("javajigi", "password");
 
-        HttpResponse expect = new HttpResponse(new TemplateView("user/login_failed"));
+        HttpResponse expect = new HttpResponse(new RedirectView("/user/login_failed.html"));
         assertThat(httpResponse).isEqualTo(expect);
     }
 
