@@ -7,19 +7,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("유저의 세션을 저장하고 있는 인메모리 저장소")
 class InMemorySessionHolderTest {
     private static final InMemorySessionHolder SESSION_HOLDER = new InMemorySessionHolder();
 
     @Test
-    void addSession() {
+    void saveAndLoadSession() {
         HttpSession session = TestHttpSession.of("sessionId");
 
-        SESSION_HOLDER.add("sessionId", session);
+        SESSION_HOLDER.save("sessionId", session);
 
-        HttpSession sessionFromStore = SESSION_HOLDER.get("sessionId");
+        HttpSession sessionFromStore = SESSION_HOLDER.load("sessionId");
 
         assertThat(session).isEqualTo(sessionFromStore);
     }
