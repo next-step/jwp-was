@@ -17,7 +17,7 @@ public class SessionManager {
     public void loadSession(final HttpRequest httpRequest, final HttpResponse httpResponse) {
         String sessionId = loadSessionId(httpRequest, httpResponse);
 
-        HttpSession httpSession = inMemorySessionHolder.load(sessionId);
+        HttpSession httpSession = loadSession(sessionId);
 
         httpRequest.setSession(httpSession);
     }
