@@ -16,10 +16,10 @@ public class HttpSession {
     }
 
     public void setAttribute(String name, Object value) {
-
+        session.put(name, value);
     }
 
     public Object getAttribute(String name) {
-        return null;
+        return session.get(name);
     }
 }
