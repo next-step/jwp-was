@@ -39,7 +39,18 @@ public class RequestHandler implements Runnable {
                 UserController.create(user);
                 body = user.toString().getBytes();
 
-                response302Header(dos);
+                response302Header(dos, "/index.html");
+            } else if ("/user/login".equals(httpRequest.getPath())) {
+                ObjectMapper mapper = new ObjectMapper();
+                User user = mapper.convertValue(httpRequest.getParameters(), User.class);
+                boolean isLogined = UserController.login(user);
+
+                if (isLogined) {
+                    response302Header(dos, "/index.html");
+                    dos.writeBytes("Set-Cookie: logined=true; Path=/");
+                } else {
+                    response302Header(dos, "/user/login_failed.html");
+                }
             } else {
                 body = RequestMappingManager.fileLoadFromPath(httpRequest.getPath());
 
@@ -78,10 +89,10 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void response302Header(DataOutputStream dos) {
+    private void response302Header(DataOutputStream dos, String path) {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: http://localhost:8080/index.html\r\n");
+            dos.writeBytes("Location: http://localhost:8080" + path + "\r\n");
             dos.writeBytes("\r\n");
 
         } catch (IOException e) {
