@@ -1,20 +1,26 @@
 package http.request;
 
+import controller.Controller;
+import controller.CreateUserController;
+import controller.ListUserController;
+import controller.LoginController;
+import controller.PathController;
+
 import java.util.Arrays;
 
 public enum RequestUrl {
 
-    USER_CREATE("/user/create", "createUser"),
-    USER_LOGIN("/user/login", "login"),
-    USER_LIST("/user/list", "userList"),
-    NONE("", "request");
+    USER_CREATE("/user/create", new CreateUserController()),
+    USER_LOGIN("/user/login", new LoginController()),
+    USER_LIST("/user/list", new ListUserController()),
+    NONE("", new PathController());
 
     private final String url;
-    private final String methodName;
+    private final Controller controller;
 
-    RequestUrl(String url, String methodName) {
+    RequestUrl(String url, Controller controller) {
         this.url = url;
-        this.methodName = methodName;
+        this.controller = controller;
     }
 
     public static RequestUrl findByPath(String path) {
@@ -28,8 +34,7 @@ public enum RequestUrl {
         return url;
     }
 
-    public String getMethodName() {
-        return methodName;
+    public Controller getController() {
+        return controller;
     }
-
 }

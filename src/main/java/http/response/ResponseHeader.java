@@ -11,10 +11,6 @@ public class ResponseHeader {
         this.header.put(key, value);
     }
 
-    public void addLocation(String redirectUrl) {
-        this.header.put("Location", redirectUrl);
-    }
-
     public Map<String, String> getHeader() {
         return header;
     }
@@ -23,7 +19,4 @@ public class ResponseHeader {
         return header.get(key);
     }
 
-    public void addCookie(String cookie) {
-        this.header.put("Set-Cookie", cookie);
-    }
 }

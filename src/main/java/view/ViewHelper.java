@@ -9,6 +9,7 @@ import utils.FileIoUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 
 public class ViewHelper {
 
@@ -30,6 +31,7 @@ public class ViewHelper {
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix(TEMPLATE_PATH);
         loader.setSuffix(HTML_EXTENSION);
+        loader.setCharset(Charset.defaultCharset());
         Handlebars handlebars = new Handlebars(loader);
         try {
             Template template = handlebars.compile(location);

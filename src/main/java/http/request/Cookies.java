@@ -7,7 +7,7 @@ public class Cookies {
     private Map<String, String> cookies = new HashMap<>();
 
     public Cookies(String value) {
-        String[] values = value.split("; ");
+        String[] values = value.split(";");
         for (String cookie : values) {
             String[] result = cookie.split("=");
 

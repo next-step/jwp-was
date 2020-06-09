@@ -35,6 +35,10 @@ public class RequestLine {
         return path.getParameter(key);
     }
 
+    public QueryString getParameters() {
+        return path.getQueryString();
+    }
+
     public Protocol getProtocol() {
         return protocol;
     }

@@ -23,16 +23,16 @@ public class HttpResponse {
     private ResponseStatus status;
     private ResponseHeader header;
     private ResponseBody body;
-    private static DataOutputStream dos;
+    private DataOutputStream dos;
 
     public HttpResponse(OutputStream out) {
-        dos = new DataOutputStream(out);
+        this.dos = new DataOutputStream(out);
         this.header = new ResponseHeader();
     }
 
     public void sendRedirect(String redirectUrl) {
         this.status = FOUND;
-        header.addLocation(redirectUrl);
+        header.addHeader("Location", redirectUrl);
         this.body = ResponseBody.emptyBody();
         this.write();
     }

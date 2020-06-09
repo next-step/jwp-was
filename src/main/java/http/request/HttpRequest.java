@@ -63,6 +63,10 @@ public class HttpRequest {
         return false;
     }
 
+    public boolean isPost() {
+        return requestLine.isPost();
+    }
+
     private void parsingHeader(BufferedReader br, Map<String, String> header, String line) throws IOException {
         while (isNotEmpty(line)) {
             line = br.readLine();
@@ -98,5 +102,13 @@ public class HttpRequest {
         if (values.length > 1) {
             header.put(values[0], values[1]);
         }
+    }
+
+    public QueryString getParameters() {
+       if (requestLine.isPost()) {
+           return body.getQueryString();
+       }
+
+       return requestLine.getParameters();
     }
 }
