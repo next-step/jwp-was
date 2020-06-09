@@ -50,6 +50,7 @@ class UserListHandlerTest {
             line += "\r\nCookie: logined=true";
         }
 
-        return HttpRequest.from(new ByteArrayInputStream(line.getBytes()), new LocalHttpSessionStorage());
+        return HttpRequest
+            .from(new ByteArrayInputStream(line.getBytes()), new LocalHttpSessionStorage());
     }
 }

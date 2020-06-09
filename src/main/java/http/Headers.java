@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.UUID;
 import utils.HttpUtils;
 import utils.StringUtils;
 
@@ -39,7 +38,7 @@ public class Headers {
         return new Headers(headers, cookie);
     }
 
-    public static Headers newInstance(){
+    public static Headers newInstance() {
         return from(Arrays.asList());
     }
 

@@ -35,7 +35,8 @@ public class HttpRequestTest {
 
         HttpRequest httpRequest = HttpRequest.from(in, httpSessionStorage);
 
-        assertThat(httpRequest).isEqualTo(HttpRequest.of(line, Arrays.asList(header), body, httpSessionStorage));
+        assertThat(httpRequest)
+            .isEqualTo(HttpRequest.of(line, Arrays.asList(header), body, httpSessionStorage));
     }
 
     @Test
