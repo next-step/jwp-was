@@ -40,13 +40,16 @@ public enum HandlerMapper {
 
     public static Handler getHandler(String url) {
         if (StaticResource.matches(url)) {
+            log.debug("StaticResource - url: {}", url);
             return new StaticResourceHandler(url, StaticResource.getStaticResource(url));
         }
 
         if (requestMap.containsKey(url)) {
+            log.debug("requestMap - url: {}", url);
             return requestMap.get(url);
         }
 
+        log.debug("ExceptionHandler - url: {}", url);
         return new ExceptionHandler(HttpStatus.NOT_FOUND);
     }
 }

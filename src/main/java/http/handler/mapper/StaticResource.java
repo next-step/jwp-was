@@ -6,6 +6,7 @@ import utils.StringUtils;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 import static http.handler.AbstractHandler.STATIC_PATH;
 import static http.handler.AbstractHandler.TEMPLATE_PATH;
@@ -56,12 +57,18 @@ public enum StaticResource {
     }
 
     private static String getFileExtension(String url) {
-        int beginIndex = url.lastIndexOf(".");
+        int beginIndex = getBeginIndex(url);
 
         if (beginIndex < 0) {
             return "";
         }
 
         return url.substring(beginIndex);
+    }
+
+    private static int getBeginIndex(String url) {
+        return Optional.ofNullable(url)
+            .map(curUrl -> curUrl.lastIndexOf("."))
+            .orElse(-1);
     }
 }
