@@ -25,4 +25,18 @@ public class HandlebarsTest {
         String profilePage = template.apply(user);
         log.debug("ProfilePage : {}", profilePage);
     }
+
+    @Test
+    void user_list() throws Exception {
+        TemplateLoader loader = new ClassPathTemplateLoader();
+        loader.setPrefix("/templates");
+        loader.setSuffix(".html");
+        Handlebars handlebars = new Handlebars(loader);
+
+        Template template = handlebars.compile("user/list");
+
+        User users = new User("javajigi", "password", "자바지기", "javajigi@gmail.com");
+        String profilePage = template.apply(users);
+        log.debug("ProfilePage : {}", profilePage);
+    }
 }

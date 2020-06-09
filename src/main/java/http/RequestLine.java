@@ -1,29 +1,26 @@
 package http;
 
-import org.springframework.http.HttpMethod;
+import java.applet.Applet;
 
 public class RequestLine {
 
-    private final String method;
+    private final HttpMethod method;
     private final String path;
-    Protocol protocol;
+    private final QueryStrings queryStrings;
+    private final Protocol protocol;
 
-    public RequestLine(String method, String path, Protocol protocol) {
+    public RequestLine(HttpMethod method, PathAndString pathAndString, Protocol protocol) {
         this.method = method;
-        this.path = path;
+        this.path = pathAndString.getPath();
+        this.queryStrings = new QueryStrings(pathAndString.getQueryStrings());
         this.protocol = protocol;
     }
 
-    public static RequestLine of(HttpMethod get, String s, Protocol protocol) {
+    public HttpMethod getMapping() {return this.method;}
 
-    }
+    public String getPath() { return this.path; }
 
-    public String getMapping() {
-        return this.method;
-    }
+    public Protocol getProtocol() { return this.protocol;}
 
-    public String getPath() {
-        return this.path;
-    }
-
+    public QueryStrings getQueryString() { return this.queryStrings;}
 }
