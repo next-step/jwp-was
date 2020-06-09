@@ -1,9 +1,11 @@
 package http.request;
 
 import http.Headers;
+import http.HttpSession;
 import http.Method;
 import http.Parameters;
 import http.RequestLine;
+import http.session.HttpSessionStorage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,27 +21,32 @@ public class HttpRequest {
 
     private final RequestLine requestLine;
     private final Headers headers;
-    private final String body;
-
     private final Parameters parameters;
 
-    private HttpRequest(RequestLine requestLine, Headers headers, String body) {
+    private final HttpSessionStorage httpSessionStorage;
+
+    private HttpRequest(RequestLine requestLine, Headers headers, String body,
+        HttpSessionStorage httpSessionStorage) {
         this.requestLine = requestLine;
         this.headers = headers;
-        this.body = body;
+        this.httpSessionStorage = httpSessionStorage;
+
         this.parameters = requestLine.getParameters();
         this.parameters.addAll(headers.parseBody(body));
     }
 
-    public static HttpRequest of(String requestLine, List<String> headers, String body) {
+    public static HttpRequest of(String requestLine, List<String> headers, String body,
+        HttpSessionStorage httpSessionStorage) {
         return new HttpRequest(
             RequestLine.of(requestLine),
             Headers.from(headers),
-            body
+            body,
+            httpSessionStorage
         );
     }
 
-    public static HttpRequest from(InputStream in) throws IOException {
+    public static HttpRequest from(InputStream in, HttpSessionStorage httpSessionStorage)
+        throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         String requestLine = br.readLine();
 
@@ -53,7 +60,8 @@ public class HttpRequest {
         Headers headers = Headers.from(headerLines);
         String requestBody = IOUtils.readData(br, headers.getContentLength());
 
-        return new HttpRequest(RequestLine.of(requestLine), headers, requestBody);
+        return new HttpRequest(RequestLine.of(requestLine), headers, requestBody,
+            httpSessionStorage);
     }
 
     public String getPath() {
@@ -70,6 +78,10 @@ public class HttpRequest {
 
     public String getCookie(String name) {
         return this.headers.getCookie(name);
+    }
+
+    public HttpSession getHttpSession() {
+        return this.headers.getHttpSession(this.httpSessionStorage);
     }
 
     @Override

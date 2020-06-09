@@ -4,6 +4,7 @@ import static http.HeaderName.CONTENT_LENGTH;
 import static http.HeaderName.CONTENT_TYPE;
 import static http.HeaderName.REQUEST_COOKIE;
 
+import http.session.HttpSessionStorage;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,7 +38,7 @@ public class Headers {
         return new Headers(headers, cookie);
     }
 
-    public static Headers newInstance(){
+    public static Headers newInstance() {
         return from(Arrays.asList());
     }
 
@@ -79,6 +80,10 @@ public class Headers {
         this.cookie.response(out);
     }
 
+    public HttpSession getHttpSession(HttpSessionStorage httpSessionStorage) {
+        return this.cookie.getHttpSession(httpSessionStorage);
+    }
+
     private Parameters parseForFormUrlEncoded(String body) {
         return new Parameters(HttpUtils.getPairs(body, "&", "="));
     }
@@ -100,5 +105,6 @@ public class Headers {
     public int hashCode() {
         return Objects.hash(headers, cookie);
     }
+
 
 }

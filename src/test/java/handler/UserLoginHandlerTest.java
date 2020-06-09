@@ -6,15 +6,15 @@ import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.view.RedirectView;
-import java.io.IOException;
 import java.util.Arrays;
 import model.User;
 import org.junit.jupiter.api.Test;
+import webserver.LocalHttpSessionStorage;
 
 class UserLoginHandlerTest {
 
     @Test
-    void login_success() throws IOException {
+    void login_success() {
         DataBase.addUser(new User("javajigi", "password", "", ""));
         HttpResponse httpResponse = login("javajigi", "password");
 
@@ -42,7 +42,8 @@ class UserLoginHandlerTest {
         HttpRequest httpRequest = HttpRequest.of(
             line,
             Arrays.asList(contentLength, contentType),
-            body
+            body,
+            new LocalHttpSessionStorage()
         );
 
         return new UserHandler().login(httpRequest);

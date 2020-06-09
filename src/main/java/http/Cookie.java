@@ -2,6 +2,7 @@ package http;
 
 import static http.HeaderName.RESPONSE_COOKIE;
 
+import http.session.HttpSessionStorage;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -48,6 +49,12 @@ public class Cookie {
         });
     }
 
+    HttpSession getHttpSession(HttpSessionStorage httpSessionStorage) {
+        String sessionId = this.cookies.get(HttpSessionStorage.SESSION_ID_NAME);
+        return httpSessionStorage.getHttpSession(sessionId)
+            .orElseGet(() -> httpSessionStorage.newHttpSession());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -64,4 +71,6 @@ public class Cookie {
     public int hashCode() {
         return Objects.hash(cookies);
     }
+
+
 }

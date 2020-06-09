@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import model.User;
 import org.junit.jupiter.api.Test;
+import webserver.LocalHttpSessionStorage;
 
 class UserCreateHandlerTest {
 
@@ -43,6 +44,6 @@ class UserCreateHandlerTest {
         String raw = line + "\n" + header + "\n\n" + body;
         InputStream in = new ByteArrayInputStream(raw.getBytes());
 
-        return HttpRequest.from(in);
+        return HttpRequest.from(in, new LocalHttpSessionStorage());
     }
 }
