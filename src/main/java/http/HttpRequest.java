@@ -113,4 +113,14 @@ public class HttpRequest {
                 .filter(cookie -> name.equals(cookie.getName()))
                 .findFirst().orElse(null);
     }
+
+    public HttpSession getSession() {
+        Cookie sessionCookie = getCookie(Cookie.JSESSION_ID);
+
+        if(sessionCookie == null) {
+            HttpSession httpSession = new HttpSession();
+            return httpSession;
+        }
+        return HttpSessionManager.getSession(sessionCookie.getValue());
+    }
 }

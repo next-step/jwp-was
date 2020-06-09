@@ -1,6 +1,8 @@
 package http;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.HttpStringBuilder;
 
 import java.io.BufferedReader;
@@ -11,6 +13,9 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpRequestTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequestTest.class);
+
     @Test
     public void parseTest() throws IOException {
         String httpString = HttpStringBuilder.builder()
@@ -68,5 +73,18 @@ public class HttpRequestTest {
         assertThat(httpRequest.getParameter("userId")).isEqualTo("KingCjy");
         assertThat(httpRequest.getParameter("password")).isEqualTo("1234");
         assertThat(httpRequest.getParameter("key")).isEqualTo("key");
+    }
+
+    @Test
+    public void getSessionTest() throws IOException {
+        String httpString = HttpStringBuilder.builder()
+                .addHeader(HttpHeaders.COOKIE, "JSESSION_ID=MYSESSION")
+                .buildRequest();
+
+        HttpRequest httpRequest = HttpRequest.from(new BufferedReader(new StringReader(httpString)));
+
+        HttpSession httpSession = httpRequest.getSession();
+
+        logger.debug("Session Created : {}", httpSession);
     }
 }

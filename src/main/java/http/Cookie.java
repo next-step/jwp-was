@@ -4,6 +4,8 @@ import java.util.Objects;
 
 public class Cookie {
 
+    public static final String JSESSION_ID = "JSESSION_ID";
+
     private String name;
     private String value;
     private String path;
