@@ -1,5 +1,6 @@
 package web;
 
+import http.HeaderProperty;
 import http.HttpHeaders;
 import http.HttpRequest;
 import http.HttpResponse;
@@ -25,8 +26,8 @@ public class ResourceHttpRequestHandler implements HttpRequestHandler {
             return;
         }
 
-        String accept = httpRequest.getHeader(HttpHeaders.ACCEPT);
-        httpResponse.setHeader(HttpHeaders.ACCEPT, accept);
+        String accept = httpRequest.getHeader(HeaderProperty.ACCEPT.getValue());
+        httpResponse.setHeader(HeaderProperty.ACCEPT.getValue(), accept);
 
         httpResponse.writeHeader();
         DataOutputStream dataOutputStream = httpResponse.getDataOutputStream();

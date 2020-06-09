@@ -29,7 +29,7 @@ public class HttpRequest {
     }
 
     private void setCookies() {
-        String cookiesString = this.httpHeaders.getHeader(HttpHeaders.COOKIE);
+        String cookiesString = this.httpHeaders.getHeader(HeaderProperty.COOKIE.getValue());
 
         if(cookiesString == null || StringUtils.isEmpty(cookiesString)) {
             this.cookies = new LinkedHashSet<>();
@@ -52,7 +52,7 @@ public class HttpRequest {
 
     private void setParameters(BufferedReader bufferedReader) throws IOException {
         HttpMethod httpMethod = requestLine.getMethod();
-        String contentLength = this.httpHeaders.getHeader(HttpHeaders.CONTENT_LENGTH);
+        String contentLength = this.httpHeaders.getHeader(HeaderProperty.CONTENT_LENGTH.getValue());
 
         this.parameters = requestLine.getParameters();
 

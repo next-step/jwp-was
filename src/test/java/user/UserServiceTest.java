@@ -1,6 +1,7 @@
 package user;
 
 import db.DataBase;
+import http.HeaderProperty;
 import http.HttpHeaders;
 import http.HttpRequest;
 import http.HttpResponse;
@@ -52,7 +53,7 @@ public class UserServiceTest {
     @DisplayName("로그인 여부 확인")
     public void isLoggedInTest() throws IOException {
         String httpString = HttpStringBuilder.builder()
-                .addHeader(HttpHeaders.COOKIE, "logined=true")
+                .addHeader(HeaderProperty.COOKIE.getValue(), "logined=true")
                 .buildRequest();
 
         HttpRequest httpRequest = HttpRequest.from(new BufferedReader(new StringReader(httpString)));

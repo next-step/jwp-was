@@ -9,15 +9,15 @@ public class HttpHeadersTest {
     @Test
     public void createTest() {
         String headerString = HttpStringBuilder.builder()
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .addHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0")
+                .addHeader(HeaderProperty.CONTENT_TYPE.getValue(), MediaType.APPLICATION_JSON.getValue())
+                .addHeader(HeaderProperty.ACCEPT.getValue(), MediaType.APPLICATION_JSON.getValue())
+                .addHeader(HeaderProperty.USER_AGENT.getValue(), "Mozilla/5.0")
                 .buildHeaders();
 
         HttpHeaders httpHeaders = HttpHeaders.from(headerString);
 
-        assertThat(httpHeaders.getHeader(HttpHeaders.CONTENT_TYPE)).isEqualTo(MediaType.APPLICATION_JSON);
-        assertThat(httpHeaders.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.APPLICATION_JSON);
-        assertThat(httpHeaders.getHeader(HttpHeaders.USER_AGENT)).isEqualTo("Mozilla/5.0");
+        assertThat(httpHeaders.getHeader(HeaderProperty.CONTENT_TYPE.getValue())).isEqualTo(MediaType.APPLICATION_JSON.getValue());
+        assertThat(httpHeaders.getHeader(HeaderProperty.ACCEPT.getValue())).isEqualTo(MediaType.APPLICATION_JSON.getValue());
+        assertThat(httpHeaders.getHeader(HeaderProperty.USER_AGENT.getValue())).isEqualTo("Mozilla/5.0");
     }
 }
