@@ -1,8 +1,5 @@
 package http;
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
-import model.User;
-
 public class PathAndQueryString {
 
     private QueryString queryString;
