@@ -5,19 +5,14 @@ import controller.ControllerMapper;
 import http.request.HttpRequest;
 import http.request.requestline.path.Path;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
 import utils.FileIoUtils;
-import utils.IOUtils;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class RequestHandler implements Runnable {
@@ -35,16 +30,15 @@ public class RequestHandler implements Runnable {
     public void run() {
         log.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
-        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            DataOutputStream dos = new DataOutputStream(out);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+        try (InputStream inputStream = connection.getInputStream(); OutputStream outputStream = connection.getOutputStream()) {
+            DataOutputStream dos = new DataOutputStream(outputStream);
 
-            HttpRequest httpRequest = readHttpRequest(bufferedReader);
+            HttpRequest httpRequest = HttpRequest.from(inputStream);
             if (httpRequest.hasPathFileExtension()) {
-                byte[] body = FileIoUtils.loadFileFromClasspath(httpRequest.getFilePath());
+                byte[] responseBody = FileIoUtils.loadFileFromClasspath(httpRequest.getFilePath());
 
-                response200Header(dos, httpRequest.getMimeType(), body.length);
-                responseBody(dos, body);
+                response200Header(dos, httpRequest.getMimeType(), responseBody.length);
+                responseBody(dos, responseBody);
                 return;
             }
 
@@ -56,32 +50,6 @@ public class RequestHandler implements Runnable {
         } catch (IOException | URISyntaxException | IllegalArgumentException e) {
             log.error(e.getMessage());
         }
-    }
-
-    private HttpRequest readHttpRequest(BufferedReader bufferedReader) throws IOException {
-        String line = bufferedReader.readLine();
-        HttpRequest httpRequest = new HttpRequest(line);
-
-        while (!StringUtils.isEmpty(line)) {
-            log.debug(line);
-            line = bufferedReader.readLine();
-            httpRequest.registerHeader(line);
-        }
-
-        String contentLength = httpRequest.getHeader("Content-Length");
-        if (doesNotHaveContentLength(contentLength)) {
-            return httpRequest;
-        }
-
-        String body = IOUtils.readData(bufferedReader, Integer.parseInt(contentLength));
-        log.debug(body);
-        httpRequest.registerBody(body);
-
-        return httpRequest;
-    }
-
-    private boolean doesNotHaveContentLength(String contentLength) {
-        return StringUtils.isEmpty(contentLength) || "0".equals(contentLength);
     }
 
     private void response200Header(DataOutputStream dos) {

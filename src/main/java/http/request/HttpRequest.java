@@ -6,8 +6,17 @@ import http.request.querystring.QueryString;
 import http.request.requestline.RequestLine;
 import http.request.requestline.RequestLineParser;
 import http.request.requestline.path.Path;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
+import utils.IOUtils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+
+@Slf4j
 public class HttpRequest {
 
     private static final String HTTP_HEADER_DELIMITER = ":";
@@ -17,12 +26,40 @@ public class HttpRequest {
     private HttpHeaders httpHeaders;
     private QueryString body = new QueryString("");
 
-    public HttpRequest(String requestLine) {
+    HttpRequest(String requestLine) {
         this.requestLine = RequestLineParser.parse(requestLine);
         this.httpHeaders = new HttpHeaders();
     }
 
-    public void registerHeader(String headerLine) {
+    public static HttpRequest from(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+
+        String line = bufferedReader.readLine();
+        HttpRequest httpRequest = new HttpRequest(line);
+
+        while (!StringUtils.isEmpty(line)) {
+            log.debug(line);
+            line = bufferedReader.readLine();
+            httpRequest.registerHeader(line);
+        }
+
+        String contentLength = httpRequest.getHeader("Content-Length");
+        if (doesNotHaveContentLength(contentLength)) {
+            return httpRequest;
+        }
+
+        String body = IOUtils.readData(bufferedReader, Integer.parseInt(contentLength));
+        log.debug(body);
+        httpRequest.registerBody(body);
+
+        return httpRequest;
+    }
+
+    private static boolean doesNotHaveContentLength(String contentLength) {
+        return StringUtils.isEmpty(contentLength) || "0".equals(contentLength);
+    }
+
+    void registerHeader(String headerLine) {
         if (StringUtils.isEmpty(headerLine)) {
             return;
         }
@@ -35,7 +72,7 @@ public class HttpRequest {
         httpHeaders.put(tokens[0].trim(), tokens[1].trim());
     }
 
-    public void registerBody(String body) {
+    void registerBody(String body) {
         if (StringUtils.isEmpty(body)) {
             return;
         }
