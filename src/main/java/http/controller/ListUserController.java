@@ -4,6 +4,7 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
+import http.HttpHeaderName;
 import http.HttpRequest;
 import http.HttpResponse;
 import java.io.IOException;
@@ -19,7 +20,6 @@ public class ListUserController extends AbstractController {
     private static final Logger logger = LoggerFactory.getLogger(ListUserController.class);
 
     private static final String REDIRECT_URL = "/user/login.html";
-    private static final String COOKIE_KEY = "Cookie";
     private static final String LOGIN_COOKIE = "logined=true";
     private static final String TEMPLATE_PREFIX = "/templates";
     private static final String TEMPLATE_SUFFIX = ".html";
@@ -61,6 +61,6 @@ public class ListUserController extends AbstractController {
     }
 
     private boolean isLogined(HttpRequest request) {
-        return request.getHeader(COOKIE_KEY).contains(LOGIN_COOKIE);
+        return request.getHeader(HttpHeaderName.COOKIE.toString()).contains(LOGIN_COOKIE);
     }
 }

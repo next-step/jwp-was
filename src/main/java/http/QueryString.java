@@ -47,8 +47,8 @@ public class QueryString {
         return queryMap;
     }
 
-    public String getPrameter(String userId) {
-        return queryMap.get(userId);
+    public String getPrameter(String key) {
+        return queryMap.get(key);
     }
 
     @Override

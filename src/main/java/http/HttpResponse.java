@@ -4,9 +4,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -18,8 +15,26 @@ public class HttpResponse {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
+    private static final String REDIRECT_STATUS_LINE = "HTTP/1.1 302 Found \r\n";
+    private static final String OK_STATUS_LINE = "HTTP/1.1 200 OK \r\n";
+    private static final String CRLF = "\r\n";
+
+    private static final String CSS_RESOURCE_PREFIX = "/css";
+    private static final String FONT_RESOURCE_PREFIX = "/fonts";
+    private static final String IMAGES_RESOURCE_PREFIX = "/images";
+    private static final String JS_RESOURCE_PREFIX = "/js";
+
+    private static final String STATIC_CONTENT_PATH = "./static";
+    private static final String TEMPLATE_CONTENT_PATH = "./templates";
+
+    private static final String CSS_CONTENT_TYPE = "text/css";
+    private static final String FONT_CONTENT_TYPE_PREFIX = "font/";
+    private static final String IMAGES_CONTENT_TYPE_PREFIX = "image/";
+    private static final String JS_CONTENT_TYPE = "application/javascript";
+    private static final String HTML_CONTENT_TYPE = "text/html;charset=utf-8";
+
     private final DataOutputStream dos;
-    private Map<String, String> headers = new HashMap<>();
+    private HttpHeaders headers = new HttpHeaders();
 
     public HttpResponse(OutputStream out) {
         this.dos = new DataOutputStream(out);
@@ -27,10 +42,10 @@ public class HttpResponse {
 
     public void redirect(String redirectLocation) {
         try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: " + redirectLocation + "\r\n");
-            processHeaders();
-            dos.writeBytes("\r\n");
+            dos.writeBytes(REDIRECT_STATUS_LINE);
+            addHeaders(HttpHeaderName.LOCATION.toString(), redirectLocation);
+            writeHeaders();
+            dos.writeBytes(CRLF);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -38,24 +53,8 @@ public class HttpResponse {
 
     public void response(String path) {
         try {
-            byte[] body;
-            if (path.startsWith("/css")) {
-                addHeaders("Content-Type", "text/css");
-                body = FileIoUtils.loadFileFromClasspath("./static" + path);
-            } else if (path.startsWith("/fonts")) {
-                addHeaders("Content-Type", "font/" + getFileExtention(path));
-                body = FileIoUtils.loadFileFromClasspath("./static" + path);
-            } else if (path.startsWith("/images")) {
-                addHeaders("Content-Type", "image/" + getFileExtention(path));
-                body = FileIoUtils.loadFileFromClasspath("./static" + path);
-            } else if (path.startsWith("/js")) {
-                addHeaders("Content-Type", "application/javascript");
-                body = FileIoUtils.loadFileFromClasspath("./static" + path);
-            } else {
-                addHeaders("Content-Type", "text/html;charset=utf-8");
-                body = FileIoUtils.loadFileFromClasspath("./templates" + path);
-            }
-            addHeaders("Content-Length", String.valueOf(body.length));
+            byte[] body = readContents(path);
+            addHeaders(HttpHeaderName.CONTENT_LENGTH.toString(), String.valueOf(body.length));
             response200Header();
             responseBody(body);
         } catch (IOException | URISyntaxException e) {
@@ -63,14 +62,40 @@ public class HttpResponse {
         }
     }
 
-    public void addHeaders(String key, String value) {
-        headers.put(key, value);
+    private byte[] readContents(String path) throws IOException, URISyntaxException {
+        if (path.startsWith(CSS_RESOURCE_PREFIX)) {
+            addHeaders(HttpHeaderName.CONTENT_TYPE.toString(), CSS_CONTENT_TYPE);
+            return readStaticContents(path);
+        }
+        if (path.startsWith(FONT_RESOURCE_PREFIX)) {
+            addHeaders(HttpHeaderName.CONTENT_TYPE.toString(), FONT_CONTENT_TYPE_PREFIX + getFileExtention(path));
+            return readStaticContents(path);
+        }
+        if (path.startsWith(IMAGES_RESOURCE_PREFIX)) {
+            addHeaders(HttpHeaderName.CONTENT_TYPE.toString(), IMAGES_CONTENT_TYPE_PREFIX + getFileExtention(path));
+            return readStaticContents(path);
+        }
+        if (path.startsWith(JS_RESOURCE_PREFIX)) {
+            addHeaders(HttpHeaderName.CONTENT_TYPE.toString(), JS_CONTENT_TYPE);
+            return readStaticContents(path);
+        }
+
+        addHeaders(HttpHeaderName.CONTENT_TYPE.toString(), HTML_CONTENT_TYPE);
+        return FileIoUtils.loadFileFromClasspath(TEMPLATE_CONTENT_PATH + path);
     }
 
-    public void responseBody(String userList) {
-        byte[] body = userList.getBytes();
-        addHeaders("Content-Type", "text/html;charset=utf-8");
-        addHeaders("Content-Length", String.valueOf(body.length));
+    private byte[] readStaticContents(String path) throws IOException, URISyntaxException {
+        return FileIoUtils.loadFileFromClasspath(STATIC_CONTENT_PATH + path);
+    }
+
+    public void addHeaders(String key, String value) {
+        headers.addHeader(key, value);
+    }
+
+    public void responseBody(String bodyString) {
+        byte[] body = bodyString.getBytes();
+        addHeaders(HttpHeaderName.CONTENT_TYPE.toString(), HTML_CONTENT_TYPE);
+        addHeaders(HttpHeaderName.CONTENT_LENGTH.toString(), String.valueOf(body.length));
         response200Header();
         responseBody(body);
     }
@@ -87,22 +112,19 @@ public class HttpResponse {
 
     private void response200Header() {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            processHeaders();
-            dos.writeBytes("\r\n");
+            dos.writeBytes(OK_STATUS_LINE);
+            writeHeaders();
+            dos.writeBytes(CRLF);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void processHeaders() {
-        Set<String> keys = headers.keySet();
-        for (String key : keys) {
-            try {
-                dos.writeBytes(key + ": " + headers.get(key) + "\r\n");
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-            }
+    private void writeHeaders() {
+        try {
+            dos.writeBytes(headers.toString());
+        } catch (IOException e) {
+            logger.error(e.getMessage());
         }
     }
 

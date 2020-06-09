@@ -2,6 +2,7 @@ package http;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,7 @@ import org.slf4j.LoggerFactory;
 public class HttpHeaders {
 
     private static final String HEADER_DELIMITER = ": ";
-    private static final String CONTENT_LENGTH_KEY = "Content-Length";
+    private static final String CRLF = "\r\n";
 
     private static final Logger logger = LoggerFactory.getLogger(HttpHeaders.class);
 
@@ -23,12 +24,26 @@ public class HttpHeaders {
         requestHeaders.put(headerValues[0].trim(), headerValues[1].trim());
     }
 
+    public void addHeader(String key, String value) {
+        requestHeaders.put(key, value);
+    }
+
     public String getHeader(String key) {
         return requestHeaders.get(key);
     }
 
     public int getContentLength() {
-        String contentLength = requestHeaders.get(CONTENT_LENGTH_KEY);
+        String contentLength = requestHeaders.get(HttpHeaderName.CONTENT_LENGTH.toString());
         return contentLength == null ? 0 : Integer.parseInt(contentLength);
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        Set<String> keys = requestHeaders.keySet();
+        for (String key : keys) {
+            sb.append(key).append(HEADER_DELIMITER).append(requestHeaders.get(key)).append(CRLF);
+        }
+        return sb.toString();
     }
 }
