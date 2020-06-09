@@ -2,6 +2,7 @@ package http.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -19,21 +20,10 @@ public class HttpRequest {
     public HttpRequest(BufferedReader br) throws IOException {
         Map<String, String> header = new HashMap<>();
         String line = br.readLine();
+        parsingHeader(br, header, line);
         this.requestLine = new RequestLine(line);
-        logger.info(line);
-        while (isNotEmpty(line)) {
-            line = br.readLine();
-            putHeader(header, line);
-            logger.info(line);
-        }
-        this.header = new RequestHeader((header));
-        String body = IOUtils.readData(br, Integer.parseInt(header.getOrDefault(CONTENT_LENGTH, "0")));
-        this.body = new RequestBody(body);
-        logger.info(body);
-    }
-
-    public RequestUrl findRequestUrl() {
-        return RequestUrl.findByPath(requestLine.getPath());
+        this.header = new RequestHeader(header);
+        this.body = new RequestBody(parsingBody(br, header));
     }
 
     public String getBody() {
@@ -44,14 +34,36 @@ public class HttpRequest {
         return requestLine.getPath();
     }
 
-    public Map<String, String> getHeader() {
-        return header.getHeader();
+    public String getHeader(String key) {
+        return header.getHeader(key);
+    }
+
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
     }
 
     public boolean isLogin() {
-        Map<String, String> cookies = header.getCookies();
-        String cookie = cookies.getOrDefault("logined", "false");
-        return Boolean.parseBoolean(cookie);
+        String cookie = header.getCookie("logined");
+        if (StringUtils.hasText(cookie)) {
+            return Boolean.parseBoolean(cookie);
+        }
+
+        return false;
+    }
+
+    private void parsingHeader(BufferedReader br, Map<String, String> header, String line) throws IOException {
+        while (isNotEmpty(line)) {
+            line = br.readLine();
+            putHeader(header, line);
+        }
+    }
+
+    private String parsingBody(BufferedReader br, Map<String, String> header) throws IOException {
+        return IOUtils.readData(br, Integer.parseInt(header.get(CONTENT_LENGTH)));
+    }
+
+    public RequestUrl findRequestUrl() {
+        return RequestUrl.findByPath(requestLine.getPath());
     }
 
     public boolean isStylesheet() {

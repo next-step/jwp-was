@@ -17,7 +17,7 @@ public class UserController {
         User user = new User(queryString);
         DataBase.addUser(user);
         logger.info("createUser :{}", user.toString());
-        httpResponse.redirect("/index.html");
+        httpResponse.sendRedirect("/index.html");
     }
 
     public boolean login(QueryString queryString, HttpResponse httpResponse) {
@@ -25,9 +25,9 @@ public class UserController {
         boolean isLogin = user != null && user.equalsPassword(queryString.getParameter("password"));
         logger.info("login : {}", isLogin);
         if (isLogin) {
-            httpResponse.returnFile("/index.html");
+            httpResponse.forward("/index.html");
         } else {
-            httpResponse.returnFile("/user/login_failed.html");
+            httpResponse.forward("/user/login_failed.html");
         }
         return isLogin;
     }

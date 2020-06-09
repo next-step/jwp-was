@@ -18,7 +18,7 @@ class HttpResponseTest {
     @Test
     void createOkResponse() {
         HttpResponse response = new HttpResponse(createDataOutputStream());
-        response.returnFile("/index.html");
+        response.forward("/index.html");
 
         assertThat(response.getStatus()).isEqualTo(OK);
         assertThat(response.getHeader()).hasSize(2);
@@ -26,11 +26,11 @@ class HttpResponseTest {
                 entry("Content-Type", "text/html;charset=utf-8"));
     }
 
-    @DisplayName("302 응답을 생성한다.")
+    @DisplayName("redirect 응답을 생성한다")
     @Test
     void createFoundResponse() {
         HttpResponse response = new HttpResponse(createDataOutputStream());
-        response.redirect("/index.html");
+        response.sendRedirect("/index.html");
 
         assertThat(response.getStatus()).isEqualTo(FOUND);
         assertThat(response.getHeader()).hasSize(1);

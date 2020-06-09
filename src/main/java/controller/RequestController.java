@@ -33,7 +33,7 @@ public class RequestController {
             return;
         }
 
-        httpResponse.returnFile("/index.html");
+        httpResponse.forward("/index.html");
         httpResponse.write();
     }
 
@@ -44,7 +44,7 @@ public class RequestController {
             return;
         }
 
-        httpResponse.returnFile(request.getPath());
+        httpResponse.forward(request.getPath());
         httpResponse.write();
     }
 }

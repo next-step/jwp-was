@@ -21,47 +21,47 @@ public class HttpResponse {
 
     private ResponseStatus status;
     private ResponseHeader header;
-    private byte[] body;
+    private ResponseBody body;
     private DataOutputStream dos;
 
     public HttpResponse(DataOutputStream dos) {
         this.dos = dos;
     }
 
-    public void redirect(String redirectUrl) {
+    public void sendRedirect(String redirectUrl) {
         this.status = FOUND;
         this.header = new ResponseHeader();
-        header.putLocation(redirectUrl);
-        this.body = new byte[0];
+        header.addLocation(redirectUrl);
+        this.body = ResponseBody.emptyBody();
         this.write();
     }
 
-    public void returnFile(String returnFile) {
+    public void forward(String returnFile) {
         this.status = OK;
         this.header = new ResponseHeader();
-        this.body = ViewHelper.readFile(returnFile);
-        header.putContentType("text/html;charset=utf-8");
-        header.putContentLength(body.length);
+        this.body = new ResponseBody(ViewHelper.readFile(returnFile));
+        header.addHeader("Content-Type", "text/html;charset=utf-8");
+        header.addHeader("Content-Length", String.valueOf(body.getLength()));
     }
 
     public void returnHandlebar(String location, Users users) {
         this.status = OK;
         this.header = new ResponseHeader();
-        this.body = ViewHelper.readHandlebar(location, users);
-        header.putContentType("text/html;charset=utf-8");
-        header.putContentLength(body.length);
+        this.body = new ResponseBody(ViewHelper.readHandlebar(location, users));
+        header.addHeader("Content-Type", "text/html;charset=utf-8");
+        header.addHeader("Content-Length", String.valueOf(body.getLength()));
     }
 
     public void viewStyleSheet(String file) {
         this.status = OK;
         this.header = new ResponseHeader();
-        this.body = ViewHelper.readStyleSheetFile(file);
-        header.putContentType("text/css");
-        header.putContentLength(body.length);
+        this.body = new ResponseBody(ViewHelper.readStyleSheetFile(file));
+        header.addHeader("Content-Type", "text/css");
+        header.addHeader("Content-Length", String.valueOf(body.getLength()));
     }
 
-    public void putHeader(String key, String value) {
-        this.header.putHeader(key, value);
+    public void addHeader(String key, String value) {
+        this.header.addHeader(key, value);
     }
 
     public ResponseStatus getStatus() {
@@ -73,11 +73,11 @@ public class HttpResponse {
     }
 
     public byte[] getBody() {
-        return body;
+        return body.getBody();
     }
 
     public void addCookie(String cookie) {
-        this.header.putCookie(cookie);
+        this.header.addCookie(cookie);
     }
 
     public void write() {
@@ -88,7 +88,7 @@ public class HttpResponse {
                 dos.writeBytes(header);
             }
             dos.writeBytes(HEADER_END_STRING);
-            dos.write(body, 0, body.length);
+            dos.write(body.getBody(), 0, body.getLength());
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());

@@ -24,4 +24,8 @@ public class Cookies {
     public Map<String, String> getCookies() {
         return cookies;
     }
+
+    public String getCookie(String key) {
+        return cookies.get(key);
+    }
 }
