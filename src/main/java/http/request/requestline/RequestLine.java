@@ -1,8 +1,7 @@
 package http.request.requestline;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
-import http.HttpMethod;
-import http.exception.BadRequestException;
+import http.common.HttpMethod;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +18,7 @@ public class RequestLine {
 
     public RequestLine(HttpMethod method, Path path, Protocol protocol) {
         if (Objects.isNull(method)) {
-            throw new BadRequestException();
+            throw new IllegalArgumentException();
         }
 
         this.method = method;
@@ -29,13 +28,13 @@ public class RequestLine {
 
     public static RequestLine of(String requestLine) {
         if (StringUtils.isEmpty(requestLine)) {
-            throw new BadRequestException();
+            throw new IllegalArgumentException();
         }
 
         String[] splitLine = requestLine.split(" ");
 
         if (splitLine.length != 3) {
-            throw new BadRequestException();
+            throw new IllegalArgumentException();
         }
 
         return new RequestLine(HttpMethod.resolve(splitLine[0]), Path.of(splitLine[1]), Protocol.of(splitLine[2]));

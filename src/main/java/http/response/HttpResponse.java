@@ -1,7 +1,7 @@
 package http.response;
 
-import http.HttpEntity;
-import http.HttpHeaders;
+import http.common.HttpEntity;
+import http.common.HttpHeaders;
 import utils.StringUtils;
 
 import java.util.Optional;
@@ -21,15 +21,9 @@ public class HttpResponse {
 
     public boolean hasHttpHeaders() {
         return Optional.ofNullable(httpEntity)
-                .map(HttpEntity::getHttpHeaders)
-                .map(HttpHeaders::isNotEmpty)
-                .orElse(false);
-    }
-
-    public HttpHeaders getHttpHeader() {
-        return Optional.ofNullable(httpEntity)
             .map(HttpEntity::getHttpHeaders)
-            .orElse(null);
+            .map(HttpHeaders::isNotEmpty)
+            .orElse(false);
     }
 
     public String getHttpHeaderString() {
@@ -59,5 +53,4 @@ public class HttpResponse {
             .map(body -> body.length)
             .orElse(0);
     }
-
 }

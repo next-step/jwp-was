@@ -1,4 +1,4 @@
-package http;
+package http.common;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -22,9 +22,5 @@ public enum HttpMethod {
         return Optional.ofNullable(method)
             .map(httpMethodMap::get)
             .orElse(null);
-    }
-
-    public boolean matches(String method) {
-        return (this == resolve(method));
     }
 }

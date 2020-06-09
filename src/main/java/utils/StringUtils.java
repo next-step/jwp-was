@@ -21,8 +21,8 @@ public class StringUtils {
         return !isEmpty(target);
     }
 
-    public static <T> String toPrettyJson( T obj ) {
-        if( obj instanceof String ) {
+    public static <T> String toPrettyJson(T obj) {
+        if (obj instanceof String) {
             JsonParser parser = new JsonParser();
             JsonObject jsonObj = parser.parse(String.valueOf(obj)).getAsJsonObject();
             String prettyJson = PRETTY_GSON.toJson(jsonObj);
@@ -40,7 +40,7 @@ public class StringUtils {
         try {
             return new BigInteger(str).intValue();
         }
-        catch(Exception e) {
+        catch (Exception e) {
             log.error(e.getMessage());
         }
 

@@ -1,7 +1,6 @@
 package http.request.requestline;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
-import http.exception.BadRequestException;
 import lombok.Getter;
 
 import java.util.*;
@@ -9,7 +8,7 @@ import java.util.*;
 @Getter
 public class Protocol {
     static final String HTTP = "HTTP";
-    static final Set<String> ALLOWED_HTTP_VERSION = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("1.0", "1.1")));
+    static final Set<String> ALLOWED_HTTP_VERSION = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("0.9", "1.0", "1.1")));
 
     private static final String SPLITTER = "/";
 
@@ -18,7 +17,7 @@ public class Protocol {
 
     public Protocol(String protocol, String version) {
         if (!HTTP.equals(protocol) || !ALLOWED_HTTP_VERSION.contains(version)) {
-            throw new BadRequestException();
+            throw new IllegalArgumentException();
         }
 
         this.protocol = protocol;
@@ -27,13 +26,13 @@ public class Protocol {
 
     public static Protocol of(String protocolAndVersion) {
         if (StringUtils.isEmpty(protocolAndVersion)) {
-            throw new BadRequestException();
+            throw new IllegalArgumentException();
         }
 
         String[] split = protocolAndVersion.split(SPLITTER, 2);
 
         if (split.length != 2) {
-            throw new BadRequestException();
+            throw new IllegalArgumentException();
         }
 
         return new Protocol(split[0], split[1]);

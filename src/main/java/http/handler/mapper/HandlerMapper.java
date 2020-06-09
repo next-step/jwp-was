@@ -1,22 +1,23 @@
-package http.request.mapper;
+package http.handler.mapper;
 
-import http.HttpStatus;
+import http.common.HttpStatus;
 import http.handler.ExceptionHandler;
 import http.handler.Handler;
 import http.handler.StaticResourceHandler;
-import http.handler.TemplateResourceHandler;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.Map;
 
-import static http.handler.Handlers.*;
+import static http.handler.mapper.Handlers.*;
 import static java.util.stream.Collectors.toMap;
 
+@Slf4j
 public enum HandlerMapper {
-    CREATE_USER("/user/create", CREATE_USER_HANDLER),
+    CREATE_USER("/createUser", CREATE_USER_HANDLER),
     LIST_USER("/user/list", LIST_USER_HANDLER),
-    LOGIN("/user/login", LOGIN_HANDLER),
+    LOGIN("/loginUser", LOGIN_HANDLER),
     ;
 
     private static final Map<String, Handler> requestMap = initRequestMap();
@@ -38,12 +39,8 @@ public enum HandlerMapper {
     }
 
     public static Handler getHandler(String url) {
-        if (TemplateResources.matches(url)) {
-            return new TemplateResourceHandler(TemplateResources.getContentType(url));
-        }
-
-        if (StaticResources.matches(url)) {
-            return new StaticResourceHandler(StaticResources.getContentType(url));
+        if (StaticResource.matches(url)) {
+            return new StaticResourceHandler(url, StaticResource.getStaticResource(url));
         }
 
         if (requestMap.containsKey(url)) {

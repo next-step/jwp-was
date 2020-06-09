@@ -1,13 +1,43 @@
 package http.handler;
 
-import http.HttpHeaders;
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.collect.Maps;
+import db.DataBase;
+import http.common.HttpHeaders;
+import http.common.HttpStatus;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
+import model.User;
 
-@Slf4j
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Map;
+
+import static http.common.HttpHeader.LOCATION_HEADER_NAME;
+
 public class CreateUserHandler extends AbstractHandler {
+    private static final String INDEX_PATH = "/index.html";
 
     @Override
-    protected HttpHeaders getHttpHeaders(int length) {
-        return null;
+    public String getPath() {
+        return INDEX_PATH;
+    }
+
+    @Override
+    public HttpStatus getHttpStatus() {
+        return HttpStatus.FOUND;
+    }
+
+    @Override
+    protected HttpHeaders getHttpHeaders(HttpRequest httpRequest, int length) {
+        Map<String, String> httpHeaders = Maps.newHashMap();
+        httpHeaders.put(LOCATION_HEADER_NAME, INDEX_PATH);
+        return new HttpHeaders(httpHeaders);
+    }
+
+    @Override
+    public HttpResponse getHttpResponse(HttpRequest httpRequest) throws IOException, URISyntaxException {
+        User user = User.of(httpRequest.getBodyMap());
+        DataBase.addUser(user);
+        return super.getHttpResponse(httpRequest);
     }
 }

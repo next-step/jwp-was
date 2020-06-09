@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 @Slf4j
 public class FileIoUtils {
     public static byte[] loadFileFromClasspath(String filePath) throws IOException, URISyntaxException {
-        log.debug("filePath: {}", filePath);
+        //log.debug("filePath: {}", filePath);
         Path path = Paths.get(FileIoUtils.class.getClassLoader().getResource(filePath).toURI());
         return Files.readAllBytes(path);
     }
