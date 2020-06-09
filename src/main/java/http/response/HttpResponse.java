@@ -7,6 +7,7 @@ import view.ViewHelper;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,15 +23,15 @@ public class HttpResponse {
     private ResponseStatus status;
     private ResponseHeader header;
     private ResponseBody body;
-    private DataOutputStream dos;
+    private static DataOutputStream dos;
 
-    public HttpResponse(DataOutputStream dos) {
-        this.dos = dos;
+    public HttpResponse(OutputStream out) {
+        dos = new DataOutputStream(out);
+        this.header = new ResponseHeader();
     }
 
     public void sendRedirect(String redirectUrl) {
         this.status = FOUND;
-        this.header = new ResponseHeader();
         header.addLocation(redirectUrl);
         this.body = ResponseBody.emptyBody();
         this.write();
@@ -38,26 +39,26 @@ public class HttpResponse {
 
     public void forward(String returnFile) {
         this.status = OK;
-        this.header = new ResponseHeader();
         this.body = new ResponseBody(ViewHelper.readFile(returnFile));
         header.addHeader("Content-Type", "text/html;charset=utf-8");
         header.addHeader("Content-Length", String.valueOf(body.getLength()));
+        this.write();
     }
 
     public void returnHandlebar(String location, Users users) {
         this.status = OK;
-        this.header = new ResponseHeader();
         this.body = new ResponseBody(ViewHelper.readHandlebar(location, users));
         header.addHeader("Content-Type", "text/html;charset=utf-8");
         header.addHeader("Content-Length", String.valueOf(body.getLength()));
+        write();
     }
 
     public void viewStyleSheet(String file) {
         this.status = OK;
-        this.header = new ResponseHeader();
         this.body = new ResponseBody(ViewHelper.readStyleSheetFile(file));
         header.addHeader("Content-Type", "text/css");
         header.addHeader("Content-Length", String.valueOf(body.getLength()));
+        write();
     }
 
     public void addHeader(String key, String value) {
@@ -72,12 +73,12 @@ public class HttpResponse {
         return header.getHeader();
     }
 
-    public byte[] getBody() {
-        return body.getBody();
+    public String getHeader(String key) {
+        return header.getHeader(key);
     }
 
-    public void addCookie(String cookie) {
-        this.header.addCookie(cookie);
+    public byte[] getBody() {
+        return body.getBody();
     }
 
     public void write() {

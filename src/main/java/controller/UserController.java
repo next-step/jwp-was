@@ -24,6 +24,7 @@ public class UserController {
         User user = DataBase.findUserById(queryString.getParameter("userId"));
         boolean isLogin = user != null && user.equalsPassword(queryString.getParameter("password"));
         logger.info("login : {}", isLogin);
+        httpResponse.addHeader("logined=", Boolean.toString(isLogin));
         if (isLogin) {
             httpResponse.forward("/index.html");
         } else {

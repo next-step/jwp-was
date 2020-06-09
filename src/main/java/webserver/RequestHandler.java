@@ -37,7 +37,7 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
 
             HttpRequest request = new HttpRequest(in);
-            HttpResponse response = new HttpResponse(dos);
+            HttpResponse response = new HttpResponse(out);
 
             RequestController controller = initController();
 

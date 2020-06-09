@@ -15,6 +15,12 @@ public class QueryString {
         String[] values = value.split(PARAMETER_DELIMITER);
         for (String s : values) {
             String[] query = s.split(VALUE_DELIMITER);
+            addParameter(query);
+        }
+    }
+
+    private void addParameter(String[] query) {
+        if(query.length > 1) {
             param.put(query[KEY_INDEX], query[VALUE_INDEX]);
         }
     }

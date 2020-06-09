@@ -19,6 +19,10 @@ public class ResponseHeader {
         return header;
     }
 
+    public String getHeader(String key) {
+        return header.get(key);
+    }
+
     public void addCookie(String cookie) {
         this.header.put("Set-Cookie", cookie);
     }

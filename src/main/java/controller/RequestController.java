@@ -21,30 +21,24 @@ public class RequestController {
 
     public void login(HttpRequest request, HttpResponse httpResponse) {
         boolean isSuccessLogin = userController.login(new QueryString(request.getBody()), httpResponse);
-        httpResponse.addCookie(String.format("logined=%s", isSuccessLogin));
-        httpResponse.write();
     }
 
     public void userList(HttpRequest request, HttpResponse httpResponse) throws IOException {
         if (request.isLogin()) {
             Users users = userController.userList();
             httpResponse.returnHandlebar("user/list", users);
-            httpResponse.write();
             return;
         }
 
         httpResponse.forward("/index.html");
-        httpResponse.write();
     }
 
     public void request(HttpRequest request, HttpResponse httpResponse) {
         if (request.isStylesheet()) {
             httpResponse.viewStyleSheet(request.getPath());
-            httpResponse.write();
             return;
         }
 
         httpResponse.forward(request.getPath());
-        httpResponse.write();
     }
 }
