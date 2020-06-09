@@ -1,6 +1,7 @@
 package http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import http.enums.ContentType;
 import http.enums.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,10 +67,7 @@ public class HttpRequest {
         return false;
     }
 
-    public boolean isStaticResource() {
-        if(this.header.isContainsKey("Accept")) {
-            return this.header.getValue("Accept").contains("text/css");
-        }
-        return this.requestLine.getPath().contains("css");
+    public ContentType getContentType() {
+        return ContentType.findContentType(this.requestLine.getPath());
     }
 }

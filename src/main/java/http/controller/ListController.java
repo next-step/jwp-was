@@ -3,6 +3,7 @@ package http.controller;
 import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
+import http.enums.ContentType;
 import model.UserList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ public class ListController extends PathController{
 
     public void doGet(HttpRequest request, HttpResponse response)  {
         log.info("list controller get method execute ========");
-        response.addHeader("Content-Type", "text/html;charset=utf-8");
+        response.addHeader("Content-Type", ContentType.html.getMimeType());
 
         if(!request.isLoggedIn()) {
             response.sendRedirect("/index.html");

@@ -2,14 +2,11 @@ package http.controller;
 
 import db.DataBase;
 import http.*;
-import http.enums.HttpResponseCode;
+
+import http.enums.ContentType;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 public class LoginController extends PathController{
 
@@ -18,7 +15,7 @@ public class LoginController extends PathController{
     public void doPost(HttpRequest request, HttpResponse response) {
         log.info("login controller post method ===========");
 
-        response.addHeader("Content-Type","text/html;charset=utf-8");
+        response.addHeader("Content-Type", ContentType.html.getMimeType());
 
         QueryString requestBodyString = new QueryString(request.getRequestBody());
         User loginUser = new User(requestBodyString.getParameter("userId"), requestBodyString.getParameter("password"));

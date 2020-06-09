@@ -2,7 +2,7 @@ package http.controller;
 
 import http.HttpRequest;
 import http.HttpResponse;
-import http.ResourcePathMaker;
+import http.enums.ContentType;
 import http.enums.Method;
 
 import org.slf4j.Logger;
@@ -25,14 +25,10 @@ public abstract class PathController implements Controller{
 
     public void doGet(HttpRequest request, HttpResponse response)  {
         log.info("default controller get method execute ========");
-        if(request.isStaticResource()) {
-            response.addHeader("Content-Type", "text/css");
-            response.forword(ResourcePathMaker.makeResourcePath(request.getPath()));
-            return;
-        }
 
-        response.addHeader("Content-Type","text/html");
-        response.forword(ResourcePathMaker.makeTemplatePath(request.getPath()));
+        ContentType contentType = request.getContentType();
+        response.addHeader("Content-Type" , contentType.getMimeType());
+        response.forword(contentType.getResourcePath() + request.getPath());
     }
 
     public void doPost(HttpRequest request, HttpResponse response) {
