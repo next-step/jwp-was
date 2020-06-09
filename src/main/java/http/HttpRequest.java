@@ -45,6 +45,10 @@ public class HttpRequest {
         return query;
     }
 
+    public String getMethod() {
+        return requestLine.getHttpMethod();
+    }
+
     public String getParameter(String key) {
         return queryString.getPrameter(key);
     }
