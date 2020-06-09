@@ -68,17 +68,6 @@ public class HttpRequest {
         return requestLine.getPath();
     }
 
-    public Map<String, String> getQueryString() {
-        return requestLine.getQueryString();
-    }
-
-    public String getQueryStringValue(String key) {
-        return Optional.ofNullable(requestLine)
-            .map(RequestLine::getQueryString)
-            .map(map -> map.get(key))
-            .orElse(null);
-    }
-
     public Map<String, String> getBodyMap() {
         return Optional.ofNullable(httpEntity)
             .map(HttpEntity::getBodyMap)

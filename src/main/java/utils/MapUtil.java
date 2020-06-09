@@ -1,6 +1,7 @@
 package utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URLDecoder;
 import java.util.Arrays;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
 
+@Slf4j
 public class MapUtil {
     public static final String PARAMETER_SPLITTER = "&";
     public static final String KEY_VALUE_SPLITTER = "=";
@@ -16,6 +18,8 @@ public class MapUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static Map<String, String> buildParameters(String queryString) {
+        log.debug("queryString: {}", queryString);
+
         if (StringUtils.isEmpty(queryString)) {
             return Collections.emptyMap();
         }

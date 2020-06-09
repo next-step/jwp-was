@@ -38,13 +38,4 @@ public class Path {
             MapUtil.buildParameters(split[1])
         );
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("path는 ").append(path).append("\r\n");
-
-        return sb.toString();
-    }
-
 }
