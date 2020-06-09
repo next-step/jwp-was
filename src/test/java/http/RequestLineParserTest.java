@@ -2,10 +2,7 @@ package http;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 class RequestLineParserTest {
 
@@ -30,20 +27,15 @@ class RequestLineParserTest {
         String source = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
 
         RequestLine requestLine = RequestLineParser.parse(source);
+        QueryStrings queryStrings = requestLine.getQueryStrings();
 
-        Map<String, String> queryStrings = requestLine.getQueryStrings();
+        assertThat(queryStrings.getQueryStrings())
+                .contains(
+                        new QueryString("userId", "javajigi"),
+                        new QueryString("password", "password"),
+                        new QueryString("name", "JaeSung")
+                );
 
-        assertThat(queryStrings).containsKeys("userId", "password", "name");
-    }
-
-    @Test
-    public void 학습테스트() {
-        String source = "/users?userId=javajigi&password=password&name=JaeSung";
-
-        final String[] pathValues = source.split("//?");
-        final String queryStrings = pathValues[1];
-
-        assertThat(pathValues.length).isEqualTo(2);
     }
 
 
