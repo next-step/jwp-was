@@ -21,8 +21,24 @@ public class HttpSessionTest {
     public void attributesTest() {
         HttpSession httpSession = new HttpSession();
 
-        httpSession.addAttribute("logined", true);
+        httpSession.setAttribute("logined", true);
+        httpSession.setAttribute("logined2", true);
 
+        httpSession.removeAttribute("logined2");
         assertThat(httpSession.getAttribute("logined")).isEqualTo(true);
+        assertThat(httpSession.getAttribute("logined2")).isNull();;
+    }
+
+    @Test
+    public void invalidateTest() {
+        HttpSession httpSession = new HttpSession();
+
+        httpSession.setAttribute("logined", true);
+        httpSession.setAttribute("logined2", true);
+
+        httpSession.clear();
+
+        assertThat(httpSession.getAttribute("logined")).isNull();;
+        assertThat(httpSession.getAttribute("logined2")).isNull();;
     }
 }

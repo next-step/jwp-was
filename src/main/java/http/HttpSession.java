@@ -24,12 +24,20 @@ public class HttpSession extends LinkedHashMap<String, Object> {
         return id;
     }
 
-    public void addAttribute(String key, Object value) {
-        put(key, value);
+    public void setAttribute(String name, Object value) {
+        put(name, value);
     }
 
-    public Object getAttribute(String key) {
-        return get(key);
+    public Object getAttribute(String name) {
+        return get(name);
+    }
+
+    public void removeAttribute(String name) {
+        remove(name);
+    }
+
+    public void invalidate() {
+        clear();
     }
 
     @Override
