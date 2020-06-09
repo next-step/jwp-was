@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 public class ListUserController extends AbstractController {
 
     private static final Logger logger = LoggerFactory.getLogger(ListUserController.class);
+
     private static final String REDIRECT_URL = "/user/login.html";
     private static final String COOKIE_KEY = "Cookie";
     private static final String LOGIN_COOKIE = "logined=true";
