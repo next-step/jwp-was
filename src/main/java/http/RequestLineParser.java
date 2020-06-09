@@ -5,6 +5,6 @@ public class RequestLineParser {
 
     public static RequestLine parse(String requestLines) {
         String[] values = requestLines.split(BLANK);
-        return RequestLine.of(values[0], values[1], values[2]);
+        return new RequestLine(values[0], values[1], values[2]);
     }
 }

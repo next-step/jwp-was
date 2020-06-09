@@ -3,21 +3,23 @@ package http;
 import java.util.Objects;
 
 public class Protocol {
-    private String protocol;
+    private String name;
     private String version;
 
-    public Protocol(String protocol, String version) {
-        this.protocol = protocol;
+    public Protocol(String name, String version) {
+        this.name = name;
         this.version = version;
     }
 
-    public Protocol(final String protocolAndVersion) {
+    public static Protocol of(final String protocolAndVersion) {
+        System.out.println("protocolAndVersion: " + protocolAndVersion);
         String[] values = protocolAndVersion.split("/");
-        new Protocol(values[0], values[1]);
+        System.out.println(values[0] + ", " + values[1]);
+        return new Protocol(values[0], values[1]);
     }
 
-    public String getProtocol() {
-        return protocol;
+    public String getName() {
+        return name;
     }
 
     public String getVersion() {
@@ -25,16 +27,24 @@ public class Protocol {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final Protocol protocol1 = (Protocol) o;
-        return Objects.equals(getProtocol(), protocol1.getProtocol()) &&
-                Objects.equals(getVersion(), protocol1.getVersion());
+        if (!(o instanceof Protocol)) return false;
+        Protocol protocol = (Protocol) o;
+        return Objects.equals(getName(), protocol.getName()) &&
+                Objects.equals(getVersion(), protocol.getVersion());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getProtocol(), getVersion());
+        return Objects.hash(getName(), getVersion());
+    }
+
+    @Override
+    public String toString() {
+        return "Protocol{" +
+                "name='" + name + '\'' +
+                ", version='" + version + '\'' +
+                '}';
     }
 }

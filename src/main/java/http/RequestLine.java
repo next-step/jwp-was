@@ -4,27 +4,23 @@ import java.util.Objects;
 
 public class RequestLine {
     private final Method method;
-    private final String path;
+    private final RequestPath requestPath;
     private final Protocol protocol;
     private final QueryStrings queryStrings;
 
     public RequestLine(String method, String path, String protocolAndVersion) {
         this.method = Method.valueOf(method);
-        this.path = path;
-        this.protocol = new Protocol(protocolAndVersion);
+        this.requestPath = RequestPath.of(path);
+        this.protocol = Protocol.of(protocolAndVersion);
         this.queryStrings = QueryStrings.of(path);
-    }
-
-    public static RequestLine of(String method, String path, String protocolAndVersion) {
-        return new RequestLine(method, path, protocolAndVersion);
     }
 
     public Method getMethod() {
         return method;
     }
 
-    public String getPath() {
-        return path;
+    public RequestPath getRequestPath() {
+        return requestPath;
     }
 
     public Protocol getProtocol() {
@@ -36,18 +32,28 @@ public class RequestLine {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final RequestLine that = (RequestLine) o;
+        if (!(o instanceof RequestLine)) return false;
+        RequestLine that = (RequestLine) o;
         return getMethod() == that.getMethod() &&
-                Objects.equals(getPath(), that.getPath()) &&
-                Objects.equals(getProtocol(), that.getProtocol());
+                Objects.equals(getRequestPath(), that.getRequestPath()) &&
+                Objects.equals(getProtocol(), that.getProtocol()) &&
+                Objects.equals(getQueryStrings(), that.getQueryStrings());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getMethod(), getPath(), getProtocol());
+        return Objects.hash(getMethod(), getRequestPath(), getProtocol(), getQueryStrings());
     }
 
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method=" + method +
+                ", requestPath=" + requestPath +
+                ", protocol=" + protocol +
+                ", queryStrings=" + queryStrings +
+                '}';
+    }
 }
