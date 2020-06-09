@@ -5,60 +5,66 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * @see <a href=https://tools.ietf.org/html/rfc2616#section-6>Response Specification</a>
- * 요약:
- * HTTP버전 상태코드 설명구문
- * 응답헤더(요청 헤더처럼)
- */
 public class ResponseContext {
 
     private static final String DEFAULT_HTTP_VERSION = "1.1";
 
-    private final String httpVersion;
+    private final String version;
     private final HttpStatus status;
     private final Map<String, String> responseHeaders;
     private final byte[] body;
 
-    // TODO: nullable 어떻게 표현할지 고민..
-    private ResponseContext(String httpVersion, HttpStatus status, Map<String, String> responseHeaders, byte[] body) {
-        this.httpVersion = httpVersion;
+    private ResponseContext(String version, HttpStatus status, Map<String, String> responseHeaders, byte[] body) {
+        this.version = version;
         this.status = status;
         this.responseHeaders = responseHeaders;
         this.body = body;
     }
 
-    // TODO: 이 컨텍스트를 바탕으로 응답 렌더링 하는 부분은 외부로 빼자
-    public String getStatusLine() {
-        return String.format("HTTP/%s %d %s \r\n", httpVersion, status.getStatusCode(), status.getReasonPhrase());
+    public static ResponseContext of(HttpStatus status) {
+        return ResponseContextFactory.getResponseContext(status);
     }
 
-    // TODO: 이 컨텍스트를 바탕으로 응답 렌더링 하는 부분은 외부로 빼자
+    public String getStatusLine() {
+        return String.format("HTTP/%s %d %s \r\n", version, status.getStatusCode(), status.getReasonPhrase());
+    }
+
     public List<String> getResponseHeaderList() {
         return responseHeaders.entrySet().stream()
                 .map(e -> String.format("%s: %s\r\n", e.getKey(), e.getValue()))
                 .collect(Collectors.toList());
     }
 
-    // TODO: 이 컨텍스트를 바탕으로 응답 렌더링 하는 부분은 외부로 빼자
     public byte[] getResponseBody() {
         return body;
-    }
-
-    @Override
-    public String toString() {
-        return "ResponseContext{" +
-                "httpVersion='" + httpVersion + '\'' +
-                ", status=" + status +
-                ", responseHeaders=" + responseHeaders +
-                '}';
     }
 
     public static ResponseContextBuilder builder() {
         return new ResponseContextBuilder();
     }
 
+    private enum ResponseContextFactory {
+        NOT_FOUND(builder().status(HttpStatus.NOT_FOUND).build()),
+        INTERNAL_SERVER_ERROR(builder().status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+
+        private final ResponseContext context;
+
+        ResponseContextFactory(ResponseContext context) {
+            this.context = context;
+        }
+
+        private static ResponseContext getResponseContext(HttpStatus status) {
+            switch (status) {
+                case INTERNAL_SERVER_ERROR:
+                    return INTERNAL_SERVER_ERROR.context;
+                default:
+                    return NOT_FOUND.context;
+            }
+        }
+    }
+
     public static class ResponseContextBuilder {
+
         private String version = DEFAULT_HTTP_VERSION;
         private HttpStatus status;
         private final Map<String, String> responseHeaders = new HashMap<>();
@@ -91,6 +97,5 @@ public class ResponseContext {
             final String version = this.version != null ? this.version : DEFAULT_HTTP_VERSION;
             return new ResponseContext(version, status, responseHeaders, body);
         }
-
     }
 }

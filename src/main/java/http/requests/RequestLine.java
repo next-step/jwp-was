@@ -1,7 +1,9 @@
 package http.requests;
 
 import http.exceptions.UnsupportedHttpMethodException;
+import http.requests.parameters.QueryString;
 import http.types.HttpMethod;
+import utils.HttpRequestParser;
 
 public class RequestLine {
 
@@ -27,7 +29,7 @@ public class RequestLine {
         final String[] tokens = rawRequestLine.split(" ");
         this.method = parseHttpMethod(tokens[TOKEN_METHOD_PART]);
         this.path = parseUri(tokens[TOKEN_PATH_PART]);
-        this.queryString = new QueryString(tokens[TOKEN_PATH_PART]);
+        this.queryString = HttpRequestParser.parseQueryString(tokens[TOKEN_PATH_PART]);
         this.protocol = new Protocol(tokens[TOKEN_PROTOCOL_PART]);
     }
 
