@@ -8,18 +8,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author KingCjy
  */
-public class HttpSessionTest {
+public class HttpSessionImplTest {
 
     @Test
     public void initTest() {
-        HttpSession httpSession = new HttpSession();
+        HttpSessionManager sessionManager = new HttpSessionManager();
+
+        HttpSession httpSession = sessionManager.createSession();
         assertThat(httpSession.getId()).isNotNull();
-        assertThat(HttpSessionManager.getSession(httpSession.getId())).isEqualTo(httpSession);
+        assertThat(sessionManager.getSession(httpSession.getId())).isEqualTo(httpSession);
     }
 
     @Test
     public void attributesTest() {
-        HttpSession httpSession = new HttpSession();
+        HttpSessionImpl httpSession = new HttpSessionImpl();
 
         httpSession.setAttribute("logined", true);
         httpSession.setAttribute("logined2", true);
@@ -31,12 +33,12 @@ public class HttpSessionTest {
 
     @Test
     public void invalidateTest() {
-        HttpSession httpSession = new HttpSession();
+        HttpSessionImpl httpSession = new HttpSessionImpl();
 
         httpSession.setAttribute("logined", true);
         httpSession.setAttribute("logined2", true);
 
-        httpSession.clear();
+        httpSession.invalidate();
 
         assertThat(httpSession.getAttribute("logined")).isNull();;
         assertThat(httpSession.getAttribute("logined2")).isNull();;

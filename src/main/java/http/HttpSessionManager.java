@@ -8,13 +8,28 @@ import java.util.Map;
  */
 public class HttpSessionManager {
 
-    private static Map<String, HttpSession> httpSessions = new LinkedHashMap<>();
+    private Map<String, HttpSession> httpSessions = new LinkedHashMap<>();
 
-    public static HttpSession getSession(String id) {
+    public HttpSession getSession(String id) {
         return httpSessions.get(id);
     }
 
-    public static void addSession(HttpSession httpSession) {
+    public void addSession(HttpSession httpSession) {
         httpSessions.put(httpSession.getId(), httpSession);
     }
+
+    public HttpSession createSession() {
+        HttpSession httpSession = new HttpSessionImpl();
+        this.addSession(httpSession);
+
+        return httpSession;
+    }
+
+    public HttpSession createSession(String id) {
+        HttpSession httpSession = new HttpSessionImpl(id);
+        this.addSession(httpSession);
+
+        return httpSession;
+    }
+
 }

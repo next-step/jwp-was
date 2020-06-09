@@ -20,12 +20,19 @@ public class HttpRequest {
     private Set<Cookie> cookies;
     private HttpResponse httpResponse;
 
+    private HttpSessionManager sessionManager;
+
     private HttpRequest(BufferedReader bufferedReader) throws IOException {
         this.requestLine = RequestLine.from(bufferedReader.readLine());
 
         setHttpHeaders(bufferedReader);
         setParameters(bufferedReader);
         setCookies();
+    }
+
+    public HttpRequest setSessionManager(HttpSessionManager sessionManager) {
+        this.sessionManager = sessionManager;
+        return this;
     }
 
     private void setCookies() {
@@ -123,16 +130,15 @@ public class HttpRequest {
         Cookie sessionCookie = getCookie(Cookie.JSESSION_ID);
 
         if(sessionCookie == null) {
-            HttpSession httpSession = new HttpSession();
+            HttpSession httpSession = sessionManager.createSession();
             httpResponse.addCookie(new Cookie(Cookie.JSESSION_ID, httpSession.getId()));
             return httpSession;
         }
 
-        HttpSession httpSession = HttpSessionManager.getSession(sessionCookie.getValue());
+        HttpSession httpSession = sessionManager.getSession(sessionCookie.getValue());
 
         if(httpSession == null) {
-            HttpSession newSession = new HttpSession(sessionCookie.getValue());
-            HttpSessionManager.addSession(newSession);
+            HttpSession newSession = sessionManager.createSession(sessionCookie.getValue());
             return newSession;
         }
 

@@ -14,6 +14,8 @@ public class HttpRequestTest {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpRequestTest.class);
 
+    private HttpSessionManager sessionManager = new HttpSessionManager();
+
     @Test
     public void parseTest() throws IOException {
         String httpString = HttpStringBuilder.builder()
@@ -82,7 +84,8 @@ public class HttpRequestTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         HttpResponse httpResponse = HttpResponse.from(new DataOutputStream(byteArrayOutputStream));
 
-        HttpRequest httpRequest = HttpRequest.from(new BufferedReader(new StringReader(httpString)));
+        HttpRequest httpRequest = HttpRequest.from(new BufferedReader(new StringReader(httpString)))
+                .setSessionManager(sessionManager);
         httpRequest.linkHttpResponse(httpResponse);
 
         HttpSession httpSession = httpRequest.getSession();
