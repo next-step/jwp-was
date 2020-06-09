@@ -7,6 +7,7 @@ import http.requestline.path.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import utils.FileIoUtils;
+import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -52,7 +53,7 @@ public class RequestHandler implements Runnable {
             controller.execute(httpRequest);
 
             response200Header(dos);
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException | URISyntaxException | IllegalArgumentException e) {
             log.error(e.getMessage());
         }
     }
@@ -66,7 +67,21 @@ public class RequestHandler implements Runnable {
             line = bufferedReader.readLine();
             httpRequest.registerHeader(line);
         }
+
+        String contentLength = httpRequest.getHeader("Content-Length");
+        if (doesNotHaveContentLength(contentLength)) {
+            return httpRequest;
+        }
+
+        String body = IOUtils.readData(bufferedReader, Integer.parseInt(contentLength));
+        log.debug(body);
+        httpRequest.registerBody(body);
+
         return httpRequest;
+    }
+
+    private boolean doesNotHaveContentLength(String contentLength) {
+        return StringUtils.isEmpty(contentLength) || "0".equals(contentLength);
     }
 
     private void response200Header(DataOutputStream dos) {

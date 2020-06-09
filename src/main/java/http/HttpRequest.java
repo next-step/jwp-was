@@ -2,6 +2,7 @@ package http;
 
 import http.exception.HttpHeaderRegistrationException;
 import http.method.HttpMethod;
+import http.querystring.QueryString;
 import http.requestline.RequestLine;
 import http.requestline.RequestLineParser;
 import http.requestline.path.Path;
@@ -14,6 +15,7 @@ public class HttpRequest {
 
     private RequestLine requestLine;
     private HttpHeaders httpHeaders;
+    private QueryString body = new QueryString("");
 
     public HttpRequest(String requestLine) {
         this.requestLine = RequestLineParser.parse(requestLine);
@@ -31,6 +33,18 @@ public class HttpRequest {
 
         String[] tokens = headerLine.split(HTTP_HEADER_DELIMITER, HEADER_TOKEN_SIZE);
         httpHeaders.put(tokens[0].trim(), tokens[1].trim());
+    }
+
+    public void registerBody(String body) {
+        if (StringUtils.isEmpty(body)) {
+            return;
+        }
+
+        this.body = new QueryString(body);
+    }
+
+    public String getBody(String key) {
+        return body.get(key);
     }
 
     public boolean hasPathFileExtension() {

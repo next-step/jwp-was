@@ -23,6 +23,14 @@ public class UserCreateController extends AbstractController {
 
     @Override
     void doPost(HttpRequest httpRequest) {
+        User user = User.builder()
+                .userId(httpRequest.getBody("userId"))
+                .password(httpRequest.getBody("password"))
+                .name(httpRequest.getBody("name"))
+                .email(httpRequest.getBody("email"))
+                .build();
 
+        log.debug("User Create : {}", user);
+        DataBase.addUser(user);
     }
 }
