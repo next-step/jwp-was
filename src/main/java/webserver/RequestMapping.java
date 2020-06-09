@@ -12,12 +12,16 @@ import java.util.Map;
  */
 public class RequestMapping {
 
+    private static final String CREATE_CONTROLLER_PATH = "/user/create";
+    private static final String LOGIN_CONTROLLER_PATH = "/user/login";
+    private static final String LIST_CONTROLLER_PATH = "/user/list";
+
     private static Map<String, Controller> controllers = new HashMap<>();
 
     static {
-        controllers.put("/user/create", new CreateUserController());
-        controllers.put("/user/login", new LoginUserController());
-        controllers.put("/user/list", new ListUserController());
+        controllers.put(CREATE_CONTROLLER_PATH, new CreateUserController());
+        controllers.put(LOGIN_CONTROLLER_PATH, new LoginUserController());
+        controllers.put(LIST_CONTROLLER_PATH, new ListUserController());
     }
 
     public static Controller getController(String path) {

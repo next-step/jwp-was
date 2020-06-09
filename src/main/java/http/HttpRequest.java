@@ -3,8 +3,6 @@ package http;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
@@ -16,33 +14,42 @@ public class HttpRequest {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
 
-    private final BufferedReader br;
-    private final RequestLine requestLine;
-    private final Map<String, String> requestHeaders;
+    private static final String CHAR_SET = "UTF-8";
 
+    private final RequestLine requestLine;
+    private final HttpHeaders requestHeaders;
     private final QueryString queryString;
 
 
     public HttpRequest(BufferedReader br) {
-        this.br = br;
-        this.requestLine = RequestLine.of(getFirstLine());
-        this.requestHeaders = processHeaders();
-        this.queryString = QueryString.of(getQuery());
+        this.requestLine = RequestLine.of(getFirstLine(br));
+        this.requestHeaders = processHeaders(br);
+        this.queryString = QueryString.of(getQuery(br));
     }
 
-    private String getQuery() {
-        String query = null;
-        String contentLength = requestHeaders.get("Content-Length");
-
-        if (contentLength != null) {
-            try {
-                query = URLDecoder.decode(IOUtils.readData(br, Integer.parseInt(contentLength)), "UTF-8");
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-            }
+    private String getFirstLine(BufferedReader br) {
+        String line = null;
+        try {
+            line = br.readLine();
+            logger.debug("request line : {}", line);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
         }
+        return line;
+    }
 
-        return query;
+    private String getQuery(BufferedReader br) {
+        int contentLength = requestHeaders.getContentLength();
+        return readQueryFromBody(br, contentLength);
+    }
+
+    private String readQueryFromBody(BufferedReader br, int contentLength) {
+        try {
+            return URLDecoder.decode(IOUtils.readData(br, contentLength), CHAR_SET);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            return null;
+        }
     }
 
     public String getMethod() {
@@ -58,37 +65,22 @@ public class HttpRequest {
     }
 
     public String getHeader(String header) {
-        return requestHeaders.get(header);
+        return requestHeaders.getHeader(header);
     }
 
-    private Map<String, String> processHeaders() {
-        Map<String, String> headers = new HashMap<>();
-        String line = null;
+    private HttpHeaders processHeaders(BufferedReader br) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        String line;
         try {
             line = br.readLine();
-            while (!"".equals(line) && line != null) {
+            while (line != null && !line.equals("") ) {
                 logger.debug("header : {}", line);
-                String[] headerValues = line.split(": ");
-                if (headerValues.length == 2) {
-                    headers.put(headerValues[0].trim(), headerValues[1].trim());
-                }
+                httpHeaders.addHeader(line);
                 line = br.readLine();
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-
-        return headers;
-    }
-
-    private String getFirstLine() {
-        String line = null;
-        try {
-            line = br.readLine();
-            logger.debug("request line : {}", line);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-        return line;
+        return httpHeaders;
     }
 }
