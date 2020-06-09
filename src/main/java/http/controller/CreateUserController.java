@@ -15,8 +15,7 @@ public class CreateUserController extends AbstractController {
 
     @Override
     public void doPost(HttpRequest request, HttpResponse response) {
-        User user = new User(request.getParameter("userId"), request.getParameter("password"),
-            request.getParameter("name"), request.getParameter("email"));
+        User user = User.ofRequest(request);
         logger.debug("User : {}", user);
         DataBase.addUser(user);
 
