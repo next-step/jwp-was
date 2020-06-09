@@ -7,8 +7,12 @@ import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class HttpRequest {
     private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
@@ -17,7 +21,8 @@ public class HttpRequest {
     private RequestHeader header;
     private RequestBody body;
 
-    public HttpRequest(BufferedReader br) throws IOException {
+    public HttpRequest(InputStream in) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, UTF_8));
         Map<String, String> header = new HashMap<>();
         String line = br.readLine();
         parsingHeader(br, header, line);
@@ -36,6 +41,13 @@ public class HttpRequest {
 
     public String getHeader(String key) {
         return header.getHeader(key);
+    }
+
+    public String getParameter(String key) {
+        if (requestLine.isPost()) {
+            return body.getParameter(key);
+        }
+        return requestLine.getParameter(key);
     }
 
     public HttpMethod getMethod() {
@@ -59,7 +71,11 @@ public class HttpRequest {
     }
 
     private String parsingBody(BufferedReader br, Map<String, String> header) throws IOException {
-        return IOUtils.readData(br, Integer.parseInt(header.get(CONTENT_LENGTH)));
+        if (requestLine.isPost()) {
+            return IOUtils.readData(br, Integer.parseInt(header.get(CONTENT_LENGTH)));
+        }
+
+        return "";
     }
 
     public RequestUrl findRequestUrl() {
@@ -75,9 +91,12 @@ public class HttpRequest {
     }
 
     private void putHeader(Map<String, String> header, String line) {
-        String[] values = line.split(":");
+        if (StringUtils.isEmpty(line)) {
+            return;
+        }
+        String[] values = line.split(": ");
         if (values.length > 1) {
-            header.put(values[0], values[1].trim());
+            header.put(values[0], values[1]);
         }
     }
 }

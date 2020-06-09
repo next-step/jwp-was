@@ -27,6 +27,10 @@ public class Path {
         return path;
     }
 
+    public String getParameter(String key) {
+        return queryString.getParameter(key);
+    }
+
     public QueryString getQueryString() {
         return queryString;
     }

@@ -1,5 +1,6 @@
 package http.request;
 
+import static http.request.HttpMethod.POST;
 import static http.request.HttpMethod.valueOf;
 
 public class RequestLine {
@@ -30,8 +31,16 @@ public class RequestLine {
         return this.path.getPath();
     }
 
+    public String getParameter(String key) {
+        return path.getParameter(key);
+    }
+
     public Protocol getProtocol() {
         return protocol;
+    }
+
+    public boolean isPost() {
+        return method == POST;
     }
 
 }
