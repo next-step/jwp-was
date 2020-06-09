@@ -1,5 +1,6 @@
 package http.request;
 
+import http.HttpSession;
 import lombok.Getter;
 import utils.ConvertUtils;
 import utils.IOUtils;
@@ -11,39 +12,47 @@ import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 public class HttpRequest {
     private static final String CHAR_SET = "UTF-8";
+    private static final String SESSION_ID = "JSESSONID";
 
     private RequestLine requestLine;
     private RequestHeader requestHeader;
     private RequestBody requestBody;
+    private HttpSession session;
 
-    private HttpRequest(RequestLine requestLine, RequestHeader requestHeader, RequestBody requestBody) {
+    private HttpRequest(RequestLine requestLine, RequestHeader requestHeader, RequestBody requestBody, HttpSession session) {
         this.requestLine = requestLine;
         this.requestHeader = requestHeader;
         this.requestBody = requestBody;
+        this.session = session;
     }
 
-    private HttpRequest(RequestLine requestLine, RequestHeader requestHeader) {
-        this(requestLine, requestHeader, null);
+    private HttpRequest(RequestLine requestLine, RequestHeader requestHeader, HttpSession session) {
+        this(requestLine, requestHeader, null, session);
     }
 
-    public static HttpRequest parse(InputStream inputStream) throws IOException {
+    public static HttpRequest parse(InputStream inputStream, Map<String, HttpSession> sessionMap) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, Charset.forName(StandardCharsets.UTF_8.name())));
 
         RequestLine requestLine = RequestLine.parse(br.readLine());
         RequestHeader requestHeader = RequestHeader.parse(br);
 
+        HttpSession session = findSession(requestHeader, sessionMap);
+
         if (requestLine.getMethod() == HttpMethod.POST) {
             String body = IOUtils.readData(br, requestHeader.getContentLength());
 
             RequestBody requestBody = RequestBody.parse(URLDecoder.decode(body, CHAR_SET));
-            return new HttpRequest(requestLine, requestHeader, requestBody);
+            return new HttpRequest(requestLine, requestHeader, requestBody, session);
         }
 
-        return new HttpRequest(requestLine, requestHeader);
+        return new HttpRequest(requestLine, requestHeader, session);
     }
 
     public String getPath() {
@@ -72,5 +81,32 @@ public class HttpRequest {
 
     public String getParameter(String key) {
         return this.requestLine.getParameter(key);
+    }
+
+    public HttpSession getSession() {
+        if (sessionIsNull()) {
+            this.session = new HttpSession(UUID.randomUUID().toString());
+        }
+        return this.session;
+    }
+
+    public boolean sessionIsNull() {
+        return Objects.isNull(session);
+    }
+
+    private static HttpSession findSession(RequestHeader requestHeader, Map<String, HttpSession> sessionMap) {
+        RequestCookie cookie = requestHeader.getRequestCookie();
+        if(Objects.isNull(cookie)) {
+            return null;
+        }
+
+        HttpSession session = null;
+        String sessionId = cookie.get(SESSION_ID);
+
+        if (Objects.nonNull(sessionId) && sessionMap.containsKey(sessionId)) {
+            session = sessionMap.get(sessionId);
+        }
+
+        return session;
     }
 }

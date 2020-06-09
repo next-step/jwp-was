@@ -47,8 +47,8 @@ public class HttpResponse {
         this.header = ResponseHeader.of(HttpStatus.NOT_FOUND, request.getContentType(), 0);
     }
 
-    public void setCookie(String cookie) {
-        this.header.setCookie(cookie);
+    public void addCookie(String key, String value) {
+        this.header.setCookie(key, value);
     }
 
     public String getContentType() {
