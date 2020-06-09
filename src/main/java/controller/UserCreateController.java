@@ -1,11 +1,28 @@
 package controller;
 
+import db.DataBase;
 import http.HttpRequest;
+import lombok.extern.slf4j.Slf4j;
+import model.User;
 
-public class UserCreateController implements Controller {
+@Slf4j
+public class UserCreateController extends AbstractController {
 
     @Override
-    public void execute(HttpRequest httpRequest) {
+    void doGet(HttpRequest httpRequest) {
+        User user = User.builder()
+                .userId(httpRequest.getQueryStringValue("userId"))
+                .password(httpRequest.getQueryStringValue("password"))
+                .name(httpRequest.getQueryStringValue("name"))
+                .email(httpRequest.getQueryStringValue("email"))
+                .build();
+
+        log.debug("User Create : {}", user);
+        DataBase.addUser(user);
+    }
+
+    @Override
+    void doPost(HttpRequest httpRequest) {
 
     }
 }

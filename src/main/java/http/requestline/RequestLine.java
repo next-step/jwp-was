@@ -31,15 +31,19 @@ public class RequestLine {
         return path.getFilePath();
     }
 
+    public String getQueryStringValue(String key) {
+        return path.getQueryStringValue(key);
+    }
+
+    public String getMimeType() {
+        return path.getMimeType();
+    }
+
     public Protocol getProtocol() {
         return protocolSpec.getProtocol();
     }
 
     public String getProtocolVersion() {
         return protocolSpec.getVersion();
-    }
-
-    public String getMimeType() {
-        return path.getMimeType();
     }
 }

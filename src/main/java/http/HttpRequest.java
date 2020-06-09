@@ -41,6 +41,10 @@ public class HttpRequest {
         return requestLine.getFilePath();
     }
 
+    public String getQueryStringValue(String key) {
+        return requestLine.getQueryStringValue(key);
+    }
+
     public String getHeader(String headerKey) {
         return httpHeaders.get(headerKey);
     }
