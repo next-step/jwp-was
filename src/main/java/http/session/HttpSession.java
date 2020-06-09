@@ -49,4 +49,12 @@ public class HttpSession {
     public void invalidate() {
         SessionManager.removeSession(id);
     }
+
+    @Override
+    public String toString() {
+        return "HttpSession{" +
+                "id='" + id + '\'' +
+                ", map=" + map +
+                '}';
+    }
 }

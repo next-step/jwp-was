@@ -2,6 +2,7 @@ package http.session;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class SessionManager {
@@ -14,9 +15,18 @@ public class SessionManager {
     }
 
     public static String createNewSession() {
-        final String newSessionId = UUID.randomUUID().toString();
-        final HttpSession newSession = new HttpSession(newSessionId);
-        sessionRepository.put(newSessionId, newSession);
-        return newSessionId;
+        final HttpSession session = createSession(UUID.randomUUID().toString());
+        return session.getId();
+    }
+
+    private static HttpSession createSession(String id) {
+        final HttpSession newSession = new HttpSession(id);
+        sessionRepository.put(id, newSession);
+        return newSession;
+    }
+
+    public static HttpSession getSession(String id) {
+        final Optional<HttpSession> maybeSession = Optional.ofNullable(sessionRepository.get(id));
+        return maybeSession.orElseGet(() -> SessionManager.createSession(id));
     }
 }
