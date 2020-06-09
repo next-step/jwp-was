@@ -12,6 +12,16 @@ public class LoginController extends PathController{
 
     private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
+    public void doGet(HttpRequest request, HttpResponse response) {
+        log.info("login Controller get methid =========");
+
+        if(request.isLoggedIn()) {
+            response.sendRedirect("/index.html");
+            return;
+        }
+        doGetDefault(request,response);
+    }
+
     public void doPost(HttpRequest request, HttpResponse response) {
         log.info("login controller post method ===========");
 

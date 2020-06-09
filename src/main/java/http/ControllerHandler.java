@@ -18,6 +18,7 @@ public class ControllerHandler {
             case "/user/create" :
                 return USER_CONTROLLER;
             case "/user/login" :
+            case "/user/login.html":
                 return LOGIN_CONTROLLER;
             case "/user/list" :
                 return LIST_CONTROLLER;
