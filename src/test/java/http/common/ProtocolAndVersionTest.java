@@ -1,6 +1,5 @@
-package http;
+package http.common;
 
-import http.common.ProtocolAndVersion;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

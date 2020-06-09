@@ -1,16 +1,15 @@
-package http;
+package http.request.parser;
 
 import http.common.ProtocolAndVersion;
 import http.request.HttpMethod;
 import http.request.QueryString;
-import http.request.parser.RequestLineParser;
 import http.request.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RequestLineParserTest {
+class RequestLineParserTest {
 
     @Test
     @DisplayName("정상적인 GET요청의 RequestLine은 method, path, protocol, version 으로 분리된다")
