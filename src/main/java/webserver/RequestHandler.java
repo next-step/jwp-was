@@ -1,26 +1,18 @@
 package webserver;
 
 import db.DataBase;
+import http.HttpRequest;
+import http.HttpResponse;
 import http.QueryString;
-import http.RequestLine;
-import http.response.HttpResponse;
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
@@ -41,25 +33,14 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
             HttpResponse response = new HttpResponse(out);
+            HttpRequest request = new HttpRequest(br);
 
-            String line = br.readLine();
-            logger.debug("request line : {}", line);
-            RequestLine requestLine = RequestLine.of(line);
-            String path = requestLine.getPath();
-            Map<String, String> headers = new HashMap<>();
-            while (!line.equals("")) {
-                line = br.readLine();
-                logger.debug("header : {}", line);
-                String[] headerValues = line.split(": ");
-                if (headerValues.length == 2) {
-                    headers.put(headerValues[0], headerValues[1]);
-                }
-            }
+            String path = request.getPath();
 
-            logger.debug("Content-Length: {}", headers.get("Content-Length"));
+            logger.debug("Content-Length: {}", request.getHeader("Content-Length"));
 
             if ("/user/create".equals(path)) {
-                String requestBody = IOUtils.readData(br, Integer.parseInt(headers.get("Content-Length")));
+                String requestBody = IOUtils.readData(br, Integer.parseInt(request.getHeader("Content-Length")));
                 QueryString queryString = QueryString.of(requestBody);
                 User user = new User(queryString.getPrameter("userId"), queryString.getPrameter("password"),
                     queryString.getPrameter("name"), queryString.getPrameter("email"));

@@ -1,4 +1,4 @@
-package http.response;
+package http;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -88,7 +88,7 @@ public class HttpResponse {
             try {
                 dos.writeBytes(key + ": " + headers.get(key) + "\r\n");
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
     }
