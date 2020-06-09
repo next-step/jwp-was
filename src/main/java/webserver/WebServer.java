@@ -2,6 +2,9 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import session.InMemorySessionHolder;
+import session.SessionManager;
+import webserver.processor.Processors;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,6 +12,8 @@ import java.net.Socket;
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
+    private static final Processors processors = new Processors();
+    private static final SessionManager sessionManager = new SessionManager(new InMemorySessionHolder());
 
     public static void main(String[] args) throws Exception {
         int port = initPort(args);
@@ -20,7 +25,7 @@ public class WebServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection));
+                Thread thread = new Thread(new RequestHandler(connection, sessionManager, processors));
                 thread.start();
             }
         }

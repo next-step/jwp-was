@@ -1,5 +1,6 @@
 package http.request;
 
+import session.HttpSession;
 import utils.IOUtils;
 import utils.StringUtil;
 
@@ -16,6 +17,7 @@ public class HttpRequest {
     private RequestLine requestLine;
     private RequestHeader requestHeader;
     private Parameters parameters;
+    private HttpSession httpSession;
     private String bodyOrigin;
 
     private HttpRequest(final InputStream inputStream) throws IOException {
@@ -100,5 +102,13 @@ public class HttpRequest {
         return requestLine.toString() + "\n" +
                 requestHeader.toString() + "\n\n" +
                 bodyOrigin;
+    }
+
+    public void setSession(final HttpSession httpSession) {
+        this.httpSession = httpSession;
+    }
+
+    public HttpSession getSession() {
+        return httpSession;
     }
 }
