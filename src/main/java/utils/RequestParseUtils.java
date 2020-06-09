@@ -1,6 +1,6 @@
 package utils;
 
-public class StringUtils {
+public class RequestParseUtils {
 
     public static String convertToNullIfEmpty(String text) {
         if (text != null && text.isEmpty()) {
@@ -9,7 +9,15 @@ public class StringUtils {
         return text;
     }
 
+    public static boolean isEmpty(String text) {
+        return text == null || text.isEmpty();
+    }
+
     public static String[] splitIntoPair(String target, String delimiter) {
+        if(isEmpty(target) || isEmpty(delimiter)) {
+            throw new IllegalArgumentException();
+        }
+
         int indexOfDelimiter = target.indexOf(delimiter);
 
         String first = target;

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class StringUtilsTest {
+class RequestParseUtilsTest {
 
     @DisplayName("빈 문자열이면 null로 변환 ")
     @Test
@@ -15,7 +15,7 @@ class StringUtilsTest {
         // given
         String text = "";
         // when
-        String result = StringUtils.convertToNullIfEmpty(text);
+        String result = RequestParseUtils.convertToNullIfEmpty(text);
         // then
         assertThat(result).isNull();
     }
@@ -26,7 +26,7 @@ class StringUtilsTest {
         // given
         String text = "userId=a";
         // when
-        String[] result = StringUtils.splitIntoPair(text, "=");
+        String[] result = RequestParseUtils.splitIntoPair(text, "=");
         // then
         assertThat(result).containsExactly("userId", "a");
     }

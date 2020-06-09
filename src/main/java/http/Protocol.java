@@ -1,46 +1,35 @@
 package http;
 
-import java.util.Objects;
+import utils.RequestParseUtils;
 
-public class Protocol {
+
+import java.util.Arrays;
+
+public enum Protocol {
+
+    HTTP_V1_0("HTTP", "1.0"),
+    HTTP_V1_1("HTTP", "1.1"),
+    HTTP_V2_0("HTTP", "2.0");
+
     private static final String SLASH_DELIMITER = "/";
-    private static final String HTTP = "HTTP";
 
-    private final String name;
+    private final String type;
     private final String version;
 
-    private Protocol(String name, String version) {
-        verify(name);
-        this.name = name;
+    Protocol(String type, String version) {
+        this.type = type;
         this.version = version;
     }
 
-    private void verify(String name) {
-        if(!HTTP.equals(name)) {
-            throw new IllegalArgumentException();
-        }
-    }
-
     public static Protocol from(String fullProtocol) {
-        String[] splittedProtocol = fullProtocol.split(SLASH_DELIMITER);
-        return new Protocol(splittedProtocol[0], splittedProtocol[1]);
+        String[] splittedProtocol = RequestParseUtils.splitIntoPair(fullProtocol, SLASH_DELIMITER);
+        return Protocol.of(splittedProtocol[0], splittedProtocol[1]);
     }
 
-    public static Protocol of(String name, String version) {
-        return new Protocol(name, version);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Protocol protocol = (Protocol) o;
-        return Objects.equals(name, protocol.name) &&
-                Objects.equals(version, protocol.version);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, version);
+    public static Protocol of(String protocol, String version) {
+        return Arrays.stream(Protocol.values())
+                .filter(v -> v.type.equals(protocol) && v.version.equals(version))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unsupported Protocol."));
     }
 }

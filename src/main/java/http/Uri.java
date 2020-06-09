@@ -1,6 +1,6 @@
 package http;
 
-import utils.StringUtils;
+import utils.RequestParseUtils;
 
 
 import java.util.Objects;
@@ -18,7 +18,7 @@ public class Uri {
     }
 
     public static Uri from(String fullUri) {
-        String[] values = StringUtils.splitIntoPair(fullUri, QUERY_SIGN);
+        String[] values = RequestParseUtils.splitIntoPair(fullUri, QUERY_SIGN);
         return new Uri(values[0], QueryString.from(values[1]));
     }
 
@@ -38,5 +38,9 @@ public class Uri {
     @Override
     public int hashCode() {
         return Objects.hash(path, queryString);
+    }
+
+    public String getPath() {
+        return this.path;
     }
 }

@@ -38,4 +38,8 @@ public class RequestLine {
     public int hashCode() {
         return Objects.hash(method, uri, protocol);
     }
+
+    public String getPath() {
+        return this.uri.getPath();
+    }
 }

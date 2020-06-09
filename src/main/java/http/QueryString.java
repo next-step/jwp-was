@@ -2,7 +2,7 @@ package http;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import utils.StringUtils;
+import utils.RequestParseUtils;
 
 
 import java.util.Arrays;
@@ -24,9 +24,9 @@ public class QueryString {
 
         MultiValueMap<String, String> parameters = Arrays.stream(pairs)
                 .filter(pair -> !pair.isEmpty())
-                .map(pair -> StringUtils.splitIntoPair(pair, EQUALS_SIGN))
+                .map(pair -> RequestParseUtils.splitIntoPair(pair, EQUALS_SIGN))
                 .collect(LinkedMultiValueMap::new,
-                        (m, v) -> m.add(v[0], StringUtils.convertToNullIfEmpty(v[1])),
+                        (m, v) -> m.add(v[0], RequestParseUtils.convertToNullIfEmpty(v[1])),
                         LinkedMultiValueMap::addAll);
         return new QueryString(parameters);
     }
