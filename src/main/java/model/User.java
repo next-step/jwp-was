@@ -1,11 +1,12 @@
 package model;
 
 import lombok.Getter;
-import utils.MapParameterUtil;
+import lombok.NoArgsConstructor;
 import utils.MapUtil;
 
 import java.util.Map;
 
+@NoArgsConstructor
 @Getter
 public class User {
     private String userId;
@@ -21,11 +22,15 @@ public class User {
     }
 
     public static User of(Map<String, String> queryString) {
-        return MapParameterUtil.toObject(queryString, User.class);
+        return MapUtil.convertToObject(queryString, User.class);
     }
 
     @Override
     public String toString() {
         return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
+    }
+
+    public boolean isAuthentic(String password) {
+        return this.password.equals(password);
     }
 }

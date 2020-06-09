@@ -1,46 +1,51 @@
 package http.handler;
 
-import http.HttpHeaders;
-import http.HttpStatus;
+import com.google.common.collect.Maps;
+import http.common.HttpHeaders;
+import http.common.HttpStatus;
+import http.handler.mapper.StaticResource;
+import http.request.HttpRequest;
+import http.response.StatusLine;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collections;
+import java.util.Map;
+
+import static http.common.HttpHeader.CONTENT_LENGTH_NAME;
+import static http.common.HttpHeader.CONTENT_TYPE_HEADER_NAME;
 
 @Slf4j
 public class ExceptionHandler extends AbstractHandler {
-    private final HttpStatus httpStatus;
+    private HttpStatus httpStatus;
 
     public ExceptionHandler(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
     }
 
     @Override
-    protected HttpHeaders getHttpHeaders(int length) {
-        return new HttpHeaders(Collections.emptyMap());
+    public String getPath() {
+        return null;
     }
-/*
+
     @Override
-    public void writeResponse(OutputStream out, HttpResponse httpResponse) {
-
+    public HttpStatus getHttpStatus() {
+        return this.httpStatus;
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
+    @Override
+    public String getContentType() {
+        return StaticResource.HTML.getContentType();
     }
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-    }*/
+    @Override
+    protected HttpHeaders getHttpHeaders(HttpRequest httpRequest, int length) {
+        Map<String, String> httpHeaders = Maps.newHashMap();
+        httpHeaders.put(CONTENT_LENGTH_NAME, String.valueOf(length));
+        httpHeaders.put(CONTENT_TYPE_HEADER_NAME, getContentType());
+        return new HttpHeaders(httpHeaders);
+    }
+
+    @Override
+    public byte[] getHttpResponseBody(HttpRequest httpRequest) {
+        return StatusLine.of(httpRequest.getProtocol(), getHttpStatus()).toString().getBytes();
+    }
 }

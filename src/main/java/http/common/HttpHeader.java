@@ -1,23 +1,22 @@
-package http;
+package http.common;
 
-import http.exception.BadRequestException;
-import lombok.extern.slf4j.Slf4j;
 import utils.StringUtils;
 
 import java.util.AbstractMap;
 import java.util.Map;
 
-import static http.HttpHeaders.HEADER_KEY_VALUE_SPLITTER;
+import static http.common.HttpHeaders.HEADER_KEY_VALUE_SPLITTER;
 
 public class HttpHeader {
     public static final String CONTENT_LENGTH_NAME = "Content-Length";
-    public static final String CONTENT_TYPE_NAME = "Content-Type";
+    public static final String CONTENT_TYPE_HEADER_NAME = "Content-Type";
+    public static final String LOCATION_HEADER_NAME = "Location";
 
     private final Map.Entry<String, String> header;
 
     public HttpHeader(String name, String value) {
         if (StringUtils.isEmpty(name) || StringUtils.isEmpty(value)) {
-            throw new BadRequestException();
+            throw new IllegalArgumentException();
         }
 
         this.header = new AbstractMap.SimpleEntry<>(name, value);
@@ -25,7 +24,7 @@ public class HttpHeader {
 
     public static HttpHeader of(String httpHeaderLine) {
         if (StringUtils.isEmpty(httpHeaderLine)) {
-            throw new BadRequestException();
+            throw new IllegalArgumentException();
         }
 
         String[] split = httpHeaderLine.split(HEADER_KEY_VALUE_SPLITTER, 2);

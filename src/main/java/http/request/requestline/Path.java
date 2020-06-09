@@ -1,8 +1,7 @@
 package http.request.requestline;
 
-import http.exception.BadRequestException;
 import lombok.Getter;
-import utils.MapParameterUtil;
+import utils.MapUtil;
 import utils.StringUtils;
 
 import java.util.Collections;
@@ -22,7 +21,7 @@ public class Path {
 
     public static Path of(String path) {
         if (StringUtils.isEmpty(path)) {
-            throw new BadRequestException();
+            throw new IllegalArgumentException();
         }
 
         String[] split = path.split(QUERY_STRING_SPLITTER, 2);
@@ -36,16 +35,7 @@ public class Path {
 
         return new Path(
             split[0],
-            MapParameterUtil.buildParameters(split[1])
+            MapUtil.buildParameters(split[1])
         );
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("path는 ").append(path).append("\r\n");
-
-        return sb.toString();
-    }
-
 }

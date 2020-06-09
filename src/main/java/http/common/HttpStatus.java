@@ -1,15 +1,14 @@
-package http;
+package http.common;
 
 import lombok.Getter;
 
 public enum HttpStatus {
     OK(200, "OK"),
     FOUND(302, "Found"),
-    BAD_REQUEST(400, "Bad Request"),
     NOT_FOUND(404, "Not Found"),
-    METHOD_NOT_ALLOWED(405, "Method Not Allowed"),
     ;
 
+    @Getter
     private final int value;
 
     @Getter
@@ -18,10 +17,6 @@ public enum HttpStatus {
     HttpStatus(int value, String reasonPhrase) {
         this.value = value;
         this.reasonPhrase = reasonPhrase;
-    }
-
-    public int value() {
-        return this.value;
     }
 
     @Override

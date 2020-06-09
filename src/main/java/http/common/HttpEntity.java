@@ -1,9 +1,11 @@
-package http;
+package http.common;
 
 import lombok.Getter;
-import utils.MapParameterUtil;
+import utils.MapUtil;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 public class HttpEntity {
     @Getter
@@ -22,6 +24,14 @@ public class HttpEntity {
     }
 
     public Map<String, String> getBodyMap() {
-        return MapParameterUtil.buildParameters(body);
+        return Optional.ofNullable(body)
+            .map(MapUtil::buildParameters)
+            .orElse(Collections.emptyMap());
+    }
+
+    public String getHeaderValue(String key) {
+        return Optional.ofNullable(httpHeaders)
+            .map(headers -> headers.getHeaderValue(key))
+            .orElse("");
     }
 }
