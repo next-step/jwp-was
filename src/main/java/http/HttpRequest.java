@@ -2,6 +2,7 @@ package http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ public class HttpRequest {
 
         if (contentLength != null) {
             try {
-                query = IOUtils.readData(br, Integer.parseInt(contentLength));
+                query = URLDecoder.decode(IOUtils.readData(br, Integer.parseInt(contentLength)), "UTF-8");
             } catch (IOException e) {
                 logger.error(e.getMessage());
             }

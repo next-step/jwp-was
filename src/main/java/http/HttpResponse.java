@@ -40,22 +40,22 @@ public class HttpResponse {
         try {
             byte[] body;
             if (path.startsWith("/css")) {
-                headers.put("Content-Type", "text/css");
+                addHeaders("Content-Type", "text/css");
                 body = FileIoUtils.loadFileFromClasspath("./static" + path);
             } else if (path.startsWith("/fonts")) {
-                headers.put("Content-Type", "font/" + getFileExtention(path));
+                addHeaders("Content-Type", "font/" + getFileExtention(path));
                 body = FileIoUtils.loadFileFromClasspath("./static" + path);
             } else if (path.startsWith("/images")) {
-                headers.put("Content-Type", "image/" + getFileExtention(path));
+                addHeaders("Content-Type", "image/" + getFileExtention(path));
                 body = FileIoUtils.loadFileFromClasspath("./static" + path);
             } else if (path.startsWith("/js")) {
-                headers.put("Content-Type", "application/javascript");
+                addHeaders("Content-Type", "application/javascript");
                 body = FileIoUtils.loadFileFromClasspath("./static" + path);
             } else {
-                headers.put("Content-Type", "text/html;charset=utf-8");
+                addHeaders("Content-Type", "text/html;charset=utf-8");
                 body = FileIoUtils.loadFileFromClasspath("./templates" + path);
             }
-            headers.put("Content-Length", String.valueOf(body.length));
+            addHeaders("Content-Length", String.valueOf(body.length));
             response200Header();
             responseBody(body);
         } catch (IOException | URISyntaxException e) {
@@ -65,6 +65,14 @@ public class HttpResponse {
 
     public void addHeaders(String key, String value) {
         headers.put(key, value);
+    }
+
+    public void responseBody(String userList) {
+        byte[] body = userList.getBytes();
+        addHeaders("Content-Type", "text/html;charset=utf-8");
+        addHeaders("Content-Length", String.valueOf(body.length));
+        response200Header();
+        responseBody(body);
     }
 
     private void responseBody(byte[] body) {

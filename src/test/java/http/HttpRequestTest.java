@@ -36,12 +36,12 @@ public class HttpRequestTest {
         assertThat(httpRequest.getPath()).isEqualTo("/user/create");
         assertThat(httpRequest.getHeader("Host")).isEqualTo("localhost:8080");
         assertThat(httpRequest.getHeader("Connection")).isEqualTo("keep-alive");
-        assertThat(httpRequest.getHeader("Content-Length")).isEqualTo("71");
+        assertThat(httpRequest.getHeader("Content-Length")).isEqualTo("93");
         assertThat(httpRequest.getHeader("Content-Type")).isEqualTo("application/x-www-form-urlencoded");
         assertThat(httpRequest.getHeader("Accept")).isEqualTo("*/*");
         assertThat(httpRequest.getParameter("userId")).isEqualTo("javajigi");
         assertThat(httpRequest.getParameter("password")).isEqualTo("password");
-        assertThat(httpRequest.getParameter("name")).isEqualTo("jaesung");
+        assertThat(httpRequest.getParameter("name")).isEqualTo("박재성");
         assertThat(httpRequest.getParameter("email")).isEqualTo("javajigi@slipp.net");
     }
 
