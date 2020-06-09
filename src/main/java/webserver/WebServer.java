@@ -8,12 +8,21 @@ import webserver.processor.Processors;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
-    private static final Processors processors = new Processors();
-    private static final SessionManager sessionManager = new SessionManager(new InMemorySessionHolder());
+    private static final Processors PROCESSORS = new Processors();
+    private static final SessionManager SESSION_MANAGER = new SessionManager(new InMemorySessionHolder());
+    private static final ThreadPoolExecutor THREAD_POOL = new ThreadPoolExecutor(
+            50, 250, 1, TimeUnit.MINUTES,
+            new LinkedBlockingQueue<>(100)
+    );
+
 
     public static void main(String[] args) throws Exception {
         int port = initPort(args);
@@ -25,9 +34,17 @@ public class WebServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection, sessionManager, processors));
-                thread.start();
+                execute(connection);
             }
+        }
+    }
+
+    private static void execute(final Socket connection) {
+        try {
+            THREAD_POOL.execute(new RequestHandler(connection, SESSION_MANAGER, PROCESSORS));
+        } catch (RejectedExecutionException e) {
+            System.out.println("rejected");
+            logger.error("Request rejected cuz worker queue is full");
         }
     }
 
