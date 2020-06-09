@@ -19,11 +19,11 @@ import static http.common.HttpHeader.LOCATION_HEADER_NAME;
 public class LoginHandler extends AbstractHandler {
     private static final String INDEX_PATH = "/index.html";
 
-    private static final String SET_COOKIE_HEADER_NAME = "Set-Cookie";
-    private static final String LOGIN_SUCCESS_COOKIE_VALUE = "logined=true";
-    private static final String LOGIN_FAIL_COOKIE_VALUE = "logined=false";
-    private static final String ROOT_PATH_COOKIE_VALUE = "Path=/";
-    private static final String COOKIE_VALUE_DELIMITER = "; ";
+    public static final String SET_COOKIE_HEADER_NAME = "Set-Cookie";
+    public static final String LOGIN_SUCCESS_COOKIE_VALUE = "logined=true";
+    public static final String LOGIN_FAIL_COOKIE_VALUE = "logined=false";
+    public static final String ROOT_PATH_COOKIE_VALUE = "Path=/";
+    public static final String COOKIE_VALUE_DELIMITER = "; ";
 
     private static final String USER_ID_KEY = "userId";
     private static final String PASSWORD_KEY = "password";

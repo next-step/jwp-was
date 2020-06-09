@@ -18,18 +18,17 @@ import java.util.Map;
 import java.util.Optional;
 
 import static http.common.HttpHeader.LOCATION_HEADER_NAME;
+import static http.handler.LoginHandler.LOGIN_SUCCESS_COOKIE_VALUE;
 
 @Slf4j
 public class ListUserHandler extends AbstractHandler {
     private static final String USER_LIST_PATH = "/user/list.html";
 
-    private static final String COOKIE_HEADER_NAME = "Cookie";
-    private static final String COOKIE_LOGIN_SUCCEEDED = "logined=true";
-
+    public static final String COOKIE_HEADER_NAME = "Cookie";
     private static final String TEMPLATES_PREFIX = "/templates";
 
-    private static final String USER_LIST_LOCATION = "user/list";
-    private static final String NOT_LOGIN_LOCATION = "user/login";
+    public static final String USER_LIST_LOCATION = "user/list";
+    public static final String NOT_LOGIN_LOCATION = "user/login";
 
     @Override
     public String getPath() {
@@ -71,11 +70,11 @@ public class ListUserHandler extends AbstractHandler {
 
     private boolean isLoginedUser(String cookieValue) {
         return Optional.ofNullable(cookieValue)
-            .filter(value -> value.contains(COOKIE_LOGIN_SUCCEEDED))
+            .filter(value -> value.contains(LOGIN_SUCCESS_COOKIE_VALUE))
             .isPresent();
     }
 
-    private String compileTemplate(String location, Map<String, List<User>> users) throws IOException {
+    String compileTemplate(String location, Map<String, List<User>> users) throws IOException {
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix(TEMPLATES_PREFIX);
         loader.setSuffix(StaticResource.HTML.getSuffix());

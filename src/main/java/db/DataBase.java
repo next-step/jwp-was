@@ -26,4 +26,8 @@ public class DataBase {
     public static List<User> findAllUserList() {
         return new ArrayList<>(findAll());
     }
+
+    public static void clearAllUsers() {
+        users.clear();
+    }
 }
