@@ -18,9 +18,20 @@ public class FormData {
         for (String v : value.split(FORM_DATA_TOKENIZER)) {
             String[] v1 = v.split(FORM_DATA_NAME_VALUE_TOKENIZER);
             if (v1.length != 2) {
-                throw new RuntimeException();
+                throw new RuntimeException("유효하지 않은 Form Data. " + encodedValue);
             }
-            data.put(v1[0], v1[1]);
+            String formDataName = v1[0].trim();
+            String formDataValue = v1[1].trim();
+
+            if (formDataName.isEmpty()) {
+                throw new RuntimeException("유효하지 않은 Form Data. " + encodedValue);
+            }
+
+            if (formDataValue.isEmpty()) {
+                throw new RuntimeException("유효하지 않은 Form Data. " + encodedValue);
+            }
+
+            data.put(formDataName, formDataValue);
         }
     }
 
