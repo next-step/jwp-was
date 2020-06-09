@@ -26,7 +26,7 @@ public class UserLoginControllerTest {
     @BeforeEach
     void setUp() throws IOException {
         InputStream in = new FileInputStream(new File(testFilePath));
-        request = HttpRequest.parse(in, new HttpSessions());
+        request = HttpRequest.getInstance(in, new HttpSessions());
         response = new HttpResponse();
         user = new User("seul", "test", "Eeseul Park", "seul");
         UserData.save(user);
