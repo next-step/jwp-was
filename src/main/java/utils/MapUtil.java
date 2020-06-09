@@ -18,8 +18,6 @@ public class MapUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static Map<String, String> buildParameters(String queryString) {
-        log.debug("queryString: {}", queryString);
-
         if (StringUtils.isEmpty(queryString)) {
             return Collections.emptyMap();
         }
