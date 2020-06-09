@@ -43,7 +43,6 @@ public class WebServer {
         try {
             THREAD_POOL.execute(new RequestHandler(connection, SESSION_MANAGER, PROCESSORS));
         } catch (RejectedExecutionException e) {
-            System.out.println("rejected");
             logger.error("Request rejected cuz worker queue is full");
         }
     }
