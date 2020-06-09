@@ -11,27 +11,26 @@ public class FormData {
 
     private Map<String, String> data = new HashMap<>();
 
-    public FormData(String encodedValue) {
-
-        String value = UrlUtf8Decoder.decode(encodedValue);
+    public FormData(String value) {
 
         for (String v : value.split(FORM_DATA_TOKENIZER)) {
             String[] v1 = v.split(FORM_DATA_NAME_VALUE_TOKENIZER);
             if (v1.length != 2) {
-                throw new RuntimeException("유효하지 않은 Form Data. " + encodedValue);
-            }
-            String formDataName = v1[0].trim();
-            String formDataValue = v1[1].trim();
-
-            if (formDataName.isEmpty()) {
-                throw new RuntimeException("유효하지 않은 Form Data. " + encodedValue);
+                throw new RuntimeException("유효하지 않은 Form Data. " + value);
             }
 
-            if (formDataValue.isEmpty()) {
-                throw new RuntimeException("유효하지 않은 Form Data. " + encodedValue);
+            String decodedName = UrlUtf8Decoder.decode(v1[0]).trim();
+            String decodedValue = UrlUtf8Decoder.decode(v1[1]).trim();
+
+            if (decodedName.isEmpty()) {
+                throw new RuntimeException("유효하지 않은 Form Data. " + value);
             }
 
-            data.put(formDataName, formDataValue);
+            if (decodedValue.isEmpty()) {
+                throw new RuntimeException("유효하지 않은 Form Data. " + value);
+            }
+
+            data.put(decodedName, decodedValue);
         }
     }
 
