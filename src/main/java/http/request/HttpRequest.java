@@ -38,7 +38,7 @@ public class HttpRequest {
         this(requestLine, requestHeader, null, session);
     }
 
-    public static HttpRequest parse(InputStream inputStream, HttpSessions httpSessions) throws IOException {
+    public static HttpRequest getInstance(InputStream inputStream, HttpSessions httpSessions) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, Charset.forName(StandardCharsets.UTF_8.name())));
 
         RequestLine requestLine = RequestLine.parse(br.readLine());
@@ -55,6 +55,8 @@ public class HttpRequest {
 
         return new HttpRequest(requestLine, requestHeader, session);
     }
+
+
 
     public String getPath() {
         return this.requestLine.getPath();

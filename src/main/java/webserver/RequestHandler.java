@@ -33,7 +33,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            HttpRequest request = HttpRequest.parse(in, httpSessions);
+            HttpRequest request = HttpRequest.getInstance(in, httpSessions);
             HttpResponse response = new HttpResponse();
 
             Controllers controllers = addControllers();
