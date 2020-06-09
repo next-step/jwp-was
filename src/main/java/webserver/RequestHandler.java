@@ -40,10 +40,8 @@ public class RequestHandler implements Runnable {
             logger.debug("Content-Length: {}", request.getHeader("Content-Length"));
 
             if ("/user/create".equals(path)) {
-                String requestBody = IOUtils.readData(br, Integer.parseInt(request.getHeader("Content-Length")));
-                QueryString queryString = QueryString.of(requestBody);
-                User user = new User(queryString.getPrameter("userId"), queryString.getPrameter("password"),
-                    queryString.getPrameter("name"), queryString.getPrameter("email"));
+                User user = new User(request.getParameter("userId"), request.getParameter("password"),
+                    request.getParameter("name"), request.getParameter("email"));
                 logger.debug("User : {}", user);
                 DataBase.addUser(user);
 

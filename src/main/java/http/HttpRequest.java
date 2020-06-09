@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.IOUtils;
 
 /**
  * Created by iltaek on 2020/06/09 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
@@ -18,11 +19,33 @@ public class HttpRequest {
     private final RequestLine requestLine;
     private final Map<String, String> requestHeaders;
 
+    private final QueryString queryString;
+
 
     public HttpRequest(BufferedReader br) {
         this.br = br;
         this.requestLine = RequestLine.of(getFirstLine());
         this.requestHeaders = processHeaders();
+        this.queryString = QueryString.of(getQuery());
+    }
+
+    private String getQuery() {
+        String query = null;
+        String contentLength = requestHeaders.get("Content-Length");
+
+        if (contentLength != null) {
+            try {
+                query = IOUtils.readData(br, Integer.parseInt(contentLength));
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
+        }
+
+        return query;
+    }
+
+    public String getParameter(String key) {
+        return queryString.getPrameter(key);
     }
 
     public String getPath() {
@@ -38,11 +61,11 @@ public class HttpRequest {
         String line = null;
         try {
             line = br.readLine();
-            while (!"".equals(line)) {
+            while (!"".equals(line) && line != null) {
                 logger.debug("header : {}", line);
                 String[] headerValues = line.split(": ");
                 if (headerValues.length == 2) {
-                    headers.put(headerValues[0], headerValues[1]);
+                    headers.put(headerValues[0].trim(), headerValues[1].trim());
                 }
                 line = br.readLine();
             }
