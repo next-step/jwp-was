@@ -1,6 +1,7 @@
 package http.request;
 
 import http.HttpSession;
+import http.HttpSessions;
 import lombok.Getter;
 import utils.ConvertUtils;
 import utils.IOUtils;
@@ -37,13 +38,13 @@ public class HttpRequest {
         this(requestLine, requestHeader, null, session);
     }
 
-    public static HttpRequest parse(InputStream inputStream, Map<String, HttpSession> sessionMap) throws IOException {
+    public static HttpRequest parse(InputStream inputStream, HttpSessions httpSessions) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, Charset.forName(StandardCharsets.UTF_8.name())));
 
         RequestLine requestLine = RequestLine.parse(br.readLine());
         RequestHeader requestHeader = RequestHeader.parse(br);
 
-        HttpSession session = findSession(requestHeader, sessionMap);
+        HttpSession session = findSession(requestHeader, httpSessions);
 
         if (requestLine.getMethod() == HttpMethod.POST) {
             String body = IOUtils.readData(br, requestHeader.getContentLength());
@@ -94,7 +95,7 @@ public class HttpRequest {
         return Objects.isNull(session);
     }
 
-    private static HttpSession findSession(RequestHeader requestHeader, Map<String, HttpSession> sessionMap) {
+    private static HttpSession findSession(RequestHeader requestHeader, HttpSessions httpSessions) {
         RequestCookie cookie = requestHeader.getRequestCookie();
         if(Objects.isNull(cookie)) {
             return null;
@@ -103,8 +104,8 @@ public class HttpRequest {
         HttpSession session = null;
         String sessionId = cookie.get(SESSION_ID);
 
-        if (Objects.nonNull(sessionId) && sessionMap.containsKey(sessionId)) {
-            session = sessionMap.get(sessionId);
+        if (Objects.nonNull(sessionId) && httpSessions.containsKey(sessionId)) {
+            session = httpSessions.getSession(sessionId);
         }
 
         return session;

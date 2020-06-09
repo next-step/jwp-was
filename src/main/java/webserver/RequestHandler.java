@@ -1,6 +1,7 @@
 package webserver;
 
 import http.HttpSession;
+import http.HttpSessions;
 import http.controller.Controller;
 import http.controller.Controllers;
 import http.controller.user.CreateUserController;
@@ -15,18 +16,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-    private Map<String, HttpSession> sessionMap;
+    private HttpSessions httpSessions;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
-        this.sessionMap = new HashMap<>();
+        this.httpSessions = new HttpSessions();
     }
 
     public void run() {
@@ -34,7 +33,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            HttpRequest request = HttpRequest.parse(in, sessionMap);
+            HttpRequest request = HttpRequest.parse(in, httpSessions);
             HttpResponse response = new HttpResponse();
 
             Controllers controllers = addControllers();
@@ -45,7 +44,7 @@ public class RequestHandler implements Runnable {
 
             if (!request.sessionIsNull()) {
                 HttpSession session = request.getSession();
-                this.sessionMap.put(session.getId(), session);
+                this.httpSessions.addSession(session.getId(), session);
             }
 
             ResponseHandler responseHandler = new ResponseHandler(out, response);
