@@ -3,7 +3,7 @@ package webserver.dispatcher;
 import http.controller.Controller;
 import http.requests.HttpRequest;
 import http.responses.HttpResponse;
-import http.types.HttpMethod;
+import http.requests.types.HttpMethod;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

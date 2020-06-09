@@ -2,7 +2,7 @@ package http.requests;
 
 import http.exceptions.UnsupportedHttpMethodException;
 import http.requests.parameters.QueryString;
-import http.types.HttpMethod;
+import http.requests.types.HttpMethod;
 import utils.HttpRequestParser;
 
 public class RequestLine {

@@ -1,7 +1,7 @@
 package http.parsers;
 
 import http.requests.HttpRequest;
-import http.types.HttpMethod;
+import http.requests.types.HttpMethod;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

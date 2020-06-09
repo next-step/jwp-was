@@ -2,7 +2,7 @@ package webserver.dispatcher;
 
 import http.controller.*;
 import http.requests.HttpRequest;
-import http.types.HttpMethod;
+import http.requests.types.HttpMethod;
 
 import java.util.HashMap;
 import java.util.Map;

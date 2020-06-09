@@ -1,6 +1,6 @@
 package webserver.dispatcher;
 
-import http.types.HttpMethod;
+import http.requests.types.HttpMethod;
 
 import java.util.Objects;
 
