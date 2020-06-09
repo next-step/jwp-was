@@ -24,6 +24,10 @@ public enum HttpMethod {
         return HTTP_METHODS.contains(methodInput);
     }
 
+    public static boolean isGET(String httpMethod) {
+        return GET.name().equals(httpMethod);
+    }
+
     public static HttpMethod of(String methodInput) {
         if (!isHttpMethod(methodInput)) {
             throw new IllegalArgumentException(String.format(ILLEGAL_HTTP_METHOD, methodInput));

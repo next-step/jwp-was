@@ -1,5 +1,6 @@
 package http.controller;
 
+import http.HttpMethod;
 import http.HttpRequest;
 import http.HttpResponse;
 
@@ -18,7 +19,7 @@ public abstract class AbstractController implements Controller{
     }
 
     private boolean isGET(HttpRequest request) {
-        return "GET".equals(request.getMethod());
+        return HttpMethod.isGET(request.getMethod());
     }
 
     public void doPost(HttpRequest request, HttpResponse response){}
