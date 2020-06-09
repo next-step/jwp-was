@@ -23,6 +23,12 @@ public class HttpEntity {
         this.body = body;
     }
 
+    public Map<String, String> getHeaderMap() {
+        return Optional.ofNullable(httpHeaders)
+                .map(HttpHeaders::getHeaders)
+                .orElse(Collections.emptyMap());
+    }
+
     public Map<String, String> getBodyMap() {
         return Optional.ofNullable(body)
             .map(MapUtil::buildParameters)

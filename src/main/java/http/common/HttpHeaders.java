@@ -1,6 +1,7 @@
 package http.common;
 
 import com.google.common.collect.Maps;
+import lombok.Getter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,9 +11,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class HttpHeaders {
+    public static final HttpHeaders EMPTY = new HttpHeaders(Collections.emptyMap());
+
     public static final String HEADER_KEY_VALUE_SPLITTER = ": ";
     public static final String HTTP_HEADER_LINE_JOINER = "\r\n";
 
+    @Getter
     private Map<String, String> headers;
 
     public HttpHeaders(Map<String, String> headers) {

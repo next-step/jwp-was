@@ -7,7 +7,7 @@ import java.util.*;
 
 @Getter
 public class Protocol {
-    static final String HTTP = "HTTP";
+    public static final String HTTP = "HTTP";
     static final Set<String> ALLOWED_HTTP_VERSION = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("1.0", "1.1")));
 
     private static final String SPLITTER = "/";

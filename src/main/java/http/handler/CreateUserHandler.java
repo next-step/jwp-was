@@ -15,7 +15,7 @@ import java.util.Map;
 import static http.common.HttpHeader.LOCATION_HEADER_NAME;
 
 public class CreateUserHandler extends AbstractHandler {
-    private static final String INDEX_PATH = "/index.html";
+    public static final String INDEX_PATH = "/index.html";
 
     @Override
     public String getPath() {

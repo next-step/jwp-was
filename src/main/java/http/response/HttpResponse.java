@@ -4,6 +4,8 @@ import http.common.HttpEntity;
 import http.common.HttpHeaders;
 import utils.StringUtils;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 public class HttpResponse {
@@ -26,12 +28,26 @@ public class HttpResponse {
             .orElse(false);
     }
 
+    public Map<String, String> getHttpHeaderMap() {
+        return Optional.ofNullable(httpEntity)
+                .map(HttpEntity::getHeaderMap)
+                .orElse(Collections.emptyMap());
+    }
+
     public String getHttpHeaderString() {
         return Optional.ofNullable(httpEntity)
             .map(HttpEntity::getHttpHeaders)
             .map(HttpHeaders::toString)
             .orElse("");
     }
+
+    public String getHttpHeaderValue(String key) {
+        return Optional.ofNullable(httpEntity)
+                .map(HttpEntity::getHttpHeaders)
+                .map(headers -> headers.getHeaderValue(key))
+                .orElse("");
+    }
+
 
     public boolean hasHttpBody() {
         return Optional.ofNullable(httpEntity)
