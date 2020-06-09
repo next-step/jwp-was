@@ -1,33 +1,36 @@
 package http;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class RequestLine {
 
-    private final String method;
-    private final String path;
+    private final RequestMethod requestMethod;
     private final Protocol protocol;
 
-    public static RequestLine ofGet(final String path, final String protocol) {
-        return new RequestLine("GET", path, new Protocol(protocol));
-    }
-
-    RequestLine(final String method, final String path, final Protocol protocol) {
-        this.method = method;
-        this.path = path;
+    public RequestLine(final RequestMethod requestMethod, final Protocol protocol) {
+        this.requestMethod = requestMethod;
         this.protocol = protocol;
     }
 
-    public String getMethod() {
-        return this.method;
-    }
-
     public String getPath() {
-        return this.path;
+        return requestMethod.getPath();
     }
 
-    public Protocol getProtocol() {
-        return protocol;
+    public String getMethodName() {
+        return requestMethod.getMethodName();
+    }
+
+    public String getProtocolName() {
+        return protocol.getProtocol();
+    }
+
+    public String getProtocolVersion() {
+        return protocol.getVersion();
+    }
+
+    public Map<String, String> getParams() {
+        return requestMethod.getRequestParameters();
     }
 
     @Override
@@ -35,12 +38,12 @@ public class RequestLine {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final RequestLine that = (RequestLine) o;
-        return Objects.equals(method, that.method) &&
-                Objects.equals(path, that.path);
+        return Objects.equals(requestMethod, that.requestMethod) &&
+                Objects.equals(protocol, that.protocol);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(method, path);
+        return Objects.hash(requestMethod, protocol);
     }
 }

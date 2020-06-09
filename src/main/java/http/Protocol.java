@@ -3,23 +3,34 @@ package http;
 import java.util.Objects;
 
 public class Protocol {
+    private static final String SEPARATOR = "/";
+    private static final int MIN_SIZE = 2;
+    private static final int PROTOCOL_INDEX = 0;
+    private static final int VERSION_INDEX = 1;
+
     private final String protocol;
     private final String version;
 
     public Protocol(final String protocolAndVersion) {
-        String[] protocols = protocolAndVersion.split("/");
+        String[] protocols = protocolAndVersion.split(SEPARATOR);
         validateByLength(protocols);
-        this.protocol = protocols[0];
-        this.version = protocols[1];
+        this.protocol = protocols[PROTOCOL_INDEX];
+        this.version = protocols[VERSION_INDEX];
     }
 
     private void validateByLength(String[] protocols) {
-        if (protocols.length < 2) {
+        if (protocols.length < MIN_SIZE) {
             throw new IllegalArgumentException("잘못된 요청입니다.");
         }
     }
 
+    public String getProtocol() {
+        return protocol;
+    }
 
+    public String getVersion() {
+        return version;
+    }
 
     @Override
     public boolean equals(final Object o) {
