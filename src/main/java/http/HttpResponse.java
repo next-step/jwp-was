@@ -29,6 +29,7 @@ public class HttpResponse {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
             dos.writeBytes("Location: " + redirectLocation + "\r\n");
+            processHeaders();
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -60,6 +61,10 @@ public class HttpResponse {
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    public void addHeaders(String key, String value) {
+        headers.put(key, value);
     }
 
     private void responseBody(byte[] body) {

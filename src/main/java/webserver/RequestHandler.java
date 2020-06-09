@@ -3,7 +3,6 @@ package webserver;
 import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
-import http.QueryString;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +12,6 @@ import java.net.Socket;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
 
@@ -46,6 +44,17 @@ public class RequestHandler implements Runnable {
                 DataBase.addUser(user);
 
                 response.redirect("/index.html");
+            } else if ("/user/login".equals(path)) {
+                User user = DataBase.findUserById(request.getParameter("userId"));
+                if (user != null) {
+                    if (user.getPassword().equals(request.getParameter("password"))) {
+                        response.addHeaders("Set-Cookie", "logined=true; Path=/");
+                        response.redirect("/index.html");
+                    }
+                }
+
+                response.addHeaders("Set-Cookie", "logined=false; Path=/");
+                response.redirect("/user/login_failed.html");
             } else {
                 response.response(path);
             }
