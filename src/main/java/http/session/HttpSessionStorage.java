@@ -5,7 +5,8 @@ import java.util.Optional;
 
 public interface HttpSessionStorage {
 
-    HttpSession newHttpSession(String id);
+    String SESSION_ID_NAME ="SESSION-ID";
 
+    HttpSession newHttpSession();
     Optional<HttpSession> getHttpSession(String id);
 }

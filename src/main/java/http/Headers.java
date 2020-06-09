@@ -81,6 +81,10 @@ public class Headers {
         this.cookie.response(out);
     }
 
+    public HttpSession getHttpSession(HttpSessionStorage httpSessionStorage) {
+        return this.cookie.getHttpSession(httpSessionStorage);
+    }
+
     private Parameters parseForFormUrlEncoded(String body) {
         return new Parameters(HttpUtils.getPairs(body, "&", "="));
     }
@@ -103,7 +107,5 @@ public class Headers {
         return Objects.hash(headers, cookie);
     }
 
-    public HttpSession getHttpSession(HttpSessionStorage httpSessionStorage) {
-        return this.cookie.getHttpSession(httpSessionStorage);
-    }
+
 }

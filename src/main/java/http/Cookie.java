@@ -16,7 +16,6 @@ import utils.HttpUtils;
 public class Cookie {
 
     private static final Logger logger = LoggerFactory.getLogger(Cookie.class);
-    private static final String SESSION_ID_NAME = "SESSION-ID";
 
     private static final String COOKIE_SPLITTER = ";";
     private static final String KEY_VALUE_SPLITTER = "=";
@@ -51,6 +50,12 @@ public class Cookie {
         });
     }
 
+    HttpSession getHttpSession(HttpSessionStorage httpSessionStorage) {
+        String sessionId = this.cookies.get(HttpSessionStorage.SESSION_ID_NAME);
+        return httpSessionStorage.getHttpSession(sessionId)
+            .orElseGet(() -> httpSessionStorage.newHttpSession());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -68,9 +73,5 @@ public class Cookie {
         return Objects.hash(cookies);
     }
 
-    public HttpSession getHttpSession(HttpSessionStorage httpSessionStorage) {
-        String sessionId = this.cookies.get(SESSION_ID_NAME);
-        return httpSessionStorage.getHttpSession(sessionId)
-            .orElseGet(() -> httpSessionStorage.newHttpSession(UUID.randomUUID().toString()));
-    }
+
 }

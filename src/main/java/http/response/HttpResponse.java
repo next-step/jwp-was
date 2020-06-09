@@ -33,7 +33,6 @@ public class HttpResponse {
 
     private void responseToHeader(DataOutputStream dos) throws IOException {
         this.headers.response(dos);
-
     }
 
     private void responseToStatus(DataOutputStream dos) throws IOException {

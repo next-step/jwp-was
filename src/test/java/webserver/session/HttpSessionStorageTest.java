@@ -4,11 +4,10 @@ package webserver.session;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import http.HttpSession;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import http.session.HttpSessionStorage;
-import http.session.LocalHttpSessionStorage;
+import webserver.LocalHttpSessionStorage;
 
 class HttpSessionStorageTest {
     private HttpSessionStorage httpSessionStorage;
@@ -19,10 +18,8 @@ class HttpSessionStorageTest {
     }
     @Test
     void creatAndFindSession(){
-        String id = UUID.randomUUID().toString();
-
-        HttpSession httpSession = httpSessionStorage.newHttpSession(id);
-        HttpSession findHttpSession = httpSessionStorage.getHttpSession(id).orElse(null);
+        HttpSession httpSession = httpSessionStorage.newHttpSession();
+        HttpSession findHttpSession = httpSessionStorage.getHttpSession(httpSession.getId()).orElse(null);
         assertThat(httpSession).isEqualTo(findHttpSession);
     }
 }

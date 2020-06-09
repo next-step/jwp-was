@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import webserver.LocalHttpSessionStorage;
 import webserver.RequestHandlerMapping;
 
 public class RequestHandlerMappingTest {
@@ -34,7 +35,8 @@ public class RequestHandlerMappingTest {
         HttpRequest httpRequest = HttpRequest.of(
             line,
             Arrays.asList(),
-            null
+            null,
+            new LocalHttpSessionStorage()
         );
         HttpResponse response = requestHandlerMapping.handle(httpRequest);
         HttpResponse expect = new HttpResponse(new StaticResourceView(path));
@@ -47,7 +49,8 @@ public class RequestHandlerMappingTest {
         HttpRequest httpRequest = HttpRequest.of(
             "POST /user/create HTTP/1.1",
             Arrays.asList(),
-            null
+            null,
+            new LocalHttpSessionStorage()
         );
         HttpResponse response = requestHandlerMapping.handle(httpRequest);
 

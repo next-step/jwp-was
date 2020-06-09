@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.Collection;
 import model.User;
 import org.junit.jupiter.api.Test;
+import webserver.LocalHttpSessionStorage;
 
 class UserListHandlerTest {
 
@@ -49,6 +50,6 @@ class UserListHandlerTest {
             line += "\r\nCookie: logined=true";
         }
 
-        return HttpRequest.from(new ByteArrayInputStream(line.getBytes()));
+        return HttpRequest.from(new ByteArrayInputStream(line.getBytes()), new LocalHttpSessionStorage());
     }
 }

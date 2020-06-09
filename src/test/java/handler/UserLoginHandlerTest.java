@@ -9,6 +9,7 @@ import http.view.RedirectView;
 import java.util.Arrays;
 import model.User;
 import org.junit.jupiter.api.Test;
+import webserver.LocalHttpSessionStorage;
 
 class UserLoginHandlerTest {
 
@@ -41,7 +42,8 @@ class UserLoginHandlerTest {
         HttpRequest httpRequest = HttpRequest.of(
             line,
             Arrays.asList(contentLength, contentType),
-            body
+            body,
+            new LocalHttpSessionStorage()
         );
 
         return new UserHandler().login(httpRequest);
