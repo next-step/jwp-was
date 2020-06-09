@@ -2,8 +2,14 @@ package http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 
+import http.controller.DefaultController;
 import http.controller.UserController;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,11 +18,23 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ControllerHandlerTest {
 
-    @Test
-    void geUserControllerTest() {
-        RequestLine requestLine = RequestLineParser.parse("GET /user/create HTTP/1.1");
-        HttpRequest httpRequest = new HttpRequest(requestLine, new HttpHeaderInfo(), StringUtils.EMPTY);
+    private String testDirectory = "./src/test/resources/";
 
-        assertThat(ControllerHandler.getPathController(httpRequest)).isInstanceOf(UserController.class);
+    @Test
+    @DisplayName("올바른 controller 반환하는지 테스트")
+    void geUserControllerTest() throws Exception {
+        InputStream in = new FileInputStream(new File(testDirectory + "Http_GET.txt"));
+        HttpRequest request = new HttpRequest(in);
+
+        assertThat(UserController.class.isInstance(ControllerHandler.getControllerProcess(request)));
+    }
+
+    @Test
+    @DisplayName("디폴트 controller 반환하는지 테스트")
+    void getDefaultTest() throws Exception {
+        InputStream in = new FileInputStream(new File(testDirectory + "Http_GET_CSS.txt"));
+        HttpRequest request = new HttpRequest(in);
+
+        assertThat(DefaultController.class.isInstance(ControllerHandler.getControllerProcess(request)));
     }
 }

@@ -15,11 +15,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class HeaderInfoTest {
     // http request / header / contentbody 분리 하자 들어온거 분석해서
     private static final Logger log = LoggerFactory.getLogger(HeaderInfoTest.class);
-    private HttpHeaderInfo headerInfo;
+    private Header headerInfo;
 
     @BeforeEach
     void createHeaderInfo() {
-        headerInfo = new HttpHeaderInfo();
+        headerInfo = new Header();
     }
 
     @Test

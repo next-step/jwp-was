@@ -2,11 +2,9 @@ package http.controller;
 
 import com.sun.istack.internal.logging.Logger;
 import db.DataBase;
-import http.HttpHeaderInfo;
 import http.HttpRequest;
 import http.HttpResponse;
 import http.QueryString;
-import http.enums.HttpResponseCode;
 import model.User;
 
 /**
@@ -16,13 +14,9 @@ public class UserController extends PathController {
 
     private static final Logger log = Logger.getLogger(UserController.class);
 
-    public UserController(HttpRequest httpRequest) {
-        super(httpRequest);
-    }
-
-    public byte[] post() {
+    public void doPost(HttpRequest request, HttpResponse response) {
         log.info("user controller post method ===========");
-        QueryString requestBodyQuery = new QueryString(httpRequest.getRequestBody());
+        QueryString requestBodyQuery = new QueryString(request.getRequestBody());
 
         User user = new User(requestBodyQuery.getParameter("userId"),
                 requestBodyQuery.getParameter("password"),
@@ -31,9 +25,6 @@ public class UserController extends PathController {
 
         DataBase.addUser(user);
 
-        HttpHeaderInfo headerInfo = new HttpHeaderInfo();
-        headerInfo.addKeyAndValue("Location", "http://localhost:8080/index.html");
-        HttpResponse httpResponse = new HttpResponse(HttpResponseCode.REDIRECT,new byte[0],headerInfo);
-        return httpResponse.makeResponseBody();
+        response.sendRedirect("/index.html");
     }
 }
