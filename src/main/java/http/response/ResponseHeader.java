@@ -1,6 +1,7 @@
 package http.response;
 
 import http.common.HeaderField;
+import http.common.HeaderFieldName;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.HashMap;
@@ -20,6 +21,10 @@ public class ResponseHeader implements Iterable {
             return Strings.EMPTY;
         }
         return headerField.getValue();
+    }
+
+    public String getValue(HeaderFieldName headerName) {
+        return getValue(headerName.stringify());
     }
 
     public void addHeader(HeaderField headerField) {

@@ -47,6 +47,10 @@ public class HttpResponse {
         return header.getValue(headerName);
     }
 
+    public String getHeader(HeaderFieldName headerName) {
+        return header.getValue(headerName);
+    }
+
     public byte[] getBody() {
         return responseBody;
     }
