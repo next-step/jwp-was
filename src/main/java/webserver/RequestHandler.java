@@ -2,8 +2,8 @@ package webserver;
 
 import controller.Controller;
 import controller.ControllerMapper;
-import http.HttpRequest;
-import http.requestline.path.Path;
+import http.request.HttpRequest;
+import http.request.requestline.path.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import utils.FileIoUtils;

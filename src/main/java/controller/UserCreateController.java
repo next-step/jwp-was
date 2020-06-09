@@ -1,7 +1,7 @@
 package controller;
 
 import db.DataBase;
-import http.HttpRequest;
+import http.request.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import model.User;
 

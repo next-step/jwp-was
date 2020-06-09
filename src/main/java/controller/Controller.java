@@ -1,6 +1,6 @@
 package controller;
 
-import http.HttpRequest;
+import http.request.HttpRequest;
 
 public interface Controller {
     void execute(HttpRequest httpRequest);

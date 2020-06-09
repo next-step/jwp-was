@@ -1,10 +1,10 @@
 package controller;
 
-import http.HttpRequest;
-import http.method.HttpMethod;
+import http.request.HttpRequest;
+import http.request.method.HttpMethod;
 
-import static http.method.HttpMethod.GET;
-import static http.method.HttpMethod.POST;
+import static http.request.method.HttpMethod.GET;
+import static http.request.method.HttpMethod.POST;
 
 public abstract class AbstractController implements Controller {
 
