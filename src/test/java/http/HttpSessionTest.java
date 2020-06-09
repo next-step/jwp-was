@@ -13,7 +13,6 @@ public class HttpSessionTest {
     @Test
     public void initTest() {
         HttpSession httpSession = new HttpSession();
-
         assertThat(httpSession.getId()).isNotNull();
         assertThat(HttpSessionManager.getSession(httpSession.getId())).isEqualTo(httpSession);
     }

@@ -18,6 +18,7 @@ public class HttpRequest {
     private HttpHeaders httpHeaders;
     private Parameters parameters;
     private Set<Cookie> cookies;
+    private HttpResponse httpResponse;
 
     private HttpRequest(BufferedReader bufferedReader) throws IOException {
         this.requestLine = RequestLine.from(bufferedReader.readLine());
@@ -84,6 +85,10 @@ public class HttpRequest {
         return new HttpRequest(bufferedReader);
     }
 
+    public void linkHttpResponse(HttpResponse httpResponse) {
+        this.httpResponse = httpResponse;
+    }
+
     public HttpMethod getMethod() {
         return requestLine.getMethod();
     }
@@ -119,8 +124,18 @@ public class HttpRequest {
 
         if(sessionCookie == null) {
             HttpSession httpSession = new HttpSession();
+            httpResponse.addCookie(new Cookie(Cookie.JSESSION_ID, httpSession.getId()));
             return httpSession;
         }
-        return HttpSessionManager.getSession(sessionCookie.getValue());
+
+        HttpSession httpSession = HttpSessionManager.getSession(sessionCookie.getValue());
+
+        if(httpSession == null) {
+            HttpSession newSession = new HttpSession(sessionCookie.getValue());
+            HttpSessionManager.addSession(newSession);
+            return newSession;
+        }
+
+        return httpSession;
     }
 }

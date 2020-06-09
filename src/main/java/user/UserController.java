@@ -71,6 +71,7 @@ public class UserController {
     public ModelAndView userListView(HttpRequest httpRequest) {
 
         boolean isLoggedIn = userService.isLoggedIn(httpRequest);
+
         if(!isLoggedIn) {
             return ModelAndView.from("redirect:/user/login.html");
         }

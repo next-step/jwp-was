@@ -5,9 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.HttpStringBuilder;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,10 +79,13 @@ public class HttpRequestTest {
                 .addHeader(HttpHeaders.COOKIE, "JSESSION_ID=MYSESSION")
                 .buildRequest();
 
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        HttpResponse httpResponse = HttpResponse.from(new DataOutputStream(byteArrayOutputStream));
+
         HttpRequest httpRequest = HttpRequest.from(new BufferedReader(new StringReader(httpString)));
+        httpRequest.linkHttpResponse(httpResponse);
 
         HttpSession httpSession = httpRequest.getSession();
-
         logger.debug("Session Created : {}", httpSession);
     }
 }

@@ -31,6 +31,8 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = HttpRequest.from(bufferedReader);
             HttpResponse httpResponse = HttpResponse.from(dos);
 
+            httpRequest.linkHttpResponse(httpResponse);
+
             httpRequestHandler.handleRequest(httpRequest, httpResponse);
 
             if(!httpResponse.isResponseDone()) {

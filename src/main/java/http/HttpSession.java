@@ -12,7 +12,11 @@ public class HttpSession extends LinkedHashMap<String, Object> {
     private String id;
 
     public HttpSession() {
-        this.id = UUID.randomUUID().toString();
+        this(UUID.randomUUID().toString());
+    }
+
+    public HttpSession(String id) {
+        this.id = id;
         HttpSessionManager.addSession(this);
     }
 
