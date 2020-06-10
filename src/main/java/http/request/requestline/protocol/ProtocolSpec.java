@@ -28,6 +28,10 @@ public class ProtocolSpec {
         return version.getVersion();
     }
 
+    public String getProtocolSpecText() {
+        return protocol.name() + PROTOCOL_SPEC_DELIMITER + version.getVersion();
+    }
+
     private String[] splitProtocolSpecText(String protocolSpecText) {
         String[] tokens = protocolSpecText.split(PROTOCOL_SPEC_DELIMITER);
         if (tokens.length != TOKEN_SIZE) {

@@ -7,12 +7,10 @@ import http.request.requestline.protocol.ProtocolSpec;
 import lombok.Builder;
 import lombok.Getter;
 
+@Getter
 public class RequestLine {
 
-    @Getter
     private final HttpMethod method;
-
-    @Getter
     private final Path path;
     private final ProtocolSpec protocolSpec;
 
@@ -35,6 +33,10 @@ public class RequestLine {
         return path.getQueryStringValue(key);
     }
 
+    public String getUri() {
+        return path.getUri();
+    }
+
     public String getMimeType() {
         return path.getMimeType();
     }
@@ -45,5 +47,9 @@ public class RequestLine {
 
     public String getProtocolVersion() {
         return protocolSpec.getVersion();
+    }
+
+    public String getProtocolSpec() {
+        return protocolSpec.getProtocolSpecText();
     }
 }

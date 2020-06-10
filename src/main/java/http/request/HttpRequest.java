@@ -5,7 +5,6 @@ import http.request.method.HttpMethod;
 import http.request.querystring.QueryString;
 import http.request.requestline.RequestLine;
 import http.request.requestline.RequestLineParser;
-import http.request.requestline.path.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import utils.IOUtils;
@@ -104,11 +103,15 @@ public class HttpRequest {
         return requestLine.getMethod();
     }
 
-    public Path getPath() {
-        return requestLine.getPath();
+    public String getUri() {
+        return requestLine.getUri();
     }
 
     public String getMimeType() {
         return requestLine.getMimeType();
+    }
+
+    public String getProtocolSpec() {
+        return requestLine.getProtocolSpec();
     }
 }
