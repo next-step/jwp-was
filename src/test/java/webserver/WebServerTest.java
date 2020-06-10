@@ -30,8 +30,7 @@ public class WebServerTest {
         ExecutorService executorService =  Executors.newFixedThreadPool(20);
 
         for (int i = 0; i < 20; i++) {
-            logger.info("{} requested", i);
-            executorService.execute(() -> sendRequest());
+            executorService.execute(() -> sendRequest(i));
         }
 
         executorService.shutdown();
@@ -39,9 +38,9 @@ public class WebServerTest {
         logger.info("finish");
     }
 
-    private ResponseEntity<String> sendRequest() {
+    private ResponseEntity<String> sendRequest(int requestId) {
         ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/index.html", String.class);
-        logger.info("Status Code: {}", response.getStatusCode());
+        logger.info("requestId : {}  Status Code: {}", requestId, response.getStatusCode());
         return response;
     }
 }
