@@ -2,9 +2,8 @@ package http.Response;
 
 import http.HttpHeaderName;
 import http.HttpHeaders;
-import java.io.DataOutputStream;
+import http.view.View;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +19,10 @@ public abstract class HttpResponse {
     private static final String REDIRECT_STATUS_LINE = "HTTP/1.1 302 Found \r\n";
     private static final String OK_STATUS_LINE = "HTTP/1.1 200 OK \r\n";
 
-    private DataOutputStream dos;
+    private final HttpHeaders headers = new HttpHeaders();
     String statusLine;
-    private HttpHeaders headers = new HttpHeaders();
     private byte[] body;
+    private View view;
 
     abstract byte[] readContents(String path);
 
@@ -31,16 +30,19 @@ public abstract class HttpResponse {
 
     public abstract boolean isMyResponse(String path);
 
-    public void setDataOutputStream(OutputStream out) {
-        this.dos = new DataOutputStream(out);
+    public void setView(View view) {
+        this.view = view;
     }
 
     public void response(String path) {
         this.body = readContents(path);
         this.statusLine = setStatusLine();
         addHeaders(HttpHeaderName.CONTENT_LENGTH.toString(), String.valueOf(body.length));
-        responseHeader();
-        responseBody(body);
+        view.render(assembleHeader(statusLine, headers), body);
+    }
+
+    private String assembleHeader(String statusLine, HttpHeaders headers) {
+        return statusLine + headers.toString();
     }
 
     String setStatusLine() {
@@ -65,32 +67,9 @@ public abstract class HttpResponse {
         headers.addHeader(key, value);
     }
 
-    private void responseHeader() {
-        try {
-            dos.writeBytes(statusLine);
-            dos.writeBytes(headers.toString());
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
     public void redirect(String redirectLocation) {
-        try {
-            dos.writeBytes(REDIRECT_STATUS_LINE);
-            addHeaders(HttpHeaderName.LOCATION.toString(), redirectLocation);
-            dos.writeBytes(headers.toString());
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+        addHeaders(HttpHeaderName.LOCATION.toString(), redirectLocation);
+        view.render(assembleHeader(REDIRECT_STATUS_LINE, headers), new byte[0]);
     }
 
 }
