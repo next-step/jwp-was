@@ -1,12 +1,7 @@
 package webserver;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
-import db.DataBase;
 import http.HttpRequest;
-import http.HttpResponse;
+import http.Response.HttpResponse;
 import http.controller.Controller;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,9 +9,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import model.User;
-import model.Users;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +30,8 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
             HttpRequest request = new HttpRequest(br);
-            HttpResponse response = new HttpResponse(out);
+            HttpResponse response = RequestMapping.getResponse(request.getPath());
+            response.setDataOutputStream(out);
 
             Controller controller = RequestMapping.getController(request.getPath());
             if (controller != null) {

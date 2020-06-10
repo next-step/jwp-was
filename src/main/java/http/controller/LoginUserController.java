@@ -3,7 +3,7 @@ package http.controller;
 import db.DataBase;
 import http.HttpHeaderName;
 import http.HttpRequest;
-import http.HttpResponse;
+import http.Response.HttpResponse;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

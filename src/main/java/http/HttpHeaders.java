@@ -44,6 +44,7 @@ public class HttpHeaders {
         for (String key : keys) {
             sb.append(key).append(HEADER_DELIMITER).append(requestHeaders.get(key)).append(CRLF);
         }
+        sb.append(CRLF);
         return sb.toString();
     }
 }

@@ -6,7 +6,7 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import http.HttpHeaderName;
 import http.HttpRequest;
-import http.HttpResponse;
+import http.Response.HttpResponse;
 import java.io.IOException;
 import model.Users;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class ListUserController extends AbstractController {
     @Override
     public void doGet(HttpRequest request, HttpResponse response) {
         if (isLogined(request)) {
-            response.responseBody(compileBody(request.getPath()));
+            response.response(compileBody(request.getPath()));
             return;
         }
         response.redirect(REDIRECT_URL);
