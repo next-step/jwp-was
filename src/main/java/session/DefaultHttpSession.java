@@ -6,18 +6,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DefaultHttpSession implements HttpSession {
-    private String sessionId;
+    private final String sessionId;
     private final Map<String, Object> attributes = new HashMap<>();
 
-    private DefaultHttpSession() {}
+    private DefaultHttpSession(final String sessionId) {
+        this.sessionId = sessionId;
+    }
 
     public static DefaultHttpSession of(final String sessionId) {
         validate(sessionId);
 
-        DefaultHttpSession httpSession = new DefaultHttpSession();
-        httpSession.sessionId = sessionId;
-
-        return httpSession;
+        return new DefaultHttpSession(sessionId);
     }
 
     private static void validate(final String sessionId) {
