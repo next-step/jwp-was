@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class RequestMappingHandler {
+    private static final int MIN_CONTENT_LENGTH = 0;
+    private static final String END_OF_LINE = "";
 
     private static final Logger logger = LoggerFactory.getLogger(RequestMappingHandler.class);
 
@@ -36,10 +38,10 @@ public class RequestMappingHandler {
     private void read() throws IOException {
         String readLine = bufferedReader.readLine();
         String firstLine = readLine;
-        int contentLength = 0;
+        int contentLength = MIN_CONTENT_LENGTH;
         logger.debug(readLine);
 
-        while (!"".equals(readLine)) {
+        while (!END_OF_LINE.equals(readLine)) {
             readLine = bufferedReader.readLine();
             if (readLine.matches("Content-Length:.*")) {
                 String[] lengths = readLine.split(":");
