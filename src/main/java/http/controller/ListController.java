@@ -18,7 +18,7 @@ public class ListController extends PathController{
 
     public void doGet(HttpRequest request, HttpResponse response)  {
         log.info("list controller get method execute ========");
-        response.addHeader("Content-Type", ContentType.html.getMimeType());
+        response.addHeader("Content-Type", ContentType.HTML.getMimeType());
 
         if(!request.isLoggedIn()) {
             response.sendRedirect("/index.html");

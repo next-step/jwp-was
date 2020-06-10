@@ -25,7 +25,7 @@ public class LoginController extends PathController{
     public void doPost(HttpRequest request, HttpResponse response) {
         log.info("login controller post method ===========");
 
-        response.addHeader("Content-Type", ContentType.html.getMimeType());
+        response.addHeader("Content-Type", ContentType.HTML.getMimeType());
 
         QueryString requestBodyString = new QueryString(request.getRequestBody());
         User loginUser = new User(requestBodyString.getParameter("userId"), requestBodyString.getParameter("password"));
