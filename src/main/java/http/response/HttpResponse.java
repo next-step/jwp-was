@@ -18,10 +18,24 @@ public class HttpResponse {
     private final DataOutputStream dos;
     private final HttpRequest httpRequest;
     private final HttpResponseMetaData metaData;
+    private TemplateRenderer templateRenderer = new TemplateRenderer();
 
     public static HttpResponse of(OutputStream outputStream, HttpRequest httpRequest) {
         DataOutputStream dos = new DataOutputStream(outputStream);
         return new HttpResponse(dos, httpRequest, new HttpResponseMetaData());
+    }
+
+    public void setModel(String key, Object value) {
+        templateRenderer.setModel(key, value);
+    }
+
+    public void renderTemplate(String location) {
+        try {
+            String renderedPage = templateRenderer.render(location);
+            updateResponseBodyContent(renderedPage.getBytes());
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
     }
 
     public void redirect(String location) {

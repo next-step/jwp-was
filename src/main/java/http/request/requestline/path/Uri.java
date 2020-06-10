@@ -33,14 +33,14 @@ public class Uri {
         return FileExtension.find(extensionName);
     }
 
-    private String extractFileExtension() {
-        String[] tokens = value.split(FILE_EXTENSION_DELIMITER);
-        return tokens[tokens.length - 1];
-    }
-
     public String getMimeType() {
         return findFileExtension()
                 .map(FileExtension::getMimeType)
-                .get();
+                .orElseGet(FileExtension.HTML::getMimeType);
+    }
+
+    private String extractFileExtension() {
+        String[] tokens = value.split(FILE_EXTENSION_DELIMITER);
+        return tokens[tokens.length - 1];
     }
 }

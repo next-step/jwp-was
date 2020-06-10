@@ -10,6 +10,7 @@ public class ControllerMapper {
     static {
         MAPPER.put("/user/create", new UserCreateController());
         MAPPER.put("/user/login", new LoginController());
+        MAPPER.put("/user/list", new UserListController());
     }
 
     public Controller findController(String path) {

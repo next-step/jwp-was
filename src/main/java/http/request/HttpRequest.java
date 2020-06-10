@@ -79,6 +79,11 @@ public class HttpRequest {
         this.body = new QueryString(body);
     }
 
+    public boolean isLoginUser() {
+        String cookie = httpHeaders.get("Cookie");
+        return cookie != null && cookie.contains("logined=true");
+    }
+
     public String getBody(String key) {
         return body.get(key);
     }
