@@ -3,6 +3,7 @@ package http.requests;
 import http.requests.parameters.Cookie;
 import http.requests.parameters.FormData;
 import http.requests.types.HttpMethod;
+import http.session.HttpSession;
 import utils.HttpHeader;
 import utils.HttpRequestParser;
 import utils.IOUtils;
@@ -22,6 +23,7 @@ public class HttpRequest {
     private final String body;
     private final FormData formData;
     private final Cookie cookie;
+    private HttpSession httpSession;
 
     public HttpRequest(InputStream in) {
         try {
@@ -84,4 +86,13 @@ public class HttpRequest {
         return cookie;
     }
 
+    public void registerHttpSession(HttpSession httpSession) {
+        if (this.httpSession == null) {
+            this.httpSession = httpSession;
+        }
+    }
+
+    public HttpSession getHttpSession() {
+        return httpSession;
+    }
 }

@@ -3,7 +3,6 @@ package http.controller;
 import http.requests.HttpRequest;
 import http.responses.HttpResponse;
 import http.session.HttpSession;
-import http.session.SessionManager;
 import service.UserService;
 import service.exceptions.UserNotFoundException;
 
@@ -19,7 +18,7 @@ public class SignInController implements Controller {
         try {
             final boolean isRightPassword = userService.authenticate(userId, password);
             if (isRightPassword) {
-                final HttpSession session = getCurrentSession(request);
+                final HttpSession session = request.getHttpSession();
                 session.setAttribute("logined", true);
                 response.sendRedirect("/index.html");
                 return;
@@ -28,10 +27,5 @@ public class SignInController implements Controller {
         } catch (UserNotFoundException e) {
             response.sendRedirect("/user/login.html");
         }
-    }
-
-    private HttpSession getCurrentSession(HttpRequest request) {
-        final String sessionId = request.getCookie().getValue(SessionManager.SESSION_NAME);
-        return SessionManager.getSession(sessionId);
     }
 }
