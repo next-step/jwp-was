@@ -11,9 +11,9 @@ class QueryStringTest {
     @Test
     void parseQueryParsing() {
         QueryString queryString = new QueryString("userId=javajigi&password=password&name=JaeSung");
-        assertThat(queryString.getParam().get("userId")).isEqualTo("javajigi");
-        assertThat(queryString.getParam().get("password")).isEqualTo("password");
-        assertThat(queryString.getParam().get("name")).isEqualTo("JaeSung");
+        assertThat(queryString.getParameter("userId")).isEqualTo("javajigi");
+        assertThat(queryString.getParameter("password")).isEqualTo("password");
+        assertThat(queryString.getParameter("name")).isEqualTo("JaeSung");
     }
 
 }

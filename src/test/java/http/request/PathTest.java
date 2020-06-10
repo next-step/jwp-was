@@ -1,11 +1,9 @@
 package http.request;
 
-import http.request.Path;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
 
 class PathTest {
 
@@ -15,8 +13,9 @@ class PathTest {
         Path path = new Path("/user/create?userId=1&password=2&name=sehee&email=asdf@asdf.com");
 
         assertThat(path.getPath()).isEqualTo("/user/create");
-        assertThat(path.getQueryString().getParam()).contains(
-                entry("userId", "1"), entry("password", "2"), entry("name", "sehee"), entry("email", "asdf@asdf.com"));
-
+        assertThat(path.getQueryString().getParameter("userId")).isEqualTo("1");
+        assertThat(path.getQueryString().getParameter("password")).isEqualTo("2");
+        assertThat(path.getQueryString().getParameter("name")).isEqualTo("sehee");
+        assertThat(path.getQueryString().getParameter("email")).isEqualTo("asdf@asdf.com");
     }
 }

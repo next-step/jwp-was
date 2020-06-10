@@ -3,10 +3,15 @@ package http.response;
 import dto.Users;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import view.ViewHelper;
+import view.FileView;
+import view.RedirectView;
+import view.StaticFileView;
+import view.TemplateView;
+import view.View;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,47 +26,45 @@ public class HttpResponse {
 
     private ResponseStatus status;
     private ResponseHeader header;
-    private byte[] body;
+    private ResponseBody body;
     private DataOutputStream dos;
+    private View view;
 
-    public HttpResponse(DataOutputStream dos) {
-        this.dos = dos;
+    public HttpResponse(OutputStream out) {
+        this.dos = new DataOutputStream(out);
+        this.header = new ResponseHeader();
     }
 
-    public void redirect(String redirectUrl) {
+    public void sendRedirect(String redirectUrl) {
         this.status = FOUND;
-        this.header = new ResponseHeader();
-        header.putLocation(redirectUrl);
-        this.body = new byte[0];
-        this.write();
+        this.view = new RedirectView(redirectUrl);
+        header.addHeader("Location", redirectUrl);
     }
 
-    public void returnFile(String returnFile) {
+    public void forward(String file) {
         this.status = OK;
-        this.header = new ResponseHeader();
-        this.body = ViewHelper.readFile(returnFile);
-        header.putContentType("text/html;charset=utf-8");
-        header.putContentLength(body.length);
+        this.view = new FileView(file);
+        header.addHeader("Content-Type", "text/html;charset=utf-8");
     }
 
-    public void returnHandlebar(String location, Users users) {
+    public void returnHandlebar(String path, Users users) {
         this.status = OK;
-        this.header = new ResponseHeader();
-        this.body = ViewHelper.readHandlebar(location, users);
-        header.putContentType("text/html;charset=utf-8");
-        header.putContentLength(body.length);
+        this.view = new TemplateView(path, users);
+        header.addHeader("Content-Type", "text/html;charset=utf-8");
     }
 
     public void viewStyleSheet(String file) {
         this.status = OK;
-        this.header = new ResponseHeader();
-        this.body = ViewHelper.readStyleSheetFile(file);
-        header.putContentType("text/css");
-        header.putContentLength(body.length);
+        this.view = new StaticFileView(file);
+        header.addHeader("Content-Type", "text/css");
     }
 
-    public void putHeader(String key, String value) {
-        this.header.putHeader(key, value);
+    public void addHeader(String key, String value) {
+        this.header.addHeader(key, value);
+    }
+
+    public void addCookie(String key, String value) {
+        this.header.addHeader("Set-Cookie", String.format("%s=%s; Path=/", key, value));
     }
 
     public ResponseStatus getStatus() {
@@ -72,12 +75,16 @@ public class HttpResponse {
         return header.getHeader();
     }
 
-    public byte[] getBody() {
-        return body;
+    public String getHeader(String key) {
+        return header.getHeader(key);
     }
 
-    public void addCookie(String cookie) {
-        this.header.putCookie(cookie);
+    public View getView() {
+        return view;
+    }
+
+    public void setBody(byte[] content) {
+        this.body = new ResponseBody(content);
     }
 
     public void write() {
@@ -88,7 +95,7 @@ public class HttpResponse {
                 dos.writeBytes(header);
             }
             dos.writeBytes(HEADER_END_STRING);
-            dos.write(body, 0, body.length);
+            dos.write(body.getBody(), 0, body.getLength());
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());

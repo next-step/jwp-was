@@ -7,27 +7,16 @@ public class ResponseHeader {
 
     private Map<String, String> header = new HashMap<>();
 
-    public void putHeader(String key, String value) {
+    public void addHeader(String key, String value) {
         this.header.put(key, value);
-    }
-
-    public void putContentType(String contentType) {
-        this.header.put("Content-Type", contentType);
-    }
-
-    public void putContentLength(int length) {
-        this.header.put("Content-Length", String.valueOf(length));
-    }
-
-    public void putLocation(String redirectUrl) {
-        this.header.put("Location", redirectUrl);
     }
 
     public Map<String, String> getHeader() {
         return header;
     }
 
-    public void putCookie(String cookie) {
-        this.header.put("Set-Cookie", cookie);
+    public String getHeader(String key) {
+        return header.get(key);
     }
+
 }

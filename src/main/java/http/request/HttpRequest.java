@@ -1,56 +1,90 @@
 package http.request;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class HttpRequest {
-    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
     private static final String CONTENT_LENGTH = "Content-Length";
     private RequestLine requestLine;
     private RequestHeader header;
-    private String body;
+    private RequestBody body;
 
-    public HttpRequest(BufferedReader br) throws IOException {
+    public HttpRequest(InputStream in) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, UTF_8));
         Map<String, String> header = new HashMap<>();
         String line = br.readLine();
+        parsingHeader(br, header, line);
         this.requestLine = new RequestLine(line);
-        logger.info(line);
-        while (isNotEmpty(line)) {
-            line = br.readLine();
-            putHeader(header, line);
-            logger.info(line);
-        }
-        this.header = new RequestHeader((header));
-        this.body = IOUtils.readData(br, Integer.parseInt(header.getOrDefault(CONTENT_LENGTH, "0")));
-        logger.info(body);
-    }
-
-    public RequestUrl findRequestUrl() {
-        return RequestUrl.findByPath(requestLine.getPath());
+        this.header = new RequestHeader(header);
+        this.body = new RequestBody(parsingBody(br, header));
     }
 
     public String getBody() {
-        return body;
+        return body.getBody();
     }
 
     public String getPath() {
         return requestLine.getPath();
     }
 
-    public Map<String, String> getHeader() {
-        return header.getHeader();
+    public String getHeader(String key) {
+        return header.getHeader(key);
+    }
+
+    public String getParameter(String key) {
+        if (requestLine.isGet()) {
+            return requestLine.getParameter(key);
+        }
+        String parameter = body.getParameter(key);
+        if (StringUtils.isEmpty(parameter)) {
+            return requestLine.getParameter(key);
+        }
+        return parameter;
+    }
+
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
     }
 
     public boolean isLogin() {
-        Map<String, String> cookies = header.getCookies();
-        String cookie = cookies.getOrDefault("logined", "false");
-        return Boolean.parseBoolean(cookie);
+        String cookie = header.getCookie("logined");
+        if (StringUtils.hasText(cookie)) {
+            return Boolean.parseBoolean(cookie);
+        }
+
+        return false;
+    }
+
+    public boolean isPost() {
+        return requestLine.isPost();
+    }
+
+    private void parsingHeader(BufferedReader br, Map<String, String> header, String line) throws IOException {
+        while (isNotEmpty(line)) {
+            line = br.readLine();
+            putHeader(header, line);
+        }
+    }
+
+    private String parsingBody(BufferedReader br, Map<String, String> header) throws IOException {
+        if (requestLine.isPost()) {
+            return IOUtils.readData(br, Integer.parseInt(header.get(CONTENT_LENGTH)));
+        }
+
+        return "";
+    }
+
+    public RequestUrl findRequestUrl() {
+        return RequestUrl.findByPath(requestLine.getPath());
     }
 
     public boolean isStylesheet() {
@@ -62,9 +96,20 @@ public class HttpRequest {
     }
 
     private void putHeader(Map<String, String> header, String line) {
-        String[] values = line.split(":");
-        if (values.length > 1) {
-            header.put(values[0], values[1].trim());
+        if (StringUtils.isEmpty(line)) {
+            return;
         }
+        String[] values = line.split(": ");
+        if (values.length > 1) {
+            header.put(values[0], values[1]);
+        }
+    }
+
+    public QueryString getParameters() {
+        if (requestLine.isPost()) {
+            return body.getQueryString();
+        }
+
+        return requestLine.getParameters();
     }
 }
