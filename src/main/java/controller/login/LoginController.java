@@ -1,5 +1,6 @@
-package controller;
+package controller.login;
 
+import controller.AbstractController;
 import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;

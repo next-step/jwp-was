@@ -8,7 +8,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static http.response.HttpStatusCode.BAD_REQUEST;
 import static http.response.HttpStatusCode.FOUND;
 
 @Slf4j
@@ -41,10 +40,6 @@ public class HttpResponse {
     public void redirect(String location) {
         metaData.updateStatusCode(FOUND);
         metaData.putResponseHeader("Location", location);
-    }
-
-    public void badRequest() {
-        metaData.updateStatusCode(BAD_REQUEST);
     }
 
     public void setCookie(String content) {
