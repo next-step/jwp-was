@@ -1,7 +1,5 @@
 package http.common;
 
-import http.common.HeaderFieldName;
-
 public class HeaderField {
     private final String name;
     private final String value;

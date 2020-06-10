@@ -128,7 +128,6 @@ class HttpResponseTest {
     @Test
     @DisplayName("response302 메서드 호출 시 입력받은 url을 가지는 Location 헤더가 추가된다")
     void response302LocationTest() {
-        final StatusCode statusCode = StatusCode.FOUND;
         final HttpResponse httpResponse = new HttpResponse();
         final String locationUrl = "http://www.google.com";
 

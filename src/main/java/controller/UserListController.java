@@ -28,17 +28,17 @@ public class UserListController extends AbstractController {
     @Override
     protected void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
         if (isLogined(httpRequest)) {
-            Users users = new Users(DataBase.findAll());
+            final Users users = new Users(DataBase.findAll());
 
-            TemplateLoader loader = new ClassPathTemplateLoader();
+            final TemplateLoader loader = new ClassPathTemplateLoader();
             loader.setPrefix("/templates");
             loader.setSuffix(".html");
 
-            Handlebars handlebars = new Handlebars(loader);
+            final Handlebars handlebars = new Handlebars(loader);
             handlebars.registerHelpers(new HandlebarsHelper());
 
             try {
-                Template template = handlebars.compile("user/list");
+                final Template template = handlebars.compile("user/list");
                 byte[] htmlFile = template.apply(users).getBytes();
                 httpResponse.response200HTML(htmlFile);
             } catch (IOException e) {
@@ -51,7 +51,7 @@ public class UserListController extends AbstractController {
     }
 
     private boolean isLogined(HttpRequest httpRequest) {
-        String logined = httpRequest.getCookie("logined");
+        final String logined = httpRequest.getCookie("logined");
         if ("true".equals(logined)) {
             return true;
         }

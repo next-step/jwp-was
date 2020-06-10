@@ -12,6 +12,7 @@ import java.util.Objects;
 public class QueryString {
     private static final String PARAMETER_NAME_VALUE_TOKENIZER = "=";
     private static final String QUERYSTRING_TOKENIZER = "&";
+    private static final String QUERY_STRING_DEFAULT_VALUE = Strings.EMPTY;
 
     private Map<String, String> queries = new HashMap<>();
 
@@ -32,8 +33,7 @@ public class QueryString {
     }
 
     public String getParameterValue(String parameterName) {
-        String defaultValue = "";
-        return queries.getOrDefault(parameterName, defaultValue);
+        return queries.getOrDefault(parameterName, QUERY_STRING_DEFAULT_VALUE);
     }
 
     private String[] split(String values) {

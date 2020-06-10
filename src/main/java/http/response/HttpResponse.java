@@ -5,7 +5,6 @@ import http.common.HeaderField;
 import http.common.HeaderFieldName;
 
 public class HttpResponse {
-
     private StatusCode statusCode;
     private final ResponseHeader header;
     private final Cookies cookies;

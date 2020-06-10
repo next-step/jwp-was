@@ -1,5 +1,6 @@
 package http.request;
 
+import org.apache.logging.log4j.util.Strings;
 import utils.UrlUtf8Decoder;
 import webserver.exceptions.ErrorMessage;
 import webserver.exceptions.WebServerException;
@@ -10,19 +11,20 @@ import java.util.Map;
 public class FormData {
     private static final String FORM_DATA_TOKENIZER = "&";
     private static final String FORM_DATA_NAME_VALUE_TOKENIZER = "=";
+    private static final String FORM_DATA_DEFAULT_VALUE = Strings.EMPTY;
 
-    private Map<String, String> data = new HashMap<>();
+    private final Map<String, String> data = new HashMap<>();
 
     public FormData(String value) {
 
         for (String v : value.split(FORM_DATA_TOKENIZER)) {
-            String[] v1 = v.split(FORM_DATA_NAME_VALUE_TOKENIZER);
+            final String[] v1 = v.split(FORM_DATA_NAME_VALUE_TOKENIZER);
             if (v1.length != 2) {
                 throw new WebServerException(ErrorMessage.ILLEGAL_FORM_DATA);
             }
 
-            String decodedName = UrlUtf8Decoder.decode(v1[0]).trim();
-            String decodedValue = UrlUtf8Decoder.decode(v1[1]).trim();
+            final String decodedName = UrlUtf8Decoder.decode(v1[0]).trim();
+            final String decodedValue = UrlUtf8Decoder.decode(v1[1]).trim();
 
             if (decodedName.isEmpty()) {
                 throw new WebServerException(ErrorMessage.ILLEGAL_FORM_DATA);
@@ -37,8 +39,7 @@ public class FormData {
     }
 
     public String getValue(String name) {
-        String defaultValue = "";
-        return data.getOrDefault(name, defaultValue);
+        return data.getOrDefault(name, FORM_DATA_DEFAULT_VALUE);
     }
 
 }

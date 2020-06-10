@@ -26,11 +26,11 @@ public class UserLoginController extends AbstractController {
 
     @Override
     protected void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
-        FormData formData = new FormData(httpRequest.getBody());
-        String userId = formData.getValue("userId");
-        String password = formData.getValue("password");
+        final FormData formData = new FormData(httpRequest.getBody());
+        final String userId = formData.getValue("userId");
+        final String password = formData.getValue("password");
 
-        User user = DataBase.findUserById(userId);
+        final User user = DataBase.findUserById(userId);
 
         if (user.matchPassword(password)) {
             httpResponse.response302("/index.html");

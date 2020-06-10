@@ -21,9 +21,9 @@ public class HtmlController implements Controller {
 
     @Override
     public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
-        String path = httpRequest.getPath();
+        final String path = httpRequest.getPath();
         try {
-            byte[] html = FileIoUtils.loadFileFromClasspath("./templates/" + path);
+            final byte[] html = FileIoUtils.loadFileFromClasspath("./templates/" + path);
             httpResponse.response200HTML(html);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();

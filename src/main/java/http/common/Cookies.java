@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 
 public class Cookies {
     private static final String COOKIE_TOKENIZER = ";";
+    private static final String COOKIE_JOIN_DELIMITER = "; ";
     private static final String COOKIE_NAME_VALUE_TOKENIZER = "=";
+    private static final String COOKIE_DEFAULT_VALUE = Strings.EMPTY;
 
     private Map<String, String> cookies;
     private String path = Strings.EMPTY;
@@ -22,19 +24,18 @@ public class Cookies {
     public Cookies(String values) {
         cookies = new HashMap<>();
         for (String cookie : values.split(COOKIE_TOKENIZER)) {
-            String[] c = cookie.trim().split(COOKIE_NAME_VALUE_TOKENIZER);
+            final String[] c = cookie.trim().split(COOKIE_NAME_VALUE_TOKENIZER);
             if (c.length != 2) {
                 throw new IllegalCookieHeaderException();
             }
-            String cookieName = c[0].trim();
-            String cookieValue = c[1].trim();
+            final String cookieName = c[0].trim();
+            final String cookieValue = c[1].trim();
             cookies.put(cookieName, cookieValue);
         }
     }
 
     public String getValue(String name) {
-        String defaultValue = "";
-        return cookies.getOrDefault(name, defaultValue);
+        return cookies.getOrDefault(name, COOKIE_DEFAULT_VALUE);
     }
 
     public void addCookie(String cookieName, String cookieValue) {
@@ -48,10 +49,10 @@ public class Cookies {
     public String stringify() {
         String cookiesStr = cookies.keySet().stream()
                 .map(cookieName -> (cookieName + "="+cookies.get(cookieName)))
-                .collect(Collectors.joining("; "));
+                .collect(Collectors.joining(COOKIE_JOIN_DELIMITER));
 
         if (!Strings.EMPTY.equals(path)) {
-            cookiesStr += "; Path=" + path;
+            cookiesStr += COOKIE_JOIN_DELIMITER + "Path=" + path;
         }
         return cookiesStr;
     }

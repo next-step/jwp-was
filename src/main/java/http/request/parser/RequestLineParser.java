@@ -11,19 +11,19 @@ public class RequestLineParser {
     private static final String QUERYSTRING_START_CHARACTER = "\\?";
 
     public static RequestLine parse(String requestLineStr) {
-        String[] value = requestLineStr.split(REQUEST_LINE_TOKENIZER);
-        String[] pathAndQuerystring = value[1].split(QUERYSTRING_START_CHARACTER);
+        final String[] value = requestLineStr.split(REQUEST_LINE_TOKENIZER);
+        final String[] pathAndQuerystring = value[1].split(QUERYSTRING_START_CHARACTER);
 
-        HttpMethod httpMethod = HttpMethod.valueOf(value[0]);
-        ProtocolAndVersion protocolAndVersion = new ProtocolAndVersion(value[2]);
-        String path = pathAndQuerystring[0];
+        final HttpMethod httpMethod = HttpMethod.valueOf(value[0]);
+        final ProtocolAndVersion protocolAndVersion = new ProtocolAndVersion(value[2]);
+        final String path = pathAndQuerystring[0];
 
         String queryStringStr = "";
         if (pathAndQuerystring.length == 2) {
             queryStringStr = pathAndQuerystring[1];
         }
 
-        QueryString queryString = new QueryString(queryStringStr);
+        final QueryString queryString = new QueryString(queryStringStr);
 
         return new RequestLine(httpMethod, path, queryString, protocolAndVersion);
     }

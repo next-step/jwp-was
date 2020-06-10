@@ -21,9 +21,9 @@ public class StaticResourceController implements Controller {
 
     @Override
     public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
-        String path = httpRequest.getPath();
+        final String path = httpRequest.getPath();
         try {
-            byte[] stylesheet = FileIoUtils.loadFileFromClasspath("./static/" + path);
+            final byte[] stylesheet = FileIoUtils.loadFileFromClasspath("./static/" + path);
             httpResponse.response200CSS(stylesheet);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();

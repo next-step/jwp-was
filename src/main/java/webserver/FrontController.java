@@ -16,9 +16,9 @@ import java.util.regex.Pattern;
 
 public class FrontController {
 
-    private static Map<String, Controller> controllers;
+    private static final Map<String, Controller> controllers;
     static {
-        Map<String, Controller> temp = new HashMap<>();
+        final Map<String, Controller> temp = new HashMap<>();
         temp.put("^[\\S]+(\\.css|\\.js|\\.ttf|\\.woff)", StaticResourceController.getInstance());
         temp.put("^[\\S]+(\\.html|\\.ico)", HtmlController.getInstance());
         temp.put("/user/create", UserCreateController.getInstance());

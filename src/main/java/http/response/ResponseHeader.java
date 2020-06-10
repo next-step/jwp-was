@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class ResponseHeader implements Iterable {
+    private static final String RESPONSE_HEADER_DEFAULT_VALUE = Strings.EMPTY;
+
     private final Map<String, HeaderField> header;
 
     public ResponseHeader() {
@@ -18,7 +20,7 @@ public class ResponseHeader implements Iterable {
     public String getValue(String headerName) {
         HeaderField headerField = header.get(headerName);
         if (headerField == null) {
-            return Strings.EMPTY;
+            return RESPONSE_HEADER_DEFAULT_VALUE;
         }
         return headerField.getValue();
     }

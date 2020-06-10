@@ -25,11 +25,11 @@ public class UserCreateController extends AbstractController {
 
     @Override
     protected void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
-        FormData formData = new FormData(httpRequest.getBody());
-        String userId = formData.getValue("userId");
-        String password = formData.getValue("password");
-        String name = formData.getValue("name");
-        String email = formData.getValue("email");
+        final FormData formData = new FormData(httpRequest.getBody());
+        final String userId = formData.getValue("userId");
+        final String password = formData.getValue("password");
+        final String name = formData.getValue("name");
+        final String email = formData.getValue("email");
 
         DataBase.addUser(new User(userId, password, name, email));
 

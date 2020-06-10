@@ -30,13 +30,6 @@ public class User {
         return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
     }
 
-    public boolean checkSamePassword(String password) {
-        if (this.password == null) {
-            return false;
-        }
-        return this.password.equals(password);
-    }
-
     public boolean matchPassword(String password) {
         if (password == null) {
             return false;

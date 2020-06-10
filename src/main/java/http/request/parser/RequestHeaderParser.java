@@ -12,7 +12,7 @@ public class RequestHeaderParser {
     private static final String HEADER_NAME_VALUE_TOKENIZER = ":";
 
     public static RequestHeader parse(String headerLines) {
-        Map<String, HeaderField> header = new HashMap<>();
+        final Map<String, HeaderField> header = new HashMap<>();
 
         String[] headersStr = headerLines.split("\n");
         for (String headerStr : headersStr) {
@@ -20,11 +20,11 @@ public class RequestHeaderParser {
                 continue;
             }
 
-            String[] h = headerStr.split(HEADER_NAME_VALUE_TOKENIZER,2);
-            String headerName = h[0].trim();
-            String headerValue = h[1].trim();
+            final String[] h = headerStr.split(HEADER_NAME_VALUE_TOKENIZER,2);
+            final String headerName = h[0].trim();
+            final String headerValue = h[1].trim();
 
-            HeaderField headerField = new HeaderField(headerName, headerValue);
+            final HeaderField headerField = new HeaderField(headerName, headerValue);
             header.put(headerName, headerField);
         }
         return new RequestHeader(header);

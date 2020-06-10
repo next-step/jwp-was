@@ -5,10 +5,10 @@ import http.common.ProtocolAndVersion;
 import java.util.Objects;
 
 public class RequestLine {
-    private HttpMethod method;
-    private String path;
-    private QueryString queryString;
-    private ProtocolAndVersion protocolAndVersion;
+    private final HttpMethod method;
+    private final String path;
+    private final QueryString queryString;
+    private final ProtocolAndVersion protocolAndVersion;
 
     public RequestLine(HttpMethod method, String path, QueryString queryString, ProtocolAndVersion protocolAndVersion) {
         this.method = method;

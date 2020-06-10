@@ -30,11 +30,11 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             try {
-                HttpRequest httpRequest = RequestReader.read(in);
-                HttpResponse httpResponse = new HttpResponse();
+                final HttpRequest httpRequest = RequestReader.read(in);
+                final HttpResponse httpResponse = new HttpResponse();
 
-                String path = httpRequest.getPath();
-                Controller controller = FrontController.controllerMapping(path);
+                final String path = httpRequest.getPath();
+                final Controller controller = FrontController.controllerMapping(path);
                 controller.service(httpRequest, httpResponse);
 
                 ResponseWriter.write(out, httpResponse);

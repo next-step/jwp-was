@@ -8,7 +8,7 @@ public enum HeaderFieldName {
     SET_COOKIE("Set-Cookie"),
     ;
 
-    private String value;
+    private final String value;
 
     HeaderFieldName(String value) {
         this.value = value;
