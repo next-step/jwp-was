@@ -1,8 +1,18 @@
 package http;
 
-public class MediaType {
-    public static final String APPLICATION_JSON = "application/json";
-    public static final String TEXT_HTML = "text/html";
-    public static final String TEXT_PLAIN = "text/plain";
-    public static final String TEXT_CSS = "text/css";
+public enum MediaType {
+    APPLICATION_JSON("application/json"),
+    TEXT_HTML("text/html"),
+    TEXT_PLAIN("text/plain"),
+    TEXT_CSS("text/css");
+
+    private String value;
+
+    MediaType(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

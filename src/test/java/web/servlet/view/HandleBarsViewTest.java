@@ -3,10 +3,7 @@ package web.servlet.view;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import http.HttpHeaders;
-import http.HttpRequest;
-import http.HttpResponse;
-import http.MediaType;
+import http.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.FileIoUtils;
@@ -44,8 +41,8 @@ public class HandleBarsViewTest {
         byte[] body = FileIoUtils.loadFileFromClasspath("templates/test_view.html");
 
         String result = HttpStringBuilder.builder()
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML)
-                .addHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(body.length))
+                .addHeader(HeaderProperty.CONTENT_TYPE.getValue(), MediaType.TEXT_HTML.getValue())
+                .addHeader(HeaderProperty.CONTENT_LENGTH.getValue(), String.valueOf(body.length))
                 .body(new String(body))
                 .buildResponse();
 

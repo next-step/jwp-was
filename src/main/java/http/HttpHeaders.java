@@ -10,14 +10,6 @@ import java.util.Map;
 
 public class HttpHeaders extends LinkedMultiValueMap<String, String> {
 
-    public static final String CONTENT_TYPE = "Content-Type";
-    public static final String CONTENT_LENGTH = "Content-Length";
-    public static final String LOCATION = "Location";
-    public static final String ACCEPT = "Accept";
-    public static final String USER_AGENT = "User-Agent";
-    public static final String SET_COOKIE = "Set-Cookie";
-    public static final String COOKIE = "Cookie";
-
     public static final String LINE_DELIMITER = "\n";
     public static final String NAME_VALUE_DELIMITER = ": ";
 

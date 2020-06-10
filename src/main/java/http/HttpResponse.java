@@ -51,20 +51,20 @@ public class HttpResponse {
     }
 
     public void setContentType(String contentType) {
-        setHeader(HttpHeaders.CONTENT_TYPE, contentType);
+        setHeader(HeaderProperty.CONTENT_TYPE.getValue(), contentType);
     }
 
     public void setContentLength(long length) {
-        setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(length));
+        setHeader(HeaderProperty.CONTENT_LENGTH.getValue(), String.valueOf(length));
     }
 
     public void addCookie(Cookie cookie) {
         this.cookies.add(cookie);
-        this.setHeader(httpHeaders.SET_COOKIE, cookie.getName() + "=" + cookie.getValue() + "; Path=" + cookie.getPath());
+        this.setHeader(HeaderProperty.SET_COOKIE.getValue(), cookie.getName() + "=" + cookie.getValue() + "; Path=" + cookie.getPath());
     }
 
     public void sendRedirect(String location) {
-        setHeader(HttpHeaders.LOCATION, location);
+        setHeader(HeaderProperty.LOCATION.getValue(), location);
         setHttpStatus(HttpStatus.FOUND);
 
         try {

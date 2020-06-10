@@ -16,12 +16,12 @@ public class HttpResponseTest {
     @Test
     public void setHeaderTest() {
         MultiValueMap<String, String> testHeaders = HttpHeaders.emptyHeaders();
-        testHeaders.add(HttpHeaders.USER_AGENT, "Chrome/1.1");
-        testHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+        testHeaders.add(HeaderProperty.USER_AGENT.getValue(), "Chrome/1.1");
+        testHeaders.add(HeaderProperty.CONTENT_TYPE.getValue(), MediaType.APPLICATION_JSON.getValue());
 
         HttpResponse httpResponse = HttpResponse.from(new DataOutputStream(new ByteArrayOutputStream()));
-        httpResponse.setContentType(MediaType.APPLICATION_JSON);
-        httpResponse.setHeader(HttpHeaders.USER_AGENT, "Chrome/1.1");
+        httpResponse.setContentType(MediaType.APPLICATION_JSON.getValue());
+        httpResponse.setHeader(HeaderProperty.USER_AGENT.getValue(), "Chrome/1.1");
 
         assertThat(httpResponse.getHeaderMap()).isEqualTo(testHeaders);
     }
@@ -31,9 +31,9 @@ public class HttpResponseTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         HttpStringBuilder builder = HttpStringBuilder.builder()
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .addHeader(HttpHeaders.ACCEPT, MediaType.TEXT_HTML)
-                .addHeader(HttpHeaders.USER_AGENT, "Chrome/1.1");
+                .addHeader(HeaderProperty.CONTENT_TYPE.getValue(), MediaType.APPLICATION_JSON.getValue())
+                .addHeader(HeaderProperty.ACCEPT.getValue(), MediaType.TEXT_HTML.getValue())
+                .addHeader(HeaderProperty.USER_AGENT.getValue(), "Chrome/1.1");
 
         HttpResponse httpResponse = HttpResponse.from(new DataOutputStream(byteArrayOutputStream));
         httpResponse.setHeaders(HttpHeaders.from(builder.buildHeaders()));
@@ -57,7 +57,7 @@ public class HttpResponseTest {
 
         String result = HttpStringBuilder.builder()
                 .httpStatus(HttpStatus.FOUND)
-                .addHeader(HttpHeaders.LOCATION, "/test_view.html")
+                .addHeader(HeaderProperty.LOCATION.getValue(), "/test_view.html")
                 .buildResponse();
 
         String httpResult = new String(byteArrayOutputStream.toByteArray());
@@ -73,7 +73,7 @@ public class HttpResponseTest {
 
         httpResponse.addCookie(new Cookie("name", "value"));
 
-        assertThat(httpResponse.getHeader(HttpHeaders.SET_COOKIE)).isEqualTo(resultString);
+        assertThat(httpResponse.getHeader(HeaderProperty.SET_COOKIE.getValue())).isEqualTo(resultString);
         assertThat(httpResponse.getCookies()).contains(new Cookie("name", "value"));
     }
 }

@@ -18,6 +18,9 @@ public class HttpRequest {
     private HttpHeaders httpHeaders;
     private Parameters parameters;
     private Set<Cookie> cookies;
+    private HttpResponse httpResponse;
+
+    private HttpSessionManager sessionManager;
 
     private HttpRequest(BufferedReader bufferedReader) throws IOException {
         this.requestLine = RequestLine.from(bufferedReader.readLine());
@@ -27,8 +30,13 @@ public class HttpRequest {
         setCookies();
     }
 
+    public HttpRequest setSessionManager(HttpSessionManager sessionManager) {
+        this.sessionManager = sessionManager;
+        return this;
+    }
+
     private void setCookies() {
-        String cookiesString = this.httpHeaders.getHeader(HttpHeaders.COOKIE);
+        String cookiesString = this.httpHeaders.getHeader(HeaderProperty.COOKIE.getValue());
 
         if(cookiesString == null || StringUtils.isEmpty(cookiesString)) {
             this.cookies = new LinkedHashSet<>();
@@ -51,7 +59,7 @@ public class HttpRequest {
 
     private void setParameters(BufferedReader bufferedReader) throws IOException {
         HttpMethod httpMethod = requestLine.getMethod();
-        String contentLength = this.httpHeaders.getHeader(HttpHeaders.CONTENT_LENGTH);
+        String contentLength = this.httpHeaders.getHeader(HeaderProperty.CONTENT_LENGTH.getValue());
 
         this.parameters = requestLine.getParameters();
 
@@ -84,6 +92,10 @@ public class HttpRequest {
         return new HttpRequest(bufferedReader);
     }
 
+    public void linkHttpResponse(HttpResponse httpResponse) {
+        this.httpResponse = httpResponse;
+    }
+
     public HttpMethod getMethod() {
         return requestLine.getMethod();
     }
@@ -112,5 +124,24 @@ public class HttpRequest {
         return cookies.stream()
                 .filter(cookie -> name.equals(cookie.getName()))
                 .findFirst().orElse(null);
+    }
+
+    public HttpSession getSession() {
+        Cookie sessionCookie = getCookie(Cookie.JSESSION_ID);
+
+        if(sessionCookie == null) {
+            HttpSession httpSession = sessionManager.createSession();
+            httpResponse.addCookie(new Cookie(Cookie.JSESSION_ID, httpSession.getId()));
+            return httpSession;
+        }
+
+        HttpSession httpSession = sessionManager.getSession(sessionCookie.getValue());
+
+        if(httpSession == null) {
+            HttpSession newSession = sessionManager.createSession(sessionCookie.getValue());
+            return newSession;
+        }
+
+        return httpSession;
     }
 }

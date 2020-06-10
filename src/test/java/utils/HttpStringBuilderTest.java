@@ -1,5 +1,6 @@
 package utils;
 
+import http.HeaderProperty;
 import http.HttpHeaders;
 import http.HttpMethod;
 import http.MediaType;
@@ -16,8 +17,8 @@ public class HttpStringBuilderTest {
                 System.lineSeparator();
 
         String httpHeaderString = HttpStringBuilder.builder()
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .addHeader(HttpHeaders.COOKIE, "name=value")
+                .addHeader(HeaderProperty.CONTENT_TYPE.getValue(), MediaType.APPLICATION_JSON.getValue())
+                .addHeader(HeaderProperty.COOKIE.getValue(), "name=value")
                 .buildHeaders();
 
         assertThat(httpHeaderString).isEqualTo(result);
@@ -34,8 +35,8 @@ public class HttpStringBuilderTest {
         String httpString = HttpStringBuilder.builder()
                 .httpMethod(HttpMethod.POST)
                 .path("/users/create")
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .addHeader(HttpHeaders.COOKIE, "name=value")
+                .addHeader(HeaderProperty.CONTENT_TYPE.getValue(), MediaType.APPLICATION_JSON.getValue())
+                .addHeader(HeaderProperty.COOKIE.getValue(), "name=value")
                 .body("userId=1&name=KingCjy&status=ACTIVE,INACTIVE&age=")
                 .buildRequest();
 
@@ -53,8 +54,8 @@ public class HttpStringBuilderTest {
 
         String httpString = HttpStringBuilder.builder()
                 .path("/users")
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .addHeader(HttpHeaders.SET_COOKIE, "_ga=GA1.1.418509108.1586868854")
+                .addHeader(HeaderProperty.CONTENT_TYPE.getValue(), MediaType.APPLICATION_JSON.getValue())
+                .addHeader(HeaderProperty.SET_COOKIE.getValue(), "_ga=GA1.1.418509108.1586868854")
                 .body("userId=1&name=KingCjy&status=ACTIVE,INACTIVE&age=")
                 .buildResponse();
 
