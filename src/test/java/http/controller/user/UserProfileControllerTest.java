@@ -8,7 +8,6 @@ import http.response.ResponseHeader;
 import model.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.UserData;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,8 +16,8 @@ import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserListControllerTest {
-    private String testFilePath = "./src/test/resources/UserListRequest.txt";
+public class UserProfileControllerTest {
+    private String testFilePath = "./src/test/resources/UserProfileRequest.txt";
     private HttpRequest request;
     private HttpResponse response;
     private User user;
@@ -28,14 +27,11 @@ public class UserListControllerTest {
         InputStream in = new FileInputStream(new File(testFilePath));
         request = HttpRequest.getInstance(in, new HttpSessions());
         response = new HttpResponse();
-        user = new User("seul", "test", "Eeseul Park", "seul");
-
-        UserData.save(user);
     }
 
     @Test
-    void doGet() throws Exception {
-        UserListController controller = new UserListController();
+    void doGet() {
+        UserProfileController controller = new UserProfileController();
         controller.doGet(request, response);
 
         ResponseHeader responseHeader = response.getHeader();
