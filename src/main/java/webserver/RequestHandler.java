@@ -1,6 +1,5 @@
 package webserver;
 
-import http.HttpSession;
 import http.HttpSessions;
 import http.controller.Controller;
 import http.controller.Controllers;
@@ -42,9 +41,8 @@ public class RequestHandler implements Runnable {
                 controller.service(request, response);
             }
 
-            if (!request.sessionIsNull()) {
-                HttpSession session = request.getSession();
-                this.httpSessions.addSession(session.getId(), session);
+            if (!request.sessionIsEmpty()) {
+                this.httpSessions.addSession(request.getSession());
             }
 
             ResponseHandler responseHandler = new ResponseHandler(out, response);

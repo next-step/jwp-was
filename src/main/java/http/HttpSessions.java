@@ -13,8 +13,10 @@ public class HttpSessions {
         this.httpSessionMap = new HashMap<>();
     }
 
-    public void addSession(String key, HttpSession session) {
-        this.httpSessionMap.put(key, session);
+    public void addSession(HttpSession session) {
+        if (!session.isEmpty()) {
+            this.httpSessionMap.put(session.getId(), session);
+        }
     }
 
     public HttpSession getSession(String key) {

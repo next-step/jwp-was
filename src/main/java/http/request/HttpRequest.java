@@ -14,7 +14,6 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 public class HttpRequest {
@@ -82,24 +81,22 @@ public class HttpRequest {
     }
 
     public HttpSession getSession() {
-        if (sessionIsNull()) {
-            this.session = new HttpSession(UUID.randomUUID().toString());
+        if (sessionIsEmpty()) {
+            this.session.createSessionId();
         }
         return this.session;
     }
 
-    public boolean sessionIsNull() {
-        return Objects.isNull(session);
+    public boolean sessionIsEmpty() {
+        return this.session.isEmpty();
     }
 
     private static HttpSession findSession(RequestCookie cookie, HttpSessions httpSessions) {
-        HttpSession session = null;
         String sessionId = cookie.get(SESSION_ID);
 
         if (Objects.nonNull(sessionId) && httpSessions.containsKey(sessionId)) {
-            session = httpSessions.getSession(sessionId);
+            return httpSessions.getSession(sessionId);
         }
-
-        return session;
+        return new HttpSession();
     }
 }
