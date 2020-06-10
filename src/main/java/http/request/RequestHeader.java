@@ -19,13 +19,13 @@ public class RequestHeader {
     private Map<String, String> headerMap;
     private RequestCookie requestCookie;
 
-    public RequestHeader(Map<String, String> headerMap, RequestCookie requestCookie) {
+    private RequestHeader(Map<String, String> headerMap, RequestCookie requestCookie) {
         this.headerMap = headerMap;
         this.requestCookie = requestCookie;
     }
 
     private RequestHeader(Map<String, String> headerMap) {
-        this(headerMap, null);
+        this(headerMap, new RequestCookie());
     }
 
     public static RequestHeader parse(BufferedReader br) throws IOException {

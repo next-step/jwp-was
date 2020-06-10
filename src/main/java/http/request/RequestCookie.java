@@ -13,6 +13,10 @@ public class RequestCookie {
 
     private Map<String, String> cookieMap;
 
+    public RequestCookie() {
+        this.cookieMap = new HashMap<>();
+    }
+
     private RequestCookie(Map<String, String> cookieMap) {
         this.cookieMap = cookieMap;
     }

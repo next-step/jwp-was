@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -35,7 +34,7 @@ public class HttpRequest {
     }
 
     private HttpRequest(RequestLine requestLine, RequestHeader requestHeader, HttpSession session) {
-        this(requestLine, requestHeader, null, session);
+        this(requestLine, requestHeader, new RequestBody(), session);
     }
 
     public static HttpRequest getInstance(InputStream inputStream, HttpSessions httpSessions) throws IOException {
@@ -43,20 +42,16 @@ public class HttpRequest {
 
         RequestLine requestLine = RequestLine.parse(br.readLine());
         RequestHeader requestHeader = RequestHeader.parse(br);
-
-        HttpSession session = findSession(requestHeader, httpSessions);
+        HttpSession session = findSession(requestHeader.getRequestCookie(), httpSessions);
 
         if (requestLine.getMethod() == HttpMethod.POST) {
             String body = IOUtils.readData(br, requestHeader.getContentLength());
-
             RequestBody requestBody = RequestBody.parse(URLDecoder.decode(body, CHAR_SET));
             return new HttpRequest(requestLine, requestHeader, requestBody, session);
         }
 
         return new HttpRequest(requestLine, requestHeader, session);
     }
-
-
 
     public String getPath() {
         return this.requestLine.getPath();
@@ -97,12 +92,7 @@ public class HttpRequest {
         return Objects.isNull(session);
     }
 
-    private static HttpSession findSession(RequestHeader requestHeader, HttpSessions httpSessions) {
-        RequestCookie cookie = requestHeader.getRequestCookie();
-        if(Objects.isNull(cookie)) {
-            return null;
-        }
-
+    private static HttpSession findSession(RequestCookie cookie, HttpSessions httpSessions) {
         HttpSession session = null;
         String sessionId = cookie.get(SESSION_ID);
 
