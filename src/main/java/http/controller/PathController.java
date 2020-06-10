@@ -24,13 +24,9 @@ public abstract class PathController implements Controller{
     }
 
     public void doGet(HttpRequest request, HttpResponse response)  {
-        log.info("default controller get method execute ========");
-
-        this.doGetDefault(request,response);
     }
 
     public void doPost(HttpRequest request, HttpResponse response) {
-        log.info("default controller post method execute ========");
     }
 
     public void doGetDefault(HttpRequest request, HttpResponse response) {
