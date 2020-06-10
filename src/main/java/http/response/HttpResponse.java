@@ -3,7 +3,11 @@ package http.response;
 import dto.Users;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import view.ViewHelper;
+import view.FileView;
+import view.RedirectView;
+import view.StaticFileView;
+import view.TemplateView;
+import view.View;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -24,6 +28,7 @@ public class HttpResponse {
     private ResponseHeader header;
     private ResponseBody body;
     private DataOutputStream dos;
+    private View view;
 
     public HttpResponse(OutputStream out) {
         this.dos = new DataOutputStream(out);
@@ -32,37 +37,34 @@ public class HttpResponse {
 
     public void sendRedirect(String redirectUrl) {
         this.status = FOUND;
+        this.view = new RedirectView(redirectUrl);
         header.addHeader("Location", redirectUrl);
-        this.body = ResponseBody.emptyBody();
-        this.write();
     }
 
-    public void forward(String returnFile) {
+    public void forward(String file) {
         this.status = OK;
-        this.body = new ResponseBody(ViewHelper.readFile(returnFile));
+        this.view = new FileView(file);
         header.addHeader("Content-Type", "text/html;charset=utf-8");
-        header.addHeader("Content-Length", String.valueOf(body.getLength()));
-        this.write();
     }
 
-    public void returnHandlebar(String location, Users users) {
+    public void returnHandlebar(String path, Users users) {
         this.status = OK;
-        this.body = new ResponseBody(ViewHelper.readHandlebar(location, users));
+        this.view = new TemplateView(path, users);
         header.addHeader("Content-Type", "text/html;charset=utf-8");
-        header.addHeader("Content-Length", String.valueOf(body.getLength()));
-        write();
     }
 
     public void viewStyleSheet(String file) {
         this.status = OK;
-        this.body = new ResponseBody(ViewHelper.readStyleSheetFile(file));
+        this.view = new StaticFileView(file);
         header.addHeader("Content-Type", "text/css");
-        header.addHeader("Content-Length", String.valueOf(body.getLength()));
-        write();
     }
 
     public void addHeader(String key, String value) {
         this.header.addHeader(key, value);
+    }
+
+    public void addCookie(String key, String value) {
+        this.header.addHeader("Set-Cookie", String.format("%s=%s; Path=/", key, value));
     }
 
     public ResponseStatus getStatus() {
@@ -77,8 +79,12 @@ public class HttpResponse {
         return header.getHeader(key);
     }
 
-    public byte[] getBody() {
-        return body.getBody();
+    public View getView() {
+        return view;
+    }
+
+    public void setBody(byte[] content) {
+        this.body = new ResponseBody(content);
     }
 
     public void write() {

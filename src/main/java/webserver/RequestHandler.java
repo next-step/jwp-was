@@ -6,6 +6,7 @@ import http.request.RequestUrl;
 import http.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import view.View;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +33,9 @@ public class RequestHandler implements Runnable {
             RequestUrl requestUrl = request.findRequestUrl();
             Controller controller = requestUrl.getController();
             controller.service(request, response);
+
+            View view = response.getView();
+            view.render(request, response);
 
         } catch (IOException e) {
             logger.error(e.getMessage());

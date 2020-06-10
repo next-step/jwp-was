@@ -12,7 +12,6 @@ public class ResponseBody {
         return new ResponseBody(new byte[0]);
     }
 
-
     public byte[] getBody() {
         return body;
     }
