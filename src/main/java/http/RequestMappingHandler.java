@@ -5,6 +5,7 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import http.header.RequestHeader;
+import http.response.Response;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,6 +109,7 @@ public class RequestMappingHandler {
             }
 
             handlerGetMethod(responseObject);
+            return;
         }
 
         ResponseObject responseObject = UserController.mappingByPostMethod(requestLine.getPath(), requestLine.getParams());
