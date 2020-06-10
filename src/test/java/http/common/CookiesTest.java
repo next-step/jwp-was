@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.exceptions.ErrorMessage;
+import webserver.exceptions.IllegalCookieHeaderException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -31,7 +32,7 @@ class CookiesTest {
         final Throwable thrown = catchThrowable(() -> new Cookies(input));
 
         assertThat(thrown)
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(IllegalCookieHeaderException.class)
                 .hasMessageContaining(ErrorMessage.ILLEGAL_COOKIE_HEADER.getMessage());
     }
 

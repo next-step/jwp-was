@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.exceptions.ErrorMessage;
+import webserver.exceptions.IllegalParameterException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -59,7 +60,7 @@ class ParametersTest {
         final Throwable thrown = catchThrowable(() -> new Parameters(input));
 
         assertThat(thrown)
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(IllegalParameterException.class)
                 .hasMessageContaining(ErrorMessage.ILLEGAL_PARAMETER.getMessage());
     }
 
