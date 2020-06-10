@@ -8,36 +8,39 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.*;
 
 public class HttpSessionsTest {
-    private static final String KEY = "session";
-    private static final String VALUE = "sessionValue";
+    private static final String KEY = "sessions";
     private HttpSessions httpSessions;
+    private HttpSession httpSession;
 
     @BeforeEach
     void setUp() {
         httpSessions = new HttpSessions();
+        httpSession = new HttpSession();
+        httpSession.createSessionId();
+        httpSession.setAttribute("session", "sessionValue");
     }
 
     @Test
     void addSession() {
-        httpSessions.addSession(KEY, new HttpSession(VALUE));
+        httpSessions.addSession(httpSession);
 
         Map<String, HttpSession> httpSessionMap = httpSessions.getHttpSessionMap();
-        HttpSession session = httpSessionMap.get(KEY);
-        assertThat(session.getId()).isEqualTo(VALUE);
+        HttpSession session = httpSessionMap.get(httpSession.getId());
+        assertThat(session.getId()).isEqualTo(httpSession.getId());
     }
 
     @Test
     void getSession() {
-        httpSessions.getHttpSessionMap().put(KEY, new HttpSession(VALUE));
+        httpSessions.getHttpSessionMap().put(KEY, httpSession);
 
         HttpSession httpSession = httpSessions.getSession(KEY);
 
-        assertThat(httpSession.getId()).isEqualTo(VALUE);
+        assertThat(httpSession.getId()).isEqualTo(httpSession.getId());
     }
 
     @Test
     void containsKey() {
-        httpSessions.getHttpSessionMap().put(KEY, new HttpSession(VALUE));
+        httpSessions.getHttpSessionMap().put(KEY, httpSession);
 
         boolean contain = httpSessions.containsKey(KEY);
 
