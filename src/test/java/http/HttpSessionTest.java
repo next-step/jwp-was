@@ -8,9 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created By kjs4395 on 2020-06-10
@@ -49,8 +47,7 @@ public class HttpSessionTest {
     @Test
     void removeAttributeTest() {
         session.removeAttribute("user");
-        assertThatThrownBy(() -> session.getAttribute("user"))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertNull(session.getAttribute("user"));
     }
 
     @Test
@@ -58,7 +55,6 @@ public class HttpSessionTest {
         String testAttribute = (String) session.getAttribute("test");
         assertNotNull(testAttribute);
         session.invalidate();
-        assertThatThrownBy(() -> session.getAttribute("test"))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertNull(session.getAttribute("test"));
     }
 }

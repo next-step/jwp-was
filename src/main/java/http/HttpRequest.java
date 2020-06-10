@@ -28,6 +28,7 @@ public class HttpRequest {
             String line = br.readLine();
             this.requestLine = RequestLineParser.parse(line.trim());
             this.header = new Header();
+            this.cookie = new Cookie();
             this.requestBody = StringUtils.EMPTY;
 
             while (!StringUtils.EMPTY.equals(line)) {
@@ -42,8 +43,7 @@ public class HttpRequest {
             }
 
             if (header.isContainsKey("Cookie")) {
-                this.cookie = new Cookie();
-                cookie.parseCookie(header.getValue("Cookie"));
+                this.cookie.parseCookie(header.getValue("Cookie"));
             }
 
         } catch (IOException e) {
@@ -68,11 +68,21 @@ public class HttpRequest {
     }
 
     public boolean isLoggedIn() {
-        if (this.cookie == null) {
+        if (!this.cookie.containsCookieValue("sessionId")) {
             return false;
         }
+        HttpSession session = HttpSessionHandler.getSession(this.cookie.getCookieValue("sessionId"));
+        return session.getAttribute("user") != null;
+    }
 
-        return Boolean.parseBoolean(this.cookie.getCookieValue("logined"));
+    public HttpSession getSession() {
+        if(!this.cookie.containsCookieValue("sessionId")) {
+            HttpSession session = new HttpSession();
+            HttpSessionHandler.addSession(session);
+            return session;
+        }
+
+        return HttpSessionHandler.getSession(this.cookie.getCookieValue("sessionId"));
     }
 
     public ContentType getContentType() {

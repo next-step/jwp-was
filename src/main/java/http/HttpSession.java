@@ -29,11 +29,7 @@ public class HttpSession {
 
     public Object getAttribute(String name) {
 
-        if (!this.attributeMap.containsKey(name)) {
-            throw new IllegalArgumentException("Invalid Attribute name");
-        }
-
-        return this.attributeMap.get(name);
+        return this.attributeMap.getOrDefault(name, null);
     }
 
 

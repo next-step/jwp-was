@@ -11,7 +11,8 @@ public class CookieTest {
     @Test
     @DisplayName("cookie 제대로 생성되는지 테스트")
     void makeCookieTest() {
-        Cookie cookie = new Cookie("logined=true;");
+        Cookie cookie = new Cookie();
+        cookie.addCookieValue("logined","test");
         assertEquals(cookie.getCookieValue("logined"), "true");
     }
 

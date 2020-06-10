@@ -32,14 +32,14 @@ public class LoginController extends PathController {
         User findUser = DataBase.findUserById(requestBodyString.getParameter("userId"));
 
         if (findUser != null && findUser.equals(loginUser)) {
-            response.addCookie("logined", "true");
-            response.addCookie("Path", "/");
+            HttpSession session = request.getSession();
+            session.setAttribute("user",findUser);
+            response.addCookie("sessionId", session.getId());
             response.sendRedirect("/index.html");
             return;
         }
 
-        response.addCookie("logined", "false");
         response.sendRedirect("/user/login_failed.html");
-
     }
+
 }

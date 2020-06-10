@@ -27,6 +27,10 @@ public class Cookie {
         }
     }
 
+    public boolean containsCookieValue(String name) {
+        return this.cookieMap.containsKey(name);
+    }
+
     public String getCookieValue(String name) {
         return this.cookieMap.get(name);
     }
