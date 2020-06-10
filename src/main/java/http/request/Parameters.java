@@ -3,6 +3,7 @@ package http.request;
 import org.apache.logging.log4j.util.Strings;
 import utils.UrlUtf8Decoder;
 import webserver.exceptions.ErrorMessage;
+import webserver.exceptions.IllegalParameterException;
 import webserver.exceptions.WebServerException;
 
 import java.util.HashMap;
@@ -26,18 +27,18 @@ public class Parameters {
         for (String v : value.split(PARAMETER_TOKENIZER)) {
             final String[] v1 = v.split(PARAMETER_NAME_VALUE_TOKENIZER);
             if (v1.length != 2) {
-                throw new WebServerException(ErrorMessage.ILLEGAL_PARAMETER);
+                throw new IllegalParameterException(value);
             }
 
             final String decodedName = UrlUtf8Decoder.decode(v1[0]).trim();
             final String decodedValue = UrlUtf8Decoder.decode(v1[1]).trim();
 
             if (decodedName.isEmpty()) {
-                throw new WebServerException(ErrorMessage.ILLEGAL_PARAMETER);
+                throw new IllegalParameterException(value);
             }
 
             if (decodedValue.isEmpty()) {
-                throw new WebServerException(ErrorMessage.ILLEGAL_PARAMETER);
+                throw new IllegalParameterException(value);
             }
 
             data.put(decodedName, decodedValue);

@@ -11,10 +11,10 @@ import java.io.OutputStream;
 public class ExceptionWriter {
     private static final Logger logger = LoggerFactory.getLogger(ExceptionWriter.class);
 
-    public static void write(OutputStream out, ErrorMessage errorMessage) {
+    public static void write(OutputStream out, String message) {
         final DataOutputStream dos = new DataOutputStream(out);
         final StatusCode statusCode = StatusCode.INTERNAL_SERVER_ERROR;
-        final byte[] body = errorMessage.getMessage().getBytes();
+        final byte[] body = message.getBytes();
         final int contentLength = body.length;
 
         try {

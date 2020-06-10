@@ -40,7 +40,7 @@ public class RequestHandler implements Runnable {
                 ResponseWriter.write(out, httpResponse);
             } catch (WebServerException e) {
                 e.printStackTrace();
-                ExceptionWriter.write(out, e.getErrorMessage());
+                ExceptionWriter.write(out, e.getMessage());
             }
 
         } catch (IOException e) {

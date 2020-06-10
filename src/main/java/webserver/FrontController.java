@@ -6,8 +6,7 @@ import controller.UserLoginController;
 import webserver.controller.Controller;
 import webserver.controller.HtmlController;
 import webserver.controller.StaticResourceController;
-import webserver.exceptions.ErrorMessage;
-import webserver.exceptions.WebServerException;
+import webserver.exceptions.ProcessableControllerNotFoundException;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,6 +32,6 @@ public class FrontController {
                 return controllers.get(regex);
             }
         }
-        throw new WebServerException(ErrorMessage.REQUEST_PROCESSABLE_CONTROLLER_NOT_FOUND);
+        throw new ProcessableControllerNotFoundException(path);
     }
 }
