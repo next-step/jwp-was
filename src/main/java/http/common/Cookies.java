@@ -1,6 +1,8 @@
 package http.common;
 
 import org.apache.logging.log4j.util.Strings;
+import webserver.exceptions.IllegalCookieHeaderException;
+import webserver.exceptions.WebServerException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +24,7 @@ public class Cookies {
         for (String cookie : values.split(COOKIE_TOKENIZER)) {
             String[] c = cookie.trim().split(COOKIE_NAME_VALUE_TOKENIZER);
             if (c.length != 2) {
-                throw new RuntimeException("유효하지 않은 Cookie 헤더임. header :: [ Cookie: " + values + "]");
+                throw new IllegalCookieHeaderException();
             }
             String cookieName = c[0].trim();
             String cookieValue = c[1].trim();
