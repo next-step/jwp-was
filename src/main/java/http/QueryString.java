@@ -19,7 +19,7 @@ public class QueryString {
         try {
             decodeQuery = URLDecoder.decode(queryString, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            log.error("url decode error : {}" , queryString);
+            log.error("url decode error : {}", queryString);
         }
         this.fullQueryString = decodeQuery;
     }
@@ -33,14 +33,14 @@ public class QueryString {
                 .filter(value -> value.startsWith(name))
                 .findFirst();
 
-         String[] values = nameValueOptional.orElseThrow(NoSuchElementException::new)
-                 .split(HttpConst.QUERY_VALUE_SEPARATOR);
+        String[] values = nameValueOptional.orElseThrow(NoSuchElementException::new)
+                .split(HttpConst.QUERY_VALUE_SEPARATOR);
 
-         if(values.length < 2) {
-             throw new IllegalArgumentException("Invalid Body String : " + name);
-         }
+        if (values.length < 2) {
+            throw new IllegalArgumentException("Invalid Body String : " + name);
+        }
 
-         return values[1];
+        return values[1];
     }
 
     @Override

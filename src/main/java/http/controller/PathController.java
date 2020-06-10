@@ -11,19 +11,19 @@ import org.slf4j.LoggerFactory;
 /**
  * Created By kjs4395 on 2020-06-05
  */
-public abstract class PathController implements Controller{
+public abstract class PathController implements Controller {
     private static final Logger log = LoggerFactory.getLogger(PathController.class);
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        if(request.getMethod().equals(Method.GET)) {
+        if (request.getMethod().equals(Method.GET)) {
             doGet(request, response);
             return;
         }
         doPost(request, response);
     }
 
-    public void doGet(HttpRequest request, HttpResponse response)  {
+    public void doGet(HttpRequest request, HttpResponse response) {
     }
 
     public void doPost(HttpRequest request, HttpResponse response) {
@@ -31,7 +31,7 @@ public abstract class PathController implements Controller{
 
     public void doGetDefault(HttpRequest request, HttpResponse response) {
         ContentType contentType = request.getContentType();
-        response.addHeader("Content-Type" , contentType.getMimeType());
+        response.addHeader("Content-Type", contentType.getMimeType());
         response.forword(contentType.getResourcePath() + request.getPath());
     }
 }

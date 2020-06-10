@@ -8,18 +8,18 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LoginController extends PathController{
+public class LoginController extends PathController {
 
     private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
     public void doGet(HttpRequest request, HttpResponse response) {
         log.info("login Controller get methid =========");
 
-        if(request.isLoggedIn()) {
+        if (request.isLoggedIn()) {
             response.sendRedirect("/index.html");
             return;
         }
-        doGetDefault(request,response);
+        doGetDefault(request, response);
     }
 
     public void doPost(HttpRequest request, HttpResponse response) {
@@ -31,8 +31,8 @@ public class LoginController extends PathController{
         User loginUser = new User(requestBodyString.getParameter("userId"), requestBodyString.getParameter("password"));
         User findUser = DataBase.findUserById(requestBodyString.getParameter("userId"));
 
-        if(findUser != null && findUser.equals(loginUser)) {
-            response.addHeader("Set-Cookie","logined=true; Path=/");
+        if (findUser != null && findUser.equals(loginUser)) {
+            response.addHeader("Set-Cookie", "logined=true; Path=/");
             response.sendRedirect("/index.html");
             return;
         }

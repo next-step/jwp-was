@@ -41,13 +41,13 @@ public class HttpResponse {
     }
 
     public void addHeader(String name, String value) {
-        this.headers.addKeyAndValue(name , value);
+        this.headers.addKeyAndValue(name, value);
     }
 
     public void forword(String path) {
         // 정적인 파일 서비스 하는 메소드(.html, .css 등등)
         try {
-            this.responseBody =  FileIoUtils.loadFileFromClasspath(path);
+            this.responseBody = FileIoUtils.loadFileFromClasspath(path);
             this.responseCode = HttpResponseCode.OK;
             addHeader("Content-Length", String.valueOf(responseBody.length));
 

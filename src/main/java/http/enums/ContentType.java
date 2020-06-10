@@ -11,9 +11,9 @@ import java.util.Optional;
 public enum ContentType {
     NONE("application/octet-stream", "", ""),
     CSS("text/css", "/css", "./static"),
-    FONT("application/x-font-woff", "/font","./static"),
-    HTML("text/html", "","./templates"),
-    IMAGES("image/png", "/images","./static"),
+    FONT("application/x-font-woff", "/font", "./static"),
+    HTML("text/html", "", "./templates"),
+    IMAGES("image/png", "/images", "./static"),
     JS("text/javascript", "/js", "./static");
 
     String mimeType;
@@ -27,7 +27,7 @@ public enum ContentType {
     }
 
     public boolean isMatchFolder(String path) {
-        if(StringUtils.isEmpty(this.resourceFolderName)) {
+        if (StringUtils.isEmpty(this.resourceFolderName)) {
             return false;
         }
         return path.startsWith(resourceFolderName);

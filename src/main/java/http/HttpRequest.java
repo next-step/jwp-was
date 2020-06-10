@@ -29,13 +29,13 @@ public class HttpRequest {
             this.header = new Header();
             this.requestBody = StringUtils.EMPTY;
 
-            while(!StringUtils.EMPTY.equals(line)) {
+            while (!StringUtils.EMPTY.equals(line)) {
                 line = br.readLine().trim();
-                if(StringUtils.isNotEmpty(line)) {
+                if (StringUtils.isNotEmpty(line)) {
                     header.addHeaderValue(line);
                 }
             }
-            if(header.isContainsKey("Content-Length")) {
+            if (header.isContainsKey("Content-Length")) {
                 this.requestBody = IOUtils.readData(br, Integer.parseInt(header.getValue("Content-Length")));
             }
 
@@ -61,7 +61,7 @@ public class HttpRequest {
     }
 
     public boolean isLoggedIn() {
-        if(header.isContainsKey("Cookie")) {
+        if (header.isContainsKey("Cookie")) {
             return header.getValue("Cookie").contains("logined=true");
         }
         return false;
