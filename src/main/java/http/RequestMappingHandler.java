@@ -4,6 +4,7 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
+import http.header.RequestHeader;
 import model.User;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class RequestMappingHandler {
     private static final int MIN_CONTENT_LENGTH = 0;
@@ -27,7 +29,8 @@ public class RequestMappingHandler {
 
     private final BufferedReader bufferedReader;
     private final Response response;
-    private CookieTranslator cookieTranslator;
+    private RequestHeader requestHeader;
+    private boolean isLogined = false;
 
     public RequestMappingHandler(final BufferedReader bufferedReader, final DataOutputStream dataOutputStream) throws IOException {
         this.bufferedReader = bufferedReader;
@@ -43,27 +46,18 @@ public class RequestMappingHandler {
 
         while (!END_OF_LINE.equals(readLine)) {
             readLine = bufferedReader.readLine();
-            if (readLine.matches("Content-Length:.*")) {
-                String[] lengths = readLine.split(":");
-                contentLength = Integer.valueOf(lengths[1].trim());
-            }
-
-            if (readLine.matches("Cookie:.*")) {
-                String[] cookies = readLine.split(":");
-                String cookieValues = cookies[1];
-                cookieTranslator = new CookieTranslator(cookieValues);
-            }
+            requestHeader = new RequestHeader(readLine);
+            isLogined = requestHeader.isLogined();
+            contentLength = Math.max(contentLength, requestHeader.getContentLength());
 
             logger.debug(readLine);
         }
-
-        String requestBody = IOUtils.readData(bufferedReader, contentLength);
-        if (Strings.isBlank(requestBody)) {
-            handler(firstLine);
+        if (contentLength > 0) {
+            String requestBody = IOUtils.readData(bufferedReader, contentLength);
+            handler(firstLine, requestBody);
             return;
         }
-        handler(firstLine, requestBody);
-
+        handler(firstLine);
     }
 
     private void handler(String readLine, String requestBody) {
@@ -121,11 +115,7 @@ public class RequestMappingHandler {
     }
 
     private void middleware() {
-        if (Objects.isNull(cookieTranslator)) {
-            response.response302Header("/user/login.html");
-        }
-
-        if (!cookieTranslator.isLogined()) {
+        if (!isLogined) {
             response.response302Header("/user/login.html");
         }
     }
