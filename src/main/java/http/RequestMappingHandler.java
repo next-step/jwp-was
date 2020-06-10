@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,15 +43,23 @@ public class RequestMappingHandler {
         String firstLine = readLine;
         int contentLength = MIN_CONTENT_LENGTH;
         logger.debug(readLine);
+        StringBuilder stringBuilder = new StringBuilder();
 
         while (!END_OF_LINE.equals(readLine)) {
             readLine = bufferedReader.readLine();
-            requestHeader = new RequestHeader(readLine);
+//            requestHeader = new RequestHeader(readLine);
             isLogined = requestHeader.isLogined();
             contentLength = Math.max(contentLength, requestHeader.getContentLength());
 
             logger.debug(readLine);
+
+            stringBuilder.append(readLine).append("\n");
         }
+
+        System.out.println(stringBuilder.toString());
+        String[] a = stringBuilder.toString().split("\n");
+        System.out.println(Arrays.toString(a));
+        System.out.println();
         if (contentLength > 0) {
             String requestBody = IOUtils.readData(bufferedReader, contentLength);
             handler(firstLine, requestBody);

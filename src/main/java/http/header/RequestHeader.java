@@ -1,35 +1,34 @@
 package http.header;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class RequestHeader {
 
-    private static final String CONTENT_LENGTH = "Content-Length:.*";
-    private static final String COOKIE = "Cookie:.*";
+    private static final String CONTENT_LENGTH = "Content-Length";
+    private static final String COOKIE = "Cookie";
     private static final String SEPARATOR = ":";
     private static final int MIN_CONTENT_LENGTH = 0;
 
-    private final String readLine;
+    private Map<String, String> header;
 
     private RequestHeaderContentLength requestHeaderContentLength;
     private RequestHeaderCookie requestHeaderCookie;
 
-    public RequestHeader(final String readLine) {
-        this.readLine = readLine;
-        validate();
+    public RequestHeader(final Map<String, String> header) {
+        this.header = header;
     }
 
-    private void validate() {
-        if (readLine.matches(CONTENT_LENGTH)) {
-            String[] lengths = readLine.split(SEPARATOR);
-            this.requestHeaderContentLength = new RequestHeaderContentLength(lengths[1].trim());
-        }
+    public String getHeader(String key) {
+        return header.get(key);
+    }
 
-        if (readLine.matches(COOKIE)) {
-            String[] cookies = readLine.split(SEPARATOR);
-            String cookieValues = cookies[1];
-            this.requestHeaderCookie = new RequestHeaderCookie(cookieValues.trim());
-        }
+    public boolean isContainsCookie() {
+        return header.containsKey(COOKIE);
+    }
+
+    private boolean isContainsContentLength() {
+        return header.containsKey(CONTENT_LENGTH);
     }
 
     public boolean isContentLength() {
@@ -38,6 +37,13 @@ public class RequestHeader {
 
     private boolean isCookie() {
         return Objects.nonNull(requestHeaderCookie);
+    }
+
+    public int getContentLength2() {
+        if (isContainsContentLength()) {
+            return Integer.parseInt(header.get(CONTENT_LENGTH));
+        }
+        return 0;
     }
 
     public int getContentLength() {
