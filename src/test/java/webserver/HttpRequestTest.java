@@ -39,7 +39,7 @@ public class HttpRequestTest {
         });
     }
 
-    @DisplayName("모든 Thread가 사용중이고, Queue까지 꽉 차서 넘치면, Thread에 발한 Exception이 로그에 기록된다.")
+    @DisplayName("모든 Thread가 사용중이고, Queue까지 꽉 차서 넘치면, Thread에 발생한 Exception이 로그에 기록된다.")
     @Test
     void requestTest() throws InterruptedException {
         //given
