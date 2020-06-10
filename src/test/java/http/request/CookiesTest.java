@@ -22,7 +22,10 @@ class CookiesTest {
 
     @DisplayName("잘못된 문자열은 쿠키에 저장하지 않는다.")
     @Test
-    void createCookie2s() {
+    void createCookies2
+
+
+            () {
         Cookies cookies = new Cookies("logined=true; SESSION");
         Map<String, String> result = cookies.getCookies();
 

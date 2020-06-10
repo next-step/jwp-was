@@ -39,6 +39,19 @@ public class HttpRequestTest {
     }
 
     @Test
+    public void request_POST2() throws Exception {
+        InputStream in = new FileInputStream(new File(testDirectory + "Http_POST2.txt"));
+        HttpRequest request = new HttpRequest(in);
+
+        assertThat(request.getMethod()).isEqualTo(POST);
+        assertThat(request.getPath()).isEqualTo("/user/create");
+        assertThat(request.getHeader("Connection")).isEqualTo("keep-alive");
+        assertThat(request.getParameter("id")).isEqualTo("1");
+        assertThat(request.getParameter("userId")).isEqualTo("javajigi");
+
+    }
+
+    @Test
     void request_resttemplate() {
         RestTemplate restTemplate = new RestTemplate();
         String resourceUrl = "https://edu.nextstep.camp";

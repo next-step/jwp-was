@@ -17,7 +17,7 @@ public class Cookies {
 
     private void addCookie(String[] result) {
         if (result.length > 1) {
-            cookies.put(result[0], result[1]);
+            cookies.put(result[0].trim(), result[1].trim());
         }
     }
 

@@ -1,5 +1,6 @@
 package http.request;
 
+import static http.request.HttpMethod.GET;
 import static http.request.HttpMethod.POST;
 import static http.request.HttpMethod.valueOf;
 
@@ -45,6 +46,10 @@ public class RequestLine {
 
     public boolean isPost() {
         return method == POST;
+    }
+
+    public boolean isGet() {
+        return method == GET;
     }
 
 }

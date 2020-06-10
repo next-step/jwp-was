@@ -1,7 +1,5 @@
 package http.request;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import utils.IOUtils;
 
@@ -15,7 +13,6 @@ import java.util.Map;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class HttpRequest {
-    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
     private static final String CONTENT_LENGTH = "Content-Length";
     private RequestLine requestLine;
     private RequestHeader header;
@@ -44,10 +41,14 @@ public class HttpRequest {
     }
 
     public String getParameter(String key) {
-        if (requestLine.isPost()) {
-            return body.getParameter(key);
+        if (requestLine.isGet()) {
+            return requestLine.getParameter(key);
         }
-        return requestLine.getParameter(key);
+        String parameter = body.getParameter(key);
+        if (StringUtils.isEmpty(parameter)) {
+            return requestLine.getParameter(key);
+        }
+        return parameter;
     }
 
     public HttpMethod getMethod() {
@@ -105,10 +106,10 @@ public class HttpRequest {
     }
 
     public QueryString getParameters() {
-       if (requestLine.isPost()) {
-           return body.getQueryString();
-       }
+        if (requestLine.isPost()) {
+            return body.getQueryString();
+        }
 
-       return requestLine.getParameters();
+        return requestLine.getParameters();
     }
 }
