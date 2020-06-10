@@ -13,7 +13,7 @@ class CookiesTest {
 
     @Test
     @DisplayName("쿠키을 넣으면 쿠키이름으로 값을 가져올 수 있다")
-    void test1() {
+    void getCookieValue() {
         final String input = "logined=true; Path=/";
         final Cookies cookies = new Cookies(input);
 
@@ -27,7 +27,7 @@ class CookiesTest {
     @DisplayName("밸류가 공백이거나 존재하지 않는 쿠키쌍으로 쿠키 객체 생성시 에러를 반환한다")
     @ParameterizedTest
     @ValueSource(strings = {"logined=true; Path= ", "logined=true; Path="})
-    void testasd(String input) {
+    void ErrorBlankValue(String input) {
         final Throwable thrown = catchThrowable(() -> new Cookies(input));
 
         assertThat(thrown)

@@ -9,11 +9,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class HttpResponseTest {
 
     @Test
+    @DisplayName("HttpResponse 객체를 생성할 수 있다")
     void createHttpResponse() {
         new HttpResponse();
     }
 
     @Test
+    @DisplayName("HttpResponse 객체에 쿠키를 저장할 수 있다")
     void addCookieTest() {
         final HttpResponse httpResponse = new HttpResponse();
         final String cookieName = "logined";

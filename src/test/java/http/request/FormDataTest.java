@@ -15,14 +15,15 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 class FormDataTest {
 
     @Test
+    @DisplayName("FormData를 생성할 수 있다")
     void formDataCreateTest() {
         final String input = "userId=userId1&password=password1&name=name1&email=aa1%40aa.a";
-        final Parameters formData = new Parameters(input);
+        new Parameters(input);
     }
 
     @Test
     @DisplayName("FormData에서 이름으로 값을 가져올 수 있다")
-    void test1() {
+    void getValue() {
         final String input = "userId=userId1&password=password1&name=name1&email=aa1%40aa.a";
         final Parameters formData = new Parameters(input);
 
@@ -53,6 +54,7 @@ class FormDataTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"id=", "id= "})
+    @DisplayName("밸류가 공백이거나 존재하지 않는 파라미터로 formData 생성 시 에러를 반환한다")
     void formData(String input) {
         final Throwable thrown = catchThrowable(() -> new Parameters(input));
 

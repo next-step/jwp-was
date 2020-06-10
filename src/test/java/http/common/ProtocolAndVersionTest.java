@@ -9,7 +9,7 @@ class ProtocolAndVersionTest {
 
     @Test
     @DisplayName("RequestLine의 프로토콜 버전으로 ProtocolAndVersion 객체를 생성한다")
-    void test1() {
+    void createProtocolAndVersion() {
         final String input = "http/1.1";
 
         final ProtocolAndVersion result = new ProtocolAndVersion(input);
