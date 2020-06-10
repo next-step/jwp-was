@@ -2,7 +2,7 @@ package http.request.parser;
 
 import http.request.HttpMethod;
 import http.common.ProtocolAndVersion;
-import http.request.QueryString;
+import http.request.Parameters;
 import http.request.RequestLine;
 
 public class RequestLineParser {
@@ -23,7 +23,7 @@ public class RequestLineParser {
             queryStringStr = pathAndQuerystring[1];
         }
 
-        final QueryString queryString = new QueryString(queryStringStr);
+        final Parameters queryString = new Parameters(queryStringStr);
 
         return new RequestLine(httpMethod, path, queryString, protocolAndVersion);
     }

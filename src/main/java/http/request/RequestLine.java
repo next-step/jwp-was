@@ -7,10 +7,10 @@ import java.util.Objects;
 public class RequestLine {
     private final HttpMethod method;
     private final String path;
-    private final QueryString queryString;
+    private final Parameters queryString;
     private final ProtocolAndVersion protocolAndVersion;
 
-    public RequestLine(HttpMethod method, String path, QueryString queryString, ProtocolAndVersion protocolAndVersion) {
+    public RequestLine(HttpMethod method, String path, Parameters queryString, ProtocolAndVersion protocolAndVersion) {
         this.method = method;
         this.path = path;
         this.queryString = queryString;
@@ -21,7 +21,7 @@ public class RequestLine {
         return path;
     }
 
-    public QueryString getQueryString() {
+    public Parameters getQueryString() {
         return queryString;
     }
 

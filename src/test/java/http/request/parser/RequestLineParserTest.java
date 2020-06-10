@@ -2,7 +2,7 @@ package http.request.parser;
 
 import http.common.ProtocolAndVersion;
 import http.request.HttpMethod;
-import http.request.QueryString;
+import http.request.Parameters;
 import http.request.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ class RequestLineParserTest {
     void test1() {
         final String requestLineStr = "GET /users HTTP/1.1";
         RequestLine requestLine = RequestLineParser.parse(requestLineStr);
-        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.GET, "/users", new QueryString(""), new ProtocolAndVersion("HTTP", "1.1")));
+        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.GET, "/users", new Parameters(""), new ProtocolAndVersion("HTTP", "1.1")));
     }
 
     @Test
@@ -24,7 +24,7 @@ class RequestLineParserTest {
     void test2() {
         final String requestLineStr = "POST /users HTTP/1.1";
         RequestLine requestLine = RequestLineParser.parse(requestLineStr);
-        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.POST, "/users", new QueryString(""), new ProtocolAndVersion("HTTP", "1.1")));
+        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.POST, "/users", new Parameters(""), new ProtocolAndVersion("HTTP", "1.1")));
     }
 
     @Test
@@ -32,7 +32,7 @@ class RequestLineParserTest {
     void test3() {
         final String requestLineStr = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
         RequestLine requestLine = RequestLineParser.parse(requestLineStr);
-        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.GET, "/users", new QueryString("userId=javajigi&password=password&name=JaeSung"), new ProtocolAndVersion("HTTP", "1.1")));
+        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.GET, "/users", new Parameters("userId=javajigi&password=password&name=JaeSung"), new ProtocolAndVersion("HTTP", "1.1")));
     }
 
 }

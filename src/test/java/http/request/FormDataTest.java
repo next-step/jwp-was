@@ -17,14 +17,14 @@ class FormDataTest {
     @Test
     void formDataCreateTest() {
         final String input = "userId=userId1&password=password1&name=name1&email=aa1%40aa.a";
-        final FormData formData = new FormData(input);
+        final Parameters formData = new Parameters(input);
     }
 
     @Test
     @DisplayName("FormData에서 이름으로 값을 가져올 수 있다")
     void test1() {
         final String input = "userId=userId1&password=password1&name=name1&email=aa1%40aa.a";
-        final FormData formData = new FormData(input);
+        final Parameters formData = new Parameters(input);
 
         final String userId = formData.getValue("userId");
         final String password = formData.getValue("password");
@@ -44,7 +44,7 @@ class FormDataTest {
         final String value = "p&a&s&==s";
         final String valueURLEncoded = URLEncoder.encode(value, "UTF-8");
         final String input = "userId=a&" + key + "=" + valueURLEncoded;
-        final FormData formData = new FormData(input);
+        final Parameters formData = new Parameters(input);
 
         final String result = formData.getValue(key);
 
@@ -54,11 +54,11 @@ class FormDataTest {
     @ParameterizedTest
     @ValueSource(strings = {"id=", "id= "})
     void formData(String input) {
-        final Throwable thrown = catchThrowable(() -> new FormData(input));
+        final Throwable thrown = catchThrowable(() -> new Parameters(input));
 
         assertThat(thrown)
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining(ErrorMessage.ILLEGAL_FORM_DATA.getMessage());
+                .hasMessageContaining(ErrorMessage.ILLEGAL_PARAMETER.getMessage());
     }
 
 }
