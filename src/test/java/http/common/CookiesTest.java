@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import webserver.exceptions.ErrorMessage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -31,7 +32,7 @@ class CookiesTest {
 
         assertThat(thrown)
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("유효하지 않은 Cookie 헤더임. header :: [ Cookie: " + input + "]");
+                .hasMessageContaining(ErrorMessage.ILLEGAL_COOKIE_HEADER.getMessage());
     }
 
 }

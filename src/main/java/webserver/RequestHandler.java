@@ -7,6 +7,8 @@ import http.response.sequelizer.ResponseWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.controller.Controller;
+import webserver.exceptions.ExceptionWriter;
+import webserver.exceptions.WebServerException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,14 +29,20 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            HttpRequest httpRequest = RequestReader.read(in);
-            HttpResponse httpResponse = new HttpResponse();
+            try {
+                HttpRequest httpRequest = RequestReader.read(in);
+                HttpResponse httpResponse = new HttpResponse();
 
-            String path = httpRequest.getPath();
-            Controller controller = FrontController.controllerMapping(path);
-            controller.service(httpRequest, httpResponse);
+                String path = httpRequest.getPath();
+                Controller controller = FrontController.controllerMapping(path);
+                controller.service(httpRequest, httpResponse);
 
-            ResponseWriter.write(out, httpResponse);
+                ResponseWriter.write(out, httpResponse);
+            } catch (WebServerException e) {
+                e.printStackTrace();
+                ExceptionWriter.write(out, e.getErrorMessage());
+            }
+
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

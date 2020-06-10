@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import webserver.exceptions.ErrorMessage;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -57,7 +58,7 @@ class FormDataTest {
 
         assertThat(thrown)
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("유효하지 않은 Form Data. " + input);
+                .hasMessageContaining(ErrorMessage.ILLEGAL_FORM_DATA.getMessage());
     }
 
 }

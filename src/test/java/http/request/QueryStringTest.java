@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import webserver.exceptions.ErrorMessage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -50,7 +51,7 @@ class QueryStringTest {
 
         assertThat(thrown)
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("queryString 자르기 실패");
+                .hasMessageContaining(ErrorMessage.ILLEGAL_QUERY_STRING.getMessage());
     }
 
 

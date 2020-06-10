@@ -1,5 +1,8 @@
 package utils;
 
+import webserver.exceptions.ErrorMessage;
+import webserver.exceptions.WebServerException;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
@@ -11,7 +14,7 @@ public class UrlUtf8Decoder {
             result = URLDecoder.decode(s, EncodeType);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            throw new RuntimeException("지원하지 않는 Encoding 타입. Type : [" + EncodeType + "]");
+            throw new WebServerException(ErrorMessage.UNSSUPORTED_ENCODING);
         }
         return result;
     }

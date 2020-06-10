@@ -2,6 +2,8 @@ package http.request;
 
 import org.apache.logging.log4j.util.Strings;
 import utils.UrlUtf8Decoder;
+import webserver.exceptions.ErrorMessage;
+import webserver.exceptions.WebServerException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +23,7 @@ public class QueryString {
         for (String value : split(values)) {
             String[] token = value.split(PARAMETER_NAME_VALUE_TOKENIZER);
             if (token.length != 2) {
-                throw new RuntimeException("queryString 자르기 실패");
+                throw new WebServerException(ErrorMessage.ILLEGAL_QUERY_STRING);
             }
             String parameterName = UrlUtf8Decoder.decode(token[0]);
             String parameterValue = UrlUtf8Decoder.decode(token[1]);

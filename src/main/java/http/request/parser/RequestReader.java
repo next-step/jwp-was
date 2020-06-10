@@ -1,5 +1,6 @@
 package http.request.parser;
 
+import http.common.Cookies;
 import http.request.RequestHeader;
 import http.request.HttpRequest;
 import http.request.RequestLine;
@@ -32,6 +33,9 @@ public class RequestReader {
         }
         RequestHeader header = RequestHeaderParser.parse(sb.toString());
 
+        String cookieValues = header.getValue("Cookie");
+        Cookies cookies = new Cookies(cookieValues);
+
         String contentLengthStr = header.getValue("Content-Length");
         int contentLength = 0;
         if (!Strings.isBlank(contentLengthStr)) {
@@ -41,7 +45,7 @@ public class RequestReader {
         String requestBody = IOUtils.readData(br, contentLength);
         logger.debug("Body :: {}", requestBody);
 
-        return new HttpRequest(requestLine, header, requestBody);
+        return new HttpRequest(requestLine, header, cookies, requestBody);
     }
 
 }
