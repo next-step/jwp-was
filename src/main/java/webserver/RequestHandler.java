@@ -6,6 +6,7 @@ import http.controller.Controllers;
 import http.controller.user.CreateUserController;
 import http.controller.user.LoginController;
 import http.controller.user.UserListController;
+import http.controller.user.UserProfileController;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import org.slf4j.Logger;
@@ -36,6 +37,7 @@ public class RequestHandler implements Runnable {
             HttpResponse response = new HttpResponse();
 
             Controllers controllers = addControllers();
+
             if (controllers.containsKey(request.getPath())) {
                 Controller controller = controllers.get(request.getPath());
                 controller.service(request, response);
@@ -57,6 +59,7 @@ public class RequestHandler implements Runnable {
         controllers.addController(new CreateUserController());
         controllers.addController(new LoginController());
         controllers.addController(new UserListController());
+        controllers.addController(new UserProfileController());
         return controllers;
     }
 }
