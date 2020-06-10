@@ -39,10 +39,11 @@ public class QueryString {
         }
 
         String[] parameterTokens = parameter.split(PARAMETER_DELIMITER);
-        if (parameterTokens.length != PARAMETER_TOKEN_SIZE) {
+        if (parameterTokens.length > PARAMETER_TOKEN_SIZE) {
             throw new QueryStringParsingException("QueryString is Illegal Format.");
         }
 
-        queryParameters.put(parameterTokens[0], parameterTokens[1]);
+        String value = (parameterTokens.length == PARAMETER_TOKEN_SIZE) ? parameterTokens[1] : "";
+        queryParameters.put(parameterTokens[0], value);
     }
 }

@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class QueryStringTest {
@@ -45,11 +46,21 @@ class QueryStringTest {
         assertThrows(QueryStringParsingException.class, () -> new QueryString(null));
     }
 
-    @DisplayName("잘못된 형식의 QueryString일 경우 QueryStringParsingException")
-    @ParameterizedTest
-    @ValueSource(strings = {"key1", "key1=value1&key2", "key1=value1&key2=value2=something2"})
-    void illegalFormat(String query) { /* given */
+    @DisplayName("잘못된 형식의 QueryString일 경우 Exception")
+    @Test
+    void illegalFormat() {
+        /* given */
+        String query = "key1=value1&key2=value2=something2";
+
         /* when */ /* then */
         assertThrows(QueryStringParsingException.class, () -> new QueryString(query));
+    }
+
+    @DisplayName("value가 없는 query문일 경우 key만 넣고 value는 빈 값으로 생성")
+    @ParameterizedTest
+    @ValueSource(strings = {"key1", "key1=", "key1=value1&key2="})
+    void doesNotExistValue(String query) { /* given */
+        /* when */ /* then */
+        assertDoesNotThrow(() -> new QueryString(query));
     }
 }
