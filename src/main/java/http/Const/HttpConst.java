@@ -17,4 +17,6 @@ public class HttpConst {
     public static final String HEADER_SEPARATOR = ":";
 
     public static final String PROTOCOL_VERSION_SEPARATOR = "/";
+
+    public static final String EMPTY_SPACE = " ";
 }

@@ -17,6 +17,6 @@ public enum HttpResponseCode {
     }
 
     public String makeHeader() {
-        return "HTTP/1.1 " + this.code.toString() + " " + this.message + HttpConst.CRLF;
+        return "HTTP/1.1 " + this.code.toString() + HttpConst.EMPTY_SPACE + this.message + HttpConst.CRLF;
     }
 }
