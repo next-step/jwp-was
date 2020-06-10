@@ -34,7 +34,7 @@ public class QueryString {
                 .findFirst();
 
         String[] values = nameValueOptional.orElseThrow(NoSuchElementException::new)
-                .split(HttpConst.QUERY_VALUE_SEPARATOR);
+                .split(HttpConst.NAME_VALUE_SEPARATOR);
 
         if (values.length < 2) {
             throw new IllegalArgumentException("Invalid Body String : " + name);

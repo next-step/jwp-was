@@ -15,15 +15,18 @@ public class HttpResponse {
     private HttpResponseCode responseCode;
     private byte[] responseBody;
     private Header headers;
+    private Cookie cookie;
 
     public HttpResponse(DataOutputStream outputStream) {
         this.outputStream = outputStream;
         this.headers = new Header();
+        this.cookie = new Cookie();
     }
 
     private void writeResponse() {
         try {
             this.outputStream.writeBytes(responseCode.makeHeader());
+            this.outputStream.writeBytes(cookie.writeCookieValue());
             this.outputStream.writeBytes(headers.makeResponseHeader());
             this.outputStream.write(this.responseBody, 0, responseBody.length);
 
@@ -73,5 +76,9 @@ public class HttpResponse {
 
     public HttpResponseCode getResponseCode() {
         return responseCode;
+    }
+
+    public void addCookie(String name, String value) {
+        this.cookie.addCookieValue(name, value);
     }
 }

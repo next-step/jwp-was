@@ -20,6 +20,7 @@ public class HttpRequest {
     private RequestLine requestLine;
     private Header header;
     private String requestBody;
+    private Cookie cookie;
 
     public HttpRequest(InputStream in) {
         try {
@@ -35,8 +36,14 @@ public class HttpRequest {
                     header.addHeaderValue(line);
                 }
             }
+
             if (header.isContainsKey("Content-Length")) {
                 this.requestBody = IOUtils.readData(br, Integer.parseInt(header.getValue("Content-Length")));
+            }
+
+            if (header.isContainsKey("Cookie")) {
+                this.cookie = new Cookie();
+                cookie.parseCookie(header.getValue("Cookie"));
             }
 
         } catch (IOException e) {
@@ -61,10 +68,11 @@ public class HttpRequest {
     }
 
     public boolean isLoggedIn() {
-        if (header.isContainsKey("Cookie")) {
-            return header.getValue("Cookie").contains("logined=true");
+        if (this.cookie == null) {
+            return false;
         }
-        return false;
+
+        return Boolean.parseBoolean(this.cookie.getCookieValue("logined"));
     }
 
     public ContentType getContentType() {

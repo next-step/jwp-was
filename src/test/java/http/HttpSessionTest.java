@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  */
 public class HttpSessionTest {
 
-    private static final String sessionId = UUID.randomUUID().toString();
     private HttpSession session;
 
     @BeforeEach
