@@ -1,4 +1,4 @@
-package http;
+package http.common;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,13 +23,7 @@ class HttpMethodTest {
     @ParameterizedTest
     @ValueSource(strings = {
             "GET",
-            "HEAD",
             "POST",
-            "PUT",
-            "PATCH",
-            "DELETE",
-            "OPTIONS",
-            "TRACE"
     })
     public void testResolve(String method) {
         assertThat(HttpMethod.resolve(method)).isNotNull();

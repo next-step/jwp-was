@@ -1,8 +1,7 @@
-package http;
+package http.common;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
@@ -16,16 +15,12 @@ public enum HttpMethod {
 
     private static Map<String, HttpMethod> initHttpMethodMap() {
         return Arrays.stream(values())
-                .collect(toMap(HttpMethod::name, entry -> entry));
+            .collect(toMap(HttpMethod::name, entry -> entry));
     }
 
-    public static String resolve(String code) {
-        if (Objects.isNull(code)) {
-            return null;
-        }
-
-        return Optional.ofNullable(httpMethodMap.get(code))
-            .map(HttpMethod::name)
-            .orElseThrow(IllegalArgumentException::new);
+    public static HttpMethod resolve(String method) {
+        return Optional.ofNullable(method)
+            .map(httpMethodMap::get)
+            .orElse(null);
     }
 }
