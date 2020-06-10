@@ -15,33 +15,15 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private final RequestLine requestLine;
-
-    public UserController(final RequestLine requestLine) {
-        this.requestLine = requestLine;
-    }
-
-    public ResponseObject mapping() {
-        String method = requestLine.getMethodName();
-
-        if (method.equals("GET")) {
-            return mappingByGetMethod();
-        }
-        return mappingByPostMethod();
-    }
-
-    private ResponseObject mappingByGetMethod() {
-        String path = requestLine.getPath();
+    public static ResponseObject mappingByGetMethod(String path) {
         if (path.equals("/user/list")) {
             return new ResponseObject(200, "/index.html", path, new ArrayList<>(DataBase.findAll()));
         }
         return new ResponseObject(200, "/index.html", String.format("./templates%s", path));
     }
 
-    private ResponseObject mappingByPostMethod() {
-        String path = requestLine.getPath();
+    public static ResponseObject mappingByPostMethod(String path, Map<String, String> requestParams) {
         if (path.equals("/user/create")) {
-            Map<String, String> requestParams = requestLine.getParams();
             String userId = requestParams.getOrDefault("userId", "");
             String password = requestParams.getOrDefault("password", "");
             String email = requestParams.getOrDefault("email", "");
@@ -54,7 +36,6 @@ public class UserController {
 
         if (path.equals("/user/login")) {
             try {
-                Map<String, String> requestParams = requestLine.getParams();
                 String userId = requestParams.getOrDefault("userId", "");
                 String password = requestParams.getOrDefault("password", "");
                 User user = DataBase.findUserById(userId);

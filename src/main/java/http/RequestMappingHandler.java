@@ -6,7 +6,6 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import http.header.RequestHeader;
 import model.User;
-import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import user.ui.UserController;
@@ -19,7 +18,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public class RequestMappingHandler {
     private static final int MIN_CONTENT_LENGTH = 0;
@@ -93,10 +91,10 @@ public class RequestMappingHandler {
     }
 
     private void handlerByUserController(RequestLine requestLine) {
-        ResponseObject responseObject = new UserController(requestLine).mapping();
         String method = requestLine.getMethodName();
         String path = requestLine.getPath();
         if (method.equals("GET")) {
+            ResponseObject responseObject = UserController.mappingByGetMethod(requestLine.getPath());
             if (path.equals("/user/login")) {
                 if (responseObject.getCode() == 200) {
                     response.responseHeaderByLoginSuccess();
@@ -111,6 +109,8 @@ public class RequestMappingHandler {
 
             handlerGetMethod(responseObject);
         }
+
+        ResponseObject responseObject = UserController.mappingByPostMethod(requestLine.getPath(), requestLine.getParams());
         handlerPostMethod(responseObject, requestLine.getPath());
     }
 
