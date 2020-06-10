@@ -37,16 +37,14 @@ public class RequestLineParser {
 
 
     private static RequestMethod createMethodPostByRequestBody(String path, String requestBody) {
-        RequestParametersTranslator requestParametersTranslator = new DefaultRequestParametersTranslator(requestBody);
-        return new RequestMethodPost(path, new RequestParameters(requestParametersTranslator.create()));
+        return new RequestMethodPost(path, new RequestParameters(requestBody));
     }
 
     private static RequestMethod createMethodGetByPath(String path) {
         String[] queryString = path.split(SEPARATOR_URI);
 
         if (queryString.length > MIN_QUERY_STRING_SIZE) {
-            RequestParametersTranslator requestParametersTranslator = new DefaultRequestParametersTranslator(queryString[1]);
-            return new RequestMethodGet(queryString[0], new RequestParameters(requestParametersTranslator.create()));
+            return new RequestMethodGet(queryString[0], new RequestParameters(queryString[1]));
         }
         return new RequestMethodGet(path);
     }

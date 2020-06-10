@@ -11,12 +11,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class RequestParametersTest {
 
-    private Map<String, String> queryString;
+    private String queryString;
 
     @BeforeEach
     void setUp() {
-        queryString = new HashMap<>();
-        queryString.put("userId", "javajigi");
+        queryString = "userId=javajigi";
     }
 
     @Test

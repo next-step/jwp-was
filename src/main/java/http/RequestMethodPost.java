@@ -11,7 +11,7 @@ public class RequestMethodPost implements RequestMethod {
     private final RequestParameters requestParameters;
 
     public RequestMethodPost(final String path) {
-        this(path, new RequestParameters(new HashMap<>()));
+        this(path, new RequestParameters(""));
     }
 
     public RequestMethodPost(final String path, final RequestParameters requestParameters) {

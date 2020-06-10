@@ -11,7 +11,7 @@ public class RequestMethodGet implements RequestMethod {
     private final RequestParameters requestParameters;
 
     public RequestMethodGet(final String path) {
-        this(path, new RequestParameters(new HashMap<>()));
+        this(path, new RequestParameters(""));
     }
 
     public RequestMethodGet(final String path, final RequestParameters requestParameters) {
