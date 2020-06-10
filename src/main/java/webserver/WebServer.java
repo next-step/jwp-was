@@ -4,13 +4,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.handler.HandlerMapper;
 import webserver.handler.HandlerRegister;
+import webserver.thread.ThreadPool;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
+    private static final ThreadPoolExecutor THREAD_POOL = ThreadPool.execute();
 
     public static void main(String args[]) throws Exception {
         int port = 0;
@@ -27,10 +31,17 @@ public class WebServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new HandlerMapper(connection));
+                HandlerMapper command = new HandlerMapper(connection);
                 HandlerRegister.register();
-                thread.start();
+
+                try {
+                    THREAD_POOL.submit(command);
+                } catch (RejectedExecutionException e) {
+                    logger.error("Client requests occurred more than thread pool size!!");
+                    throw e;
+                }
             }
         }
     }
+
 }
