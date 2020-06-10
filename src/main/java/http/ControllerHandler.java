@@ -15,12 +15,12 @@ public class ControllerHandler {
 
     public static PathController getControllerProcess(HttpRequest request) {
         switch (request.getPath()) {
-            case "/user/create":
+            case "/user/create" :
                 return USER_CONTROLLER;
-            case "/user/login":
+            case "/user/login" :
             case "/user/login.html":
                 return LOGIN_CONTROLLER;
-            case "/user/list":
+            case "/user/list" :
                 return LIST_CONTROLLER;
             default:
                 return DEFAULT;
