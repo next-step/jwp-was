@@ -44,7 +44,7 @@ public class HttpRequestParser {
 
     public static Cookie parseCookie(String cookieData) {
         if (cookieData == null || cookieData.isEmpty()) {
-            return new Cookie(Collections.emptyMap());
+            return new Cookie(new HashMap<>());
         }
         final String decodedCookie = URLDecoder.decode(cookieData, StandardCharsets.UTF_8);
         final Stream<String> stream = Arrays.stream(decodedCookie.split(COOKIE_DATA_PAIR_DELIMITER));

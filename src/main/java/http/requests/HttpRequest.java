@@ -2,7 +2,7 @@ package http.requests;
 
 import http.requests.parameters.Cookie;
 import http.requests.parameters.FormData;
-import http.types.HttpMethod;
+import http.requests.types.HttpMethod;
 import utils.HttpHeader;
 import utils.HttpRequestParser;
 import utils.IOUtils;

@@ -2,13 +2,15 @@ package http.controller;
 
 import db.DataBase;
 import http.requests.HttpRequest;
-import http.requests.parameters.Cookie;
 import http.responses.HttpResponse;
+import http.session.HttpSession;
+import http.session.SessionManager;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public class UserListController implements Controller {
 
@@ -16,7 +18,10 @@ public class UserListController implements Controller {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        if (isSignedIn(request)) {
+        final HttpSession currentSession = getCurrentSession(request);
+        log.debug("UserListController#service - {}", currentSession);
+        final boolean logined = Optional.ofNullable((Boolean) currentSession.getAttribute("logined")).orElse(false);
+        if (logined) {
             final Collection<User> users = DataBase.findAll();
             log.debug("user list: {}", users);
             response.addAttribute("users", users);
@@ -26,8 +31,9 @@ public class UserListController implements Controller {
         response.sendRedirect("/user/login.html");
     }
 
-    private boolean isSignedIn(HttpRequest request) {
-        final Cookie cookie = request.getCookie();
-        return Boolean.parseBoolean(cookie.getValue("logined"));
+    private HttpSession getCurrentSession(HttpRequest request) {
+        final String sessionId = request.getCookie().getValue(SessionManager.SESSION_NAME);
+        log.debug("UserListController#getCurrentSession - {}", sessionId);
+        return SessionManager.getSession(sessionId);
     }
 }
