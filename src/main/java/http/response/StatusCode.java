@@ -25,8 +25,8 @@ public enum StatusCode {
     INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
     ;
 
-    private int code;
-    private String message;
+    private final int code;
+    private final String message;
 
     StatusCode(int code, String message) {
         this.code = code;

@@ -8,7 +8,7 @@ public enum ErrorMessage {
     REQUEST_PROCESSABLE_CONTROLLER_NOT_FOUND("해당 요청을 처리할 컨트롤러를 찾지 못했습니다."),
     ;
 
-    private String message;
+    private final String message;
 
     ErrorMessage(String message) {
         this.message = message;
