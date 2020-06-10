@@ -41,7 +41,7 @@ public class RequestHandler implements Runnable {
             }
 
             Controller controller = CONTROLLER_MAPPER.findController(httpRequest.getUri());
-            controller.execute(httpRequest);
+            controller.execute(httpRequest, httpResponse);
 
             httpResponse.flush();
         } catch (IOException | URISyntaxException | IllegalArgumentException e) {

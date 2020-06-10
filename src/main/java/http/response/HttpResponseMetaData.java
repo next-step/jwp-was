@@ -29,13 +29,23 @@ public class HttpResponseMetaData {
         this.responseBody = responseBody;
     }
 
+    public void updateStatusCode(HttpStatusCode statusCode) {
+        if (statusCode != null) {
+            this.statusCode = statusCode;
+        }
+    }
+
+    public void putResponseHeader(String key, String value) {
+        headers.put(key, value);
+    }
+
     public void writeResponseLine(DataOutputStream dos, String protocolSpec) throws IOException {
         dos.writeBytes(String.format("%s %s %s ", protocolSpec, statusCode.getCode(), statusCode.name()) + NEW_LINE);
     }
 
     public void writeResponseHeaders(DataOutputStream dos) throws IOException {
         for (Map.Entry<String, String> entry : headers.entrySet()) {
-            dos.writeBytes(generateHeaderLine(entry.getKey(), entry.getValue()));
+            dos.writeBytes(generateHeaderLine(entry.getKey(), entry.getValue()) + NEW_LINE);
         }
     }
 

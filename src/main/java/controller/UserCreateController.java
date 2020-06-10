@@ -2,6 +2,7 @@ package controller;
 
 import db.DataBase;
 import http.request.HttpRequest;
+import http.response.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import model.User;
 
@@ -9,7 +10,7 @@ import model.User;
 public class UserCreateController extends AbstractController {
 
     @Override
-    void doGet(HttpRequest httpRequest) {
+    void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
         User user = User.builder()
                 .userId(httpRequest.getQueryStringValue("userId"))
                 .password(httpRequest.getQueryStringValue("password"))
@@ -22,7 +23,7 @@ public class UserCreateController extends AbstractController {
     }
 
     @Override
-    void doPost(HttpRequest httpRequest) {
+    void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
         User user = User.builder()
                 .userId(httpRequest.getBody("userId"))
                 .password(httpRequest.getBody("password"))
@@ -32,5 +33,7 @@ public class UserCreateController extends AbstractController {
 
         log.debug("User Create : {}", user);
         DataBase.addUser(user);
+
+        httpResponse.redirect("/index.html");
     }
 }

@@ -2,6 +2,7 @@ package controller;
 
 import http.request.HttpRequest;
 import http.request.method.HttpMethod;
+import http.response.HttpResponse;
 
 import static http.request.method.HttpMethod.GET;
 import static http.request.method.HttpMethod.POST;
@@ -9,19 +10,19 @@ import static http.request.method.HttpMethod.POST;
 public abstract class AbstractController implements Controller {
 
     @Override
-    public void execute(HttpRequest httpRequest) {
+    public void execute(HttpRequest httpRequest, HttpResponse httpResponse) {
         HttpMethod httpMethod = httpRequest.getHttpMethod();
 
         if (httpMethod == GET) {
-            doGet(httpRequest);
+            doGet(httpRequest, httpResponse);
         }
 
         if (httpMethod == POST) {
-            doPost(httpRequest);
+            doPost(httpRequest, httpResponse);
         }
     }
 
-    abstract void doGet(HttpRequest httpRequest);
+    abstract void doGet(HttpRequest httpRequest, HttpResponse httpResponse);
 
-    abstract void doPost(HttpRequest httpRequest);
+    abstract void doPost(HttpRequest httpRequest, HttpResponse httpResponse);
 }

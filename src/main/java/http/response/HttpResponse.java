@@ -8,6 +8,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import static http.response.HttpStatusCode.FOUND;
+
 @Slf4j
 @RequiredArgsConstructor
 public class HttpResponse {
@@ -19,6 +21,11 @@ public class HttpResponse {
     public static HttpResponse of(OutputStream outputStream, HttpRequest httpRequest) {
         DataOutputStream dos = new DataOutputStream(outputStream);
         return new HttpResponse(dos, httpRequest, new HttpResponseMetaData());
+    }
+
+    public void redirect(String location) {
+        metaData.updateStatusCode(FOUND);
+        metaData.putResponseHeader("Location", location);
     }
 
     public void updateResponseBodyContent(byte[] responseBody) {
