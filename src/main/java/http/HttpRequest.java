@@ -30,7 +30,7 @@ public class HttpRequest {
         setCookies();
     }
 
-    public HttpRequest setSessionManager(HttpSessionManager sessionManager) {
+    public HttpRequest addSessionManager(HttpSessionManager sessionManager) {
         this.sessionManager = sessionManager;
         return this;
     }

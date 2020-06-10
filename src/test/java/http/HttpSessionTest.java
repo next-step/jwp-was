@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author KingCjy
  */
-public class HttpSessionImplTest {
+public class HttpSessionTest {
 
     @Test
     public void initTest() {
@@ -21,7 +21,7 @@ public class HttpSessionImplTest {
 
     @Test
     public void attributesTest() {
-        HttpSessionImpl httpSession = new HttpSessionImpl();
+        HttpSession httpSession = new HttpSession();
 
         httpSession.setAttribute("logined", true);
         httpSession.setAttribute("logined2", true);
@@ -33,7 +33,7 @@ public class HttpSessionImplTest {
 
     @Test
     public void invalidateTest() {
-        HttpSessionImpl httpSession = new HttpSessionImpl();
+        HttpSession httpSession = new HttpSession();
 
         httpSession.setAttribute("logined", true);
         httpSession.setAttribute("logined2", true);
