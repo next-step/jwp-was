@@ -47,7 +47,7 @@ public class Cookies {
 
     public String stringify() {
         String cookiesStr = cookies.keySet().stream()
-                .map(cookieName -> (cookieName + "="+cookies.get(cookieName)))
+                .map(cookieName -> (cookieName + "=" + cookies.get(cookieName)))
                 .collect(Collectors.joining(COOKIE_JOIN_DELIMITER));
 
         if (!Strings.EMPTY.equals(path)) {
