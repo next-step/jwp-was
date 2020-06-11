@@ -1,0 +1,5 @@
+HTTP/1.1 302 Found
+ 
+Content-Type: text/html;charset=utf-8
+Location: /index.html
+

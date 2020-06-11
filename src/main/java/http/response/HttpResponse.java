@@ -48,6 +48,15 @@ public class HttpResponse {
     }
 
     public void forwardBody(String path) {
+        try {
+            responseOK();
+            responseHeader.addHeader("Host", "localhost:8080");
+            responseHeader.addHeader("Content-Type", ResponseContentType.HTML.toString());
+            applyHeader();
+            responseBody(readFile("./templates/" + path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
