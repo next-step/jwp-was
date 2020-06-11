@@ -10,14 +10,11 @@ import http.response.StatusLine;
 import lombok.extern.slf4j.Slf4j;
 import utils.FileIoUtils;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 @Slf4j
 public abstract class AbstractHandler implements Handler {
-    public static final String NEW_LINE_STRING = "\r\n";
-
     public static final String TEMPLATE_PATH = "./templates";
     public static final String STATIC_PATH = "./static";
 
@@ -52,27 +49,5 @@ public abstract class AbstractHandler implements Handler {
     @Override
     public byte[] getHttpResponseBody(HttpRequest httpRequest) throws IOException, URISyntaxException {
         return FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + getPath());
-    }
-
-    @Override
-    public void writeHttpResponse(DataOutputStream dos, HttpResponse httpResponse) {
-        try {
-            dos.writeBytes(httpResponse.getStatusLine() + NEW_LINE_STRING);
-
-            if (httpResponse.hasHttpHeaders()) {
-                dos.writeBytes(httpResponse.getHttpHeaderString());
-                dos.writeBytes(NEW_LINE_STRING);
-            }
-
-            dos.writeBytes(NEW_LINE_STRING);
-
-            if (httpResponse.hasHttpBody()) {
-                dos.write(httpResponse.getHttpBody().getBytes(), 0, httpResponse.getHttpBodyLength());
-            }
-            dos.flush();
-        }
-        catch (Exception e) {
-            log.error(e.getMessage());
-        }
     }
 }

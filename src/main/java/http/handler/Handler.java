@@ -18,6 +18,4 @@ public interface Handler {
     HttpResponse getHttpResponse(HttpRequest httpRequest) throws IOException, URISyntaxException;
 
     byte[] getHttpResponseBody(HttpRequest httpRequest) throws IOException, URISyntaxException;
-
-    void writeHttpResponse(DataOutputStream dos, HttpResponse httpResponse) throws IOException;
 }

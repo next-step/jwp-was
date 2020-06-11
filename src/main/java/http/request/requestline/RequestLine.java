@@ -26,7 +26,7 @@ public class RequestLine {
         this.protocol = protocol;
     }
 
-    public static RequestLine of(String requestLine) {
+    public static RequestLine parse(String requestLine) {
         if (StringUtils.isEmpty(requestLine)) {
             throw new IllegalArgumentException();
         }

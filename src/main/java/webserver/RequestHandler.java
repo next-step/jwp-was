@@ -1,6 +1,5 @@
 package webserver;
 
-import http.common.HttpHeaders;
 import http.handler.Handler;
 import http.handler.mapper.HandlerMapper;
 import http.request.HttpRequest;
@@ -31,6 +30,7 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+
             String request = br.readLine();
             log.debug("request: {}", request);
 
@@ -38,15 +38,12 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
-            RequestLine requestLine = RequestLine.of(request);
-            log.debug("path: {}", requestLine.getPath());
-
-            HttpRequest httpRequest = HttpRequest.of(br, requestLine, HttpHeaders.of(br));
+            HttpRequest httpRequest = HttpRequest.parse(br, request);
             log.debug("httpRequest: {}", StringUtils.toPrettyJson(httpRequest));
 
-            Handler handler = HandlerMapper.getHandler(requestLine.getPath());
+            Handler handler = HandlerMapper.getHandler(httpRequest.getPath());
             HttpResponse httpResponse = handler.getHttpResponse(httpRequest);
-            handler.writeHttpResponse(dos, httpResponse);
+            ResponseHandler.writeHttpResponse(dos, httpResponse);
 
             log.debug("httpResponse: {}", StringUtils.toPrettyJson(httpResponse));
         }

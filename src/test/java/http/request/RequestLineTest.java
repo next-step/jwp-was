@@ -26,7 +26,7 @@ class RequestLineTest {
     })
     @NullAndEmptySource
     public void testRequestLine(String requestLine) {
-        assertThrows(IllegalArgumentException.class, () -> RequestLine.of(requestLine));
+        assertThrows(IllegalArgumentException.class, () -> RequestLine.parse(requestLine));
     }
 
     @DisplayName("QueryString 없는 RequestLine 테스트")
@@ -38,7 +38,7 @@ class RequestLineTest {
             "'POST', '/users', '', 'HTTP', '1.1'",
     })
     public void testRequestLineWithoutQueryString(String method, String path, String queryString, String protocol, String version) {
-        RequestLine requestLine = RequestLine.of(buildRequestLine(method, path, queryString, protocol, version));
+        RequestLine requestLine = RequestLine.parse(buildRequestLine(method, path, queryString, protocol, version));
 
         assertThat(requestLine).isNotNull();
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.resolve(method));
@@ -57,7 +57,7 @@ class RequestLineTest {
             "'POST', '/users', 'userId=javajigi&password=password&name=JaeSung', 'HTTP', '1.1'",
     })
     public void testRequestLineWithQueryString(String method, String path, String queryString, String protocol, String version) {
-        RequestLine requestLine = RequestLine.of(buildRequestLine(method, path, queryString, protocol, version));
+        RequestLine requestLine = RequestLine.parse(buildRequestLine(method, path, queryString, protocol, version));
 
         assertThat(requestLine).isNotNull();
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.resolve(method));

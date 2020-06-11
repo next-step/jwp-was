@@ -27,7 +27,7 @@ public class HttpHeaders {
         this.headers = Collections.unmodifiableMap(headers);
     }
 
-    public static HttpHeaders of(BufferedReader br) throws IOException {
+    public static HttpHeaders parse(BufferedReader br) throws IOException {
         Map<String, String> httpHeaders = Maps.newHashMap();
         String httpHeaderLine = br.readLine();
 
