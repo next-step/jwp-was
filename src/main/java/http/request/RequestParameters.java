@@ -21,6 +21,10 @@ public class RequestParameters {
         }
     }
 
+    public RequestParameters(Map<String, String> requestParameters) {
+        this.requestParameters = requestParameters;
+    }
+
     public Map<String, String> getRequestParameters() {
         return new HashMap<>(requestParameters);
     }

@@ -1,5 +1,7 @@
 package http.request;
 
+import java.util.Map;
+
 public class RequestLineParser {
 
     private static final String GET_METHOD = "GET";
@@ -37,7 +39,16 @@ public class RequestLineParser {
 
 
     private static RequestMethod createMethodPostByRequestBody(String path, String requestBody) {
-        return new RequestMethodPost(path, new RequestParameters(requestBody));
+        RequestParameters requestParameters = new RequestParameters(requestBody);
+        String[] queryString = path.split(SEPARATOR_URI);
+        if (queryString.length > MIN_QUERY_STRING_SIZE) {
+            RequestParameters requestQueryString = new RequestParameters(queryString[1]);
+            Map<String, String> parameters = requestQueryString.getRequestParameters();
+            parameters.putAll(requestParameters.getRequestParameters());
+            return new RequestMethodPost(queryString[0], new RequestParameters(parameters));
+        }
+
+        return new RequestMethodPost(path, requestParameters);
     }
 
     private static RequestMethod createMethodGetByPath(String path) {
