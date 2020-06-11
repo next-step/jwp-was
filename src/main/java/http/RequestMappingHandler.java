@@ -5,7 +5,7 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import http.header.RequestHeader;
-import http.response.Response;
+import http.response.HttpResponse;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +28,13 @@ public class RequestMappingHandler {
     private static final Logger logger = LoggerFactory.getLogger(RequestMappingHandler.class);
 
     private final BufferedReader bufferedReader;
-    private final Response response;
+    private final HttpResponse httpResponse;
     private RequestHeader requestHeader;
     private boolean isLogined = false;
 
     public RequestMappingHandler(final BufferedReader bufferedReader, final DataOutputStream dataOutputStream) throws IOException {
         this.bufferedReader = bufferedReader;
-        this.response = new Response(dataOutputStream);
+        this.httpResponse = new HttpResponse(dataOutputStream);
         read();
     }
 
@@ -82,8 +82,8 @@ public class RequestMappingHandler {
 
         if (path.equals("/index.html")) {
             byte[] body = getForm("./templates/index.html");
-            response.response200Header(body.length);
-            response.responseBody(body);
+            httpResponse.response200Header(body.length);
+            httpResponse.responseBody(body);
         }
 
         if (path.matches("/user/.*")) {
@@ -95,8 +95,8 @@ public class RequestMappingHandler {
 
         if (path.matches("/css/.*")) {
             byte[] body = getForm("./static/" + path);
-            response.responseHeaderByCss();
-            response.responseBody(body);
+            httpResponse.responseHeaderByCss();
+            httpResponse.responseBody(body);
         }
     }
 
@@ -107,14 +107,14 @@ public class RequestMappingHandler {
             ResponseObject responseObject = UserController.mappingByGetMethod(requestLine.getPath());
             if (path.equals("/user/login")) {
                 if (responseObject.getCode() == 200) {
-                    response.responseHeaderByLoginSuccess();
+                    httpResponse.responseHeaderByLoginSuccess();
                 }
             }
 
             if (path.equals("/user/list")) {
                 byte[] body = viewListByTemplate(responseObject);
-                response.response200Header(body.length);
-                response.responseBody(body);
+                httpResponse.response200Header(body.length);
+                httpResponse.responseBody(body);
             }
 
             handlerGetMethod(responseObject);
@@ -127,27 +127,27 @@ public class RequestMappingHandler {
 
     private void middleware() {
         if (!isLogined) {
-            response.response302Header("/user/login.html");
+            httpResponse.response302Header("/user/login.html");
         }
     }
 
     private void handlerGetMethod(ResponseObject responseObject) {
         byte[] body = getForm(responseObject.getRequestPath());
-        response.response200Header(body.length);
-        response.responseBody(body);
+        httpResponse.response200Header(body.length);
+        httpResponse.responseBody(body);
     }
 
     private void handlerPostMethod(ResponseObject responseObject, String path) {
         if (path.equals("/user/login")) {
             if (responseObject.getCode() == 200) {
-                response.responseHeaderByLoginSuccess();
+                httpResponse.responseHeaderByLoginSuccess();
             }
-            response.response302HeaderByLoginFail(responseObject.getLocation());
+            httpResponse.response302HeaderByLoginFail(responseObject.getLocation());
         }
 
         if (path.equals("/user/create")) {
             if (responseObject.getCode() == 302) {
-                response.response302Header(responseObject.getLocation());
+                httpResponse.response302Header(responseObject.getLocation());
             }
         }
     }
@@ -187,11 +187,11 @@ public class RequestMappingHandler {
         if (o == null || getClass() != o.getClass()) return false;
         final RequestMappingHandler that = (RequestMappingHandler) o;
         return Objects.equals(bufferedReader, that.bufferedReader) &&
-                Objects.equals(response, that.response);
+                Objects.equals(httpResponse, that.httpResponse);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bufferedReader, response);
+        return Objects.hash(bufferedReader, httpResponse);
     }
 }

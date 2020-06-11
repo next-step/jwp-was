@@ -6,16 +6,16 @@ import org.slf4j.LoggerFactory;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class Response {
+public class HttpResponse {
 
     private static final String BASIC_PROTOCOL = "HTTP/1.1";
     private static final String BASIC_CONTENT_KEY = "Content-Type:";
     private static final String BASIC_REQUEST = "%s %s \r\n";
-    private static final Logger logger = LoggerFactory.getLogger(Response.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
     private final DataOutputStream dataOutputStream;
 
-    public Response(final DataOutputStream dataOutputStream) {
+    public HttpResponse(final DataOutputStream dataOutputStream) {
         this.dataOutputStream = dataOutputStream;
     }
 
