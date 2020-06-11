@@ -52,10 +52,7 @@ public class UserListController extends AbstractController {
 
     private boolean isLogined(HttpRequest httpRequest) {
         final String logined = httpRequest.getCookie("logined");
-        if ("true".equals(logined)) {
-            return true;
-        }
-        return false;
+        return "true".equals(logined);
     }
 
     @Override
