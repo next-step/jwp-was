@@ -1,6 +1,7 @@
 package webserver;
 
 import utils.StringUtils;
+import webserver.exception.HttpMethodMismatchException;
 
 import java.util.Arrays;
 
@@ -15,6 +16,6 @@ public enum HttpMethod {
         return Arrays.stream(HttpMethod.values())
                 .filter(httpMethod -> httpMethod.name().equals(method))
                 .findAny()
-                .orElse(null);
+                .orElseThrow(HttpMethodMismatchException::new);
     }
 }
