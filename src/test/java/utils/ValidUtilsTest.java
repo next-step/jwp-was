@@ -16,7 +16,7 @@ class ValidUtilsTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> ValidUtils.notNull(object))
+                .isThrownBy(() -> ValidUtils.assertNotNull(object))
                 .withMessage("파라미터는 null일 수 없습니다");
 
     }
@@ -30,6 +30,6 @@ class ValidUtilsTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> ValidUtils.notBlank(value, "Value must not be blank"));
+                .isThrownBy(() -> ValidUtils.assertNotBlank(value, "Value must not be blank"));
     }
 }

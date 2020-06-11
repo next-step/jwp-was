@@ -1,7 +1,6 @@
 package webserver;
 
 import lombok.EqualsAndHashCode;
-import utils.ValidUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
+import static utils.ValidUtils.assertNotBlank;
+import static utils.ValidUtils.assertNotNull;
 
 @EqualsAndHashCode
 public class RequestLine {
@@ -24,9 +25,9 @@ public class RequestLine {
     private Map<String, String> queryParameters;
 
     public RequestLine(HttpMethod method, String url, Protocol protocol) {
-        ValidUtils.notNull(method, "http method는 null일 수 없습니다");
-        ValidUtils.notBlank(url, "http url은 blank일 수 없습니다");
-        ValidUtils.notNull(protocol, "프로토콜 정보가 null일 수 없습니다");
+        assertNotNull(method, "http method는 null일 수 없습니다");
+        assertNotBlank(url, "http url은 blank일 수 없습니다");
+        assertNotNull(protocol, "프로토콜 정보가 null일 수 없습니다");
 
         this.method = method;
         this.url = url;
@@ -35,7 +36,7 @@ public class RequestLine {
     }
 
     public RequestLine(String requestLine) {
-        ValidUtils.notBlank(requestLine, "http request line은 null일 수 없습니다");
+        assertNotBlank(requestLine, "http request line은 null일 수 없습니다");
 
         String[] split = requestLine.split(BLANK);
         this.method = HttpMethod.resolve(split[0]);
@@ -47,7 +48,7 @@ public class RequestLine {
     }
 
     private Map<String, String> parseQueryString(String url) {
-        ValidUtils.notBlank(url, "http url은 blank일 수 없습니다");
+        assertNotBlank(url, "http url은 blank일 수 없습니다");
 
         String[] queryString = url.split(URL_SEPARATOR);
         if (isNonExistent(queryString)) {
@@ -60,7 +61,7 @@ public class RequestLine {
     }
 
     private boolean isNonExistent(String[] queryString) {
-        ValidUtils.notNull(queryString);
+        assertNotNull(queryString);
         return queryString.length <= 1;
     }
 
