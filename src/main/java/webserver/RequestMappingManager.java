@@ -73,7 +73,7 @@ public class RequestMappingManager {
         HttpResponse httpResponse;
 
         byte[] body = new byte[0];
-        logger.debug("request url: {} - cookie{}", httpRequest.getPath(), httpRequest.getHeaders());
+        logger.debug("request url: {} - cookie{}", httpRequest.getPath(), httpRequest.getHeader("Cookie"));
         switch (httpRequest.getPath()) {
             case "/user/create":
                 User user = convertMapToObject(httpRequest.getParameters(), User.class);

@@ -1,17 +1,52 @@
 package webserver;
 
 import http.HttpMethod;
+import http.RequestLine;
 import http.request.HttpRequest;
+import http.request.HttpRequestHeader;
 import mock.MockSocket;
 import org.junit.jupiter.api.Test;
 import utils.FileIoUtils;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class HttpRequestReaderTest {
+
+    @Test
+    void read_refactoring() throws Exception {
+        String request = "GET /index.html HTTP/1.1\r\n" +
+                "Host: localhost:8080\r\n" +
+                "Connection: keep-alive\r\n" +
+                "Accept: */*\r\n";
+        MockSocket socket = new MockSocket(request);
+
+        InputStream in = socket.getInputStream();
+
+        // 스트림의 내용을 읽는다
+        BufferedReader br = HttpRequestReader.readBuffer(in);
+
+        // 리퀘스트 부분을 얻는다
+        RequestLine line = HttpRequestReader.parseReadLine(br);
+
+        // 헤더를 얻는다.
+        Map<String, String> headerMap = HttpRequestReader.readHeader(br);
+        HttpRequestHeader header = new HttpRequestHeader(headerMap);
+
+        // 바디를 확인한다.
+
+        if (header.hasBody()) {
+            int contentLength = header.getContentLength();
+            Map<String, String> paramMap = HttpRequestReader.readBody(br, contentLength);
+        }
+
+        // HttpRequest 를 생성한다.
+
+    }
 
     @Test
     void read() {

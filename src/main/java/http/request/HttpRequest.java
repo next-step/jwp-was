@@ -8,13 +8,13 @@ import java.util.Map;
 public class HttpRequest {
     private final RequestLine requestLine;
 
-    private final Map<String, String> requestHeaders;
+    private final HttpRequestHeader requestHeaders;
 
     private final Map<String, String> parameters;
 
-    public HttpRequest(RequestLine requestLine, Map<String, String> requestHeaders, Map<String, String> parameters) {
+    public HttpRequest(RequestLine requestLine, HttpRequestHeader requestHeader, Map<String, String> parameters) {
         this.requestLine = requestLine;
-        this.requestHeaders = requestHeaders;
+        this.requestHeaders = requestHeader;
         this.parameters = parameters;
     }
 
@@ -35,7 +35,7 @@ public class HttpRequest {
     }
 
     public String getHeader(String key) {
-        return requestHeaders.get(key);
+        return requestHeaders.getHeader(key);
     }
 
     public String getParameter(String key) {
@@ -50,9 +50,5 @@ public class HttpRequest {
             return requestLine.getParameters();
         }
         return parameters;
-    }
-
-    public Map<String, String> getHeaders() {
-        return requestHeaders;
     }
 }
