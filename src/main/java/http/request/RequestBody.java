@@ -12,6 +12,10 @@ public class RequestBody {
 
     private Map<String, String> bodyMap;
 
+    public RequestBody() {
+        this.bodyMap = new HashMap<>();
+    }
+
     private RequestBody(Map<String, String> bodyMap) {
         this.bodyMap = bodyMap;
     }

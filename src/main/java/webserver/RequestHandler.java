@@ -1,11 +1,12 @@
 package webserver;
 
-import http.HttpSession;
+import http.HttpSessions;
 import http.controller.Controller;
 import http.controller.Controllers;
 import http.controller.user.CreateUserController;
 import http.controller.user.LoginController;
 import http.controller.user.UserListController;
+import http.controller.user.UserProfileController;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import org.slf4j.Logger;
@@ -15,18 +16,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-    private Map<String, HttpSession> sessionMap;
+    private HttpSessions httpSessions;
 
-    public RequestHandler(Socket connectionSocket) {
+    public RequestHandler(Socket connectionSocket, HttpSessions httpSessions) {
         this.connection = connectionSocket;
-        this.sessionMap = new HashMap<>();
+        this.httpSessions = httpSessions;
     }
 
     public void run() {
@@ -34,18 +33,18 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            HttpRequest request = HttpRequest.parse(in, sessionMap);
+            HttpRequest request = HttpRequest.getInstance(in, httpSessions);
             HttpResponse response = new HttpResponse();
 
             Controllers controllers = addControllers();
+
             if (controllers.containsKey(request.getPath())) {
                 Controller controller = controllers.get(request.getPath());
                 controller.service(request, response);
             }
 
-            if (!request.sessionIsNull()) {
-                HttpSession session = request.getSession();
-                this.sessionMap.put(session.getId(), session);
+            if (!request.sessionIsEmpty()) {
+                this.httpSessions.addSession(request.getSession());
             }
 
             ResponseHandler responseHandler = new ResponseHandler(out, response);
@@ -60,6 +59,7 @@ public class RequestHandler implements Runnable {
         controllers.addController(new CreateUserController());
         controllers.addController(new LoginController());
         controllers.addController(new UserListController());
+        controllers.addController(new UserProfileController());
         return controllers;
     }
 }

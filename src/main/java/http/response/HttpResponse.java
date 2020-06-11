@@ -8,7 +8,7 @@ import utils.FileIoUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -67,8 +67,12 @@ public class HttpResponse {
         return this.header.getStatusName();
     }
 
-    public Map<String, String> getCustomHeader() {
+    public CustomHeader getCustomHeader() {
         return this.header.getCustomHeader();
+    }
+
+    public List<String> getCookies() {
+        return this.header.getCookies();
     }
 
     public boolean headerIsNull() {

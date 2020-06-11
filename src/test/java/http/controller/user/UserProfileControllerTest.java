@@ -8,7 +8,6 @@ import http.response.ResponseHeader;
 import model.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.UserData;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,8 +16,8 @@ import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CreateUserControllerTest {
-    private String testFilePath = "./src/test/resources/CreateUserRequest.txt";
+public class UserProfileControllerTest {
+    private String testFilePath = "./src/test/resources/UserProfileRequest.txt";
     private HttpRequest request;
     private HttpResponse response;
     private User user;
@@ -28,18 +27,16 @@ public class CreateUserControllerTest {
         InputStream in = new FileInputStream(new File(testFilePath));
         request = HttpRequest.getInstance(in, new HttpSessions());
         response = new HttpResponse();
-        user = new User("seul", "test", "Eeseul Park", "seul");
     }
 
     @Test
-    void doPostTest() {
-        CreateUserController controller = new CreateUserController();
-        controller.doPost(request, response);
+    void doGet() {
+        UserProfileController controller = new UserProfileController();
+        controller.doGet(request, response);
+
         ResponseHeader responseHeader = response.getHeader();
 
-        assertThat(UserData.getUser("seul")).isEqualTo(user);
-        assertThat(responseHeader.getHttpStatus()).isEqualTo(HttpStatus.FOUND);
+        assertThat(responseHeader.getHttpStatus()).isEqualTo(HttpStatus.OK);
         assertThat(responseHeader.getContentType()).isEqualTo("text/html");
-        assertThat(responseHeader.getCustomHeader().get("Location")).isEqualTo("http://localhost:8080/index.html");
     }
 }

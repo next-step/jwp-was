@@ -14,17 +14,24 @@ public class HttpSessionTest {
 
     @BeforeEach
     void setUp() {
-        httpSession = new HttpSession("sessionIdValue");
+        httpSession = new HttpSession();
+    }
+
+    @Test
+    void createSession() {
+        httpSession.createSessionId();
+
         Map<String, Object> session = httpSession.getSession();
-        session.put(key, value);
-        session.put("key2", "value2");
+        assertThat(session.get("JSESSONID")).isNotNull();
     }
 
     @Test
     void getId() {
+        httpSession.createSessionId();
+
         String sessionId = httpSession.getId();
 
-        assertThat(sessionId).isEqualTo("sessionIdValue");
+        assertThat(sessionId).isNotNull();
     }
 
     @Test
@@ -48,7 +55,10 @@ public class HttpSessionTest {
 
     @Test
     void removeAttribute() {
+        httpSession.createSessionId();
         Map<String, Object> session = httpSession.getSession();
+        session.put(key, value);
+        session.put("key2", "value2");
 
         httpSession.removeAttribute(key);
 
@@ -57,7 +67,10 @@ public class HttpSessionTest {
 
     @Test
     void invalidate() {
+        httpSession.createSessionId();
         Map<String, Object> session = httpSession.getSession();
+        session.put(key, value);
+        session.put("key2", "value2");
 
         httpSession.invalidate();
 

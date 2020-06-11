@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Getter
 public class HttpSession {
@@ -11,9 +12,16 @@ public class HttpSession {
 
     private Map<String, Object> session;
 
-    public HttpSession(String sessionId) {
+    public HttpSession() {
         this.session = new HashMap<>();
-        setAttribute(SESSION_ID, sessionId);
+    }
+
+    public void createSessionId() {
+        setAttribute(SESSION_ID, UUID.randomUUID().toString());
+    }
+
+    public boolean isEmpty() {
+        return session.isEmpty();
     }
 
     public String getId() {

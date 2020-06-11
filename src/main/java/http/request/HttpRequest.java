@@ -1,6 +1,7 @@
 package http.request;
 
 import http.HttpSession;
+import http.HttpSessions;
 import lombok.Getter;
 import utils.ConvertUtils;
 import utils.IOUtils;
@@ -12,9 +13,7 @@ import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 public class HttpRequest {
@@ -34,20 +33,18 @@ public class HttpRequest {
     }
 
     private HttpRequest(RequestLine requestLine, RequestHeader requestHeader, HttpSession session) {
-        this(requestLine, requestHeader, null, session);
+        this(requestLine, requestHeader, new RequestBody(), session);
     }
 
-    public static HttpRequest parse(InputStream inputStream, Map<String, HttpSession> sessionMap) throws IOException {
+    public static HttpRequest getInstance(InputStream inputStream, HttpSessions httpSessions) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, Charset.forName(StandardCharsets.UTF_8.name())));
 
         RequestLine requestLine = RequestLine.parse(br.readLine());
         RequestHeader requestHeader = RequestHeader.parse(br);
-
-        HttpSession session = findSession(requestHeader, sessionMap);
+        HttpSession session = findSession(requestHeader.getRequestCookie(), httpSessions);
 
         if (requestLine.getMethod() == HttpMethod.POST) {
             String body = IOUtils.readData(br, requestHeader.getContentLength());
-
             RequestBody requestBody = RequestBody.parse(URLDecoder.decode(body, CHAR_SET));
             return new HttpRequest(requestLine, requestHeader, requestBody, session);
         }
@@ -84,29 +81,22 @@ public class HttpRequest {
     }
 
     public HttpSession getSession() {
-        if (sessionIsNull()) {
-            this.session = new HttpSession(UUID.randomUUID().toString());
+        if (sessionIsEmpty()) {
+            this.session.createSessionId();
         }
         return this.session;
     }
 
-    public boolean sessionIsNull() {
-        return Objects.isNull(session);
+    public boolean sessionIsEmpty() {
+        return this.session.isEmpty();
     }
 
-    private static HttpSession findSession(RequestHeader requestHeader, Map<String, HttpSession> sessionMap) {
-        RequestCookie cookie = requestHeader.getRequestCookie();
-        if(Objects.isNull(cookie)) {
-            return null;
-        }
-
-        HttpSession session = null;
+    private static HttpSession findSession(RequestCookie cookie, HttpSessions httpSessions) {
         String sessionId = cookie.get(SESSION_ID);
 
-        if (Objects.nonNull(sessionId) && sessionMap.containsKey(sessionId)) {
-            session = sessionMap.get(sessionId);
+        if (Objects.nonNull(sessionId) && httpSessions.containsKey(sessionId)) {
+            return httpSessions.getSession(sessionId);
         }
-
-        return session;
+        return new HttpSession();
     }
 }

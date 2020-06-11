@@ -1,5 +1,6 @@
 package http.controller.user;
 
+import http.HttpSessions;
 import http.HttpStatus;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
@@ -9,8 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.UserData;
 
-import java.io.*;
-import java.util.HashMap;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,7 +26,7 @@ public class UserListControllerTest {
     @BeforeEach
     void setUp() throws IOException {
         InputStream in = new FileInputStream(new File(testFilePath));
-        request = HttpRequest.parse(in, new HashMap<>());
+        request = HttpRequest.getInstance(in, new HttpSessions());
         response = new HttpResponse();
         user = new User("seul", "test", "Eeseul Park", "seul");
 
@@ -31,7 +34,7 @@ public class UserListControllerTest {
     }
 
     @Test
-    void list() throws Exception {
+    void doGet() throws Exception {
         UserListController controller = new UserListController();
         controller.doGet(request, response);
 

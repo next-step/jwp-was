@@ -27,16 +27,16 @@ public class LoginController extends AbstractController {
         if (Objects.isNull(user) || !user.login(userRequestView.getPassword())) {
             response.redirect("/user/login_failed.html");
             response.addCookie("logined", "false");
-            response.addCookie("Path", "/");
             return;
         }
 
         HttpSession session = request.getSession();
+        session.setAttribute("userId", user.getUserId());
+        session.setAttribute("email", user.getEmail());
 
         response.redirect("/index.html");
         response.addCookie(SESSION_ID, session.getId());
         response.addCookie("logined", "true");
-        response.addCookie("Path", "/");
     }
 
     @Override

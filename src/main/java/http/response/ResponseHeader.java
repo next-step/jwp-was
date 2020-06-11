@@ -3,24 +3,26 @@ package http.response;
 import http.HttpStatus;
 import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class ResponseHeader {
     private final static String HOST = "http://localhost:8080";
-    private final static String SET_COOKIE_HEADER = "Set-Cookie";
     private final static String LOCATION_HEADER = "Location";
+    private final static String COOKIE_PATH = "; Path=/";
 
     private HttpStatus httpStatus;
     private String contentType;
     private int contentLength;
-    private Map<String, String> customHeader = new HashMap<>();
+    private CustomHeader customHeader;
+    private List<String> cookies = new ArrayList<>();
 
     private ResponseHeader(HttpStatus httpStatus, String contentType, int contentLength) {
         this.httpStatus = httpStatus;
         this.contentType = contentType;
         this.contentLength = contentLength;
+        this.customHeader = new CustomHeader();
     }
 
     public static ResponseHeader of(HttpStatus httpStatus, String contentType, int contentLength) {
@@ -43,14 +45,10 @@ public class ResponseHeader {
 
     public void setCookie(String key, String value) {
         String cookie = key.concat("=").concat(value);
-        if (customHeader.containsKey(SET_COOKIE_HEADER)) {
-            cookie = customHeader.get(SET_COOKIE_HEADER).concat("; ").concat(cookie);
-        }
-
-        customHeader.put(SET_COOKIE_HEADER, cookie);
+        cookies.add(cookie.concat(COOKIE_PATH));
     }
 
     private void setLocation(String location) {
-        customHeader.put(LOCATION_HEADER, HOST + location);
+        customHeader.add(LOCATION_HEADER, HOST + location);
     }
 }
