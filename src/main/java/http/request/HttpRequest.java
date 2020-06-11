@@ -40,8 +40,8 @@ public class HttpRequest {
     }
 
     private RequestLine parseRequestLine(BufferedReader bufferedReader, String line) throws IOException {
-        int contentLength = requestHeader.getContentLength2();
-        if (requestHeader.getContentLength2() > 0) {
+        int contentLength = requestHeader.getContentLength();
+        if (requestHeader.getContentLength() > 0) {
             String requestBody = IOUtils.readData(bufferedReader, contentLength);
             return RequestLineParser.parse(line, requestBody);
         }
@@ -60,13 +60,16 @@ public class HttpRequest {
         return requestHeader.getHeader(key);
     }
 
+    public boolean isLogin() {
+        return requestHeader.isLogin();
+    }
+
     public String getParameter(String key) {
         return requestLine.getParams().get(key);
     }
 
-    public Map<String, String > getRequestParameters() {
+    public Map<String, String> getRequestParameters() {
         return requestLine.getParams();
     }
-
 
 }

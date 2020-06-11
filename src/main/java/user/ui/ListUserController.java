@@ -29,10 +29,6 @@ public class ListUserController extends BaseController {
         return httpResponse;
     }
 
-    public boolean isLogin(String userId) {
-        return true;
-    }
-
     private byte[] viewListByTemplate(String path, List<User> users) {
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix("/templates");

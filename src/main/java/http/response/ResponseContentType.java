@@ -17,6 +17,6 @@ public enum ResponseContentType {
 
     @Override
     public String toString() {
-        return type+";charset=utf-8";
+        return type + ";charset=utf-8";
     }
 }

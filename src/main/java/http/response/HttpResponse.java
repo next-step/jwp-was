@@ -67,6 +67,19 @@ public class HttpResponse {
         }
     }
 
+    public void forwardTemplateBody() {
+        try {
+            responseOK();
+            responseHeader.addHeader("Host", "localhost:8080");
+            responseHeader.addHeader("Content-Type", ResponseContentType.HTML.toString());
+            responseHeader.addHeader("Content-Length", String.valueOf(body.length));
+            applyHeader();
+            responseBody();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendRedirect(String path) {
         try {
             responseFound();

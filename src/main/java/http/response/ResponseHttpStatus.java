@@ -1,6 +1,6 @@
 package http.response;
 
-public enum  ResponseHttpStatus {
+public enum ResponseHttpStatus {
 
     OK(200, "OK"),
     Found(302, "Found");
@@ -15,6 +15,6 @@ public enum  ResponseHttpStatus {
 
     @Override
     public String toString() {
-        return status + " " + code +"\r\n";
+        return status + " " + code + "\r\n";
     }
 }

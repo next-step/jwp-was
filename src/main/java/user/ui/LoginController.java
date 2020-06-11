@@ -2,7 +2,6 @@ package user.ui;
 
 import controller.BaseController;
 import db.DataBase;
-import http.ResponseObject;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import model.User;

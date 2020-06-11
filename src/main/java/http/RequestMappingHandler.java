@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import user.ui.CreateUserController;
 import user.ui.ListUserController;
 import user.ui.LoginController;
-import user.ui.UserController;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -21,7 +20,6 @@ public class RequestMappingHandler {
     private final HttpRequest httpRequest;
     private final HttpResponse httpResponse;
     private BaseController baseController;
-    private boolean isLogined = false;
 
     public RequestMappingHandler(final BufferedReader bufferedReader, final DataOutputStream dataOutputStream) throws IOException {
         this.httpRequest = new HttpRequest(bufferedReader);
@@ -31,18 +29,10 @@ public class RequestMappingHandler {
 
     private void run() {
         String path = httpRequest.getPath();
-
-        if (path.matches("/user/.*")) {
-            if (path.matches("/user/list.*")) {
-                middleware();
-            }
-        }
-
         if (path.matches("/css/.*") || path.matches("/fonts/.*") || path.matches("/js/.*") || path.matches("/images/*")) {
             httpResponse.forward(path);
             return;
         }
-
         handlerByUserController();
     }
 
@@ -51,18 +41,15 @@ public class RequestMappingHandler {
         String path = httpRequest.getPath();
 
         if (method.equals("GET")) {
-            if (path.equals("/user/login")) {
-                ResponseObject responseObject = UserController.mappingByGetMethod(path);
-                if (responseObject.getCode() == 200) {
-                    httpResponse.addHeader("Set-Cookie", "logined=true; Path=/");
-                    httpResponse.sendRedirect("/index.html");
-                }
-            }
-
             if (path.equals("/user/list")) {
                 baseController = new ListUserController();
+                if (!httpRequest.isLogin()) {
+                    httpResponse.addHeader("Set-Cookie", "logined=false; Path=/");
+                    httpResponse.sendRedirect("/user/login.html");
+                    return;
+                }
                 HttpResponse response = baseController.doGet(httpRequest, httpResponse);
-                response.responseBody();
+                response.forwardTemplateBody();
                 return;
             }
 
@@ -70,13 +57,6 @@ public class RequestMappingHandler {
             return;
         }
         postMethod();
-    }
-
-    private void middleware() {
-        if (!isLogined) {
-            httpResponse.addHeader("Set-Cookie", "logined=false; Path=/");
-            httpResponse.sendRedirect("/user/login.html");
-        }
     }
 
     private void postMethod() {
