@@ -1,35 +1,33 @@
 package utils;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 class ValidUtilsTest {
 
-    @DisplayName("파라미터가 null인 경우 확인")
-    @Test
-    void notNull() {
-
-        // given
-        Object object = null;
+    @DisplayName("파라미터가 null인지 확인")
+    @ParameterizedTest
+    @NullSource
+    void notNull(Object object) {
 
         // when & then
-        assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> ValidUtils.assertNotNull(object))
-                .withMessage("파라미터는 null일 수 없습니다");
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> ValidUtils.assertNotNull(object));
 
     }
 
-    @DisplayName("파라미터가 blank인 경우 확인")
-    @Test
-    void notBlank() {
-
-        // given
-        String value = "";
+    @DisplayName("파라미터가 blank인지 확인")
+    @ParameterizedTest
+    @NullAndEmptySource
+    void notNullAndEmpty(String value) {
 
         // when & then
-        assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatIllegalArgumentException()
                 .isThrownBy(() -> ValidUtils.assertNotBlank(value, "Value must not be blank"));
+
     }
 }
