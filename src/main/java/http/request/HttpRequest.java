@@ -24,8 +24,8 @@ public class HttpRequest {
         this.httpEntity = httpEntity;
     }
 
-    public static HttpRequest parse(BufferedReader br, String request) throws IOException {
-        RequestLine requestLine = RequestLine.parse(request);
+    public static HttpRequest parse(String requestLineStr, BufferedReader br) throws IOException {
+        RequestLine requestLine = RequestLine.parse(requestLineStr);
         HttpHeaders httpHeaders = HttpHeaders.parse(br);
 
         if (HttpMethod.GET.equals(requestLine.getMethod())) {
