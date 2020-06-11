@@ -31,6 +31,10 @@ public class RequestLine {
         return protocol.getVersion();
     }
 
+    public boolean isGet() {
+        return HttpMethod.GET.equals(method);
+    }
+
     public String getParameter(String key) {
         return queryString.getParameter(key);
     }

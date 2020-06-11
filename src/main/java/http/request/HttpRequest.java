@@ -39,14 +39,14 @@ public class HttpRequest {
     }
 
     public String getParameter(String key) {
-        if (HttpMethod.GET.equals(requestLine.getMethod())) {
+        if (requestLine.isGet()) {
             return requestLine.getParameter(key);
         }
         return parameters.get(key);
     }
 
     public Map<String, String> getParameters() {
-        if (HttpMethod.GET.equals(requestLine.getMethod())) {
+        if (requestLine.isGet()) {
             return requestLine.getParameters();
         }
         return parameters;
