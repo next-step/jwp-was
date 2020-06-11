@@ -7,10 +7,10 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import controller.UserController;
 import http.request.HttpRequest;
-import http.response.HttpResponse;
 import http.response.HttpResponse200;
 import http.response.HttpResponse302;
 import http.response.HttpResponse400;
+import http.response.HttpResponse_;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +70,7 @@ public class RequestMappingManager {
     }
 
     public static void execute(HttpRequest httpRequest, DataOutputStream dos) {
-        HttpResponse httpResponse;
+        HttpResponse_ httpResponse;
 
         byte[] body = new byte[0];
         logger.debug("request url: {} - cookie{}", httpRequest.getPath(), httpRequest.getHeader("Cookie"));

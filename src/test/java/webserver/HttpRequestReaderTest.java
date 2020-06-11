@@ -1,9 +1,9 @@
 package webserver;
 
-import http.HttpMethod;
-import http.RequestLine;
+import http.request.HttpMethod;
 import http.request.HttpRequest;
 import http.request.HttpRequestHeader;
+import http.request.RequestLine;
 import mock.MockSocket;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

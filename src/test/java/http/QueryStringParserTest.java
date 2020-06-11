@@ -1,5 +1,7 @@
 package http;
 
+import http.request.QueryString;
+import http.request.QueryStringParser;
 import org.junit.jupiter.api.Test;
 
 import java.security.InvalidParameterException;

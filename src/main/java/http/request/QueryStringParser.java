@@ -1,4 +1,4 @@
-package http;
+package http.request;
 
 import org.apache.logging.log4j.util.Strings;
 

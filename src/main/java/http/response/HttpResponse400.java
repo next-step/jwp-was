@@ -1,8 +1,6 @@
 package http.response;
 
-import http.HttpResponseCode;
-
-public class HttpResponse400 extends HttpResponse {
+public class HttpResponse400 extends HttpResponse_ {
 
     public HttpResponse400(String version) {
         super(HttpResponseCode.NOT_FOUNT, version);

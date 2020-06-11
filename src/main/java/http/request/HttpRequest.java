@@ -1,8 +1,5 @@
 package http.request;
 
-import http.HttpMethod;
-import http.RequestLine;
-
 import java.util.HashMap;
 import java.util.Map;
 
