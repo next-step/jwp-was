@@ -3,19 +3,22 @@ package http.request;
 import http.HttpMethod;
 import http.RequestLine;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest {
-    private final RequestLine requestLine;
+    private RequestLine requestLine;
 
-    private final HttpRequestHeader requestHeaders;
+    private HttpRequestHeader requestHeaders;
 
-    private final Map<String, String> parameters;
+    private Map<String, String> parameters;
 
-    public HttpRequest(RequestLine requestLine, HttpRequestHeader requestHeader, Map<String, String> parameters) {
+    public HttpRequest(final RequestLine requestLine, final HttpRequestHeader requestHeader, final Map<String, String> parameters) {
         this.requestLine = requestLine;
         this.requestHeaders = requestHeader;
         this.parameters = parameters;
+
+        if (this.parameters == null) this.parameters = new HashMap<>();
     }
 
     public HttpMethod getMethod() {

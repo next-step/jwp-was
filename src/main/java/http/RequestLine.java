@@ -1,5 +1,6 @@
 package http;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class RequestLine {
@@ -36,10 +37,10 @@ public class RequestLine {
     }
 
     public String getParameter(String key) {
-        return queryString.getParameter(key);
+        return queryString != null ? queryString.getParameter(key) : null;
     }
 
     public Map<String, String> getParameters() {
-        return queryString.getParameters();
+        return queryString != null ? queryString.getParameters() : new HashMap<>();
     }
 }
