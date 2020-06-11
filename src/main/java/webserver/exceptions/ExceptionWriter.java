@@ -19,7 +19,7 @@ public class ExceptionWriter {
 
         try {
             dos.writeBytes("HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getMessage() + "\r\n");
-            dos.writeBytes("Content-Type: text/plain\r\n");
+            dos.writeBytes("Content-Type: text/plain;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + contentLength + "\r\n");
             dos.writeBytes("\r\n");
             dos.write(body, 0, contentLength);
