@@ -26,27 +26,37 @@ public class Parameters {
 
         for (String v : value.split(PARAMETER_TOKENIZER)) {
             final String[] v1 = v.split(PARAMETER_NAME_VALUE_TOKENIZER);
-            if (v1.length != 2) {
-                throw new IllegalParameterException(value);
-            }
 
-            final String decodedName = UrlUtf8Decoder.decode(v1[0]).trim();
-            final String decodedValue = UrlUtf8Decoder.decode(v1[1]).trim();
+            validateParameterTokenSize(v1, value);
 
-            if (decodedName.isEmpty()) {
-                throw new IllegalParameterException(value);
-            }
+            final String decodedName = decodeWithTrim(v1[0]);
+            final String decodedValue = decodeWithTrim(v1[1]);
 
-            if (decodedValue.isEmpty()) {
-                throw new IllegalParameterException(value);
-            }
+            validateEmptyParameter(decodedName, value);
+            validateEmptyParameter(decodedValue, value);
 
             data.put(decodedName, decodedValue);
         }
     }
 
+    private void validateParameterTokenSize(String[] s, String value) {
+        if (s.length != 2) {
+            throw new IllegalParameterException(value);
+        }
+    }
+
+    private String decodeWithTrim(String s) {
+        return UrlUtf8Decoder.decode(s).trim();
+    }
+
     public String getValue(String name) {
         return data.getOrDefault(name, PARAMETER_DEFAULT_VALUE);
+    }
+
+    private void validateEmptyParameter(String s, String value) {
+        if (s.isEmpty()) {
+            throw new IllegalParameterException(value);
+        }
     }
 
     @Override
