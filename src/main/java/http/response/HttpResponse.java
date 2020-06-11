@@ -17,6 +17,7 @@ public class HttpResponse {
 
     private final DataOutputStream dataOutputStream;
     private final ResponseHeader responseHeader;
+    private byte[] body = new byte[0];
 
     public HttpResponse(final DataOutputStream dataOutputStream) {
         this.dataOutputStream = dataOutputStream;
@@ -30,6 +31,10 @@ public class HttpResponse {
         dataOutputStream.writeBytes("\r\n");
     }
 
+    public void applyBody(byte[] body) {
+        this.body = body;
+    }
+
     public void addHeader(String key, String value) {
         responseHeader.addHeader(key, value);
     }
@@ -37,11 +42,12 @@ public class HttpResponse {
     public void forward(String path) {
         try {
             responseOK();
+            body = readFile("./static/" + path);
             responseHeader.addHeader("Host", "localhost:8080");
             responseHeader.addHeader("Accept", "text/css,*/*;q=0.1");
             responseHeader.addHeader("Connection", "keep-alive");
             applyHeader();
-            responseBody(readFile("./static/" + path));
+            responseBody();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,14 +56,15 @@ public class HttpResponse {
     public void forwardBody(String path) {
         try {
             responseOK();
+            body = readFile("./templates/" + path);
             responseHeader.addHeader("Host", "localhost:8080");
             responseHeader.addHeader("Content-Type", ResponseContentType.HTML.toString());
+            responseHeader.addHeader("Content-Length", String.valueOf(body.length));
             applyHeader();
-            responseBody(readFile("./templates/" + path));
+            responseBody();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public void sendRedirect(String path) {
@@ -71,18 +78,7 @@ public class HttpResponse {
         }
     }
 
-    public void response200Header(int lengthOfBodyContent) {
-        try {
-            responseOK();
-            responseHeader.addHeader("Content-Type", ResponseContentType.HTML.toString());
-            responseHeader.addHeader("Content-Length", String.valueOf(lengthOfBodyContent));
-            applyHeader();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    public void responseBody(byte[] body) {
+    public void responseBody() {
         try {
             dataOutputStream.write(body, 0, body.length);
             dataOutputStream.flush();

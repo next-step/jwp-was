@@ -1,22 +1,18 @@
 package http;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
+import controller.BaseController;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import user.ui.CreateUserController;
+import user.ui.ListUserController;
+import user.ui.LoginController;
 import user.ui.UserController;
-import utils.FileIoUtils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.List;
 
 public class RequestMappingHandler {
 
@@ -24,6 +20,7 @@ public class RequestMappingHandler {
 
     private final HttpRequest httpRequest;
     private final HttpResponse httpResponse;
+    private BaseController baseController;
     private boolean isLogined = false;
 
     public RequestMappingHandler(final BufferedReader bufferedReader, final DataOutputStream dataOutputStream) throws IOException {
@@ -41,8 +38,9 @@ public class RequestMappingHandler {
             }
         }
 
-        if (path.matches("/css/.*")) {
+        if (path.matches("/css/.*") || path.matches("/fonts/.*") || path.matches("/js/.*") || path.matches("/images/*")) {
             httpResponse.forward(path);
+            return;
         }
 
         handlerByUserController();
@@ -53,8 +51,8 @@ public class RequestMappingHandler {
         String path = httpRequest.getPath();
 
         if (method.equals("GET")) {
-            ResponseObject responseObject = UserController.mappingByGetMethod(path);
             if (path.equals("/user/login")) {
+                ResponseObject responseObject = UserController.mappingByGetMethod(path);
                 if (responseObject.getCode() == 200) {
                     httpResponse.addHeader("Set-Cookie", "logined=true; Path=/");
                     httpResponse.sendRedirect("/index.html");
@@ -62,17 +60,16 @@ public class RequestMappingHandler {
             }
 
             if (path.equals("/user/list")) {
-                byte[] body = viewListByTemplate(responseObject);
-                httpResponse.response200Header(body.length);
-                httpResponse.responseBody(body);
+                baseController = new ListUserController();
+                HttpResponse response = baseController.doGet(httpRequest, httpResponse);
+                response.responseBody();
+                return;
             }
 
-            handlerGetMethod(responseObject);
+            httpResponse.forwardBody(path);
             return;
         }
-
-        ResponseObject responseObject = UserController.mappingByPostMethod(path, httpRequest.getRequestParameters());
-        handlerPostMethod(responseObject, path);
+        postMethod();
     }
 
     private void middleware() {
@@ -82,56 +79,16 @@ public class RequestMappingHandler {
         }
     }
 
-    private void handlerGetMethod(ResponseObject responseObject) {
-        byte[] body = getForm(responseObject.getRequestPath());
-        httpResponse.response200Header(body.length);
-        httpResponse.responseBody(body);
-    }
-
-    private void handlerPostMethod(ResponseObject responseObject, String path) {
-        if (path.equals("/user/login")) {
-            if (responseObject.getCode() == 200) {
-                httpResponse.addHeader("Set-Cookie", "logined=true; Path=/");
-                httpResponse.sendRedirect("/index.html");
-            }
-            httpResponse.addHeader("Set-Cookie", "logined=false; Path=/");
-            httpResponse.sendRedirect("/user/login.html");
-        }
-
+    private void postMethod() {
+        String path = httpRequest.getPath();
         if (path.equals("/user/create")) {
-            if (responseObject.getCode() == 302) {
-                httpResponse.sendRedirect(responseObject.getLocation());
-            }
+            baseController = new CreateUserController();
+            baseController.doPost(httpRequest, httpResponse);
+        }
+
+        if (path.equals("/user/login")) {
+            baseController = new LoginController();
+            baseController.doPost(httpRequest, httpResponse);
         }
     }
-
-    private byte[] getForm(String filePath) {
-        try {
-            return viewByUserForm(filePath);
-        } catch (IOException | URISyntaxException | NullPointerException e) {
-            throw new IllegalArgumentException("Not Found Path");
-        }
-    }
-
-    private byte[] viewByUserForm(String path) throws IOException, URISyntaxException {
-        return FileIoUtils.loadFileFromClasspath(path);
-    }
-
-    private byte[] viewListByTemplate(ResponseObject responseObject) {
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".html");
-        Handlebars handlebars = new Handlebars(loader);
-
-        Template template = null;
-        try {
-            template = handlebars.compile(responseObject.getRequestPath());
-            List<User> users = (List<User>) responseObject.getData();
-            String listPage = template.apply(users);
-            return listPage.getBytes();
-        } catch (IOException e) {
-            throw new IllegalArgumentException("template error");
-        }
-    }
-
 }
