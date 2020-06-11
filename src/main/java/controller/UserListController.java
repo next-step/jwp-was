@@ -55,8 +55,4 @@ public class UserListController extends AbstractController {
         return "true".equals(logined);
     }
 
-    @Override
-    protected void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
-    }
-
 }

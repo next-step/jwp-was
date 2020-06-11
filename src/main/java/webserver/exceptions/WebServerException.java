@@ -1,5 +1,7 @@
 package webserver.exceptions;
 
+import http.response.StatusCode;
+
 public class WebServerException extends RuntimeException {
 
     private ErrorMessage errorMessage;
@@ -14,8 +16,8 @@ public class WebServerException extends RuntimeException {
         this.errorMessage = errorMessage;
     }
 
-    public ErrorMessage getErrorMessage() {
-        return errorMessage;
+    public StatusCode getStatusCode() {
+        return errorMessage.getStatusCode();
     }
 
 }
