@@ -23,7 +23,7 @@ public class RequestURI {
             this.queryString = QueryString.of(uriMatcher.group("query"));
         } else {
             this.path = requestURI;
-            this.queryString = QueryString.of(null);
+            this.queryString = QueryString.ofNull();
         }
     }
 
@@ -33,6 +33,10 @@ public class RequestURI {
 
     public String getQueryString() {
         return queryString.toString();
+    }
+
+    public QueryString getQuery() {
+        return this.queryString;
     }
 
     @Override
