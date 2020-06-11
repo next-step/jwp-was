@@ -1,5 +1,6 @@
 package webserver;
 
+import http.HttpSessions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +35,9 @@ public class WebServer {
 
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
+            HttpSessions httpSessions = new HttpSessions();
             while ((connection = listenSocket.accept()) != null) {
-                threadPoolExecutor.execute(new RequestHandler(connection));
+                threadPoolExecutor.execute(new RequestHandler(connection, httpSessions));
             }
         }
     }

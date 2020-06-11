@@ -23,9 +23,9 @@ public class RequestHandler implements Runnable {
     private Socket connection;
     private HttpSessions httpSessions;
 
-    public RequestHandler(Socket connectionSocket) {
+    public RequestHandler(Socket connectionSocket, HttpSessions httpSessions) {
         this.connection = connectionSocket;
-        this.httpSessions = new HttpSessions();
+        this.httpSessions = httpSessions;
     }
 
     public void run() {

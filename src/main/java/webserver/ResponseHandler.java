@@ -15,6 +15,7 @@ public class ResponseHandler {
     private static final String PROTOCOL = "HTTP/1.1 ";
     private static final String CONTENT_TYPE = "Content-Type: ";
     private static final String CONTENT_LENGTH = "Content-Length: ";
+    private final static String SET_COOKIE_HEADER = "Set-Cookie: ";
 
     private DataOutputStream dos;
     private HttpResponse response;
@@ -51,6 +52,10 @@ public class ResponseHandler {
                 String key = headerEntry.getKey();
                 String value = headerEntry.getValue();
                 dos.writeBytes(key + ": " + value + "\r\n");
+            }
+
+            for (String cookie : response.getCookies()) {
+                dos.writeBytes(SET_COOKIE_HEADER + cookie + "\r\n");
             }
 
             dos.writeBytes("\r\n");
