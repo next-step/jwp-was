@@ -23,20 +23,6 @@ public class RequestLine {
     private Protocol protocol;
     private Map<String, String> queryParameters;
 
-    public static RequestLine of(String requestLine) {
-        assertNotBlank(requestLine, "http request line은 null일 수 없습니다");
-
-        String[] split = requestLine.split(BLANK);
-        HttpMethod method = HttpMethod.resolve(split[0]);
-        String url = split[1];
-
-        String protocolNameAndVersion = split[2];
-        Protocol protocol = new Protocol(protocolNameAndVersion);
-        Map<String, String> queryParameters = parseQueryString(url);
-
-        return new RequestLine(method, url, protocol, queryParameters);
-    }
-
     public RequestLine(HttpMethod method, String url, Protocol protocol, Map<String, String> queryParameters) {
         assertNotNull(method, "http method는 null일 수 없습니다");
         assertNotBlank(url, "http url은 blank일 수 없습니다");
@@ -46,6 +32,20 @@ public class RequestLine {
         this.url = url;
         this.protocol = protocol;
         this.queryParameters = queryParameters;
+    }
+
+    public static RequestLine of(String requestLine) {
+        assertNotBlank(requestLine, "http request line은 null일 수 없습니다");
+
+        String[] split = requestLine.split(BLANK);
+        HttpMethod method = HttpMethod.resolve(split[0]);
+        String url = split[1];
+
+        String protocolNameAndVersion = split[2];
+        Protocol protocol = Protocol.of(protocolNameAndVersion);
+        Map<String, String> queryParameters = parseQueryString(url);
+
+        return new RequestLine(method, url, protocol, queryParameters);
     }
 
     private static Map<String, String> parseQueryString(String url) {
