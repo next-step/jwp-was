@@ -17,6 +17,7 @@ public class RequestLine {
     private static final String URL_SEPARATOR = "\\?";
     private static final String ENTRY_SEPARATOR = "&";
     private static final String KEY_VALUE_SEPARATOR = "=";
+    private static final String STATIC_FILE_ROOT_LOCATION = "./templates";
 
     private HttpMethod method;
     private String url;
@@ -68,5 +69,9 @@ public class RequestLine {
 
     public Map<String, String> getQueryParameters() {
         return Collections.unmodifiableMap(queryParameters);
+    }
+
+    public String getPath() {
+        return STATIC_FILE_ROOT_LOCATION + url;
     }
 }

@@ -76,4 +76,20 @@ public class RequestLineTest {
         // then
         assertThat(requestLine.getQueryParameters()).isEmpty();
     }
+
+    @DisplayName("정적파일의 위치 반환")
+    @Test
+    void getPath() {
+
+        // given
+        String url = "/index.html";
+        String requestLineText = "GET " + url + " HTTP/1.1";
+        RequestLine requestLine = RequestLine.of(requestLineText);
+
+        // when
+        String path = requestLine.getPath();
+
+        // then
+        assertThat(path).isEqualTo("./templates" + url);
+    }
 }
