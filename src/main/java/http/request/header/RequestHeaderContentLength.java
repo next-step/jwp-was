@@ -1,4 +1,4 @@
-package http.header;
+package http.request.header;
 
 public class RequestHeaderContentLength {
     private final int contentLength;

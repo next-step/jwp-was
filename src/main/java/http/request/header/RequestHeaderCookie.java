@@ -1,4 +1,4 @@
-package http.header;
+package http.request.header;
 
 import http.CookieTranslator;
 

@@ -4,7 +4,6 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import http.header.RequestHeader;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import model.User;
@@ -12,15 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import user.ui.UserController;
 import utils.FileIoUtils;
-import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class RequestMappingHandler {
 

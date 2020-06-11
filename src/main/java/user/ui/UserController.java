@@ -1,7 +1,6 @@
 package user.ui;
 
 import db.DataBase;
-import http.RequestLine;
 import http.ResponseObject;
 import model.User;
 import org.slf4j.Logger;

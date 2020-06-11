@@ -1,9 +1,6 @@
 package http.request;
 
-import http.RequestLine;
-import http.RequestLineParser;
-import http.RequestMappingHandler;
-import http.header.RequestHeader;
+import http.request.header.RequestHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;

@@ -1,4 +1,4 @@
-package http.header;
+package http.request.header;
 
 import java.util.Map;
 import java.util.Objects;
