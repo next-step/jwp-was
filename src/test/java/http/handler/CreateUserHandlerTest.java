@@ -25,7 +25,7 @@ class CreateUserHandlerTest {
 
     @Test
     void testGetHttpResponse() throws IOException, URISyntaxException {
-        RequestLine requestLine = RequestLine.of(POST.name() + " " + HandlerMapper.CREATE_USER.getUrl() + " HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse(POST.name() + " " + HandlerMapper.CREATE_USER.getUrl() + " HTTP/1.1");
         String body = "userId=ninjasul&password=1234&name=%EB%B0%95%EB%8F%99%EC%97%BD&email=ninjasul%40gmail.com";
 
         HttpRequest httpRequest = new HttpRequest(requestLine, new HttpEntity(HttpHeaders.EMPTY, body));

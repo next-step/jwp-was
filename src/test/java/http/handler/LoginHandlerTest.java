@@ -32,7 +32,7 @@ class LoginHandlerTest {
     void testGetHttpResponseForLoginSuccessUser() throws IOException, URISyntaxException {
         addUserToDataBase();
 
-        RequestLine requestLine = RequestLine.of(POST.name() + " " + HandlerMapper.LOGIN.getUrl() + " HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse(POST.name() + " " + HandlerMapper.LOGIN.getUrl() + " HTTP/1.1");
         String body = "userId=ninjasul&password=1234";
 
         HttpRequest httpRequest = new HttpRequest(requestLine, new HttpEntity(HttpHeaders.EMPTY, body));
@@ -60,7 +60,7 @@ class LoginHandlerTest {
     void testGetHttpResponseForLoginFailedUser(String body) throws IOException, URISyntaxException {
         addUserToDataBase();
 
-        RequestLine requestLine = RequestLine.of(POST.name() + " " + HandlerMapper.LOGIN.getUrl() + " HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse(POST.name() + " " + HandlerMapper.LOGIN.getUrl() + " HTTP/1.1");
         HttpRequest httpRequest = new HttpRequest(requestLine, new HttpEntity(HttpHeaders.EMPTY, body));
 
         Handler handler = new LoginHandler();

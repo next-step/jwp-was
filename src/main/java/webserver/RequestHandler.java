@@ -1,10 +1,8 @@
 package webserver;
 
-import http.common.HttpHeaders;
 import http.handler.Handler;
 import http.handler.mapper.HandlerMapper;
 import http.request.HttpRequest;
-import http.request.requestline.RequestLine;
 import http.response.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import utils.StringUtils;
@@ -31,22 +29,20 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            String request = br.readLine();
-            log.debug("request: {}", request);
 
-            if (Objects.isNull(request)) {
+            String requestLineStr = br.readLine();
+            log.debug("requestLine: {}", requestLineStr);
+
+            if (Objects.isNull(requestLineStr)) {
                 return;
             }
 
-            RequestLine requestLine = RequestLine.of(request);
-            log.debug("path: {}", requestLine.getPath());
-
-            HttpRequest httpRequest = HttpRequest.of(br, requestLine, HttpHeaders.of(br));
+            HttpRequest httpRequest = HttpRequest.parse(requestLineStr, br);
             log.debug("httpRequest: {}", StringUtils.toPrettyJson(httpRequest));
 
-            Handler handler = HandlerMapper.getHandler(requestLine.getPath());
+            Handler handler = HandlerMapper.getHandler(httpRequest.getPath());
             HttpResponse httpResponse = handler.getHttpResponse(httpRequest);
-            handler.writeHttpResponse(dos, httpResponse);
+            ResponseHandler.writeHttpResponse(dos, httpResponse);
 
             log.debug("httpResponse: {}", StringUtils.toPrettyJson(httpResponse));
         }

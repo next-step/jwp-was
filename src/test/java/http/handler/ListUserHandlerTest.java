@@ -27,7 +27,7 @@ class ListUserHandlerTest {
 
     @Test
     void testGetHttpResponseForLoginedUser() throws IOException, URISyntaxException {
-        RequestLine requestLine = RequestLine.of(GET.name() + " " + HandlerMapper.LIST_USER.getUrl() + " HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse(GET.name() + " " + HandlerMapper.LIST_USER.getUrl() + " HTTP/1.1");
 
         HttpHeaders httpHeaders = getLoginedHttpHeaders();
         HttpRequest httpRequest = new HttpRequest(requestLine, new HttpEntity(httpHeaders, Strings.EMPTY));
@@ -50,7 +50,7 @@ class ListUserHandlerTest {
 
     @Test
     void testGetHttpResponseForNotLoginedUser() throws IOException, URISyntaxException {
-        RequestLine requestLine = RequestLine.of(GET.name() + " " + HandlerMapper.LIST_USER.getUrl() + " HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse(GET.name() + " " + HandlerMapper.LIST_USER.getUrl() + " HTTP/1.1");
 
         HttpHeaders httpHeaders = getNotLoginedHttpHeaders();
         HttpRequest httpRequest = new HttpRequest(requestLine, new HttpEntity(httpHeaders, Strings.EMPTY));

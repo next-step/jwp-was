@@ -24,13 +24,16 @@ public class HttpRequest {
         this.httpEntity = httpEntity;
     }
 
-    public static HttpRequest of(BufferedReader br, RequestLine requestLine, HttpHeaders httpHeaders) throws IOException {
+    public static HttpRequest parse(String requestLineStr, BufferedReader br) throws IOException {
+        RequestLine requestLine = RequestLine.parse(requestLineStr);
+        HttpHeaders httpHeaders = HttpHeaders.parse(br);
+
         if (HttpMethod.GET.equals(requestLine.getMethod())) {
-            return HttpRequest.ofGet(requestLine, httpHeaders);
+            return HttpRequest.fromGet(requestLine, httpHeaders);
         }
 
         String httpBody = getHttpBody(br, StringUtils.toInt(httpHeaders.getHeaderValue(CONTENT_LENGTH_NAME)));
-        return HttpRequest.ofPost(requestLine, httpHeaders, httpBody);
+        return HttpRequest.fromPost(requestLine, httpHeaders, httpBody);
     }
 
     private static String getHttpBody(BufferedReader br, int contentLength) throws IOException {
@@ -41,18 +44,11 @@ public class HttpRequest {
         return httpBody;
     }
 
-    private static HttpRequest ofGet(
-        RequestLine requestLine,
-        HttpHeaders httpHeaders
-    ) {
+    private static HttpRequest fromGet(RequestLine requestLine, HttpHeaders httpHeaders) {
         return new HttpRequest(requestLine, new HttpEntity(httpHeaders));
     }
 
-    private static HttpRequest ofPost(
-        RequestLine requestLine,
-        HttpHeaders httpHeaders,
-        String httpBody
-    ) {
+    private static HttpRequest fromPost(RequestLine requestLine, HttpHeaders httpHeaders, String httpBody) {
         return new HttpRequest(requestLine, new HttpEntity(httpHeaders, httpBody));
     }
 
