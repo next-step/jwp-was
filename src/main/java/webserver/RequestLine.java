@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
@@ -24,7 +23,21 @@ public class RequestLine {
     private Protocol protocol;
     private Map<String, String> queryParameters;
 
-    public RequestLine(HttpMethod method, String url, Protocol protocol) {
+    public static RequestLine of(String requestLine) {
+        assertNotBlank(requestLine, "http request line은 null일 수 없습니다");
+
+        String[] split = requestLine.split(BLANK);
+        HttpMethod method = HttpMethod.resolve(split[0]);
+        String url = split[1];
+
+        String protocolNameAndVersion = split[2];
+        Protocol protocol = new Protocol(protocolNameAndVersion);
+        Map<String, String> queryParameters = parseQueryString(url);
+
+        return new RequestLine(method, url, protocol, queryParameters);
+    }
+
+    public RequestLine(HttpMethod method, String url, Protocol protocol, Map<String, String> queryParameters) {
         assertNotNull(method, "http method는 null일 수 없습니다");
         assertNotBlank(url, "http url은 blank일 수 없습니다");
         assertNotNull(protocol, "프로토콜 정보가 null일 수 없습니다");
@@ -32,22 +45,10 @@ public class RequestLine {
         this.method = method;
         this.url = url;
         this.protocol = protocol;
-        queryParameters = new HashMap<>();
+        this.queryParameters = queryParameters;
     }
 
-    public RequestLine(String requestLine) {
-        assertNotBlank(requestLine, "http request line은 null일 수 없습니다");
-
-        String[] split = requestLine.split(BLANK);
-        this.method = HttpMethod.resolve(split[0]);
-        this.url = split[1];
-
-        String protocolNameAndVersion = split[2];
-        this.protocol = new Protocol(protocolNameAndVersion);
-        this.queryParameters = parseQueryString(url);
-    }
-
-    private Map<String, String> parseQueryString(String url) {
+    private static Map<String, String> parseQueryString(String url) {
         assertNotBlank(url, "http url은 blank일 수 없습니다");
 
         String[] queryString = url.split(URL_SEPARATOR);
@@ -60,7 +61,7 @@ public class RequestLine {
                 .collect(toMap(entry -> entry[0], entry -> entry[1]));
     }
 
-    private boolean isNonExistent(String[] queryString) {
+    private static boolean isNonExistent(String[] queryString) {
         assertNotNull(queryString);
         return queryString.length <= 1;
     }
