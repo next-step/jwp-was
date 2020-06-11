@@ -27,6 +27,7 @@ public class HttpResponse {
         for (final Map.Entry<String, String> entry : responseHeader.getHeader().entrySet()) {
             dataOutputStream.writeBytes(entry.getKey() + ": " + entry.getValue() + "\r\n");
         }
+        dataOutputStream.writeBytes("\r\n");
     }
 
     public void addHeader(String key, String value) {
@@ -82,7 +83,7 @@ public class HttpResponse {
     }
 
     private void responseOK() throws IOException {
-        dataOutputStream.writeBytes(String.format(BASIC_REQUEST, BASIC_PROTOCOL, ResponseHttpStatus.Found.toString()));
+        dataOutputStream.writeBytes(String.format(BASIC_REQUEST, BASIC_PROTOCOL, ResponseHttpStatus.OK.toString()));
     }
 
     private void responseFound() throws IOException {

@@ -5,6 +5,7 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import http.header.RequestHeader;
+import http.request.HttpRequest;
 import http.response.HttpResponse;
 import model.User;
 import org.slf4j.Logger;
@@ -22,92 +23,45 @@ import java.util.List;
 import java.util.Objects;
 
 public class RequestMappingHandler {
-    private static final int MIN_CONTENT_LENGTH = 0;
-    private static final String END_OF_LINE = "";
 
     private static final Logger logger = LoggerFactory.getLogger(RequestMappingHandler.class);
 
-    private final BufferedReader bufferedReader;
+    private final HttpRequest httpRequest;
     private final HttpResponse httpResponse;
-    private RequestHeader requestHeader;
     private boolean isLogined = false;
 
     public RequestMappingHandler(final BufferedReader bufferedReader, final DataOutputStream dataOutputStream) throws IOException {
-        this.bufferedReader = bufferedReader;
+        this.httpRequest = new HttpRequest(bufferedReader);
         this.httpResponse = new HttpResponse(dataOutputStream);
-        read();
+        run();
     }
 
-    private void read() throws IOException {
-        String readLine = bufferedReader.readLine();
-        String firstLine = readLine;
-        int contentLength = MIN_CONTENT_LENGTH;
-        logger.debug(readLine);
-        StringBuilder stringBuilder = new StringBuilder();
-
-        while (!END_OF_LINE.equals(readLine)) {
-            readLine = bufferedReader.readLine();
-//            requestHeader = new RequestHeader(readLine);
-            isLogined = requestHeader.isLogined();
-            contentLength = Math.max(contentLength, requestHeader.getContentLength());
-
-            logger.debug(readLine);
-
-            stringBuilder.append(readLine).append("\n");
-        }
-
-        System.out.println(stringBuilder.toString());
-        String[] a = stringBuilder.toString().split("\n");
-        System.out.println(Arrays.toString(a));
-        System.out.println();
-        if (contentLength > 0) {
-            String requestBody = IOUtils.readData(bufferedReader, contentLength);
-            handler(firstLine, requestBody);
-            return;
-        }
-        handler(firstLine);
-    }
-
-    private void handler(String readLine, String requestBody) {
-        RequestLine requestLine = RequestLineParser.parse(readLine, requestBody);
-        String path = requestLine.getPath();
-        if (path.matches("/user/.*")) {
-            handlerByUserController(requestLine);
-        }
-    }
-
-    private void handler(String readLine) {
-        RequestLine requestLine = RequestLineParser.parse(readLine);
-        String path = requestLine.getPath();
-
-        if (path.equals("/index.html")) {
-            byte[] body = getForm("./templates/index.html");
-            httpResponse.response200Header(body.length);
-            httpResponse.responseBody(body);
-        }
+    private void run() {
+        String path = httpRequest.getPath();
 
         if (path.matches("/user/.*")) {
             if (path.matches("/user/list.*")) {
                 middleware();
             }
-            handlerByUserController(requestLine);
         }
 
         if (path.matches("/css/.*")) {
-            byte[] body = getForm("./static/" + path);
-            httpResponse.responseHeaderByCss();
-            httpResponse.responseBody(body);
+            httpResponse.forward(path);
         }
+
+        handlerByUserController();
     }
 
-    private void handlerByUserController(RequestLine requestLine) {
-        String method = requestLine.getMethodName();
-        String path = requestLine.getPath();
+    private void handlerByUserController() {
+        String method = httpRequest.getMethod();
+        String path = httpRequest.getPath();
+
         if (method.equals("GET")) {
-            ResponseObject responseObject = UserController.mappingByGetMethod(requestLine.getPath());
+            ResponseObject responseObject = UserController.mappingByGetMethod(path);
             if (path.equals("/user/login")) {
                 if (responseObject.getCode() == 200) {
-                    httpResponse.responseHeaderByLoginSuccess();
+                    httpResponse.addHeader("Set-Cookie", "logined=true; Path=/");
+                    httpResponse.sendRedirect("/index.html");
                 }
             }
 
@@ -121,13 +75,14 @@ public class RequestMappingHandler {
             return;
         }
 
-        ResponseObject responseObject = UserController.mappingByPostMethod(requestLine.getPath(), requestLine.getParams());
-        handlerPostMethod(responseObject, requestLine.getPath());
+        ResponseObject responseObject = UserController.mappingByPostMethod(path, httpRequest.getRequestParameters());
+        handlerPostMethod(responseObject, path);
     }
 
     private void middleware() {
         if (!isLogined) {
-            httpResponse.response302Header("/user/login.html");
+            httpResponse.addHeader("Set-Cookie", "logined=false; Path=/");
+            httpResponse.sendRedirect("/user/login.html");
         }
     }
 
@@ -140,14 +95,16 @@ public class RequestMappingHandler {
     private void handlerPostMethod(ResponseObject responseObject, String path) {
         if (path.equals("/user/login")) {
             if (responseObject.getCode() == 200) {
-                httpResponse.responseHeaderByLoginSuccess();
+                httpResponse.addHeader("Set-Cookie", "logined=true; Path=/");
+                httpResponse.sendRedirect("/index.html");
             }
-            httpResponse.response302HeaderByLoginFail(responseObject.getLocation());
+            httpResponse.addHeader("Set-Cookie", "logined=false; Path=/");
+            httpResponse.sendRedirect("/user/login.html");
         }
 
         if (path.equals("/user/create")) {
             if (responseObject.getCode() == 302) {
-                httpResponse.response302Header(responseObject.getLocation());
+                httpResponse.sendRedirect(responseObject.getLocation());
             }
         }
     }
@@ -181,17 +138,4 @@ public class RequestMappingHandler {
         }
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final RequestMappingHandler that = (RequestMappingHandler) o;
-        return Objects.equals(bufferedReader, that.bufferedReader) &&
-                Objects.equals(httpResponse, that.httpResponse);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(bufferedReader, httpResponse);
-    }
 }

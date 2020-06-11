@@ -15,6 +15,6 @@ public enum  ResponseHttpStatus {
 
     @Override
     public String toString() {
-        return status + " " + code;
+        return status + " " + code +"\r\n";
     }
 }

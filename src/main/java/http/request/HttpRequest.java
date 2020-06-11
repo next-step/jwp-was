@@ -2,7 +2,10 @@ package http.request;
 
 import http.RequestLine;
 import http.RequestLineParser;
+import http.RequestMappingHandler;
 import http.header.RequestHeader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -12,12 +15,14 @@ import java.util.Map;
 
 public class HttpRequest {
     private static final String SEPARATOR_HEADER = ":";
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
 
     private RequestLine requestLine;
     private RequestHeader requestHeader;
 
     public HttpRequest(BufferedReader bufferedReader) throws IOException {
         String readLine = bufferedReader.readLine();
+        logger.debug(readLine);
         this.requestHeader = new RequestHeader(createHeaders(bufferedReader));
         this.requestLine = parseRequestLine(bufferedReader, readLine);
     }
@@ -26,6 +31,7 @@ public class HttpRequest {
         Map<String, String> headers = new HashMap<>();
         String readLine = bufferedReader.readLine();
         while (!"".equals(readLine)) {
+            logger.debug(readLine);
             String[] lines = readLine.split(SEPARATOR_HEADER);
             headers.put(lines[0].trim(), lines[1].trim());
             readLine = bufferedReader.readLine();
@@ -59,6 +65,10 @@ public class HttpRequest {
 
     public String getParameter(String key) {
         return requestLine.getParams().get(key);
+    }
+
+    public Map<String, String > getRequestParameters() {
+        return requestLine.getParams();
     }
 
 
