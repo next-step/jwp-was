@@ -1,6 +1,7 @@
 package webserver;
 
 import http.request.HttpRequest;
+import http.response.CustomHeader;
 import http.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Map;
 
 public class ResponseHandler {
     private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
@@ -48,10 +48,9 @@ public class ResponseHandler {
             dos.writeBytes(CONTENT_TYPE + response.getContentType() + "\r\n");
             dos.writeBytes(CONTENT_LENGTH + response.getContentLength() + "\r\n");
 
-            for (Map.Entry<String, String> headerEntry : response.getCustomHeader().entrySet()) {
-                String key = headerEntry.getKey();
-                String value = headerEntry.getValue();
-                dos.writeBytes(key + ": " + value + "\r\n");
+            CustomHeader customHeader = response.getCustomHeader();
+            for (String headers : customHeader.getList()) {
+                dos.writeBytes(headers + "\r\n");
             }
 
             for (String cookie : response.getCookies()) {

@@ -1,10 +1,13 @@
 package http.response;
 
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Getter
 public class CustomHeader {
     private Map<String, String> customHeader;
 
