@@ -4,9 +4,7 @@ import http.HttpStatus;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 public class ResponseHeader {
@@ -17,13 +15,14 @@ public class ResponseHeader {
     private HttpStatus httpStatus;
     private String contentType;
     private int contentLength;
-    private Map<String, String> customHeader = new HashMap<>();
+    private CustomHeader customHeader;
     private List<String> cookies = new ArrayList<>();
 
     private ResponseHeader(HttpStatus httpStatus, String contentType, int contentLength) {
         this.httpStatus = httpStatus;
         this.contentType = contentType;
         this.contentLength = contentLength;
+        this.customHeader = new CustomHeader();
     }
 
     public static ResponseHeader of(HttpStatus httpStatus, String contentType, int contentLength) {
@@ -50,6 +49,6 @@ public class ResponseHeader {
     }
 
     private void setLocation(String location) {
-        customHeader.put(LOCATION_HEADER, HOST + location);
+        customHeader.add(LOCATION_HEADER, HOST + location);
     }
 }
