@@ -7,12 +7,15 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HttpRequestTest {
+public class HttpRequestRestTemplateTest {
+
     @Test
-    void request_resttemplate() {
+    void request_restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         String resourceUrl = "https://edu.nextstep.camp";
+
         ResponseEntity<String> response = restTemplate.getForEntity(resourceUrl + "/c/4YUvqn9V", String.class);
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }

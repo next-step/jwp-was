@@ -1,16 +1,22 @@
 package webserver;
 
-import java.io.DataOutputStream;
+import controller.Controller;
+import controller.ControllerMapper;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
+import lombok.extern.slf4j.Slf4j;
+import utils.FileIoUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.URISyntaxException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+@Slf4j
 public class RequestHandler implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+
+    private static final ControllerMapper CONTROLLER_MAPPER = new ControllerMapper();
 
     private Socket connection;
 
@@ -18,38 +24,28 @@ public class RequestHandler implements Runnable {
         this.connection = connectionSocket;
     }
 
+    @Override
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
+        log.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
-        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
+        try (InputStream inputStream = connection.getInputStream(); OutputStream outputStream = connection.getOutputStream()) {
+            HttpRequest httpRequest = HttpRequest.from(inputStream);
+            HttpResponse httpResponse = HttpResponse.of(outputStream, httpRequest);
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
+            if (httpRequest.hasPathFileExtension()) {
+                byte[] responseBody = FileIoUtils.loadFileFromClasspath(httpRequest.getFilePath());
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+                httpResponse.updateResponseBodyContent(responseBody);
+                httpResponse.flush();
+                return;
+            }
+
+            Controller controller = CONTROLLER_MAPPER.findController(httpRequest.getUri());
+            controller.execute(httpRequest, httpResponse);
+
+            httpResponse.flush();
+        } catch (IOException | URISyntaxException | IllegalArgumentException e) {
+            log.error(e.getMessage());
         }
     }
 }
