@@ -13,7 +13,7 @@ import java.util.Objects;
 public class Parameters {
     private static final String PARAMETER_TOKENIZER = "&";
     private static final String PARAMETER_NAME_VALUE_TOKENIZER = "=";
-    private static final String PARAMETER_DEFAULT_VALUE = Strings.EMPTY;
+    private static final String PARAMETER_DEFAULT_VALUE = "";
 
     private final Map<String, String> data;
 
