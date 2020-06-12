@@ -1,16 +1,16 @@
-package http;
+package http.common;
 
 import java.util.Objects;
 
 public class ProtocolAndVersion {
 
-    private String protocol;
-    private String version;
+    private final String protocol;
+    private final String version;
 
     private static final String PROTOCOL_TOKENIZER = "/";
 
     public ProtocolAndVersion(String protocolAndVersion) {
-        String[] result = protocolAndVersion.split(PROTOCOL_TOKENIZER);
+        final String[] result = protocolAndVersion.split(PROTOCOL_TOKENIZER);
         this.protocol = result[0];
         this.version = result[1];
     }

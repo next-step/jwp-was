@@ -17,10 +17,6 @@ public class User {
         return userId;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public String getName() {
         return name;
     }
@@ -32,5 +28,12 @@ public class User {
     @Override
     public String toString() {
         return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
+    }
+
+    public boolean matchPassword(String password) {
+        if (password == null) {
+            return false;
+        }
+        return this.password.equals(password);
     }
 }
