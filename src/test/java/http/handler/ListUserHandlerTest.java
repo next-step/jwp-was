@@ -3,7 +3,7 @@ package http.handler;
 import com.google.common.collect.Maps;
 import http.common.HttpEntity;
 import http.common.HttpHeaders;
-import http.handler.mapper.HandlerMapper;
+import http.handler.mapper.Dispatcher;
 import http.request.HttpRequest;
 import http.request.requestline.RequestLine;
 import http.response.HttpResponse;
@@ -27,13 +27,14 @@ class ListUserHandlerTest {
 
     @Test
     void testGetHttpResponseForLoginedUser() throws IOException, URISyntaxException {
-        RequestLine requestLine = RequestLine.parse(GET.name() + " " + HandlerMapper.LIST_USER.getUrl() + " HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse(GET.name() + " " + Dispatcher.LIST_USER_URL + " HTTP/1.1");
 
         HttpHeaders httpHeaders = getLoginedHttpHeaders();
         HttpRequest httpRequest = new HttpRequest(requestLine, new HttpEntity(httpHeaders, Strings.EMPTY));
+        HttpResponse httpResponse = new HttpResponse(null);
 
         ListUserHandler handler = new ListUserHandler();
-        HttpResponse httpResponse = handler.getHttpResponse(httpRequest);
+        handler.handle(httpRequest, httpResponse);
 
         assertThat(httpResponse).isNotNull();
         assertThat(httpResponse.getHttpHeaderMap()).isEmpty();
@@ -50,13 +51,14 @@ class ListUserHandlerTest {
 
     @Test
     void testGetHttpResponseForNotLoginedUser() throws IOException, URISyntaxException {
-        RequestLine requestLine = RequestLine.parse(GET.name() + " " + HandlerMapper.LIST_USER.getUrl() + " HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse(GET.name() + " " + Dispatcher.LIST_USER_URL + " HTTP/1.1");
 
         HttpHeaders httpHeaders = getNotLoginedHttpHeaders();
         HttpRequest httpRequest = new HttpRequest(requestLine, new HttpEntity(httpHeaders, Strings.EMPTY));
+        HttpResponse httpResponse = new HttpResponse(null);
 
         ListUserHandler handler = new ListUserHandler();
-        HttpResponse httpResponse = handler.getHttpResponse(httpRequest);
+        handler.handle(httpRequest, httpResponse);
 
         assertThat(httpResponse).isNotNull();
         assertThat(httpResponse.getHttpHeaderMap()).contains(

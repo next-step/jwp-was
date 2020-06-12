@@ -1,20 +1,23 @@
 package http.request;
 
+import com.google.common.collect.Maps;
 import http.common.HttpEntity;
 import http.common.HttpHeaders;
 import http.common.HttpMethod;
 import http.request.requestline.Protocol;
 import http.request.requestline.RequestLine;
+import lombok.extern.slf4j.Slf4j;
 import utils.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import static http.common.HttpHeader.CONTENT_LENGTH_NAME;
 
+@Slf4j
 public class HttpRequest {
     private final RequestLine requestLine;
     private final HttpEntity httpEntity;
@@ -24,8 +27,14 @@ public class HttpRequest {
         this.httpEntity = httpEntity;
     }
 
-    public static HttpRequest parse(String requestLineStr, BufferedReader br) throws IOException {
-        RequestLine requestLine = RequestLine.parse(requestLineStr);
+    public static HttpRequest parse(BufferedReader br) throws IOException {
+        String request = br.readLine();
+
+        if (Objects.isNull(request)) {
+            return null;
+        }
+
+        RequestLine requestLine = RequestLine.parse(request);
         HttpHeaders httpHeaders = HttpHeaders.parse(br);
 
         if (HttpMethod.GET.equals(requestLine.getMethod())) {
@@ -64,14 +73,21 @@ public class HttpRequest {
         return requestLine.getPath();
     }
 
-    public Map<String, String> getBodyMap() {
+    public Map<String, String> getParameterMap() {
         return Optional.ofNullable(httpEntity)
             .map(HttpEntity::getBodyMap)
-            .orElse(Collections.emptyMap());
+            .map(this::getMergedBodyAndQueryStrings)
+            .orElse(requestLine.getQueryString());
     }
 
-    public String getBodyMapValue(String key) {
-        return getBodyMap().get(key);
+    private Map<String, String> getMergedBodyAndQueryStrings(Map<String, String> bodyMap) {
+        Map<String, String> parameterMap = Maps.newHashMap(bodyMap);
+        parameterMap.putAll(requestLine.getQueryString());
+        return parameterMap;
+    }
+
+    public String getParameterMapValue(String key) {
+        return getParameterMap().get(key);
     }
 
     public String getHeaderValue(String key) {

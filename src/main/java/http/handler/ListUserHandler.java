@@ -52,11 +52,11 @@ public class ListUserHandler extends AbstractHandler {
     }
 
     @Override
-    public byte[] getHttpResponseBody(HttpRequest httpRequest) throws IOException {
+    public byte[] getHttpResponseBody(HttpRequest response) throws IOException {
         String location = NOT_LOGIN_LOCATION;
         Map<String, List<User>> users = Maps.newHashMap();
 
-        if (isLoginedUser(httpRequest)) {
+        if (isLoginedUser(response)) {
             location = USER_LIST_LOCATION;
             users.put("users", DataBase.findAllUserList());
         }

@@ -49,7 +49,7 @@ public class StaticResourceHandler extends AbstractHandler {
     }
 
     @Override
-    public byte[] getHttpResponseBody(HttpRequest httpRequest) throws IOException, URISyntaxException {
+    public byte[] getHttpResponseBody(HttpRequest response) throws IOException, URISyntaxException {
         return FileIoUtils.loadFileFromClasspath(staticResource.getBasePath() + getPath());
     }
 }

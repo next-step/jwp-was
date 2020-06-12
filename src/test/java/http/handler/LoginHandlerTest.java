@@ -3,7 +3,7 @@ package http.handler;
 import db.DataBase;
 import http.common.HttpEntity;
 import http.common.HttpHeaders;
-import http.handler.mapper.HandlerMapper;
+import http.handler.mapper.Dispatcher;
 import http.request.HttpRequest;
 import http.request.requestline.RequestLine;
 import http.response.HttpResponse;
@@ -32,13 +32,14 @@ class LoginHandlerTest {
     void testGetHttpResponseForLoginSuccessUser() throws IOException, URISyntaxException {
         addUserToDataBase();
 
-        RequestLine requestLine = RequestLine.parse(POST.name() + " " + HandlerMapper.LOGIN.getUrl() + " HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse(POST.name() + " " + Dispatcher.LOGIN_USER_URL + " HTTP/1.1");
         String body = "userId=ninjasul&password=1234";
 
         HttpRequest httpRequest = new HttpRequest(requestLine, new HttpEntity(HttpHeaders.EMPTY, body));
+        HttpResponse httpResponse = new HttpResponse(null);
 
         Handler handler = new LoginHandler();
-        HttpResponse httpResponse = handler.getHttpResponse(httpRequest);
+        handler.handle(httpRequest, httpResponse);
 
         assertThat(httpResponse).isNotNull();
         assertThat(httpResponse.getHttpHeaderMap()).contains(
@@ -60,11 +61,12 @@ class LoginHandlerTest {
     void testGetHttpResponseForLoginFailedUser(String body) throws IOException, URISyntaxException {
         addUserToDataBase();
 
-        RequestLine requestLine = RequestLine.parse(POST.name() + " " + HandlerMapper.LOGIN.getUrl() + " HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse(POST.name() + " " + Dispatcher.LOGIN_USER_URL + " HTTP/1.1");
         HttpRequest httpRequest = new HttpRequest(requestLine, new HttpEntity(HttpHeaders.EMPTY, body));
+        HttpResponse httpResponse = new HttpResponse(null);
 
         Handler handler = new LoginHandler();
-        HttpResponse httpResponse = handler.getHttpResponse(httpRequest);
+        handler.handle(httpRequest, httpResponse);
 
         assertThat(httpResponse).isNotNull();
         assertThat(httpResponse.getHttpHeaderMap()).contains(

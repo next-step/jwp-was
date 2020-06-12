@@ -9,14 +9,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HandlerMapperTest {
+class DispatcherTest {
 
     @ParameterizedTest
     @NullAndEmptySource
     void getHandlerForNullAndEmpty(String url) {
-        Handler handler = HandlerMapper.getHandler(url);
+        Handler handler = Dispatcher.getHandler(url);
 
         assertThat(handler).isNotNull();
         assertThat(handler.getClass()).isEqualTo(ExceptionHandler.class);
@@ -39,7 +41,7 @@ class HandlerMapperTest {
         "/user/login_failed.html",
     })
     void getHandlerForStaticResources(String url) {
-        Handler handler = HandlerMapper.getHandler(url);
+        Handler handler = Dispatcher.getHandler(url);
 
         assertThat(handler).isNotNull();
         assertThat(handler.getClass()).isEqualTo(StaticResourceHandler.class);
@@ -49,10 +51,10 @@ class HandlerMapperTest {
 
     @Test
     void getHandlerForUserHandler() {
-        for (HandlerMapper handlerMapper : HandlerMapper.values()) {
-            Handler handler = HandlerMapper.getHandler(handlerMapper.getUrl());
+        for (Map.Entry<String, Handler> mapEntry : Dispatcher.getHandlers().entrySet()) {
+            Handler handler = Dispatcher.getHandler(mapEntry.getKey());
 
-            assertThat(handler).isEqualTo(handlerMapper.getHandler());
+            assertThat(handler).isEqualTo(mapEntry.getValue());
         }
     }
 }

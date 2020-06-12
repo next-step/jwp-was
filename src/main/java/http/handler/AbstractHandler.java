@@ -1,12 +1,10 @@
 package http.handler;
 
-import http.common.HttpEntity;
 import http.common.HttpHeaders;
 import http.common.HttpStatus;
 import http.handler.mapper.StaticResource;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import http.response.StatusLine;
 import lombok.extern.slf4j.Slf4j;
 import utils.FileIoUtils;
 
@@ -21,15 +19,12 @@ public abstract class AbstractHandler implements Handler {
     public static final String LOGIN_FAILED_PATH = "/user/login_failed.html";
 
     @Override
-    public HttpResponse getHttpResponse(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        byte[] httpBody = getHttpResponseBody(httpRequest);
+    public void handle(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+        response.setStatusLine(request.getProtocol(), getHttpStatus());
 
-        HttpResponse httpResponse = new HttpResponse(
-            StatusLine.of(httpRequest.getProtocol(), getHttpStatus()),
-            new HttpEntity(getHttpHeaders(httpRequest, httpBody.length), new String(httpBody))
-        );
-
-        return httpResponse;
+        byte[] httpBody = getHttpResponseBody(request);
+        response.setHttpEntity(getHttpHeaders(request, httpBody.length), new String(httpBody));
+        response.write();
     }
 
     public abstract String getPath();
@@ -47,7 +42,7 @@ public abstract class AbstractHandler implements Handler {
     protected abstract HttpHeaders getHttpHeaders(HttpRequest httpRequest, int length);
 
     @Override
-    public byte[] getHttpResponseBody(HttpRequest httpRequest) throws IOException, URISyntaxException {
+    public byte[] getHttpResponseBody(HttpRequest response) throws IOException, URISyntaxException {
         return FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + getPath());
     }
 }

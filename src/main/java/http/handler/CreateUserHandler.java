@@ -35,9 +35,9 @@ public class CreateUserHandler extends AbstractHandler {
     }
 
     @Override
-    public HttpResponse getHttpResponse(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        User user = User.of(httpRequest.getBodyMap());
+    public void handle(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+        User user = User.of(request.getParameterMap());
         DataBase.addUser(user);
-        return super.getHttpResponse(httpRequest);
+        super.handle(request, response);
     }
 }
