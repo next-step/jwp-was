@@ -14,9 +14,8 @@ public class Cookies {
     private static final String COOKIE_DELIMITER = ";";
     private static final String COOKIE_NAME_VALUE_DELIMITER = "=";
     private static final String HEADER_DELIMITER = ": ";
-    private static final String CRLF = "\r\n";
 
-    private Map<String, String> cookieJar = Maps.newHashMap();
+    private final Map<String, String> cookieJar = Maps.newHashMap();
     private String path = Strings.EMPTY;
 
     public Cookies() {

@@ -17,10 +17,6 @@ public class CreateUserController extends AbstractController {
     private static final String REDIRECT_URL = "/index.html";
 
     @Override
-    protected void doGET(HttpRequest request, HttpResponse response) {
-    }
-
-    @Override
     protected void doPOST(HttpRequest request, HttpResponse response) {
         User user = User.ofRequest(request);
         logger.debug("User Created : {}", user);

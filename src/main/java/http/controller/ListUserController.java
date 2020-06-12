@@ -6,6 +6,7 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
+import http.HttpSession;
 import java.io.IOException;
 import model.Users;
 import org.slf4j.Logger;
@@ -38,10 +39,6 @@ public class ListUserController extends AbstractController {
     }
 
     @Override
-    protected void doPOST(HttpRequest request, HttpResponse response) {
-    }
-
-    @Override
     protected void doGET(HttpRequest request, HttpResponse response) {
         if (!isLogined(request)) {
             response.redirect(REDIRECT_URL);
@@ -55,13 +52,10 @@ public class ListUserController extends AbstractController {
             logger.error(e.getMessage());
             response.redirect(REDIRECT_URL);
         }
-
-
-
-
     }
 
     private boolean isLogined(HttpRequest request) {
-        return LOGIN_COOKIE_STATUS_TRUE.equals(request.getCookie(LOGIN_COOKIE_KEY));
+        HttpSession session = getCurrentSession(request);
+        return LOGIN_COOKIE_STATUS_TRUE.equals(session.getAttribute(LOGIN_COOKIE_KEY));
     }
 }
