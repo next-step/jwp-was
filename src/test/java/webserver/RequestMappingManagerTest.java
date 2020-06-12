@@ -33,7 +33,7 @@ public class RequestMappingManagerTest {
     void testClass() throws Exception {
         Class controllerClass = Class.forName("controller.LoginController");
         Controller controller = (Controller) controllerClass.newInstance();
-        assertThat(controller.getPath()).isEqualTo("/login");
+        assertThat(controller.getPath()).isEqualTo("/user/login");
     }
 
     @Test
