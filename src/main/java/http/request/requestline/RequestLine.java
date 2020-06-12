@@ -25,6 +25,14 @@ public class RequestLine {
         return path.hasExtension();
     }
 
+    public boolean isGetMethod() {
+        return method.isGet();
+    }
+
+    public boolean isPostMethod() {
+        return method.isPost();
+    }
+
     public String getFilePath() {
         return path.getFilePath();
     }

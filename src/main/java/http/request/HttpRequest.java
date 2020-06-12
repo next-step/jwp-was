@@ -43,7 +43,7 @@ public class HttpRequest {
         }
 
         String contentLength = httpRequest.getHeader("Content-Length");
-        if (doesNotHaveContentLength(contentLength)) {
+        if (httpRequest.doesNotHaveContentLength(contentLength)) {
             return httpRequest;
         }
 
@@ -52,10 +52,6 @@ public class HttpRequest {
         httpRequest.registerBody(body);
 
         return httpRequest;
-    }
-
-    private static boolean doesNotHaveContentLength(String contentLength) {
-        return StringUtils.isEmpty(contentLength) || "0".equals(contentLength);
     }
 
     void registerHeader(String headerLine) {
@@ -77,6 +73,14 @@ public class HttpRequest {
         }
 
         this.body = new QueryString(body);
+    }
+
+    public boolean isGetMethod() {
+        return requestLine.isGetMethod();
+    }
+
+    public boolean isPostMethod() {
+        return requestLine.isPostMethod();
     }
 
     public boolean isLoginUser() {
@@ -118,5 +122,9 @@ public class HttpRequest {
 
     public String getProtocolSpec() {
         return requestLine.getProtocolSpec();
+    }
+
+    private boolean doesNotHaveContentLength(String contentLength) {
+        return StringUtils.isEmpty(contentLength) || "0".equals(contentLength);
     }
 }

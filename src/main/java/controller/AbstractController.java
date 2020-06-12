@@ -1,23 +1,18 @@
 package controller;
 
 import http.request.HttpRequest;
-import http.request.method.HttpMethod;
 import http.response.HttpResponse;
-
-import static http.request.method.HttpMethod.GET;
-import static http.request.method.HttpMethod.POST;
 
 public abstract class AbstractController implements Controller {
 
     @Override
     public void execute(HttpRequest httpRequest, HttpResponse httpResponse) {
-        HttpMethod httpMethod = httpRequest.getHttpMethod();
-
-        if (httpMethod == GET) {
+        if (httpRequest.isGetMethod()) {
             doGet(httpRequest, httpResponse);
+            return;
         }
 
-        if (httpMethod == POST) {
+        if (httpRequest.isPostMethod()) {
             doPost(httpRequest, httpResponse);
         }
     }

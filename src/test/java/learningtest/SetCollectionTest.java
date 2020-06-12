@@ -52,3 +52,4 @@ public class SetCollectionTest {
         assertEquals(numbers.contains(number), expected);
     }
 }
+
