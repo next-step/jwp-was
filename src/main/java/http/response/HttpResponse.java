@@ -1,6 +1,7 @@
 package http.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import http.common.Cookies;
 import http.common.HttpEntity;
 import http.common.HttpHeaders;
 import http.common.HttpStatus;
@@ -13,6 +14,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import static http.common.HttpHeaders.COOKIE_HEADER_NAME;
+import static http.common.HttpHeaders.SET_COOKIE_HEADER_NAME;
+
 @Slf4j
 public class HttpResponse {
     public static final String NEW_LINE_STRING = "\r\n";
@@ -21,6 +25,7 @@ public class HttpResponse {
     private final DataOutputStream dos;
     private StatusLine statusLine;
     private HttpEntity httpEntity;
+    private Cookies cookies;
 
     public HttpResponse(DataOutputStream dos) {
         this.dos = dos;
@@ -32,6 +37,7 @@ public class HttpResponse {
 
     public void setHttpEntity(HttpHeaders httpHeaders, String httpBody) {
         this.httpEntity = new HttpEntity(httpHeaders, httpBody);
+        this.cookies = Cookies.parse(httpEntity.getHeaderValue(SET_COOKIE_HEADER_NAME));
     }
 
     public boolean hasHttpHeaders() {
@@ -73,6 +79,10 @@ public class HttpResponse {
             .map(String::getBytes)
             .map(body -> body.length)
             .orElse(0);
+    }
+
+    public String getCookie(String key) {
+        return cookies.getCookie(key);
     }
 
     public void write() {

@@ -1,6 +1,7 @@
 package http.request;
 
 import com.google.common.collect.Maps;
+import http.common.Cookies;
 import http.common.HttpEntity;
 import http.common.HttpHeaders;
 import http.common.HttpMethod;
@@ -16,15 +17,18 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static http.common.HttpHeader.CONTENT_LENGTH_NAME;
+import static http.common.HttpHeaders.COOKIE_HEADER_NAME;
 
 @Slf4j
 public class HttpRequest {
     private final RequestLine requestLine;
     private final HttpEntity httpEntity;
+    private final Cookies cookies;
 
     public HttpRequest(RequestLine requestLine, HttpEntity httpEntity) {
         this.requestLine = requestLine;
         this.httpEntity = httpEntity;
+        this.cookies = Cookies.parse(getHeaderValue(COOKIE_HEADER_NAME));
     }
 
     public static HttpRequest parse(BufferedReader br) throws IOException {
@@ -92,5 +96,9 @@ public class HttpRequest {
 
     public String getHeaderValue(String key) {
         return httpEntity.getHeaderValue(key);
+    }
+
+    public String getCookie(String key) {
+        return cookies.getCookie(key);
     }
 }

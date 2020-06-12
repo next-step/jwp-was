@@ -1,29 +1,34 @@
 package http.common;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Maps;
+import utils.StringUtils;
 
+import java.util.Collections;
 import java.util.Map;
 
 public class Cookies {
-    public static final String SESSION_COOKIE_NAME = "JSESSIONID";
-    public static final String COOKIE_HEADER_NAME = "Cookie";
-    public static final String SET_COOKIE_HEADER_NAME = "Set-Cookie";
-    public static final String LOGIN_SUCCESS_COOKIE_VALUE = "logined=true";
-    public static final String LOGIN_FAIL_COOKIE_VALUE = "logined=false";
+    public static final String SESSION_ID_COOKIE_NAME = "JSESSIONID";
 
-    public static final String COOKIE_SPLITTER = ";";
+    public static final String COOKIE_DELIMITER = "; ";
     public static final String COOKIE_KEY_VALUE_SEPARATOR = "=";
 
     private final Map<String, String> cookies;
 
     public static Cookies parse(String cookieHeader) {
-        return new Cookies(getSplitCookies(cookieHeader));
+        if (StringUtils.isEmpty(cookieHeader)) {
+            return new Cookies(Collections.emptyMap());
+        }
+
+
+        return new Cookies(splitCookies(cookieHeader));
     }
 
-    private static Map<String, String> getSplitCookies(String cookieHeader) {
-        return Splitter.on(COOKIE_SPLITTER)
+    private static Map<String, String> splitCookies(String cookieHeader) {
+        return Splitter.on(COOKIE_DELIMITER)
             .omitEmptyStrings()
-            .withKeyValueSeparator(Splitter.on(COOKIE_KEY_VALUE_SEPARATOR).limit(2))
+            .withKeyValueSeparator(COOKIE_KEY_VALUE_SEPARATOR)
             .split(cookieHeader);
     }
 
@@ -35,7 +40,10 @@ public class Cookies {
         return cookies.get(key);
     }
 
-    public void setCookie(String key, String value) {
-        cookies.put(key, value);
+    @Override
+    public String toString() {
+        return Joiner.on(COOKIE_DELIMITER)
+                .withKeyValueSeparator(COOKIE_KEY_VALUE_SEPARATOR)
+                .join(cookies);
     }
 }

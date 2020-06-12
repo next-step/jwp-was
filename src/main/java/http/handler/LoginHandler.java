@@ -2,8 +2,7 @@ package http.handler;
 
 import com.google.common.collect.Maps;
 import db.DataBase;
-import http.common.HttpHeaders;
-import http.common.HttpStatus;
+import http.common.*;
 import http.request.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import utils.FileIoUtils;
@@ -15,12 +14,11 @@ import java.util.Optional;
 
 import static http.common.Cookies.*;
 import static http.common.HttpHeader.LOCATION_HEADER_NAME;
+import static http.common.HttpHeaders.SET_COOKIE_HEADER_NAME;
 
 @Slf4j
 public class LoginHandler extends AbstractHandler {
     private static final String INDEX_PATH = "/index.html";
-
-    public static final String ROOT_PATH_COOKIE_VALUE = "Path=/";
 
     private static final String USER_ID_KEY = "userId";
     private static final String PASSWORD_KEY = "password";
@@ -41,18 +39,22 @@ public class LoginHandler extends AbstractHandler {
 
         if (isAuthenticUser(httpRequest)) {
             httpHeaders.put(LOCATION_HEADER_NAME, getPath());
-            httpHeaders.put(SET_COOKIE_HEADER_NAME, getCookieValue(LOGIN_SUCCESS_COOKIE_VALUE));
+
+            Cookies cookies = getLoginSuccessCookies();
+            httpHeaders.put(SET_COOKIE_HEADER_NAME, cookies.toString());
         }
         else {
             httpHeaders.put(LOCATION_HEADER_NAME, LOGIN_FAILED_PATH);
-            httpHeaders.put(SET_COOKIE_HEADER_NAME, getCookieValue(LOGIN_FAIL_COOKIE_VALUE));
         }
 
         return new HttpHeaders(httpHeaders);
     }
 
-    private String getCookieValue(String cookieValue) {
-        return cookieValue + COOKIE_SPLITTER + ROOT_PATH_COOKIE_VALUE;
+    private Cookies getLoginSuccessCookies() {
+        HttpSession session = HttpSessionUtil.getSession();
+        Map<String, String> cookiesMap = Maps.newHashMap();
+        cookiesMap.put(SESSION_ID_COOKIE_NAME, session.getId());
+        return new Cookies(cookiesMap);
     }
 
     @Override

@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 public class HttpHeaders {
     public static final HttpHeaders EMPTY = new HttpHeaders(Collections.emptyMap());
 
+    public static final String COOKIE_HEADER_NAME = "Cookie";
+    public static final String SET_COOKIE_HEADER_NAME = "Set-Cookie";
+
     public static final String HEADER_KEY_VALUE_SPLITTER = ": ";
     public static final String HTTP_HEADER_LINE_JOINER = "\r\n";
 

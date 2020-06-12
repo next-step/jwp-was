@@ -53,4 +53,12 @@ public class StringUtils {
 
         return 0;
     }
+
+    public static String getOrDefault(String target) {
+        return getOrDefault(target, "");
+    }
+
+    public static String getOrDefault(String target, String defaultValue) {
+        return isNotEmpty(target) ? target : defaultValue;
+    }
 }
