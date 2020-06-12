@@ -5,6 +5,7 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
+import http.common.ContentType;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import model.Users;
@@ -40,7 +41,7 @@ public class UserListController extends AbstractController {
             try {
                 final Template template = handlebars.compile("user/list");
                 byte[] htmlFile = template.apply(users).getBytes();
-                httpResponse.response200HTML(htmlFile);
+                httpResponse.response200(ContentType.TEXT_HTML_UTF_8, htmlFile);
             } catch (IOException e) {
                 httpResponse.response302("/index.html");
             }

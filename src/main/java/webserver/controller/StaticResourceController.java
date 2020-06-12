@@ -1,5 +1,6 @@
 package webserver.controller;
 
+import http.common.ContentType;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import utils.FileIoUtils;
@@ -24,7 +25,7 @@ public class StaticResourceController implements Controller {
         final String path = httpRequest.getPath();
         try {
             final byte[] stylesheet = FileIoUtils.loadFileFromClasspath("./static/" + path);
-            httpResponse.response200CSS(stylesheet);
+            httpResponse.response200(ContentType.TEXT_CSS_UTF_8, stylesheet);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }

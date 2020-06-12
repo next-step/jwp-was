@@ -1,5 +1,6 @@
 package http.response;
 
+import http.common.ContentType;
 import http.common.Cookies;
 import http.common.HeaderField;
 import http.common.HeaderFieldName;
@@ -54,22 +55,17 @@ public class HttpResponse {
         return responseBody;
     }
 
-    public void response200HTML(byte[] htmlFile) {
-        this.statusCode = StatusCode.OK;
-        header.addHeader(new HeaderField(HeaderFieldName.CONTENT_TYPE, "text/html;charset=utf-8"));
-        header.addHeader(new HeaderField(HeaderFieldName.CONTENT_LENGTH, String.valueOf(htmlFile.length)));
-        this.responseBody = htmlFile;
-    }
-
     public void addCookiePath(String path) {
         this.cookies.setPath(path);
     }
 
-    public void response200CSS(byte[] cssFile) {
+    public void response200(ContentType contentType, byte[] body) {
         this.statusCode = StatusCode.OK;
-        header.addHeader(new HeaderField(HeaderFieldName.CONTENT_TYPE, "text/css;charset=utf-8"));
-        header.addHeader(new HeaderField(HeaderFieldName.CONTENT_LENGTH, String.valueOf(cssFile.length)));
-        this.responseBody = cssFile;
+        final String contentTypeValue = contentType.getValue();
+
+        header.addHeader(new HeaderField(HeaderFieldName.CONTENT_TYPE, contentTypeValue));
+        header.addHeader(new HeaderField(HeaderFieldName.CONTENT_LENGTH, String.valueOf(body.length)));
+        this.responseBody = body;
     }
 
 }
