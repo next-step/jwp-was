@@ -1,20 +1,20 @@
 package http.common;
 
-import org.apache.logging.log4j.util.Strings;
 import webserver.exceptions.IllegalCookieHeaderException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Cookies {
     private static final String COOKIE_TOKENIZER = ";";
     private static final String COOKIE_JOIN_DELIMITER = "; ";
     private static final String COOKIE_NAME_VALUE_TOKENIZER = "=";
-    private static final String COOKIE_DEFAULT_VALUE = Strings.EMPTY;
+    private static final String COOKIE_DEFAULT_VALUE = "";
 
     private Map<String, String> cookies;
-    private String path = Strings.EMPTY;
+    private String path;
 
     public Cookies() {
         cookies = new HashMap<>();
@@ -53,12 +53,13 @@ public class Cookies {
 
     public String stringify() {
         String cookiesStr = cookies.keySet().stream()
-                .map(cookieName -> (cookieName + "=" + cookies.get(cookieName)))
+                .map(cookieName -> (cookieName + COOKIE_NAME_VALUE_TOKENIZER + cookies.get(cookieName)))
                 .collect(Collectors.joining(COOKIE_JOIN_DELIMITER));
 
-        if (!Strings.EMPTY.equals(path)) {
-            cookiesStr += COOKIE_JOIN_DELIMITER + "Path=" + path;
+        if (path != null) {
+            cookiesStr += COOKIE_JOIN_DELIMITER + "Path" + COOKIE_NAME_VALUE_TOKENIZER + path;
         }
+
         return cookiesStr;
     }
 
