@@ -32,7 +32,7 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
             HttpRequest httpRequest = HttpRequest.from(bufferedReader)
-                    .setSessionManager(sessionManager);
+                    .addSessionManager(sessionManager);
             HttpResponse httpResponse = HttpResponse.from(dos);
 
             httpRequest.linkHttpResponse(httpResponse);

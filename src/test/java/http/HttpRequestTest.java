@@ -85,7 +85,7 @@ public class HttpRequestTest {
         HttpResponse httpResponse = HttpResponse.from(new DataOutputStream(byteArrayOutputStream));
 
         HttpRequest httpRequest = HttpRequest.from(new BufferedReader(new StringReader(httpString)))
-                .setSessionManager(sessionManager);
+                .addSessionManager(sessionManager);
         httpRequest.linkHttpResponse(httpResponse);
 
         HttpSession httpSession = httpRequest.getSession();

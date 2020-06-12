@@ -3,6 +3,7 @@ package webserver;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.*;
 
 import common.CommonController;
 import http.HttpSessionManager;
@@ -23,11 +24,14 @@ public class WebServer {
     public static void main(String args[]) throws Exception {
         int port = 0;
         if (args == null || args.length == 0) {
-
             port = DEFAULT_PORT;
         } else {
             port = Integer.parseInt(args[0]);
         }
+
+        int corePoolSize = getArgument(args, 1, 100);
+        int maximumPoolSize = getArgument(args, 2, 250);
+        int queueSize = getArgument(args, 3, 100);
 
         Map<Class<?>, Object> controllers = new LinkedHashMap<>();
         controllers.put(CommonController.class, new CommonController());
@@ -47,6 +51,8 @@ public class WebServer {
 
         HttpSessionManager sessionManager = new HttpSessionManager();
 
+        Executor executor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<>(queueSize));
+
         // 서버소켓을 생성한다. 웹서버는 기본적으로 8080번 포트를 사용한다.
         try (ServerSocket listenSocket = new ServerSocket(port)) {
             logger.info("Web Application Server started {} port.", port);
@@ -54,9 +60,20 @@ public class WebServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection, httpRequestHandlerComposite, sessionManager));
-                thread.start();
+                executor.execute(new RequestHandler(connection, httpRequestHandlerComposite, sessionManager));
             }
+        }
+    }
+
+    private static int getArgument(String[] args, int index, int defaultValue) {
+        if(args.length > index) {
+            try {
+                return Integer.parseInt(args[index]);
+            } catch (NumberFormatException e) {
+                return defaultValue;
+            }
+        } else {
+            return defaultValue;
         }
     }
 }

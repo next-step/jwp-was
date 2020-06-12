@@ -19,14 +19,14 @@ public class HttpSessionManager {
     }
 
     public HttpSession createSession() {
-        HttpSession httpSession = new HttpSessionImpl();
+        HttpSession httpSession = new HttpSession();
         this.addSession(httpSession);
 
         return httpSession;
     }
 
     public HttpSession createSession(String id) {
-        HttpSession httpSession = new HttpSessionImpl(id);
+        HttpSession httpSession = new HttpSession(id);
         this.addSession(httpSession);
 
         return httpSession;
