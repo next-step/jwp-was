@@ -1,5 +1,6 @@
 package webserver.exceptions;
 
+import http.common.ContentType;
 import http.response.StatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,7 @@ public class ExceptionWriter {
 
         try {
             dos.writeBytes("HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getMessage() + "\r\n");
-            dos.writeBytes("Content-Type: text/plain;charset=utf-8\r\n");
+            dos.writeBytes("Content-Type: " + ContentType.TEXT_PLAIN_UTF_8 + "\r\n");
             dos.writeBytes("Content-Length: " + contentLength + "\r\n");
             dos.writeBytes("\r\n");
             dos.write(body, 0, contentLength);
