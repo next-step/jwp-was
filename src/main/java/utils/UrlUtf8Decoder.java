@@ -2,6 +2,7 @@ package utils;
 
 
 import org.apache.logging.log4j.util.Strings;
+import webserver.exceptions.UncheckedUnsupportedEncodingException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -14,7 +15,7 @@ public class UrlUtf8Decoder {
             result = URLDecoder.decode(s, EncodeType);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            throw new webserver.exceptions.UnsupportedEncodingException(EncodeType);
+            throw new UncheckedUnsupportedEncodingException(EncodeType);
         }
         return result;
     }
