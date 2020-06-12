@@ -5,6 +5,12 @@ import com.google.common.base.Splitter;
 import java.util.Map;
 
 public class Cookies {
+    public static final String SESSION_COOKIE_NAME = "JSESSIONID";
+    public static final String COOKIE_HEADER_NAME = "Cookie";
+    public static final String SET_COOKIE_HEADER_NAME = "Set-Cookie";
+    public static final String LOGIN_SUCCESS_COOKIE_VALUE = "logined=true";
+    public static final String LOGIN_FAIL_COOKIE_VALUE = "logined=false";
+
     public static final String COOKIE_SPLITTER = ";";
     public static final String COOKIE_KEY_VALUE_SEPARATOR = "=";
 
@@ -25,11 +31,11 @@ public class Cookies {
         this.cookies = cookies;
     }
 
-    public String getCookieValue(String key) {
+    public String getCookie(String key) {
         return cookies.get(key);
     }
 
-    public void setCookieValue(String key, String value) {
+    public void setCookie(String key, String value) {
         cookies.put(key, value);
     }
 }

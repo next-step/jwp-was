@@ -13,17 +13,14 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
 
+import static http.common.Cookies.*;
 import static http.common.HttpHeader.LOCATION_HEADER_NAME;
 
 @Slf4j
 public class LoginHandler extends AbstractHandler {
     private static final String INDEX_PATH = "/index.html";
 
-    public static final String SET_COOKIE_HEADER_NAME = "Set-Cookie";
-    public static final String LOGIN_SUCCESS_COOKIE_VALUE = "logined=true";
-    public static final String LOGIN_FAIL_COOKIE_VALUE = "logined=false";
     public static final String ROOT_PATH_COOKIE_VALUE = "Path=/";
-    public static final String COOKIE_VALUE_DELIMITER = "; ";
 
     private static final String USER_ID_KEY = "userId";
     private static final String PASSWORD_KEY = "password";
@@ -55,7 +52,7 @@ public class LoginHandler extends AbstractHandler {
     }
 
     private String getCookieValue(String cookieValue) {
-        return cookieValue + COOKIE_VALUE_DELIMITER + ROOT_PATH_COOKIE_VALUE;
+        return cookieValue + COOKIE_SPLITTER + ROOT_PATH_COOKIE_VALUE;
     }
 
     @Override

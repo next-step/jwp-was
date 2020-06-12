@@ -17,6 +17,7 @@ import utils.FileIoUtils;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import static http.common.Cookies.*;
 import static http.common.HttpHeader.LOCATION_HEADER_NAME;
 import static http.common.HttpMethod.POST;
 import static http.handler.CreateUserHandler.INDEX_PATH;
@@ -44,7 +45,7 @@ class LoginHandlerTest {
         assertThat(httpResponse).isNotNull();
         assertThat(httpResponse.getHttpHeaderMap()).contains(
                 entry(LOCATION_HEADER_NAME, INDEX_PATH),
-                entry(SET_COOKIE_HEADER_NAME, LOGIN_SUCCESS_COOKIE_VALUE + COOKIE_VALUE_DELIMITER + ROOT_PATH_COOKIE_VALUE)
+                entry(SET_COOKIE_HEADER_NAME, LOGIN_SUCCESS_COOKIE_VALUE + COOKIE_SPLITTER + ROOT_PATH_COOKIE_VALUE)
         );
         assertThat(httpResponse.getHttpBody()).isEqualTo(new String(FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + INDEX_PATH)));
 
@@ -71,7 +72,7 @@ class LoginHandlerTest {
         assertThat(httpResponse).isNotNull();
         assertThat(httpResponse.getHttpHeaderMap()).contains(
                 entry(LOCATION_HEADER_NAME, LOGIN_FAILED_PATH),
-                entry(SET_COOKIE_HEADER_NAME, LOGIN_FAIL_COOKIE_VALUE + COOKIE_VALUE_DELIMITER + ROOT_PATH_COOKIE_VALUE)
+                entry(SET_COOKIE_HEADER_NAME, LOGIN_FAIL_COOKIE_VALUE + COOKIE_SPLITTER + ROOT_PATH_COOKIE_VALUE)
         );
         assertThat(httpResponse.getHttpBody()).isEqualTo(new String(FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + LOGIN_FAILED_PATH)));
 

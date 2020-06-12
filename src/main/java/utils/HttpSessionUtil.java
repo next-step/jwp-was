@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class HttpSessionUtil {
-    public static final String DEFAULT_SESSION_COOKIE_NAME = "JSESSIONID";
     private static final Map<String, HttpSession> httpSessions = Maps.newHashMap();
 
     public static String getId() {

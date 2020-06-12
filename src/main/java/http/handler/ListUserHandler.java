@@ -17,14 +17,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static http.common.Cookies.COOKIE_HEADER_NAME;
+import static http.common.Cookies.LOGIN_SUCCESS_COOKIE_VALUE;
 import static http.common.HttpHeader.LOCATION_HEADER_NAME;
-import static http.handler.LoginHandler.LOGIN_SUCCESS_COOKIE_VALUE;
 
 @Slf4j
 public class ListUserHandler extends AbstractHandler {
     private static final String USER_LIST_PATH = "/user/list.html";
-
-    public static final String COOKIE_HEADER_NAME = "Cookie";
     private static final String TEMPLATES_PREFIX = "/templates";
 
     public static final String USER_LIST_LOCATION = "user/list";
