@@ -34,10 +34,6 @@ public class HttpResponse {
         this.httpEntity = new HttpEntity(httpHeaders, httpBody);
     }
 
-    public String getStatusLine() {
-        return this.statusLine.toString();
-    }
-
     public boolean hasHttpHeaders() {
         return Optional.ofNullable(httpEntity)
             .map(HttpEntity::getHttpHeaders)
