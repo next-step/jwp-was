@@ -1,87 +1,54 @@
 package webserver;
 
-import http.HttpMethod;
+import http.request.HttpMethod;
 import http.request.HttpRequest;
+import http.request.HttpRequestHeader;
+import http.request.RequestLine;
 import mock.MockSocket;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import utils.FileIoUtils;
+import org.junit.jupiter.api.TestInstance;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class HttpRequestReaderTest {
 
-    @Test
-    void read() {
-        String request = "GET /index.html HTTP/1.1\r\n" +
-                "Host: localhost:8080\r\n" +
-                "Connection: keep-alive\r\n" +
-                "Accept: */*\r\n";
-        MockSocket socket = new MockSocket(request);
+    InputStream get;
+    InputStream getWithQueryString;
+    InputStream post;
+    InputStream postWithQueryString;
 
-        InputStream in = socket.getInputStream();
-
-        HttpRequest httpRequest = HttpRequestReader.read(in);
-        assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(httpRequest.getPath()).isEqualTo("/index.html");
-        assertThat(httpRequest.getProtocol()).isEqualTo("HTTP");
-        assertThat(httpRequest.getVersion()).isEqualTo("1.1");
-
-        assertThat(httpRequest.getHeader("Host")).isEqualTo("localhost:8080");
-        assertThat(httpRequest.getHeader("Connection")).isEqualTo("keep-alive");
-        assertThat(httpRequest.getHeader("Accept")).isEqualTo("*/*");
-    }
-
-    @Test
-    void readAndResponse() throws Exception {
+    @BeforeAll
+    public void initGet() throws Exception {
         String request = "GET /index.html HTTP/1.1\r\n" +
                 "Host: localhost:8080\r\n" +
                 "Connection: keep-alive\r\n" +
                 "Accept: */*\r\n" +
                 "\r\n";
-
         MockSocket socket = new MockSocket(request);
 
-        InputStream in = socket.getInputStream();
-
-        HttpRequest httpRequest = HttpRequestReader.read(in);
-
-        byte[] body = RequestMappingManager.fileLoadFromPath(httpRequest.getPath());
-
-        assertThat(body).isEqualTo(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
+        this.get = socket.getInputStream();
     }
 
-
-    @Test
-    void readRequestParameterGet() {
+    @BeforeAll
+    public void initGetWithQueryString() throws Exception {
         String request = "GET /user/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
-                "Accept: */*";
+                "Accept: */*\n" +
+                "\n";
         MockSocket socket = new MockSocket(request);
 
-        InputStream in = socket.getInputStream();
-
-        HttpRequest httpRequest = HttpRequestReader.read(in);
-        assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(httpRequest.getPath()).isEqualTo("/user/create");
-        assertThat(httpRequest.getProtocol()).isEqualTo("HTTP");
-        assertThat(httpRequest.getVersion()).isEqualTo("1.1");
-
-        assertThat(httpRequest.getHeader("Host")).isEqualTo("localhost:8080");
-        assertThat(httpRequest.getHeader("Connection")).isEqualTo("keep-alive");
-        assertThat(httpRequest.getHeader("Accept")).isEqualTo("*/*");
-
-        assertThat(httpRequest.getParameter("userId")).isEqualTo("javajigi");
-        assertThat(httpRequest.getParameter("password")).isEqualTo("password");
-        assertThat(httpRequest.getParameter("name")).isEqualTo("박재성");
-        assertThat(httpRequest.getParameter("email")).isEqualTo("javajigi@slipp.net");
+        this.getWithQueryString = socket.getInputStream();
     }
 
-    @Test
-    void readRequestParameterPost() {
+    @BeforeAll
+    public void initPost() throws Exception {
         String request = "POST /user/create HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
@@ -89,25 +56,193 @@ public class HttpRequestReaderTest {
                 "Content-Type: application/x-www-form-urlencoded\n" +
                 "Accept: */*\n" +
                 "\n" +
-                "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
+                "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net\n";
         MockSocket socket = new MockSocket(request);
 
-        InputStream in = socket.getInputStream();
+        this.post = socket.getInputStream();
+    }
 
-        HttpRequest httpRequest = HttpRequestReader.read(in);
-        assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.POST);
-        assertThat(httpRequest.getPath()).isEqualTo("/user/create");
-        assertThat(httpRequest.getProtocol()).isEqualTo("HTTP");
-        assertThat(httpRequest.getVersion()).isEqualTo("1.1");
+    @BeforeAll
+    public void initPostWithQueryString() throws Exception {
+        String request = "POST /user/create?id=1 HTTP/1.1\n" +
+                "Host: localhost:8080\n" +
+                "Connection: keep-alive\n" +
+                "Content-Length: 46\n" +
+                "Content-Type: application/x-www-form-urlencoded\n" +
+                "Accept: */*\n" +
+                "\n" +
+                "userId=javajigi&password=password&name=JaeSung";
+        MockSocket socket = new MockSocket(request);
 
-        assertThat(httpRequest.getHeader("Host")).isEqualTo("localhost:8080");
-        assertThat(httpRequest.getHeader("Connection")).isEqualTo("keep-alive");
-        assertThat(httpRequest.getHeader("Accept")).isEqualTo("*/*");
+        this.postWithQueryString = socket.getInputStream();
+    }
 
-        assertThat(httpRequest.getParameter("userId")).isEqualTo("javajigi");
-        assertThat(httpRequest.getParameter("password")).isEqualTo("password");
-        assertThat(httpRequest.getParameter("name")).isEqualTo("박재성");
-        assertThat(httpRequest.getParameter("email")).isEqualTo("javajigi@slipp.net");
+
+    @Test
+    void readBufferGet() throws Exception {
+        get.reset();
+        BufferedReader br = HttpRequestReader.readBuffer(get);
+
+        assertThat(br).isNotEqualTo(null);
+        assertThat(br.readLine()).startsWith("GET");
+    }
+
+    @Test
+    void readBufferGetQuery() throws Exception {
+        getWithQueryString.reset();
+        BufferedReader br = HttpRequestReader.readBuffer(getWithQueryString);
+
+        assertThat(br).isNotEqualTo(null);
+        assertThat(br.readLine()).startsWith("GET");
+    }
+
+    @Test
+    void readBufferPost() throws Exception {
+        post.reset();
+        BufferedReader br = HttpRequestReader.readBuffer(post);
+
+        assertThat(br).isNotEqualTo(null);
+        assertThat(br.readLine()).startsWith("POST");
+    }
+
+    @Test
+    void readLineGet() throws Exception {
+        get.reset();
+        BufferedReader br = HttpRequestReader.readBuffer(get);
+        RequestLine line = HttpRequestReader.parseReadLine(br);
+
+        assertThat(line).isNotEqualTo(null);
+        assertThat(line.isGet()).isEqualTo(true);
+    }
+
+    @Test
+    void readLineGetQuery() throws Exception {
+        getWithQueryString.reset();
+        BufferedReader br = HttpRequestReader.readBuffer(getWithQueryString);
+        RequestLine line = HttpRequestReader.parseReadLine(br);
+
+        assertThat(line).isNotEqualTo(null);
+        assertThat(line.isGet()).isEqualTo(true);
+    }
+
+    @Test
+    void readLinePost() throws Exception {
+        post.reset();
+        BufferedReader br = HttpRequestReader.readBuffer(post);
+        RequestLine line = HttpRequestReader.parseReadLine(br);
+
+        assertThat(line).isNotEqualTo(null);
+        assertThat(line.isGet()).isEqualTo(false);
+    }
+
+    @Test
+    void readLinePostQuery() throws Exception {
+        postWithQueryString.reset();
+        HttpRequest request = HttpRequestReader.read(postWithQueryString);
+
+        assertThat(request.getMethod()).isEqualTo(HttpMethod.POST);
+        assertThat(request.getPath()).isEqualTo("/user/create");
+        assertThat(request.getHeader("Connection")).isEqualTo("keep-alive");
+        assertThat(request.getParameter("id")).isEqualTo("1");
+        assertThat(request.getParameter("userId")).isEqualTo("javajigi");
+    }
+
+    @Test
+    void readHeaderGet() throws Exception {
+        get.reset();
+        BufferedReader br = HttpRequestReader.readBuffer(get);
+        Map<String, String> headerMap = HttpRequestReader.readHeader(br);
+        HttpRequestHeader header = new HttpRequestHeader(headerMap);
+
+        assertThat(header.getHeader("Host")).isEqualTo("localhost:8080");
+        assertThat(header.getHeader("Connection")).isEqualTo("keep-alive");
+        assertThat(header.getHeader("Accept")).isEqualTo("*/*");
+    }
+
+    @Test
+    void readHeaderGetQuery() throws Exception {
+        getWithQueryString.reset();
+        BufferedReader br = HttpRequestReader.readBuffer(getWithQueryString);
+        Map<String, String> headerMap = HttpRequestReader.readHeader(br);
+        HttpRequestHeader header = new HttpRequestHeader(headerMap);
+
+        assertThat(header.getHeader("Host")).isEqualTo("localhost:8080");
+        assertThat(header.getHeader("Connection")).isEqualTo("keep-alive");
+        assertThat(header.getHeader("Accept")).isEqualTo("*/*");
+        assertThat(header.getContentLength()).isEqualTo(0);
+        assertThat(header.hasBody()).isEqualTo(false);
+    }
+
+    @Test
+    void readHeaderPost() throws Exception {
+        post.reset();
+        BufferedReader br = HttpRequestReader.readBuffer(post);
+        Map<String, String> headerMap = HttpRequestReader.readHeader(br);
+        HttpRequestHeader header = new HttpRequestHeader(headerMap);
+
+        assertThat(header.getHeader("Host")).isEqualTo("localhost:8080");
+        assertThat(header.getHeader("Accept")).isEqualTo("*/*");
+        assertThat(header.getHeader("Content-Length")).isEqualTo("93");
+        assertThat(header.getContentLength()).isEqualTo(93);
+        assertThat(header.hasBody()).isEqualTo(true);
+    }
+
+    @Test
+    void readBodyGetQuery() throws Exception {
+        post.reset();
+        BufferedReader br = HttpRequestReader.readBuffer(getWithQueryString);
+        Map<String, String> headerMap = HttpRequestReader.readHeader(br);
+        HttpRequestHeader header = new HttpRequestHeader(headerMap);
+        Map<String, String> parameter = HttpRequestReader.readBody(br, header.getContentLength());
+
+        assertThat(parameter.get("userId")).isEqualTo(null);
+        assertThat(parameter.get("password")).isEqualTo(null);
+        assertThat(parameter.get("name")).isEqualTo(null);
+        assertThat(parameter.get("email")).isEqualTo(null);
+    }
+
+    @Test
+    void readBodyPost() throws Exception {
+        post.reset();
+        BufferedReader br = HttpRequestReader.readBuffer(post);
+        Map<String, String> headerMap = HttpRequestReader.readHeader(br);
+        HttpRequestHeader header = new HttpRequestHeader(headerMap);
+        Map<String, String> parameter = HttpRequestReader.readBody(br, header.getContentLength());
+
+        assertThat(parameter.get("userId")).isEqualTo("javajigi");
+        assertThat(parameter.get("password")).isEqualTo("password");
+        assertThat(parameter.get("name")).isEqualTo("박재성");
+        assertThat(parameter.get("email")).isEqualTo("javajigi@slipp.net");
+    }
+
+    @Test
+    void readGet() throws Exception {
+        get.reset();
+        HttpRequest request = HttpRequestReader.read(get);
+
+        assertThat(request.getMethod()).isEqualTo(HttpMethod.GET);
+        assertThat(request.getHeader("Host")).isEqualTo("localhost:8080");
+        assertThat(request.getParameter("userId")).isEqualTo(null);
+    }
+
+    @Test
+    void readGetQuery() throws Exception {
+        getWithQueryString.reset();
+        HttpRequest request = HttpRequestReader.read(getWithQueryString);
+
+        assertThat(request.getMethod()).isEqualTo(HttpMethod.GET);
+        assertThat(request.getHeader("Host")).isEqualTo("localhost:8080");
+        assertThat(request.getParameter("userId")).isEqualTo("javajigi");
+    }
+
+    @Test
+    void readPost() throws Exception {
+        post.reset();
+        HttpRequest request = HttpRequestReader.read(post);
+
+        assertThat(request.getMethod()).isEqualTo(HttpMethod.POST);
+        assertThat(request.getHeader("Host")).isEqualTo("localhost:8080");
+        assertThat(request.getParameter("userId")).isEqualTo("javajigi");
     }
 
 

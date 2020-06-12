@@ -1,21 +1,25 @@
 package http.request;
 
-import http.HttpMethod;
-import http.RequestLine;
-
+import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest {
-    private final RequestLine requestLine;
+    private RequestLine requestLine;
 
-    private final Map<String, String> requestHeaders;
+    private HttpRequestHeader requestHeaders;
 
-    private final Map<String, String> parameters;
+    private Map<String, String> parameters;
 
-    public HttpRequest(RequestLine requestLine, Map<String, String> requestHeaders, Map<String, String> parameters) {
+    public HttpRequest(final RequestLine requestLine, final HttpRequestHeader requestHeader, final Map<String, String> parameters) {
         this.requestLine = requestLine;
-        this.requestHeaders = requestHeaders;
+        this.requestHeaders = requestHeader;
         this.parameters = parameters;
+
+        if (this.parameters == null) this.parameters = new HashMap<>();
+    }
+
+    public boolean isGet() {
+        return requestLine.isGet();
     }
 
     public HttpMethod getMethod() {
@@ -35,24 +39,14 @@ public class HttpRequest {
     }
 
     public String getHeader(String key) {
-        return requestHeaders.get(key);
+        return requestHeaders.getHeader(key);
     }
 
     public String getParameter(String key) {
-        if (HttpMethod.GET.equals(requestLine.getMethod())) {
-            return requestLine.getParameter(key);
-        }
-        return parameters.get(key);
+        return requestLine.getParameter(key) != null ? requestLine.getParameter(key) : parameters.get(key);
     }
 
     public Map<String, String> getParameters() {
-        if (HttpMethod.GET.equals(requestLine.getMethod())) {
-            return requestLine.getParameters();
-        }
         return parameters;
-    }
-
-    public Map<String, String> getHeaders() {
-        return requestHeaders;
     }
 }

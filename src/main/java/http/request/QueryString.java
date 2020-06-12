@@ -1,13 +1,15 @@
-package http;
+package http.request;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class QueryString {
 
-    private final Map<String, String> parameters;
+    private Map<String, String> parameters;
 
     public QueryString(final Map<String, String> parameters) {
         this.parameters = parameters;
+        if (this.parameters == null) this.parameters = new HashMap<>();
     }
 
     public String getParameter(final String key) {

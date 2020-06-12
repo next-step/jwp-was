@@ -1,10 +1,14 @@
 package webserver;
 
+import controller.Controller;
 import http.request.HttpRequest;
 import mock.MockSocket;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.InputStream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class RequestMappingManagerTest {
 
@@ -22,6 +26,26 @@ public class RequestMappingManagerTest {
 
         //리쿼스트 path를 판단
 //        HttpResponse httpResponse = RequestMappingManager.execute(httpRequest);
+
+    }
+
+    @Test
+    void testClass() throws Exception {
+        Class controllerClass = Class.forName("controller.LoginController");
+        Controller controller = (Controller) controllerClass.newInstance();
+        assertThat(controller.getPath()).isEqualTo("/user/login");
+    }
+
+    @Test
+    void getPathFile() throws Exception {
+        String packageName = "controller";
+        File dir = new File("src/main/java/" + packageName.replace(".", "/"));
+
+        System.out.println(dir.getAbsolutePath());
+
+        for (File file : dir.listFiles()) {
+            System.out.println(file.getName().replace(".java", ""));
+        }
 
     }
 }

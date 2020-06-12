@@ -1,19 +1,24 @@
 package webserver;
 
+import controller.Controller;
 import http.request.HttpRequest;
+import http.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+
+    private Map<String, Controller> pathMap = new HashMap<>();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -24,10 +29,10 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            DataOutputStream dos = new DataOutputStream(out);
 
             HttpRequest httpRequest = HttpRequestReader.read(in);
-            RequestMappingManager.execute(httpRequest, dos);
+            HttpResponse httpResponse = new HttpResponse(out);
+            RequestMappingManager.execute(httpRequest, httpResponse);
 
         } catch (IOException e) {
             logger.error(e.getMessage());
