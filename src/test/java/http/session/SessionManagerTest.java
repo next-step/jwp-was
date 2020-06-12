@@ -14,7 +14,6 @@ class SessionManagerTest {
 
     private static final Pattern UUID_REGEX = Pattern.compile("([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})");
 
-
     @DisplayName("세션 생성을 요청하면 UUID가 반환되어야 해요.")
     @Test
     void create_new_session() {

@@ -40,7 +40,7 @@ class WebServerTest {
     void connection_test() throws Exception {
         thread.start();
 
-        final int requestCount = 10;
+        final int requestCount = 1000;
         final RestTemplate restTemplate = new RestTemplate();
         final String targetUrl = "http://localhost:8080/index.html";
         final ExecutorService requestPool = Executors.newFixedThreadPool(requestCount);

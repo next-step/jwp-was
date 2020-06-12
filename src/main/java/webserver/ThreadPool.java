@@ -1,6 +1,7 @@
 package webserver;
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -24,7 +25,11 @@ public class ThreadPool {
         );
     }
 
-    public void execute(Runnable runnable) {
-        threadPoolExecutor.execute(runnable);
+    public void execute(Runnable runnable) throws TaskRejectedException {
+        try {
+            threadPoolExecutor.execute(runnable);
+        } catch (RejectedExecutionException e) {
+            throw new TaskRejectedException(e.getMessage(), e);
+        }
     }
 }
