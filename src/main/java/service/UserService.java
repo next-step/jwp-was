@@ -5,7 +5,7 @@ import model.User;
 
 public class UserService {
 
-    public static void create(User user) {
+    public static void save(User user) {
         DataBase.addUser(user);
     }
 

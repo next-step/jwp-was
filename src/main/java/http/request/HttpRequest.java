@@ -18,6 +18,10 @@ public class HttpRequest {
         if (this.parameters == null) this.parameters = new HashMap<>();
     }
 
+    public boolean isGet() {
+        return requestLine.isGet();
+    }
+
     public HttpMethod getMethod() {
         return requestLine.getMethod();
     }
