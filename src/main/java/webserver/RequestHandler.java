@@ -40,10 +40,7 @@ public class RequestHandler implements Runnable {
 
             String sessionId = request.getCookie(HttpSessionManager.SESSION_NAME);
             if (Strings.isEmpty(sessionId)) {
-                String newSessionId = sessionManager.createSession();
-                response.addCookie(HttpSessionManager.SESSION_NAME, newSessionId);
-                response.addCookiePath("/");
-                request.addCookie(HttpSessionManager.SESSION_NAME, newSessionId);
+                initializeSession(request, response);
             }
 
             final Controller controller = RequestMapping.getController(request.getPath());
@@ -53,5 +50,12 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private void initializeSession(HttpRequest request, HttpResponse response) {
+        String newSessionId = sessionManager.createSession();
+        response.addCookie(HttpSessionManager.SESSION_NAME, newSessionId);
+        response.addCookiePath("/");
+        request.addCookie(HttpSessionManager.SESSION_NAME, newSessionId);
     }
 }
