@@ -20,16 +20,22 @@ public class Cookies {
         cookies = new HashMap<>();
     }
 
-    public Cookies(String values) {
+    public Cookies(String value) {
         cookies = new HashMap<>();
-        for (String cookie : values.split(COOKIE_TOKENIZER)) {
+        for (String cookie : value.split(COOKIE_TOKENIZER)) {
             final String[] c = cookie.trim().split(COOKIE_NAME_VALUE_TOKENIZER);
-            if (c.length != 2) {
-                throw new IllegalCookieHeaderException(values);
-            }
+
+            validateCookieTokenSize(c, value);
+
             final String cookieName = c[0].trim();
             final String cookieValue = c[1].trim();
             cookies.put(cookieName, cookieValue);
+        }
+    }
+
+    private void validateCookieTokenSize(String[] c, String value) {
+        if (c.length != 2) {
+            throw new IllegalCookieHeaderException(value);
         }
     }
 
