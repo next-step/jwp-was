@@ -3,6 +3,12 @@ package model;
 import http.HttpRequest;
 
 public class User {
+
+    private static final String USER_ID_FIELD ="userId";
+    private static final String PASSWORD_FIELD ="password";
+    private static final String NAME_FIELD ="name";
+    private static final String EMAIL_FIELD ="email";
+
     private String userId;
     private String password;
     private String name;
