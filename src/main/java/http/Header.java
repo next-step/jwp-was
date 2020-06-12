@@ -17,9 +17,9 @@ public class Header {
     }
 
     public void addHeaderValue(String headerLine) {
-        String[] values = headerLine.split(HttpConst.HEADER_SEPARATOR,2);
+        String[] values = headerLine.split(HttpConst.HEADER_SEPARATOR, 2);
 
-        if(values.length < 2) {
+        if (values.length < 2) {
             throw new IllegalArgumentException("Invalid header format");
         }
 
@@ -27,9 +27,9 @@ public class Header {
     }
 
     public void addKeyAndValue(String key, String value) {
-        if(this.headers == null) this.headers = new HashMap<>();
+        if (this.headers == null) this.headers = new HashMap<>();
 
-        headers.put(key,value);
+        headers.put(key, value);
     }
 
     public String getValue(String headerName) {

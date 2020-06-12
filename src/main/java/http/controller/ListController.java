@@ -12,15 +12,15 @@ import utils.HandlebarLoadUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ListController extends PathController{
+public class ListController extends PathController {
     private static final Logger log = LoggerFactory.getLogger(ListController.class);
 
 
-    public void doGet(HttpRequest request, HttpResponse response)  {
+    public void doGet(HttpRequest request, HttpResponse response) {
         log.info("list controller get method execute ========");
-        response.addHeader("Content-Type", ContentType.html.getMimeType());
+        response.addHeader("Content-Type", ContentType.HTML.getMimeType());
 
-        if(!request.isLoggedIn()) {
+        if (!request.isLoggedIn()) {
             response.sendRedirect("/index.html");
             return;
         }

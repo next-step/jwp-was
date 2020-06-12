@@ -4,13 +4,10 @@ import http.enums.HttpResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import utils.HandlebarLoadUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.util.logging.Handler;
 
 public class HttpResponse {
     private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
@@ -18,15 +15,18 @@ public class HttpResponse {
     private HttpResponseCode responseCode;
     private byte[] responseBody;
     private Header headers;
+    private Cookie cookie;
 
     public HttpResponse(DataOutputStream outputStream) {
         this.outputStream = outputStream;
         this.headers = new Header();
+        this.cookie = new Cookie();
     }
 
     private void writeResponse() {
         try {
             this.outputStream.writeBytes(responseCode.makeHeader());
+            this.outputStream.writeBytes(cookie.writeCookieValue());
             this.outputStream.writeBytes(headers.makeResponseHeader());
             this.outputStream.write(this.responseBody, 0, responseBody.length);
 
@@ -44,13 +44,13 @@ public class HttpResponse {
     }
 
     public void addHeader(String name, String value) {
-        this.headers.addKeyAndValue(name , value);
+        this.headers.addKeyAndValue(name, value);
     }
 
     public void forword(String path) {
         // 정적인 파일 서비스 하는 메소드(.html, .css 등등)
         try {
-            this.responseBody =  FileIoUtils.loadFileFromClasspath(path);
+            this.responseBody = FileIoUtils.loadFileFromClasspath(path);
             this.responseCode = HttpResponseCode.OK;
             addHeader("Content-Length", String.valueOf(responseBody.length));
 
@@ -76,5 +76,9 @@ public class HttpResponse {
 
     public HttpResponseCode getResponseCode() {
         return responseCode;
+    }
+
+    public void addCookie(String name, String value) {
+        this.cookie.addCookieValue(name, value);
     }
 }

@@ -23,7 +23,7 @@ public class HeaderInfoTest {
     }
 
     @Test
-    void httpHeaderInfoAddTest()  {
+    void httpHeaderInfoAddTest() {
         headerInfo.addHeaderValue("Content-Length: 59");
         assertThat(headerInfo.getValue("Content-Length")).isEqualTo("59");
     }

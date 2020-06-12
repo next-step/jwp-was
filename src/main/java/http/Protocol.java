@@ -10,8 +10,8 @@ public class Protocol {
 
     public Protocol(String protocolAndVersion) {
         String[] values = protocolAndVersion.split(HttpConst.PROTOCOL_VERSION_SEPARATOR);
-        if(values.length != 2) {
-            throw new IllegalArgumentException("Invalid format : "+ protocolAndVersion);
+        if (values.length != 2) {
+            throw new IllegalArgumentException("Invalid format : " + protocolAndVersion);
         }
         this.protocol = values[0];
         this.version = values[1];

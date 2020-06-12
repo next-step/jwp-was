@@ -10,11 +10,15 @@ public class HttpConst {
 
     public static final String QUERY_SEPARATOR = "&";
 
-    public static final String QUERY_VALUE_SEPARATOR = "=";
+    public static final String NAME_VALUE_SEPARATOR = "=";
 
     public static final String PATH_QUERY_SEPARATOR = "\\?";
 
     public static final String HEADER_SEPARATOR = ":";
 
     public static final String PROTOCOL_VERSION_SEPARATOR = "/";
+
+    public static final String EMPTY_SPACE = " ";
+
+    public static final String COOKIE_VALUE_SEPARATOR = ";";
 }

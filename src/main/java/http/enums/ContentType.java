@@ -10,11 +10,11 @@ import java.util.Optional;
  */
 public enum ContentType {
     NONE("application/octet-stream", "", ""),
-    css("text/css", "/css", "./static"),
-    font("application/x-font-woff", "/font","./static"),
-    html("text/html", "","./templates"),
-    images("image/png", "/images","./static"),
-    js("text/javascript", "/js", "./static");
+    CSS("text/css", "/css", "./static"),
+    FONT("application/x-font-woff", "/font", "./static"),
+    HTML("text/html", "", "./templates"),
+    IMAGES("image/png", "/images", "./static"),
+    JS("text/javascript", "/js", "./static");
 
     String mimeType;
     String resourceFolderName;
@@ -27,7 +27,7 @@ public enum ContentType {
     }
 
     public boolean isMatchFolder(String path) {
-        if(StringUtils.isEmpty(this.resourceFolderName)) {
+        if (StringUtils.isEmpty(this.resourceFolderName)) {
             return false;
         }
         return path.startsWith(resourceFolderName);
@@ -45,6 +45,6 @@ public enum ContentType {
         Optional<ContentType> contentTypeOptional = Arrays.stream(ContentType.values())
                 .filter(contentType -> contentType.isMatchFolder(requestPath))
                 .findFirst();
-        return contentTypeOptional.orElseGet(() -> requestPath.matches("[^.]*.html[^.]*") ? ContentType.html : ContentType.NONE);
+        return contentTypeOptional.orElseGet(() -> requestPath.matches("[^.]*.html[^.]*") ? ContentType.HTML : ContentType.NONE);
     }
 }

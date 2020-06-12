@@ -20,6 +20,7 @@ public class HttpRequest {
     private RequestLine requestLine;
     private Header header;
     private String requestBody;
+    private Cookie cookie;
 
     public HttpRequest(InputStream in) {
         try {
@@ -27,16 +28,22 @@ public class HttpRequest {
             String line = br.readLine();
             this.requestLine = RequestLineParser.parse(line.trim());
             this.header = new Header();
+            this.cookie = new Cookie();
             this.requestBody = StringUtils.EMPTY;
 
-            while(!StringUtils.EMPTY.equals(line)) {
+            while (!StringUtils.EMPTY.equals(line)) {
                 line = br.readLine().trim();
-                if(StringUtils.isNotEmpty(line)) {
+                if (StringUtils.isNotEmpty(line)) {
                     header.addHeaderValue(line);
                 }
             }
-            if(header.isContainsKey("Content-Length")) {
+
+            if (header.isContainsKey("Content-Length")) {
                 this.requestBody = IOUtils.readData(br, Integer.parseInt(header.getValue("Content-Length")));
+            }
+
+            if (header.isContainsKey("Cookie")) {
+                this.cookie.parseCookie(header.getValue("Cookie"));
             }
 
         } catch (IOException e) {
@@ -61,10 +68,21 @@ public class HttpRequest {
     }
 
     public boolean isLoggedIn() {
-        if(header.isContainsKey("Cookie")) {
-            return header.getValue("Cookie").contains("logined=true");
+        if (!this.cookie.containsCookieValue("sessionId")) {
+            return false;
         }
-        return false;
+        HttpSession session = HttpSessionHandler.getSession(this.cookie.getCookieValue("sessionId"));
+        return session.getAttribute("user") != null;
+    }
+
+    public HttpSession getSession() {
+        if(!this.cookie.containsCookieValue("sessionId")) {
+            HttpSession session = new HttpSession();
+            HttpSessionHandler.addSession(session);
+            return session;
+        }
+
+        return HttpSessionHandler.getSession(this.cookie.getCookieValue("sessionId"));
     }
 
     public ContentType getContentType() {
