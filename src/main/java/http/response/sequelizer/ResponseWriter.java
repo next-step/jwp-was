@@ -13,10 +13,11 @@ public class ResponseWriter {
 
     public static void write(OutputStream out, HttpResponse httpResponse) {
         DataOutputStream dos = new DataOutputStream(out);
+
         try {
-            dos.writeBytes(ResponseLineSequelizer.sequelize(httpResponse));
-            dos.writeBytes(ResponseCookieSequelizer.sequelize(httpResponse));
-            dos.writeBytes(ResponseHeaderSequelizer.sequelize(httpResponse));
+            dos.writeBytes(ResponseSequelizer.RESPONSE_LINE.sequelize(httpResponse));
+            dos.writeBytes(ResponseSequelizer.COOKIE.sequelize(httpResponse));
+            dos.writeBytes(ResponseSequelizer.HEADER.sequelize(httpResponse));
             dos.write(httpResponse.getBody(), 0, httpResponse.getBody().length);
             dos.flush();
         } catch (IOException e) {
