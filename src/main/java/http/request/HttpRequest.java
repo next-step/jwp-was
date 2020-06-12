@@ -43,16 +43,10 @@ public class HttpRequest {
     }
 
     public String getParameter(String key) {
-        if (requestLine.isGet()) {
-            return requestLine.getParameter(key);
-        }
-        return parameters.get(key);
+        return requestLine.getParameter(key) != null ? requestLine.getParameter(key) : parameters.get(key);
     }
 
     public Map<String, String> getParameters() {
-        if (requestLine.isGet()) {
-            return requestLine.getParameters();
-        }
         return parameters;
     }
 }

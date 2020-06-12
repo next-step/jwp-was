@@ -21,6 +21,7 @@ public class HttpRequestReaderTest {
     InputStream get;
     InputStream getWithQueryString;
     InputStream post;
+    InputStream postWithQueryString;
 
     @BeforeAll
     public void initGet() throws Exception {
@@ -59,6 +60,21 @@ public class HttpRequestReaderTest {
         MockSocket socket = new MockSocket(request);
 
         this.post = socket.getInputStream();
+    }
+
+    @BeforeAll
+    public void initPostWithQueryString() throws Exception {
+        String request = "POST /user/create?id=1 HTTP/1.1\n" +
+                "Host: localhost:8080\n" +
+                "Connection: keep-alive\n" +
+                "Content-Length: 46\n" +
+                "Content-Type: application/x-www-form-urlencoded\n" +
+                "Accept: */*\n" +
+                "\n" +
+                "userId=javajigi&password=password&name=JaeSung";
+        MockSocket socket = new MockSocket(request);
+
+        this.postWithQueryString = socket.getInputStream();
     }
 
 
@@ -117,6 +133,18 @@ public class HttpRequestReaderTest {
 
         assertThat(line).isNotEqualTo(null);
         assertThat(line.isGet()).isEqualTo(false);
+    }
+
+    @Test
+    void readLinePostQuery() throws Exception {
+        postWithQueryString.reset();
+        HttpRequest request = HttpRequestReader.read(postWithQueryString);
+
+        assertThat(request.getMethod()).isEqualTo(HttpMethod.POST);
+        assertThat(request.getPath()).isEqualTo("/user/create");
+        assertThat(request.getHeader("Connection")).isEqualTo("keep-alive");
+        assertThat(request.getParameter("id")).isEqualTo("1");
+        assertThat(request.getParameter("userId")).isEqualTo("javajigi");
     }
 
     @Test
@@ -216,4 +244,6 @@ public class HttpRequestReaderTest {
         assertThat(request.getHeader("Host")).isEqualTo("localhost:8080");
         assertThat(request.getParameter("userId")).isEqualTo("javajigi");
     }
+
+
 }
