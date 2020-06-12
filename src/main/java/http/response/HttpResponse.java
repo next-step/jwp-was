@@ -4,25 +4,33 @@ import http.common.ContentType;
 import http.common.Cookies;
 import http.common.HeaderField;
 import http.common.HeaderFieldName;
+import webserver.exceptions.StatusCodeNotFoundException;
+
+import java.util.Optional;
 
 public class HttpResponse {
-    private StatusCode statusCode;
+    private Optional<StatusCode> statusCode;
     private final ResponseHeader header;
     private final Cookies cookies;
     private byte[] responseBody;
 
     public HttpResponse() {
+        statusCode = Optional.empty();
         header = new ResponseHeader();
         cookies = new Cookies();
         responseBody = new byte[0];
     }
 
     public int getStatusCode() {
-        return statusCode.getCode();
+        return statusCode
+                .orElseThrow(StatusCodeNotFoundException::new)
+                .getCode();
     }
 
     public String getStatusMessage() {
-        return statusCode.getMessage();
+        return statusCode
+                .orElseThrow(StatusCodeNotFoundException::new)
+                .getMessage();
     }
 
     public void addCookie(String cookieName, String cookieValue) {
@@ -34,7 +42,7 @@ public class HttpResponse {
     }
 
     public void response302(String locationUrl) {
-        this.statusCode = StatusCode.FOUND;
+        this.statusCode = Optional.of(StatusCode.FOUND);
         HeaderField locationHeader = new HeaderField(HeaderFieldName.LOCATION, locationUrl);
         header.addHeader(locationHeader);
     }
@@ -60,7 +68,7 @@ public class HttpResponse {
     }
 
     public void response200(ContentType contentType, byte[] body) {
-        this.statusCode = StatusCode.OK;
+        this.statusCode = Optional.of(StatusCode.OK);
         final String contentTypeValue = contentType.getValue();
 
         header.addHeader(new HeaderField(HeaderFieldName.CONTENT_TYPE, contentTypeValue));

@@ -9,6 +9,7 @@ public enum ErrorMessage {
     ILLEGAL_PARAMETER(StatusCode.INTERNAL_SERVER_ERROR, "유효하지 않은 Parameters 입니다. parameter: "),
     UNSSUPORTED_ENCODING(StatusCode.INTERNAL_SERVER_ERROR, "지원하지 않는 Encoding 타입 입니다. encoder: "),
     PROCESSABLE_CONTROLLER_NOT_FOUND(StatusCode.INTERNAL_SERVER_ERROR, "해당 요청을 처리할 컨트롤러를 찾지 못했습니다. path:"),
+    STATUS_CODE_NOT_FOUND(StatusCode.INTERNAL_SERVER_ERROR, "status code가 존재하지 않습니다."),
     ;
 
     private final StatusCode statusCode;
