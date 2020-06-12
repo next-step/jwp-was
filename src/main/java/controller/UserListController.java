@@ -16,7 +16,8 @@ import java.io.IOException;
 
 public class UserListController extends AbstractController {
 
-    private UserListController() {}
+    private UserListController() {
+    }
 
     private static class Singleton {
         private static final UserListController instance = new UserListController();
@@ -28,25 +29,23 @@ public class UserListController extends AbstractController {
 
     @Override
     protected void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (isLogined(httpRequest)) {
-            final Users users = new Users(DataBase.findAll());
+        if (!isLogined(httpRequest)) {
+            httpResponse.response302("/index.html");
+        }
+        final Users users = new Users(DataBase.findAll());
 
-            final TemplateLoader loader = new ClassPathTemplateLoader();
-            loader.setPrefix("/templates");
-            loader.setSuffix(".html");
+        final TemplateLoader loader = new ClassPathTemplateLoader();
+        loader.setPrefix("/templates");
+        loader.setSuffix(".html");
 
-            final Handlebars handlebars = new Handlebars(loader);
-            handlebars.registerHelpers(new HandlebarsHelper());
+        final Handlebars handlebars = new Handlebars(loader);
+        handlebars.registerHelpers(new HandlebarsHelper());
 
-            try {
-                final Template template = handlebars.compile("user/list");
-                byte[] htmlFile = template.apply(users).getBytes();
-                httpResponse.response200(ContentType.TEXT_HTML_UTF_8, htmlFile);
-            } catch (IOException e) {
-                httpResponse.response302("/index.html");
-            }
-
-        } else {
+        try {
+            final Template template = handlebars.compile("user/list");
+            byte[] htmlFile = template.apply(users).getBytes();
+            httpResponse.response200(ContentType.TEXT_HTML_UTF_8, htmlFile);
+        } catch (IOException e) {
             httpResponse.response302("/index.html");
         }
     }
