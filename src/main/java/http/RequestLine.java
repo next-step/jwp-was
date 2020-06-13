@@ -54,4 +54,8 @@ public class RequestLine {
     public String getPath() {
         return this.uri.getPath();
     }
+
+    public QueryString getQueryString() {
+        return this.uri.getQueryString();
+    }
 }

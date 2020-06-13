@@ -22,7 +22,9 @@ public class QueryString {
                 .filter(pair -> !StringUtils.isEmpty(pair) && !EQUALS_SIGN.equals(pair))
                 .map(pair -> StringUtils.splitIntoPair(pair, EQUALS_SIGN))
                 .collect(LinkedMultiValueMap::new,
-                        (m, v) -> m.add(v[0], StringUtils.convertToNullIfEmpty(v[1])),
+                        (m, v) -> m.add(
+                                StringUtils.decode(v[0]),
+                                StringUtils.decode(StringUtils.convertToNullIfEmpty(v[1]))),
                         LinkedMultiValueMap::addAll);
     }
 
@@ -43,7 +45,9 @@ public class QueryString {
         return parameters.get(key);
     }
 
-    public boolean isEmpty() {
-        return parameters.isEmpty();
+    public String getFirstParameter(String key) { return parameters.getFirst(key); }
+
+    public int size() {
+        return parameters.size();
     }
 }

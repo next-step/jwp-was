@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class QueryStringTest {
     @DisplayName("쿼리스트링을 변수와 값의 쌍 형태로 파싱")
@@ -15,9 +16,12 @@ public class QueryStringTest {
         // when
         QueryString queryString = new QueryString(fullQueryString);
         // then
-        assertThat(queryString.getParameter("userId")).hasSize(1).containsExactly("crystal");
-        assertThat(queryString.getParameter("password")).hasSize(1).containsExactly("password");
-        assertThat(queryString.getParameter("name")).hasSize(1).containsExactly("Sujung");
+        assertAll(
+                () -> assertThat(queryString.size()).isEqualTo(3),
+                () -> assertThat(queryString.getParameter("userId")).hasSize(1).containsExactly("crystal"),
+                () -> assertThat(queryString.getParameter("password")).hasSize(1).containsExactly("password"),
+                () -> assertThat(queryString.getParameter("name")).hasSize(1).containsExactly("Sujung")
+        );
     }
 
     @DisplayName("키는 존재하나 값이 표기되지 않은 파라미터는 값이 null로 저장")
@@ -61,7 +65,7 @@ public class QueryStringTest {
         // when
         QueryString queryString = new QueryString(fullQueryString);
         // then
-        assertThat(queryString.isEmpty()).isTrue();
+        assertThat(queryString.size()).isEqualTo(0);
     }
 
     @DisplayName("구분자만 있는 경우 무시")
@@ -72,6 +76,18 @@ public class QueryStringTest {
         // when
         QueryString queryString = new QueryString(fullQueryString);
         // then
-        assertThat(queryString.isEmpty()).isTrue();
+        assertThat(queryString.size()).isEqualTo(0);
+    }
+
+    @DisplayName("최종 파싱된 파라미터에 URL 디코딩 처리")
+    @Test
+    void test_url_decoding() {
+        // given
+        String fullQueryString = "userId=crystal&password=password&name=%EC%9E%84%EC%88%98%EC%A0%95&email=crystal%40naver.com";
+        // when
+        QueryString queryString = new QueryString(fullQueryString);
+        // then
+        assertThat(queryString.getFirstParameter("name")).isEqualTo("임수정");
+        assertThat(queryString.getFirstParameter("email")).isEqualTo("crystal@naver.com");
     }
 }

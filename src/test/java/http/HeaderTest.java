@@ -27,9 +27,9 @@ public class HeaderTest {
         // then
         assertAll(
                 () -> assertThat(header.size()).isEqualTo(3),
-                () -> assertEquals(header.get("Host"), "localhost:8080"),
-                () -> assertEquals(header.get("Connection"), "keep-alive"),
-                () -> assertEquals(header.get("Accept"), "*/*")
+                () -> assertEquals("localhost:8080", header.get("Host")),
+                () -> assertEquals("keep-alive", header.get("Connection")),
+                () -> assertEquals("*/*", header.get("Accept"))
         );
     }
 

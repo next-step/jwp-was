@@ -56,4 +56,8 @@ public class RequestMessage {
     public String getPath() {
         return this.requestLine.getPath();
     }
+
+    public QueryString getQueryString() {
+        return this.requestLine.getQueryString();
+    }
 }

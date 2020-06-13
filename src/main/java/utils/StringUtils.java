@@ -1,5 +1,8 @@
 package utils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 public class StringUtils {
 
     public static String convertToNullIfEmpty(String text) {
@@ -29,5 +32,16 @@ public class StringUtils {
         }
 
         return new String[]{first, second};
+    }
+
+    public static String decode(String target) {
+        try {
+            if (target == null) {
+                return null;
+            }
+            return URLDecoder.decode(target, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError("UTF-8 is not supported.");
+        }
     }
 }
