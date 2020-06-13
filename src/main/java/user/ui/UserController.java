@@ -1,23 +1,22 @@
-package controller;
+package user.ui;
 
+import controller.BaseController;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 
-public abstract class BaseController implements Controller {
+public class UserController extends BaseController {
     @Override
     public void service(final HttpRequest httpRequest, final HttpResponse httpResponse) {
-        String method = httpRequest.getMethod();
-        if (method.equals("GET")) {
-            doGet(httpRequest, httpResponse);
-        }
-        doPost(httpRequest, httpResponse);
+        super.service(httpRequest, httpResponse);
     }
 
+    @Override
     public void doPost(final HttpRequest httpRequest, final HttpResponse httpResponse) {
-        httpResponse.sendRedirect("/index.html");
+        super.doPost(httpRequest, httpResponse);
     }
 
+    @Override
     public void doGet(final HttpRequest httpRequest, final HttpResponse httpResponse) {
-        httpResponse.forwardBody(httpRequest.getPath());
+        super.doGet(httpRequest, httpResponse);
     }
 }

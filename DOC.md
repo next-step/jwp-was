@@ -19,3 +19,8 @@
 
 `Controller` 는 URL의 요청 사항을 처리
 `Controller` 는 비지니스 로직을 `Service` 로 책임을 위임 후, 로직 결과에 대한 `Response` 를 처리
+
+###URL Mapping
+- url 요청 시 해당 컨트롤러 연결
+- 다형성을 통해 `BaseController` 를 상태 값으로 가지며 객체의 생성은 상속받은 객체 (LSP..?) 
+- static을 통해 매번 객체 생성하지 않게

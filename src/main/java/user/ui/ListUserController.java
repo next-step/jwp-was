@@ -4,7 +4,6 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import controller.BaseController;
 import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
@@ -16,17 +15,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListUserController extends BaseController {
+public class ListUserController extends UserController {
     private static final Logger logger = LoggerFactory.getLogger(ListUserController.class);
 
     @Override
-    public HttpResponse doGet(final HttpRequest httpRequest, final HttpResponse httpResponse) {
+    public void doGet(final HttpRequest httpRequest, final HttpResponse httpResponse) {
+        if (!httpRequest.isLogin()) {
+            httpResponse.addHeader("Set-Cookie", "logined=false; Path=/");
+            httpResponse.sendRedirect("/user/login.html");
+            return;
+        }
+
         String path = httpRequest.getPath();
         if (path.equals("/user/list")) {
             httpResponse.applyBody(viewListByTemplate(path, new ArrayList<>(DataBase.findAll())));
+            httpResponse.forwardTemplateBody();
         }
 
-        return httpResponse;
     }
 
     private byte[] viewListByTemplate(String path, List<User> users) {

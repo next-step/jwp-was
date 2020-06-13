@@ -1,6 +1,5 @@
 package user.ui;
 
-import controller.BaseController;
 import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
@@ -10,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public class CreateUserController extends BaseController {
+public class CreateUserController extends UserController {
     private static final Logger logger = LoggerFactory.getLogger(CreateUserController.class);
 
     @Override
