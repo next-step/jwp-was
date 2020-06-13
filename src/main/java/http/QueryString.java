@@ -65,7 +65,6 @@ public class QueryString {
         }
 
         QueryString that = (QueryString) o;
-
         if (queryString != null ? !queryString.equals(that.queryString) : that.queryString != null) {
             return false;
         }
