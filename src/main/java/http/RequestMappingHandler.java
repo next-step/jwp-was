@@ -5,10 +5,12 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import resource.ResourceController;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 public class RequestMappingHandler {
 
@@ -25,14 +27,12 @@ public class RequestMappingHandler {
 
     private void run() {
         String path = httpRequest.getPath();
-        if (path.matches("/css/.*") || path.matches("/fonts/.*") || path.matches("/js/.*") || path.matches("/images/*")) {
-            httpResponse.forward(path);
+        ResourceController resourceController = MappingResources.getResourceController(path);
+        if (Objects.nonNull(resourceController)) {
+            resourceController.service(httpRequest, httpResponse);
             return;
         }
-        handlerByUserController();
-    }
 
-    private void handlerByUserController() {
         BaseController baseController = MappingControllers.getController(httpRequest.getPath());
         baseController.service(httpRequest, httpResponse);
     }
