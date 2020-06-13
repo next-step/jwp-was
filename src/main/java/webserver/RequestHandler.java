@@ -28,12 +28,11 @@ public class RequestHandler implements Runnable {
 
         try (InputStream inputStream = connection.getInputStream(); OutputStream outputStream = connection.getOutputStream()) {
             HttpRequest httpRequest = HttpRequest.from(inputStream);
-            HttpResponse httpResponse = HttpResponse.of(outputStream, httpRequest);
 
             Controller controller = CONTROLLER_MAPPER.findController(httpRequest.getUri());
-            controller.execute(httpRequest, httpResponse);
+            HttpResponse httpResponse = controller.execute(httpRequest);
 
-            httpResponse.flush();
+            httpResponse.flush(outputStream);
         } catch (IOException | IllegalArgumentException e) {
             log.error(e.getMessage(), e);
         }

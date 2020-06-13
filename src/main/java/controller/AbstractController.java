@@ -6,14 +6,19 @@ import http.response.HttpResponse;
 public abstract class AbstractController implements Controller {
 
     @Override
-    public void execute(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public HttpResponse execute(HttpRequest httpRequest) {
+        HttpResponse httpResponse = HttpResponse.from(httpRequest);
+
         if (httpRequest.isGetMethod()) {
             doGet(httpRequest, httpResponse);
-            return;
+            return httpResponse;
         }
 
         if (httpRequest.isPostMethod()) {
             doPost(httpRequest, httpResponse);
+            return httpResponse;
         }
+
+        return httpResponse;
     }
 }

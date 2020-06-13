@@ -5,7 +5,7 @@ import http.response.HttpResponse;
 
 public interface Controller {
 
-    void execute(HttpRequest httpRequest, HttpResponse httpResponse);
+    HttpResponse execute(HttpRequest httpRequest);
 
     default void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
     }

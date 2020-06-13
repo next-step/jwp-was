@@ -1,6 +1,7 @@
 package http.response;
 
 import http.request.HttpRequest;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,17 +15,15 @@ import static http.response.HttpResponseHeaderKeys.LOCATION_HEADER_KEY;
 import static http.response.HttpStatusCode.FOUND;
 
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class HttpResponse {
 
-    private final DataOutputStream dos;
     private final HttpRequest httpRequest;
     private final HttpResponseMetaData metaData;
     private final Map<String, Object> model = new HashMap<>();
 
-    public static HttpResponse of(OutputStream outputStream, HttpRequest httpRequest) {
-        DataOutputStream dos = new DataOutputStream(outputStream);
-        return new HttpResponse(dos, httpRequest, new HttpResponseMetaData());
+    public static HttpResponse from(HttpRequest httpRequest) {
+        return new HttpResponse(httpRequest, new HttpResponseMetaData());
     }
 
     public void setModel(String key, Object value) {
@@ -68,7 +67,9 @@ public class HttpResponse {
         metaData.updateResponseBody(responseBody);
     }
 
-    public void flush() throws IOException {
+    public void flush(OutputStream outputStream) throws IOException {
+        DataOutputStream dos = new DataOutputStream(outputStream);
+
         metaData.writeResponseLine(dos, httpRequest.getProtocolSpec());
         metaData.writeResponseHeaders(dos);
         metaData.writeResponseBody(dos);
