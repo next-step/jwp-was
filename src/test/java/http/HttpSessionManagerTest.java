@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
  */
 public class HttpSessionManagerTest {
 
-    private HttpSessionManager sessionManager;
-
     @DisplayName("HttpSession을 잘 생성하는지 테스트")
     @Test
     void createSessionTest() {

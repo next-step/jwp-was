@@ -21,9 +21,9 @@ public abstract class AbstractController implements Controller {
 
     protected HttpSession getCurrentSession(HttpRequest request) {
         String sessionId = request.getCookie(HttpSessionManager.SESSION_NAME);
-        HttpSession session = request.getSessionManager().getSession(sessionId);
+        HttpSession session = HttpSessionManager.getSession(sessionId);
         if (session == null) {
-            session = request.getSessionManager().createSession(sessionId);
+            session = HttpSessionManager.createSession(sessionId);
         }
         return session;
     }

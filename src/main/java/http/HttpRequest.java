@@ -10,8 +10,6 @@ public class HttpRequest {
     private final Cookies cookies;
     private final QueryString queryString;
 
-    private HttpSessionManager sessionManager;
-
     public HttpRequest(RequestLine requestLine, HttpHeaders headers, QueryString queryString) {
         this.requestLine = requestLine;
         this.headers = headers;
@@ -21,14 +19,6 @@ public class HttpRequest {
 
     private Cookies getCookies(HttpHeaders headers) {
         return new Cookies(headers.getHeader(HttpHeaderNames.COOKIE.toString()));
-    }
-
-    public void setSessionManager(HttpSessionManager sessionManager) {
-        this.sessionManager = sessionManager;
-    }
-
-    public HttpSessionManager getSessionManager() {
-        return this.sessionManager;
     }
 
     public String getPath() {
@@ -49,10 +39,6 @@ public class HttpRequest {
 
     public String getParameter(String key) {
         return queryString.getParameter(key);
-    }
-
-    public HttpMethod getMethod() {
-        return requestLine.getMethod();
     }
 
     public boolean isGET() {
