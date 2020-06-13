@@ -1,7 +1,5 @@
 package http;
 
-import model.User;
-
 public class Path {
     private final String url;
     private final String requestParameter;

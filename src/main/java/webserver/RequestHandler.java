@@ -3,12 +3,15 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 
+import http.HttpMethod;
 import http.Path;
+import http.RequestHeaderLine;
+import http.RequestHeaderLineType;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import utils.RequestHeaderUtils;
+import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -27,12 +30,33 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader((new InputStreamReader(in, "UTF-8")));
             String line = br.readLine();
             Path path = null;
-            if (line != null && !"".equals(line))
-                path = RequestHeaderUtils.parse(line).getPath();
-            if (path != null && path.getRequestParameter() != null)
-                logger.debug("User toString() : {}", User.of(RequestHeaderUtils.parse(line).getPath().getRequestParameter()));
-            if (path != null)
-                logger.debug("url path String : {}", path.getUrl());
+            RequestHeaderLine requestHeaderLine = null;
+            int contentLength = 0;
+            while(line != null) {
+                logger.debug("line : {}", line);
+                RequestHeaderLineType requestHeaderLineType = RequestHeaderLineType.parse(line);
+                if (requestHeaderLineType == RequestHeaderLineType.FIRST_LINE) {
+                    requestHeaderLine = RequestHeaderLine.of(line);
+                    path = requestHeaderLine.getPath();
+                }
+                if (requestHeaderLine.getMethod() == null)
+                    break;
+                if ((requestHeaderLine.getMethod() == HttpMethod.GET) &&
+                        (requestHeaderLineType == RequestHeaderLineType.EMPTY_LINE ||
+                                requestHeaderLineType == RequestHeaderLineType.OTHER_LINE))
+                    break;
+                if ((requestHeaderLine.getMethod() == HttpMethod.POST) &&
+                        (requestHeaderLineType == RequestHeaderLineType.CONTENT_LENGTH_LINE))
+                    contentLength = Integer.parseInt(line.split(" ")[1]);
+                if ((requestHeaderLine.getMethod() == HttpMethod.POST) &&
+                        (requestHeaderLineType == RequestHeaderLineType.EMPTY_LINE)) {
+                    User user = User.of(IOUtils.readData(br, contentLength));
+                    logger.debug("user toString: {}", user.toString());
+                    break;
+                }
+                line = br.readLine();
+            }
+            logger.debug("Path URL : {}", path.getUrl());
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = FileIoUtils.loadFileFromClasspath("./templates"+path.getUrl());
             response200Header(dos, body.length);
