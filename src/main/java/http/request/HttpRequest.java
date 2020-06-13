@@ -10,11 +10,12 @@ public class HttpRequest {
     private final String body;
     private HttpSession session;
 
-    public HttpRequest(RequestLine requestLine, RequestHeader header, Cookies cookies, String body) {
+    public HttpRequest(RequestLine requestLine, RequestHeader header, Cookies cookies, String body, HttpSession session) {
         this.requestLine = requestLine;
         this.header = header;
         this.cookies = cookies;
         this.body = body;
+        this.session = session;
     }
 
     public HttpMethod getMethod() {

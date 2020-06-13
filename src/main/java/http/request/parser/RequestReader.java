@@ -9,6 +9,8 @@ import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
+import webserver.session.HttpSession;
+import webserver.session.SessionStore;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,7 +49,10 @@ public class RequestReader {
         final String requestBody = IOUtils.readData(br, contentLength);
         logger.debug("Body :: {}", requestBody);
 
-        return new HttpRequest(requestLine, header, cookies, requestBody);
+        final String sessionId = cookies.getValue("JSESSIONID");
+        final HttpSession session = SessionStore.get(sessionId);
+
+        return new HttpRequest(requestLine, header, cookies, requestBody, session);
     }
 
 }
