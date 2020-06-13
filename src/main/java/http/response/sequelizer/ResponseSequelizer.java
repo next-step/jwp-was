@@ -29,7 +29,7 @@ public enum ResponseSequelizer {
     }
 
     private static String sequelizeCookie(HttpResponse httpResponse) {
-        Cookies cookies = httpResponse.getCookie();
+        final Cookies cookies = httpResponse.getCookie();
         if (cookies.isEmpty()) {
             return Strings.EMPTY;
         }
@@ -37,7 +37,7 @@ public enum ResponseSequelizer {
     }
 
     private static String sequelizeHeader(HttpResponse httpResponse) {
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         for (Iterator it = httpResponse.getHeader().iterator(); it.hasNext(); ) {
             String headerName = (String) it.next();
             String headerValue = httpResponse.getHeader(headerName);

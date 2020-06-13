@@ -39,7 +39,7 @@ public class RequestHandler implements Runnable {
                 final Controller controller = FrontController.controllerMapping(path);
                 controller.service(httpRequest, httpResponse);
 
-                HttpSession httpSession = httpRequest.getSession(false);
+                final HttpSession httpSession = httpRequest.getSession(false);
                 handleSession(httpSession, httpResponse);
 
                 ResponseWriter.write(out, httpResponse);
@@ -57,8 +57,10 @@ public class RequestHandler implements Runnable {
         if (httpSession == null) {
             return;
         }
+
         SessionStore.add(httpSession);
-        String sessionId = httpSession.getId();
+
+        final String sessionId = httpSession.getId();
         httpResponse.addCookie("JSESSIONID", sessionId);
     }
 

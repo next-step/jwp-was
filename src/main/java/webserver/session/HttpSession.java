@@ -8,8 +8,8 @@ public class HttpSession {
     private Attributes attributes;
 
     public static HttpSession create() {
-        HttpSession httpSession = new HttpSession();
-        UUID uuid = UUID.randomUUID();
+        final HttpSession httpSession = new HttpSession();
+        final UUID uuid = UUID.randomUUID();
         httpSession.id = uuid.toString();
         httpSession.initAttribute();
         return httpSession;

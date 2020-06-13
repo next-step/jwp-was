@@ -18,7 +18,7 @@ public class ResponseHeader implements Iterable {
     }
 
     public String getValue(String headerName) {
-        HeaderField headerField = header.get(headerName);
+        final HeaderField headerField = header.get(headerName);
         if (headerField == null) {
             return RESPONSE_HEADER_DEFAULT_VALUE;
         }

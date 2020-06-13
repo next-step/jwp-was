@@ -8,7 +8,7 @@ import webserver.exceptions.MethodNotAllowedException;
 public abstract class AbstractController implements Controller {
     @Override
     public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
-        HttpMethod httpMethod = httpRequest.getMethod();
+        final HttpMethod httpMethod = httpRequest.getMethod();
         if (isGet(httpMethod)) {
             doGet(httpRequest, httpResponse);
         } else if (isPost(httpMethod)) {
