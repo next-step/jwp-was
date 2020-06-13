@@ -82,4 +82,13 @@ class HttpSessionTest {
         assertThat(result).isEqualTo(null);
     }
 
+    @Test
+    @DisplayName("HttpSession에서 문자열 키로 존재하지 않는 attribute를 삭제할 경우 에러를 반환하지 않는다")
+    void HttpSessionRemoveNotExistAttributeKey() {
+        final HttpSession httpSession = new HttpSession();
+        final String key = "a";
+
+        httpSession.removeAttribute(key);
+    }
+
 }
