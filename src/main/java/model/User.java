@@ -1,5 +1,7 @@
 package model;
 
+import org.springframework.util.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +19,7 @@ public class User {
     }
 
     public static User of(String requestParameter) {
+        if (StringUtils.isEmpty(requestParameter)) return null;
         String[] parameters = requestParameter.split("&");
         int index = 0;
         Map parameterMap = new HashMap();

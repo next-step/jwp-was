@@ -1,5 +1,7 @@
 package http;
 
+import model.User;
+
 public class Path {
     private final String url;
     private final String requestParameter;
@@ -9,9 +11,17 @@ public class Path {
         this.requestParameter = requestParameter;
     }
 
+    public Path(String url) {
+        this.url = url;
+        this.requestParameter = null;
+    }
+
     public static Path of(String value) {
         String[] values = value.split("\\?");
-        return new Path(values[0], values[1]);
+        if (values.length == 2)
+            return new Path(values[0], values[1]);
+
+        return new Path(values[0]);
     }
 
     public String getUrl() {

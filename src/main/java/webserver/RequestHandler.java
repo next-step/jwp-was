@@ -3,6 +3,8 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 
+import http.Path;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -24,20 +26,21 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader((new InputStreamReader(in, "UTF-8")));
             String line = br.readLine();
-            String path = null;
-            if (line != null && !"".equals(line)) {
-                System.out.println(line);
-                path = RequestHeaderUtils.parse(line).getPath().getUrl();
-            }
-            logger.debug("path String : {}", path);
+            Path path = null;
+            if (line != null && !"".equals(line))
+                path = RequestHeaderUtils.parse(line).getPath();
+            if (path != null && path.getRequestParameter() != null)
+                logger.debug("User toString() : {}", User.of(RequestHeaderUtils.parse(line).getPath().getRequestParameter()));
+            if (path != null)
+                logger.debug("url path String : {}", path.getUrl());
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = FileIoUtils.loadFileFromClasspath("./templates"+path);
+            byte[] body = FileIoUtils.loadFileFromClasspath("./templates"+path.getUrl());
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error("IOException : {}", e.getMessage());
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("Exception : {}", e.getMessage());
         }
     }
 
