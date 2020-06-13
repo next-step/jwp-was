@@ -68,4 +68,18 @@ class HttpSessionTest {
         assertThat(result).isEqualTo(null);
     }
 
+    @Test
+    @DisplayName("HttpSession에서 문자열 키로 attribute를 삭제할 수 있다")
+    void HttpSessionremoveAttribute() {
+        final HttpSession httpSession = new HttpSession();
+        final String key = "aa";
+        final String value = "abc";
+        httpSession.setAttribute(key, value);
+
+        httpSession.removeAttribute(key);
+        final Object result = httpSession.getAttribute(key);
+
+        assertThat(result).isEqualTo(null);
+    }
+
 }
