@@ -32,6 +32,7 @@ public class UserListController extends AbstractController {
     protected void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
         if (!isAuthenticated(httpRequest.getSession(false))) {
             httpResponse.response302("/index.html");
+            return;
         }
         final Users users = new Users(DataBase.findAll());
 
