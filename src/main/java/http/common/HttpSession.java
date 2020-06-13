@@ -13,6 +13,10 @@ public class HttpSession {
     public HttpSession() {
         UUID uuid = UUID.randomUUID();
         this.id = uuid.toString();
+        initAttribute();
+    }
+
+    private void initAttribute() {
         this.attributes = new HashMap<>();
     }
 
@@ -33,6 +37,6 @@ public class HttpSession {
     }
 
     public void invalidate() {
-        this.attributes = new HashMap<>();
+        initAttribute();
     }
 }
