@@ -42,7 +42,7 @@ public abstract class AbstractHandler implements Handler {
     protected abstract HttpHeaders getHttpHeaders(HttpRequest httpRequest, int length);
 
     @Override
-    public byte[] getHttpResponseBody(HttpRequest response) throws IOException, URISyntaxException {
+    public byte[] getHttpResponseBody(HttpRequest request) throws IOException, URISyntaxException {
         return FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + getPath());
     }
 }

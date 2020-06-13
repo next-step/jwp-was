@@ -45,7 +45,7 @@ public class ExceptionHandler extends AbstractHandler {
     }
 
     @Override
-    public byte[] getHttpResponseBody(HttpRequest response) {
-        return StatusLine.of(response.getProtocol(), getHttpStatus()).toString().getBytes();
+    public byte[] getHttpResponseBody(HttpRequest request) {
+        return StatusLine.of(request.getProtocol(), getHttpStatus()).toString().getBytes();
     }
 }
