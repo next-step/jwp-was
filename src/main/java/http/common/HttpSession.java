@@ -32,4 +32,7 @@ public class HttpSession {
         attributes.remove(key);
     }
 
+    public void invalidate() {
+        this.attributes = new HashMap<>();
+    }
 }
