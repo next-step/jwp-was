@@ -35,7 +35,7 @@ public class HttpRequest {
 
     public HttpSession getSession(boolean create) {
         if (session == null && create) {
-            this.session = new HttpSession();
+            this.session = HttpSession.create();
         }
         return session;
     }

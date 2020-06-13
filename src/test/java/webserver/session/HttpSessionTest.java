@@ -17,13 +17,13 @@ class HttpSessionTest {
 
     @BeforeEach
     void setUp() {
-        httpSession = new HttpSession();
+        httpSession = HttpSession.create();
     }
 
     @Test
     @DisplayName("HttpSession을 정상적으로 생성할 수 있다")
     void createHttpSession() {
-        new HttpSession();
+        HttpSession.create();
     }
 
     @Test

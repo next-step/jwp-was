@@ -7,10 +7,15 @@ public class HttpSession {
     private String id;
     private Attributes attributes;
 
-    public HttpSession() {
+    public static HttpSession create() {
+        HttpSession httpSession = new HttpSession();
         UUID uuid = UUID.randomUUID();
-        this.id = uuid.toString();
-        initAttribute();
+        httpSession.id = uuid.toString();
+        httpSession.initAttribute();
+        return httpSession;
+    }
+
+    private HttpSession() {
     }
 
     private void initAttribute() {
