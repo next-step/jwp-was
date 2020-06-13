@@ -15,9 +15,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
+import static http.response.HttpResponseHeaderKeys.CONTENT_LENGTH_HEADER_KEY;
+
 @Slf4j
 public class HttpRequest {
 
+    private static final String COOKIE_REQUEST_HEADER_KEY = "Cookie";
     private static final String HTTP_HEADER_DELIMITER = ":";
     private static final int HEADER_TOKEN_SIZE = 2;
 
@@ -42,7 +45,7 @@ public class HttpRequest {
             httpRequest.registerHeader(line);
         }
 
-        String contentLength = httpRequest.getHeader("Content-Length");
+        String contentLength = httpRequest.getHeader(CONTENT_LENGTH_HEADER_KEY);
         if (httpRequest.doesNotHaveContentLength(contentLength)) {
             return httpRequest;
         }
@@ -84,7 +87,7 @@ public class HttpRequest {
     }
 
     public boolean isLoginUser() {
-        String cookie = httpHeaders.get("Cookie");
+        String cookie = httpHeaders.get(COOKIE_REQUEST_HEADER_KEY);
         return cookie != null && cookie.contains("logined=true");
     }
 
