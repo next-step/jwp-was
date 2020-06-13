@@ -1,6 +1,8 @@
 package http.response;
 
 import dto.Users;
+import http.request.Cookie;
+import http.request.Cookies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import view.FileView;
@@ -29,10 +31,12 @@ public class HttpResponse {
     private ResponseBody body;
     private DataOutputStream dos;
     private View view;
+    private Cookies cookies;
 
     public HttpResponse(OutputStream out) {
         this.dos = new DataOutputStream(out);
         this.header = new ResponseHeader();
+        this.cookies = new Cookies();
     }
 
     public void sendRedirect(String redirectUrl) {
@@ -63,8 +67,10 @@ public class HttpResponse {
         this.header.addHeader(key, value);
     }
 
-    public void addCookie(String key, String value) {
-        this.header.addHeader("Set-Cookie", String.format("%s=%s; Path=/", key, value));
+    public void addCookie(String key, String value, String path) {
+        Cookie cookie = new Cookie(key, value);
+        cookie.setPath(path);
+        this.cookies.addCookie(cookie);
     }
 
     public ResponseStatus getStatus() {
@@ -90,6 +96,7 @@ public class HttpResponse {
     public void write() {
         try {
             dos.writeBytes(makeStatus());
+            this.header.addCookies(cookies);
             List<String> headers = makeHeader();
             for (String header : headers) {
                 dos.writeBytes(header);

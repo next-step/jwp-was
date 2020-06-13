@@ -1,31 +1,42 @@
 package http.request;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Cookies {
-    private Map<String, String> cookies = new HashMap<>();
+    private List<Cookie> cookies = new ArrayList<>();
 
-    public Cookies(String value) {
-        String[] values = value.split(";");
-        for (String cookie : values) {
-            String[] result = cookie.split("=");
+    public Cookies() {
+    }
 
-            addCookie(result);
+    public Cookies(String values) {
+        String[] cookies = values.split(";");
+        for (String result : cookies) {
+            String[] results = result.split("=");
+            addCookie(results);
         }
     }
 
-    private void addCookie(String[] result) {
-        if (result.length > 1) {
-            cookies.put(result[0].trim(), result[1].trim());
+    private void addCookie(String[] results) {
+        if (results.length > 1) {
+            this.cookies.add(new Cookie(results[0].trim(), results[1].trim()));
         }
     }
 
-    public Map<String, String> getCookies() {
+    public void addCookie(Cookie cookie) {
+        this.cookies.add(cookie);
+    }
+
+    public List<Cookie> getCookies() {
         return cookies;
     }
 
     public String getCookie(String key) {
-        return cookies.get(key);
+        return cookies.stream()
+                .filter(c -> c.getKey().equals(key))
+                .findAny()
+                .map(Cookie::getValue)
+                .orElseThrow(() -> new IllegalArgumentException("해당 쿠키를 찾을 수 없습니다."));
     }
+
 }

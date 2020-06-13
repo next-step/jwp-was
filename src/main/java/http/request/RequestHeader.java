@@ -1,5 +1,6 @@
 package http.request;
 
+import java.util.List;
 import java.util.Map;
 
 public class RequestHeader {
@@ -15,7 +16,7 @@ public class RequestHeader {
         return header.get(key);
     }
 
-    public Map<String, String> getCookies() {
+    public List<Cookie> getCookies() {
         return cookies.getCookies();
     }
 

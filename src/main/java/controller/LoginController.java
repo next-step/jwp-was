@@ -10,7 +10,7 @@ public class LoginController extends AbstractController {
     public void doPost(HttpRequest request, HttpResponse response) {
         User user = DataBase.findUserById(request.getParameter("userId"));
         boolean isLogin = isLogin(request, user);
-        response.addCookie("logined=", Boolean.toString(isLogin));
+        response.addCookie("logined", Boolean.toString(isLogin), "/");
 
         if (isLogin) {
             response.forward("/index.html");
