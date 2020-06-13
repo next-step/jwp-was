@@ -44,4 +44,17 @@ class HttpSessionTest {
         assertThat(result).isTrue();
     }
 
+    @Test
+    @DisplayName("HttpSession에서 원하는 문자열 키로 객체를 저장하고 가져올 수 있다")
+    void HttpSessionAttribute() {
+        final HttpSession httpSession = new HttpSession();
+        final String key = "aa";
+        final String value = "abc";
+        httpSession.setAttribute(key, value);
+
+        final Object result = httpSession.getAttribute(key);
+
+        assertThat(result).isEqualTo(value);
+    }
+
 }
