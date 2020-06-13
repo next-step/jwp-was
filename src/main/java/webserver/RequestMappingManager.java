@@ -45,7 +45,6 @@ public class RequestMappingManager {
         return requestMap.get(path);
     }
 
-
     public static void execute(final HttpRequest httpRequest, final HttpResponse httpResponse) {
 
         final String path = httpRequest.getPath();
@@ -71,7 +70,6 @@ public class RequestMappingManager {
         controller.service(httpRequest, httpResponse);
     }
 
-
     public static byte[] fileLoadFromPath(String path) {
         try {
             if (path.endsWith("/")) return new byte[0];
@@ -88,7 +86,6 @@ public class RequestMappingManager {
         String extension = split[split.length - 1];
         return FileExtension.of(extension);
     }
-
 
     private static List<String> getControllerPathFile(final String packageName) throws Exception {
         File dir = new File(ROOT_ABSOLUTE_PATH + packageName.replace(".", "/"));
