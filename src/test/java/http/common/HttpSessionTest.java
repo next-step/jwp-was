@@ -34,7 +34,7 @@ class HttpSessionTest {
 
     @Test
     @DisplayName("HttpSession에서 의 id는 UUID 형식이다")
-    void asd() {
+    void HttpSessionId() {
         final String uuidRegex = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
         final HttpSession httpSession = new HttpSession();
 
