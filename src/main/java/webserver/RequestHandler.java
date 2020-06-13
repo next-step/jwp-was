@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import webserver.controller.Controller;
 import webserver.exceptions.ExceptionWriter;
 import webserver.exceptions.WebServerException;
+import webserver.session.HttpSession;
+import webserver.session.SessionStore;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +39,9 @@ public class RequestHandler implements Runnable {
                 final Controller controller = FrontController.controllerMapping(path);
                 controller.service(httpRequest, httpResponse);
 
+                HttpSession httpSession = httpRequest.getSession(false);
+                handleSession(httpSession, httpResponse);
+
                 ResponseWriter.write(out, httpResponse);
             } catch (WebServerException e) {
                 e.printStackTrace();
@@ -47,4 +52,14 @@ public class RequestHandler implements Runnable {
             logger.error(e.getMessage());
         }
     }
+
+    private void handleSession(HttpSession httpSession, HttpResponse httpResponse) {
+        if (httpSession == null) {
+            return;
+        }
+        SessionStore.add(httpSession);
+        String sessionId = httpSession.getId();
+        httpResponse.addCookie("JSESSIONID", sessionId);
+    }
+
 }
