@@ -91,4 +91,17 @@ class HttpSessionTest {
         httpSession.removeAttribute(key);
     }
 
+    @Test
+    @DisplayName("HttpSession에서 모든 attribute를 삭제할 수 있다")
+    void invalidate() {
+        final HttpSession httpSession = new HttpSession();
+        final String key = "aa";
+        final String value = "abc";
+        httpSession.setAttribute(key, value);
+
+        httpSession.invalidate();
+
+        assertThat(httpSession.getAttribute(key)).isEqualTo(null);
+    }
+
 }
