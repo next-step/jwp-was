@@ -21,8 +21,8 @@ public class RequestLine {
         return path;
     }
 
-    public Parameters getQueryString() {
-        return queryString;
+    public String getParameter(String parameterName) {
+        return queryString.getValue(parameterName);
     }
 
     public HttpMethod getHttpMethod() {

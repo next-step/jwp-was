@@ -1,6 +1,7 @@
 package http.request;
 
 import http.common.Cookies;
+import http.common.HeaderFieldName;
 import webserver.session.HttpSession;
 
 public class HttpRequest {
@@ -34,10 +35,22 @@ public class HttpRequest {
         return cookies.getValue(cookieName);
     }
 
+    public String getHeader(String headerName) {
+        return header.getValue(headerName);
+    }
+
+    public String getHeader(HeaderFieldName headerName) {
+        return header.getValue(headerName);
+    }
+
     public HttpSession getSession(boolean create) {
         if (session == null && create) {
             this.session = HttpSession.create();
         }
         return session;
+    }
+
+    public String getParameter(String parameterName) {
+        return requestLine.getParameter(parameterName);
     }
 }
