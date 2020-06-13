@@ -21,9 +21,4 @@ public class CreateUserController extends AbstractController {
 
         response.sendRedirect("http://localhost:8080/index.html");
     }
-
-    @Override
-    public void doGet(HttpRequest request, HttpResponse response) {
-
-    }
 }

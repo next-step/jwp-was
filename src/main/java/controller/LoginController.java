@@ -26,9 +26,4 @@ public class LoginController extends AbstractController {
             response.sendRedirect("http://localhost:8080/user/login_failed.html");
         }
     }
-
-    @Override
-    public void doGet(HttpRequest request, HttpResponse response) {
-
-    }
 }
