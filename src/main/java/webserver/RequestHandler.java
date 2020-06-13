@@ -9,7 +9,6 @@ import http.view.DataOutputStreamView;
 import http.view.View;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import org.apache.logging.log4j.util.Strings;
@@ -21,11 +20,9 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-    private final HttpSessionManager sessionManager;
 
-    public RequestHandler(Socket connectionSocket, HttpSessionManager sessionManager) {
+    public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
-        this.sessionManager = sessionManager;
     }
 
     public void run() {
@@ -35,7 +32,6 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
             final HttpRequest request = HttpRequestProcessor.createRequest(in);
-            request.setSessionManager(sessionManager);
             final HttpResponse response = new HttpResponse();
             final View view = new DataOutputStreamView(out);
 
@@ -54,7 +50,7 @@ public class RequestHandler implements Runnable {
     }
 
     private void initializeSession(HttpRequest request, HttpResponse response) {
-        String newSessionId = sessionManager.createSession();
+        String newSessionId = HttpSessionManager.createSession();
         response.addCookie(HttpSessionManager.SESSION_NAME, newSessionId);
         response.addCookiePath("/");
         request.addCookie(HttpSessionManager.SESSION_NAME, newSessionId);

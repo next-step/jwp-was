@@ -10,23 +10,26 @@ import java.util.UUID;
 public class HttpSessionManager {
 
     public static final String SESSION_NAME = "KSESSIONID";
-    private final Map<String, HttpSession> sessions = new HashMap<>();
+    private static final Map<String, HttpSession> sessions = new HashMap<>();
 
-    public String createSession() {
+    private HttpSessionManager() {
+    }
+
+    public static String createSession() {
         return createSession(UUID.randomUUID().toString()).getId();
     }
 
-    public HttpSession createSession(String id) {
+    public static HttpSession createSession(String id) {
         final HttpSession session = new HttpSession(id);
         sessions.put(id, session);
         return session;
     }
 
-    public HttpSession getSession(String id) {
+    public static HttpSession getSession(String id) {
         return sessions.get(id);
     }
 
-    public void removeSession(String id) {
+    public static void removeSession(String id) {
         sessions.remove(id);
     }
 }
