@@ -1,5 +1,7 @@
 package http;
 
+import java.util.Arrays;
+
 public enum FileExtension {
     NONE("", ""),
     JS("application/js", "./static"),
@@ -30,11 +32,8 @@ public enum FileExtension {
     }
 
     public static FileExtension of(String extension) {
-        for (FileExtension fe : FileExtension.values()) {
-            if (fe.toString().equals(extension.toUpperCase())) {
-                return fe;
-            }
-        }
-        return NONE;
+        return Arrays.stream(FileExtension.values())
+                .filter(f -> f.toString().equals(extension.toUpperCase()))
+                .findFirst().orElse(NONE);
     }
 }
