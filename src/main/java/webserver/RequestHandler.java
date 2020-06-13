@@ -84,7 +84,7 @@ public class RequestHandler implements Runnable {
                 if (isLoginSuccess) {
                     body = FileIoUtils.loadFileFromClasspath("./templates"+"/index.html");
                 }
-                response200Header(dos, body.length);
+                response200SetCookieHeader(dos, body.length, isLoginSuccess);
                 responseBody(dos, body);
                 return;
             }
@@ -114,6 +114,18 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("HTTP/1.1 302 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Location: " + "/index.html" + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response200SetCookieHeader(DataOutputStream dos, int lengthOfBodyContent, boolean isLogined) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("Set-Cookie: " + "logined=" + isLogined + ";" + " " +"Path=/" + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
