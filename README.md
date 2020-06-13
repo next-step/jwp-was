@@ -20,3 +20,23 @@
 * 수신한 inputstream을 requestHeader로 읽기
 * RequestLine에서 path 추출
 * path에 대응하는 파일 읽어 outputstream통해 응답
+#### 요구사항 2: Request Parameter 읽어 회원가입 처리
+* user/form.html에서 회원가입 요청 - GET 요청
+* Request Parameter의 유저정보를 파싱
+* 유저정보를 model.User 클래스에 저장
+#### 요구사항 3: Request Body 읽어 회원가입 처리
+* user/form.html에서 회원가입 요청 - POST 요청
+* Request Body의 유저정보를 파싱
+* 유저정보를 model.User 클래스에 저장
+#### 요구사항 4: 회원가입 완료 시 index.html로 redirect
+#### 요구사항 5
+##### 로그인 기능 구현하고 성공/실패 여부에 따라 다른 페이지로 이동
+* 성공 시 index.html로 이동
+* 실패 시 /user/login_failed.html로 이동
+##### Cookie를 구현하고 이를 로그인 여부 확인에 활용
+* 성공 시 응답 header의 쿠키 헤더 값이 `logined=true`
+* 싪패 시 header 값 `logined=false`로 전달
+#### 요구사항 6: Cookie 값에 따라 특정 url 접속 분기 처리
+* 로그인했을 경우, 사용자 목록 출력
+* 로그인하지 않은 경우, 로그인 페이지로 이동
+#### 요구사항 7: html이외의 정적 자원 요청에 응답하기
