@@ -2,7 +2,6 @@ package http;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,33 +12,28 @@ public class HttpSessionManagerTest {
 
     private HttpSessionManager sessionManager;
 
-    @BeforeEach
-    void setUp() {
-        this.sessionManager = new HttpSessionManager();
-    }
-
     @DisplayName("HttpSession을 잘 생성하는지 테스트")
     @Test
     void createSessionTest() {
-        String sessionId = sessionManager.createSession();
+        String sessionId = HttpSessionManager.createSession();
         assertThat(sessionId).isNotNull();
     }
 
     @DisplayName("생성한 HttpSession을 id로 잘 조회하는지 테스트")
     @Test
     void getSessionTest() {
-        String sessionId = sessionManager.createSession();
-        assertThat(sessionManager.getSession(sessionId)).isEqualTo(new HttpSession(sessionId));
-        assertThat(sessionManager.getSession("a")).isNull();
+        String sessionId = HttpSessionManager.createSession();
+        assertThat(HttpSessionManager.getSession(sessionId)).isEqualTo(new HttpSession(sessionId));
+        assertThat(HttpSessionManager.getSession("a")).isNull();
     }
 
     @DisplayName("생성한 HttpSession을 id로 조회하여 잘 제거하는지 테스트")
     @Test
     void removeSessionTest() {
-        String sessionId = sessionManager.createSession();
-        assertThat(sessionManager.getSession(sessionId)).isEqualTo(new HttpSession(sessionId));
+        String sessionId = HttpSessionManager.createSession();
+        assertThat(HttpSessionManager.getSession(sessionId)).isEqualTo(new HttpSession(sessionId));
 
-        sessionManager.removeSession(sessionId);
-        assertThat(sessionManager.getSession(sessionId)).isNull();
+        HttpSessionManager.removeSession(sessionId);
+        assertThat(HttpSessionManager.getSession(sessionId)).isNull();
     }
 }
