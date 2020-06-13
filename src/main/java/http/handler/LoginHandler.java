@@ -2,8 +2,7 @@ package http.handler;
 
 import com.google.common.collect.Maps;
 import db.DataBase;
-import http.common.HttpHeaders;
-import http.common.HttpStatus;
+import http.common.*;
 import http.request.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import utils.FileIoUtils;
@@ -13,17 +12,13 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
 
+import static http.common.Cookies.*;
 import static http.common.HttpHeader.LOCATION_HEADER_NAME;
+import static http.common.HttpHeaders.SET_COOKIE_HEADER_NAME;
 
 @Slf4j
 public class LoginHandler extends AbstractHandler {
     private static final String INDEX_PATH = "/index.html";
-
-    public static final String SET_COOKIE_HEADER_NAME = "Set-Cookie";
-    public static final String LOGIN_SUCCESS_COOKIE_VALUE = "logined=true";
-    public static final String LOGIN_FAIL_COOKIE_VALUE = "logined=false";
-    public static final String ROOT_PATH_COOKIE_VALUE = "Path=/";
-    public static final String COOKIE_VALUE_DELIMITER = "; ";
 
     private static final String USER_ID_KEY = "userId";
     private static final String PASSWORD_KEY = "password";
@@ -44,24 +39,28 @@ public class LoginHandler extends AbstractHandler {
 
         if (isAuthenticUser(httpRequest)) {
             httpHeaders.put(LOCATION_HEADER_NAME, getPath());
-            httpHeaders.put(SET_COOKIE_HEADER_NAME, getCookieValue(LOGIN_SUCCESS_COOKIE_VALUE));
+
+            Cookies cookies = getLoginSuccessCookies();
+            httpHeaders.put(SET_COOKIE_HEADER_NAME, cookies.toString());
         }
         else {
             httpHeaders.put(LOCATION_HEADER_NAME, LOGIN_FAILED_PATH);
-            httpHeaders.put(SET_COOKIE_HEADER_NAME, getCookieValue(LOGIN_FAIL_COOKIE_VALUE));
         }
 
         return new HttpHeaders(httpHeaders);
     }
 
-    private String getCookieValue(String cookieValue) {
-        return cookieValue + COOKIE_VALUE_DELIMITER + ROOT_PATH_COOKIE_VALUE;
+    private Cookies getLoginSuccessCookies() {
+        HttpSession session = HttpSessionUtil.getSession();
+        Map<String, String> cookiesMap = Maps.newHashMap();
+        cookiesMap.put(SESSION_ID_COOKIE_NAME, session.getId());
+        return new Cookies(cookiesMap);
     }
 
     @Override
-    public byte[] getHttpResponseBody(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        if (isAuthenticUser(httpRequest)) {
-            return super.getHttpResponseBody(httpRequest);
+    public byte[] getHttpResponseBody(HttpRequest response) throws IOException, URISyntaxException {
+        if (isAuthenticUser(response)) {
+            return super.getHttpResponseBody(response);
         }
 
         return FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + LOGIN_FAILED_PATH);
@@ -81,6 +80,6 @@ public class LoginHandler extends AbstractHandler {
     }
 
     private String getBodyMapValue(HttpRequest httpRequest, String key) {
-        return httpRequest.getBodyMapValue(key);
+        return httpRequest.getParameterMapValue(key);
     }
 }

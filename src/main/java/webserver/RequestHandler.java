@@ -1,11 +1,9 @@
 package webserver;
 
-import http.handler.Handler;
-import http.handler.mapper.HandlerMapper;
+import http.handler.mapper.Dispatcher;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
-import utils.StringUtils;
 
 import java.io.*;
 import java.net.Socket;
@@ -30,21 +28,13 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
-            String requestLineStr = br.readLine();
-            log.debug("requestLine: {}", requestLineStr);
+            HttpRequest httpRequest = HttpRequest.parse(br);
 
-            if (Objects.isNull(requestLineStr)) {
+            if (Objects.isNull(httpRequest)) {
                 return;
             }
 
-            HttpRequest httpRequest = HttpRequest.parse(requestLineStr, br);
-            log.debug("httpRequest: {}", StringUtils.toPrettyJson(httpRequest));
-
-            Handler handler = HandlerMapper.getHandler(httpRequest.getPath());
-            HttpResponse httpResponse = handler.getHttpResponse(httpRequest);
-            ResponseHandler.writeHttpResponse(dos, httpResponse);
-
-            log.debug("httpResponse: {}", StringUtils.toPrettyJson(httpResponse));
+            Dispatcher.dispatch(httpRequest, new HttpResponse(dos));
         }
         catch (IOException | URISyntaxException e) {
             log.error(e.getMessage());

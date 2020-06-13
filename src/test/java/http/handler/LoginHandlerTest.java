@@ -3,7 +3,7 @@ package http.handler;
 import db.DataBase;
 import http.common.HttpEntity;
 import http.common.HttpHeaders;
-import http.handler.mapper.HandlerMapper;
+import http.handler.mapper.Dispatcher;
 import http.request.HttpRequest;
 import http.request.requestline.RequestLine;
 import http.response.HttpResponse;
@@ -17,7 +17,9 @@ import utils.FileIoUtils;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import static http.common.Cookies.*;
 import static http.common.HttpHeader.LOCATION_HEADER_NAME;
+import static http.common.HttpHeaders.SET_COOKIE_HEADER_NAME;
 import static http.common.HttpMethod.POST;
 import static http.handler.CreateUserHandler.INDEX_PATH;
 import static http.handler.ListUserHandler.LOGIN_FAILED_PATH;
@@ -32,19 +34,20 @@ class LoginHandlerTest {
     void testGetHttpResponseForLoginSuccessUser() throws IOException, URISyntaxException {
         addUserToDataBase();
 
-        RequestLine requestLine = RequestLine.parse(POST.name() + " " + HandlerMapper.LOGIN.getUrl() + " HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse(POST.name() + " " + Dispatcher.LOGIN_USER_URL + " HTTP/1.1");
         String body = "userId=ninjasul&password=1234";
 
         HttpRequest httpRequest = new HttpRequest(requestLine, new HttpEntity(HttpHeaders.EMPTY, body));
+        HttpResponse httpResponse = new HttpResponse(null);
 
         Handler handler = new LoginHandler();
-        HttpResponse httpResponse = handler.getHttpResponse(httpRequest);
+        handler.handle(httpRequest, httpResponse);
 
         assertThat(httpResponse).isNotNull();
         assertThat(httpResponse.getHttpHeaderMap()).contains(
-                entry(LOCATION_HEADER_NAME, INDEX_PATH),
-                entry(SET_COOKIE_HEADER_NAME, LOGIN_SUCCESS_COOKIE_VALUE + COOKIE_VALUE_DELIMITER + ROOT_PATH_COOKIE_VALUE)
+                entry(LOCATION_HEADER_NAME, INDEX_PATH)
         );
+        assertThat(httpResponse.getCookie(SESSION_ID_COOKIE_NAME)).isNotEmpty();
         assertThat(httpResponse.getHttpBody()).isEqualTo(new String(FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + INDEX_PATH)));
 
         DataBase.clearAllUsers();
@@ -60,17 +63,18 @@ class LoginHandlerTest {
     void testGetHttpResponseForLoginFailedUser(String body) throws IOException, URISyntaxException {
         addUserToDataBase();
 
-        RequestLine requestLine = RequestLine.parse(POST.name() + " " + HandlerMapper.LOGIN.getUrl() + " HTTP/1.1");
+        RequestLine requestLine = RequestLine.parse(POST.name() + " " + Dispatcher.LOGIN_USER_URL + " HTTP/1.1");
         HttpRequest httpRequest = new HttpRequest(requestLine, new HttpEntity(HttpHeaders.EMPTY, body));
+        HttpResponse httpResponse = new HttpResponse(null);
 
         Handler handler = new LoginHandler();
-        HttpResponse httpResponse = handler.getHttpResponse(httpRequest);
+        handler.handle(httpRequest, httpResponse);
 
         assertThat(httpResponse).isNotNull();
         assertThat(httpResponse.getHttpHeaderMap()).contains(
-                entry(LOCATION_HEADER_NAME, LOGIN_FAILED_PATH),
-                entry(SET_COOKIE_HEADER_NAME, LOGIN_FAIL_COOKIE_VALUE + COOKIE_VALUE_DELIMITER + ROOT_PATH_COOKIE_VALUE)
+            entry(LOCATION_HEADER_NAME, LOGIN_FAILED_PATH)
         );
+        assertThat(httpResponse.getCookie(SESSION_ID_COOKIE_NAME)).isNull();
         assertThat(httpResponse.getHttpBody()).isEqualTo(new String(FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + LOGIN_FAILED_PATH)));
 
         DataBase.clearAllUsers();

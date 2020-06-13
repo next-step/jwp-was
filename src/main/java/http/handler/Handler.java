@@ -4,7 +4,6 @@ import http.common.HttpStatus;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -15,7 +14,7 @@ public interface Handler {
 
     String getContentType();
 
-    HttpResponse getHttpResponse(HttpRequest httpRequest) throws IOException, URISyntaxException;
+    void handle(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException;
 
-    byte[] getHttpResponseBody(HttpRequest httpRequest) throws IOException, URISyntaxException;
+    byte[] getHttpResponseBody(HttpRequest response) throws IOException, URISyntaxException;
 }
