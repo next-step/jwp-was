@@ -76,7 +76,7 @@ class HttpSessionTest {
 
         httpSession.removeAttribute(KEY);
 
-        assertThat(httpSession.getAttribute(KEY)).isEqualTo(null);
+        assertThat(httpSession.getAttribute(KEY)).isNull();
     }
 
     @Test
@@ -92,7 +92,7 @@ class HttpSessionTest {
 
         httpSession.invalidate();
 
-        assertThat(httpSession.getAttribute(KEY)).isEqualTo(null);
+        assertThat(httpSession.getAttribute(KEY)).isNull();
     }
 
 }
