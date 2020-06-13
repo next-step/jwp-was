@@ -58,6 +58,10 @@ public class RequestHandler implements Runnable {
             }
             logger.debug("Path URL : {}", path.getUrl());
             DataOutputStream dos = new DataOutputStream(out);
+            if (path.getUrl().equals("/user/create")) {
+                response302Header(dos);
+                return;
+            }
             byte[] body = FileIoUtils.loadFileFromClasspath("./templates"+path.getUrl());
             response200Header(dos, body.length);
             responseBody(dos, body);
@@ -73,6 +77,17 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(DataOutputStream dos) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 OK \r\n");
+            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Location: " + "/index.html" + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
