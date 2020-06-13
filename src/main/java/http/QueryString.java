@@ -2,7 +2,7 @@ package http;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import utils.RequestParseUtils;
+import utils.StringUtils;
 
 
 import java.util.Arrays;
@@ -15,20 +15,15 @@ public class QueryString {
 
     private MultiValueMap<String, String> parameters;
 
-    private QueryString(MultiValueMap<String, String> parameters) {
-        this.parameters = parameters;
-    }
-
-    public static QueryString from(String fullQueryString) {
+    public QueryString(String fullQueryString) {
         String[] pairs = fullQueryString.split(AMPERSAND_DELIMITER);
 
-        MultiValueMap<String, String> parameters = Arrays.stream(pairs)
-                .filter(pair -> !pair.isEmpty())
-                .map(pair -> RequestParseUtils.splitIntoPair(pair, EQUALS_SIGN))
+        this.parameters = Arrays.stream(pairs)
+                .filter(pair -> !StringUtils.isEmpty(pair) && !EQUALS_SIGN.equals(pair))
+                .map(pair -> StringUtils.splitIntoPair(pair, EQUALS_SIGN))
                 .collect(LinkedMultiValueMap::new,
-                        (m, v) -> m.add(v[0], RequestParseUtils.convertToNullIfEmpty(v[1])),
+                        (m, v) -> m.add(v[0], StringUtils.convertToNullIfEmpty(v[1])),
                         LinkedMultiValueMap::addAll);
-        return new QueryString(parameters);
     }
 
     @Override
@@ -44,7 +39,7 @@ public class QueryString {
         return Objects.hash(parameters);
     }
 
-    public List<String> getParameters(String key) {
+    public List<String> getParameter(String key) {
         return parameters.get(key);
     }
 

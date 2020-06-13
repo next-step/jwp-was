@@ -1,6 +1,6 @@
 package utils;
 
-public class RequestParseUtils {
+public class StringUtils {
 
     public static String convertToNullIfEmpty(String text) {
         if (text != null && text.isEmpty()) {
@@ -14,7 +14,7 @@ public class RequestParseUtils {
     }
 
     public static String[] splitIntoPair(String target, String delimiter) {
-        if(isEmpty(target) || isEmpty(delimiter)) {
+        if (isEmpty(target) || isEmpty(delimiter)) {
             throw new IllegalArgumentException();
         }
 

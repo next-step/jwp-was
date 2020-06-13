@@ -2,7 +2,6 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.URISyntaxException;
 
 
 import http.RequestMessage;
@@ -23,7 +22,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            RequestMessage requestMessage = HttpMessageFactory.makeRequestMessage(new BufferedReader(new InputStreamReader(in)));
+            RequestMessage requestMessage = RequestMessage.from(new BufferedReader(new InputStreamReader(in)));
             byte[] body = ResourceMapper.getResource(requestMessage);
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length);

@@ -1,6 +1,7 @@
 package http;
 
-import utils.RequestParseUtils;
+
+import utils.StringUtils;
 
 
 import java.util.Arrays;
@@ -12,6 +13,7 @@ public enum Protocol {
     HTTP_V2_0("HTTP", "2.0");
 
     private static final String SLASH_DELIMITER = "/";
+    public static final String PROTOCOL_IS_UNSUPPORTED = "protocol is unsupported.";
 
     private final String type;
     private final String version;
@@ -22,14 +24,14 @@ public enum Protocol {
     }
 
     public static Protocol from(String fullProtocol) {
-        String[] splittedProtocol = RequestParseUtils.splitIntoPair(fullProtocol, SLASH_DELIMITER);
-        return Protocol.of(splittedProtocol[0], splittedProtocol[1]);
+        String[] values = StringUtils.splitIntoPair(fullProtocol, SLASH_DELIMITER);
+        return Protocol.of(values[0], values[1]);
     }
 
     public static Protocol of(String protocol, String version) {
         return Arrays.stream(Protocol.values())
                 .filter(v -> v.type.equals(protocol) && v.version.equals(version))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Unsupported Protocol."));
+                .orElseThrow(() -> new IllegalArgumentException(protocol + SLASH_DELIMITER + version + PROTOCOL_IS_UNSUPPORTED));
     }
 }

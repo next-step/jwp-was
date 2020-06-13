@@ -1,9 +1,13 @@
 package http;
 
+import utils.StringUtils;
+
+
 import java.util.Objects;
 
 public class RequestLine {
     private static final String SPACE_DELIMITER = " ";
+    public static final String REQUEST_LINE_IS_INVALID = "request line is invalid.";
 
     private final HttpMethod method;
     private final Uri uri;
@@ -16,8 +20,16 @@ public class RequestLine {
     }
 
     public static RequestLine from(String fullRequestLine) {
-        String[] splittedRequestLine = fullRequestLine.split(SPACE_DELIMITER);
-        return new RequestLine(HttpMethod.valueOf(splittedRequestLine[0]), Uri.from(splittedRequestLine[1]), Protocol.from(splittedRequestLine[2]));
+        if (StringUtils.isEmpty(fullRequestLine)) {
+            throw new IllegalArgumentException(REQUEST_LINE_IS_INVALID);
+        }
+
+        String[] values = fullRequestLine.split(SPACE_DELIMITER);
+        if (values.length != 3) {
+            throw new IllegalArgumentException(REQUEST_LINE_IS_INVALID);
+        }
+
+        return new RequestLine(HttpMethod.valueOf(values[0]), Uri.from(values[1]), Protocol.from(values[2]));
     }
 
     public static RequestLine of(String method, String uri, String protocol, String version) {
@@ -31,7 +43,7 @@ public class RequestLine {
         RequestLine that = (RequestLine) o;
         return method == that.method &&
                 Objects.equals(uri, that.uri) &&
-                Objects.equals(protocol, that.protocol);
+                protocol == that.protocol;
     }
 
     @Override

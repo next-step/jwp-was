@@ -12,11 +12,13 @@ public class UriTest {
     @Test
     void test_parsing_uri_should_pass() {
         // given
-        String fullUri = "/users?userId=javajigi&password=password&name=JaeSung";
+        String fullUri = "/users?userId=crystal&password=password&name=Sujung";
         // when
         Uri uri = Uri.from(fullUri);
         // then
-        assertThat(uri.equals(Uri.of("/users", "userId=javajigi&password=password&name=JaeSung"))).isTrue();
+        assertThat(uri.getPath()).isEqualTo("/users");
+        assertThat(uri.getQueryString()).isEqualTo(new QueryString("userId=crystal&password=password&name=Sujung"));
+//        assertThat(uri.equals(Uri.of("/users", "userId=crystal&password=password&name=Sujung"))).isTrue();
     }
 
     @DisplayName("쿼리스트링 없이 경로만 존재하면 쿼리스트링은 비어있다.")
@@ -24,10 +26,10 @@ public class UriTest {
     void parse_uri_without_querystring() {
         // given
         String fullUri = "/users";
-        String noQueryString = "";
         // when
         Uri uri = Uri.from(fullUri);
         // then
-        assertThat(uri.equals(Uri.of(fullUri, noQueryString))).isTrue();
+        assertThat(uri.getPath()).isEqualTo("/users");
+        assertThat(uri.getQueryString()).isEqualTo(new QueryString(""));
     }
 }
