@@ -28,4 +28,8 @@ public class HttpSession {
         return attributes.get(key);
     }
 
+    public void removeAttribute(String key) {
+        attributes.remove(key);
+    }
+
 }
