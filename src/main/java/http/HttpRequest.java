@@ -54,4 +54,8 @@ public class HttpRequest {
     public HttpMethod getMethod() {
         return requestLine.getMethod();
     }
+
+    public boolean isGET() {
+        return this.requestLine.getMethod() == HttpMethod.GET;
+    }
 }
