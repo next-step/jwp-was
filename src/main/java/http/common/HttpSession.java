@@ -1,13 +1,11 @@
 package http.common;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class HttpSession {
 
     private String id;
-    private Map<String, Object> attributes;
+    private Attributes attributes;
 
     public HttpSession() {
         UUID uuid = UUID.randomUUID();
@@ -16,7 +14,7 @@ public class HttpSession {
     }
 
     private void initAttribute() {
-        this.attributes = new HashMap<>();
+        this.attributes = new Attributes();
     }
 
     public String getId() {
