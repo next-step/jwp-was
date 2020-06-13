@@ -1,12 +1,14 @@
 package http.request;
 
 import http.common.Cookies;
+import webserver.session.HttpSession;
 
 public class HttpRequest {
     private final RequestLine requestLine;
     private final RequestHeader header;
     private final Cookies cookies;
     private final String body;
+    private HttpSession session;
 
     public HttpRequest(RequestLine requestLine, RequestHeader header, Cookies cookies, String body) {
         this.requestLine = requestLine;
@@ -29,5 +31,12 @@ public class HttpRequest {
 
     public String getCookie(String cookieName) {
         return cookies.getValue(cookieName);
+    }
+
+    public HttpSession getSession(boolean create) {
+        if (session == null && create) {
+            this.session = new HttpSession();
+        }
+        return session;
     }
 }
