@@ -22,14 +22,14 @@ public class User {
         if (StringUtils.isEmpty(requestParameter)) return null;
         String[] parameters = requestParameter.split("&");
         int index = 0;
-        Map parameterMap = new HashMap();
+        Map<String, String> parameterMap = new HashMap();
         while(index < parameters.length) {
             String[] keyvalue = parameters[index].split("=");
             parameterMap.put(keyvalue[0], keyvalue[1]);
             index++;
         }
-        return new User(parameterMap.get("userId").toString(), parameterMap.get("password").toString(),
-                parameterMap.get("name").toString(), parameterMap.get("email").toString());
+        return new User(parameterMap.get("userId"), parameterMap.get("password"),
+                parameterMap.get("name"), parameterMap.get("email"));
     }
 
     public String getUserId() {

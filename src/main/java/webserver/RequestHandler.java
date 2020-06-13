@@ -3,6 +3,7 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 
+import db.DataBase;
 import http.HttpMethod;
 import http.Path;
 import http.RequestHeaderLine;
@@ -32,6 +33,7 @@ public class RequestHandler implements Runnable {
             Path path = null;
             RequestHeaderLine requestHeaderLine = null;
             int contentLength = 0;
+            boolean isLoginSuccess = false;
             while(line != null) {
                 logger.debug("line : {}", line);
                 RequestHeaderLineType requestHeaderLineType = RequestHeaderLineType.parse(line);
@@ -50,8 +52,23 @@ public class RequestHandler implements Runnable {
                     contentLength = Integer.parseInt(line.split(" ")[1]);
                 if ((requestHeaderLine.getMethod() == HttpMethod.POST) &&
                         (requestHeaderLineType == RequestHeaderLineType.EMPTY_LINE)) {
-                    User user = User.of(IOUtils.readData(br, contentLength));
-                    logger.debug("user toString: {}", user.toString());
+                    if (path.getUrl().equals("/user/create")) {
+                        User user = User.of(IOUtils.readData(br, contentLength));
+                        DataBase.addUser(user);
+                    }
+                    if (path.getUrl().equals("/user/login")) {
+                        User user = User.of(IOUtils.readData(br, contentLength));
+                        logger.debug("login user : {}", user.toString());
+                        User findUser = DataBase.findUserById(user.getUserId());
+                        logger.debug("findUser : {}", findUser);
+                        if (findUser == null) {
+                            logger.debug("로그인 실패");
+                        }
+                        if (findUser != null && findUser.getPassword().equals(user.getPassword())) {
+                            logger.debug("로그인 성공");
+                            isLoginSuccess = true;
+                        }
+                    }
                     break;
                 }
                 line = br.readLine();
@@ -60,6 +77,15 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
             if (path.getUrl().equals("/user/create")) {
                 response302Header(dos);
+                return;
+            }
+            if (path.getUrl().equals("/user/login")) {
+                byte[] body = FileIoUtils.loadFileFromClasspath("./templates"+"/user/login_failed.html");
+                if (isLoginSuccess) {
+                    body = FileIoUtils.loadFileFromClasspath("./templates"+"/index.html");
+                }
+                response200Header(dos, body.length);
+                responseBody(dos, body);
                 return;
             }
             byte[] body = FileIoUtils.loadFileFromClasspath("./templates"+path.getUrl());
