@@ -6,19 +6,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MappingResources {
+    private static final String CSS_EXTENSION = "css";
+    private static final String IMAGE_PNG_EXTENSION = "png";
+    private static final String JAVASCRIPT_EXTENSION = "js";
+    private static final String FONT_EOT_EXTENSION = "eot";
+    private static final String FONT_SVG_EXTENSION = "svg";
+    private static final String FONT_TTF_EXTENSION = "ttf";
+    private static final String FONT_WOFF_EXTENSION = "woff";
+    private static final String FONT_WOFF2_EXTENSION = "woff2";
 
     private static final Map<String, ResourceController> mappingResources;
 
     static {
         mappingResources = new HashMap<>();
-        mappingResources.put("css", new CssController());
-        mappingResources.put("png", new ImageController());
-        mappingResources.put("js", new JsController());
-        mappingResources.put("eot", new FontController());
-        mappingResources.put("svg", new FontController());
-        mappingResources.put("ttf", new FontController());
-        mappingResources.put("woff", new FontController());
-        mappingResources.put("woff2", new FontController());
+        mappingResources.put(CSS_EXTENSION, new CssController());
+        mappingResources.put(IMAGE_PNG_EXTENSION, new ImageController());
+        mappingResources.put(JAVASCRIPT_EXTENSION, new JsController());
+        mappingResources.put(FONT_EOT_EXTENSION, new FontController());
+        mappingResources.put(FONT_SVG_EXTENSION, new FontController());
+        mappingResources.put(FONT_TTF_EXTENSION, new FontController());
+        mappingResources.put(FONT_WOFF2_EXTENSION, new FontController());
+        mappingResources.put(FONT_WOFF_EXTENSION, new FontController());
     }
 
     public static ResourceController getResourceController(String path) {
