@@ -57,4 +57,15 @@ class HttpSessionTest {
         assertThat(result).isEqualTo(value);
     }
 
+    @Test
+    @DisplayName("HttpSession에서 존재하지 않는 키로 attribute를 가져올 경우 null을 반환한다")
+    void notExistAttributeKey() {
+        final HttpSession httpSession = new HttpSession();
+        final String key = "a";
+
+        final Object result = httpSession.getAttribute(key);
+
+        assertThat(result).isEqualTo(null);
+    }
+
 }
