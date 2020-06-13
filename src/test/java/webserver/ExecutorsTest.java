@@ -1,40 +1,86 @@
 package webserver;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.StopWatch;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 public class ExecutorsTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExecutorsTest.class);
+    @Test
+    void performance_test() throws InterruptedException, BrokenBarrierException, ExecutionException {
+        final int poolSize = 10;
+        WebServer webServer = rueWebServer(poolSize);
 
-    private static AtomicInteger counter = new AtomicInteger(0);
+        List<Future<HttpStatus>> status = call(100);
 
-    public static void main(String[] args) throws Exception {
-        ExecutorService es = Executors.newFixedThreadPool(100);
-
-        StopWatch sw = new StopWatch();
-        sw.start();
-        for (int i = 0; i < 100; i++) {
-            es.execute(() -> {
-                int idx = counter.addAndGet(1);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                logger.info("Thread {}", idx);
-            });
+        for (Future<HttpStatus> httpStatus : status){
+            assertThat(httpStatus.get()).isEqualTo(HttpStatus.OK);
         }
-        sw.stop();
+        webServer.stop();
+    }
 
-        es.shutdown();
-        es.awaitTermination(100, TimeUnit.SECONDS);
-        logger.info("Total Elaspsed: {}", sw.getTotalTimeSeconds());
+    private List<Future<HttpStatus>> call(final int requestCount) throws InterruptedException, BrokenBarrierException {
+        ExecutorService executor = Executors.newFixedThreadPool(requestCount);
+
+        CyclicBarrier barrier = new CyclicBarrier(requestCount + 1);
+
+        List<Future<HttpStatus>> status = IntStream.range(0, requestCount).mapToObj(value -> executor.submit(() -> {
+            RestTemplate restTemplate = new RestTemplate();
+            try {
+                barrier.await();
+            } catch (BrokenBarrierException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                ResponseEntity<String> response = restTemplate
+                    .getForEntity("http://localhost:9000", String.class);
+                return response.getStatusCode();
+            } catch (RestClientException e) {
+               return HttpStatus.BAD_GATEWAY;
+            }
+        })).collect(Collectors.toList());
+        barrier.await();
+
+        executor.shutdown();
+        executor.awaitTermination(5, TimeUnit.SECONDS);
+
+        return status;
+    }
+
+    private WebServer rueWebServer(int poolSize) {
+        WebServer webServer = new WebServer(9000,
+            new ThreadPoolExecutor(poolSize, poolSize, 1, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(100))
+        );
+
+        Thread thread = new Thread(() -> {
+            try {
+                webServer.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
+        while (!webServer.isRunning()) {
+        }
+
+        return webServer;
     }
 }
 
