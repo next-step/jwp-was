@@ -11,6 +11,7 @@ import http.response.HttpResponse;
 import model.Users;
 import utils.HandlebarsHelper;
 import webserver.controller.AbstractController;
+import webserver.session.HttpSession;
 
 import java.io.IOException;
 
@@ -29,7 +30,7 @@ public class UserListController extends AbstractController {
 
     @Override
     protected void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (!isLogined(httpRequest)) {
+        if (!isAuthenticated(httpRequest.getSession(false))) {
             httpResponse.response302("/index.html");
         }
         final Users users = new Users(DataBase.findAll());
@@ -50,9 +51,18 @@ public class UserListController extends AbstractController {
         }
     }
 
-    private boolean isLogined(HttpRequest httpRequest) {
-        final String logined = httpRequest.getCookie("logined");
-        return "true".equals(logined);
+    private boolean isAuthenticated(HttpSession session) {
+        if (session == null) {
+            return false;
+        }
+
+        Object isAuthenticatedObj = session.getAttribute("isAuthenticated");
+
+        if (isAuthenticatedObj == null) {
+            return false;
+        }
+
+        return (boolean) isAuthenticatedObj;
     }
 
 }

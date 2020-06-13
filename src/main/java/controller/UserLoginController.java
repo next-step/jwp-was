@@ -6,6 +6,7 @@ import http.request.Parameters;
 import http.response.HttpResponse;
 import model.User;
 import webserver.controller.AbstractController;
+import webserver.session.HttpSession;
 
 public class UserLoginController extends AbstractController {
 
@@ -30,12 +31,10 @@ public class UserLoginController extends AbstractController {
 
         if (user.matchPassword(password)) {
             httpResponse.response302("/index.html");
-            httpResponse.addCookie("logined", "true");
-            httpResponse.addCookiePath("/");
+            HttpSession session = httpRequest.getSession(true);
+            session.setAttribute("isAuthenticated", true);
         } else {
             httpResponse.response302("/user/login_failed.html");
-            httpResponse.addCookie("logined", "false");
-            httpResponse.addCookiePath("/");
         }
     }
 
