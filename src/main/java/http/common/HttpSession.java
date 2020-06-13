@@ -10,4 +10,8 @@ public class HttpSession {
         UUID uuid = UUID.randomUUID();
         this.id = uuid.toString();
     }
+
+    public String getId() {
+        return id;
+    }
 }
