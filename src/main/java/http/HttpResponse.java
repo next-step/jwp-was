@@ -26,7 +26,7 @@ public class HttpResponse {
     private void writeResponse() {
         try {
             this.outputStream.writeBytes(responseCode.makeHeader());
-            this.outputStream.writeBytes(cookie.writeCookieValue());
+            this.outputStream.writeBytes(headers.makeCookieHeader(cookie));
             this.outputStream.writeBytes(headers.makeResponseHeader());
             this.outputStream.write(this.responseBody, 0, responseBody.length);
 
