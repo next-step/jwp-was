@@ -16,7 +16,7 @@ public class HttpRequestTest {
     private String testDirectory = "./src/test/resources/";
 
     @Test
-    @DisplayName("Http Request Message를 정상적으로 파싱할 수 있다")
+    @DisplayName("GET 메서드의 Http Request Message를 정상적으로 파싱할 수 있다")
     public void request_GET() throws Exception {
         final InputStream in = new FileInputStream(new File(testDirectory + "Http_GET.txt"));
         final HttpRequest request = RequestReader.read(in);
@@ -26,4 +26,17 @@ public class HttpRequestTest {
         assertEquals("keep-alive", request.getHeader("Connection"));
         assertEquals("javajigi", request.getParameter("userId"));
     }
+
+    @Test
+    @DisplayName("POST 메서드의 Http Request Message를 정상적으로 파싱할 수 있다")
+    public void request_POST() throws Exception {
+        final InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.txt"));
+        final HttpRequest request = RequestReader.read(in);
+
+        assertEquals(HttpMethod.POST, request.getMethod());
+        assertEquals("/user/create", request.getPath());
+        assertEquals("keep-alive", request.getHeader("Connection"));
+        assertEquals("javajigi", request.getParameter("userId"));
+    }
+
 }
