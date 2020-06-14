@@ -37,7 +37,6 @@ public class MappingResources {
         String[] names = path.split("\\.");
         int size = names.length;
         if (size > 0) {
-            System.out.println(names[size - 1]);
             return names[size - 1];
         }
         return path;
