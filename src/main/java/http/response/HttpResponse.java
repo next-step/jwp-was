@@ -15,6 +15,7 @@ public class HttpResponse {
     private byte[] responseBody;
 
     public HttpResponse() {
+        statusCode = StatusCode.OK;
         header = new ResponseHeader();
         cookies = new Cookies();
         responseBody = new byte[0];
@@ -40,12 +41,6 @@ public class HttpResponse {
         return cookies;
     }
 
-    public void response302(String locationUrl) {
-        this.statusCode = StatusCode.FOUND;
-        HeaderField locationHeader = new HeaderField(HeaderFieldName.LOCATION, locationUrl);
-        header.addHeader(locationHeader);
-    }
-
     public ResponseHeader getHeader() {
         return header;
     }
@@ -62,17 +57,22 @@ public class HttpResponse {
         return responseBody;
     }
 
-    public void addCookiePath(String path) {
-        this.cookies.setPath(path);
+    public void setContentType(ContentType contentType) {
+        header.addHeader(new HeaderField(HeaderFieldName.CONTENT_TYPE, contentType.getValue()));
     }
 
-    public void response200(ContentType contentType, byte[] body) {
-        this.statusCode = StatusCode.OK;
-        final String contentTypeValue = contentType.getValue();
+    public void setBody(String bodyStr) {
+        setBody(bodyStr.getBytes());
+    }
 
-        header.addHeader(new HeaderField(HeaderFieldName.CONTENT_TYPE, contentTypeValue));
+    public void setBody(byte[] body) {
         header.addHeader(new HeaderField(HeaderFieldName.CONTENT_LENGTH, String.valueOf(body.length)));
         this.responseBody = body;
+    }
+
+    public void sendRedirect(String redirectUrl) {
+        this.statusCode = StatusCode.FOUND;
+        header.addHeader(new HeaderField(HeaderFieldName.LOCATION, redirectUrl));
     }
 
 }

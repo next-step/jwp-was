@@ -31,7 +31,7 @@ public class UserListController extends AbstractController {
     @Override
     protected void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
         if (!isAuthenticated(httpRequest.getSession(false))) {
-            httpResponse.response302("/index.html");
+            httpResponse.sendRedirect("/index.html");
             return;
         }
         final Users users = new Users(DataBase.findAll());
@@ -45,10 +45,11 @@ public class UserListController extends AbstractController {
 
         try {
             final Template template = handlebars.compile("user/list");
-            byte[] htmlFile = template.apply(users).getBytes();
-            httpResponse.response200(ContentType.TEXT_HTML_UTF_8, htmlFile);
+            String htmlFile = template.apply(users);
+            httpResponse.setContentType(ContentType.TEXT_HTML_UTF_8);
+            httpResponse.setBody(htmlFile);
         } catch (IOException e) {
-            httpResponse.response302("/index.html");
+            httpResponse.setBody("/index.html");
         }
     }
 

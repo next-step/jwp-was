@@ -25,7 +25,8 @@ public class HtmlController implements Controller {
         final String path = httpRequest.getPath();
         try {
             final byte[] html = FileIoUtils.loadFileFromClasspath("./templates/" + path);
-            httpResponse.response200(ContentType.TEXT_HTML_UTF_8, html);
+            httpResponse.setContentType(ContentType.TEXT_HTML_UTF_8);
+            httpResponse.setBody(html);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }

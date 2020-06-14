@@ -26,6 +26,6 @@ public class UserCreateController extends AbstractController {
         final String email = httpRequest.getParameter("email");
         DataBase.addUser(new User(userId, password, name, email));
 
-        httpResponse.response302("/index.html");
+        httpResponse.sendRedirect("/index.html");
     }
 }

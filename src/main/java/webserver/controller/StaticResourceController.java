@@ -25,7 +25,8 @@ public class StaticResourceController implements Controller {
         final String path = httpRequest.getPath();
         try {
             final byte[] stylesheet = FileIoUtils.loadFileFromClasspath("./static/" + path);
-            httpResponse.response200(ContentType.TEXT_CSS_UTF_8, stylesheet);
+            httpResponse.setContentType(ContentType.TEXT_CSS_UTF_8);
+            httpResponse.setBody(stylesheet);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }

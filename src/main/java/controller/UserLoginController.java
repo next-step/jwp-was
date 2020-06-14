@@ -29,11 +29,11 @@ public class UserLoginController extends AbstractController {
         final User user = DataBase.findUserById(userId);
 
         if (user.matchPassword(password)) {
-            httpResponse.response302("/index.html");
+            httpResponse.sendRedirect("/index.html");
             HttpSession session = httpRequest.getSession(true);
             session.setAttribute("isAuthenticated", true);
         } else {
-            httpResponse.response302("/user/login_failed.html");
+            httpResponse.sendRedirect("/user/login_failed.html");
         }
     }
 
