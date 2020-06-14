@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import utils.Args;
 
 /**
- * Created by iltaek on 2020/06/03 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
+ * Created by iltaek on 2020/06/11 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
  */
 public class RequestLine {
 
@@ -13,43 +13,35 @@ public class RequestLine {
     private static final Pattern REQUEST_LINE_PATTERN = Pattern.compile(REQUEST_LINE_FORMAT);
     protected static final String ILLEGAL_REQUEST_LINE = "유효하지 않은 요청입니다.";
 
-    private final HttpMethod httpMethod;
+    private final HttpMethod method;
     private final RequestURI requestURI;
     private final ProtocolVersion protocolVersion;
 
-    public static RequestLine of(String requestLineInput) {
-        Matcher requestLineMatcher = Args.checkPattern(REQUEST_LINE_PATTERN.matcher(requestLineInput), ILLEGAL_REQUEST_LINE);
+    private RequestLine(String method, String uri, String protocolVersion) {
+        this.method = HttpMethod.of(method);
+        this.requestURI = new RequestURI(uri);
+        this.protocolVersion = new ProtocolVersion(protocolVersion);
+    }
+
+    public static RequestLine of(String line) {
+        Matcher requestLineMatcher = Args.checkPattern(REQUEST_LINE_PATTERN.matcher(line), ILLEGAL_REQUEST_LINE);
         return new RequestLine(requestLineMatcher.group("method"),
-            requestLineMatcher.group("uri"), new ProtocolVersion(requestLineMatcher.group("version")));
+            requestLineMatcher.group("uri"), requestLineMatcher.group("version"));
     }
 
-    public RequestLine(String httpMethod, String path, ProtocolVersion protocolVersion) {
-        this.httpMethod = HttpMethod.of(httpMethod);
-        this.requestURI = new RequestURI(path);
-        this.protocolVersion = protocolVersion;
-    }
-
-    public String getHttpMethod() {
-        return this.httpMethod.name();
+    public HttpMethod getMethod() {
+        return method;
     }
 
     public String getPath() {
-        return this.requestURI.getPath();
+        return requestURI.getPath();
     }
 
-    public String getQueryString() {
-        return this.requestURI.getQueryString();
+    public QueryString getQueryString() {
+        return requestURI.getQueryString();
     }
 
-    public QueryString getQuery() {
-        return this.requestURI.getQuery();
-    }
-
-    public String getProtocolVersion() {
-        return this.protocolVersion.getHttpProtocol();
-    }
-
-    public String getVersion() {
-        return this.protocolVersion.getVersion();
+    public ProtocolVersion getProtocolVersion() {
+        return protocolVersion;
     }
 }

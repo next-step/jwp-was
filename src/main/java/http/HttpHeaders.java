@@ -1,50 +1,39 @@
 package http;
 
-import java.util.HashMap;
+import com.google.common.collect.Maps;
 import java.util.Map;
-import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.stream.Collectors;
+import utils.Args;
 
 /**
- * Created by iltaek on 2020/06/09 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
+ * Created by iltaek on 2020/06/11 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
  */
 public class HttpHeaders {
 
+    protected static final String ILLEGAL_HEADER = "유효하지 않은 Header 입니다.";
     private static final String HEADER_DELIMITER = ": ";
     private static final String CRLF = "\r\n";
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpHeaders.class);
-
-    private Map<String, String> requestHeaders = new HashMap<>();
+    private final Map<String, String> headers = Maps.newHashMap();
 
     public void addHeader(String line) {
-        logger.debug("header : {}", line);
-        String[] headerValues = line.split(HEADER_DELIMITER);
-        requestHeaders.put(headerValues[0].trim(), headerValues[1].trim());
+        String[] values = line.split(HEADER_DELIMITER, -1);
+        Args.check(values.length == 2, ILLEGAL_HEADER);
+        headers.put(values[0].trim(), values[1].trim());
     }
 
     public void addHeader(String key, String value) {
-        requestHeaders.put(key, value);
+        headers.put(Args.notNull(key, ILLEGAL_HEADER), value);
     }
 
-    public String getHeader(String key) {
-        return requestHeaders.get(key);
-    }
-
-    public int getContentLength() {
-        String contentLength = requestHeaders.get(HttpHeaderName.CONTENT_LENGTH.toString());
-        return contentLength == null ? 0 : Integer.parseInt(contentLength);
+    public String getHeader(String headerName) {
+        return headers.get(headerName);
     }
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
-        Set<String> keys = requestHeaders.keySet();
-        for (String key : keys) {
-            sb.append(key).append(HEADER_DELIMITER).append(requestHeaders.get(key)).append(CRLF);
-        }
-        sb.append(CRLF);
-        return sb.toString();
+        return headers.keySet().stream()
+            .map(key -> key + HEADER_DELIMITER + headers.get(key) + CRLF)
+            .collect(Collectors.joining(""));
     }
 }

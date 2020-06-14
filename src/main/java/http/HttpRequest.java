@@ -1,86 +1,47 @@
 package http;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.net.URLDecoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utils.IOUtils;
-
 /**
- * Created by iltaek on 2020/06/09 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
+ * Created by iltaek on 2020/06/11 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
  */
 public class HttpRequest {
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
-
-    private static final String CHAR_SET = "UTF-8";
-
     private final RequestLine requestLine;
-    private final HttpHeaders requestHeaders;
+    private final HttpHeaders headers;
+    private final Cookies cookies;
     private final QueryString queryString;
 
-
-    public HttpRequest(BufferedReader br) {
-        this.requestLine = RequestLine.of(getFirstLine(br));
-        this.requestHeaders = processHeaders(br);
-        this.queryString = QueryString.of(getQuery(br));
+    public HttpRequest(RequestLine requestLine, HttpHeaders headers, QueryString queryString) {
+        this.requestLine = requestLine;
+        this.headers = headers;
+        this.cookies = getCookies(headers);
+        this.queryString = queryString;
     }
 
-    private String getFirstLine(BufferedReader br) {
-        String line = null;
-        try {
-            line = br.readLine();
-            logger.debug("request line : {}", line);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-        return line;
-    }
-
-    private String getQuery(BufferedReader br) {
-        int contentLength = requestHeaders.getContentLength();
-        return readQueryFromBody(br, contentLength);
-    }
-
-    private String readQueryFromBody(BufferedReader br, int contentLength) {
-        try {
-            return URLDecoder.decode(IOUtils.readData(br, contentLength), CHAR_SET);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-            return null;
-        }
-    }
-
-    public String getMethod() {
-        return requestLine.getHttpMethod();
-    }
-
-    public String getParameter(String key) {
-        return queryString.getPrameter(key);
+    private Cookies getCookies(HttpHeaders headers) {
+        return new Cookies(headers.getHeader(HttpHeaderNames.COOKIE.toString()));
     }
 
     public String getPath() {
         return requestLine.getPath();
     }
 
-    public String getHeader(String header) {
-        return requestHeaders.getHeader(header);
+    public String getHeader(String key) {
+        return headers.getHeader(key);
     }
 
-    private HttpHeaders processHeaders(BufferedReader br) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        String line;
-        try {
-            line = br.readLine();
-            while (line != null && !line.equals("") ) {
-                logger.debug("header : {}", line);
-                httpHeaders.addHeader(line);
-                line = br.readLine();
-            }
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-        return httpHeaders;
+    public String getCookie(String key) {
+        return cookies.getCookie(key);
+    }
+
+    public void addCookie(String key, String value) {
+        cookies.addCookie(key, value);
+    }
+
+    public String getParameter(String key) {
+        return queryString.getParameter(key);
+    }
+
+    public boolean isGET() {
+        return this.requestLine.getMethod() == HttpMethod.GET;
     }
 }

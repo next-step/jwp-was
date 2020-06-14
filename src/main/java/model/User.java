@@ -22,8 +22,12 @@ public class User {
     }
 
     public static User ofRequest(HttpRequest request) {
-        return new User(request.getParameter(USER_ID_FIELD), request.getParameter(PASSWORD_FIELD),
-            request.getParameter(NAME_FIELD), request.getParameter(EMAIL_FIELD));
+        final String userId = request.getParameter("userId");
+        final String password = request.getParameter("password");
+        final String name = request.getParameter("name");
+        final String email = request.getParameter("email");
+
+        return new User(userId, password, name, email);
     }
 
     public String getUserId() {
@@ -42,7 +46,7 @@ public class User {
         return email;
     }
 
-    public boolean isPasswordCorrect(String password) {
+    public boolean login(String password) {
         return this.password.equals(password);
     }
 

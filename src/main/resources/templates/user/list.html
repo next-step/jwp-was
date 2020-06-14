@@ -39,7 +39,7 @@
                         <li><a href="https://facebook.com" target="_blank">Facebook</a></li>
                     </ul>
                 </li>
-                <li><a href="../user/list.html"><i class="glyphicon glyphicon-user"></i></a></li>
+                <li><a href="../user/list"><i class="glyphicon glyphicon-user"></i></a></li>
             </ul>
         </div>
     </div>
@@ -84,9 +84,9 @@
               </thead>
               <tbody>
               {{#users}}
-                <tr>
-                    <th scope="row">{{@index}}</th> <td>{{userId}}</td> <td>{{name}}</td> <td>{{email}}</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
-                </tr>
+              <tr>
+                  <th scope="row">{{@index}}</th> <td>{{userId}}</td> <td>{{name}}</td> <td>{{email}}</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
+              </tr>
               {{/users}}
               </tbody>
           </table>

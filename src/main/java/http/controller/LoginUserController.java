@@ -1,45 +1,43 @@
 package http.controller;
 
 import db.DataBase;
-import http.HttpHeaderName;
 import http.HttpRequest;
-import http.Response.HttpResponse;
+import http.HttpResponse;
+import http.HttpSession;
+import http.HttpSessionManager;
 import model.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * Created by iltaek on 2020/06/09 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
+ * Created by iltaek on 2020/06/11 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
  */
 public class LoginUserController extends AbstractController {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginUserController.class);
-
     private static final String LOGIN_SUCCESS_REDIRECT_URL = "/index.html";
     private static final String LOGIN_FAIL_REDIRECT_URL = "/user/login_failed.html";
-    private static final String USER_ID_FIELD ="userId";
-    private static final String PASSWORD_FIELD ="password";
-    private static final String LOGIN_SUCCESS_COOKIE = "logined=true; Path=/";
-    private static final String LOGIN_FAIL_COOKIE = "logined=fail; Path=/";
+    private static final String LOGIN_COOKIE_KEY = "logined";
+    private static final String LOGIN_COOKIE_STATUS_TRUE = "true";
+    private static final String LOGIN_COOKIE_STATUS_FALSE = "false";
+    private static final String LOGIN_COOKIE_PATH = "/";
 
     @Override
-    public void doPost(HttpRequest request, HttpResponse response) {
-        User user = DataBase.findUserById(request.getParameter(USER_ID_FIELD));
-        if (isLoginSuccess(user, request)) {
-            logger.debug("User : {}", user);
-            response.addHeaders(HttpHeaderName.SET_COOKIE.toString(), LOGIN_SUCCESS_COOKIE);
+    protected void doPOST(HttpRequest request, HttpResponse response) {
+        final String userId = request.getParameter("userId");
+        final String password = request.getParameter("password");
+
+        final User user = DataBase.findUserById(userId);
+
+        if (user != null && user.login(password)) {
+            setCurrentSessionAttribute(request, LOGIN_COOKIE_KEY, LOGIN_COOKIE_STATUS_TRUE);
             response.redirect(LOGIN_SUCCESS_REDIRECT_URL);
             return;
         }
-        response.addHeaders(HttpHeaderName.SET_COOKIE.toString(), LOGIN_FAIL_COOKIE);
+
+        setCurrentSessionAttribute(request, LOGIN_COOKIE_KEY, LOGIN_COOKIE_STATUS_FALSE);
         response.redirect(LOGIN_FAIL_REDIRECT_URL);
     }
 
-    private boolean isUserByUserId(User user) {
-        return user != null;
-    }
-
-    private boolean isLoginSuccess(User user, HttpRequest request) {
-        return isUserByUserId(user) && user.isPasswordCorrect(request.getParameter(PASSWORD_FIELD));
+    private void setCurrentSessionAttribute(HttpRequest request, String key, String value) {
+        HttpSession session = getCurrentSession(request);
+        session.setAttribute(key, value);
     }
 }

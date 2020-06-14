@@ -1,9 +1,11 @@
 package http.view;
 
+import http.HttpResponse;
+
 /**
- * Created by iltaek on 2020/06/10 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
+ * Created by iltaek on 2020/06/12 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
  */
 public interface View {
 
-    void render(String header, byte[] body);
+    void render(HttpResponse response);
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by iltaek on 2020/06/03 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
+ * Created by iltaek on 2020/06/11 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
  */
 public enum HttpMethod {
     GET("GET"), POST("POST");
@@ -20,18 +20,14 @@ public enum HttpMethod {
         this.httpMethod = httpMethod;
     }
 
-    private static boolean isHttpMethod(String methodInput) {
-        return HTTP_METHODS.contains(methodInput);
-    }
-
-    public static boolean isGET(String httpMethod) {
-        return GET.name().equals(httpMethod);
-    }
-
     public static HttpMethod of(String methodInput) {
         if (!isHttpMethod(methodInput)) {
             throw new IllegalArgumentException(String.format(ILLEGAL_HTTP_METHOD, methodInput));
         }
         return HttpMethod.valueOf(methodInput);
+    }
+
+    private static boolean isHttpMethod(String methodInput) {
+        return HTTP_METHODS.contains(methodInput);
     }
 }

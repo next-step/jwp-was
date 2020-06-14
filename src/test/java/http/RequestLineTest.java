@@ -9,39 +9,38 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 /**
- * Created by iltaek on 2020/06/03 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
+ * Created by iltaek on 2020/06/11 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
  */
-public class RequestLineTest {
+class RequestLineTest {
 
     @Test
     @DisplayName("유효한 입력값으로 RequestLine을 생성 시에 정확하게 RequestLine이 생성되는지 테스트 - GET")
     void parseGETTest() {
         RequestLine requestLine = RequestLine.of("GET /users HTTP/1.1");
-        assertThat(requestLine.getHttpMethod()).isEqualTo("GET");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
-        assertThat(requestLine.getProtocolVersion()).isEqualTo("HTTP");
-        assertThat(requestLine.getVersion()).isEqualTo("1.1");
+        assertThat(requestLine.getQueryString()).isEqualTo(QueryString.ofNull());
+        assertThat(requestLine.getProtocolVersion()).isEqualTo(new ProtocolVersion("HTTP/1.1"));
     }
 
     @Test
     @DisplayName("유효한 입력값으로 RequestLine을 생성 시에 정확하게 RequestLine이 생성되는지 테스트 - POST")
     void parsePOSTTest() {
         RequestLine requestLine = RequestLine.of("POST /users HTTP/1.1");
-        assertThat(requestLine.getHttpMethod()).isEqualTo("POST");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(requestLine.getPath()).isEqualTo("/users");
-        assertThat(requestLine.getProtocolVersion()).isEqualTo("HTTP");
-        assertThat(requestLine.getVersion()).isEqualTo("1.1");
+        assertThat(requestLine.getQueryString()).isEqualTo(QueryString.ofNull());
+        assertThat(requestLine.getProtocolVersion()).isEqualTo(new ProtocolVersion("HTTP/1.1"));
     }
 
     @Test
     @DisplayName("유효한 입력값으로 RequestLine을 생성 시에 정확하게 RequestLine이 생성되는지 테스트 - GET with QueryString")
     void parserequestWithQueryStringTest() {
         RequestLine requestLine = RequestLine.of("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
-        assertThat(requestLine.getHttpMethod()).isEqualTo("GET");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
-        assertThat(requestLine.getQueryString()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
-        assertThat(requestLine.getProtocolVersion()).isEqualTo("HTTP");
-        assertThat(requestLine.getVersion()).isEqualTo("1.1");
+        assertThat(requestLine.getQueryString()).isEqualTo(QueryString.of("userId=javajigi&password=password&name=JaeSung"));
+        assertThat(requestLine.getProtocolVersion()).isEqualTo(new ProtocolVersion("HTTP/1.1"));
     }
 
     @ParameterizedTest

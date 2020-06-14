@@ -1,12 +1,16 @@
 package http;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.util.Strings;
 import utils.Args;
 
 /**
- * Created by iltaek on 2020/06/03 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
+ * Created by iltaek on 2020/06/11 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
  */
 public class QueryString {
 
@@ -24,10 +28,10 @@ public class QueryString {
     }
 
     public static QueryString of(String queryString) {
-        if (queryString == null) {
+        if (Strings.isEmpty(queryString)) {
             return EMPTY_QUERY_STRING;
         }
-        return new QueryString(queryString);
+        return new QueryString(URLDecoder.decode(queryString));
     }
 
     public static QueryString ofNull() {
@@ -40,20 +44,15 @@ public class QueryString {
         }
         Map<String, String> queryMap = new HashMap<>();
         for (String keyValue : queryString.split(QUERY_DELIMITER)) {
-            String[] values = keyValue.split(KEY_VALUE_DELIMITER);
+            String[] values = keyValue.split(KEY_VALUE_DELIMITER, -1);
             Args.check(values.length == 2, ILLEGAL_QUERY);
-            queryMap.put(values[0], values[1]);
+            queryMap.put(values[0].trim(), values[1].trim());
         }
         return queryMap;
     }
 
-    public String getPrameter(String key) {
+    public String getParameter(String key) {
         return queryMap.get(key);
-    }
-
-    @Override
-    public String toString() {
-        return queryString;
     }
 
     @Override
@@ -66,12 +65,16 @@ public class QueryString {
         }
 
         QueryString that = (QueryString) o;
-
+        if (queryString != null ? !queryString.equals(that.queryString) : that.queryString != null) {
+            return false;
+        }
         return queryMap != null ? queryMap.equals(that.queryMap) : that.queryMap == null;
     }
 
     @Override
     public int hashCode() {
-        return queryMap != null ? queryMap.hashCode() : 0;
+        int result = queryString != null ? queryString.hashCode() : 0;
+        result = 31 * result + (queryMap != null ? queryMap.hashCode() : 0);
+        return result;
     }
 }
