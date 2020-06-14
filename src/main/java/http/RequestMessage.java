@@ -102,4 +102,8 @@ public class RequestMessage {
     public Header getHeader() {
         return this.header;
     }
+
+    public Uri getUri() {
+        return this.requestLine.getUri();
+    }
 }

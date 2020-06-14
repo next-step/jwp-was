@@ -8,10 +8,10 @@ import java.util.Arrays;
 
 public enum HandlerMapper {
 
+    DEFAULT("/", DefaultHandler.getInstance()),
     USER_CREATE("/user/create", UserCreateHandler.getInstance()),
     USER_LOGIN("/user/login", UserLoginHandler.getInstance()),
-    USER_LIST("/user/list", UserListHandler.getInstance()),
-    DEFAULT("/", DefaultHandler.getInstance());
+    USER_LIST("/user/list", UserListHandler.getInstance());
 
     private final String mappingPath;
     private final Handler handlerInstance;

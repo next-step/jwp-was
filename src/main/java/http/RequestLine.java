@@ -62,4 +62,8 @@ public class RequestLine {
     public HttpMethod getMethod() {
         return this.method;
     }
+
+    public Uri getUri() {
+        return uri;
+    }
 }
