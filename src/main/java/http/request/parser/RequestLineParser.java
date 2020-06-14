@@ -13,7 +13,6 @@ public class RequestLineParser {
     public static RequestLine parse(String requestLineStr) {
         final String[] value = requestLineStr.split(REQUEST_LINE_TOKENIZER);
         final String[] pathAndQuerystring = value[1].split(QUERYSTRING_START_CHARACTER);
-
         final HttpMethod httpMethod = HttpMethod.valueOf(value[0]);
         final ProtocolAndVersion protocolAndVersion = new ProtocolAndVersion(value[2]);
         final String path = pathAndQuerystring[0];

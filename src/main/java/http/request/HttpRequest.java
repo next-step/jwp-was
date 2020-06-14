@@ -7,13 +7,15 @@ import webserver.session.HttpSession;
 public class HttpRequest {
     private final RequestLine requestLine;
     private final RequestHeader header;
+    private final Parameters formData;
     private final Cookies cookies;
     private final String body;
     private HttpSession session;
 
-    public HttpRequest(RequestLine requestLine, RequestHeader header, Cookies cookies, String body, HttpSession session) {
+    public HttpRequest(RequestLine requestLine, RequestHeader header, Parameters formData, Cookies cookies, String body, HttpSession session) {
         this.requestLine = requestLine;
         this.header = header;
+        this.formData = formData;
         this.cookies = cookies;
         this.body = body;
         this.session = session;
@@ -51,6 +53,10 @@ public class HttpRequest {
     }
 
     public String getParameter(String parameterName) {
-        return requestLine.getParameter(parameterName);
+        String parameterValue = requestLine.getParameter(parameterName);
+        if ("".equals(parameterValue)) {
+            parameterValue = formData.getValue(parameterName);
+        }
+        return parameterValue;
     }
 }

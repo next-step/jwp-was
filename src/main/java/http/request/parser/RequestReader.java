@@ -1,13 +1,16 @@
 package http.request.parser;
 
+import http.common.ContentType;
 import http.common.Cookies;
 import http.common.HeaderFieldName;
+import http.request.Parameters;
 import http.request.RequestHeader;
 import http.request.HttpRequest;
 import http.request.RequestLine;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.tags.Param;
 import utils.IOUtils;
 import webserver.session.HttpSession;
 import webserver.session.SessionStore;
@@ -52,7 +55,12 @@ public class RequestReader {
         final String sessionId = cookies.getValue("JSESSIONID");
         final HttpSession session = SessionStore.get(sessionId);
 
-        return new HttpRequest(requestLine, header, cookies, requestBody, session);
+        Parameters formData = null;
+        if (ContentType.APPLICATION_X_WWW_FORM_UNLENCODED.getValue().equals(header.getValue(HeaderFieldName.CONTENT_TYPE))) {
+            formData = new Parameters(requestBody);
+        }
+
+        return new HttpRequest(requestLine, header, formData, cookies, requestBody, session);
     }
 
 }

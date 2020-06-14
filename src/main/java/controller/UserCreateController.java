@@ -2,7 +2,6 @@ package controller;
 
 import db.DataBase;
 import http.request.HttpRequest;
-import http.request.Parameters;
 import http.response.HttpResponse;
 import model.User;
 import webserver.controller.AbstractController;
@@ -21,11 +20,10 @@ public class UserCreateController extends AbstractController {
 
     @Override
     protected void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
-        final Parameters formData = new Parameters(httpRequest.getBody());
-        final String userId = formData.getValue("userId");
-        final String password = formData.getValue("password");
-        final String name = formData.getValue("name");
-        final String email = formData.getValue("email");
+        final String userId = httpRequest.getParameter("userId");
+        final String password = httpRequest.getParameter("password");
+        final String name = httpRequest.getParameter("name");
+        final String email = httpRequest.getParameter("email");
         DataBase.addUser(new User(userId, password, name, email));
 
         httpResponse.response302("/index.html");
