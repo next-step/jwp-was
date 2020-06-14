@@ -58,9 +58,9 @@ public class LoginHandler extends AbstractHandler {
     }
 
     @Override
-    public byte[] getHttpResponseBody(HttpRequest response) throws IOException, URISyntaxException {
-        if (isAuthenticUser(response)) {
-            return super.getHttpResponseBody(response);
+    public byte[] getHttpResponseBody(HttpRequest request) throws IOException, URISyntaxException {
+        if (isAuthenticUser(request)) {
+            return super.getHttpResponseBody(request);
         }
 
         return FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + LOGIN_FAILED_PATH);
