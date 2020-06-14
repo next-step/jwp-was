@@ -9,26 +9,25 @@ import webserver.exceptions.StatusCodeNotFoundException;
 import java.util.Optional;
 
 public class HttpResponse {
-    private Optional<StatusCode> statusCode;
+    private StatusCode statusCode;
     private final ResponseHeader header;
     private final Cookies cookies;
     private byte[] responseBody;
 
     public HttpResponse() {
-        statusCode = Optional.empty();
         header = new ResponseHeader();
         cookies = new Cookies();
         responseBody = new byte[0];
     }
 
     public int getStatusCode() {
-        return statusCode
+        return Optional.ofNullable(statusCode)
                 .orElseThrow(StatusCodeNotFoundException::new)
                 .getCode();
     }
 
     public String getStatusMessage() {
-        return statusCode
+        return Optional.ofNullable(statusCode)
                 .orElseThrow(StatusCodeNotFoundException::new)
                 .getMessage();
     }
@@ -42,7 +41,7 @@ public class HttpResponse {
     }
 
     public void response302(String locationUrl) {
-        this.statusCode = Optional.of(StatusCode.FOUND);
+        this.statusCode = StatusCode.FOUND;
         HeaderField locationHeader = new HeaderField(HeaderFieldName.LOCATION, locationUrl);
         header.addHeader(locationHeader);
     }
@@ -68,7 +67,7 @@ public class HttpResponse {
     }
 
     public void response200(ContentType contentType, byte[] body) {
-        this.statusCode = Optional.of(StatusCode.OK);
+        this.statusCode = StatusCode.OK;
         final String contentTypeValue = contentType.getValue();
 
         header.addHeader(new HeaderField(HeaderFieldName.CONTENT_TYPE, contentTypeValue));
