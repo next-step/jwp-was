@@ -30,7 +30,7 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = HttpRequest.from(inputStream);
 
             Controller controller = CONTROLLER_MAPPER.findController(httpRequest.getUri());
-            HttpResponse httpResponse = controller.execute(httpRequest);
+            HttpResponse httpResponse = controller.service(httpRequest);
 
             httpResponse.flush(outputStream);
         } catch (IOException | IllegalArgumentException e) {

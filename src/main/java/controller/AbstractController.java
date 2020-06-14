@@ -6,7 +6,7 @@ import http.response.HttpResponse;
 public abstract class AbstractController implements Controller {
 
     @Override
-    public HttpResponse execute(HttpRequest httpRequest) {
+    public HttpResponse service(HttpRequest httpRequest) {
         HttpResponse httpResponse = HttpResponse.from(httpRequest);
 
         if (httpRequest.isGetMethod()) {
