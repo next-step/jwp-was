@@ -7,21 +7,39 @@ import java.util.Map;
 
 public class QueryStrings {
 
-    private Map<String, String> queryMap = new HashMap<>();
+    private Map<String, String> queryMap;
+
+    public QueryStrings(){
+
+    }
 
     public QueryStrings(String queryStrings) {
 
-        Map<String, String> query_pair = new HashMap<>();
+        Map<String, String> queryPair = new HashMap<>();
         String[] pairs = queryStrings.split("&");
 
         if(pairs.length > 1) {
             for(String pair : pairs) {
                 String key = pair.split("=")[0];
                 String value = pair.split("=")[1];
-                query_pair.put(key, value);
+                queryPair.put(key, value);
             }
         }
-        this.queryMap = query_pair;
+        this.queryMap = queryPair;
+    }
+
+    public Map<String, String> getParseQuery(String body) {
+        Map<String, String> queryPair = new HashMap<>();
+        String[] pairs = body.split("&");
+
+        if(pairs.length > 1) {
+            for(String pair : pairs) {
+                String key = pair.split("=")[0];
+                String value = pair.split("=")[1];
+                queryPair.put(key, value);
+            }
+        }
+        return queryPair;
     }
 
     public String getParameter(String parameter) {
@@ -37,4 +55,6 @@ public class QueryStrings {
 
         return value;
     }
+
+
 }

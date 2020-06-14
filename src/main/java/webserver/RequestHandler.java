@@ -35,72 +35,70 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+
+            /*BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
             String line = br.readLine();
-            logger.debug("requestline : {}",line);
+            logger.debug("requestline : {}", line);*/
 
-            HttpRequest httpRequest = new HttpRequest(RequestLineParser.parse(line));
-
-            String path = httpRequest.getPath();
+            HttpRequest httpRequest = new HttpRequest(in);
+           /* String path = httpRequest.getPath();
             int contentLength = 0;
             boolean loginStatus = false;
-            while(!line.equals("")) {
+            while (!"".equals(line)) {
                 line = br.readLine();
                 logger.debug("header : {}", line);
-                if(line.contains("Content-Length")) {
+                if (line.contains("Content-Length")) {
                     String value = line.split(" ")[1];
                     contentLength = Integer.parseInt(value);
                 }
-                if(line.contains("Cookie")) {
+                if (line.contains("Cookie")) {
                     loginStatus = loginCheck(line);
                 }
-            }
-
-            if(path.equals("/user/create")) {
-                String body = IOUtils.readData(br, contentLength);
-
-                QueryStrings queryStrings = new QueryStrings(body);
-
-                User user = new User(queryStrings.getParameter("userId"),
-                        queryStrings.getParameter("password"), queryStrings.getParameter("name"),
-                        queryStrings.getParameter("email"));
-                /*User user = new User(httpRequest.getParameter("userId"),
+            }*/
+            logger.debug("getPath : {}", httpRequest.getPath());
+            String path = httpRequest.getPath();
+            if (path.equals("/user/create")) {
+                User user = new User(httpRequest.getParameter("userId"),
                         httpRequest.getParameter("password"), httpRequest.getParameter("name"),
-                        httpRequest.getParameter("email"));*/
+                        httpRequest.getParameter("email"));
                 logger.debug("User : {}", user);
                 DataBase.addUser(user);
                 DataOutputStream dos = new DataOutputStream(out);
-                response302Header(dos, "/index.html" );
-            } else if(path.endsWith("css")){
+                response302Header(dos, "/index.html");
+            } else if (path.endsWith(".css")) {
                 DataOutputStream dos = new DataOutputStream(out);
-                byte[] body = HttpResponse.getCss(path);
+                byte[] body = HttpResponse.getCss(httpRequest.getPath());
                 responseCssHeader(dos, body.length);
                 responseBody(dos, body);
-            } else if(path.equals("/user/login")) {
-                String body = IOUtils.readData(br, contentLength);
+            } else if (path.equals("/user/login")) {
 
-                QueryStrings queryStrings = new QueryStrings(body);
+                User user = DataBase.findUserById(httpRequest.getParameter("userId"));
 
-                User user = DataBase.findUserById(queryStrings.getParameter("userId"));
-
-                if(user == null) {
-                    responseResource(out, path);
+                if (user == null) {
+                    responseResource(out, "/user/login_failed.html");
                     return;
                 }
 
-                if(user.getPassword().equals(queryStrings.getParameter("password"))) {
+                if (user.getPassword().equals(httpRequest.getParameter("password"))) {
                     DataOutputStream dos = new DataOutputStream(out);
                     responseLoginHeader(dos);
+                    responseResource(out, "/index.html");
                 } else {
-                    responseResource(out, path);
+                    responseResource(out, httpRequest.getPath());
                 }
 
-            } else if(path.equals("/user/list")) {
-                if(!loginStatus) {
+            } else if (path.equals("/user/list")) {
+
+                boolean loginStatus = false;
+
+                loginStatus = loginCheck(httpRequest.getHeader("Cookie"));
+
+                if (!loginStatus) {
                     responseResource(out, "/login.html");
                     return;
                 }
+
                 TemplateLoader loader = new ClassPathTemplateLoader();
                 loader.setPrefix("/templates");
                 loader.setSuffix(".html");
@@ -115,8 +113,8 @@ public class RequestHandler implements Runnable {
                 byte[] body = profilePage.getBytes();
                 response200Header(dos, body.length);
                 responseBody(dos, body);
-            } else{
-                responseResource(out, path);
+            } else {
+                responseResource(out, httpRequest.getPath());
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -127,7 +125,7 @@ public class RequestHandler implements Runnable {
         boolean result = false;
         String loginStatus = line.split("=")[1];
 
-        if(loginStatus.equals("true"))
+        if (loginStatus.equals("true"))
             result = true;
 
         return result;
