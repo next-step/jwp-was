@@ -13,22 +13,15 @@ public class RequestHeader {
 
     public RequestHeader(final Map<String, String> header) {
         this.header = header;
+        requestHeaderCookie = new RequestHeaderCookie(header.getOrDefault(COOKIE, ""));
     }
 
     public String getHeader(String key) {
         return header.get(key);
     }
 
-    public boolean isLogin() {
-        if (isContainsCookie()) {
-            requestHeaderCookie = new RequestHeaderCookie(header.getOrDefault(COOKIE, ""));
-            return requestHeaderCookie.isLogined();
-        }
-        return false;
-    }
-
-    private boolean isContainsCookie() {
-        return header.containsKey(COOKIE);
+    public String getSessionId() {
+        return requestHeaderCookie.getSessionId();
     }
 
     private boolean isContainsContentLength() {

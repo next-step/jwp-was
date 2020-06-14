@@ -48,6 +48,10 @@ public class HttpRequest {
         return RequestLineParser.parse(line);
     }
 
+    public String getSessionId() {
+        return requestHeader.getSessionId();
+    }
+
     public String getMethod() {
         return requestLine.getMethodName();
     }
@@ -58,10 +62,6 @@ public class HttpRequest {
 
     public String getHeader(String key) {
         return requestHeader.getHeader(key);
-    }
-
-    public boolean isLogin() {
-        return requestHeader.isLogin();
     }
 
     public String getParameter(String key) {
