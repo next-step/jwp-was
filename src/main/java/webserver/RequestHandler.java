@@ -5,7 +5,6 @@ import http.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -29,7 +28,7 @@ public class RequestHandler implements Runnable {
             HttpResponse httpResponse = new HttpResponse(out);
             RequestMappingManager.execute(httpRequest, httpResponse);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }

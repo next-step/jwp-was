@@ -45,7 +45,7 @@ public class RequestMappingManager {
         return requestMap.get(path);
     }
 
-    public static void execute(final HttpRequest httpRequest, final HttpResponse httpResponse) {
+    public static void execute(final HttpRequest httpRequest, final HttpResponse httpResponse) throws Exception {
 
         final String path = httpRequest.getPath();
         logger.debug("request url: {}, cookie{}", path, httpRequest.getHeader("Cookie"));
@@ -67,6 +67,7 @@ public class RequestMappingManager {
             httpResponse.responseBody(body);
             return;
         }
+
         controller.service(httpRequest, httpResponse);
     }
 
