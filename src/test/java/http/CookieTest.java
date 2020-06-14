@@ -24,13 +24,4 @@ public class CookieTest {
         assertTrue(Boolean.parseBoolean(cookie.getCookieValue("logined")));
     }
 
-    @Test
-    @DisplayName("Set-Cookie 잘 써지는지 테스트")
-    void writeCookieTest() {
-        Cookie cookie = new Cookie();
-        cookie.addCookieValue("test","test");
-        System.out.println(cookie.writeCookieValue());
-        assertEquals("Set-Cookie : test=test \r\n", cookie.writeCookieValue());
-    }
-
 }
