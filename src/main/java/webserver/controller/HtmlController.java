@@ -5,12 +5,10 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import utils.FileIoUtils;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 public class HtmlController implements Controller {
 
-    private HtmlController() {}
+    private HtmlController() {
+    }
 
     private static class Singleton {
         private static final HtmlController instance = new HtmlController();
@@ -23,12 +21,9 @@ public class HtmlController implements Controller {
     @Override
     public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
         final String path = httpRequest.getPath();
-        try {
-            final byte[] html = FileIoUtils.loadFileFromClasspath("./templates/" + path);
-            httpResponse.setContentType(ContentType.TEXT_HTML_UTF_8);
-            httpResponse.setBody(html);
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
+        final byte[] html = FileIoUtils.loadFileFromClasspath("./templates/" + path);
+
+        httpResponse.setContentType(ContentType.TEXT_HTML_UTF_8);
+        httpResponse.setBody(html);
     }
 }
