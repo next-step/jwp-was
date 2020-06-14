@@ -98,4 +98,8 @@ public class RequestMessage {
     public HttpMethod getMethod() {
         return this.requestLine.getMethod();
     }
+
+    public Header getHeader() {
+        return this.header;
+    }
 }

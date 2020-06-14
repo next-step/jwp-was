@@ -5,10 +5,7 @@ import http.RequestLine;
 import http.RequestMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.handler.DefaultHandler;
-import webserver.handler.Handler;
-import webserver.handler.UserCreateHandler;
-import webserver.handler.UserLoginHandler;
+import webserver.handler.*;
 
 
 import java.util.Collections;
@@ -43,6 +40,20 @@ public class HandlerMapperTest {
         Handler handler = HandlerMapper.getHandler(request);
         // then
         assertThat(handler).isInstanceOf(UserLoginHandler.class);
+    }
+
+    @DisplayName("/user/list 처리 핸들러 얻기")
+    @Test
+    void test_getUserListHandler_withUri_should_pass() {
+        // given
+        RequestMessage request = RequestMessage.createWithDefaultBody(
+                RequestLine.from("GET /user/list HTTP/1.1"),
+                new Header(Collections.emptyList())
+        );
+        // when
+        Handler handler = HandlerMapper.getHandler(request);
+        // then
+        assertThat(handler).isInstanceOf(UserListHandler.class);
     }
 
     @DisplayName("상기 외의 uri에 대해서는 디폴트 핸들러 반환")

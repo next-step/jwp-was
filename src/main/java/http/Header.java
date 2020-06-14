@@ -63,4 +63,9 @@ public class Header {
                 .map(header -> header.getKey() + HEADER_DELIMITER + header.getValue() + "\r\n")
                 .collect(Collectors.joining());
     }
+
+    public boolean hasCookieValue(String value) {
+        String cookie = this.headers.get("Cookie");
+        return cookie != null && cookie.contains(value);
+    }
 }

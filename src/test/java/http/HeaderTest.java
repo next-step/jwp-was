@@ -75,4 +75,16 @@ public class HeaderTest {
                 () -> assertThat(result).contains("Accept: */*\r\n")
         );
     }
+
+    @DisplayName("헤더에 로그인 상태 쿠키값이 있는지 확인")
+    @Test
+    void test_hasLoginCookie() {
+        // given
+        List<String> strings = Arrays.asList("Cookie: logined=true");
+        Header header = new Header(strings);
+        // when
+        boolean result = header.hasCookieValue("logined=true");
+        // then
+        assertThat(result).isTrue();
+    }
 }

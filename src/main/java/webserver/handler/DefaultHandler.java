@@ -6,7 +6,7 @@ import utils.FileIoUtils;
 
 public class DefaultHandler implements Handler {
 
-    private static final String TEMPLATE_PATH = "./templates";
+    public static final String TEMPLATE_PATH = "./templates";
 
     private static final DefaultHandler INSTANCE = new DefaultHandler();
 
