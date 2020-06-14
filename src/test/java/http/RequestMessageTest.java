@@ -18,11 +18,11 @@ class RequestMessageTest {
     @Test
     void test_createRequestMessage_by_get_should_pass() throws IOException {
         // given
-        String input = "GET /index.html HTTP/1.1\n" +
-                "Host: localhost:8080\n" +
-                "Connection: keep-alive\n" +
-                "Accept: */*\n" +
-                "\n";
+        String input = "GET /index.html HTTP/1.1\r\n" +
+                "Host: localhost:8080\r\n" +
+                "Connection: keep-alive\r\n" +
+                "Accept: */*\r\n" +
+                "\r\n";
         StringReader sr = new StringReader(input);
         BufferedReader br = new BufferedReader(sr);
         // when
@@ -38,15 +38,14 @@ class RequestMessageTest {
     @Test
     void test_createRequestMessage_by_post_should_pass() throws IOException {
         // given
-        String input = "POST /user/create HTTP/1.1\n" +
-                "Host: localhost:8080\n" +
-                "Connection: keep-alive\n" +
-                "Content-Length: 59\n" +
-                "Content-Type: application/x-www-form-urlencoded\n" +
-                "Accept: */*\n" +
-                "\n" +
-                "userId=crystal&password=password&name=%EC%9E%84%EC%88%98%EC%A0%95&email=crystal%40naver.com";
-        StringReader sr = new StringReader(input);
+        String input = "POST /user/create HTTP/1.1\r\n" +
+                "Host: localhost:8080\r\n" +
+                "Connection: keep-alive\r\n" +
+                "Content-Length: 59\r\n" +
+                "Content-Type: application/x-www-form-urlencoded\r\n" +
+                "Accept: */*\r\n" +
+                "\r\n" +
+                "userId=crystal&password=password&name=%EC%9E%84%EC%88%98%EC%A0%95&email=crystal%40naver.com";StringReader sr = new StringReader(input);
         BufferedReader br = new BufferedReader(sr);
         // when
         RequestMessage requestMessage = RequestMessage.from(br);

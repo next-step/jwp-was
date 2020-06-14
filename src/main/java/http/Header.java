@@ -60,7 +60,7 @@ public class Header {
     public String toJoinedString() {
         return this.headers.entrySet()
                 .stream()
-                .map(header -> header.getKey() + HEADER_DELIMITER + header.getValue())
-                .collect(Collectors.joining("\n"));
+                .map(header -> header.getKey() + HEADER_DELIMITER + header.getValue() + "\r\n")
+                .collect(Collectors.joining());
     }
 }

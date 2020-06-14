@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,6 +34,16 @@ public class HeaderTest {
         );
     }
 
+    @DisplayName("빈 리스로 빈 헤더 생성")
+    @Test
+    void test_createEmptyHeader() {
+        // given
+        // when
+        Header header = new Header(Collections.emptyList());
+        // then
+        assertThat(header.size()).isEqualTo(0);
+    }
+
     @DisplayName("유효하지 않은 형식의 헤더는 IllegalArgumentException 발생")
     @Test
     void test_createHeader_should_fail() {
@@ -44,5 +55,24 @@ public class HeaderTest {
             Header header = new Header(strings);
         }).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(Header.REQUEST_HEADER_IS_INVALID);
+    }
+
+    @DisplayName("헤더의 키와 값을 \': \'로 이어붙이고, 각 헤더들은 개행문자로 이어붙인다.")
+    @Test
+    void test_joiningAll_should_pass() {
+        // given
+        List<String> strings = Arrays.asList(
+                "Host: localhost:8080",
+                "Connection: keep-alive",
+                "Accept: */*");
+        Header header = new Header(strings);
+        // when
+        String result = header.toJoinedString();
+        // then
+        assertAll(
+                () -> assertThat(result).contains("Host: localhost:8080\r\n"),
+                () -> assertThat(result).contains("Connection: keep-alive\r\n"),
+                () -> assertThat(result).contains("Accept: */*\r\n")
+        );
     }
 }

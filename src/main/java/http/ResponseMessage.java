@@ -53,7 +53,7 @@ public class ResponseMessage {
     private void writeHeader() {
         try {
             if (header.size() > 0) {
-                dos.writeBytes(this.header.toJoinedString() + "\r\n");
+                dos.writeBytes(this.header.toJoinedString());
             }
         } catch (IOException e) {
             e.printStackTrace();
