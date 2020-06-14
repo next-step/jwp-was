@@ -1,10 +1,8 @@
 package http;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.util.Strings;
 import utils.Args;
