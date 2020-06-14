@@ -3,7 +3,7 @@ package http;
 import java.util.Map;
 
 public class RequestLine {
-    private String method;
+    private HttpMethod method;
     private String path;
     private String protocol;
     private String version;
@@ -12,7 +12,7 @@ public class RequestLine {
     public RequestLine() {
     }
 
-    public RequestLine(String method, String path, String protocol, String version, Map<String, Object> queryString) {
+    public RequestLine(HttpMethod method, String path, String protocol, String version, Map<String, Object> queryString) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
@@ -20,11 +20,11 @@ public class RequestLine {
         this.queryString = queryString;
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
-    public void setMethod(String method) {
+    public void setMethod(HttpMethod method) {
         this.method = method;
     }
 
