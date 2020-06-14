@@ -24,8 +24,8 @@ public class ResponseBody {
         return new ResponseBody(file, fileType);
     }
 
-    public int getLength() {
-        return file.length;
+    public String getLength() {
+        return String.valueOf(file.length);
     }
 
     public String getContentType() {
