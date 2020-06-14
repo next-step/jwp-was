@@ -44,8 +44,8 @@ public class Header {
         return Objects.hash(headers);
     }
 
-    public String get(String key) {
-        return this.headers.get(key);
+    public String get(String name) {
+        return this.headers.get(name);
     }
 
     public int size() {

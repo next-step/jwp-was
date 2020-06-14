@@ -41,11 +41,11 @@ public class QueryString {
         return Objects.hash(parameters);
     }
 
-    public List<String> getParameter(String key) {
-        return parameters.get(key);
+    public List<String> getParameter(String field) {
+        return parameters.get(field);
     }
 
-    public String getFirstParameter(String key) { return parameters.getFirst(key); }
+    public String getFirstParameter(String field) { return parameters.getFirst(field); }
 
     public int size() {
         return parameters.size();

@@ -45,6 +45,4 @@ public class HeaderTest {
         }).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(Header.REQUEST_HEADER_IS_INVALID);
     }
-
-    // TODO: 헤더명 검증 -> enum
 }

@@ -5,6 +5,7 @@ import java.net.Socket;
 
 
 import http.RequestMessage;
+import http.ResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,30 +24,8 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             RequestMessage requestMessage = RequestMessage.from(new BufferedReader(new InputStreamReader(in)));
-            byte[] body = ResourceMapper.getResource(requestMessage);
-            DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
+            ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(out));
+            ResourceMapper.service(requestMessage, responseMessage);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
