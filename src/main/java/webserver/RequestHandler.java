@@ -71,12 +71,10 @@ public class RequestHandler implements Runnable {
         if ("/user/list.html".equalsIgnoreCase(path)) {
             if (isAuthuorizedUser(httpRequest)) {
                 Users users = new Users();
-                Collection<User> all = DataBase.findAll();
-                all.stream()
-                        .forEach(user -> users.addUser(user));
+                users.addUseraAll(DataBase.findAll());
 
-                String s = readTemplateView("user/list", users);
-                return HttpResponse.from(s.getBytes(), HttpStatus.OK);
+                String templateViewString = readTemplateView("user/list", users);
+                return HttpResponse.from(templateViewString .getBytes(), HttpStatus.OK);
             }
 
             return HttpResponse.redirectBy302StatusCode("/user/login.html");

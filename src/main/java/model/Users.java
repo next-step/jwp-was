@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Users {
@@ -8,6 +9,11 @@ public class Users {
 
     public void addUser(User user) {
         userList.add(user);
+    }
+
+    public void addUseraAll(Collection<User> users) {
+        users.stream()
+                .forEach(user -> addUser(user));
     }
 
     public List<User> getUsers() {
