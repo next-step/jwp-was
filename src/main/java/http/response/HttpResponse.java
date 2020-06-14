@@ -1,8 +1,10 @@
 package http.response;
 
 import dto.Users;
-import http.request.Cookie;
-import http.request.Cookies;
+import http.HttpSession;
+import http.HttpSessionManager;
+import http.Cookie;
+import http.Cookies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import view.FileView;
@@ -71,6 +73,12 @@ public class HttpResponse {
         Cookie cookie = new Cookie(key, value);
         cookie.setPath(path);
         this.cookies.addCookie(cookie);
+    }
+
+    public void addSession() {
+        HttpSession httpSession = new HttpSession();
+        HttpSessionManager.addSession(httpSession);
+        this.cookies.addSession(httpSession);
     }
 
     public ResponseStatus getStatus() {

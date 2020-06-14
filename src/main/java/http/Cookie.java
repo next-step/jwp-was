@@ -1,4 +1,4 @@
-package http.request;
+package http;
 
 import org.springframework.util.StringUtils;
 

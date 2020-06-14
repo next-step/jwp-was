@@ -1,9 +1,10 @@
-package http.request;
+package http;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Cookies {
+    private static final String SESSION_ID = "SessionId";
     private List<Cookie> cookies = new ArrayList<>();
 
     public Cookies() {
@@ -36,7 +37,10 @@ public class Cookies {
                 .filter(c -> c.getKey().equals(key))
                 .findAny()
                 .map(Cookie::getValue)
-                .orElseThrow(() -> new IllegalArgumentException("해당 쿠키를 찾을 수 없습니다."));
+                .orElse(null);
     }
 
+    public void addSession(HttpSession httpSession) {
+        this.cookies.add(new Cookie(SESSION_ID, httpSession.getId()));
+    }
 }

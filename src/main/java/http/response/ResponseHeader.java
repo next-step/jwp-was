@@ -1,7 +1,7 @@
 package http.response;
 
-import http.request.Cookie;
-import http.request.Cookies;
+import http.Cookie;
+import http.Cookies;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 
 public class TemplateView extends AbstractView {
 
-    private static final String TEMPLATE_PATH = "./templates";
+    private static final String TEMPLATE_PATH = "/templates";
     private static final String HTML_EXTENSION = ".html";
 
     private final Object data;

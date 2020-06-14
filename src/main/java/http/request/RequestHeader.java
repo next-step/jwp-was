@@ -1,9 +1,14 @@
 package http.request;
 
+import http.Cookie;
+import http.Cookies;
+
 import java.util.List;
 import java.util.Map;
 
 public class RequestHeader {
+
+    private static final String SESSION_ID = "SessionId";
     private Map<String, String> header;
     private Cookies cookies;
 
@@ -24,4 +29,7 @@ public class RequestHeader {
         return cookies.getCookie(key);
     }
 
+    public String getSession() {
+        return getCookie(SESSION_ID);
+    }
 }
