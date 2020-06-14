@@ -2,6 +2,7 @@ package webserver;
 
 import controller.Controller;
 import http.request.HttpRequest;
+import http.request.HttpRequestReader;
 import mock.MockSocket;
 import org.junit.jupiter.api.Test;
 

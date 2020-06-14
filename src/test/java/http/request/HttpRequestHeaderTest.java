@@ -4,7 +4,6 @@ import mock.MockSocket;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import webserver.HttpRequestReader;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
