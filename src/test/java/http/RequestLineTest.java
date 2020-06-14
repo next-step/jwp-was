@@ -1,5 +1,9 @@
 package http;
 
+import http.request.Protocol;
+import http.request.RequestLine;
+import http.request.RequestMethod;
+import http.request.RequestMethodGet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

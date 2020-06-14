@@ -1,20 +1,20 @@
-package http;
+package http.request;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class RequestMethodPost implements RequestMethod {
-    private static final String METHOD_NAME = "POST";
+public class RequestMethodGet implements RequestMethod {
+    private static final String METHOD_NAME = "GET";
 
     private final String path;
     private final RequestParameters requestParameters;
 
-    public RequestMethodPost(final String path) {
-        this(path, new RequestParameters(new HashMap<>()));
+    public RequestMethodGet(final String path) {
+        this(path, new RequestParameters(""));
     }
 
-    public RequestMethodPost(final String path, final RequestParameters requestParameters) {
+    public RequestMethodGet(final String path, final RequestParameters requestParameters) {
         this.path = path;
         this.requestParameters = requestParameters;
     }
@@ -38,7 +38,7 @@ public class RequestMethodPost implements RequestMethod {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final RequestMethodPost that = (RequestMethodPost) o;
+        final RequestMethodGet that = (RequestMethodGet) o;
         return Objects.equals(path, that.path);
     }
 
