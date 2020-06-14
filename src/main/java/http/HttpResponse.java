@@ -4,7 +4,6 @@ import org.springframework.util.StringUtils;
 import utils.FileIoUtils;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -87,37 +86,11 @@ public class HttpResponse {
     private static ResponseHeaders makeContentHeaders(String filePath) throws IOException, URISyntaxException {
         ResponseHeaders responseHeaders = new ResponseHeaders();
         String filenameExtension = StringUtils.getFilenameExtension(filePath);
-        MimeType mimeType = makeContentType(filenameExtension);
+        MimeType mimeType = MimeTypeUtil.findMimeTypeByFileExtension(filenameExtension);
         responseHeaders.put("Content-Type", mimeType.makeContentTypeValue());
         responseHeaders.put("Content-Length", FileIoUtils.loadFileFromClasspath(filePath).length);
 
         return responseHeaders;
-    }
-
-    @Nonnull
-    private static MimeType makeContentType(@Nullable String filenameExtension) {
-        // TODO ContentType 객체? 혹은 mapping 해주는 enum?
-        if ("css".equalsIgnoreCase(filenameExtension)) {
-//            return "text/css;charset=utf-8";
-            return MimeType.TEXT_CSS;
-        }
-
-        if ("js".equalsIgnoreCase(filenameExtension)) {
-//            return "application/javascript";
-            return MimeType.APPLICATION_JAVASCRIPT;
-        }
-
-        if ("jpg".equalsIgnoreCase(filenameExtension)) {
-//            return "image/jpeg";
-            return MimeType.IMAGE_JPEG;
-        }
-
-        if ("html".equalsIgnoreCase(filenameExtension)) {
-//            return "text/html;charset=utf-8";
-            return MimeType.TEXT_HTML;
-        }
-
-        return MimeType.APPLICATION_JSON;
     }
 
     @Nonnull
