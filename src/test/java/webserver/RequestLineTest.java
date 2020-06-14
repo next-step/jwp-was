@@ -92,4 +92,32 @@ public class RequestLineTest {
         // then
         assertThat(path).isEqualTo("./templates" + url);
     }
+
+    @DisplayName("요청받은 파일타입 반환")
+    @Test
+    void getFileType() {
+
+        // given
+        RequestLine requestLine = RequestLine.of("GET /index.html HTTP/1.1");
+
+        // when
+        FileType fileType = requestLine.getFileType();
+
+        // then
+        assertThat(fileType).isEqualTo(FileType.HTML);
+    }
+
+    @DisplayName("요청받은 파일타입 반환 - 파일타입을 명시하지 않았을 경우")
+    @Test
+    void getFileType_empty_file_type() {
+
+        // given
+        RequestLine requestLine = RequestLine.of("GET /users HTTP/1.1");
+
+        // when
+        FileType fileType = requestLine.getFileType();
+
+        // then
+        assertThat(fileType).isEqualTo(FileType.NONE);
+    }
 }

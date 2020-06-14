@@ -1,6 +1,7 @@
 package webserver;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,6 +11,7 @@ import static java.util.stream.Collectors.toMap;
 import static utils.ValidUtils.assertNotBlank;
 import static utils.ValidUtils.assertNotNull;
 
+@Getter
 @EqualsAndHashCode
 public class RequestLine {
 
@@ -73,5 +75,17 @@ public class RequestLine {
 
     public String getPath() {
         return STATIC_FILE_ROOT_LOCATION + url;
+    }
+
+    public FileType getFileType() {
+        String[] split = url.split("\\.");
+        if (nonExistFileType(split)) {
+            return FileType.NONE;
+        }
+        return FileType.valueOf(split[split.length - 1].toUpperCase());
+    }
+
+    private boolean nonExistFileType(String[] split) {
+        return split.length == 1;
     }
 }

@@ -2,7 +2,6 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import utils.StringUtils;
 
 import java.io.*;
@@ -33,11 +32,11 @@ public class RequestHandler implements Runnable {
             List<String> requestHeaderTexts = parseRequestHeader(br);
             RequestHeaders requestHeaders = RequestHeaders.of(requestHeaderTexts);
 
-            byte[] file = FileIoUtils.loadFileFromClasspath(requestLine.getPath());
+            ResponseBody responseBody = ResponseBody.of(requestLine);
 
             DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, file.length);
-            responseBody(dos, file);
+            response200Header(dos, responseBody.getContentType(), responseBody.getLength());
+            responseBody(dos, responseBody.getFile());
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
@@ -60,10 +59,10 @@ public class RequestHandler implements Runnable {
         return requestHeaderTexts;
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dos, String contentType, int lengthOfBodyContent) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Type: " + contentType + ";charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
