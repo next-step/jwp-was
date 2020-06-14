@@ -1,6 +1,7 @@
 package http;
 
 import org.slf4j.Logger;
+import utils.FileIoUtils;
 
 
 import java.io.DataOutputStream;
@@ -19,9 +20,13 @@ public class ResponseMessage {
         this.dos = dos;
     }
 
+    public void setHeader(String name, String value) {
+        this.header.add(name, value);
+    }
+
     public void response200Header(int lengthOfBodyContent) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("HTTP/1.1 200 OK\r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
@@ -62,7 +67,7 @@ public class ResponseMessage {
 
     public void response404Header() {
         try {
-            dos.writeBytes("HTTP/1.1 404 Not Found \r\n");
+            dos.writeBytes("HTTP/1.1 404 Not Found\r\n");
             dos.writeBytes("Content-Type: text/plain;charset=utf-8\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
@@ -70,7 +75,13 @@ public class ResponseMessage {
         }
     }
 
-    public void setHeader(String name, String value) {
-        this.header.add(name, value);
+    public void responseResource(String location) {
+        try {
+            byte[] body = FileIoUtils.loadFileFromClasspath(location);
+            response200Header(body.length);
+            responseBody(body);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
     }
 }

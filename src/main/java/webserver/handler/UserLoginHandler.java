@@ -26,12 +26,13 @@ public class UserLoginHandler implements Handler {
         QueryString requestBody = requestMessage.getBody();
         User loginUser = DataBase.findUserById(requestBody.getFirstParameter("userId"));
 
-        if (loginUser == null) {
-            responseMessage.setHeader("Set-Cookie", "logined=false");
-            responseMessage.redirectTo("/user/login_failed.html");
-        } else {
-            responseMessage.setHeader("Set-Cookie", "logined=true");
+        if(loginUser != null && loginUser.matchPassword(requestBody.getFirstParameter("password"))) {
+            responseMessage.setHeader("Set-Cookie", "logined=true; Path=/");
             responseMessage.redirectTo("/index.html");
+        } else {
+            responseMessage.setHeader("Set-Cookie", "logined=false");
+            responseMessage.responseResource(DefaultHandler.TEMPLATE_PATH + "/user/login_failed.html");
         }
+
     }
 }

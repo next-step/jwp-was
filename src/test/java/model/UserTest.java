@@ -21,4 +21,15 @@ class UserTest {
         assertThat(user.equals(new User("crystal", "password", "임수정", "crystal.@naver.com")));
     }
 
+    @DisplayName("비밀번호 매칭")
+    @Test
+    void test_matchPassword() {
+        // given
+        String password = "password";
+        User user = new User("crystal", password, "임수정", "crystal.@naver.com");
+        // when
+        boolean result = user.matchPassword(password);
+        // then
+        assertThat(result).isTrue();
+    }
 }
