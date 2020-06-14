@@ -45,11 +45,11 @@ public class RequestLine {
     }
 
     public boolean isPost() {
-        return method == POST;
+        return method.isPost();
     }
 
     public boolean isGet() {
-        return method == GET;
+        return method.isGet();
     }
 
 }

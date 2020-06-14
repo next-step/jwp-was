@@ -1,5 +1,8 @@
 package http.response;
 
+import http.Cookie;
+import http.Cookies;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +12,15 @@ public class ResponseHeader {
 
     public void addHeader(String key, String value) {
         this.header.put(key, value);
+    }
+
+    public void addCookies(Cookies cookies) {
+        StringBuilder sb = new StringBuilder();
+        for (Cookie cookie : cookies.getCookies()) {
+            sb.append(cookie.getFormat());
+        }
+
+        addHeader("Set-Cookie", sb.toString());
     }
 
     public Map<String, String> getHeader() {

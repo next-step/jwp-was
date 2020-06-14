@@ -1,5 +1,6 @@
 package http.request;
 
+import http.HttpSessionManager;
 import org.springframework.util.StringUtils;
 import utils.IOUtils;
 
@@ -55,13 +56,9 @@ public class HttpRequest {
         return requestLine.getMethod();
     }
 
-    public boolean isLogin() {
-        String cookie = header.getCookie("logined");
-        if (StringUtils.hasText(cookie)) {
-            return Boolean.parseBoolean(cookie);
-        }
-
-        return false;
+    public boolean isAuthentication() {
+        String sessionId = header.getSession();
+        return HttpSessionManager.isAuthentication(sessionId);
     }
 
     public boolean isPost() {

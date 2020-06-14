@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class ListUserController extends AbstractController {
 
     public void doGet(HttpRequest request, HttpResponse response) {
-        if (request.isLogin()) {
+        if (request.isAuthentication()) {
             Users users = new Users(new ArrayList<>(DataBase.findAll()));
             response.returnHandlebar("user/list", users);
             return;
