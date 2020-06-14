@@ -11,7 +11,7 @@ public class Attribute {
         this.attribute = new HashMap<>();
     }
 
-    public void setAttribute(String name, String value) {
+    public void setAttribute(String name, Object value) {
         this.attribute.put(name, value);
     }
 
