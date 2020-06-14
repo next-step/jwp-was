@@ -1,36 +1,38 @@
 package http.response;
 
 import http.request.HttpRequest;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
+import static http.response.HttpResponseHeaderKeys.LOCATION_HEADER_KEY;
 import static http.response.HttpStatusCode.FOUND;
 
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class HttpResponse {
 
-    private final DataOutputStream dos;
     private final HttpRequest httpRequest;
     private final HttpResponseMetaData metaData;
-    private TemplateRenderer templateRenderer = new TemplateRenderer();
+    private final Map<String, Object> model = new HashMap<>();
 
-    public static HttpResponse of(OutputStream outputStream, HttpRequest httpRequest) {
-        DataOutputStream dos = new DataOutputStream(outputStream);
-        return new HttpResponse(dos, httpRequest, new HttpResponseMetaData());
+    public static HttpResponse from(HttpRequest httpRequest) {
+        return new HttpResponse(httpRequest, new HttpResponseMetaData());
     }
 
     public void setModel(String key, Object value) {
-        templateRenderer.setModel(key, value);
+        model.put(key, value);
     }
 
     public void renderTemplate(String location) {
         try {
-            String renderedPage = templateRenderer.render(location);
+            String renderedPage = TemplateRenderer.render(location, model);
             updateResponseBodyContent(renderedPage.getBytes());
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -39,15 +41,15 @@ public class HttpResponse {
 
     public void redirect(String location) {
         metaData.updateStatusCode(FOUND);
-        metaData.putResponseHeader("Location", location);
+        metaData.putResponseHeader(LOCATION_HEADER_KEY, location);
     }
 
-    public void setCookie(String content) {
-        metaData.putResponseHeader("Set-Cookie", content);
+    public void addCookie(String key, String value) {
+        metaData.addCookie(key, value);
     }
 
     public void setLoginCookie(boolean logined) {
-        setCookie(String.format("logined=%s", logined));
+        addCookie("logined", String.valueOf(logined));
     }
 
     public void setLoginCookie(boolean logined, String path) {
@@ -56,7 +58,8 @@ public class HttpResponse {
             return;
         }
 
-        setCookie(String.format("logined=%s; Path=%s", logined, path));
+        addCookie("logined", String.valueOf(logined));
+        addCookie("Path", path);
     }
 
     public void updateResponseBodyContent(byte[] responseBody) {
@@ -64,7 +67,9 @@ public class HttpResponse {
         metaData.updateResponseBody(responseBody);
     }
 
-    public void flush() throws IOException {
+    public void flush(OutputStream outputStream) throws IOException {
+        DataOutputStream dos = new DataOutputStream(outputStream);
+
         metaData.writeResponseLine(dos, httpRequest.getProtocolSpec());
         metaData.writeResponseHeaders(dos);
         metaData.writeResponseBody(dos);

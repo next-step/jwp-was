@@ -4,25 +4,19 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import lombok.extern.slf4j.Slf4j;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TemplateRenderer {
 
     private static final String DEFAULT_PREFIX = "/templates";
     private static final String DEFAULT_SUFFIX = ".html";
 
-    private final Map<String, Object> model = new HashMap<>();
-
-    public void setModel(String key, Object value) {
-        model.put(key, value);
-    }
-
-    public String render(String location) throws IOException {
+    public static String render(String location, Map<String, Object> model) throws IOException {
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix(DEFAULT_PREFIX);
         loader.setSuffix(DEFAULT_SUFFIX);

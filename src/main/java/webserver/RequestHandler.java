@@ -1,22 +1,20 @@
 package webserver;
 
 import controller.Controller;
-import controller.ControllerMapper;
+import controller.RequestMapping;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
-import utils.FileIoUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.URISyntaxException;
 
 @Slf4j
 public class RequestHandler implements Runnable {
 
-    private static final ControllerMapper CONTROLLER_MAPPER = new ControllerMapper();
+    private static final RequestMapping CONTROLLER_MAPPER = new RequestMapping();
 
     private Socket connection;
 
@@ -30,22 +28,13 @@ public class RequestHandler implements Runnable {
 
         try (InputStream inputStream = connection.getInputStream(); OutputStream outputStream = connection.getOutputStream()) {
             HttpRequest httpRequest = HttpRequest.from(inputStream);
-            HttpResponse httpResponse = HttpResponse.of(outputStream, httpRequest);
-
-            if (httpRequest.hasPathFileExtension()) {
-                byte[] responseBody = FileIoUtils.loadFileFromClasspath(httpRequest.getFilePath());
-
-                httpResponse.updateResponseBodyContent(responseBody);
-                httpResponse.flush();
-                return;
-            }
 
             Controller controller = CONTROLLER_MAPPER.findController(httpRequest.getUri());
-            controller.execute(httpRequest, httpResponse);
+            HttpResponse httpResponse = controller.service(httpRequest);
 
-            httpResponse.flush();
-        } catch (IOException | URISyntaxException | IllegalArgumentException e) {
-            log.error(e.getMessage());
+            httpResponse.flush(outputStream);
+        } catch (IOException | IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
         }
     }
 }

@@ -15,9 +15,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
+import static http.response.HttpResponseHeaderKeys.CONTENT_LENGTH_HEADER_KEY;
+
 @Slf4j
 public class HttpRequest {
 
+    private static final String COOKIE_REQUEST_HEADER_KEY = "Cookie";
     private static final String HTTP_HEADER_DELIMITER = ":";
     private static final int HEADER_TOKEN_SIZE = 2;
 
@@ -42,8 +45,8 @@ public class HttpRequest {
             httpRequest.registerHeader(line);
         }
 
-        String contentLength = httpRequest.getHeader("Content-Length");
-        if (doesNotHaveContentLength(contentLength)) {
+        String contentLength = httpRequest.getHeader(CONTENT_LENGTH_HEADER_KEY);
+        if (httpRequest.doesNotHaveContentLength(contentLength)) {
             return httpRequest;
         }
 
@@ -52,10 +55,6 @@ public class HttpRequest {
         httpRequest.registerBody(body);
 
         return httpRequest;
-    }
-
-    private static boolean doesNotHaveContentLength(String contentLength) {
-        return StringUtils.isEmpty(contentLength) || "0".equals(contentLength);
     }
 
     void registerHeader(String headerLine) {
@@ -79,8 +78,16 @@ public class HttpRequest {
         this.body = new QueryString(body);
     }
 
+    public boolean isGetMethod() {
+        return requestLine.isGetMethod();
+    }
+
+    public boolean isPostMethod() {
+        return requestLine.isPostMethod();
+    }
+
     public boolean isLoginUser() {
-        String cookie = httpHeaders.get("Cookie");
+        String cookie = httpHeaders.get(COOKIE_REQUEST_HEADER_KEY);
         return cookie != null && cookie.contains("logined=true");
     }
 
@@ -118,5 +125,9 @@ public class HttpRequest {
 
     public String getProtocolSpec() {
         return requestLine.getProtocolSpec();
+    }
+
+    private boolean doesNotHaveContentLength(String contentLength) {
+        return StringUtils.isEmpty(contentLength) || "0".equals(contentLength);
     }
 }
