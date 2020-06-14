@@ -11,14 +11,15 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public class WebServerThreadPoolExecutor {
-    public static final int DEFAULT_POOL_SIZE = 250;
-    public static final int DEFAULT_QUEUE_SIZE = 100;
+public class WebServerRunner {
+    public static final int DEFAULT_POOL_SIZE = 5;
+    public static final int DEFAULT_QUEUE_SIZE = 5;
+    private static final long DEFAULT_TERMINATION_AWAIT_TIMEOUT = 1000;
 
     private ExecutorService executorService;
 
-    public static WebServerThreadPoolExecutor from(int poolSize, int queueSize) {
-        return new WebServerThreadPoolExecutor(
+    public static WebServerRunner from(int poolSize, int queueSize) {
+        return new WebServerRunner(
             new ThreadPoolExecutor(
                 poolSize,
                 poolSize,
@@ -29,11 +30,11 @@ public class WebServerThreadPoolExecutor {
         );
     }
 
-    public WebServerThreadPoolExecutor(ExecutorService executorService) {
+    public WebServerRunner(ExecutorService executorService) {
         this.executorService = executorService;
     }
 
-    public void runServer(int port) throws IOException {
+    public void execute(int port) throws IOException, InterruptedException {
         // 서버소켓을 생성한다. 웹서버는 기본적으로 8080번 포트를 사용한다.
         try (ServerSocket listenSocket = new ServerSocket(port)) {
             log.info("Web Application Server started {} port.", port);
@@ -46,5 +47,6 @@ public class WebServerThreadPoolExecutor {
         }
 
         executorService.shutdown();
+        executorService.awaitTermination(DEFAULT_TERMINATION_AWAIT_TIMEOUT, TimeUnit.SECONDS);
     }
 }
