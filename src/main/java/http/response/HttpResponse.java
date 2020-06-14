@@ -31,13 +31,15 @@ public class HttpResponse {
         this.dos = dos;
     }
 
-    public void setStatusLine(Protocol protocol, HttpStatus httpStatus) {
+    public HttpResponse statusLine(Protocol protocol, HttpStatus httpStatus) {
         this.statusLine = StatusLine.of(protocol, httpStatus);
+        return this;
     }
 
-    public void setHttpEntity(HttpHeaders httpHeaders, String httpBody) {
+    public HttpResponse httpEntity(HttpHeaders httpHeaders, String httpBody) {
         this.httpEntity = new HttpEntity(httpHeaders, httpBody);
         this.cookies = Cookies.parse(httpEntity.getHeaderValue(SET_COOKIE_HEADER_NAME));
+        return this;
     }
 
     public boolean hasHttpHeaders() {

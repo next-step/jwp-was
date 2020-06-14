@@ -20,11 +20,11 @@ public abstract class AbstractHandler implements Handler {
 
     @Override
     public void handle(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-        response.setStatusLine(request.getProtocol(), getHttpStatus());
-
         byte[] httpBody = getHttpResponseBody(request);
-        response.setHttpEntity(getHttpHeaders(request, httpBody.length), new String(httpBody));
-        response.write();
+
+        response.statusLine(request.getProtocol(), getHttpStatus())
+                .httpEntity(getHttpHeaders(request, httpBody.length), new String(httpBody))
+                .write();
     }
 
     public abstract String getPath();
