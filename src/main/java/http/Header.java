@@ -7,10 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Header {
 
-    private static final String HEADER_DELIMITER = ":";
+    private static final String HEADER_DELIMITER = ": ";
     public static final String REQUEST_HEADER_IS_INVALID = "request header is invalid.";
     private final Map<String, String> headers;
 
@@ -28,7 +29,7 @@ public class Header {
         if (values.length != 2 || StringUtils.isEmpty(values[0]) || StringUtils.isEmpty(values[1])) {
             throw new IllegalArgumentException(REQUEST_HEADER_IS_INVALID);
         }
-        return new String[]{values[0], values[1].trim()};
+        return new String[]{values[0], values[1]};
     }
 
     @Override
@@ -50,5 +51,16 @@ public class Header {
 
     public int size() {
         return this.headers.size();
+    }
+
+    public void add(String name, String value) {
+        this.headers.put(name, value);
+    }
+
+    public String toJoinedString() {
+        return this.headers.entrySet()
+                .stream()
+                .map(header -> header.getKey() + HEADER_DELIMITER + header.getValue())
+                .collect(Collectors.joining("\n"));
     }
 }

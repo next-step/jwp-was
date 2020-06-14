@@ -12,6 +12,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 class ResponseMessageTest {
 
     private static final Logger logger = LoggerFactory.getLogger(ResponseMessageTest.class);
@@ -51,5 +53,18 @@ class ResponseMessageTest {
         responseMessage.responseBody("Not Found".getBytes());
         // then
         logger.debug("response message: {}", output.toString());
+    }
+
+    @DisplayName("클라이언트에 쿠키를 전송하기 위해 헤더 설정")
+    @Test
+    void test_setHeader() {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
+        // when
+        responseMessage.setHeader("Set-Cookie", "logined=true; Path=/");
+        responseMessage.redirectTo("/index.html");
+        // then
+        assertThat(output.toString()).isEqualTo("HTTP/1.1 302 Redirect\r\n" + "Location: /index.html\r\n" + "Set-Cookie: logined=true; Path=/\r\n" + "\r\n"
+        );
     }
 }

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Collections;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -12,6 +13,7 @@ public class ResponseMessage {
 
     private static final Logger logger = getLogger(ResponseMessage.class);
     private final DataOutputStream dos;
+    private final Header header = new Header(Collections.emptyList());
 
     public ResponseMessage(DataOutputStream dos) {
         this.dos = dos;
@@ -39,11 +41,22 @@ public class ResponseMessage {
 
     public void redirectTo(String url) {
         try {
-            dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
+            dos.writeBytes("HTTP/1.1 302 Redirect\r\n");
             dos.writeBytes("Location: " + url + "\r\n");
+            writeHeader();
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
+        }
+    }
+
+    private void writeHeader() {
+        try {
+            if (header.size() > 0) {
+                dos.writeBytes(this.header.toJoinedString() + "\r\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -55,5 +68,9 @@ public class ResponseMessage {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    public void setHeader(String name, String value) {
+        this.header.add(name, value);
     }
 }
