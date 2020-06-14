@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class HttpMethodTest {
@@ -18,5 +19,15 @@ public class HttpMethodTest {
         assertThatThrownBy(() -> {
             HttpMethod httpMethod = HttpMethod.valueOf(method);
         }).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("POST방식은 요청 바디를 지원가능")
+    @Test
+    void test_post_canSupportBody_should_pass() {
+        // given
+        // when
+        boolean result = HttpMethod.POST.canSupportBody();
+        // then
+        assertThat(result).isTrue();
     }
 }

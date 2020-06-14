@@ -58,4 +58,8 @@ public class RequestLine {
     public QueryString getQueryString() {
         return this.uri.getQueryString();
     }
+
+    public HttpMethod getMethod() {
+        return this.method;
+    }
 }

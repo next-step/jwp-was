@@ -8,14 +8,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RequestMessageTest {
 
-    @DisplayName("HTTP 요청은 requestLine과 header로 파싱되어 RequestMessage로 생성된다")
+    @DisplayName("GET 요청은 requestLine과 header로 파싱되어 생성")
     @Test
-    void test_createRequestMessage_should_pass() throws IOException {
+    void test_createRequestMessage_by_get_should_pass() throws IOException {
         // given
         String input = "GET /index.html HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
@@ -28,9 +29,33 @@ class RequestMessageTest {
         RequestMessage requestMessage = RequestMessage.from(br);
         // then
         assertThat(requestMessage.equals(
-                RequestMessage.of(RequestLine.from("GET /index.html HTTP/1.1"),
+                RequestMessage.createWithDefaultBody(RequestLine.from("GET /index.html HTTP/1.1"),
                         new Header(Arrays.asList("Host: localhost:8080", "Connection: keep-alive", "Accept: */*")))))
                 .isTrue();
     }
+
+    @DisplayName("POST 요청은 requestLine, header, body로 파싱되어 생성")
+    @Test
+    void test_createRequestMessage_by_post_should_pass() throws IOException {
+        // given
+        String input = "POST /user/create HTTP/1.1\n" +
+                "Host: localhost:8080\n" +
+                "Connection: keep-alive\n" +
+                "Content-Length: 59\n" +
+                "Content-Type: application/x-www-form-urlencoded\n" +
+                "Accept: */*\n" +
+                "\n" +
+                "userId=crystal&password=password&name=%EC%9E%84%EC%88%98%EC%A0%95&email=crystal%40naver.com";
+        StringReader sr = new StringReader(input);
+        BufferedReader br = new BufferedReader(sr);
+        // when
+        RequestMessage requestMessage = RequestMessage.from(br);
+        // then
+        assertThat(requestMessage.equals(RequestMessage.create(
+                        RequestLine.from("POST /user/create HTTP/1.1"),
+                        new Header(Collections.emptyList()),
+                        "userId=crystal&password=password&name=%EC%9E%84%EC%88%98%EC%A0%95&email=crystal%40naver.com"
+        )));
+        }
 
 }

@@ -1,10 +1,12 @@
 package http;
 
 
+import utils.IOUtils;
 import utils.StringUtils;
 
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,28 +17,56 @@ public class RequestMessage {
 
     private final RequestLine requestLine;
     private final Header header;
+    private final String body;
 
-    private RequestMessage(RequestLine requestLine, Header header) {
-        if (requestLine == null) {
+    private RequestMessage(RequestLine requestLine, Header header, String body) {
+        if (requestLine == null || header == null || body == null) {
             throw new IllegalArgumentException(REQUEST_MESSAGE_IS_INVALID);
         }
         this.requestLine = requestLine;
         this.header = header;
+        this.body = body;
     }
 
     public static RequestMessage from(BufferedReader br) throws IOException {
-        String startLine = br.readLine();
+        RequestLine requestLine = getRequestLine(br);
+        Header header = getHeader(br);
+        String body = getBody(br, requestLine, header);
+        return new RequestMessage(requestLine, header, body);
+    }
 
+    private static RequestLine getRequestLine(BufferedReader br) throws IOException {
+        String line = br.readLine();
+        if (line == null) {
+            throw new EOFException();
+        }
+        return RequestLine.from(line);
+    }
+
+    private static Header getHeader(BufferedReader br) throws IOException {
         String line;
         List<String> others = new ArrayList<>();
         while (!StringUtils.isEmpty(line = br.readLine())) {
             others.add(line);
         }
-        return new RequestMessage(RequestLine.from(startLine), new Header(others));
+        return new Header(others);
     }
 
-    public static RequestMessage of(RequestLine requestLine, Header header) {
-        return new RequestMessage(requestLine, header);
+    private static String getBody(BufferedReader br, RequestLine requestLine, Header header) throws IOException {
+        String body = "";
+        if (requestLine.getMethod().canSupportBody()) {
+            int contentLength = Integer.parseInt(header.get("Content-Length"));
+            body = IOUtils.readData(br, contentLength);
+        }
+        return body;
+    }
+
+    public static RequestMessage createWithDefaultBody(RequestLine requestLine, Header header) {
+        return new RequestMessage(requestLine, header, "");
+    }
+
+    public static RequestMessage create(RequestLine requestLine, Header header, String body) {
+        return new RequestMessage(requestLine, header, body);
     }
 
     @Override
@@ -59,5 +89,13 @@ public class RequestMessage {
 
     public QueryString getQueryString() {
         return this.requestLine.getQueryString();
+    }
+
+    public QueryString getBody() {
+        return new QueryString(body);
+    }
+
+    public HttpMethod getMethod() {
+        return this.requestLine.getMethod();
     }
 }

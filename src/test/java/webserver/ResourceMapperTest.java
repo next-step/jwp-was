@@ -1,5 +1,6 @@
 package webserver;
 
+import http.Header;
 import http.RequestLine;
 import http.RequestMessage;
 import model.User;
@@ -10,7 +11,7 @@ import utils.FileIoUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +21,9 @@ class ResourceMapperTest {
     @Test
     void test_get_resource_service() throws IOException, URISyntaxException {
         // given
-        RequestMessage requestMessage = RequestMessage.of(RequestLine.from("GET /index.html HTTP/1.1"), null);
+        RequestMessage requestMessage = RequestMessage.createWithDefaultBody(
+                RequestLine.from("GET /index.html HTTP/1.1"),
+                new Header(Collections.emptyList()));
 
         byte[] bytes = FileIoUtils.loadFileFromClasspath("./templates/index.html");
         // when
@@ -33,7 +36,9 @@ class ResourceMapperTest {
     @Test
     void test_get_nonexistent_resource() {
         // given
-        RequestMessage requestMessage = RequestMessage.of(RequestLine.from("GET /ho.html HTTP/1.1"), null);
+        RequestMessage requestMessage = RequestMessage.createWithDefaultBody(
+                RequestLine.from("GET /ho.html HTTP/1.1"),
+                new Header(Collections.emptyList()));
 
         byte[] bytes = "Not Found".getBytes();
         // when
@@ -46,8 +51,25 @@ class ResourceMapperTest {
     @Test
     void test_userCreate_by_get_should_pass() {
         // given
-        RequestMessage requestMessage = RequestMessage.of(RequestLine.from("GET /user/create?userId=crystal&password=password&name=%EC%9E%84%EC%88%98%EC%A0%95&email=crystal%40naver.com HTTP/1.1"), null);
+        RequestMessage requestMessage = RequestMessage.createWithDefaultBody(
+                RequestLine.from("GET /user/create?userId=crystal&password=password&name=%EC%9E%84%EC%88%98%EC%A0%95&email=crystal%40naver.com HTTP/1.1"),
+                new Header(Collections.emptyList()));
 
+        User user = new User("crystal", "password", "임수정", "crystal@naver.com");
+        // when
+        byte[] body = ResourceMapper.getResource(requestMessage);
+        // then
+        assertThat(body).isEqualTo(user.toString().getBytes());
+    }
+
+    @DisplayName("POST 방식으로 회원가입 요청 처리")
+    @Test
+    void test_userCreate_by_post_should_pass() {
+        // given
+        RequestMessage requestMessage = RequestMessage.create(
+                RequestLine.from("POST /user/create HTTP/1.1"),
+                new Header(Collections.emptyList()),
+                "userId=crystal&password=password&name=%EC%9E%84%EC%88%98%EC%A0%95&email=crystal%40naver.com");
         User user = new User("crystal", "password", "임수정", "crystal@naver.com");
         // when
         byte[] body = ResourceMapper.getResource(requestMessage);

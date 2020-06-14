@@ -13,7 +13,7 @@ public class StringUtils {
     }
 
     public static boolean isEmpty(String text) {
-        return text == null || text.isEmpty();
+        return text == null || text.trim().isEmpty();
     }
 
     public static String[] splitIntoPair(String target, String delimiter) {

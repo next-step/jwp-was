@@ -1,5 +1,6 @@
 package webserver;
 
+import http.HttpMethod;
 import http.RequestMessage;
 import model.User;
 import org.slf4j.Logger;
@@ -11,15 +12,19 @@ public class ResourceMapper {
     public static final String NOT_FOUND = "Not Found";
 
     public static byte[] getResource(RequestMessage requestMessage) {
-        if("/user/create".equals(requestMessage.getPath())) {
-            User user = new User(requestMessage.getQueryString());
-            return user.toString().getBytes();
+        if ("/user/create".equals(requestMessage.getPath())) {
+            if (requestMessage.getMethod() == HttpMethod.GET) {
+                User user = new User(requestMessage.getQueryString());
+                return user.toString().getBytes();
+            } else if (requestMessage.getMethod() == HttpMethod.POST) {
+                User user = new User(requestMessage.getBody());
+                return user.toString().getBytes();
+            }
         }
         try {
             return FileIoUtils.loadFileFromClasspath("./templates" + requestMessage.getPath());
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            return NOT_FOUND.getBytes();
         }
-        return NOT_FOUND.getBytes();
     }
 }
