@@ -3,10 +3,13 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import utils.StringUtils;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -24,8 +27,12 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
-            String requestLineText = br.readLine();
+            String requestLineText = parseRequestLine(br);
             RequestLine requestLine = RequestLine.of(requestLineText);
+
+            List<String> requestHeaderTexts = parseRequestHeader(br);
+            RequestHeaders requestHeaders = RequestHeaders.of(requestHeaderTexts);
+
             byte[] file = FileIoUtils.loadFileFromClasspath(requestLine.getPath());
 
             DataOutputStream dos = new DataOutputStream(out);
@@ -34,6 +41,23 @@ public class RequestHandler implements Runnable {
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private String parseRequestLine(BufferedReader br) throws IOException {
+        return br.readLine();
+    }
+
+    private List<String> parseRequestHeader(BufferedReader br) throws IOException {
+        List<String> requestHeaderTexts = new ArrayList<>();
+        String line;
+        do {
+            line = br.readLine();
+            if (StringUtils.isNull(line)) {
+                break;
+            }
+            requestHeaderTexts.add(line);
+        } while (!"".equals(line));
+        return requestHeaderTexts;
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
