@@ -35,4 +35,22 @@ public class RequestHeadersTest {
         assertThat(requestHeaders)
                 .isEqualTo(new RequestHeaders(requestHeaderMap));
     }
+
+    @DisplayName("request header의 속성 확인")
+    @Test
+    void get() {
+
+        // given
+        List<String> requestHeaderTexts = Arrays.asList(
+                "Host: localhost:8080",
+                "Connection: keep-alive",
+                "Accept: text/html");
+
+        // when
+        RequestHeaders requestHeaders = RequestHeaders.of(requestHeaderTexts);
+
+        // then
+        assertThat(requestHeaders.get("Accept"))
+                .isEqualTo("text/html");
+    }
 }

@@ -2,6 +2,7 @@ package webserver.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import utils.IOUtils;
 import utils.StringUtils;
 
 import java.io.BufferedReader;
@@ -15,6 +16,7 @@ public class HttpRequest {
 
     private RequestLine requestLine;
     private RequestHeaders requestHeaders;
+    private RequestBody requestBody;
 
     public static HttpRequest of(BufferedReader br) throws IOException {
         String requestLineText = parseRequestLine(br);
@@ -23,7 +25,13 @@ public class HttpRequest {
         List<String> requestHeaderTexts = parseRequestHeader(br);
         RequestHeaders requestHeaders = RequestHeaders.of(requestHeaderTexts);
 
-        return new HttpRequest(requestLine, requestHeaders);
+        RequestBody requestBody = null;
+        if (requestLine.isPost()) {
+            String data = IOUtils.readData(br, Integer.parseInt(requestHeaders.get("Content-Length")));
+            requestBody = RequestBody.of(data);
+        }
+
+        return new HttpRequest(requestLine, requestHeaders, requestBody);
     }
 
     private static String parseRequestLine(BufferedReader br) throws IOException {

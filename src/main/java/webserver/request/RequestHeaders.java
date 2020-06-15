@@ -25,4 +25,9 @@ public class RequestHeaders {
                 .collect(toMap(RequestHeader::getName, Function.identity()));
         return new RequestHeaders(requestHeaderMap);
     }
+
+    public String get(String name) {
+        RequestHeader requestHeader = requestHeaders.get(name);
+        return requestHeader.getValue();
+    }
 }
