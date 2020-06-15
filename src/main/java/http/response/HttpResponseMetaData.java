@@ -1,14 +1,11 @@
 package http.response;
 
-import org.springframework.util.StringUtils;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static http.response.HttpResponseHeaderKeys.CONTENT_LENGTH_HEADER_KEY;
 import static http.response.HttpResponseHeaderKeys.CONTENT_TYPE_HEADER_KEY;
@@ -17,14 +14,12 @@ import static http.response.HttpStatusCode.OK;
 
 public class HttpResponseMetaData {
 
-    private static final String COOKIE_VALUE_DELIMITER = "=";
-    private static final String COOKIE_DELIMITER = "; ";
     private static final String NEW_LINE = "\r\n";
     private static final String HTTP_HEADER_DELIMITER = ":";
 
     private HttpStatusCode statusCode = OK;
     private Map<String, String> headers = new HashMap<>();
-    private Map<String, String> cookies = new LinkedHashMap<>();
+    private List<Cookie> cookies = new ArrayList<>();
     private byte[] responseBody = {};
 
     public HttpResponseMetaData() {
@@ -46,12 +41,10 @@ public class HttpResponseMetaData {
         }
     }
 
-    public void addCookie(String key, String value) {
-        if (StringUtils.isEmpty(key)) {
-            return;
+    public void addCookie(Cookie cookie) {
+        if (cookie != null) {
+            this.cookies.add(cookie);
         }
-
-        this.cookies.put(key, value);
     }
 
     public void putResponseHeader(String key, String value) {
@@ -63,9 +56,8 @@ public class HttpResponseMetaData {
     }
 
     public void writeResponseHeaders(DataOutputStream dos) throws IOException {
-        String cookieValue = generateCookieValue();
-        if (!StringUtils.isEmpty(cookieValue)) {
-            dos.writeBytes(generateHeaderLine(COOKIE_HEADER_KEY, cookieValue) + NEW_LINE);
+        for (Cookie cookie : cookies) {
+            dos.writeBytes(generateHeaderLine(COOKIE_HEADER_KEY, cookie.generateCookieHeader()) + NEW_LINE);
         }
 
         for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -78,14 +70,6 @@ public class HttpResponseMetaData {
             dos.writeBytes(NEW_LINE);
             dos.write(responseBody, 0, responseBody.length);
         }
-    }
-
-    String generateCookieValue() {
-        List<String> cookieValues = cookies.entrySet().stream()
-                .map(entry -> entry.getKey() + COOKIE_VALUE_DELIMITER + entry.getValue())
-                .collect(Collectors.toList());
-
-        return String.join(COOKIE_DELIMITER, cookieValues);
     }
 
     String generateHeaderLine(String key, String value) {
