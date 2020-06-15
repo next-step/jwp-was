@@ -30,4 +30,14 @@ class StringUtilsTest {
         // then
         assertThat(result).containsExactly("userId", "a");
     }
+
+    @DisplayName("URI 퍼센트 디코딩 시 null 값은 그대로 반환")
+    @Test
+    void test_percent_decoding_null() {
+        // given
+        // when
+        String result = StringUtils.decode(null);
+        // then
+        assertThat(result).isNull();
+    }
 }

@@ -17,7 +17,7 @@ public class ProtocolTest {
         // when
         Protocol protocol = Protocol.from(protocolInfo);
         // then
-        assertThat(protocol.equals(Protocol.of("HTTP", "1.1"))).isTrue();
+        assertThat(protocol.equals(Protocol.HTTP_V1_1)).isTrue();
     }
 
     @DisplayName("유효하지 않은 프로토콜명인 경우 IllegalArgumentException 발생")
@@ -25,6 +25,18 @@ public class ProtocolTest {
     void test_parsing_invalid_protocol_should_fail() {
         // given
         String protocolInfo = "HTDP/1.1";
+        // when
+        // then
+        assertThatThrownBy(() -> {
+            Protocol protocol = Protocol.from(protocolInfo);
+        }).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("유효하지 않은 프로토콜버전인 경우 IllegalArgumentException 발생")
+    @Test
+    void test_parsing_invalid_version_should_fail() {
+        // given
+        String protocolInfo = "HTTP/0.0";
         // when
         // then
         assertThatThrownBy(() -> {
