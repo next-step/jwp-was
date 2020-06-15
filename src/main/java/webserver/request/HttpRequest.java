@@ -2,6 +2,8 @@ package webserver.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 import utils.StringUtils;
 
@@ -14,12 +16,16 @@ import java.util.List;
 @AllArgsConstructor
 public class HttpRequest {
 
+    private static final Logger log = LoggerFactory.getLogger(HttpRequest.class);
+
     private RequestLine requestLine;
     private RequestHeaders requestHeaders;
     private RequestBody requestBody;
 
     public static HttpRequest of(BufferedReader br) throws IOException {
         String requestLineText = parseRequestLine(br);
+        log.info("RequestLine : {}", requestLineText);
+
         RequestLine requestLine = RequestLine.of(requestLineText);
 
         List<String> requestHeaderTexts = parseRequestHeader(br);

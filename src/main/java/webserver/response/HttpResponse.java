@@ -1,6 +1,5 @@
 package webserver.response;
 
-import lombok.AllArgsConstructor;
 import webserver.request.HttpRequest;
 
 import java.io.IOException;
@@ -8,11 +7,16 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Objects;
 
-@AllArgsConstructor
 public class HttpResponse {
 
+    private ResponseLine responseLine;
     private ResponseHeaders responseHeaders;
     private ResponseBody responseBody;
+
+    public HttpResponse(ResponseHeaders responseHeaders, ResponseBody responseBody) {
+        this.responseHeaders = responseHeaders;
+        this.responseBody = responseBody;
+    }
 
     public static HttpResponse of(HttpRequest httpRequest) throws IOException, URISyntaxException {
         ResponseHeaders responseHeaders = ResponseHeaders.of();
@@ -37,11 +41,20 @@ public class HttpResponse {
         return file;
     }
 
-    public String response200() {
-        return "HTTP/1.1 200 OK \r\n";
+    public void response200() {
+        this.responseLine = ResponseLine.of("200", "OK");
+    }
+
+    public void response302(String location) {
+        this.responseLine = ResponseLine.of("302", "FOUND");
+        responseHeaders.addHeader("Location", location);
     }
 
     public Map<String, ResponseHeader> getResponseHeaders() {
         return responseHeaders.getResponseHeaders();
+    }
+
+    public String getResponseLine() {
+        return responseLine.response();
     }
 }

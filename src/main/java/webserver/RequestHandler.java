@@ -33,6 +33,7 @@ public class RequestHandler implements Runnable {
             HttpResponse httpResponse;
             if (httpRequest.isStaticFileRequest()) {
                 httpResponse = HttpResponse.of(httpRequest);
+                httpResponse.response200();
             } else {
                 httpResponse = HttpResponse.of();
                 Controller userController = new UserController();
@@ -48,7 +49,7 @@ public class RequestHandler implements Runnable {
 
     private void response(DataOutputStream dos, HttpResponse httpResponse) {
         try {
-            dos.writeBytes(httpResponse.response200());
+            dos.writeBytes(httpResponse.getResponseLine());
             responseHeader(dos, httpResponse.getResponseHeaders());
             responseBody(dos, httpResponse.getBody());
             dos.flush();

@@ -29,6 +29,8 @@ public class UserController implements Controller {
 
         User user = new User(userId, password, name, email);
         DataBase.addUser(user);
+
+        response.response200();
     }
 
     private void doPost(HttpRequest request, HttpResponse response) {
@@ -40,5 +42,8 @@ public class UserController implements Controller {
 
         User user = new User(userId, password, name, email);
         DataBase.addUser(user);
+
+        String location = "http://" + request.getRequestHeaders().get("Host") + "/index.html";
+        response.response302(location);
     }
 }

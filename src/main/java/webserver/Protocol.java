@@ -36,4 +36,8 @@ public class Protocol {
     private static boolean isNonExistent(String[] nameAndVersion) {
         return nameAndVersion.length != 2;
     }
+
+    public String getNameAndVersion() {
+        return name + "/" + version;
+    }
 }
