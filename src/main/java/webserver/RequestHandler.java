@@ -1,24 +1,20 @@
 package webserver;
 
-import controller.Controller;
 import http.request.HttpRequest;
+import http.request.HttpRequestReader;
 import http.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import session.HttpSessionManager;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-
-    private Map<String, Controller> pathMap = new HashMap<>();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -32,9 +28,15 @@ public class RequestHandler implements Runnable {
 
             HttpRequest httpRequest = HttpRequestReader.read(in);
             HttpResponse httpResponse = new HttpResponse(out);
+
+            if (httpRequest.getHeader(HttpSessionManager.SESSION_ID) == null) {
+                String uuid = HttpSessionManager.createSession();
+                httpResponse.addHeader("Set-Cookie", HttpSessionManager.getCookieHeader(uuid));
+            }
+
             RequestMappingManager.execute(httpRequest, httpResponse);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }

@@ -6,7 +6,7 @@ import http.response.HttpResponse;
 public abstract class AbstractController implements Controller {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    public void service(HttpRequest request, HttpResponse response) throws Exception {
         if (request.isGet()) {
             doGet(request, response);
             return;
@@ -14,7 +14,9 @@ public abstract class AbstractController implements Controller {
         doPost(request, response);
     }
 
-    public abstract void doPost(HttpRequest request, HttpResponse response);
+    public void doPost(HttpRequest request, HttpResponse response) throws Exception {
+    }
 
-    public abstract void doGet(HttpRequest request, HttpResponse response);
+    public void doGet(HttpRequest request, HttpResponse response) throws Exception {
+    }
 }
