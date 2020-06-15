@@ -4,6 +4,7 @@ import http.common.ContentType;
 import http.common.Cookies;
 import http.common.HeaderField;
 import http.common.HeaderFieldName;
+import org.apache.logging.log4j.util.Strings;
 import webserver.exceptions.StatusCodeNotFoundException;
 
 import java.util.Optional;
@@ -45,11 +46,11 @@ public class HttpResponse {
         return header;
     }
 
-    public String getHeader(String headerName) {
+    public Optional<String> getHeader(String headerName) {
         return header.getValue(headerName);
     }
 
-    public String getHeader(HeaderFieldName headerName) {
+    public Optional<String> getHeader(HeaderFieldName headerName) {
         return header.getValue(headerName);
     }
 

@@ -14,6 +14,7 @@ import webserver.controller.AbstractController;
 import webserver.session.HttpSession;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class UserListController extends AbstractController {
 
@@ -30,7 +31,8 @@ public class UserListController extends AbstractController {
 
     @Override
     protected void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (!isAuthenticated(httpRequest.getSession(false))) {
+        Optional<HttpSession> sessionOpt = httpRequest.getSession(false);
+        if (!isAuthenticated(sessionOpt)) {
             httpResponse.sendRedirect("/index.html");
             return;
         }
@@ -53,18 +55,11 @@ public class UserListController extends AbstractController {
         }
     }
 
-    private boolean isAuthenticated(HttpSession session) {
-        if (session == null) {
-            return false;
-        }
-
-        Object isAuthenticatedObj = session.getAttribute("isAuthenticated");
-
-        if (isAuthenticatedObj == null) {
-            return false;
-        }
-
-        return (boolean) isAuthenticatedObj;
+    private boolean isAuthenticated(Optional<HttpSession> sessionOpt) {
+        return sessionOpt
+                .map(session -> session.getAttribute("isAuthenticated"))
+                .map(x -> (boolean) x.get())
+                .orElse(false);
     }
 
 }

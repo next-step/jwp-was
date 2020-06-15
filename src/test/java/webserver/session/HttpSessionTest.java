@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,15 +59,17 @@ class HttpSessionTest {
 
         final Object result = httpSession.getAttribute(KEY);
 
-        assertThat(result).isEqualTo(VALUE);
+        assertThat(result).isEqualTo(Optional.of(VALUE));
     }
 
     @Test
-    @DisplayName("HttpSession에서 존재하지 않는 키로 attribute를 가져올 경우 null을 반환한다")
+    @DisplayName("HttpSession에서 존재하지 않는 키로 attribute를 가져올 경우 Optional.empty()를 반환한다")
     void notExistAttributeKey() {
+        final Optional expected = Optional.empty();
+
         final Object result = httpSession.getAttribute(KEY);
 
-        assertThat(result).isEqualTo(null);
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
@@ -76,7 +79,7 @@ class HttpSessionTest {
 
         httpSession.removeAttribute(KEY);
 
-        assertThat(httpSession.getAttribute(KEY)).isNull();
+        assertThat(httpSession.getAttribute(KEY)).isEmpty();
     }
 
     @Test
@@ -92,7 +95,7 @@ class HttpSessionTest {
 
         httpSession.invalidate();
 
-        assertThat(httpSession.getAttribute(KEY)).isNull();
+        assertThat(httpSession.getAttribute(KEY)).isEmpty();
     }
 
 }

@@ -39,8 +39,8 @@ public class RequestHandler implements Runnable {
                 final Controller controller = FrontController.controllerMapping(path);
                 controller.service(httpRequest, httpResponse);
 
-                final HttpSession httpSession = httpRequest.getSession(false);
-                handleSession(httpSession, httpResponse);
+                httpRequest.getSession(false)
+                        .ifPresent(httpSession -> handleSession(httpSession, httpResponse));
 
                 ResponseWriter.write(out, httpResponse);
             } catch (WebServerException e) {
@@ -54,10 +54,6 @@ public class RequestHandler implements Runnable {
     }
 
     private void handleSession(HttpSession httpSession, HttpResponse httpResponse) {
-        if (httpSession == null) {
-            return;
-        }
-
         SessionStore.add(httpSession);
 
         final String sessionId = httpSession.getId();

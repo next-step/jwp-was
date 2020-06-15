@@ -2,6 +2,7 @@ package webserver.session;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class Attributes {
     private Map<String, Object> attributes;
@@ -14,8 +15,8 @@ public class Attributes {
         attributes.put(key, value);
     }
 
-    public Object get(String key) {
-        return attributes.get(key);
+    public Optional<Object> get(String key) {
+        return Optional.ofNullable(attributes.get(key));
     }
 
     public void remove(String key) {

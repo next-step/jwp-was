@@ -40,7 +40,7 @@ public enum ResponseSequelizer {
         final StringBuffer sb = new StringBuffer();
         for (Iterator it = httpResponse.getHeader().iterator(); it.hasNext(); ) {
             String headerName = (String) it.next();
-            String headerValue = httpResponse.getHeader(headerName);
+            String headerValue = httpResponse.getHeader(headerName).orElse(Strings.EMPTY);
             sb.append(headerName + ": " + headerValue + "\r\n");
         }
         sb.append("\r\n");

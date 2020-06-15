@@ -1,9 +1,11 @@
 package http.request.parser;
 
-import http.request.HttpMethod;
 import http.common.ProtocolAndVersion;
+import http.request.HttpMethod;
 import http.request.Parameters;
 import http.request.RequestLine;
+
+import java.util.Optional;
 
 public class RequestLineParser {
 
@@ -17,12 +19,10 @@ public class RequestLineParser {
         final ProtocolAndVersion protocolAndVersion = new ProtocolAndVersion(value[2]);
         final String path = pathAndQuerystring[0];
 
-        String queryStringStr = "";
+        Parameters queryString = new Parameters();
         if (pathAndQuerystring.length == 2) {
-            queryStringStr = pathAndQuerystring[1];
+            queryString = new Parameters(pathAndQuerystring[1]);
         }
-
-        final Parameters queryString = new Parameters(queryStringStr);
 
         return new RequestLine(httpMethod, path, queryString, protocolAndVersion);
     }

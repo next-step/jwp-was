@@ -7,9 +7,9 @@ import org.apache.logging.log4j.util.Strings;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 
 public class ResponseHeader implements Iterable {
-    private static final String RESPONSE_HEADER_DEFAULT_VALUE = Strings.EMPTY;
 
     private final Map<String, HeaderField> header;
 
@@ -17,15 +17,15 @@ public class ResponseHeader implements Iterable {
         this.header = new HashMap<>();
     }
 
-    public String getValue(String headerName) {
+    public Optional<String> getValue(String headerName) {
         final HeaderField headerField = header.get(headerName);
         if (headerField == null) {
-            return RESPONSE_HEADER_DEFAULT_VALUE;
+            return Optional.empty();
         }
-        return headerField.getValue();
+        return Optional.of(headerField.getValue());
     }
 
-    public String getValue(HeaderFieldName headerName) {
+    public Optional<String> getValue(HeaderFieldName headerName) {
         return getValue(headerName.stringify());
     }
 

@@ -4,6 +4,8 @@ import http.common.Cookies;
 import http.common.HeaderFieldName;
 import webserver.session.HttpSession;
 
+import java.util.Optional;
+
 public class HttpRequest {
     private final RequestLine requestLine;
     private final RequestHeader header;
@@ -37,19 +39,19 @@ public class HttpRequest {
         return cookies.getValue(cookieName);
     }
 
-    public String getHeader(String headerName) {
+    public Optional<String> getHeader(String headerName) {
         return header.getValue(headerName);
     }
 
-    public String getHeader(HeaderFieldName headerName) {
+    public Optional<String> getHeader(HeaderFieldName headerName) {
         return header.getValue(headerName);
     }
 
-    public HttpSession getSession(boolean create) {
+    public Optional<HttpSession> getSession(boolean create) {
         if (session == null && create) {
             this.session = HttpSession.create();
         }
-        return session;
+        return Optional.ofNullable(session);
     }
 
     public String getParameter(String parameterName) {

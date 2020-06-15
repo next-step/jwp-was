@@ -1,11 +1,9 @@
 package http.common;
 
-import org.apache.logging.log4j.util.Strings;
 import webserver.exceptions.IllegalCookieHeaderException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Cookies {
@@ -23,10 +21,6 @@ public class Cookies {
 
     public Cookies(String value) {
         cookies = new HashMap<>();
-
-        if (Strings.EMPTY.equals(value)) {
-            return;
-        }
 
         for (String cookie : value.split(COOKIE_TOKENIZER)) {
             final String[] c = cookie.trim().split(COOKIE_NAME_VALUE_TOKENIZER);

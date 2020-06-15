@@ -16,7 +16,7 @@ class RequestLineParserTest {
     void createRequestLineInGET() {
         final String requestLineStr = "GET /users HTTP/1.1";
         RequestLine requestLine = RequestLineParser.parse(requestLineStr);
-        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.GET, "/users", new Parameters(""), new ProtocolAndVersion("HTTP", "1.1")));
+        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.GET, "/users", new Parameters(), new ProtocolAndVersion("HTTP", "1.1")));
     }
 
     @Test
@@ -24,7 +24,7 @@ class RequestLineParserTest {
     void createRequestLineInPost() {
         final String requestLineStr = "POST /users HTTP/1.1";
         RequestLine requestLine = RequestLineParser.parse(requestLineStr);
-        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.POST, "/users", new Parameters(""), new ProtocolAndVersion("HTTP", "1.1")));
+        assertThat(requestLine).isEqualTo(new RequestLine(HttpMethod.POST, "/users", new Parameters(), new ProtocolAndVersion("HTTP", "1.1")));
     }
 
     @Test

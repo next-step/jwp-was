@@ -6,6 +6,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.session.HttpSession;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class HttpRequestTest {
@@ -15,19 +17,19 @@ class HttpRequestTest {
     void notExistSessionWithTrue() {
         final HttpRequest httpRequest = new HttpRequest(null, null, null, null, null, null);
 
-        final HttpSession session = httpRequest.getSession(true);
+        final Optional<HttpSession> result = httpRequest.getSession(true);
 
-        assertThat(session).isNotNull();
+        assertThat(result).isNotEmpty();
     }
 
     @Test
-    @DisplayName("세션이 존재하지 않는 httpReqeust에서 false 옵션으로 세션을 가져올 경우 null을 반환한다")
+    @DisplayName("세션이 존재하지 않는 httpReqeust에서 false 옵션으로 세션을 가져올 경우 새로운 세션을 생성하지 않는")
     void notExistSessionWithFalse() {
         final HttpRequest httpRequest = new HttpRequest(null, null, null,null, null, null);
 
-        final HttpSession session = httpRequest.getSession(false);
+        final Optional<HttpSession> result = httpRequest.getSession(false);
 
-        assertThat(session).isNull();
+        assertThat(result).isEmpty();
     }
 
     @ParameterizedTest
@@ -37,9 +39,9 @@ class HttpRequestTest {
         final HttpRequest httpRequest = new HttpRequest(null, null, null,null, null, null);
         httpRequest.getSession(true);
 
-        final HttpSession session = httpRequest.getSession(create);
+        final Optional<HttpSession> result = httpRequest.getSession(create);
 
-        assertThat(session).isNotNull();
+        assertThat(result).isNotEmpty();
     }
 
 }

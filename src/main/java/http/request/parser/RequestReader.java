@@ -3,14 +3,13 @@ package http.request.parser;
 import http.common.ContentType;
 import http.common.Cookies;
 import http.common.HeaderFieldName;
+import http.request.HttpRequest;
 import http.request.Parameters;
 import http.request.RequestHeader;
-import http.request.HttpRequest;
 import http.request.RequestLine;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.servlet.tags.Param;
 import utils.IOUtils;
 import webserver.session.HttpSession;
 import webserver.session.SessionStore;
@@ -40,14 +39,13 @@ public class RequestReader {
         }
         final RequestHeader header = RequestHeaderParser.parse(sb.toString());
 
-        final String cookieValues = header.getValue(HeaderFieldName.COOKIE);
-        final Cookies cookies = new Cookies(cookieValues);
+        final Cookies cookies = header.getValue(HeaderFieldName.COOKIE)
+                .map(Cookies::new)
+                .orElseGet(Cookies::new);
 
-        final String contentLengthStr = header.getValue(HeaderFieldName.CONTENT_LENGTH);
-        int contentLength = 0;
-        if (!Strings.isBlank(contentLengthStr)) {
-            contentLength = Integer.parseInt(contentLengthStr);
-        }
+        final int contentLength = header.getValue(HeaderFieldName.CONTENT_LENGTH)
+                .map(Integer::valueOf)
+                .orElse(0);
 
         final String requestBody = IOUtils.readData(br, contentLength);
         logger.debug("Body :: {}", requestBody);
@@ -55,10 +53,10 @@ public class RequestReader {
         final String sessionId = cookies.getValue("JSESSIONID");
         final HttpSession session = SessionStore.get(sessionId);
 
-        Parameters formData = null;
-        if (ContentType.APPLICATION_X_WWW_FORM_UNLENCODED.getValue().equals(header.getValue(HeaderFieldName.CONTENT_TYPE))) {
-            formData = new Parameters(requestBody);
-        }
+        Parameters formData = header.getValue(HeaderFieldName.CONTENT_TYPE)
+                .filter(ContentType.APPLICATION_X_WWW_FORM_UNLENCODED.getValue()::equals)
+                .map(x -> new Parameters(requestBody))
+                .orElseGet(Parameters::new);
 
         return new HttpRequest(requestLine, header, formData, cookies, requestBody, session);
     }

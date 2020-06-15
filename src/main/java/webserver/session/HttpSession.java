@@ -1,5 +1,6 @@
 package webserver.session;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class HttpSession {
@@ -30,7 +31,7 @@ public class HttpSession {
         attributes.put(key, value);
     }
 
-    public Object getAttribute(String key) {
+    public Optional<Object> getAttribute(String key) {
         return attributes.get(key);
     }
 
