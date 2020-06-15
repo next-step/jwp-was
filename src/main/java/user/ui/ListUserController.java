@@ -8,6 +8,7 @@ import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.session.HttpSession;
+import http.session.HttpSessionHandler;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public class ListUserController extends UserController {
     }
 
     private boolean isLogin(String sessionId) {
-        HttpSession httpSession = HttpSession.getInstance(sessionId);
+        HttpSession httpSession = HttpSessionHandler.getSession(sessionId);
         if (httpSession.getAttribute("logined") == null) {
             return false;
         }

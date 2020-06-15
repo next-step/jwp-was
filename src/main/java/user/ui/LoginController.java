@@ -4,6 +4,7 @@ import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.session.HttpSession;
+import http.session.HttpSessionHandler;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,10 @@ public class LoginController extends UserController {
             User user = DataBase.findUserById(userId);
             logger.debug(user.toString());
             if (user.isCorrectPassword(password)) {
-                HttpSession httpSession = HttpSession.getInstance(UUID.randomUUID().toString());
+                HttpSession httpSession = new HttpSession(UUID.randomUUID().toString());
+                HttpSessionHandler.applySession(httpSession);
+                System.out.println("------------------");
+                System.out.println(httpSession.getId());
                 httpSession.setAttribute("logined", true);
                 httpResponse.addHeader("Set-Cookie", "CUSTOM_SESSION_ID=" + httpSession.getId() + ";Path=/");
                 httpResponse.sendRedirect("/index.html");

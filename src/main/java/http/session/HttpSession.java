@@ -3,21 +3,16 @@ package http.session;
 import java.util.Objects;
 
 public class HttpSession {
-    private static HttpSession httpSession = null;
-
     private final String sessionId;
     private final Attribute attribute;
 
-    public static HttpSession getInstance(String sessionId) {
-        if (Objects.isNull(httpSession)) {
-            httpSession = new HttpSession(sessionId);
-        }
-        return httpSession;
-    }
-
-    private HttpSession(final String sessionId) {
+    public HttpSession(final String sessionId) {
         this.sessionId = sessionId;
         this.attribute = new Attribute();
+    }
+
+    public boolean hasSession(String sessionId) {
+        return this.sessionId.equals(sessionId);
     }
 
     public String getId() {

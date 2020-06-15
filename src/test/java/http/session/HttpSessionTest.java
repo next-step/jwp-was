@@ -12,7 +12,7 @@ class HttpSessionTest {
 
     @BeforeEach
     void setUp() {
-        httpSession = HttpSession.getInstance("test");
+        httpSession = new HttpSession("test");
     }
 
     @Test
@@ -20,7 +20,7 @@ class HttpSessionTest {
     void createByConstructor() {
         // give
         HttpSession actual = httpSession;
-        HttpSession expected = HttpSession.getInstance("test");
+        HttpSession expected = new HttpSession("test");
         // when
         boolean same = actual.equals(expected);
         // then
@@ -47,7 +47,7 @@ class HttpSessionTest {
         httpSession.setAttribute("email", "liquidjoo@gmail.com");
         httpSession.removeAttribute("email");
         HttpSession actual = httpSession;
-        HttpSession expected = HttpSession.getInstance("test");
+        HttpSession expected = new HttpSession("test");
         // when
         boolean same = actual.equals(expected);
         // then
@@ -64,7 +64,7 @@ class HttpSessionTest {
 
         httpSession.invalidate();
         HttpSession actual = httpSession;
-        HttpSession expected = HttpSession.getInstance("test");
+        HttpSession expected = new HttpSession("test");
         // when
         boolean same = actual.equals(expected);
         // then
