@@ -1,5 +1,7 @@
 package http.request;
 
+import cookie.CookieManager;
+import cookie.Cookies;
 import session.HttpSessionManager;
 import session.Session;
 
@@ -15,6 +17,8 @@ public class HttpRequest {
 
     private Session session;
 
+    private Cookies cookies;
+
     public HttpRequest(final RequestLine requestLine, final HttpRequestHeader requestHeader, final Map<String, String> parameters) {
         this.requestLine = requestLine;
         this.requestHeaders = requestHeader;
@@ -22,7 +26,9 @@ public class HttpRequest {
 
         if (this.parameters == null) this.parameters = new HashMap<>();
 
-        this.session = HttpSessionManager.getSession(requestHeader.getHeader("SESSIONID"));
+        this.cookies = CookieManager.read(requestHeader.getHeader("Cookie"));
+        this.session = HttpSessionManager.getSession(getCookie(HttpSessionManager.SESSION_ID));
+
     }
 
     public boolean isGet() {
@@ -71,5 +77,9 @@ public class HttpRequest {
         }
 
         session.setAttribute(key, value);
+    }
+
+    public String getCookie(String key) {
+        return cookies.getCookie(key);
     }
 }

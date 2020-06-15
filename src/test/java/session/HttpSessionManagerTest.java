@@ -21,6 +21,7 @@ public class HttpSessionManagerTest {
         String uuid = HttpSessionManager.createSession();
 
         this.SESSIONID = uuid;
+        HttpSessionManager.getSession(uuid).setAttribute("test", "1234");
     }
 
     @Test
@@ -51,6 +52,8 @@ public class HttpSessionManagerTest {
         InputStream in = socket.getInputStream();
 
         HttpRequest httpRequest = HttpRequestReader.read(in);
-        httpRequest.getSessionAttribute("aaaa");
+        String value = (String) httpRequest.getSessionAttribute("test");
+
+        assertThat(value).isEqualTo("1234");
     }
 }
