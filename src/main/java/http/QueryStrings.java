@@ -1,6 +1,10 @@
 package http;
 
+import model.User;
+
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class QueryStrings {
     private final List<QueryString> queryStrings;
@@ -60,5 +64,37 @@ public class QueryStrings {
         return "QueryStrings{" +
                 "queryStrings=" + queryStrings +
                 '}';
+    }
+
+    public String getUserId() {
+        return queryStrings.stream()
+                .filter(QueryString::isUserId)
+                .map(QueryString::getValue)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
+    public String getPassword() {
+        return queryStrings.stream()
+                .filter(QueryString::isPassword)
+                .map(QueryString::getValue)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
+    public String getName() {
+        return queryStrings.stream()
+                .filter(QueryString::isName)
+                .map(QueryString::getValue)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
+    public String getEmail() {
+        return queryStrings.stream()
+                .filter(QueryString::isEmail)
+                .map(QueryString::getValue)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 }

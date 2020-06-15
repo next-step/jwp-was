@@ -1,8 +1,10 @@
 package webserver;
 
 import http.HttpRequest;
+import http.QueryStrings;
 import http.RequestLine;
 import http.RequestPath;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -33,6 +35,14 @@ public class RequestHandler implements Runnable {
 
             RequestLine requestLine = httpRequest.getRequestLine();
             RequestPath requestPath = requestLine.getRequestPath();
+
+            if (requestPath.equals(new RequestPath("/user/create"))) {
+                logger.info("hihi i am create data: {}", requestLine.getQueryStrings().toString());
+                QueryStrings queryStrings = requestLine.getQueryStrings();
+                User userSource = new User(queryStrings);
+                logger.debug(userSource.toString());
+            }
+
 
             if (requestPath.getPath().contains(".html")) {
                 DataOutputStream dos = new DataOutputStream(out);

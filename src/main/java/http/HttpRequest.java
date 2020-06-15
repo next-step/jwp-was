@@ -11,6 +11,7 @@ public class HttpRequest {
         String requestLine;
         do {
             requestLine = readLine(inputStream);
+            System.out.println(requestLine);
             if (requestLine == null) {
                 return;
             }

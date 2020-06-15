@@ -25,6 +25,22 @@ public class QueryString {
         return value;
     }
 
+    public boolean isUserId() {
+        return this.key.equals("userId");
+    }
+
+    public boolean isPassword() {
+        return this.key.equals("password");
+    }
+
+    public boolean isName() {
+        return this.key.equals("name");
+    }
+
+    public boolean isEmail() {
+        return this.key.equals("email");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,5 +1,8 @@
 package model;
 
+import http.QueryString;
+import http.QueryStrings;
+
 public class User {
     private String userId;
     private String password;
@@ -11,6 +14,13 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public User(QueryStrings queryStrings) {
+        this.userId = queryStrings.getUserId();
+        this.password = queryStrings.getPassword();
+        this.name = queryStrings.getName();
+        this.email = queryStrings.getEmail();
     }
 
     public String getUserId() {
