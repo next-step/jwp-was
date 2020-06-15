@@ -36,66 +36,43 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
 
-            /*BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-
-            String line = br.readLine();
-            logger.debug("requestline : {}", line);*/
 
             HttpRequest httpRequest = new HttpRequest(in);
-           /* String path = httpRequest.getPath();
-            int contentLength = 0;
-            boolean loginStatus = false;
-            while (!"".equals(line)) {
-                line = br.readLine();
-                logger.debug("header : {}", line);
-                if (line.contains("Content-Length")) {
-                    String value = line.split(" ")[1];
-                    contentLength = Integer.parseInt(value);
-                }
-                if (line.contains("Cookie")) {
-                    loginStatus = loginCheck(line);
-                }
-            }*/
-            logger.debug("getPath : {}", httpRequest.getPath());
+            HttpResponse httpResponse = new HttpResponse(out);
+
             String path = httpRequest.getPath();
+            logger.debug("path : {} ", path);
+
             if (path.equals("/user/create")) {
-                User user = new User(httpRequest.getParameter("userId"),
-                        httpRequest.getParameter("password"), httpRequest.getParameter("name"),
-                        httpRequest.getParameter("email"));
+                User user = new User(
+                                    httpRequest.getParameter("userId"),
+                                    httpRequest.getParameter("password"),
+                                    httpRequest.getParameter("name"),
+                                    httpRequest.getParameter("email"));
                 logger.debug("User : {}", user);
                 DataBase.addUser(user);
-                DataOutputStream dos = new DataOutputStream(out);
-                response302Header(dos, "/index.html");
-            } else if (path.endsWith(".css")) {
-                DataOutputStream dos = new DataOutputStream(out);
-                byte[] body = HttpResponse.getCss(httpRequest.getPath());
-                responseCssHeader(dos, body.length);
-                responseBody(dos, body);
+                httpResponse.sendRedirect("/index.html");
             } else if (path.equals("/user/login")) {
 
                 User user = DataBase.findUserById(httpRequest.getParameter("userId"));
 
                 if (user == null) {
-                    responseResource(out, "/user/login_failed.html");
+                    httpResponse.sendRedirect("/user/login_failed.html");
                     return;
                 }
 
                 if (user.getPassword().equals(httpRequest.getParameter("password"))) {
                     DataOutputStream dos = new DataOutputStream(out);
-                    responseLoginHeader(dos);
-                    responseResource(out, "/index.html");
+                    httpResponse.addHeader("Set-Cookie","logined=true");
+                    httpResponse.sendRedirect( "/index.html");
                 } else {
-                    responseResource(out, httpRequest.getPath());
+                    httpResponse.forward("/user/login_failed.html");
                 }
 
             } else if (path.equals("/user/list")) {
 
-                boolean loginStatus = false;
-
-                loginStatus = loginCheck(httpRequest.getHeader("Cookie"));
-
-                if (!loginStatus) {
-                    responseResource(out, "/login.html");
+                if (!loginCheck(httpRequest.getHeader("Cookie"))) {
+                    httpResponse.sendRedirect("/login.html");
                     return;
                 }
 
@@ -111,10 +88,10 @@ public class RequestHandler implements Runnable {
 
                 DataOutputStream dos = new DataOutputStream(out);
                 byte[] body = profilePage.getBytes();
-                response200Header(dos, body.length);
-                responseBody(dos, body);
+                httpResponse.responseBody(body);
+                httpResponse.forward(httpRequest.getPath());
             } else {
-                responseResource(out, httpRequest.getPath());
+                httpResponse.forward(httpRequest.getPath());
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -131,62 +108,5 @@ public class RequestHandler implements Runnable {
         return result;
     }
 
-    private void responseResource(OutputStream out, String url) throws IOException {
-        DataOutputStream dos = new DataOutputStream(out);
-        byte[] body = HttpResponse.getBody(url);
-        response200Header(dos, body.length);
-        responseBody(dos, body);
-    }
 
-    private void responseLoginHeader(DataOutputStream dos) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;\r\n");
-            dos.writeBytes("Set-Cookie: logined=true; path=/ \r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseCssHeader(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response302Header(DataOutputStream dos, String redirectUrl) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: " + redirectUrl + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
 }

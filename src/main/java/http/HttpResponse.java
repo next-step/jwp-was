@@ -1,31 +1,99 @@
 package http;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import webserver.RequestHandler;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpResponse {
-    private static String PATH = "./templates";
-    private static String CSS_PATH = "./static";
+    private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
-    public static byte[] getBody(String path) throws IOException {
+    private String resourcePath = "";
+
+    private DataOutputStream dos = null;
+    private HttpHeaders headers = new HttpHeaders();
+
+    public HttpResponse(OutputStream out) {
+        dos = new DataOutputStream(out);
+    }
+
+    public void forward(String url) {
         byte[] body = new byte[0];
         try {
-            body = FileIoUtils.loadFileFromClasspath(PATH + path);
+            if (url.endsWith(".css")) {
+                resourcePath = ContentType.CSS.resourcePath;
+                headers.put("Content-Type", ContentType.CSS.mimeType);
+            }else if (url.endsWith(".ttf")) {
+                resourcePath = ContentType.FONT.resourcePath;
+                headers.put("Content-Type", ContentType.FONT.mimeType);
+            } else if (url.endsWith(".js")) {
+                resourcePath = ContentType.JS.resourcePath;
+                headers.put("Content-Type", ContentType.JS.mimeType);
+            } else {
+                resourcePath = ContentType.HTML.resourcePath;
+                headers.put("Content-Type", "text/html");
+            }
+            body = getBody(url);
+            headers.put("Content-Length", body.length + "");
+            response200Header();
+            responseBody(body);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public byte[] getBody(String url) throws IOException {
+        byte[] body = new byte[0];
+        try {
+            body = FileIoUtils.loadFileFromClasspath(resourcePath + url);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         return body;
     }
 
-    public static byte[] getCss(String path) throws IOException {
-        byte[] body = new byte[0];
+    public void response200Header() {
         try {
-            body = FileIoUtils.loadFileFromClasspath(CSS_PATH + path);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes(headers.makeResponseHeader());
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
         }
-        return body;
     }
+
+    public void sendRedirect(String redirectUrl) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Location: " + redirectUrl + "\r\n");
+            dos.writeBytes(headers.makeResponseHeader());
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    public void responseBody(byte[] body) {
+        try {
+            dos.write(body, 0, body.length);
+            dos.flush();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    public void addHeader(String key, String value) {
+        headers.put(key, value);
+    }
+
 }
