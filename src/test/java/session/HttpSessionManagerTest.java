@@ -41,6 +41,12 @@ public class HttpSessionManagerTest {
     }
 
     @Test
+    void keyNull() {
+        Session session = HttpSessionManager.getSession(null);
+        assertThat(session).isEqualTo(null);
+    }
+
+    @Test
     void initSessionInRequest() {
         String request = "GET /index.html HTTP/1.1\r\n" +
                 "Host: localhost:8080\r\n" +

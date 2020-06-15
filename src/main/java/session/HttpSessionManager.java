@@ -16,6 +16,7 @@ public class HttpSessionManager {
     }
 
     public static Session getSession(String uuid) {
+        if (uuid == null) return null;
         return sessionMap.get(uuid);
     }
 

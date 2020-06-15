@@ -10,7 +10,7 @@ public class CookieManager {
     private static final String SEPERATOR_VALUE = "=";
 
     public static Cookies read(final String cookiesString) {
-        if (cookiesString == null) new Cookies();
+        if (cookiesString == null) return new Cookies();
 
         String[] split = cookiesString.split(SEPERATOR);
         Map<String, String> cookieMap = Arrays.stream(split)
