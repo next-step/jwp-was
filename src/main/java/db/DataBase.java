@@ -10,7 +10,14 @@ import model.User;
 public class DataBase {
     private static Map<String, User> users = Maps.newHashMap();
 
+    private DataBase() {
+        // do nothing
+    }
+
     public static void addUser(User user) {
+        if (user == null) {
+            return;
+        }
         users.put(user.getUserId(), user);
     }
 

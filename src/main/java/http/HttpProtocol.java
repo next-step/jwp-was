@@ -1,28 +1,34 @@
 package http;
 
-import java.util.Map;
+import javax.annotation.Nonnull;
 
-public class HttpProtocol {
-    private final String method;
-    private final String path;
+public class HttpProtocol implements Protocol {
     private final String protocol;
     private final String version;
-    private final Map<String, String> header;
 
-    public HttpProtocol(String method, String path, String protocol, String version, Map<String, String> header) {
-        this.method = method;
-        this.path = path;
+    public HttpProtocol(String protocol, String version) {
         this.protocol = protocol;
         this.version = version;
-        this.header = header;
     }
 
-    public String getMethod() {
-        return method;
+    @Nonnull
+    public static HttpProtocol from(@Nonnull String httpProtocol) {
+        String[] splitBySlash = httpProtocol.split("/");
+        if (splitBySlash.length < 2) {
+            return makeEmptyHttpProtocol();
+        }
+
+        return new HttpProtocol(splitBySlash[0], splitBySlash[1]);
     }
 
-    public String getPath() {
-        return path;
+    private static HttpProtocol makeEmptyHttpProtocol() {
+        return new EmptyHttpProtocol();
+    }
+
+    static class EmptyHttpProtocol extends HttpProtocol {
+        private EmptyHttpProtocol() {
+            super("", "");
+        }
     }
 
     public String getProtocol() {
@@ -31,9 +37,5 @@ public class HttpProtocol {
 
     public String getVersion() {
         return version;
-    }
-
-    public Map<String, String> getHeader() {
-        return header;
     }
 }
