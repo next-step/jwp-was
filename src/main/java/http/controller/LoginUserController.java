@@ -4,7 +4,6 @@ import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
 import http.HttpSession;
-import http.HttpSessionManager;
 import model.User;
 
 /**
@@ -17,7 +16,6 @@ public class LoginUserController extends AbstractController {
     private static final String LOGIN_COOKIE_KEY = "logined";
     private static final String LOGIN_COOKIE_STATUS_TRUE = "true";
     private static final String LOGIN_COOKIE_STATUS_FALSE = "false";
-    private static final String LOGIN_COOKIE_PATH = "/";
 
     @Override
     protected void doPOST(HttpRequest request, HttpResponse response) {

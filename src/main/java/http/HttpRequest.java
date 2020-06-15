@@ -33,10 +33,6 @@ public class HttpRequest {
         return cookies.getCookie(key);
     }
 
-    public void addCookie(String key, String value) {
-        cookies.addCookie(key, value);
-    }
-
     public String getParameter(String key) {
         return queryString.getParameter(key);
     }

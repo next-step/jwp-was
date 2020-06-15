@@ -10,11 +10,9 @@ import http.controller.ImageController;
 import http.controller.JSController;
 import http.controller.ListUserController;
 import http.controller.LoginUserController;
-import http.controller.StaticController;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
 
 /**
  * Created by iltaek on 2020/06/11 Blog : http://blog.iltaek.me Github : http://github.com/iltaek
