@@ -13,6 +13,7 @@ public class HttpResponse {
 
     private static final String BASIC_PROTOCOL = "HTTP/1.1";
     private static final String BASIC_REQUEST = "%s %s \r\n";
+    private static final String SET_COOKIE = "Set-Cookie";
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
     private final DataOutputStream dataOutputStream;
@@ -37,6 +38,17 @@ public class HttpResponse {
 
     public void addHeader(String key, String value) {
         responseHeader.addHeader(key, value);
+    }
+
+    public void addSessionId(String sessionId) {
+        String id = new StringBuilder()
+                .append("CUSTOM_SESSION_ID")
+                .append("=")
+                .append(sessionId)
+                .append(";")
+                .append("Path=/")
+                .toString();
+        responseHeader.addHeader(SET_COOKIE, id);
     }
 
     public void forward(String path) {

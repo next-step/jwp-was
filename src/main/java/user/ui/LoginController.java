@@ -27,10 +27,8 @@ public class LoginController extends UserController {
             if (user.isCorrectPassword(password)) {
                 HttpSession httpSession = new HttpSession(UUID.randomUUID().toString());
                 HttpSessionHandler.applySession(httpSession);
-                System.out.println("------------------");
-                System.out.println(httpSession.getId());
                 httpSession.setAttribute("logined", true);
-                httpResponse.addHeader("Set-Cookie", "CUSTOM_SESSION_ID=" + httpSession.getId() + ";Path=/");
+                httpResponse.addSessionId(httpSession.getId());
                 httpResponse.sendRedirect("/index.html");
                 return;
             }
