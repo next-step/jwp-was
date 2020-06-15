@@ -88,4 +88,16 @@ public class RequestLine {
     private boolean nonExistFileType(String[] split) {
         return split.length == 1;
     }
+
+    public boolean isGet() {
+        return method.isGet();
+    }
+
+    public boolean isPost() {
+        return method.isPost();
+    }
+
+    public boolean isFileTypeInUrl() {
+        return url.split("\\.").length > 1;
+    }
 }

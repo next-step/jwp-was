@@ -18,4 +18,12 @@ public enum HttpMethod {
                 .findAny()
                 .orElseThrow(HttpMethodMismatchException::new);
     }
+
+    public boolean isGet() {
+        return this.equals(GET);
+    }
+
+    public boolean isPost() {
+        return this.equals(POST);
+    }
 }

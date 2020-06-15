@@ -2,6 +2,8 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.controller.Controller;
+import webserver.controller.UserController;
 
 import java.io.*;
 import java.net.Socket;
@@ -25,7 +27,14 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
             HttpRequest httpRequest = HttpRequest.of(br);
-            HttpResponse httpResponse = HttpResponse.of(httpRequest);
+            HttpResponse httpResponse;
+            if (httpRequest.isStaticFileRequest()) {
+                httpResponse = HttpResponse.of(httpRequest);
+            } else {
+                httpResponse = HttpResponse.of();
+                Controller userController = new UserController();
+                userController.service(httpRequest, httpResponse);
+            }
 
             DataOutputStream dos = new DataOutputStream(out);
             response(dos, httpResponse);

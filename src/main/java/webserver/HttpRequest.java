@@ -42,4 +42,16 @@ public class HttpRequest {
         } while (!"".equals(line));
         return requestHeaderTexts;
     }
+
+    public boolean isStaticFileRequest() {
+        return requestLine.isFileTypeInUrl();
+    }
+
+    public boolean isGet() {
+        return requestLine.isGet();
+    }
+
+    public boolean isPost() {
+        return requestLine.isPost();
+    }
 }

@@ -1,7 +1,9 @@
 package webserver;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import utils.FileIoUtils;
 
 import java.io.IOException;
@@ -9,6 +11,8 @@ import java.net.URISyntaxException;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class ResponseBody {
 
     private static final String STATIC_FILE_ROOT_LOCATION = "./templates";
@@ -18,8 +22,10 @@ public class ResponseBody {
 
     public static ResponseBody of(RequestLine requestLine) throws IOException, URISyntaxException {
         FileType fileType = requestLine.getFileType();
+        if (fileType.equals(FileType.NONE)) {
+            return new ResponseBody();
+        }
         String path = fileType.getLocation() + requestLine.getUrl();
-
         byte[] file = FileIoUtils.loadFileFromClasspath(path);
         return new ResponseBody(file, fileType);
     }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Objects;
 
 @AllArgsConstructor
 public class HttpResponse {
@@ -15,14 +16,24 @@ public class HttpResponse {
     public static HttpResponse of(HttpRequest httpRequest) throws IOException, URISyntaxException {
         ResponseHeaders responseHeaders = ResponseHeaders.of();
         ResponseBody responseBody = ResponseBody.of(httpRequest.getRequestLine());
-
         responseHeaders.addHeader("Content-Type", responseBody.getContentType(), "charset=utf-8");
         responseHeaders.addHeader("Content-Length", responseBody.getLength());
         return new HttpResponse(responseHeaders, responseBody);
     }
 
+    public static HttpResponse of() {
+        ResponseHeaders responseHeaders = ResponseHeaders.of();
+        ResponseBody responseBody = new ResponseBody();
+        return new HttpResponse(responseHeaders, responseBody);
+    }
+
+
     public byte[] getBody() {
-        return responseBody.getFile();
+        byte[] file = responseBody.getFile();
+        if (Objects.isNull(file)) {
+            return "".getBytes();
+        }
+        return file;
     }
 
     public String response200() {
