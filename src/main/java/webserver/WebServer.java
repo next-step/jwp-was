@@ -2,15 +2,21 @@ package webserver;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
 
     public static void main(String args[]) throws Exception {
+        LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<>(100);
+        ThreadPoolExecutor executorService = new ThreadPoolExecutor(100, 150,1, SECONDS, queue);
         int port = 0;
         if (args == null || args.length == 0) {
             port = DEFAULT_PORT;
@@ -25,8 +31,7 @@ public class WebServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection));
-                thread.start();
+                executorService.execute(new RequestHandler(connection));
             }
         }
     }

@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Cookie {
-    private Map<String, String> cookieMap = Maps.newHashMap();
+    private Map<String, String> cookieValues;
 
     public Cookie() {
-        this.cookieMap = Maps.newHashMap();
+        this.cookieValues = Maps.newHashMap();
     }
 
     public void parseCookie(String value) {
@@ -23,26 +23,23 @@ public class Cookie {
                 throw new IllegalArgumentException("Invalid Cookie Value");
             }
 
-            cookieMap.put(values[0], values[1]);
+            cookieValues.put(values[0], values[1]);
         }
     }
 
     public boolean containsCookieValue(String name) {
-        return this.cookieMap.containsKey(name);
+        return this.cookieValues.containsKey(name);
     }
 
     public String getCookieValue(String name) {
-        return this.cookieMap.get(name);
+        return this.cookieValues.get(name);
     }
 
     public void addCookieValue(String name, String value) {
-        this.cookieMap.put(name, value);
+        this.cookieValues.put(name, value);
     }
 
-    public String writeCookieValue() {
-        return this.cookieMap.keySet()
-                .stream()
-                .map(key -> String.format("Set-Cookie : %s=%s %s", key, this.cookieMap.get(key), HttpConst.CRLF))
-                .collect(Collectors.joining());
+    public Map<String,String> getCookieValues() {
+        return this.cookieValues;
     }
 }

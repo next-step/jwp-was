@@ -5,6 +5,7 @@ import http.Const.HttpConst;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created By kjs4395 on 2020-06-05
@@ -41,14 +42,21 @@ public class Header {
     }
 
     public String makeResponseHeader() {
-        StringBuilder responseHeader = new StringBuilder();
 
-        for (String key : this.headers.keySet()) {
-            responseHeader.append(key).append(HttpConst.HEADER_SEPARATOR).append(headers.get(key)).append(HttpConst.CRLF);
-        }
-        responseHeader.append(HttpConst.CRLF);
-
-        return responseHeader.toString();
+        return this.headers.keySet()
+                .stream()
+                .map(key -> String.format("%s=%s",key, headers.get(key)))
+                .collect(Collectors.joining(HttpConst.CRLF))
+                .concat(HttpConst.CRLF)
+                .concat(HttpConst.CRLF);
     }
 
+    public String makeCookieHeader(Cookie cookie) {
+        Map<String,String> cookieValues = cookie.getCookieValues();
+        return cookieValues
+                .keySet()
+                .stream()
+                .map(key -> String.format("Set-Cookie : %s=%s %s", key, cookieValues.get(key), HttpConst.CRLF))
+                .collect(Collectors.joining());
+    }
 }
