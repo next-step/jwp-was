@@ -11,12 +11,12 @@ import java.util.Map;
 public class UserController implements Controller {
 
     @Override
-    public void service(HttpRequest req, HttpResponse resp) {
-        if (req.isGet()) {
-            doGet(req, resp);
+    public void service(HttpRequest request, HttpResponse response) {
+        if (request.isGet()) {
+            doGet(request, response);
         }
-        if (req.isPost()) {
-            doPost(req, resp);
+        if (request.isPost()) {
+            doPost(request, response);
         }
     }
 

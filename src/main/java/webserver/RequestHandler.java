@@ -3,6 +3,7 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.controller.Controller;
+import webserver.controller.LoginController;
 import webserver.controller.UserController;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
@@ -11,15 +12,25 @@ import webserver.response.ResponseHeader;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private Map<String, Controller> controllers;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
+        this.controllers = initializeController();
+    }
+
+    private Map<String, Controller> initializeController() {
+        Map<String, Controller> controllers = new HashMap<>();
+        controllers.put("/user/create", new UserController());
+        controllers.put("/user/login", new LoginController());
+        return controllers;
     }
 
     public void run() {
@@ -36,8 +47,8 @@ public class RequestHandler implements Runnable {
                 httpResponse.response200();
             } else {
                 httpResponse = HttpResponse.of();
-                Controller userController = new UserController();
-                userController.service(httpRequest, httpResponse);
+                Controller controller = controllers.get(httpRequest.getHost());
+                controller.service(httpRequest, httpResponse);
             }
 
             DataOutputStream dos = new DataOutputStream(out);
