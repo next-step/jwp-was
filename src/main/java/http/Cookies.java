@@ -1,6 +1,7 @@
 package http;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Cookies {
@@ -29,7 +30,7 @@ public class Cookies {
     }
 
     public List<Cookie> getCookies() {
-        return cookies;
+        return Collections.unmodifiableList(cookies);
     }
 
     public String getCookie(String key) {
