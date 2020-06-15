@@ -1,4 +1,4 @@
-package webserver;
+package webserver.request;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;

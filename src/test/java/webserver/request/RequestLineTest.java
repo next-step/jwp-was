@@ -1,7 +1,9 @@
-package webserver;
+package webserver.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.FileType;
+import webserver.Protocol;
 
 import java.util.Collections;
 import java.util.HashMap;

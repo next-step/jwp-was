@@ -2,8 +2,8 @@ package webserver.controller;
 
 import db.DataBase;
 import model.User;
-import webserver.HttpRequest;
-import webserver.HttpResponse;
+import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
 
 import java.util.Map;
 

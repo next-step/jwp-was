@@ -1,10 +1,12 @@
-package webserver;
+package webserver.response;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import utils.FileIoUtils;
+import webserver.FileType;
+import webserver.request.RequestLine;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

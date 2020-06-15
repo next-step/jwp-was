@@ -4,6 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.controller.Controller;
 import webserver.controller.UserController;
+import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
+import webserver.response.ResponseHeader;
 
 import java.io.*;
 import java.net.Socket;

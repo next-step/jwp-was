@@ -1,6 +1,7 @@
-package webserver;
+package webserver.response;
 
 import lombok.AllArgsConstructor;
+import webserver.request.HttpRequest;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

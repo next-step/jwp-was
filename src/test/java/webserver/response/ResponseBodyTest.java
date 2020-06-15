@@ -1,7 +1,8 @@
-package webserver;
+package webserver.response;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.request.RequestLine;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
