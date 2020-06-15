@@ -14,9 +14,6 @@ public class DefaultHandler implements Handler {
 
     private static final Logger logger = getLogger(DefaultHandler.class);
 
-    public static final String TEMPLATE_PATH = "./templates";
-    public static final String STATIC_PATH = "./static";
-
     private static final DefaultHandler INSTANCE = new DefaultHandler();
 
     private DefaultHandler() {
@@ -29,14 +26,11 @@ public class DefaultHandler implements Handler {
     @Override
     public void doGet(RequestMessage requestMessage, ResponseMessage responseMessage) {
         Uri uri = requestMessage.getUri();
-        ContentType contentType = ContentType.valueOf(uri.getExtension().toUpperCase());
-
-        String relativePath = toSuffixPath(contentType) + uri.getPath();
 
         try {
-            byte[] body = FileIoUtils.loadFileFromClasspath(relativePath);
+            byte[] body = FileIoUtils.loadFileFromClasspath(ContentType.toRelativePath(uri));
 
-            responseMessage.setHeader("Content-Type", contentType.getMediaType());
+            responseMessage.setHeader("Content-Type", ContentType.toMediaTypeFrom(uri));
             responseMessage.response200Header(body.length);
             responseMessage.responseBody(body);
         } catch (Exception e) {
@@ -46,13 +40,6 @@ public class DefaultHandler implements Handler {
             responseMessage.response404Header();
             responseMessage.responseBody(body);
         }
-    }
-
-    private String toSuffixPath(ContentType contentType) {
-        if(contentType == ContentType.HTML || contentType == ContentType.ICO) {
-            return TEMPLATE_PATH;
-        }
-        return STATIC_PATH;
     }
 
     @Override

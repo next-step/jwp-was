@@ -1,9 +1,7 @@
 package webserver.handler;
 
 import db.DataBase;
-import http.Header;
-import http.RequestMessage;
-import http.ResponseMessage;
+import http.*;
 import model.User;
 import webserver.DynamicContentsFactory;
 
@@ -35,7 +33,7 @@ public class UserListHandler implements Handler {
             responseMessage.responseBody(body);
             return;
         }
-        responseMessage.responseResource(DefaultHandler.TEMPLATE_PATH + "/user/login.html");
+        responseMessage.responseResource(ContentType.toRelativePath(Uri.from("/user/login.html")));
     }
 
     @Override

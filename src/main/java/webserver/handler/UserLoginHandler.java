@@ -1,9 +1,7 @@
 package webserver.handler;
 
 import db.DataBase;
-import http.QueryString;
-import http.RequestMessage;
-import http.ResponseMessage;
+import http.*;
 import model.User;
 
 public class UserLoginHandler implements Handler {
@@ -31,7 +29,7 @@ public class UserLoginHandler implements Handler {
             responseMessage.redirectTo("/index.html");
         } else {
             responseMessage.setHeader("Set-Cookie", "logined=false");
-            responseMessage.responseResource(DefaultHandler.TEMPLATE_PATH + "/user/login_failed.html");
+            responseMessage.responseResource(ContentType.toRelativePath(Uri.from("/user/login_failed.html")));
         }
 
     }

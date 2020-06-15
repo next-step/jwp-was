@@ -2,13 +2,8 @@ package http;
 
 
 import utils.StringUtils;
-import webserver.handler.DefaultHandler;
-
 
 import java.util.Objects;
-
-import static webserver.handler.DefaultHandler.STATIC_PATH;
-import static webserver.handler.DefaultHandler.TEMPLATE_PATH;
 
 public class Uri {
 
@@ -56,7 +51,7 @@ public class Uri {
     public String getExtension() {
         String extension = "";
         int indexOfComma = this.path.lastIndexOf(".");
-        if(indexOfComma > 0) {
+        if (indexOfComma > 0) {
             extension = this.path.substring(indexOfComma + 1);
         }
         return extension;

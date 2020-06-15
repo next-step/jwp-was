@@ -32,4 +32,15 @@ public class UriTest {
         assertThat(uri.getPath()).isEqualTo("/users");
         assertThat(uri.getQueryString()).isEqualTo(new QueryString(""));
     }
+
+    @DisplayName("url이 정적자원을 지칭하는 경우 확장자 구하기")
+    @Test
+    void test_getExtension() {
+        // given
+        String fullUri = "/user/index.html";
+        // when
+        Uri uri = Uri.from(fullUri);
+        // then
+        assertThat(uri.getExtension()).isEqualTo("html");
+    }
 }
