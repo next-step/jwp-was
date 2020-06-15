@@ -57,4 +57,8 @@ public class HttpResponse {
     public String getResponseLine() {
         return responseLine.response();
     }
+
+    public void addCookie(String value) {
+        responseHeaders.addHeader("Set-Cookie", value, "Path=/");
+    }
 }

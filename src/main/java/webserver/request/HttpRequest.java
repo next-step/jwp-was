@@ -68,4 +68,8 @@ public class HttpRequest {
     public boolean isPost() {
         return requestLine.isPost();
     }
+
+    public String getHost() {
+        return requestLine.getUrl().split("\\?")[0];
+    }
 }
