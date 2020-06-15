@@ -1,6 +1,7 @@
 package http;
 
 import java.io.*;
+import java.util.Objects;
 
 public class HttpRequest {
 
@@ -25,5 +26,25 @@ public class HttpRequest {
 
     public RequestLine getRequestLine() {
         return requestLine;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HttpRequest)) return false;
+        HttpRequest that = (HttpRequest) o;
+        return Objects.equals(getRequestLine(), that.getRequestLine());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRequestLine());
+    }
+
+    @Override
+    public String toString() {
+        return "HttpRequest{" +
+                "requestLine=" + requestLine +
+                '}';
     }
 }

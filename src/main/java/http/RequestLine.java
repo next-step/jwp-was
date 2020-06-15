@@ -15,6 +15,10 @@ public class RequestLine {
         this.queryStrings = QueryStrings.of(path);
     }
 
+    public static RequestLine of(String method, String path, String protocolAndVersion) {
+        return new RequestLine(method, path, protocolAndVersion);
+    }
+
     public Method getMethod() {
         return method;
     }

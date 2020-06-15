@@ -1,6 +1,6 @@
 package http;
 
-import java.util.Collections;
+import java.util.Objects;
 
 public class RequestPath {
     private final String path;
@@ -18,5 +18,25 @@ public class RequestPath {
 
     public String getPath() {
         return path;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RequestPath)) return false;
+        RequestPath that = (RequestPath) o;
+        return Objects.equals(getPath(), that.getPath());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPath());
+    }
+
+    @Override
+    public String toString() {
+        return "RequestPath{" +
+                "path='" + path + '\'' +
+                '}';
     }
 }

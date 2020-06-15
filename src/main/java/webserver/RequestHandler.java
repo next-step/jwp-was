@@ -5,9 +5,14 @@ import http.RequestLine;
 import http.RequestPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
+import java.net.URISyntaxException;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -24,32 +29,20 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = new HttpRequest(in);
-            RequestLine requestLine = httpRequest.getRequestLine();
+            logger.debug(httpRequest.toString());
 
-            System.out.println("requestLine : " + requestLine.toString());
+            RequestLine requestLine = httpRequest.getRequestLine();
             RequestPath requestPath = requestLine.getRequestPath();
 
             if (requestPath.getPath().contains(".html")) {
-                File file = new File("./src/main/resources/templates" + requestPath.getPath());
-                System.out.println("./src/resources/templates" + requestPath.getPath());
-                System.out.println("exists  : " + file.exists());
-
-                FileReader fileReader = new FileReader(file);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-                StringBuffer stringBuffer = new StringBuffer();
-                String response;
-                while ((response = bufferedReader.readLine()) != null) {
-                    stringBuffer.append(response);
-                }
-
                 DataOutputStream dos = new DataOutputStream(out);
-                byte[] body = stringBuffer.toString().getBytes();
+                String path = requestPath.getPath();
+                byte[] body = FileIoUtils.loadFileFromClasspath("./templates/" + path);
                 response200Header(dos, body.length);
                 responseBody(dos, body);
             }
 
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
