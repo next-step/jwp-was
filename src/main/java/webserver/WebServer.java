@@ -39,8 +39,10 @@ public class WebServer {
             while ((connection = listenSocket.accept()) != null) {
                 int idx = counter.addAndGet(1);
                 executor.execute(new RequestHandler(connection));
+                TimeUnit.MILLISECONDS.sleep(500);
                 logger.info("Thread {}", idx);
             }
         }
+
     }
 }

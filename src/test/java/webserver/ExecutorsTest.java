@@ -1,6 +1,5 @@
 package webserver;
 
-import http.request.Protocol;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -55,7 +54,7 @@ public class ExecutorsTest {
                 TimeUnit.SECONDS, new LinkedBlockingDeque<>(workQueueCapacity));
 
         for (int i = 0; i < maximumPoolSize + workQueueCapacity; i++) {
-            excuteTest(executor);
+            executeTest(executor);
         }
     }
 
@@ -70,12 +69,12 @@ public class ExecutorsTest {
 
         assertThatThrownBy(() -> {
             for (int i = 0; i < maximumPoolSize + workQueueCapacity + 1; i++) {
-                excuteTest(executor);
+                executeTest(executor);
             }
         }).isInstanceOf(RejectedExecutionException.class);
     }
 
-    private void excuteTest(ThreadPoolExecutor executor) {
+    private void executeTest(ThreadPoolExecutor executor) {
         executor.execute(() -> {
             int idx = counter.addAndGet(1);
             try {

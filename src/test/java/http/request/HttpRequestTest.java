@@ -52,10 +52,11 @@ public class HttpRequestTest {
     }
 
     @Test
-    void request_resttemplate() {
+    void request_resttemplate_example() {
         RestTemplate restTemplate = new RestTemplate();
         String resourceUrl = "https://edu.nextstep.camp";
         ResponseEntity<String> response = restTemplate.getForEntity(resourceUrl + "/c/4YUvqn9V", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
 }
