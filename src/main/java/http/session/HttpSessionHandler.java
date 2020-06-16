@@ -6,7 +6,11 @@ import java.util.Map;
 public class HttpSessionHandler {
     private static Map<String, HttpSession> sessions;
 
-    public HttpSessionHandler() {
+    public static void run() {
+        new HttpSessionHandler();
+    }
+
+    private HttpSessionHandler() {
         sessions = new HashMap<>();
     }
 
