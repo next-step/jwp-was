@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import webserver.controller.Controller;
 import webserver.controller.LoginController;
 import webserver.controller.UserController;
+import webserver.controller.UserListController;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.response.ResponseHeader;
@@ -30,6 +31,7 @@ public class RequestHandler implements Runnable {
         Map<String, Controller> controllers = new HashMap<>();
         controllers.put("/user/create", new UserController());
         controllers.put("/user/login", new LoginController());
+        controllers.put("/user/list", new UserListController());
         return controllers;
     }
 

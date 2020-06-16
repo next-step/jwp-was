@@ -32,6 +32,11 @@ public class ResponseBody {
         return new ResponseBody(file, fileType);
     }
 
+    public void addFile(byte[] file) {
+        this.file = file;
+        this.fileType = FileType.HTML;
+    }
+
     public String getLength() {
         return String.valueOf(file.length);
     }

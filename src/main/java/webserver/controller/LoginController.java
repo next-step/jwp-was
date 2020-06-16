@@ -28,7 +28,7 @@ public class LoginController implements Controller {
             response.response302(location);
             return;
         }
-        response.addCookie("logined=false");
+        response.addCookie("logined=true");
         String location = "http://" + request.getRequestHeaders().get("Host") + "/index.html";
         response.response302(location);
     }

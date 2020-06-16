@@ -5,6 +5,7 @@ import utils.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
@@ -28,6 +29,9 @@ public class RequestHeaders {
 
     public String get(String name) {
         RequestHeader requestHeader = requestHeaders.get(name);
+        if (Objects.isNull(requestHeader)) {
+            return null;
+        }
         return requestHeader.getValue();
     }
 }
