@@ -1,4 +1,7 @@
-package http;
+package http.request;
+
+import http.HttpMethod;
+import http.Protocol;
 
 import java.util.Objects;
 
