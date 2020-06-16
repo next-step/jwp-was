@@ -1,13 +1,20 @@
 package webserver;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ExecutorsTest {
     private static final Logger logger = LoggerFactory.getLogger(ExecutorsTest.class);
@@ -35,6 +42,48 @@ public class ExecutorsTest {
         es.shutdown();
         es.awaitTermination(100, TimeUnit.SECONDS);
         logger.info("Total Elaspsed: {}", sw.getTotalTimeSeconds());
+    }
+
+    @DisplayName("최대 ThradPool 사이즈와 대기 큐 사이즈까지의 실행을 커버한다.")
+    @Test
+    void maximumPoolSize() {
+        int corePoolSize = 10;
+        int maximumPoolSize = 10;
+        int workQueueCapacity = 1;
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, 0,
+                TimeUnit.SECONDS, new LinkedBlockingDeque<>(workQueueCapacity));
+
+        for (int i = 0; i < maximumPoolSize + workQueueCapacity; i++) {
+            executeTest(executor);
+        }
+    }
+
+    @DisplayName("최대 ThreadPool 사이즈와 대기 큐 사이즈를 초과하면 에러가 발생한다.")
+    @Test
+    void maximumPoolError() {
+        int corePoolSize = 10;
+        int maximumPoolSize = 10;
+        int workQueueCapacity = 1;
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, 0,
+                TimeUnit.SECONDS, new LinkedBlockingDeque<>(workQueueCapacity));
+
+        assertThatThrownBy(() -> {
+            for (int i = 0; i < maximumPoolSize + workQueueCapacity + 1; i++) {
+                executeTest(executor);
+            }
+        }).isInstanceOf(RejectedExecutionException.class);
+    }
+
+    private void executeTest(ThreadPoolExecutor executor) {
+        executor.execute(() -> {
+            int idx = counter.addAndGet(1);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            logger.info("Thread {}", idx);
+        });
     }
 }
 

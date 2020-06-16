@@ -3,10 +3,7 @@ package http;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.MapEntry.entry;
 
 class HttpSessionTest {
 
@@ -23,19 +20,7 @@ class HttpSessionTest {
         HttpSession httpSession = new HttpSession();
         httpSession.setAttribute("a", "b");
 
-        Map<String, String> attributes = httpSession.getAttributes();
-        assertThat(attributes).hasSize(1);
-        assertThat(attributes).contains(entry("a", "b"));
-    }
-
-    @DisplayName("name으로 value를 확인한다.")
-    @Test
-    void getAttribute() {
-        HttpSession httpSession = new HttpSession();
-        httpSession.setAttribute("a", "b");
-
-        String value = httpSession.getAttribute("a");
-        assertThat(value).isEqualTo("b");
+        assertThat(httpSession.getAttribute("a")).isEqualTo("b");
     }
 
     @DisplayName("name으로 attribute를 삭제한다.")
@@ -47,9 +32,8 @@ class HttpSessionTest {
 
         httpSession.removeAttribute("c");
 
-        Map<String, String> attributes = httpSession.getAttributes();
-        assertThat(attributes).hasSize(1);
-        assertThat(attributes).contains(entry("a", "b"));
+        assertThat(httpSession.getAttribute("a")).isEqualTo("b");
+        assertThat(httpSession.getAttribute("c")).isEqualTo(null);
     }
 
     @DisplayName("저장되어 있는 값을 모두 삭제한다.")
@@ -61,6 +45,7 @@ class HttpSessionTest {
 
         httpSession.invalidate();
 
-        assertThat(httpSession.getAttributes()).hasSize(0);
+        assertThat(httpSession.getAttribute("a")).isEqualTo(null);
+        assertThat(httpSession.getAttribute("c")).isEqualTo(null);
     }
 }

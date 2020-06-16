@@ -33,7 +33,4 @@ public class HttpSession {
         return id;
     }
 
-    public Map<String, String> getAttributes() {
-        return attributes;
-    }
 }
