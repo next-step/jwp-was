@@ -4,7 +4,7 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 
-public class TemplateLoader<T> {
+public class CustomTemplateLoader<T> {
 
     private static final String TEMPLATES_PATH = "/templates";
 
@@ -14,7 +14,7 @@ public class TemplateLoader<T> {
 
     private final Template template;
 
-    public TemplateLoader(final String filePath) throws Exception {
+    public CustomTemplateLoader(final String filePath) throws Exception {
         com.github.jknack.handlebars.io.TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix(TEMPLATES_PATH);
         loader.setSuffix(HTML_EXTENSION);
