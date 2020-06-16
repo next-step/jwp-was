@@ -1,0 +1,4 @@
+GET /user/create?userId=jinwoo&password=1q2w3e4r&name=JWLEE HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Accept: */*
