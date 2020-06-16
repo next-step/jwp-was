@@ -7,7 +7,10 @@ import utils.FileIoUtils;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HttpResponse {
 
@@ -18,11 +21,13 @@ public class HttpResponse {
 
     private final DataOutputStream dataOutputStream;
     private final ResponseHeader responseHeader;
+    private List<String> cookies;
     private byte[] body = new byte[0];
 
     public HttpResponse(final DataOutputStream dataOutputStream) {
         this.dataOutputStream = dataOutputStream;
         this.responseHeader = new ResponseHeader();
+        this.cookies = new ArrayList<>();
     }
 
     private void applyHeader() throws IOException {
@@ -40,15 +45,16 @@ public class HttpResponse {
         responseHeader.addHeader(key, value);
     }
 
-    public void addSessionId(String sessionId) {
-        String id = new StringBuilder()
-                .append("CUSTOM_SESSION_ID")
-                .append("=")
-                .append(sessionId)
-                .append(";")
-                .append("Path=/")
-                .toString();
-        responseHeader.addHeader(SET_COOKIE, id);
+    public void applyCookie() {
+        responseHeader.addHeader(SET_COOKIE, String.join(" ", cookies));
+    }
+
+    public void addSetCookie(String key, String value) {
+        cookies.add(key + "=" + value + ";");
+    }
+
+    public void addSetCookieOptional(String value) {
+        cookies.add(value + ";");
     }
 
     public void forward(String path) {

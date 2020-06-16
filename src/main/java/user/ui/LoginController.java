@@ -28,7 +28,10 @@ public class LoginController extends UserController {
                 HttpSession httpSession = new HttpSession(UUID.randomUUID().toString());
                 HttpSessionHandler.applySession(httpSession);
                 httpSession.setAttribute("logined", true);
-                httpResponse.addSessionId(httpSession.getId());
+
+                httpResponse.addSetCookie("CUSTOM_SESSION_ID", httpSession.getId());
+                httpResponse.addSetCookie("path", "/");
+                httpResponse.applyCookie();
                 httpResponse.sendRedirect("/index.html");
                 return;
             }
