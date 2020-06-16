@@ -12,7 +12,7 @@ class HttpResponseTest {
     private HttpResponse sut;
 
     @Test
-    void css_HttpResponse_success() throws IOException, URISyntaxException {
+    void css_HttpResponse_success() {
         // given
         String filePath = "/css/test.css";
         HttpResponse httpResponse = sut.from(filePath, HttpStatus.OK);
@@ -26,19 +26,7 @@ class HttpResponseTest {
     }
 
     @Test
-    void css_HttpResponse_error() throws IOException, URISyntaxException {
-        // given
-
-
-        // when
-
-
-        // then
-
-    }
-
-    @Test
-    void html_HttpResponse_success() throws IOException, URISyntaxException {
+    void html_HttpResponse_success() {
         // given
         String filePath = "/css/test.html";
         HttpResponse httpResponse = sut.from(filePath, HttpStatus.OK);

@@ -35,6 +35,13 @@ public class StatusLine {
         return new StatusLine(httpProtocol, statusCode, reason);
     }
 
+    @Nonnull
+    public String makeStatusLineString() {
+        return httpProtocol.getProtocol() + "/" + httpProtocol.getVersion() + " " +
+                statusCode + " " + reason + "\r\n";
+
+    }
+
     public static StatusLine makeEmptyStatusLine() {
         return new EmptyStatusLine(null, "", "");
     }
@@ -48,14 +55,6 @@ public class StatusLine {
         public String makeStatusLineString() {
             return "";
         }
-    }
-
-    @Nonnull
-    public String makeStatusLineString() {
-        // TODO 비어있을 때 예외처리
-        return httpProtocol.getProtocol() + "/" + httpProtocol.getVersion() + " " +
-                statusCode + " " + reason + "\r\n";
-
     }
 
     public HttpProtocol getHttpProtocol() {

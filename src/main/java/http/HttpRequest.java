@@ -3,10 +3,13 @@ package http;
 import utils.IOUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import static utils.StringConstant.COLON;
 
 public class HttpRequest {
     private final RequestLine requestLine;
@@ -42,7 +45,7 @@ public class HttpRequest {
                 break;
             }
 
-            String[] splitByColon = line.split(":");
+            String[] splitByColon = line.split(COLON);
             if (splitByColon.length < 2) {
                 continue;
             }
@@ -59,16 +62,19 @@ public class HttpRequest {
         return new HttpRequest(requestLine, requestHeaders, requestBody);
     }
 
+    @Nullable
+    public Object getQueryValue(@Nonnull String key) {
+        Object valueInRequestLine = getRequestLine().getQueryMap().get(key);
+        if (valueInRequestLine != null) {
+            return valueInRequestLine;
+        }
+
+        return getBody().getQueryMap().get(key);
+    }
+
     @Nonnull
     public QueryMap getQueryMap() {
-        switch (requestLine.getMethod()) {
-            case GET:
-                return getRequestLine().getQueryMap();
-            case POST:
-                return getBody().getQueryMap();
-            default:
-                return new QueryMap();
-        }
+        return QueryMap.mergeQueryMap(getRequestLine().getQueryMap(), getBody().getQueryMap());
     }
 
     private static boolean isEndOfLine(String line) {
@@ -77,6 +83,14 @@ public class HttpRequest {
 
     private static boolean isLineBreak(String line) {
         return "".equals(line);
+    }
+
+    public boolean isGetMethod() {
+        return Method.GET.equals(requestLine.getMethod());
+    }
+
+    public boolean isPostMethod() {
+        return Method.POST.equals(requestLine.getMethod());
     }
 
     @Nonnull

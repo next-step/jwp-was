@@ -1,10 +1,9 @@
 package model;
 
-import com.sun.jndi.toolkit.url.UrlUtil;
 import http.QueryMap;
+import utils.UrlUtils;
 
 import javax.annotation.Nullable;
-import java.net.MalformedURLException;
 
 public class User {
     private String userId;
@@ -23,11 +22,7 @@ public class User {
         this.userId = map.getString("userId");
         this.password = map.getString("password");
         this.name = map.getString("name");
-        try {
-            this.email = UrlUtil.decode(map.getString("email"));
-        } catch (MalformedURLException e) {
-            this.email = "";
-        }
+        this.email = UrlUtils.decode(map.getString("email"));
     }
 
     @Nullable

@@ -63,16 +63,16 @@ public class RequestLine {
         return splitByQuestionMark[0];
     }
 
-    @Nullable
+    @Nonnull
     private static QueryMap makeQueryMap(@Nonnull String pathWithQueryString) {
+        QueryMap queryMap = new QueryMap();
         String[] splitByQuestionMark = pathWithQueryString.split("\\?");
         if (splitByQuestionMark.length < 2) {
-            return null;
+            return queryMap;
         }
 
 
         String[] splitByAmpersand = splitByQuestionMark[1].split("&");
-        QueryMap queryMap = new QueryMap();
         Arrays.stream(splitByAmpersand)
                 .filter(Objects::nonNull)
                 .forEach(query -> {

@@ -34,16 +34,32 @@ public class HttpResponse {
 
     @Nonnull
     // TODO 넘겨 줄 때 content-type이 넘어가게. content-length도 함께?
-    public static HttpResponse from(String filePath, HttpStatus httpStatus) throws IOException, URISyntaxException {
+    public static HttpResponse from(String filePath, HttpStatus httpStatus) {
         StatusLine statusLine = makeStatusLine(httpStatus);
-        ResponseHeaders responseHeaders = makeContentHeaders(filePath);
-        ResponseBody responseBody = new ResponseBody(FileIoUtils.loadFileFromClasspath(filePath));
+        ResponseHeaders responseHeaders;
+        ResponseBody responseBody;
+        try {
+            responseHeaders = makeContentHeaders(filePath);
+            responseBody = new ResponseBody(FileIoUtils.loadFileFromClasspath(filePath));
+        } catch (IOException | URISyntaxException e) {
+            return HttpResponse.makeErrorResponse();
+        }
 
         return new HttpResponse(statusLine, responseHeaders, responseBody);
     }
 
+    public static HttpResponse makeErrorResponse() {
+        StatusLine statusLine = makeStatusLine(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new HttpResponse(statusLine, ResponseHeaders.makeEmptyResponseHeaders(), ResponseBody.makeEmptyResponseBody());
+    }
+
+    public static HttpResponse makeResponseWithHttpStatus(HttpStatus httpStatus) {
+        StatusLine statusLine = makeStatusLine(httpStatus);
+        return new HttpResponse(statusLine, ResponseHeaders.makeEmptyResponseHeaders(), ResponseBody.makeEmptyResponseBody());
+    }
+
     @Nonnull
-    public static HttpResponse from(byte[] responseBodyByteArray, HttpStatus httpStatus) throws IOException, URISyntaxException {
+    public static HttpResponse from(byte[] responseBodyByteArray, HttpStatus httpStatus) {
         StatusLine statusLine = makeStatusLine(httpStatus);
         // TODO 여기도 contentType 과 length 는 역할을 따로 빼야 할 것 같음.
         ResponseHeaders responseHeaders = makeContentHeaders("text/html;charset=utf-8", responseBodyByteArray.length);
@@ -116,10 +132,6 @@ public class HttpResponse {
     @Nonnull
     public static HttpResponse makeEmptyHttpResponse() {
         return new EmptyHttpResponse();
-    }
-
-    public void setHttpStatus(HttpStatus httpStatus) {
-        new StatusLine(new HttpProtocol("HTTP", "1.1"), Integer.toString(httpStatus.getValue()), httpStatus.getReasonPhrase());
     }
 
     static class EmptyHttpResponse extends HttpResponse {
