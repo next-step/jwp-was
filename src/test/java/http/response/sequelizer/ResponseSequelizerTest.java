@@ -35,6 +35,17 @@ class ResponseSequelizerTest {
     }
 
     @Test
+    @DisplayName("httpResponse에 쿠키가 없는 경우 비어있는 문자열이 나온다")
+    public void emptyCookie() {
+        final HttpResponse httpResponse = new HttpResponse();
+        final String expected = "";
+
+        final String result = ResponseSequelizer.COOKIE.sequelize(httpResponse);
+
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
     @DisplayName("httpResponse에 헤더가 존재할 경우 헤더 문자열이 정상적으로 나온다")
     public void header() {
         final HttpResponse httpResponse = new HttpResponse();
