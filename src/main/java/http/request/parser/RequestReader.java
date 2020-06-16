@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 public class RequestReader {
     private static final Logger logger = LoggerFactory.getLogger(RequestReader.class);
     private static final String INPUT_STREAM_DECODER = "UTF-8";
+    private static final String SESSION_ID = "JSESSIONID";
 
     public static HttpRequest read(InputStream in) throws IOException {
 
@@ -50,7 +51,7 @@ public class RequestReader {
         final String requestBody = IOUtils.readData(br, contentLength);
         logger.debug("Body :: {}", requestBody);
 
-        final String sessionId = cookies.getValue("JSESSIONID");
+        final String sessionId = cookies.getValue(SESSION_ID);
         final HttpSession session = SessionStore.get(sessionId);
 
         Parameters formData = header.getValue(HeaderFieldName.CONTENT_TYPE)
