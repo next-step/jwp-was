@@ -1,22 +1,20 @@
 package http.session;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpSessionHandler {
-    private static List<HttpSession> sessions;
+    private static Map<String, HttpSession> sessions;
+
     public HttpSessionHandler() {
-        sessions = new ArrayList<>();
+        sessions = new HashMap<>();
     }
 
     public static HttpSession getSession(String sessionId) {
-        return sessions.stream()
-                .filter(httpSession -> httpSession.hasSession(sessionId))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("not found session"));
+        return sessions.get(sessionId);
     }
 
     public static void applySession(HttpSession httpSession) {
-        sessions.add(httpSession);
+        sessions.put(httpSession.getId(), httpSession);
     }
 }

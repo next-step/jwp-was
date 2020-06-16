@@ -1,18 +1,16 @@
 package http.session;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class HttpSession {
     private final String sessionId;
-    private final Attribute attribute;
+    private final Map<String, Object> attribute;
 
     public HttpSession(final String sessionId) {
         this.sessionId = sessionId;
-        this.attribute = new Attribute();
-    }
-
-    public boolean hasSession(String sessionId) {
-        return this.sessionId.equals(sessionId);
+        this.attribute = new HashMap<>();
     }
 
     public String getId() {
@@ -20,19 +18,19 @@ public class HttpSession {
     }
 
     public void setAttribute(String name, Object value) {
-        this.attribute.setAttribute(name, value);
+        this.attribute.put(name, value);
     }
 
     public Object getAttribute(String name) {
-        return this.attribute.getAttribute(name);
+        return this.attribute.get(name);
     }
 
     public void removeAttribute(String name) {
-        this.attribute.removeAttribute(name);
+        this.attribute.remove(name);
     }
 
     public void invalidate() {
-        this.attribute.invalidate();
+        this.attribute.clear();
     }
 
     @Override
