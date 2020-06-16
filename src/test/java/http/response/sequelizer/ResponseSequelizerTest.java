@@ -27,11 +27,11 @@ class ResponseSequelizerTest {
         final HttpResponse httpResponse = new HttpResponse();
         httpResponse.addCookie("a", "1");
         httpResponse.addCookie("b", "2");
-        final String expected = "Set-Cookie: a=1; b=2\r\n";
+        final String expected1 = "Set-Cookie: a=1";
+        final String expected2 = "Set-Cookie: b=2";
 
         final String result = ResponseSequelizer.COOKIE.sequelize(httpResponse);
-
-        assertThat(result).isEqualTo(expected);
+        assertThat(result).contains(expected1, expected2);
     }
 
     @Test

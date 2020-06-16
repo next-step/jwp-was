@@ -1,5 +1,6 @@
 package http.request;
 
+import http.common.Cookies;
 import http.response.HttpResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,13 +53,14 @@ class HttpRequestTest {
     }
 
     @Test
-    @DisplayName("httpReqeust에서 세션을 가져올 때 세션이 존재하지 않을 경우 세션을 만들고 해당 sessionId는 HttpResponse의 쿠키에 저장된다")
+    @DisplayName("httpReqeust에서 세션을 가져올 때 세션이 존재하지 않을 경우 새로운 세션을 만들고 sessionId는 HttpResponse의 쿠키에 JSESSIONID로 저장된다")
     void jsessionId() {
         httpRequest.getSession();
+        Cookies cookies = httpResponse.getCookie();
 
-        final Optional<String> result = httpResponse.getHeader("Set-Cookie");
+        String result = cookies.getValue("JSESSIONID");
 
-        assertThat(result.get()).contains("JSESSIONID=");
+        assertThat(result).isNotBlank();
     }
 
 

@@ -7,6 +7,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import webserver.exceptions.ErrorMessage;
 import webserver.exceptions.IllegalCookieHeaderException;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -36,4 +38,15 @@ class CookiesTest {
                 .hasMessageContaining(ErrorMessage.ILLEGAL_COOKIE_HEADER.getMessage());
     }
 
+    @Test
+    @DisplayName("쿠키를 여러개 등록하고 stringify() 할 경우 쿠키 쌍을 여러개 반환한다")
+    void manyCookieStringify() {
+        final Cookies cookies = new Cookies();
+        cookies.addCookie("a", "1");
+        cookies.addCookie("b", "2");
+
+        final List<String> result = cookies.stringify();
+
+        assertThat(result).contains("a=1", "b=2");
+    }
 }
