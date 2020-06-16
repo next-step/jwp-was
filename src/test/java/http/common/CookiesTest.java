@@ -45,7 +45,7 @@ class CookiesTest {
         cookies.addCookie("a", "1");
         cookies.addCookie("b", "2");
 
-        final List<String> result = cookies.stringify();
+        final List<String> result = cookies.asList();
 
         assertThat(result).contains("a=1", "b=2");
     }

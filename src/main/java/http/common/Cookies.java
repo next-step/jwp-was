@@ -52,13 +52,12 @@ public class Cookies {
         this.path = path;
     }
 
-    public List<String> stringify() {
+    public List<String> asList() {
         List<String> cookiesStr = cookies.keySet().stream()
                 .map(this::addCookie)
                 .map(this::addPath)
                 .map(builder -> builder.toString())
                 .collect(Collectors.toList());
-
         return cookiesStr;
     }
 

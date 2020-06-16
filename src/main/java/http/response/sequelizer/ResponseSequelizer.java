@@ -31,7 +31,7 @@ public enum ResponseSequelizer {
 
     private static String sequelizeCookie(HttpResponse httpResponse) {
         final Cookies cookies = httpResponse.getCookie();
-        return cookies.stringify().stream()
+        return cookies.asList().stream()
                 .map(c -> HeaderFieldName.SET_COOKIE.stringify() + ": " + c + "\r\n")
                 .collect(Collectors.joining());
     }
