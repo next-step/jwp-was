@@ -1,5 +1,6 @@
 package http;
 
+import http.request.RequestParams;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -9,7 +10,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class QueryStringTest {
+public class RequestParamsTest {
     static Stream<String> blankStrings() {
         return Stream.of("", null);
     }
@@ -17,16 +18,18 @@ public class QueryStringTest {
     @Test
     @DisplayName("쿼리 스트링을 입력하고 값을 가지고 온다")
     void getParameter() {
-        QueryString queryString = QueryString.of("userId=jinwoo&password=1q2w3e4r");
-        assertThat(queryString.getParameter("userId")).isEqualTo("jinwoo");
-        assertThat(queryString.getParameter("password")).isEqualTo("1q2w3e4r");
+        final RequestParams requestParams = new RequestParams();
+        requestParams.addParams("userId=jinwoo&password=1q2w3e4r");
+        assertThat(requestParams.getParameter("userId")).isEqualTo("jinwoo");
+        assertThat(requestParams.getParameter("password")).isEqualTo("1q2w3e4r");
     }
 
     @ParameterizedTest
     @DisplayName("빈 쿼리 스트링 입력")
     @MethodSource("blankStrings")
     void createEmptyQueryString(final String value) {
-        QueryString queryString = QueryString.of(value);
-        assertThat(queryString).isNotNull();
+        final RequestParams requestParams = new RequestParams();
+        requestParams.addParams(value);
+        assertThat(requestParams).isNotNull();
     }
 }
