@@ -1,27 +1,32 @@
 package http;
 
+import org.apache.logging.log4j.util.Strings;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class CookieTranslator {
 
     private static final String SEPARATOR = ";";
     private static final String SEPARATOR_COOKIE_KEY_VALUE = "=";
 
-    private String[] cookieValues;
+    private Map<String, String> cookies;
 
-    public CookieTranslator(final String cookieValues) {
-        this.cookieValues = cookieValues.split(SEPARATOR);
-    }
-
-    public boolean isLogined() {
-        for (final String cookieValue : cookieValues) {
-            String[] cookies = cookieValue.split(SEPARATOR_COOKIE_KEY_VALUE);
-            if (cookies[0].trim().equals("logined") && cookies[1].trim().equals("true")) {
-                return true;
-            }
+    public CookieTranslator(final String values) {
+        cookies = new HashMap<>();
+        if (Strings.isNotBlank(values)) {
+            create(values.split(SEPARATOR));
         }
-        return false;
     }
 
-    public String[] getCookieValues() {
-        return cookieValues;
+    private void create(String[] cookieValues) {
+        for (final String cookieValue : cookieValues) {
+            String[] cookiesKeyAndValue = cookieValue.split(SEPARATOR_COOKIE_KEY_VALUE);
+            cookies.put(cookiesKeyAndValue[0].trim(), cookiesKeyAndValue[1].trim());
+        }
+    }
+
+    public String getSessionId() {
+        return cookies.get("CUSTOM_SESSION_ID");
     }
 }

@@ -12,26 +12,19 @@ class CookieTranslatorTest {
 
     @BeforeEach
     void setUp() {
-        cookieValues = "JSESSIONID=2D1DD994C93709F4551726B01B720252; _ga=GA1.1.35327423.1583978820; logined=true";
+        cookieValues = "CUSTOM_SESSION_ID=b7ba5891-4404-4102-bb68-5548648d9cec";
     }
 
     @Test
-    @DisplayName("배열 크기 확인")
-    void size() {
+    @DisplayName("세션아이디 가져오기")
+    void getSessionId() {
         // give
         CookieTranslator cookieTranslator = new CookieTranslator(cookieValues);
-        int actualSize = cookieTranslator.getCookieValues().length;
-        // when then
-        assertThat(actualSize).isEqualTo(3);
-    }
-
-    @Test
-    @DisplayName("쿠키 로그인 여부")
-    void isLogined() {
-        // give
-        CookieTranslator cookieTranslator = new CookieTranslator(cookieValues);
-        boolean actual = cookieTranslator.isLogined();
-        // when then
-        assertThat(actual).isTrue();
+        String actual = cookieTranslator.getSessionId();
+        String expected = "b7ba5891-4404-4102-bb68-5548648d9cec";
+        // when
+        boolean same = actual.equals(expected);
+        // then
+        assertThat(same).isTrue();
     }
 }

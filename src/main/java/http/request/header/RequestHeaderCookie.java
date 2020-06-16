@@ -9,7 +9,7 @@ public class RequestHeaderCookie {
         this.cookieTranslator = new CookieTranslator(cookieValues);
     }
 
-    public boolean isLogined() {
-        return cookieTranslator.isLogined();
+    public String getSessionId() {
+        return cookieTranslator.getSessionId();
     }
 }

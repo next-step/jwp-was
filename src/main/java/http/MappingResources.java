@@ -19,14 +19,14 @@ public class MappingResources {
 
     static {
         mappingResources = new HashMap<>();
-        mappingResources.put(CSS_EXTENSION, new CssController());
-        mappingResources.put(IMAGE_PNG_EXTENSION, new ImageController());
-        mappingResources.put(JAVASCRIPT_EXTENSION, new JsController());
-        mappingResources.put(FONT_EOT_EXTENSION, new FontController());
-        mappingResources.put(FONT_SVG_EXTENSION, new FontController());
-        mappingResources.put(FONT_TTF_EXTENSION, new FontController());
-        mappingResources.put(FONT_WOFF2_EXTENSION, new FontController());
-        mappingResources.put(FONT_WOFF_EXTENSION, new FontController());
+        mappingResources.put(CSS_EXTENSION, new ResourceController());
+        mappingResources.put(IMAGE_PNG_EXTENSION, new ResourceController());
+        mappingResources.put(JAVASCRIPT_EXTENSION, new ResourceController());
+        mappingResources.put(FONT_EOT_EXTENSION, new ResourceController());
+        mappingResources.put(FONT_SVG_EXTENSION, new ResourceController());
+        mappingResources.put(FONT_TTF_EXTENSION, new ResourceController());
+        mappingResources.put(FONT_WOFF2_EXTENSION, new ResourceController());
+        mappingResources.put(FONT_WOFF_EXTENSION, new ResourceController());
     }
 
     public static ResourceController getResourceController(String path) {
@@ -37,7 +37,6 @@ public class MappingResources {
         String[] names = path.split("\\.");
         int size = names.length;
         if (size > 0) {
-            System.out.println(names[size - 1]);
             return names[size - 1];
         }
         return path;

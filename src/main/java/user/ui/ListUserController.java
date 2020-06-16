@@ -7,6 +7,8 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
+import http.session.HttpSession;
+import http.session.HttpSessionHandler;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +16,15 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ListUserController extends UserController {
     private static final Logger logger = LoggerFactory.getLogger(ListUserController.class);
 
     @Override
     public void doGet(final HttpRequest httpRequest, final HttpResponse httpResponse) {
-        if (!httpRequest.isLogin()) {
-            httpResponse.addHeader("Set-Cookie", "logined=false; Path=/");
+        String id = httpRequest.getSessionId();
+        if (!isLogin(id)) {
             httpResponse.sendRedirect("/user/login.html");
             return;
         }
@@ -31,7 +34,14 @@ public class ListUserController extends UserController {
             httpResponse.applyBody(viewListByTemplate(path, new ArrayList<>(DataBase.findAll())));
             httpResponse.forwardTemplateBody();
         }
+    }
 
+    private boolean isLogin(String sessionId) {
+        HttpSession httpSession = HttpSessionHandler.getSession(sessionId);
+        if (Objects.nonNull(httpSession)) {
+            return httpSession.isLogin();
+        }
+        return false;
     }
 
     private byte[] viewListByTemplate(String path, List<User> users) {

@@ -7,21 +7,27 @@ import utils.FileIoUtils;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HttpResponse {
 
     private static final String BASIC_PROTOCOL = "HTTP/1.1";
     private static final String BASIC_REQUEST = "%s %s \r\n";
+    private static final String SET_COOKIE = "Set-Cookie";
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
     private final DataOutputStream dataOutputStream;
     private final ResponseHeader responseHeader;
+    private List<String> cookies;
     private byte[] body = new byte[0];
 
     public HttpResponse(final DataOutputStream dataOutputStream) {
         this.dataOutputStream = dataOutputStream;
         this.responseHeader = new ResponseHeader();
+        this.cookies = new ArrayList<>();
     }
 
     private void applyHeader() throws IOException {
@@ -37,6 +43,18 @@ public class HttpResponse {
 
     public void addHeader(String key, String value) {
         responseHeader.addHeader(key, value);
+    }
+
+    public void applyCookie() {
+        responseHeader.addHeader(SET_COOKIE, String.join(" ", cookies));
+    }
+
+    public void addSetCookie(String key, String value) {
+        cookies.add(key + "=" + value + ";");
+    }
+
+    public void addSetCookieOptional(String value) {
+        cookies.add(value + ";");
     }
 
     public void forward(String path) {

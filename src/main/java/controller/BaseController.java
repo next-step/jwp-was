@@ -9,6 +9,7 @@ public abstract class BaseController implements Controller {
         String method = httpRequest.getMethod();
         if (method.equals("GET")) {
             doGet(httpRequest, httpResponse);
+            return;
         }
         doPost(httpRequest, httpResponse);
     }

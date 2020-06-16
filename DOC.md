@@ -24,3 +24,10 @@
 - url 요청 시 해당 컨트롤러 연결
 - 다형성을 통해 `BaseController` 를 상태 값으로 가지며 객체의 생성은 상속받은 객체 (LSP..?) 
 - static을 통해 매번 객체 생성하지 않게
+
+###Session
+HttpSession API 중 구현할 메소드는 getId(), setAttribute(String name, Object value), getAttribute(String name), removeAttribute(String name), invalidate() 5개이다
+`HttpSession` 은 sessionId, `Attribute` 의 두 상태값을 가질 수 있다.
+
+`Attribute` 는 `Map` 타입의 상태 값을 가지는 일급컬렉션
+`Map` 의 타입은 key = String, value = Object 기반이다.
