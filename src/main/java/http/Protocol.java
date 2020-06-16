@@ -6,19 +6,23 @@ public class Protocol {
     private final String protocol;
     private final String version;
 
-    public Protocol(String s) {
-        String[] values = s.split("/");
-        this.protocol = values[0];
-        this.version = values[1];
-    }
-
     public Protocol(String protocol, String version) {
         this.protocol = protocol;
         this.version = version;
     }
 
-    public static Protocol of(String protocol, String version) {
-        return new Protocol(protocol, version);
+    public Protocol(String protocol) {
+        this.protocol = protocol;
+        this.version = "1.1";
+    }
+
+    public static Protocol of(String value) {
+        if (value == null)
+            return null;
+        String[] values = value.split("/");
+        if (values.length == 2)
+            return new Protocol(values[0], values[1]);
+        return new Protocol(values[0]);
     }
 
     public String getProtocol() {

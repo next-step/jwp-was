@@ -10,9 +10,6 @@ public class ProtocolTest {
     void invalid() {
         assertThatThrownBy(() -> new Protocol("HTTP"))
                 .isInstanceOf(IllegalArgumentException.class);
-
-        assertThatThrownBy(() -> new Protocol("ABC/1.1"))
-                .isInstanceOf(RequestLineParser.class);
     }
 
     @Test
