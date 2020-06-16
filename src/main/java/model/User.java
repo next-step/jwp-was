@@ -25,9 +25,14 @@ public class User {
         Map<String, String> parameterMap = new HashMap();
         while(index < parameters.length) {
             String[] keyvalue = parameters[index].split("=");
-            parameterMap.put(keyvalue[0], keyvalue[1]);
+            parameterMap.put(keyvalue[0], null);
+            if (keyvalue.length == 2)
+                parameterMap.put(keyvalue[0], keyvalue[1]);
             index++;
         }
+        if (StringUtils.isEmpty(parameterMap.get("userId")) ||
+                StringUtils.isEmpty(parameterMap.get("password")))
+            return null;
         return new User(parameterMap.get("userId"), parameterMap.get("password"),
                 parameterMap.get("name"), parameterMap.get("email"));
     }

@@ -15,10 +15,11 @@ public class Path {
     }
 
     public static Path of(String value) {
+        if (value == null)
+            return null;
         String[] values = value.split("\\?");
         if (values.length == 2)
             return new Path(values[0], values[1]);
-
         return new Path(values[0]);
     }
 
