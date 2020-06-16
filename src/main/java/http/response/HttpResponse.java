@@ -76,4 +76,7 @@ public class HttpResponse {
         header.addHeader(new HeaderField(HeaderFieldName.LOCATION, redirectUrl));
     }
 
+    public void setSessionId(String sessionId) {
+        header.addHeader("Set-Cookie", "JSESSIONID="+sessionId+"; Path=/");
+    }
 }

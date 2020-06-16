@@ -17,7 +17,7 @@ class ResponseHeaderTest {
     }
 
     @Test
-    @DisplayName("ResponseHeader 객체에 헤더를 추가할 수 있다")
+    @DisplayName("ResponseHeader 객체에 HeaderField로 헤더를 추가할 수 있다")
     void addTest() {
         final String name = "Content-Type";
         final String value = "text/html";
@@ -25,6 +25,18 @@ class ResponseHeaderTest {
         final ResponseHeader responseHeader = new ResponseHeader();
 
         responseHeader.addHeader(headerField);
+
+        assertThat(responseHeader.getValue(name)).hasValue(value);
+    }
+
+    @Test
+    @DisplayName("ResponseHeader 객체에 키-밸류로 헤더를 추가할 수 있다")
+    void addHeader() {
+        final String name = "Content-Type";
+        final String value = "text/html";
+        final ResponseHeader responseHeader = new ResponseHeader();
+
+        responseHeader.addHeader(name, value);
 
         assertThat(responseHeader.getValue(name)).hasValue(value);
     }

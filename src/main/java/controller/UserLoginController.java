@@ -5,7 +5,6 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import model.User;
 import webserver.controller.AbstractController;
-import webserver.exceptions.SessionNotExistException;
 import webserver.session.HttpSession;
 
 public class UserLoginController extends AbstractController {
@@ -31,8 +30,7 @@ public class UserLoginController extends AbstractController {
 
         if (user.matchPassword(password)) {
             httpResponse.sendRedirect("/index.html");
-            HttpSession session = httpRequest.getSession(true)
-                    .orElseThrow(SessionNotExistException::new);
+            HttpSession session = httpRequest.getSession();
             session.setAttribute("isAuthenticated", true);
         } else {
             httpResponse.sendRedirect("/user/login_failed.html");

@@ -2,6 +2,8 @@ package http.request;
 
 import http.common.Cookies;
 import http.common.HeaderFieldName;
+import http.response.HttpResponse;
+import webserver.exceptions.FailedSessionCreateException;
 import webserver.session.HttpSession;
 
 import java.util.Optional;
@@ -12,6 +14,7 @@ public class HttpRequest {
     private final Parameters formData;
     private final Cookies cookies;
     private final String body;
+    private HttpResponse httpResponse;
     private HttpSession session;
 
     public HttpRequest(RequestLine requestLine, RequestHeader header, Parameters formData, Cookies cookies, String body, HttpSession session) {
@@ -47,11 +50,25 @@ public class HttpRequest {
         return header.getValue(headerName);
     }
 
+    public HttpSession getSession() {
+        if (session == null) {
+            this.session = getSession(true)
+                .orElseThrow(FailedSessionCreateException::new);
+        }
+        return session;
+    }
+
     public Optional<HttpSession> getSession(boolean create) {
         if (session == null && create) {
-            this.session = HttpSession.create();
+            this.session = createSession();
         }
         return Optional.ofNullable(session);
+    }
+
+    private HttpSession createSession() {
+        HttpSession session = HttpSession.create();
+        httpResponse.setSessionId(session.getId());
+        return session;
     }
 
     public String getParameter(String parameterName) {
@@ -60,5 +77,9 @@ public class HttpRequest {
             parameterValue = formData.getValue(parameterName);
         }
         return parameterValue;
+    }
+
+    public void setHttpResponse(HttpResponse httpResponse) {
+        this.httpResponse = httpResponse;
     }
 }
