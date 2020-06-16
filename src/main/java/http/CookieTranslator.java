@@ -13,8 +13,8 @@ public class CookieTranslator {
     private Map<String, String> cookies;
 
     public CookieTranslator(final String values) {
+        cookies = new HashMap<>();
         if (Strings.isNotBlank(values)) {
-            cookies = new HashMap<>();
             create(values.split(SEPARATOR));
         }
     }

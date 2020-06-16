@@ -25,6 +25,13 @@ public class HttpSession {
         return this.attribute.get(name);
     }
 
+    public boolean isLogin() {
+        if (attribute.containsKey("logined")) {
+            return (boolean) attribute.get("logined");
+        }
+        return false;
+    }
+
     public void removeAttribute(String name) {
         this.attribute.remove(name);
     }

@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ListUserController extends UserController {
     private static final Logger logger = LoggerFactory.getLogger(ListUserController.class);
@@ -37,10 +38,10 @@ public class ListUserController extends UserController {
 
     private boolean isLogin(String sessionId) {
         HttpSession httpSession = HttpSessionHandler.getSession(sessionId);
-        if (httpSession.getAttribute("logined") == null) {
-            return false;
+        if (Objects.nonNull(httpSession)) {
+            return httpSession.isLogin();
         }
-        return (boolean) httpSession.getAttribute("logined");
+        return false;
     }
 
     private byte[] viewListByTemplate(String path, List<User> users) {
