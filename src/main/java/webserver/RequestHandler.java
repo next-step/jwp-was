@@ -10,6 +10,8 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
+import controller.Controller;
+import controller.RequestMapping;
 import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
@@ -43,7 +45,15 @@ public class RequestHandler implements Runnable {
             String path = httpRequest.getPath();
             logger.debug("path : {} ", path);
 
-            if (path.equals("/user/create")) {
+            Controller controller = RequestMapping.getController(path);
+
+            if(controller == null) {
+                httpResponse.forward(path);
+            } else {
+                controller.service(httpRequest, httpResponse);
+            }
+
+            /*if (path.equals("/user/create")) {
                 User user = new User(
                                     httpRequest.getParameter("userId"),
                                     httpRequest.getParameter("password"),
@@ -92,21 +102,12 @@ public class RequestHandler implements Runnable {
                 httpResponse.forward(httpRequest.getPath());
             } else {
                 httpResponse.forward(httpRequest.getPath());
-            }
+            }*/
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private boolean loginCheck(String line) {
-        boolean result = false;
-        String loginStatus = line.split("=")[1];
-
-        if (loginStatus.equals("true"))
-            result = true;
-
-        return result;
-    }
 
 
 }

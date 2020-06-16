@@ -60,5 +60,7 @@ public class HttpRequest {
         return params.get(param);
     }
 
-
+    public HttpMethod getMethod() {
+        return  requestLine.getMapping();
+    }
 }

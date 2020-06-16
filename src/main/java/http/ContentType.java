@@ -3,7 +3,7 @@ package http;
 public enum ContentType {
     CSS("text/css", "/css", "./static"),
     HTML("text/html", "", "./templates"),
-    FONT("application/x-font-woff", "/font", "./static"),
+    FONT("application/x-font-woff", "/fonts", "./static"),
     JS("application/javascript","/js", "./static");
 
     String mimeType;
