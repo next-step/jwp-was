@@ -1,5 +1,6 @@
 package http.response;
 
+import http.cookie.Cookie;
 import http.request.HttpRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

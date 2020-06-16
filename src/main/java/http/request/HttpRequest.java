@@ -1,10 +1,14 @@
 package http.request;
 
+import http.cookie.Cookie;
 import http.request.exception.HttpHeaderRegistrationException;
 import http.request.method.HttpMethod;
 import http.request.querystring.QueryString;
 import http.request.requestline.RequestLine;
 import http.request.requestline.RequestLineParser;
+import http.session.HttpSession;
+import http.session.HttpSessionMap;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import utils.IOUtils;
@@ -14,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static http.response.HttpResponseHeaderKeys.CONTENT_LENGTH_HEADER_KEY;
 
@@ -27,6 +32,7 @@ public class HttpRequest {
     private RequestLine requestLine;
     private HttpHeaders httpHeaders;
     private QueryString body = new QueryString("");
+    private String sessionId;
 
     HttpRequest(String requestLine) {
         this.requestLine = RequestLineParser.parse(requestLine);
@@ -87,16 +93,39 @@ public class HttpRequest {
     }
 
     public boolean isLoginUser() {
-        String cookie = httpHeaders.get(COOKIE_REQUEST_HEADER_KEY);
-        return cookie != null && cookie.contains("logined=true");
+        Cookie loginCookie = httpHeaders.getCookies().stream()
+                .filter(cookie -> cookie.isSameName("logined"))
+                .findFirst()
+                .orElse(null);
+
+        return isLoginedCookieValue(loginCookie);
     }
 
-    public String getBody(String key) {
-        return body.get(key);
+    public HttpSession getSession() {
+        if (this.sessionId == null) {
+            this.sessionId = this.httpHeaders.findSessionId();
+        }
+
+        HttpSession httpSession = HttpSessionMap.createSessionIfAbsent(sessionId);
+        this.sessionId = httpSession.getId();
+
+        return httpSession;
+    }
+
+    public String getSessionId() {
+        if (this.sessionId == null) {
+            this.sessionId = this.httpHeaders.findSessionId();
+        }
+
+        return this.sessionId;
     }
 
     public boolean hasPathFileExtension() {
         return requestLine.hasPathFileExtension();
+    }
+
+    public String getBody(String key) {
+        return body.get(key);
     }
 
     public String getFilePath() {
@@ -129,5 +158,9 @@ public class HttpRequest {
 
     private boolean doesNotHaveContentLength(String contentLength) {
         return StringUtils.isEmpty(contentLength) || "0".equals(contentLength);
+    }
+
+    private boolean isLoginedCookieValue(Cookie cookie) {
+        return cookie != null && cookie.getValue().equals("true");
     }
 }
