@@ -2,7 +2,16 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import http.*;
 import model.User;
@@ -32,6 +41,7 @@ public class RequestHandler implements Runnable {
             int contentLength = 0;
             boolean isLoginSuccess = false;
             boolean isCreateSuccess = false;
+            Cookie cookie = null;
 
             while(line != null) {
                 logger.debug("line : {}", line);
@@ -52,7 +62,7 @@ public class RequestHandler implements Runnable {
                     contentLength = Integer.parseInt(line.split(" ")[1]);
                 if ((requestHeaderLine.getMethod() == HttpMethod.POST) &&
                         (requestHeaderLineType == RequestHeaderLineType.EMPTY_LINE)) {
-                    User user = User.of(IOUtils.readData(br, contentLength));
+                    User user = User.of(IOUtils.readData(br, contentLength), UrlType.of(url));
                     if (user == null &&
                             (UrlType.LOGIN_USER == UrlType.of(url) || UrlType.CREATE_USER == UrlType.of(url))) {
                         break;
@@ -60,6 +70,9 @@ public class RequestHandler implements Runnable {
                     isCreateSuccess = createUser(url, user);
                     isLoginSuccess = loginUser(url, user);
                     break;
+                }
+                if (requestHeaderLineType == RequestHeaderLineType.COOKIE_LINE) {
+                    cookie = Cookie.of(line);
                 }
                 line = br.readLine();
             }
@@ -73,12 +86,31 @@ public class RequestHandler implements Runnable {
                 response302Header(dos, "/user/form.html");
             }
             if (UrlType.LOGIN_USER == UrlType.of(url)) {
-                if (isLoginSuccess) {
-                    byte[] body = FileIoUtils.loadFileFromClasspath("./templates"+"/index.html");
-                    response200LoginHeader(dos, body.length, isLoginSuccess);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./templates"+"/user/login_failed.html");
+                if (isLoginSuccess)
+                    body = FileIoUtils.loadFileFromClasspath("./templates"+"/index.html");
+                response200LoginHeader(dos, body.length, isLoginSuccess);
+                responseBody(dos, body);
+            }
+
+            if (UrlType.LIST == UrlType.of(url)) {
+                if (cookie != null && cookie.isLogined()) {
+                    TemplateLoader loader = new ClassPathTemplateLoader();
+                    loader.setPrefix("/templates");
+                    loader.setSuffix(".html");
+                    Handlebars handlebars = new Handlebars(loader);
+
+                    Template template = handlebars.compile("user/list");
+
+                    Map<String, List> users = new HashMap<>();
+                    users.put("users", DataBase.findAll().stream().collect(Collectors.toList()));
+
+                    String profilePage = template.apply(users);
+                    byte[] body = profilePage.getBytes();
+                    response200Header(dos, body.length);
                     responseBody(dos, body);
                 }
-                response302Header(dos, "/user/login_failed.html");
+                response302Header(dos, "/user/login.html");
             }
 
             byte[] body = FileIoUtils.loadFileFromClasspath("./templates"+url);

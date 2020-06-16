@@ -5,6 +5,7 @@ public enum RequestHeaderLineType {
     CONTENT_LENGTH_LINE("Content length line"),
     CONTENT_TYPE_LINE("Content type line"),
     EMPTY_LINE("Empty line"),
+    COOKIE_LINE("Cookie line"),
     OTHER_LINE("Other kind line"),
     DO_NOT_PARSE_LINE("do not parse line")
     ;
@@ -27,6 +28,8 @@ public enum RequestHeaderLineType {
             return RequestHeaderLineType.CONTENT_LENGTH_LINE;
         if (values.length == 2 && RequestHeaderLine.CONTENT_TYPE_KEY.equals(values[0]))
             return RequestHeaderLineType.CONTENT_TYPE_LINE;
+        if (values.length == 2 && RequestHeaderLine.COOKIE_KEY.equals(values[0]))
+            return RequestHeaderLineType.COOKIE_LINE;
 
         return RequestHeaderLineType.OTHER_LINE;
     }

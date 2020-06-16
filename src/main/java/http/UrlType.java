@@ -1,11 +1,11 @@
 package http;
 
-import org.springframework.util.StringUtils;
 
 public enum UrlType {
     INDEX("/index.html"),
     CREATE_USER("/user/create"),
-    LOGIN_USER("/user/login")
+    LOGIN_USER("/user/login"),
+    LIST("/user/list")
     ;
     private String urlPath;
 
@@ -20,6 +20,8 @@ public enum UrlType {
             return UrlType.LOGIN_USER;
         else if (UrlType.CREATE_USER.getUrlPath().equals(urlPath))
             return UrlType.CREATE_USER;
+        else if (UrlType.LIST.getUrlPath().equals(urlPath))
+            return UrlType.LIST;
         return UrlType.INDEX;
     }
 

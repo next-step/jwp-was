@@ -6,6 +6,7 @@ public class RequestHeaderLine {
     private final String protocol;
     public final static String CONTENT_LENGTH_KEY = "Content-Length:";
     public final static String CONTENT_TYPE_KEY = "Content-Type:";
+    public final static String COOKIE_KEY = "Cookie:";
 
     public RequestHeaderLine(HttpMethod method, String path, String protocol) {
         this.method = method;
