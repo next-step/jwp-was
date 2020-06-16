@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,9 +33,9 @@ class RequestHeaderTest {
         final Map<String, HeaderField> input = Collections.singletonMap(name, headerField);
         final RequestHeader requestHeader = new RequestHeader(input);
 
-        final String result = requestHeader.getValue(name);
+        final Optional<String> result = requestHeader.getValue(name);
 
-        assertThat(result).isEqualTo(value);
+        assertThat(result).hasValue(value);
     }
 
     @Test
@@ -47,9 +48,9 @@ class RequestHeaderTest {
         final RequestHeader requestHeader = new RequestHeader(input);
         final HeaderFieldName nameType = HeaderFieldName.CONTENT_TYPE;
 
-        final String result = requestHeader.getValue(nameType);
+        final Optional<String> result = requestHeader.getValue(nameType);
 
-        assertThat(result).isEqualTo(value);
+        assertThat(result).hasValue(value);
     }
 
 }

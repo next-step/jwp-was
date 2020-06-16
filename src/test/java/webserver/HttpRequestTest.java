@@ -1,18 +1,43 @@
 package webserver;
 
+import http.request.HttpMethod;
+import http.request.HttpRequest;
+import http.request.parser.RequestReader;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HttpRequestTest {
+    private String testDirectory = "./src/test/resources/";
+
     @Test
-    void request_resttemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        String resourceUrl = "https://edu.nextstep.camp";
-        ResponseEntity<String> response = restTemplate.getForEntity(resourceUrl + "/c/4YUvqn9V", String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    @DisplayName("GET 메서드의 Http Request Message를 정상적으로 파싱할 수 있다")
+    public void request_GET() throws Exception {
+        final InputStream in = new FileInputStream(new File(testDirectory + "Http_GET.txt"));
+        final HttpRequest request = RequestReader.read(in);
+
+        assertThat(request.getMethod()).isEqualTo(HttpMethod.GET);
+        assertThat(request.getPath()).isEqualTo("/user/create");
+        assertThat(request.getHeader("Connection")).hasValue("keep-alive");
+        assertThat(request.getParameter("userId")).isEqualTo("javajigi");
     }
+
+    @Test
+    @DisplayName("POST 메서드의 Http Request Message를 정상적으로 파싱할 수 있다")
+    public void request_POST() throws Exception {
+        final InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.txt"));
+        final HttpRequest request = RequestReader.read(in);
+
+        assertThat(request.getMethod()).isEqualTo(HttpMethod.POST);
+        assertThat(request.getPath()).isEqualTo("/user/create");
+        assertThat(request.getHeader("Connection")).hasValue("keep-alive");
+        assertThat(request.getParameter("userId")).isEqualTo("javajigi");
+    }
+
 }

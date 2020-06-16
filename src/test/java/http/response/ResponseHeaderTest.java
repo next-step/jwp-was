@@ -4,6 +4,8 @@ import http.common.HeaderField;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ResponseHeaderTest {
@@ -24,7 +26,7 @@ class ResponseHeaderTest {
 
         responseHeader.addHeader(headerField);
 
-        assertThat(responseHeader.getValue(name)).isEqualTo(value);
+        assertThat(responseHeader.getValue(name)).hasValue(value);
     }
 
     @Test
@@ -36,21 +38,20 @@ class ResponseHeaderTest {
         final ResponseHeader responseHeader = new ResponseHeader();
         responseHeader.addHeader(headerField);
 
-        final String result = responseHeader.getValue(name);
+        final Optional<String> result = responseHeader.getValue(name);
 
-        assertThat(result).isEqualTo(value);
+        assertThat(result).hasValue(value);
     }
 
     @Test
-    @DisplayName("ResponseHeader 객체에서 존재하지 않는 헤더 값을 요청할 경우 빈 문자열을 반환한다")
+    @DisplayName("ResponseHeader 객체에서 존재하지 않는 헤더 값을 요청할 경우 Optional.empty 을 반환한다")
     void returnEmpty() {
         final ResponseHeader responseHeader = new ResponseHeader();
         final String name = "Content-Type";
-        final String expected = "";
 
-        final String result = responseHeader.getValue(name);
+        final Optional<String> result = responseHeader.getValue(name);
 
-        assertThat(result).isEqualTo(expected);
+        assertThat(result).isEmpty();
     }
 
 }

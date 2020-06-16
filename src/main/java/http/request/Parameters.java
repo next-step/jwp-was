@@ -1,10 +1,7 @@
 package http.request;
 
-import org.apache.logging.log4j.util.Strings;
 import utils.UrlUtf8Decoder;
-import webserver.exceptions.ErrorMessage;
 import webserver.exceptions.IllegalParameterException;
-import webserver.exceptions.WebServerException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,12 +14,12 @@ public class Parameters {
 
     private final Map<String, String> data;
 
+    public Parameters() {
+        data = new HashMap<>();
+    }
+
     public Parameters(String value) {
         data = new HashMap<>();
-
-        if (Strings.isBlank(value)) {
-            return;
-        }
 
         for (String v : value.split(PARAMETER_TOKENIZER)) {
             final String[] v1 = v.split(PARAMETER_NAME_VALUE_TOKENIZER);

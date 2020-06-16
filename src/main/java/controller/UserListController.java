@@ -11,8 +11,10 @@ import http.response.HttpResponse;
 import model.Users;
 import utils.HandlebarsHelper;
 import webserver.controller.AbstractController;
+import webserver.session.HttpSession;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class UserListController extends AbstractController {
 
@@ -29,8 +31,10 @@ public class UserListController extends AbstractController {
 
     @Override
     protected void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (!isLogined(httpRequest)) {
-            httpResponse.response302("/index.html");
+        Optional<HttpSession> sessionOpt = httpRequest.getSession(false);
+        if (!isAuthenticated(sessionOpt)) {
+            httpResponse.sendRedirect("/index.html");
+            return;
         }
         final Users users = new Users(DataBase.findAll());
 
@@ -43,16 +47,19 @@ public class UserListController extends AbstractController {
 
         try {
             final Template template = handlebars.compile("user/list");
-            byte[] htmlFile = template.apply(users).getBytes();
-            httpResponse.response200(ContentType.TEXT_HTML_UTF_8, htmlFile);
+            String htmlFile = template.apply(users);
+            httpResponse.setContentType(ContentType.TEXT_HTML_UTF_8);
+            httpResponse.setBody(htmlFile);
         } catch (IOException e) {
-            httpResponse.response302("/index.html");
+            httpResponse.setBody("/index.html");
         }
     }
 
-    private boolean isLogined(HttpRequest httpRequest) {
-        final String logined = httpRequest.getCookie("logined");
-        return "true".equals(logined);
+    private boolean isAuthenticated(Optional<HttpSession> sessionOpt) {
+        return sessionOpt
+                .map(session -> session.getAttribute("isAuthenticated"))
+                .map(x -> (boolean) x.get())
+                .orElse(false);
     }
 
 }

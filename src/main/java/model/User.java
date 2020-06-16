@@ -31,7 +31,7 @@ public class User {
     }
 
     public boolean matchPassword(String password) {
-        if (password == null) {
+        if (this.password == null) {
             return false;
         }
         return this.password.equals(password);

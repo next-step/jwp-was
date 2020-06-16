@@ -12,7 +12,7 @@ public class ResponseWriter {
     private static final Logger logger = LoggerFactory.getLogger(ResponseWriter.class);
 
     public static void write(OutputStream out, HttpResponse httpResponse) {
-        DataOutputStream dos = new DataOutputStream(out);
+        final DataOutputStream dos = new DataOutputStream(out);
 
         try {
             dos.writeBytes(ResponseSequelizer.RESPONSE_LINE.sequelize(httpResponse));

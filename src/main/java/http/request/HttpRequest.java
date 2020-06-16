@@ -1,18 +1,26 @@
 package http.request;
 
 import http.common.Cookies;
+import http.common.HeaderFieldName;
+import webserver.session.HttpSession;
+
+import java.util.Optional;
 
 public class HttpRequest {
     private final RequestLine requestLine;
     private final RequestHeader header;
+    private final Parameters formData;
     private final Cookies cookies;
     private final String body;
+    private HttpSession session;
 
-    public HttpRequest(RequestLine requestLine, RequestHeader header, Cookies cookies, String body) {
+    public HttpRequest(RequestLine requestLine, RequestHeader header, Parameters formData, Cookies cookies, String body, HttpSession session) {
         this.requestLine = requestLine;
         this.header = header;
+        this.formData = formData;
         this.cookies = cookies;
         this.body = body;
+        this.session = session;
     }
 
     public HttpMethod getMethod() {
@@ -29,5 +37,28 @@ public class HttpRequest {
 
     public String getCookie(String cookieName) {
         return cookies.getValue(cookieName);
+    }
+
+    public Optional<String> getHeader(String headerName) {
+        return header.getValue(headerName);
+    }
+
+    public Optional<String> getHeader(HeaderFieldName headerName) {
+        return header.getValue(headerName);
+    }
+
+    public Optional<HttpSession> getSession(boolean create) {
+        if (session == null && create) {
+            this.session = HttpSession.create();
+        }
+        return Optional.ofNullable(session);
+    }
+
+    public String getParameter(String parameterName) {
+        String parameterValue = requestLine.getParameter(parameterName);
+        if ("".equals(parameterValue)) {
+            parameterValue = formData.getValue(parameterName);
+        }
+        return parameterValue;
     }
 }

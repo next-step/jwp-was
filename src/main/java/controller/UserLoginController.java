@@ -2,10 +2,11 @@ package controller;
 
 import db.DataBase;
 import http.request.HttpRequest;
-import http.request.Parameters;
 import http.response.HttpResponse;
 import model.User;
 import webserver.controller.AbstractController;
+import webserver.exceptions.SessionNotExistException;
+import webserver.session.HttpSession;
 
 public class UserLoginController extends AbstractController {
 
@@ -22,20 +23,19 @@ public class UserLoginController extends AbstractController {
 
     @Override
     protected void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
-        final Parameters formData = new Parameters(httpRequest.getBody());
-        final String userId = formData.getValue("userId");
-        final String password = formData.getValue("password");
+        final String userId = httpRequest.getParameter("userId");
+        final String password = httpRequest.getParameter("password");
 
-        final User user = DataBase.findUserById(userId);
+        final User user = DataBase.findUserById(userId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저Id 입니다."));
 
         if (user.matchPassword(password)) {
-            httpResponse.response302("/index.html");
-            httpResponse.addCookie("logined", "true");
-            httpResponse.addCookiePath("/");
+            httpResponse.sendRedirect("/index.html");
+            HttpSession session = httpRequest.getSession(true)
+                    .orElseThrow(SessionNotExistException::new);
+            session.setAttribute("isAuthenticated", true);
         } else {
-            httpResponse.response302("/user/login_failed.html");
-            httpResponse.addCookie("logined", "false");
-            httpResponse.addCookiePath("/");
+            httpResponse.sendRedirect("/user/login_failed.html");
         }
     }
 
