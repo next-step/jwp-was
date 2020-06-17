@@ -7,6 +7,9 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static utils.StringConstant.AMPERSAND;
+import static utils.StringConstant.EQUAL_SIGN;
+
 public class RequestBody {
     private QueryMap queryMap;
 
@@ -20,12 +23,12 @@ public class RequestBody {
             return null;
         }
 
-        String[] splitByAmpersand = requestBodyString.split("&");
+        String[] splitByAmpersand = requestBodyString.split(AMPERSAND);
         QueryMap queryMap = new QueryMap();
         Arrays.stream(splitByAmpersand)
                 .filter(Objects::nonNull)
                 .forEach(query -> {
-                    String[] splitByEqualSign = query.split("=");
+                    String[] splitByEqualSign = query.split(EQUAL_SIGN);
                     if (splitByEqualSign.length < 2) {
                         return;
                     }

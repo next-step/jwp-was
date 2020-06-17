@@ -6,6 +6,8 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static utils.StringConstant.*;
+
 public class StatusLine {
     private final HttpProtocol httpProtocol;
     private final String statusCode;
@@ -23,7 +25,7 @@ public class StatusLine {
             return makeEmptyStatusLine();
         }
 
-        String[] splitBySpace = statusLine.replaceAll("\r\n", "").split(" ");
+        String[] splitBySpace = statusLine.replaceAll("\r\n", EMPTY).split(SPACE);
         if (splitBySpace.length < 3) {
             return makeEmptyStatusLine();
         }
@@ -37,13 +39,13 @@ public class StatusLine {
 
     @Nonnull
     public String makeStatusLineString() {
-        return httpProtocol.getProtocol() + "/" + httpProtocol.getVersion() + " " +
-                statusCode + " " + reason + "\r\n";
+        return httpProtocol.getProtocol() + SLASH + httpProtocol.getVersion() + SPACE +
+                statusCode + SPACE + reason + "\r\n";
 
     }
 
     public static StatusLine makeEmptyStatusLine() {
-        return new EmptyStatusLine(null, "", "");
+        return new EmptyStatusLine(null, EMPTY, EMPTY);
     }
 
     static class EmptyStatusLine extends StatusLine {
@@ -53,7 +55,7 @@ public class StatusLine {
 
         // TODO 예외 일 때 처리 확인
         public String makeStatusLineString() {
-            return "";
+            return EMPTY;
         }
     }
 

@@ -2,6 +2,8 @@ package http;
 
 import javax.annotation.Nonnull;
 
+import static utils.StringConstant.SLASH;
+
 public class HttpProtocol implements Protocol {
     private final String protocol;
     private final String version;
@@ -13,7 +15,7 @@ public class HttpProtocol implements Protocol {
 
     @Nonnull
     public static HttpProtocol from(@Nonnull String httpProtocol) {
-        String[] splitBySlash = httpProtocol.split("/");
+        String[] splitBySlash = httpProtocol.split(SLASH);
         if (splitBySlash.length < 2) {
             throw new IllegalArgumentException();
         }

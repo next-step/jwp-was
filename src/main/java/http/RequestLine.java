@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static utils.StringConstant.*;
+
 public class RequestLine {
     private static final int SPLIT_BY_SPACE_COUNT = 3;
     private final Method method;
@@ -30,7 +32,7 @@ public class RequestLine {
             return makeEmptyRequestLine();
         }
 
-        String[] splitBySpace = requestLine.split(" ");
+        String[] splitBySpace = requestLine.split(SPACE);
         if (splitBySpace.length < SPLIT_BY_SPACE_COUNT) {
             return makeEmptyRequestLine();
         }
@@ -41,7 +43,7 @@ public class RequestLine {
         if (protocolAndVersion.length() < 2) {
             return makeEmptyRequestLine();
         }
-        String[] splitBySlash = protocolAndVersion.replaceAll("\n", "").split("/");
+        String[] splitBySlash = protocolAndVersion.replaceAll("\n", EMPTY).split(SLASH);
         String protocol = splitBySlash[0];
         String version = splitBySlash[1];
 
@@ -72,11 +74,11 @@ public class RequestLine {
         }
 
 
-        String[] splitByAmpersand = splitByQuestionMark[1].split("&");
+        String[] splitByAmpersand = splitByQuestionMark[1].split(AMPERSAND);
         Arrays.stream(splitByAmpersand)
                 .filter(Objects::nonNull)
                 .forEach(query -> {
-                    String[] splitByEqualSign = query.split("=");
+                    String[] splitByEqualSign = query.split(EQUAL_SIGN);
                     if (splitByEqualSign.length < 2) {
                         return;
                     }
@@ -90,7 +92,7 @@ public class RequestLine {
 
     static class EmptyRequsetLine extends RequestLine {
         public EmptyRequsetLine() {
-            super(null, "", "", "", null);
+            super(null, EMPTY, EMPTY, EMPTY, null);
         }
     }
 

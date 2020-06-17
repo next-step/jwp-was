@@ -2,10 +2,7 @@ package webserver;
 
 import Controller.Controller;
 import Controller.ControllerMapper;
-import http.HttpRequest;
-import http.HttpResponse;
-import http.HttpStatus;
-import http.RequestLine;
+import http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FilePathUtils;

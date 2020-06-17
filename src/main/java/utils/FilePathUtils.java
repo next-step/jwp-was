@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static utils.StringConstant.*;
+
 public class FilePathUtils {
     private static final Logger logger = LoggerFactory.getLogger(FilePathUtils.class);
 
@@ -31,6 +33,6 @@ public class FilePathUtils {
             return filePath;
         }
 
-        return "";
+        return EMPTY;
     }
 }

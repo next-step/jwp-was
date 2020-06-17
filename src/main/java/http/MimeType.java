@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static utils.StringConstant.SEMI_COLON;
+import static utils.StringConstant.SLASH;
+
 public enum MimeType {
     ALL("*", "*"),
     APPLICATION_JSON("application", "json"),
@@ -31,7 +34,7 @@ public enum MimeType {
     }
 
     String makeContentTypeValue() {
-        String typeAndSubType = type + "/" + subType + ";";
+        String typeAndSubType = type + SLASH + subType + SEMI_COLON;
         if (parameterMap.isEmpty()) {
             return typeAndSubType;
         }

@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static utils.StringConstant.EMPTY;
+
 public class TemplateView {
     private static final Logger log = LoggerFactory.getLogger(TemplateView.class);
     private final Handlebars handlebars;
@@ -30,6 +32,6 @@ public class TemplateView {
             log.error(e.getMessage());
         }
 
-        return "";
+        return EMPTY;
     }
 }
