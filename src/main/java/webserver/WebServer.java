@@ -4,16 +4,20 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class WebServer {
+
     private static final int DEFAULT_PORT = 8080;
+    private static final int MAX_THREAD_POOL_SIZE = 250;
+    private static final int THREAD_QUEUE_CAPACITY = 100;
 
     public static void main(String args[]) throws Exception {
-        int port = 0;
-        if (args == null || args.length == 0) {
-            port = DEFAULT_PORT;
-        } else {
+        int port = DEFAULT_PORT;
+        if (args != null && args.length != 0) {
             port = Integer.parseInt(args[0]);
         }
 
@@ -21,11 +25,12 @@ public class WebServer {
         try (ServerSocket listenSocket = new ServerSocket(port)) {
             log.info("Web Application Server started {} port.", port);
 
+            ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(MAX_THREAD_POOL_SIZE, MAX_THREAD_POOL_SIZE
+                    , 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(THREAD_QUEUE_CAPACITY));
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection));
-                thread.start();
+                threadPoolExecutor.execute(new RequestHandler(connection));
             }
         }
     }
