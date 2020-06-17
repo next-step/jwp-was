@@ -4,7 +4,7 @@ public enum HttpMethod {
     GET,
     POST;
 
-    public boolean canSupportBody() {
-        return this.equals(POST);
+    public boolean isPost() {
+        return this == POST;
     }
 }

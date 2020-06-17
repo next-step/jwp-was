@@ -30,15 +30,11 @@ public enum ContentType {
         this.mediaType = mediaType;
     }
 
-    public static String toMediaTypeFrom(Uri uri) {
-        return from(uri).toStringWithCharsetUTF8();
-    }
-
-    private static ContentType from(Uri uri) {
+    public static ContentType from(Uri uri) {
         return valueOf(uri.getExtension().toUpperCase());
     }
 
-    private String toStringWithCharsetUTF8() {
+    public String toStringWithCharsetUTF8() {
         return this.mediaType + SEMI_COLON + CHARSET_UTF_8;
     }
 

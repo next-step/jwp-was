@@ -9,13 +9,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Header {
+public class HttpHeaders {
 
     private static final String HEADER_DELIMITER = ": ";
     public static final String REQUEST_HEADER_IS_INVALID = "request header is invalid.";
     private final Map<String, String> headers;
 
-    public Header(List<String> headers) {
+    public HttpHeaders(List<String> headers) {
         this.headers = headers.stream()
                 .filter(header -> !StringUtils.isEmpty(header))
                 .map(this::parse)
@@ -36,8 +36,8 @@ public class Header {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Header header = (Header) o;
-        return Objects.equals(headers, header.headers);
+        HttpHeaders httpHeaders = (HttpHeaders) o;
+        return Objects.equals(headers, httpHeaders.headers);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class Header {
         return this.headers.size();
     }
 
-    public void add(String name, String value) {
+    public void set(String name, String value) {
         this.headers.put(name, value);
     }
 

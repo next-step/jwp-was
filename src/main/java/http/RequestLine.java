@@ -11,12 +11,12 @@ public class RequestLine {
 
     private final HttpMethod method;
     private final Uri uri;
-    private final Protocol protocol;
+    private final HttpProtocol httpProtocol;
 
-    private RequestLine(HttpMethod method, Uri uri, Protocol protocol) {
+    private RequestLine(HttpMethod method, Uri uri, HttpProtocol httpProtocol) {
         this.method = method;
         this.uri = uri;
-        this.protocol = protocol;
+        this.httpProtocol = httpProtocol;
     }
 
     public static RequestLine from(String fullRequestLine) {
@@ -29,26 +29,15 @@ public class RequestLine {
             throw new IllegalArgumentException(REQUEST_LINE_IS_INVALID);
         }
 
-        return new RequestLine(HttpMethod.valueOf(values[0]), Uri.from(values[1]), Protocol.from(values[2]));
+        return new RequestLine(HttpMethod.valueOf(values[0]), Uri.from(values[1]), HttpProtocol.from(values[2]));
     }
 
     public static RequestLine of(String method, String uri, String protocol, String version) {
-        return new RequestLine(HttpMethod.valueOf(method), Uri.from(uri), Protocol.of(protocol, version));
+        return new RequestLine(HttpMethod.valueOf(method), Uri.from(uri), HttpProtocol.of(protocol, version));
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RequestLine that = (RequestLine) o;
-        return method == that.method &&
-                Objects.equals(uri, that.uri) &&
-                protocol == that.protocol;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(method, uri, protocol);
+    public boolean hasBody() {
+        return this.method.isPost();
     }
 
     public String getPath() {
@@ -65,5 +54,20 @@ public class RequestLine {
 
     public Uri getUri() {
         return uri;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestLine that = (RequestLine) o;
+        return method == that.method &&
+                Objects.equals(uri, that.uri) &&
+                httpProtocol == that.httpProtocol;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(method, uri, httpProtocol);
     }
 }

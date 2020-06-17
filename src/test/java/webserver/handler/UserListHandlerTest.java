@@ -1,7 +1,7 @@
 package webserver.handler;
 
 import db.DataBase;
-import http.Header;
+import http.HttpHeaders;
 import http.RequestLine;
 import http.RequestMessage;
 import http.ResponseMessage;
@@ -52,7 +52,7 @@ class UserListHandlerTest {
         // given
         RequestMessage requestMessage = RequestMessage.createWithDefaultBody(
                 RequestLine.from("GET /user/list HTTP/1.1"),
-                new Header(Arrays.asList("Cookie: logined=true"))
+                new HttpHeaders(Arrays.asList("Cookie: logined=true"))
         );
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -71,7 +71,7 @@ class UserListHandlerTest {
         // given
         RequestMessage requestMessage = RequestMessage.createWithDefaultBody(
                 RequestLine.from("GET /user/list HTTP/1.1"),
-                new Header(Collections.emptyList())
+                new HttpHeaders(Collections.emptyList())
         );
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();

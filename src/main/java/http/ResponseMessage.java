@@ -3,6 +3,7 @@ package http;
 import org.slf4j.Logger;
 import utils.FileIoUtils;
 
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Collections;
@@ -12,63 +13,64 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ResponseMessage {
 
     private static final Logger logger = getLogger(ResponseMessage.class);
+    public static final String CRLF = "\r\n";
+    public static final String SPACE = " ";
+    public static final String EMPTY_STRING = "";
+
     private final DataOutputStream dos;
-    private final Header header = new Header(Collections.emptyList());
+    private final HttpHeaders httpHeaders = new HttpHeaders(Collections.emptyList());
+    private byte[] body = EMPTY_STRING.getBytes();
 
     public ResponseMessage(DataOutputStream dos) {
         this.dos = dos;
     }
 
-    public void setHeader(String name, String value) {
-        this.header.add(name, value);
+    public void setHeader(HttpHeader name, String value) {
+        this.httpHeaders.set(name.getText(), value);
     }
 
-    public void response200Header(int lengthOfBodyContent) {
+    private void setBody(byte[] body) {
+        setHeader(HttpHeader.CONTENT_LENGTH, Integer.toString(body.length));
+        this.body = body;
+    }
+
+    public void responseWith(HttpStatus status, byte[] body, ContentType contentType) {
+        setHeader(HttpHeader.CONTENT_TYPE, contentType.toStringWithCharsetUTF8());
+        setBody(body);
+        write(status);
+    }
+
+    public void write(HttpStatus status) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK\r\n");
+            writeStatusLine(status);
             writeHeader();
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    public void responseBody(byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    public void redirectTo(String url) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Redirect\r\n");
-            dos.writeBytes("Location: " + url + "\r\n");
-            writeHeader();
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void writeHeader() {
-        try {
-            if (header.size() > 0) {
-                dos.writeBytes(this.header.toJoinedString());
-            }
+            writeBody();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void response404Header() {
+    private void writeStatusLine(HttpStatus status) throws IOException {
+        dos.writeBytes(HttpProtocol.HTTP_V1_1.toJoinedString() + SPACE + status + CRLF);
+    }
+
+    private void writeHeader() throws IOException {
+        if (httpHeaders.size() > 0) {
+            dos.writeBytes(this.httpHeaders.toJoinedString());
+        }
+        dos.writeBytes(CRLF);
+    }
+
+    private void writeBody() throws IOException {
+        dos.write(this.body, 0, this.body.length);
+        dos.flush();
+    }
+
+    public void redirectTo(String url) {
+        setHeader(HttpHeader.LOCATION, url);
         try {
-            dos.writeBytes("HTTP/1.1 404 Not Found\r\n");
-            dos.writeBytes("Content-Type: text/plain;charset=utf-8\r\n");
-            dos.writeBytes("\r\n");
+            writeStatusLine(HttpStatus.REDIRECT);
+            writeHeader();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -77,8 +79,7 @@ public class ResponseMessage {
     public void responseResource(String location) {
         try {
             byte[] body = FileIoUtils.loadFileFromClasspath(location);
-            response200Header(body.length);
-            responseBody(body);
+            responseWith(HttpStatus.OK, body, ContentType.HTML);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

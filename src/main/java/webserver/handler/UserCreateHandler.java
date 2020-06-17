@@ -1,6 +1,8 @@
 package webserver.handler;
 
 import db.DataBase;
+import http.ContentType;
+import http.HttpStatus;
 import http.RequestMessage;
 import http.ResponseMessage;
 import model.User;
@@ -21,13 +23,12 @@ public class UserCreateHandler implements Handler {
         User user = new User(requestMessage.getQueryString());
         byte[] body = user.toString().getBytes();
 
-        responseMessage.response200Header(body.length);
-        responseMessage.responseBody(body);
+        responseMessage.responseWith(HttpStatus.OK, body, ContentType.PLAIN);
     }
 
     @Override
     public void doPost(RequestMessage requestMessage, ResponseMessage responseMessage) {
-        User user = new User(requestMessage.getBody());
+        User user = new User(requestMessage.readBody());
         DataBase.addUser(user);
 
         responseMessage.redirectTo("/index.html");

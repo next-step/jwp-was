@@ -1,7 +1,7 @@
 package webserver.handler;
 
 import db.DataBase;
-import http.Header;
+import http.HttpHeaders;
 import http.RequestLine;
 import http.RequestMessage;
 import http.ResponseMessage;
@@ -40,7 +40,7 @@ class UserLoginHandlerTest {
         // given
         RequestMessage requestMessage = RequestMessage.create(
                 RequestLine.from("POST /user/login HTTP/1.1"),
-                new Header(Collections.emptyList()),
+                new HttpHeaders(Collections.emptyList()),
                 "userId=crystal&password=password"
         );
 
@@ -50,11 +50,8 @@ class UserLoginHandlerTest {
         UserLoginHandler.getInstance().handle(requestMessage, responseMessage);
         // then
         String result = output.toString();
-        assertThat(result).isEqualTo(
-                        "HTTP/1.1 302 Redirect\r\n" +
-                        "Location: /index.html\r\n" +
-                        "Set-Cookie: logined=true; Path=/\r\n"
-                        + "\r\n");
+        assertThat(result).startsWith("HTTP/1.1 302 Found\r\n").contains("Location: /index.html\r\n",
+                "Set-Cookie: logined=true; Path=/\r\n").endsWith("\r\n");
     }
 
     @DisplayName("비밀번호 불일치로 로그인 실패")
@@ -63,7 +60,7 @@ class UserLoginHandlerTest {
         // given
         RequestMessage requestMessage = RequestMessage.create(
                 RequestLine.from("POST /user/login HTTP/1.1"),
-                new Header(Collections.emptyList()),
+                new HttpHeaders(Collections.emptyList()),
                 "userId=crystal&password=popo"
         );
 
@@ -83,7 +80,7 @@ class UserLoginHandlerTest {
         // given
         RequestMessage requestMessage = RequestMessage.create(
                 RequestLine.from("POST /user/login HTTP/1.1"),
-                new Header(Collections.emptyList()),
+                new HttpHeaders(Collections.emptyList()),
                 "userId=keke&password=popo"
         );
 

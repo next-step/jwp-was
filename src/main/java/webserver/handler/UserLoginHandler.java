@@ -21,14 +21,14 @@ public class UserLoginHandler implements Handler {
 
     @Override
     public void doPost(RequestMessage requestMessage, ResponseMessage responseMessage) {
-        QueryString requestBody = requestMessage.getBody();
+        QueryString requestBody = requestMessage.readBody();
         User loginUser = DataBase.findUserById(requestBody.getFirstParameter("userId"));
 
         if(loginUser != null && loginUser.matchPassword(requestBody.getFirstParameter("password"))) {
-            responseMessage.setHeader("Set-Cookie", "logined=true; Path=/");
+            responseMessage.setHeader(HttpHeader.SET_COOKIE, "logined=true; Path=/");
             responseMessage.redirectTo("/index.html");
         } else {
-            responseMessage.setHeader("Set-Cookie", "logined=false");
+            responseMessage.setHeader(HttpHeader.SET_COOKIE, "logined=false");
             responseMessage.responseResource(ContentType.toRelativePath(Uri.from("/user/login_failed.html")));
         }
 

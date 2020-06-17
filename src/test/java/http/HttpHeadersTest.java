@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HeaderTest {
+public class HttpHeadersTest {
 
     @DisplayName("헤더는 이름과 값으로 파싱")
     @Test
@@ -24,13 +24,13 @@ public class HeaderTest {
                 "Connection: keep-alive",
                 "Accept: */*");
         // when
-        Header header = new Header(strings);
+        HttpHeaders httpHeaders = new HttpHeaders(strings);
         // then
         assertAll(
-                () -> assertThat(header.size()).isEqualTo(3),
-                () -> assertEquals("localhost:8080", header.get("Host")),
-                () -> assertEquals("keep-alive", header.get("Connection")),
-                () -> assertEquals("*/*", header.get("Accept"))
+                () -> assertThat(httpHeaders.size()).isEqualTo(3),
+                () -> assertEquals("localhost:8080", httpHeaders.get("Host")),
+                () -> assertEquals("keep-alive", httpHeaders.get("Connection")),
+                () -> assertEquals("*/*", httpHeaders.get("Accept"))
         );
     }
 
@@ -39,9 +39,9 @@ public class HeaderTest {
     void test_createEmptyHeader() {
         // given
         // when
-        Header header = new Header(Collections.emptyList());
+        HttpHeaders httpHeaders = new HttpHeaders(Collections.emptyList());
         // then
-        assertThat(header.size()).isEqualTo(0);
+        assertThat(httpHeaders.size()).isEqualTo(0);
     }
 
     @DisplayName("유효하지 않은 형식의 헤더는 IllegalArgumentException 발생")
@@ -52,9 +52,9 @@ public class HeaderTest {
         // when
         // then
         assertThatThrownBy(() -> {
-            Header header = new Header(strings);
+            HttpHeaders httpHeaders = new HttpHeaders(strings);
         }).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(Header.REQUEST_HEADER_IS_INVALID);
+                .hasMessage(HttpHeaders.REQUEST_HEADER_IS_INVALID);
     }
 
     @DisplayName("헤더의 키와 값을 \': \'로 이어붙이고, 각 헤더들은 개행문자로 이어붙인다.")
@@ -65,9 +65,9 @@ public class HeaderTest {
                 "Host: localhost:8080",
                 "Connection: keep-alive",
                 "Accept: */*");
-        Header header = new Header(strings);
+        HttpHeaders httpHeaders = new HttpHeaders(strings);
         // when
-        String result = header.toJoinedString();
+        String result = httpHeaders.toJoinedString();
         // then
         assertAll(
                 () -> assertThat(result).contains("Host: localhost:8080\r\n"),
@@ -81,9 +81,9 @@ public class HeaderTest {
     void test_hasLoginCookie() {
         // given
         List<String> strings = Arrays.asList("Cookie: logined=true");
-        Header header = new Header(strings);
+        HttpHeaders httpHeaders = new HttpHeaders(strings);
         // when
-        boolean result = header.hasCookieValue("logined=true");
+        boolean result = httpHeaders.hasCookieValue("logined=true");
         // then
         assertThat(result).isTrue();
     }

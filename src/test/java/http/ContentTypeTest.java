@@ -14,8 +14,10 @@ class ContentTypeTest {
         // given
         Uri uri = Uri.from("/user/index.html");
         // when
-        String result = ContentType.toMediaTypeFrom(uri);
+        ContentType contentType = ContentType.from(uri);
+        String result = contentType.toStringWithCharsetUTF8();
         // then
+        assertThat(contentType).isEqualTo(ContentType.HTML);
         assertThat(result).isEqualTo("text/html;charset=utf-8");
     }
 

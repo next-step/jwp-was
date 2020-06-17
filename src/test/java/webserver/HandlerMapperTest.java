@@ -1,6 +1,6 @@
 package webserver;
 
-import http.Header;
+import http.HttpHeaders;
 import http.RequestLine;
 import http.RequestMessage;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ public class HandlerMapperTest {
         // given
         RequestMessage request = RequestMessage.createWithDefaultBody(
                 RequestLine.from("POST /user/create HTTP/1.1"),
-                new Header(Collections.emptyList())
+                new HttpHeaders(Collections.emptyList())
         );
         // when
         Handler handler = HandlerMapper.getHandler(request);
@@ -34,7 +34,7 @@ public class HandlerMapperTest {
         // given
         RequestMessage request = RequestMessage.createWithDefaultBody(
                 RequestLine.from("GET /user/login HTTP/1.1"),
-                new Header(Collections.emptyList())
+                new HttpHeaders(Collections.emptyList())
         );
         // when
         Handler handler = HandlerMapper.getHandler(request);
@@ -48,7 +48,7 @@ public class HandlerMapperTest {
         // given
         RequestMessage request = RequestMessage.createWithDefaultBody(
                 RequestLine.from("GET /user/list HTTP/1.1"),
-                new Header(Collections.emptyList())
+                new HttpHeaders(Collections.emptyList())
         );
         // when
         Handler handler = HandlerMapper.getHandler(request);
@@ -62,7 +62,7 @@ public class HandlerMapperTest {
         // given
         RequestMessage request = RequestMessage.createWithDefaultBody(
                 RequestLine.from("GET /index.html HTTP/1.1"),
-                new Header(Collections.emptyList())
+                new HttpHeaders(Collections.emptyList())
         );
         // when
         Handler handler = HandlerMapper.getHandler(request);

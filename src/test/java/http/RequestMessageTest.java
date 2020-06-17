@@ -30,7 +30,7 @@ class RequestMessageTest {
         // then
         assertThat(requestMessage.equals(
                 RequestMessage.createWithDefaultBody(RequestLine.from("GET /index.html HTTP/1.1"),
-                        new Header(Arrays.asList("Host: localhost:8080", "Connection: keep-alive", "Accept: */*")))))
+                        new HttpHeaders(Arrays.asList("Host: localhost:8080", "Connection: keep-alive", "Accept: */*")))))
                 .isTrue();
     }
 
@@ -45,14 +45,15 @@ class RequestMessageTest {
                 "Content-Type: application/x-www-form-urlencoded\r\n" +
                 "Accept: */*\r\n" +
                 "\r\n" +
-                "userId=crystal&password=password&name=%EC%9E%84%EC%88%98%EC%A0%95&email=crystal%40naver.com";StringReader sr = new StringReader(input);
+                "userId=crystal&password=password&name=%EC%9E%84%EC%88%98%EC%A0%95&email=crystal%40naver.com";
+        StringReader sr = new StringReader(input);
         BufferedReader br = new BufferedReader(sr);
         // when
         RequestMessage requestMessage = RequestMessage.from(br);
         // then
         assertThat(requestMessage.equals(RequestMessage.create(
                         RequestLine.from("POST /user/create HTTP/1.1"),
-                        new Header(Collections.emptyList()),
+                        new HttpHeaders(Collections.emptyList()),
                         "userId=crystal&password=password&name=%EC%9E%84%EC%88%98%EC%A0%95&email=crystal%40naver.com"
         )));
         }

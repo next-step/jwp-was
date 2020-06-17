@@ -22,15 +22,14 @@ public class UserListHandler implements Handler {
 
     @Override
     public void doGet(RequestMessage requestMessage, ResponseMessage responseMessage) throws IOException {
-        Header header = requestMessage.getHeader();
+        HttpHeaders httpHeaders = requestMessage.getHttpHeaders();
 
-        if (header.hasCookieValue("logined=true")) {
+        if (httpHeaders.hasCookieValue("logined=true")) {
             Collection<User> allUsers = DataBase.findAll();
 
             byte[] body = DynamicContentsFactory.createHTML("/user/list", allUsers);
 
-            responseMessage.response200Header(body.length);
-            responseMessage.responseBody(body);
+            responseMessage.responseWith(HttpStatus.OK, body, ContentType.HTML);
             return;
         }
         responseMessage.responseResource(ContentType.toRelativePath(Uri.from("/user/login.html")));

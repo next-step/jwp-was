@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class ProtocolTest {
+public class HttpProtocolTest {
 
     @DisplayName("프로토콜 정보를 이름과 버전으로 파싱한다.")
     @Test
@@ -15,9 +15,9 @@ public class ProtocolTest {
         // given
         String protocolInfo = "HTTP/1.1";
         // when
-        Protocol protocol = Protocol.from(protocolInfo);
+        HttpProtocol httpProtocol = HttpProtocol.from(protocolInfo);
         // then
-        assertThat(protocol.equals(Protocol.HTTP_V1_1)).isTrue();
+        assertThat(httpProtocol.equals(HttpProtocol.HTTP_V1_1)).isTrue();
     }
 
     @DisplayName("유효하지 않은 프로토콜명인 경우 IllegalArgumentException 발생")
@@ -28,7 +28,7 @@ public class ProtocolTest {
         // when
         // then
         assertThatThrownBy(() -> {
-            Protocol protocol = Protocol.from(protocolInfo);
+            HttpProtocol httpProtocol = HttpProtocol.from(protocolInfo);
         }).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -40,7 +40,7 @@ public class ProtocolTest {
         // when
         // then
         assertThatThrownBy(() -> {
-            Protocol protocol = Protocol.from(protocolInfo);
+            HttpProtocol httpProtocol = HttpProtocol.from(protocolInfo);
         }).isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -16,26 +16,26 @@ public class RequestMessage {
     public static final String REQUEST_MESSAGE_IS_INVALID = "request message is invalid.";
 
     private final RequestLine requestLine;
-    private final Header header;
+    private final HttpHeaders httpHeaders;
     private final String body;
 
-    private RequestMessage(RequestLine requestLine, Header header, String body) {
-        if (requestLine == null || header == null || body == null) {
+    private RequestMessage(RequestLine requestLine, HttpHeaders httpHeaders, String body) {
+        if (requestLine == null || httpHeaders == null || body == null) {
             throw new IllegalArgumentException(REQUEST_MESSAGE_IS_INVALID);
         }
         this.requestLine = requestLine;
-        this.header = header;
+        this.httpHeaders = httpHeaders;
         this.body = body;
     }
 
     public static RequestMessage from(BufferedReader br) throws IOException {
-        RequestLine requestLine = getRequestLine(br);
-        Header header = getHeader(br);
-        String body = getBody(br, requestLine, header);
-        return new RequestMessage(requestLine, header, body);
+        RequestLine requestLine = readRequestLine(br);
+        HttpHeaders httpHeaders = readHeader(br);
+        String body = readBody(br, requestLine, httpHeaders);
+        return new RequestMessage(requestLine, httpHeaders, body);
     }
 
-    private static RequestLine getRequestLine(BufferedReader br) throws IOException {
+    private static RequestLine readRequestLine(BufferedReader br) throws IOException {
         String line = br.readLine();
         if (line == null) {
             throw new EOFException();
@@ -43,44 +43,30 @@ public class RequestMessage {
         return RequestLine.from(line);
     }
 
-    private static Header getHeader(BufferedReader br) throws IOException {
+    private static HttpHeaders readHeader(BufferedReader br) throws IOException {
         String line;
         List<String> others = new ArrayList<>();
         while (!StringUtils.isEmpty(line = br.readLine())) {
             others.add(line);
         }
-        return new Header(others);
+        return new HttpHeaders(others);
     }
 
-    private static String getBody(BufferedReader br, RequestLine requestLine, Header header) throws IOException {
+    private static String readBody(BufferedReader br, RequestLine requestLine, HttpHeaders httpHeaders) throws IOException {
         String body = "";
-        if (requestLine.getMethod().canSupportBody()) {
-            int contentLength = Integer.parseInt(header.get("Content-Length"));
+        if (requestLine.hasBody()) {
+            int contentLength = Integer.parseInt(httpHeaders.get("Content-Length"));
             body = IOUtils.readData(br, contentLength);
         }
         return body;
     }
 
-    public static RequestMessage createWithDefaultBody(RequestLine requestLine, Header header) {
-        return new RequestMessage(requestLine, header, "");
+    public static RequestMessage createWithDefaultBody(RequestLine requestLine, HttpHeaders httpHeaders) {
+        return new RequestMessage(requestLine, httpHeaders, "");
     }
 
-    public static RequestMessage create(RequestLine requestLine, Header header, String body) {
-        return new RequestMessage(requestLine, header, body);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RequestMessage that = (RequestMessage) o;
-        return Objects.equals(requestLine, that.requestLine) &&
-                Objects.equals(header, that.header);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(requestLine, header);
+    public static RequestMessage create(RequestLine requestLine, HttpHeaders httpHeaders, String body) {
+        return new RequestMessage(requestLine, httpHeaders, body);
     }
 
     public String getPath() {
@@ -91,7 +77,7 @@ public class RequestMessage {
         return this.requestLine.getQueryString();
     }
 
-    public QueryString getBody() {
+    public QueryString readBody() {
         return new QueryString(body);
     }
 
@@ -99,11 +85,25 @@ public class RequestMessage {
         return this.requestLine.getMethod();
     }
 
-    public Header getHeader() {
-        return this.header;
+    public HttpHeaders getHttpHeaders() {
+        return this.httpHeaders;
     }
 
     public Uri getUri() {
         return this.requestLine.getUri();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestMessage that = (RequestMessage) o;
+        return Objects.equals(requestLine, that.requestLine) &&
+                Objects.equals(httpHeaders, that.httpHeaders);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(requestLine, httpHeaders);
     }
 }

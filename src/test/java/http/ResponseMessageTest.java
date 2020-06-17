@@ -26,8 +26,7 @@ class ResponseMessageTest {
         byte[] body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
         ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
         // when
-        responseMessage.response200Header(body.length);
-        responseMessage.responseBody(body);
+        responseMessage.responseWith(HttpStatus.OK, body, ContentType.HTML);
         // then
         logger.debug("response message: {}", output.toString());
     }
@@ -49,8 +48,7 @@ class ResponseMessageTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
         // when
-        responseMessage.response404Header();
-        responseMessage.responseBody("Not Found".getBytes());
+        responseMessage.responseWith(HttpStatus.NOT_FOUND, "Not Found".getBytes(), ContentType.PLAIN);
         // then
         logger.debug("response message: {}", output.toString());
     }
@@ -61,10 +59,10 @@ class ResponseMessageTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
         // when
-        responseMessage.setHeader("Set-Cookie", "logined=true; Path=/");
-        responseMessage.redirectTo("/index.html");
+        responseMessage.setHeader(HttpHeader.SET_COOKIE,"logined=true; Path=/");
+        responseMessage.write(HttpStatus.OK);
         // then
-        assertThat(output.toString()).isEqualTo("HTTP/1.1 302 Redirect\r\n" + "Location: /index.html\r\n" + "Set-Cookie: logined=true; Path=/\r\n" + "\r\n"
+        assertThat(output.toString()).isEqualTo("HTTP/1.1 200 OK\r\n" + "Set-Cookie: logined=true; Path=/\r\n" + "\r\n"
         );
     }
 }

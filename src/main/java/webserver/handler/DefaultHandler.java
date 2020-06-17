@@ -1,9 +1,6 @@
 package webserver.handler;
 
-import http.ContentType;
-import http.RequestMessage;
-import http.ResponseMessage;
-import http.Uri;
+import http.*;
 import org.slf4j.Logger;
 import utils.FileIoUtils;
 
@@ -30,15 +27,12 @@ public class DefaultHandler implements Handler {
         try {
             byte[] body = FileIoUtils.loadFileFromClasspath(ContentType.toRelativePath(uri));
 
-            responseMessage.setHeader("Content-Type", ContentType.toMediaTypeFrom(uri));
-            responseMessage.response200Header(body.length);
-            responseMessage.responseBody(body);
+            responseMessage.responseWith(HttpStatus.OK, body, ContentType.from(uri));
         } catch (Exception e) {
             String reason = uri.getPath() + " is not found";
             byte[] body = reason.getBytes();
 
-            responseMessage.response404Header();
-            responseMessage.responseBody(body);
+            responseMessage.responseWith(HttpStatus.NOT_FOUND, body, ContentType.PLAIN);
         }
     }
 
