@@ -48,61 +48,14 @@ public class RequestHandler implements Runnable {
             Controller controller = RequestMapping.getController(path);
 
             if(controller == null) {
+                if(path.equals("/")) {
+                    path = "/index.html";
+                }
                 httpResponse.forward(path);
             } else {
                 controller.service(httpRequest, httpResponse);
             }
 
-            /*if (path.equals("/user/create")) {
-                User user = new User(
-                                    httpRequest.getParameter("userId"),
-                                    httpRequest.getParameter("password"),
-                                    httpRequest.getParameter("name"),
-                                    httpRequest.getParameter("email"));
-                logger.debug("User : {}", user);
-                DataBase.addUser(user);
-                httpResponse.sendRedirect("/index.html");
-            } else if (path.equals("/user/login")) {
-
-                User user = DataBase.findUserById(httpRequest.getParameter("userId"));
-
-                if (user == null) {
-                    httpResponse.sendRedirect("/user/login_failed.html");
-                    return;
-                }
-
-                if (user.getPassword().equals(httpRequest.getParameter("password"))) {
-                    DataOutputStream dos = new DataOutputStream(out);
-                    httpResponse.addHeader("Set-Cookie","logined=true");
-                    httpResponse.sendRedirect( "/index.html");
-                } else {
-                    httpResponse.forward("/user/login_failed.html");
-                }
-
-            } else if (path.equals("/user/list")) {
-
-                if (!loginCheck(httpRequest.getHeader("Cookie"))) {
-                    httpResponse.sendRedirect("/login.html");
-                    return;
-                }
-
-                TemplateLoader loader = new ClassPathTemplateLoader();
-                loader.setPrefix("/templates");
-                loader.setSuffix(".html");
-                Handlebars handlebars = new Handlebars(loader);
-
-                Template template = handlebars.compile("user/list");
-                Collection<User> users = DataBase.findAll();
-
-                String profilePage = template.apply(users);
-
-                DataOutputStream dos = new DataOutputStream(out);
-                byte[] body = profilePage.getBytes();
-                httpResponse.responseBody(body);
-                httpResponse.forward(httpRequest.getPath());
-            } else {
-                httpResponse.forward(httpRequest.getPath());
-            }*/
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

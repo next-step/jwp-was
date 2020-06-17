@@ -29,6 +29,12 @@ public class HttpResponseTest {
         response.forward("/scripts.js");
     }
 
+    @Test
+    public void responseForward_ttf() throws Exception {
+        HttpResponse response = new HttpResponse(createOutputStream("Http_Forward_FONT.txt"));
+        response.forward("/glyphicons-halflings-regular.woff");
+    }
+
 
     @Test
     public void responseRedirect() throws Exception {

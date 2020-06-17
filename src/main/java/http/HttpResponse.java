@@ -31,7 +31,7 @@ public class HttpResponse {
             if (url.endsWith(".css")) {
                 resourcePath = ContentType.CSS.resourcePath;
                 headers.put("Content-Type", ContentType.CSS.mimeType);
-            }else if (url.endsWith(".ttf")) {
+            }else if (url.endsWith(".ttf") || url.endsWith(".woff")) {
                 resourcePath = ContentType.FONT.resourcePath;
                 headers.put("Content-Type", ContentType.FONT.mimeType);
             } else if (url.endsWith(".js")) {
