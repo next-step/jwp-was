@@ -1,5 +1,6 @@
 package http.response;
 
+import http.cookie.Cookie;
 import http.request.HttpRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -44,12 +45,13 @@ public class HttpResponse {
         metaData.putResponseHeader(LOCATION_HEADER_KEY, location);
     }
 
-    public void addCookie(String key, String value) {
-        metaData.addCookie(key, value);
+    public void addCookie(Cookie cookie) {
+        metaData.addCookie(cookie);
     }
 
     public void setLoginCookie(boolean logined) {
-        addCookie("logined", String.valueOf(logined));
+        Cookie cookie = createLoginCookie(logined);
+        addCookie(cookie);
     }
 
     public void setLoginCookie(boolean logined, String path) {
@@ -58,8 +60,9 @@ public class HttpResponse {
             return;
         }
 
-        addCookie("logined", String.valueOf(logined));
-        addCookie("Path", path);
+        Cookie cookie = createLoginCookie(logined);
+        cookie.setPath(path);
+        addCookie(cookie);
     }
 
     public void updateResponseBodyContent(byte[] responseBody) {
@@ -74,5 +77,9 @@ public class HttpResponse {
         metaData.writeResponseHeaders(dos);
         metaData.writeResponseBody(dos);
         dos.flush();
+    }
+
+    private Cookie createLoginCookie(boolean logined) {
+        return new Cookie("logined", String.valueOf(logined));
     }
 }
