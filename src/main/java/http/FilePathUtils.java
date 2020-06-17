@@ -1,6 +1,5 @@
-package utils;
+package http;
 
-import http.RequestLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

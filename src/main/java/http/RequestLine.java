@@ -77,17 +77,19 @@ public class RequestLine {
         String[] splitByAmpersand = splitByQuestionMark[1].split(AMPERSAND);
         Arrays.stream(splitByAmpersand)
                 .filter(Objects::nonNull)
-                .forEach(query -> {
-                    String[] splitByEqualSign = query.split(EQUAL_SIGN);
-                    if (splitByEqualSign.length < 2) {
-                        return;
-                    }
-
-                    // 같은 파라미터가 여러개 넘어오면 리스트로 넘겨줘야 하나?
-                    queryMap.put(splitByEqualSign[0], splitByEqualSign[1]);
-                });
+                .forEach(query -> putToQueryMap(queryMap, query));
 
         return queryMap;
+    }
+
+    private static void putToQueryMap(QueryMap queryMap, String query) {
+        String[] splitByEqualSign = query.split(EQUAL_SIGN);
+        if (splitByEqualSign.length < 2) {
+            return;
+        }
+
+        // 같은 파라미터가 여러개 넘어오면 리스트로 넘겨줘야 하나?
+        queryMap.put(splitByEqualSign[0], splitByEqualSign[1]);
     }
 
     static class EmptyRequsetLine extends RequestLine {

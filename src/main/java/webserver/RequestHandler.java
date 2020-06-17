@@ -5,7 +5,6 @@ import Controller.ControllerMapper;
 import http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FilePathUtils;
 
 import javax.annotation.Nonnull;
 import java.io.DataOutputStream;
@@ -41,14 +40,11 @@ public class RequestHandler implements Runnable {
 
     @Nonnull
     private HttpResponse makeHttpResponse(@Nonnull HttpRequest httpRequest) {
-        RequestLine requestLine = httpRequest.getRequestLine();
-
         Controller controller = ControllerMapper.getController(httpRequest.getRequestLine().getPath());
         if (controller != null) {
             return controller.service(httpRequest);
         }
 
-        String filePath = FilePathUtils.makeFilePath(requestLine);
-        return HttpResponse.from(filePath, HttpStatus.OK);
+        return HttpResponse.from(httpRequest, HttpStatus.OK);
     }
 }

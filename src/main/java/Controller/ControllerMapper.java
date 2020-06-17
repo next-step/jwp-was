@@ -12,10 +12,6 @@ public class ControllerMapper {
     private static final Map<String, Controller> controllerMap = new ConcurrentHashMap();
 
     static {
-//        controllerMap.put("/user/create", CreateUserController.class);
-//        controllerMap.put("/user/login", LoginUserController.class);
-//        controllerMap.put("/user/list.html", ListUserController.class);
-
         // TODO 이렇게 되면 싱글톤이 되는데 컨트롤러가 상태를 가지게되면 문제가 생길 수 있다. class 넣고 객체 반환으로 고쳐야할 듯
         controllerMap.put("/", new IndexController());
         controllerMap.put("/user/create", new CreateUserController());

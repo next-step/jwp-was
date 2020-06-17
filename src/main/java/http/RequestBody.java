@@ -11,9 +11,11 @@ import static utils.StringConstant.AMPERSAND;
 import static utils.StringConstant.EQUAL_SIGN;
 
 public class RequestBody {
-    private QueryMap queryMap;
+    private final String requestBodyString;
+    private final QueryMap queryMap;
 
-    private RequestBody(QueryMap queryMap) {
+    private RequestBody(String requestBodyString, QueryMap queryMap) {
+        this.requestBodyString = requestBodyString;
         this.queryMap = queryMap;
     }
 
@@ -37,7 +39,11 @@ public class RequestBody {
                     queryMap.put(splitByEqualSign[0], splitByEqualSign[1]);
                 });
 
-        return new RequestBody(queryMap);
+        return new RequestBody(requestBodyString, queryMap);
+    }
+
+    public String getRequestBodyString() {
+        return requestBodyString;
     }
 
     public QueryMap getQueryMap() {
