@@ -1,21 +1,38 @@
 package webserver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.controller.Controller;
+import webserver.controller.LoginController;
+import webserver.controller.UserController;
+import webserver.controller.UserListController;
+import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
+import webserver.response.ResponseHeader;
+
+import java.io.*;
+import java.net.Socket;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private Map<String, Controller> controllers;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
+        this.controllers = initializeController();
+    }
+
+    private Map<String, Controller> initializeController() {
+        Map<String, Controller> controllers = new HashMap<>();
+        controllers.put("/user/create", new UserController());
+        controllers.put("/user/login", new LoginController());
+        controllers.put("/user/list", new UserListController());
+        return controllers;
     }
 
     public void run() {
@@ -23,21 +40,42 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+            HttpRequest httpRequest = HttpRequest.of(br);
+            HttpResponse httpResponse;
+            if (httpRequest.isStaticFileRequest()) {
+                httpResponse = HttpResponse.of(httpRequest);
+                httpResponse.response200();
+            } else {
+                httpResponse = HttpResponse.of();
+                Controller controller = controllers.get(httpRequest.getHost());
+                controller.service(httpRequest, httpResponse);
+            }
+
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            response(dos, httpResponse);
+        } catch (IOException | URISyntaxException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response(DataOutputStream dos, HttpResponse httpResponse) {
+        try {
+            dos.writeBytes(httpResponse.getResponseLine());
+            responseHeader(dos, httpResponse.getResponseHeaders());
+            responseBody(dos, httpResponse.getBody());
+            dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void responseHeader(DataOutputStream dos, Map<String, ResponseHeader> responseHeaders) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            for (String name : responseHeaders.keySet()) {
+                dos.writeBytes(name + ": " + responseHeaders.get(name));
+            }
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
