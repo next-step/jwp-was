@@ -9,7 +9,7 @@ import webserver.DynamicContentsFactory;
 import java.io.IOException;
 import java.util.Collection;
 
-public class UserListHandler implements Handler {
+public class UserListHandler extends AbstractHandler {
 
     private static final UserListHandler INSTANCE = new UserListHandler();
 
@@ -29,10 +29,10 @@ public class UserListHandler implements Handler {
 
             byte[] body = DynamicContentsFactory.createHTML("/user/list", allUsers);
 
-            responseMessage.responseWith(HttpStatus.OK, body, ContentType.HTML);
+            responseMessage.responseWith(HttpStatus.OK, body, ResourceFormat.HTML);
             return;
         }
-        responseMessage.responseResource(ContentType.toRelativePath(Uri.from("/user/login.html")));
+        responseMessage.responseResource(ResourceFormat.toRelativePath(Uri.from("/user/login.html")));
     }
 
     @Override

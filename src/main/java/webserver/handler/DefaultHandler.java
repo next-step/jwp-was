@@ -7,7 +7,7 @@ import utils.FileIoUtils;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class DefaultHandler implements Handler {
+public class DefaultHandler extends AbstractHandler {
 
     private static final Logger logger = getLogger(DefaultHandler.class);
 
@@ -16,7 +16,7 @@ public class DefaultHandler implements Handler {
     private DefaultHandler() {
     }
 
-    public static DefaultHandler getInstance() {
+    public static Handler getInstance() {
         return INSTANCE;
     }
 
@@ -25,14 +25,14 @@ public class DefaultHandler implements Handler {
         Uri uri = requestMessage.getUri();
 
         try {
-            byte[] body = FileIoUtils.loadFileFromClasspath(ContentType.toRelativePath(uri));
+            byte[] body = FileIoUtils.loadFileFromClasspath(ResourceFormat.toRelativePath(uri));
 
-            responseMessage.responseWith(HttpStatus.OK, body, ContentType.from(uri));
+            responseMessage.responseWith(HttpStatus.OK, body, ResourceFormat.from(uri));
         } catch (Exception e) {
             String reason = uri.getPath() + " is not found";
             byte[] body = reason.getBytes();
 
-            responseMessage.responseWith(HttpStatus.NOT_FOUND, body, ContentType.PLAIN);
+            responseMessage.responseWith(HttpStatus.NOT_FOUND, body, ResourceFormat.PLAIN);
         }
     }
 

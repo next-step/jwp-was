@@ -8,6 +8,7 @@ import http.RequestMessage;
 import http.ResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.handler.AbstractHandler;
 import webserver.handler.Handler;
 
 public class RequestHandler implements Runnable {
@@ -27,7 +28,7 @@ public class RequestHandler implements Runnable {
             RequestMessage requestMessage = RequestMessage.from(new BufferedReader(new InputStreamReader(in)));
             ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(out));
             Handler handler = HandlerMapper.getHandler(requestMessage);
-            handler.handle(requestMessage, responseMessage);
+            handler.service(requestMessage, responseMessage);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

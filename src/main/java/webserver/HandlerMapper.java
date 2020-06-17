@@ -14,11 +14,11 @@ public enum HandlerMapper {
     USER_LIST("/user/list", UserListHandler.getInstance());
 
     private final String mappingPath;
-    private final Handler handlerInstance;
+    private final Handler handler;
 
-    HandlerMapper(String mappingPath, Handler handlerInstance) {
+    HandlerMapper(String mappingPath, Handler handler) {
         this.mappingPath = mappingPath;
-        this.handlerInstance = handlerInstance;
+        this.handler = handler;
     }
 
     public static Handler getHandler(RequestMessage requestMessage) {
@@ -26,6 +26,6 @@ public enum HandlerMapper {
         return Arrays.stream(values())
                 .filter(pair -> pair.mappingPath.startsWith(requestPath))
                 .findFirst()
-                .orElseGet(() -> DEFAULT).handlerInstance;
+                .orElseGet(() -> DEFAULT).handler;
     }
 }

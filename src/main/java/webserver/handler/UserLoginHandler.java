@@ -4,7 +4,7 @@ import db.DataBase;
 import http.*;
 import model.User;
 
-public class UserLoginHandler implements Handler {
+public class UserLoginHandler extends AbstractHandler {
 
     private static final UserLoginHandler INSTANCE = new UserLoginHandler();
 
@@ -29,7 +29,7 @@ public class UserLoginHandler implements Handler {
             responseMessage.redirectTo("/index.html");
         } else {
             responseMessage.setHeader(HttpHeader.SET_COOKIE, "logined=false");
-            responseMessage.responseResource(ContentType.toRelativePath(Uri.from("/user/login_failed.html")));
+            responseMessage.responseResource(ResourceFormat.toRelativePath(Uri.from("/user/login_failed.html")));
         }
 
     }
