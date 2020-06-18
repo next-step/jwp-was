@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 
 import static utils.StringConstant.SLASH;
 
-public class HttpProtocol implements Protocol {
+public class HttpProtocol {
     private final String protocol;
     private final String version;
 

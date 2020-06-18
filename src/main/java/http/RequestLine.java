@@ -13,16 +13,13 @@ public class RequestLine {
     private static final int SPLIT_BY_SPACE_COUNT = 3;
     private final Method method;
     private final String path;
-    // TODO HttpProtocol로 고쳐야함
-    private final String protocol;
-    private final String version;
+    private final HttpProtocol httpProtocol;
     private final QueryMap queryMap;
 
-    private RequestLine(Method method, String path, String protocol, String version, QueryMap queryMap) {
+    private RequestLine(Method method, String path, HttpProtocol httpProtocol, QueryMap queryMap) {
         this.method = method;
         this.path = path;
-        this.protocol = protocol;
-        this.version = version;
+        this.httpProtocol = httpProtocol;
         this.queryMap = queryMap;
     }
 
@@ -47,7 +44,7 @@ public class RequestLine {
         String protocol = splitBySlash[0];
         String version = splitBySlash[1];
 
-        return new RequestLine(Method.find(method), makePath(pathWithQueryString), protocol, version, makeQueryMap(pathWithQueryString));
+        return new RequestLine(Method.find(method), makePath(pathWithQueryString), new HttpProtocol(protocol, version), makeQueryMap(pathWithQueryString));
     }
 
     @Nonnull
@@ -94,7 +91,7 @@ public class RequestLine {
 
     static class EmptyRequsetLine extends RequestLine {
         public EmptyRequsetLine() {
-            super(null, EMPTY, EMPTY, EMPTY, null);
+            super(null, EMPTY, new HttpProtocol("", ""), null);
         }
     }
 
@@ -111,10 +108,10 @@ public class RequestLine {
     }
 
     public String getProtocol() {
-        return protocol;
+        return httpProtocol.getProtocol();
     }
 
     public String getVersion() {
-        return version;
+        return httpProtocol.getVersion();
     }
 }

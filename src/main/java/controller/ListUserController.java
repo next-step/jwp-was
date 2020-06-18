@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import db.DataBase;
 import http.HttpRequest;
@@ -16,7 +16,7 @@ public class ListUserController extends AbstractController {
             users.addUseraAll(DataBase.findAll());
 
             String templateViewString = readTemplateView("user/list", users);
-            return HttpResponse.from(templateViewString .getBytes(), HttpStatus.OK);
+            return HttpResponse.from(HttpStatus.OK, templateViewString .getBytes());
         }
 
         return HttpResponse.redirectBy302StatusCode("/user/login.html");

@@ -13,16 +13,14 @@ public class ResponseHeaders {
     private final Map<String, Object> headerMap;
 
     public ResponseHeaders() {
-        this.headerMap = Maps.newHashMap();
+        this.headerMap = Maps.newLinkedHashMap();
     }
 
     @Nonnull
     public String makeHeadersString() {
         final StringBuilder sb = new StringBuilder();
         headerMap.entrySet().stream()
-                .forEach(e -> {
-                    sb.append(e.getKey()).append(": ").append(e.getValue()).append("\r\n");
-                });
+                .forEach(e -> sb.append(e.getKey()).append(": ").append(e.getValue()).append("\r\n"));
 
         return sb.toString();
     }

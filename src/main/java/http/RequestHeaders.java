@@ -6,7 +6,6 @@ import javax.annotation.Nonnull;
 import java.util.Map;
 
 public class RequestHeaders {
-    // TODO 쿠기도 따로 빼야함
     private final Map<String, String> headerMap;
 
     public RequestHeaders() {

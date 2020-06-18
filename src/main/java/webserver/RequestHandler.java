@@ -1,7 +1,7 @@
 package webserver;
 
-import Controller.Controller;
-import Controller.ControllerMapper;
+import controller.Controller;
+import controller.ControllerMapper;
 import http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +40,7 @@ public class RequestHandler implements Runnable {
 
     @Nonnull
     private HttpResponse makeHttpResponse(@Nonnull HttpRequest httpRequest) {
-        Controller controller = ControllerMapper.getController(httpRequest.getRequestLine().getPath());
-        if (controller != null) {
-            return controller.service(httpRequest);
-        }
-
-        return HttpResponse.from(httpRequest, HttpStatus.OK);
+        Controller controller = ControllerMapper.getController(httpRequest.getPath());
+        return controller.service(httpRequest);
     }
 }

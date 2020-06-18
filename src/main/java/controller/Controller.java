@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import http.HttpRequest;
 import http.HttpResponse;

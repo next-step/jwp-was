@@ -1,62 +1,52 @@
 package http;
 
-
-import org.springframework.util.StringUtils;
+import static utils.StringConstant.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static utils.StringConstant.*;
+import org.springframework.util.StringUtils;
 
 public class StatusLine {
     private final HttpProtocol httpProtocol;
     private final String statusCode;
-    private final String reason;
+    private final String reasonPhrase;
 
-    public StatusLine(HttpProtocol httpProtocol, String statusCode, String reason) {
+    public StatusLine(HttpProtocol httpProtocol, String statusCode, String reasonPhrase) {
         this.httpProtocol = httpProtocol;
         this.statusCode = statusCode;
-        this.reason = reason;
+        this.reasonPhrase = reasonPhrase;
     }
 
     @Nonnull
     public static StatusLine from(@Nullable String statusLine) {
         if (StringUtils.isEmpty(statusLine)) {
-            return makeEmptyStatusLine();
+            return makeErrorStatusLine(HttpStatus.BAD_REQUEST);
         }
 
         String[] splitBySpace = statusLine.replaceAll("\r\n", EMPTY).split(SPACE);
         if (splitBySpace.length < 3) {
-            return makeEmptyStatusLine();
+            return makeErrorStatusLine(HttpStatus.BAD_REQUEST);
         }
 
         HttpProtocol httpProtocol = HttpProtocol.from(splitBySpace[0]);
         String statusCode = splitBySpace[1];
-        String reason = splitBySpace[2];
+        String reasonPhrase = splitBySpace[2];
 
-        return new StatusLine(httpProtocol, statusCode, reason);
+        return new StatusLine(httpProtocol, statusCode, reasonPhrase);
+    }
+
+    @Nonnull
+    public static StatusLine makeErrorStatusLine(@Nonnull HttpStatus httpStatus) {
+        String statusCode = Integer.toString(httpStatus.getValue());
+        String reasonPhase = httpStatus.getReasonPhrase();
+        return new StatusLine(new HttpProtocol("HTTP", "1.1"), statusCode, reasonPhase);
     }
 
     @Nonnull
     public String makeStatusLineString() {
         return httpProtocol.getProtocol() + SLASH + httpProtocol.getVersion() + SPACE +
-                statusCode + SPACE + reason + "\r\n";
-
-    }
-
-    public static StatusLine makeEmptyStatusLine() {
-        return new EmptyStatusLine(null, EMPTY, EMPTY);
-    }
-
-    static class EmptyStatusLine extends StatusLine {
-        private EmptyStatusLine(HttpProtocol httpProtocol, String statusCode, String reasonPhrase) {
-            super(httpProtocol, statusCode, reasonPhrase);
-        }
-
-        // TODO 예외 일 때 처리 확인
-        public String makeStatusLineString() {
-            return EMPTY;
-        }
+                statusCode + SPACE + reasonPhrase + "\r\n";
     }
 
     public HttpProtocol getHttpProtocol() {
@@ -67,7 +57,7 @@ public class StatusLine {
         return statusCode;
     }
 
-    public String getReason() {
-        return reason;
+    public String getReasonPhrase() {
+        return reasonPhrase;
     }
 }

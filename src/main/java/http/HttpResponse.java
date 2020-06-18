@@ -17,7 +17,7 @@ public class HttpResponse {
     private HttpResponse(StatusLine statusLine, ResponseHeaders headers, ResponseBody body) {
         // 방어로직
         if (statusLine == null) {
-            statusLine = StatusLine.makeEmptyStatusLine();
+            statusLine = StatusLine.makeErrorStatusLine(HttpStatus.BAD_REQUEST);
         }
 
         if (headers == null) {
@@ -31,19 +31,6 @@ public class HttpResponse {
         this.statusLine = statusLine;
         this.headers = headers;
         this.body = body;
-    }
-
-    @Nonnull
-    public static HttpResponse from2(@Nonnull HttpRequest httpRequest, HttpStatus httpStatus) {
-        String filePath = FilePathUtils.makeFilePath(httpRequest.getRequestLine());
-        MimeType mimeType = MimeTypeUtil.findMimeTypeByPath(httpRequest.getRequestLine().getPath());
-        return from(filePath, httpStatus);
-    }
-
-    @Nonnull
-    public static HttpResponse from(@Nonnull HttpRequest httpRequest, HttpStatus httpStatus) {
-        String filePath = FilePathUtils.makeFilePath(httpRequest.getRequestLine());
-        return from(filePath, httpStatus);
     }
 
     @Nonnull
@@ -61,21 +48,21 @@ public class HttpResponse {
         return new HttpResponse(statusLine, responseHeaders, responseBody);
     }
 
+    @Nonnull
     public static HttpResponse makeErrorResponse() {
         StatusLine statusLine = makeStatusLine(HttpStatus.INTERNAL_SERVER_ERROR);
         return new HttpResponse(statusLine, ResponseHeaders.makeEmptyResponseHeaders(), ResponseBody.makeEmptyResponseBody());
     }
 
+    @Nonnull
     public static HttpResponse makeResponseWithHttpStatus(HttpStatus httpStatus) {
         StatusLine statusLine = makeStatusLine(httpStatus);
         return new HttpResponse(statusLine, ResponseHeaders.makeEmptyResponseHeaders(), ResponseBody.makeEmptyResponseBody());
     }
 
     @Nonnull
-    public static HttpResponse from(byte[] responseBodyByteArray, HttpStatus httpStatus) {
+    public static HttpResponse from(@Nonnull HttpStatus httpStatus, byte[] responseBodyByteArray) {
         StatusLine statusLine = makeStatusLine(httpStatus);
-        // TODO 여기도 contentType 과 length 는 역할을 따로 빼야 할 것 같음.
-
         ResponseHeaders responseHeaders = makeContentHeaders("text/html;charset=utf-8", responseBodyByteArray.length);
         ResponseBody responseBody = new ResponseBody(responseBodyByteArray);
 
@@ -100,14 +87,14 @@ public class HttpResponse {
     }
 
     @Nonnull
-    private static ResponseHeaders makeContentHeaders(String filePath) throws IOException, URISyntaxException {
+    private static ResponseHeaders makeContentHeaders(@Nonnull String filePath) throws IOException, URISyntaxException {
         MimeType mimeType = MimeTypeUtil.findMimeTypeByPath(filePath);
 
         return makeContentHeaders(mimeType.makeContentTypeValue(), FileIoUtils.loadFileFromClasspath(filePath).length);
     }
 
     @Nonnull
-    private static ResponseHeaders makeContentHeaders(String contentType, int contentLength) {
+    private static ResponseHeaders makeContentHeaders(@Nonnull String contentType, int contentLength) {
         ResponseHeaders responseHeaders = new ResponseHeaders();
         responseHeaders.put(ResponseHeaders.CONTENT_TYPE, contentType);
         responseHeaders.put(ResponseHeaders.CONTENT_LENGTH, Integer.toString(contentLength));
@@ -116,7 +103,7 @@ public class HttpResponse {
     }
 
     @Nonnull
-    private static StatusLine makeStatusLine(HttpStatus httpStatus) {
+    private static StatusLine makeStatusLine(@Nonnull HttpStatus httpStatus) {
         String statusCode = Integer.toString(httpStatus.getValue());
         String reasonPhase = httpStatus.getReasonPhrase();
         return new StatusLine(new HttpProtocol("HTTP", "1.1"), statusCode, reasonPhase);
@@ -133,17 +120,6 @@ public class HttpResponse {
                 + new String(body.getMessageBodyByteArray());
 
         return rawResponseString.getBytes();
-    }
-
-    @Nonnull
-    public static HttpResponse makeEmptyHttpResponse() {
-        return new EmptyHttpResponse();
-    }
-
-    static class EmptyHttpResponse extends HttpResponse {
-        private EmptyHttpResponse() {
-            super(StatusLine.makeEmptyStatusLine(), ResponseHeaders.makeEmptyResponseHeaders(), null);
-        }
     }
 
     public StatusLine getStatusLine() {

@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import db.DataBase;
 import http.HttpRequest;

@@ -53,7 +53,6 @@ public class HttpRequest {
             requestHeaders.putWithValueTrim(splitByColon[0], splitByColon[1]);
         }
 
-        // TODO 모든 헤더의 값들은 enum으로 빼야함.
         int contentLengthValue = Integer.parseInt(requestHeaders.getOrDefault("Content-Length", "0"));
         String requestBodyString = IOUtils.readData(bufferedReader, contentLengthValue);
         RequestBody requestBody = RequestBody.from(requestBodyString);
@@ -90,6 +89,10 @@ public class HttpRequest {
 
     public boolean isPostMethod() {
         return Method.POST.equals(requestLine.getMethod());
+    }
+
+    public String getPath() {
+        return requestLine.getPath();
     }
 
     @Nonnull

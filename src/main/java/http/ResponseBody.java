@@ -3,7 +3,6 @@ package http;
 import javax.annotation.Nonnull;
 
 public class ResponseBody {
-    // TODO byte? string?
     private byte[] messageBodyByteArray;
 
     public ResponseBody(byte[] messageBodyByteArray) {

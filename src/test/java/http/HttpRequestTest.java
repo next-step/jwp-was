@@ -44,7 +44,6 @@ class HttpRequestTest {
     void new_httpRequest() throws IOException {
         // given
         String keepAlive = "keep-alive";
-        String bodyString = "bodyString";
         String rawRequestString = "GET / HTTP/1.1\n" +
                 "Host: 127.0.0.1:8080\n" +
                 "Connection: " + keepAlive + "\n" +

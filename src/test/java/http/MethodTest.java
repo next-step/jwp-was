@@ -8,7 +8,7 @@ class MethodTest {
     private Method sut;
 
     @Test
-    public void test_find() {
+    public void find() {
         // given
         String method = "get";
 

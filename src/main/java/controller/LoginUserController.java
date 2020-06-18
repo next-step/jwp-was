@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import com.google.common.collect.Maps;
 import http.HttpRequest;

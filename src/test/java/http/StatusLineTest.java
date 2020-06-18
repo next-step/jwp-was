@@ -13,9 +13,9 @@ class StatusLineTest {
         String protocol = "HTTP";
         String version = "1.1";
         String statusCode = "200";
-        String reason = "OK";
+        String reasonPhrase = "OK";
 
-        String rawStatusLine = protocol + "/" + version + " " + statusCode + " " + reason + "\r\n";
+        String rawStatusLine = protocol + "/" + version + " " + statusCode + " " + reasonPhrase + "\r\n";
 
         // when
         StatusLine statusLine = sut.from(rawStatusLine);
@@ -25,19 +25,20 @@ class StatusLineTest {
         assertThat(statusLine.getHttpProtocol().getProtocol()).isEqualTo(protocol);
         assertThat(statusLine.getHttpProtocol().getVersion()).isEqualTo(version);
         assertThat(statusLine.getStatusCode()).isEqualTo(statusCode);
-        assertThat(statusLine.getReason()).isEqualTo(reason);
+        assertThat(statusLine.getReasonPhrase()).isEqualTo(reasonPhrase);
     }
 
     @Test
     void new_statusLine_isEmpty() {
         // given
-        String statusLine = "";
+        String statusLineString = "";
 
         // when
-        StatusLine sta = sut.from(statusLine);
+        StatusLine statusLine = sut.from(statusLineString);
 
         // then
-        assertThat(sta).extracting("class").isEqualTo(StatusLine.EmptyStatusLine.class);
+        assertThat(statusLine.getStatusCode()).isEqualTo(Integer.toString(HttpStatus.BAD_REQUEST.getValue()));
+        assertThat(statusLine.getReasonPhrase()).isEqualTo(HttpStatus.BAD_REQUEST.getReasonPhrase());
     }
 
 }
