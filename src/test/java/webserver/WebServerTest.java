@@ -38,7 +38,7 @@ public class WebServerTest {
     void aleadyUsingPort() {
         final String[] args = new String[]{};
 
-        runServer(args);
+        ServerExecutor.execute(args);
         final Throwable thrown = catchThrowable(() -> WebServer.main(args));
 
         assertThat(thrown)
@@ -52,7 +52,7 @@ public class WebServerTest {
         final String resourceUrl = "http://localhost:8080/index.html";
         final String[] args = new String[]{};
 
-        runServer(args);
+        ServerExecutor.execute(args);
         final ResponseEntity<String> response = request(resourceUrl);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -70,7 +70,7 @@ public class WebServerTest {
         final int requestCount = 10; // WebServer의 MAXIMUM_POOL_SIZE + MAXIMUM_QUEUE_SIZE
         final String[] args = new String[]{};
 
-        runServer(args);
+        ServerExecutor.execute(args);
         final int responsedCount = request(resourceUrl, requestCount);
 
         assertThat(responsedCount).isEqualTo(requestCount);
@@ -83,32 +83,10 @@ public class WebServerTest {
         final int requestCount = 15; // WebServer의 MAXIMUM_POOL_SIZE + MAXIMUM_QUEUE_SIZE + 5
         final String[] args = new String[]{};
 
-        runServer(args);
+        ServerExecutor.execute(args);
         final int responsedCount = request(resourceUrl, requestCount);
 
         assertThat(responsedCount).isLessThan(requestCount);
-    }
-
-    private void runServer(String[] args) {
-        ExecutorService es = Executors.newSingleThreadExecutor();
-        es.execute(() -> {
-            try {
-                WebServer.main(args);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException ignored) {
-            ignored.printStackTrace();
-        }
-        try {
-            es.awaitTermination(5, TimeUnit.SECONDS);
-        } catch (InterruptedException ignored) {
-            ignored.printStackTrace();
-        }
     }
 
     private int request(String resourceUrl, int requestCount) {
