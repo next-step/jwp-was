@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.BindException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -13,8 +14,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 public class WebServerTest {
+
+    @Test
+    @DisplayName("서버를 실행할 때 해당 포트를 이미 사용중인 경우 예외를 알려준다")
+    void aleadyUsingPort() {
+        final String[] args = new String[]{};
+
+        runServer();
+        final Throwable thrown = catchThrowable(() -> WebServer.main(args));
+
+        assertThat(thrown)
+                .isInstanceOf(BindException.class)
+                .hasMessageContaining("Address already in use (Bind failed)");
+    }
 
     @Test
     @DisplayName("서버에서 리소스를 정상적으로 가져올 수 있다")
