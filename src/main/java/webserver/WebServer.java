@@ -23,7 +23,6 @@ public class WebServer {
             logger.info("Web Application Server started {} port.", port);
 
             // 클라이언트가 연결될때까지 대기한다.
-            HttpSessionHandler.run();
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
                 Thread thread = new Thread(new RequestHandler(connection));
