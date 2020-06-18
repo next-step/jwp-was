@@ -5,15 +5,14 @@ import java.util.Map;
 
 public class Cookies {
 
-    private Map<String, String> cookieMap;
+    private final Map<String, String> cookieMap;
 
     public Cookies() {
         cookieMap = new HashMap<>();
     }
 
     public Cookies(Map<String, String> cookieMap) {
-        this.cookieMap = cookieMap;
-        if (cookieMap == null) cookieMap = new HashMap<>();
+        this.cookieMap = cookieMap != null ? cookieMap : new HashMap<>();
     }
 
     public String getCookie(String key) {

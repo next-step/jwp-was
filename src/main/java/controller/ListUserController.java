@@ -1,6 +1,6 @@
 package controller;
 
-import http.TemplateLoader;
+import http.CustomTemplateLoader;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import model.User;
@@ -17,7 +17,7 @@ public class ListUserController extends AbstractController {
         String cookie = request.getHeader("Cookie");
         if (cookie.contains("logined=true")) {
             User user = new User("javajigi", "password", "자바지기", "javajigi@gmail.com");
-            TemplateLoader<User> loader = new TemplateLoader("user/list");
+            CustomTemplateLoader<User> loader = new CustomTemplateLoader("user/list");
 
             String profilePage = loader.applyTemplate(user);
 

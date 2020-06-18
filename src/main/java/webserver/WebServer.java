@@ -5,10 +5,14 @@ import org.slf4j.LoggerFactory;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
+    private static final int REQUEST_QUEUE_CAPACITY = 100;
 
     public static void main(String args[]) throws Exception {
         int port = 0;
@@ -24,11 +28,12 @@ public class WebServer {
         try (ServerSocket listenSocket = new ServerSocket(port)) {
             logger.info("Web Application Server started {} port.", port);
 
-            // 클라이언트가 연결될때까지 대기한다.
+            LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<>(REQUEST_QUEUE_CAPACITY);
+            ThreadPoolExecutor executorService = new ThreadPoolExecutor(250, 250, 1, TimeUnit.MINUTES, queue);
+
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection));
-                thread.start();
+                executorService.execute(new RequestHandler(connection));
             }
         }
     }
