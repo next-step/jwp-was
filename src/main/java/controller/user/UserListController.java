@@ -21,7 +21,7 @@ public class UserListController extends AbstractController {
     @Override
     public void service(HttpRequest request, HttpResponse response) throws IOException {
         if (!loginCheck(request.getHeader("Cookie"))) {
-            response.sendRedirect("/login.html");
+            response.sendRedirect("/user/login.html");
             return;
         }
 
@@ -36,8 +36,9 @@ public class UserListController extends AbstractController {
         String profilePage = template.apply(users);
 
         byte[] body = profilePage.getBytes();
-        response.responseBody(body);
-        response.forward(request.getPath());
+
+        response.responseTemplateBody(body);
+        //response.forward(request.getPath());
     }
 
     @Override

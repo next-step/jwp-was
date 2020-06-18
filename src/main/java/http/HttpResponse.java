@@ -92,6 +92,12 @@ public class HttpResponse {
         }
     }
 
+    public void responseTemplateBody(byte[] body) {
+        headers.put("Content-Length", body.length + "");
+        response200Header();
+        responseBody(body);
+    }
+
     public void addHeader(String key, String value) {
         headers.put(key, value);
     }
