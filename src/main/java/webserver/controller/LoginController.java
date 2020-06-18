@@ -7,16 +7,15 @@ import webserver.request.HttpRequest;
 import webserver.request.RequestBody;
 import webserver.response.HttpResponse;
 
-public class LoginController implements Controller {
+public class LoginController extends AbstractController {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
-        if (request.isPost()) {
-            doPost(request, response);
-        }
+    protected void doGet(HttpRequest request, HttpResponse response) {
+
     }
 
-    private void doPost(HttpRequest request, HttpResponse response) {
+    @Override
+    protected void doPost(HttpRequest request, HttpResponse response) {
         RequestBody requestBody = request.getRequestBody();
         String userId = requestBody.get("userId");
         String password = requestBody.get("password");

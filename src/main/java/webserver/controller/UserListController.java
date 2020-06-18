@@ -7,23 +7,12 @@ import webserver.request.HttpRequest;
 import webserver.request.RequestHeaders;
 import webserver.response.HttpResponse;
 
-import java.io.IOException;
 import java.util.Collection;
 
-public class UserListController implements Controller {
+public class UserListController extends AbstractController {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
-        if (request.isGet()) {
-            try {
-                doGet(request, response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void doGet(HttpRequest request, HttpResponse response) throws IOException {
+    protected void doGet(HttpRequest request, HttpResponse response) {
         RequestHeaders requestHeaders = request.getRequestHeaders();
         String cookie = requestHeaders.get("Cookie");
         if (StringUtils.isNotBlank(cookie) && cookie.contains("logined=true")) {
@@ -34,5 +23,10 @@ public class UserListController implements Controller {
         }
         String location = "http://" + request.getRequestHeaders().get("Host") + "/user/login.html";
         response.response302(location);
+    }
+
+    @Override
+    protected void doPost(HttpRequest request, HttpResponse response) {
+
     }
 }

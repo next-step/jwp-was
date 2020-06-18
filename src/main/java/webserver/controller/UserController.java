@@ -8,19 +8,10 @@ import webserver.response.HttpResponse;
 
 import java.util.Map;
 
-public class UserController implements Controller {
+public class UserController extends AbstractController {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
-        if (request.isGet()) {
-            doGet(request, response);
-        }
-        if (request.isPost()) {
-            doPost(request, response);
-        }
-    }
-
-    private void doGet(HttpRequest request, HttpResponse response) {
+    protected void doGet(HttpRequest request, HttpResponse response) {
         Map<String, String> queryParameters = request.getRequestLine().getQueryParameters();
         String userId = queryParameters.get("userId");
         String password = queryParameters.get("password");
@@ -33,7 +24,8 @@ public class UserController implements Controller {
         response.response200();
     }
 
-    private void doPost(HttpRequest request, HttpResponse response) {
+    @Override
+    protected void doPost(HttpRequest request, HttpResponse response) {
         RequestBody requestBody = request.getRequestBody();
         String userId = requestBody.get("userId");
         String password = requestBody.get("password");

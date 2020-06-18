@@ -5,6 +5,8 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.request.HttpRequest;
 
 import java.io.IOException;
@@ -15,6 +17,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class HttpResponse {
+
+    private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
 
     private ResponseLine responseLine;
     private ResponseHeaders responseHeaders;
@@ -69,17 +73,21 @@ public class HttpResponse {
         responseHeaders.addHeader("Set-Cookie", value, "Path=/");
     }
 
-    public void addBody(Collection<User> users) throws IOException {
+    public void addBody(Collection<User> users) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("users", users);
+
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix("/templates");
         loader.setSuffix(".html");
         Handlebars handlebars = new Handlebars(loader);
-
-        Template template = handlebars.compile("user/list");
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("users", users);
-        String userListPage = template.apply(model);
-        responseBody.addFile(userListPage.getBytes());
+        String userListPage;
+        try {
+            Template template = handlebars.compile("user/list");
+            userListPage = template.apply(model);
+            responseBody.addFile(userListPage.getBytes());
+        } catch (Exception e) {
+            log.debug("handlebars error : {}", e.getMessage());
+        }
     }
 }
