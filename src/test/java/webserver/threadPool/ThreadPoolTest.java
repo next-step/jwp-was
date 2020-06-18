@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import webserver.ServerExecutor;
+import webserver.WebServerExecutor;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,7 +30,7 @@ public class ThreadPoolTest {
         final String[] args = new String[]{String.valueOf(port), null, String.valueOf(maximumPoolSize), null, String.valueOf(maximumQueueSize)};
 
         // when
-        ServerExecutor.execute(args);
+        WebServerExecutor.execute(args);
         final int responsedCount = request(resourceUrl, requestCount);
 
         // then
@@ -50,7 +50,7 @@ public class ThreadPoolTest {
         final String[] args = new String[]{String.valueOf(port), null, String.valueOf(maximumPoolSize), null, String.valueOf(maximumQueueSize)};
 
         // when
-        ServerExecutor.execute(args);
+        WebServerExecutor.execute(args);
         final int responsedCount = request(resourceUrl, requestCount);
 
         // then

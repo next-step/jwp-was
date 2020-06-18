@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 *    테스트 코드에서 서버를 띄워둘 필요가 있을 때 사용한다.
 *    메인 스레드는 WAIT_MS 밀리초 대기한 후에 리턴한다.
 */
-public class ServerExecutor {
+public class WebServerExecutor {
 
     private final static long WAIT_MS = 3000;
 
