@@ -21,12 +21,13 @@ public class ThreadPoolTest {
     @DisplayName("동시에 요청한 사용자 수가 쓰레드풀 사이즈, 대기열 사이즈를 합한 것과 같을 경우 모든 요청에 정상적으로 응답한다")
     void requestMaximum() {
         // given
+        final int port = 8081;
         final int maximumPoolSize = 5;
         final int maximumQueueSize = 5;
         final int requestCount = maximumPoolSize + maximumQueueSize;
 
-        final String resourceUrl = "http://localhost:8080/index.html";
-        final String[] args = new String[]{"8080", null, String.valueOf(maximumPoolSize), null, String.valueOf(maximumQueueSize)};
+        final String resourceUrl = "http://localhost:" + port + "/index.html";
+        final String[] args = new String[]{String.valueOf(port), null, String.valueOf(maximumPoolSize), null, String.valueOf(maximumQueueSize)};
 
         // when
         ServerExecutor.execute(args);
@@ -40,12 +41,13 @@ public class ThreadPoolTest {
     @DisplayName("동시에 요청한 사용자 수가 쓰레드풀 사이즈, 대기열 사이즈를 합한 것보다 클 경우 요청 중 일부는 응답을 받지 못한다")
     void requestExceedMaximum() {
         // given
+        final int port = 8082;
         final int maximumPoolSize = 5;
         final int maximumQueueSize = 5;
         final int requestCount = 5 + maximumPoolSize + maximumQueueSize;
 
-        final String resourceUrl = "http://localhost:8080/index.html";
-        final String[] args = new String[]{};
+        final String resourceUrl = "http://localhost:" + port + "/index.html";
+        final String[] args = new String[]{String.valueOf(port), null, String.valueOf(maximumPoolSize), null, String.valueOf(maximumQueueSize)};
 
         // when
         ServerExecutor.execute(args);

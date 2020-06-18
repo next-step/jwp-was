@@ -28,7 +28,7 @@ public class WebServerTest {
     @Test
     @DisplayName("서버를 실행할 때 해당 포트를 이미 사용중인 경우 예외를 던진다")
     void aleadyUsingPort() {
-        final String[] args = new String[]{};
+        final String[] args = new String[]{"8085"};
 
         ServerExecutor.execute(args);
         final Throwable thrown = catchThrowable(() -> WebServer.main(args));

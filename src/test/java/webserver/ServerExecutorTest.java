@@ -11,7 +11,7 @@ public class ServerExecutorTest {
     @Test
     @DisplayName("서버를 정상적으로 실행할 수 있다")
     void runServer() {
-        final String[] args = new String[]{};
+        final String[] args = new String[]{"8083"};
         ServerExecutor.execute(args);
     }
 
