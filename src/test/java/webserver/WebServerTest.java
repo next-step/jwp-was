@@ -23,7 +23,7 @@ public class WebServerTest {
     @DisplayName("서버를 실행할 때 포트가 사용 가능한 범위를 벗어난 경우 예외를 던진다")
     @ParameterizedTest
     @ValueSource(strings = {"-1","65536"})
-    void asdasd(String port) {
+    void portOutOfRange(String port) {
         final String[] args = {port};
 
         final Throwable thrown = catchThrowable(() -> WebServer.main(args));
