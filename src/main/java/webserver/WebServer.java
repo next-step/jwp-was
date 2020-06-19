@@ -2,6 +2,7 @@ package webserver;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.*;
 
 import http.session.HttpSessionHandler;
 import org.slf4j.Logger;
@@ -22,13 +23,16 @@ public class WebServer {
         try (ServerSocket listenSocket = new ServerSocket(port)) {
             logger.info("Web Application Server started {} port.", port);
 
+            LinkedBlockingDeque<Runnable> queue = new LinkedBlockingDeque<>(100);
+            ExecutorService executorService = new ThreadPoolExecutor(250, 250, 0L, TimeUnit.MILLISECONDS, queue);
+
             // 클라이언트가 연결될때까지 대기한다.
-            HttpSessionHandler.run();
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection));
-                thread.start();
+                executorService.execute(new RequestHandler(connection));
             }
+            executorService.shutdown();
+            executorService.awaitTermination(100, TimeUnit.SECONDS);
         }
     }
 }
