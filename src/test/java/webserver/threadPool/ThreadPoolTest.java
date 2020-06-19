@@ -4,8 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 import testUtils.PortNumberProvider;
+import testUtils.Request;
 import webserver.WebServerExecutor;
 
 import java.util.concurrent.ExecutorService;
@@ -65,7 +65,7 @@ public class ThreadPoolTest {
 
         IntStream.rangeClosed(1, requestCount).forEach(x -> {
             es.execute(() -> {
-                ResponseEntity<String> response = request(resourceUrl);
+                ResponseEntity<String> response = Request.get(resourceUrl);
                 if (response.getStatusCode() == HttpStatus.OK) {
                     counter.getAndIncrement();
                 }
@@ -80,11 +80,6 @@ public class ThreadPoolTest {
             e.printStackTrace();
         }
         return counter.get();
-    }
-
-    private ResponseEntity<String> request(String resourceUrl) {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForEntity(resourceUrl, String.class);
     }
 
 }
