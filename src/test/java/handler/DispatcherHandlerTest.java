@@ -1,18 +1,17 @@
-package webserver;
+package handler;
 
-import http.HttpHeaders;
-import http.RequestLine;
-import http.RequestMessage;
+import http.common.HttpHeaders;
+import http.request.RequestLine;
+import http.request.RequestMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.handler.*;
 
 
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HandlerMapperTest {
+public class DispatcherHandlerTest {
 
     @DisplayName("/user/create uri로 회원가입 핸들러 얻기")
     @Test
@@ -23,7 +22,7 @@ public class HandlerMapperTest {
                 new HttpHeaders(Collections.emptyList())
         );
         // when
-        Handler handler = HandlerMapper.getHandler(request);
+        Handler handler = DispatcherHandler.getInstance().getHandler(request);
         // then
         assertThat(handler).isInstanceOf(UserCreateHandler.class);
     }
@@ -37,7 +36,7 @@ public class HandlerMapperTest {
                 new HttpHeaders(Collections.emptyList())
         );
         // when
-        Handler handler = HandlerMapper.getHandler(request);
+        Handler handler = DispatcherHandler.getInstance().getHandler(request);
         // then
         assertThat(handler).isInstanceOf(UserLoginHandler.class);
     }
@@ -51,7 +50,7 @@ public class HandlerMapperTest {
                 new HttpHeaders(Collections.emptyList())
         );
         // when
-        Handler handler = HandlerMapper.getHandler(request);
+        Handler handler = DispatcherHandler.getInstance().getHandler(request);
         // then
         assertThat(handler).isInstanceOf(UserListHandler.class);
     }
@@ -65,7 +64,7 @@ public class HandlerMapperTest {
                 new HttpHeaders(Collections.emptyList())
         );
         // when
-        Handler handler = HandlerMapper.getHandler(request);
+        Handler handler = DispatcherHandler.getInstance().getHandler(request);
         // then
         assertThat(handler).isInstanceOf(DefaultHandler.class);
     }

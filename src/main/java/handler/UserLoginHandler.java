@@ -1,8 +1,17 @@
-package webserver.handler;
+package handler;
 
 import db.DataBase;
-import http.*;
+import http.common.HttpHeader;
+import http.request.QueryString;
+import http.request.RequestMessage;
+import http.response.ContentType;
+import http.response.HttpStatus;
+import http.response.ResponseMessage;
 import model.User;
+import webserver.StaticResourceLoader;
+
+
+import java.io.IOException;
 
 public class UserLoginHandler extends AbstractHandler {
 
@@ -20,7 +29,7 @@ public class UserLoginHandler extends AbstractHandler {
     }
 
     @Override
-    public void doPost(RequestMessage requestMessage, ResponseMessage responseMessage) {
+    public void doPost(RequestMessage requestMessage, ResponseMessage responseMessage) throws IOException {
         QueryString requestBody = requestMessage.readBody();
         User loginUser = DataBase.findUserById(requestBody.getFirstParameter("userId"));
 
@@ -28,8 +37,10 @@ public class UserLoginHandler extends AbstractHandler {
             responseMessage.setHeader(HttpHeader.SET_COOKIE, "logined=true; Path=/");
             responseMessage.redirectTo("/index.html");
         } else {
+            byte[] body = StaticResourceLoader.loadResource("/user/login_failed.html");
+
             responseMessage.setHeader(HttpHeader.SET_COOKIE, "logined=false");
-            responseMessage.responseResource(ResourceFormat.toRelativePath(Uri.from("/user/login_failed.html")));
+            responseMessage.responseWith(HttpStatus.OK, body, ContentType.HTML);
         }
 
     }

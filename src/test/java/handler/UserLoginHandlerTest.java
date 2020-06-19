@@ -1,10 +1,10 @@
-package webserver.handler;
+package handler;
 
 import db.DataBase;
-import http.HttpHeaders;
-import http.RequestLine;
-import http.RequestMessage;
-import http.ResponseMessage;
+import http.common.HttpHeaders;
+import http.request.RequestLine;
+import http.request.RequestMessage;
+import http.response.ResponseMessage;
 import model.User;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -47,7 +47,7 @@ class UserLoginHandlerTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
         // when
-        UserLoginHandler.getInstance().handle(requestMessage, responseMessage);
+        UserLoginHandler.getInstance().service(requestMessage, responseMessage);
         // then
         String result = output.toString();
         assertThat(result).startsWith("HTTP/1.1 302 Found\r\n").contains("Location: /index.html\r\n",
@@ -68,7 +68,7 @@ class UserLoginHandlerTest {
         ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
         byte[] loginFailTemplate = FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html");
         // when
-        UserLoginHandler.getInstance().handle(requestMessage, responseMessage);
+        UserLoginHandler.getInstance().service(requestMessage, responseMessage);
         // then
         byte[] result = output.toByteArray();
         assertThat(result).contains(loginFailTemplate);
@@ -88,7 +88,7 @@ class UserLoginHandlerTest {
         ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
         byte[] loginFailTemplate = FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html");
         // when
-        UserLoginHandler.getInstance().handle(requestMessage, responseMessage);
+        UserLoginHandler.getInstance().service(requestMessage, responseMessage);
         // then
         byte[] result = output.toByteArray();
         assertThat(result).contains(loginFailTemplate);

@@ -1,7 +1,7 @@
-package webserver.handler;
+package handler;
 
-import http.RequestMessage;
-import http.ResponseMessage;
+import http.request.RequestMessage;
+import http.response.ResponseMessage;
 
 
 import java.io.IOException;

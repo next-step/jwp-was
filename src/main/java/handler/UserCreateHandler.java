@@ -1,10 +1,10 @@
-package webserver.handler;
+package handler;
 
 import db.DataBase;
-import http.ResourceFormat;
-import http.HttpStatus;
-import http.RequestMessage;
-import http.ResponseMessage;
+import http.response.ContentType;
+import http.response.HttpStatus;
+import http.request.RequestMessage;
+import http.response.ResponseMessage;
 import model.User;
 
 public class UserCreateHandler extends AbstractHandler {
@@ -23,7 +23,7 @@ public class UserCreateHandler extends AbstractHandler {
         User user = new User(requestMessage.getQueryString());
         byte[] body = user.toString().getBytes();
 
-        responseMessage.responseWith(HttpStatus.OK, body, ResourceFormat.PLAIN);
+        responseMessage.responseWith(HttpStatus.OK, body, ContentType.PLAIN);
     }
 
     @Override

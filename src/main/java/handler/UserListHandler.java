@@ -1,9 +1,14 @@
-package webserver.handler;
+package handler;
 
 import db.DataBase;
-import http.*;
+import http.common.HttpHeaders;
+import http.request.RequestMessage;
+import http.response.ContentType;
+import http.response.HttpStatus;
+import http.response.ResponseMessage;
 import model.User;
 import webserver.DynamicContentsFactory;
+import webserver.StaticResourceLoader;
 
 
 import java.io.IOException;
@@ -29,10 +34,12 @@ public class UserListHandler extends AbstractHandler {
 
             byte[] body = DynamicContentsFactory.createHTML("/user/list", allUsers);
 
-            responseMessage.responseWith(HttpStatus.OK, body, ResourceFormat.HTML);
+            responseMessage.responseWith(HttpStatus.OK, body, ContentType.HTML);
             return;
         }
-        responseMessage.responseResource(ResourceFormat.toRelativePath(Uri.from("/user/login.html")));
+
+        byte[] body = StaticResourceLoader.loadResource("/user/login.html");
+        responseMessage.responseWith(HttpStatus.OK, body, ContentType.HTML);
     }
 
     @Override

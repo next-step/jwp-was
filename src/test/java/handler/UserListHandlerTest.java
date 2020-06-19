@@ -1,10 +1,10 @@
-package webserver.handler;
+package handler;
 
 import db.DataBase;
-import http.HttpHeaders;
-import http.RequestLine;
-import http.RequestMessage;
-import http.ResponseMessage;
+import http.common.HttpHeaders;
+import http.request.RequestLine;
+import http.request.RequestMessage;
+import http.response.ResponseMessage;
 import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +58,7 @@ class UserListHandlerTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
         // when
-        UserListHandler.getInstance().handle(requestMessage, responseMessage);
+        UserListHandler.getInstance().service(requestMessage, responseMessage);
         // then
         String result = output.toString();
         assertThat(result).contains(MessageFormat.format("<td>{0}</td> <td>{1}</td> <td>{2}</td>", first.getUserId(), first.getName(), first.getEmail()));
@@ -79,7 +79,7 @@ class UserListHandlerTest {
 
         byte[] loginTemplate = FileIoUtils.loadFileFromClasspath("./templates/user/login.html");
         // when
-        UserListHandler.getInstance().handle(requestMessage, responseMessage);
+        UserListHandler.getInstance().service(requestMessage, responseMessage);
         // then
         byte[] result = output.toByteArray();
         assertThat(result).contains(loginTemplate);

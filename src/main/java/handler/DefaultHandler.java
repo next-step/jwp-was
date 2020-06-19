@@ -1,8 +1,12 @@
-package webserver.handler;
+package handler;
 
-import http.*;
+import http.request.RequestMessage;
+import http.request.Uri;
+import http.response.ContentType;
+import http.response.HttpStatus;
+import http.response.ResponseMessage;
 import org.slf4j.Logger;
-import utils.FileIoUtils;
+import webserver.StaticResourceLoader;
 
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -25,14 +29,14 @@ public class DefaultHandler extends AbstractHandler {
         Uri uri = requestMessage.getUri();
 
         try {
-            byte[] body = FileIoUtils.loadFileFromClasspath(ResourceFormat.toRelativePath(uri));
+            byte[] body = StaticResourceLoader.loadResource(uri.getPath());
 
-            responseMessage.responseWith(HttpStatus.OK, body, ResourceFormat.from(uri));
+            responseMessage.responseWith(HttpStatus.OK, body, ContentType.from(uri.getExtension()));
         } catch (Exception e) {
             String reason = uri.getPath() + " is not found";
             byte[] body = reason.getBytes();
 
-            responseMessage.responseWith(HttpStatus.NOT_FOUND, body, ResourceFormat.PLAIN);
+            responseMessage.responseWith(HttpStatus.NOT_FOUND, body, ContentType.PLAIN);
         }
     }
 
