@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import testUtils.PortNumberProvider;
 
 import java.net.BindException;
 
@@ -28,7 +29,8 @@ public class WebServerIllegarArgumentTest {
     @Test
     @DisplayName("서버를 실행할 때 해당 포트를 이미 사용중인 경우 예외를 던진다")
     void aleadyUsingPort() {
-        final String[] args = new String[]{"8085"};
+        final String port = PortNumberProvider.fetchPortNumberStr();
+        final String[] args = new String[]{port};
 
         WebServerExecutor.execute(args);
         final Throwable thrown = catchThrowable(() -> WebServer.main(args));
