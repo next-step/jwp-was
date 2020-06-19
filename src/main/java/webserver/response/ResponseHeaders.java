@@ -2,23 +2,37 @@ package webserver.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ResponseHeaders {
 
-    private Map<String, ResponseHeader> responseHeaders;
+    private static final Logger log = LoggerFactory.getLogger(ResponseHeaders.class);
 
-    public static ResponseHeaders of() {
-        Map<String, ResponseHeader> responseHeaders = new HashMap<>();
-        return new ResponseHeaders(responseHeaders);
-    }
+    private Map<String, ResponseHeader> responseHeaders = new HashMap<>();
 
     public void addHeader(String name, String... values) {
         ResponseHeader responseHeader = ResponseHeader.of(name, values);
         responseHeaders.put(name, responseHeader);
+    }
+
+    public void response(DataOutputStream dos) {
+        try {
+            for (String name : responseHeaders.keySet()) {
+                dos.writeBytes(name + ": " + responseHeaders.get(name));
+            }
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
     }
 }

@@ -10,25 +10,26 @@ import webserver.response.HttpResponse;
 public class LoginController extends AbstractController {
 
     @Override
-    protected void doGet(HttpRequest request, HttpResponse response) {
-
+    protected ModelAndView doGet(HttpRequest request, HttpResponse response) {
+        return new ModelAndView();
     }
 
     @Override
-    protected void doPost(HttpRequest request, HttpResponse response) {
+    protected ModelAndView doPost(HttpRequest request, HttpResponse response) {
+        ModelAndView mav = new ModelAndView();
         RequestBody requestBody = request.getRequestBody();
         String userId = requestBody.get("userId");
         String password = requestBody.get("password");
         User user = DataBase.findUserById(userId)
                 .orElseThrow(NotFoundUserException::new);
+
         if (!user.isEqual(password)) {
             response.addCookie("logined=false");
-            String location = "http://" + request.getRequestHeaders().get("Host") + "/user/login_failed.html";
-            response.response302(location);
-            return;
+            mav.setView("redirect:/user/login_failed.html");
+            return mav;
         }
         response.addCookie("logined=true");
-        String location = "http://" + request.getRequestHeaders().get("Host") + "/index.html";
-        response.response302(location);
+        mav.setView("redirect:/index.html");
+        return mav;
     }
 }

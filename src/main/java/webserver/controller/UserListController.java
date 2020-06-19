@@ -12,21 +12,22 @@ import java.util.Collection;
 public class UserListController extends AbstractController {
 
     @Override
-    protected void doGet(HttpRequest request, HttpResponse response) {
+    protected ModelAndView doGet(HttpRequest request, HttpResponse response) {
+        ModelAndView mav = new ModelAndView();
         RequestHeaders requestHeaders = request.getRequestHeaders();
         String cookie = requestHeaders.get("Cookie");
         if (StringUtils.isNotBlank(cookie) && cookie.contains("logined=true")) {
             Collection<User> users = DataBase.findAll();
-            response.addBody(users);
-            response.response200();
-            return;
+            mav.addModel("users", users);
+            mav.setView("/user/list.html");
+            return mav;
         }
-        String location = "http://" + request.getRequestHeaders().get("Host") + "/user/login.html";
-        response.response302(location);
+        mav.setView("redirect:/user/login.html");
+        return mav;
     }
 
     @Override
-    protected void doPost(HttpRequest request, HttpResponse response) {
-
+    protected ModelAndView doPost(HttpRequest request, HttpResponse response) {
+        return new ModelAndView();
     }
 }

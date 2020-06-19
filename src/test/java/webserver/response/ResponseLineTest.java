@@ -13,15 +13,14 @@ class ResponseLineTest {
     void of() {
 
         // given
-        String code = "200";
-        String statusCodeMessage = "OK";
+        HttpResponseStatus status = HttpResponseStatus.OK;
 
         // when
-        ResponseLine responseLine = ResponseLine.of(code, statusCodeMessage);
+        ResponseLine responseLine = ResponseLine.of(status);
 
         // then
         assertThat(responseLine)
-                .isEqualTo(new ResponseLine(Protocol.of("HTTP/1.1"), code, statusCodeMessage));
+                .isEqualTo(new ResponseLine(Protocol.of("HTTP/1.1"), status));
     }
 
     @DisplayName("response line 메시지 생성")
@@ -29,9 +28,8 @@ class ResponseLineTest {
     void response() {
 
         // given
-        String code = "200";
-        String statusCodeMessage = "OK";
-        ResponseLine responseLine = ResponseLine.of(code, statusCodeMessage);
+        HttpResponseStatus status = HttpResponseStatus.OK;
+        ResponseLine responseLine = ResponseLine.of(status);
 
         // when
         String response = responseLine.response();

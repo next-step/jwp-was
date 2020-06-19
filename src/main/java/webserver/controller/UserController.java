@@ -6,26 +6,15 @@ import webserver.request.HttpRequest;
 import webserver.request.RequestBody;
 import webserver.response.HttpResponse;
 
-import java.util.Map;
-
 public class UserController extends AbstractController {
 
     @Override
-    protected void doGet(HttpRequest request, HttpResponse response) {
-        Map<String, String> queryParameters = request.getRequestLine().getQueryParameters();
-        String userId = queryParameters.get("userId");
-        String password = queryParameters.get("password");
-        String name = queryParameters.get("name");
-        String email = queryParameters.get("email");
-
-        User user = new User(userId, password, name, email);
-        DataBase.addUser(user);
-
-        response.response200();
+    protected ModelAndView doGet(HttpRequest request, HttpResponse response) {
+        return doPost(request, response);
     }
 
     @Override
-    protected void doPost(HttpRequest request, HttpResponse response) {
+    protected ModelAndView doPost(HttpRequest request, HttpResponse response) {
         RequestBody requestBody = request.getRequestBody();
         String userId = requestBody.get("userId");
         String password = requestBody.get("password");
@@ -35,7 +24,8 @@ public class UserController extends AbstractController {
         User user = new User(userId, password, name, email);
         DataBase.addUser(user);
 
-        String location = "http://" + request.getRequestHeaders().get("Host") + "/index.html";
-        response.response302(location);
+        ModelAndView mav = new ModelAndView();
+        mav.setView("redirect:/index.html");
+        return mav;
     }
 }

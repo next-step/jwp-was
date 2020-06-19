@@ -14,7 +14,7 @@ class ResponseHeadersTest {
         // given
         String name = "Content-Type";
         String[] values = {"text/html", "charset=utf-8"};
-        ResponseHeaders responseHeaders = ResponseHeaders.of();
+        ResponseHeaders responseHeaders = new ResponseHeaders();
 
         // when
         responseHeaders.addHeader(name, values);
