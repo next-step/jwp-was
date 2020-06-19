@@ -34,7 +34,6 @@ public class WebServerArgumentTest {
                 .hasMessageContaining("Address already in use (Bind failed)");
     }
 
-
     @Test
     @DisplayName("서버를 실행할 때 args에 포트, 스레드풀 설정을 할 수 있다")
     void runServerPortThreadPoolArgs() {
@@ -61,10 +60,10 @@ public class WebServerArgumentTest {
         final String maximumPoolSize = "-1";
         final String[] args = new String[]{port, corePoolSize, maximumPoolSize};
 
-        Throwable thrown = catchThrowable(() -> WebServerExecutor.execute(args));
+        Throwable thrown = catchThrowable(() -> WebServer.main(args));
 
         assertThat(thrown)
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -75,15 +74,15 @@ public class WebServerArgumentTest {
         final String maximumPoolSize = "4";
         final String[] args = new String[]{port, corePoolSize, maximumPoolSize};
 
-        Throwable thrown = catchThrowable(() -> WebServerExecutor.execute(args));
+        Throwable thrown = catchThrowable(() -> WebServer.main(args));
 
         assertThat(thrown)
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("서버를 실행할 때 포트가 사용 가능한 범위를 벗어난 경우 예외를 던진다")
     @ParameterizedTest
-    @ValueSource(strings = {"-1","65536"})
+    @ValueSource(strings = {"-1", "65536"})
     void portOutOfRange(String port) {
         final String[] args = {port};
 
