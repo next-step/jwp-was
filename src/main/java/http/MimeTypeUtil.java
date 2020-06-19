@@ -2,12 +2,16 @@ package http;
 
 import javax.annotation.Nonnull;
 
+import org.springframework.util.StringUtils;
+
 public class MimeTypeUtil {
     private MimeTypeUtil() {
     }
 
     @Nonnull
-    public static MimeType findMimeTypeByFileExtension(@Nonnull String filenameExtension) {
+    public static MimeType findMimeTypeByPath(@Nonnull String path) {
+        String filenameExtension = StringUtils.getFilenameExtension(path);
+
         if ("css".equalsIgnoreCase(filenameExtension)) {
             return MimeType.TEXT_CSS;
         }

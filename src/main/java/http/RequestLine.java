@@ -7,20 +7,19 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static utils.StringConstant.*;
+
 public class RequestLine {
     private static final int SPLIT_BY_SPACE_COUNT = 3;
     private final Method method;
     private final String path;
-    // TODO HttpProtocol로 고쳐야함
-    private final String protocol;
-    private final String version;
+    private final HttpProtocol httpProtocol;
     private final QueryMap queryMap;
 
-    private RequestLine(Method method, String path, String protocol, String version, QueryMap queryMap) {
+    private RequestLine(Method method, String path, HttpProtocol httpProtocol, QueryMap queryMap) {
         this.method = method;
         this.path = path;
-        this.protocol = protocol;
-        this.version = version;
+        this.httpProtocol = httpProtocol;
         this.queryMap = queryMap;
     }
 
@@ -30,7 +29,7 @@ public class RequestLine {
             return makeEmptyRequestLine();
         }
 
-        String[] splitBySpace = requestLine.split(" ");
+        String[] splitBySpace = requestLine.split(SPACE);
         if (splitBySpace.length < SPLIT_BY_SPACE_COUNT) {
             return makeEmptyRequestLine();
         }
@@ -41,11 +40,11 @@ public class RequestLine {
         if (protocolAndVersion.length() < 2) {
             return makeEmptyRequestLine();
         }
-        String[] splitBySlash = protocolAndVersion.replaceAll("\n", "").split("/");
+        String[] splitBySlash = protocolAndVersion.replaceAll("\n", EMPTY).split(SLASH);
         String protocol = splitBySlash[0];
         String version = splitBySlash[1];
 
-        return new RequestLine(Method.find(method), makePath(pathWithQueryString), protocol, version, makeQueryMap(pathWithQueryString));
+        return new RequestLine(Method.find(method), makePath(pathWithQueryString), new HttpProtocol(protocol, version), makeQueryMap(pathWithQueryString));
     }
 
     @Nonnull
@@ -63,34 +62,36 @@ public class RequestLine {
         return splitByQuestionMark[0];
     }
 
-    @Nullable
+    @Nonnull
     private static QueryMap makeQueryMap(@Nonnull String pathWithQueryString) {
+        QueryMap queryMap = new QueryMap();
         String[] splitByQuestionMark = pathWithQueryString.split("\\?");
         if (splitByQuestionMark.length < 2) {
-            return null;
+            return queryMap;
         }
 
 
-        String[] splitByAmpersand = splitByQuestionMark[1].split("&");
-        QueryMap queryMap = new QueryMap();
+        String[] splitByAmpersand = splitByQuestionMark[1].split(AMPERSAND);
         Arrays.stream(splitByAmpersand)
                 .filter(Objects::nonNull)
-                .forEach(query -> {
-                    String[] splitByEqualSign = query.split("=");
-                    if (splitByEqualSign.length < 2) {
-                        return;
-                    }
-
-                    // 같은 파라미터가 여러개 넘어오면 리스트로 넘겨줘야 하나?
-                    queryMap.put(splitByEqualSign[0], splitByEqualSign[1]);
-                });
+                .forEach(query -> putToQueryMap(queryMap, query));
 
         return queryMap;
     }
 
+    private static void putToQueryMap(QueryMap queryMap, String query) {
+        String[] splitByEqualSign = query.split(EQUAL_SIGN);
+        if (splitByEqualSign.length < 2) {
+            return;
+        }
+
+        // 같은 파라미터가 여러개 넘어오면 리스트로 넘겨줘야 하나?
+        queryMap.put(splitByEqualSign[0], splitByEqualSign[1]);
+    }
+
     static class EmptyRequsetLine extends RequestLine {
         public EmptyRequsetLine() {
-            super(null, "", "", "", null);
+            super(null, EMPTY, new HttpProtocol("", ""), null);
         }
     }
 
@@ -107,10 +108,10 @@ public class RequestLine {
     }
 
     public String getProtocol() {
-        return protocol;
+        return httpProtocol.getProtocol();
     }
 
     public String getVersion() {
-        return version;
+        return httpProtocol.getVersion();
     }
 }

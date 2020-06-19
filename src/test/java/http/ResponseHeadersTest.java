@@ -8,7 +8,7 @@ class ResponseHeadersTest {
     private ResponseHeaders sut;
 
     @Test
-    void test_responseHeaders() {
+    void makeHeaderString() {
         // given
         sut = new ResponseHeaders();
         String headerKey1 = "content-type";
@@ -35,7 +35,7 @@ class ResponseHeadersTest {
     }
 
     @Test
-    void test_reponseHeaders_isEmpty() {
+    void makeEmptyResponseHeaders() {
         // given
         sut = ResponseHeaders.makeEmptyResponseHeaders();
 

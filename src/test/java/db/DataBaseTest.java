@@ -12,7 +12,7 @@ class DataBaseTest {
     void find_user() {
         // given
         String userId = "testId";
-        sut.addUser(new User("notExistUserId", "1", "1", "1"));
+        sut.addUser(new User(userId, "1", "1", "1"));
 
         // when
         User user = sut.findUserById(userId);

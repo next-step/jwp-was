@@ -1,12 +1,13 @@
 package http;
 
-import org.springframework.util.StringUtils;
-import utils.FileIoUtils;
-
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import utils.FileIoUtils;
 
 public class HttpResponse {
     private final StatusLine statusLine;
@@ -16,7 +17,7 @@ public class HttpResponse {
     private HttpResponse(StatusLine statusLine, ResponseHeaders headers, ResponseBody body) {
         // 방어로직
         if (statusLine == null) {
-            statusLine = StatusLine.makeEmptyStatusLine();
+            statusLine = StatusLine.makeErrorStatusLine(HttpStatus.BAD_REQUEST);
         }
 
         if (headers == null) {
@@ -33,19 +34,35 @@ public class HttpResponse {
     }
 
     @Nonnull
-    // TODO 넘겨 줄 때 content-type이 넘어가게. content-length도 함께?
-    public static HttpResponse from(String filePath, HttpStatus httpStatus) throws IOException, URISyntaxException {
+    public static HttpResponse from(String filePath, HttpStatus httpStatus) {
         StatusLine statusLine = makeStatusLine(httpStatus);
-        ResponseHeaders responseHeaders = makeContentHeaders(filePath);
-        ResponseBody responseBody = new ResponseBody(FileIoUtils.loadFileFromClasspath(filePath));
+        ResponseHeaders responseHeaders;
+        ResponseBody responseBody;
+        try {
+            responseHeaders = makeContentHeaders(filePath);
+            responseBody = new ResponseBody(FileIoUtils.loadFileFromClasspath(filePath));
+        } catch (IOException | URISyntaxException e) {
+            return HttpResponse.makeErrorResponse();
+        }
 
         return new HttpResponse(statusLine, responseHeaders, responseBody);
     }
 
     @Nonnull
-    public static HttpResponse from(byte[] responseBodyByteArray, HttpStatus httpStatus) throws IOException, URISyntaxException {
+    public static HttpResponse makeErrorResponse() {
+        StatusLine statusLine = makeStatusLine(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new HttpResponse(statusLine, ResponseHeaders.makeEmptyResponseHeaders(), ResponseBody.makeEmptyResponseBody());
+    }
+
+    @Nonnull
+    public static HttpResponse makeResponseWithHttpStatus(HttpStatus httpStatus) {
         StatusLine statusLine = makeStatusLine(httpStatus);
-        // TODO 여기도 contentType 과 length 는 역할을 따로 빼야 할 것 같음.
+        return new HttpResponse(statusLine, ResponseHeaders.makeEmptyResponseHeaders(), ResponseBody.makeEmptyResponseBody());
+    }
+
+    @Nonnull
+    public static HttpResponse from(@Nonnull HttpStatus httpStatus, byte[] responseBodyByteArray) {
+        StatusLine statusLine = makeStatusLine(httpStatus);
         ResponseHeaders responseHeaders = makeContentHeaders("text/html;charset=utf-8", responseBodyByteArray.length);
         ResponseBody responseBody = new ResponseBody(responseBodyByteArray);
 
@@ -53,19 +70,15 @@ public class HttpResponse {
     }
 
     @Nonnull
-    public static HttpResponse redirectBy302StatusCode(String location) {
-        StatusLine statusLine = makeStatusLine(HttpStatus.FOUND);
-        ResponseHeaders responseHeaders = new ResponseHeaders();
-        responseHeaders.put("Location", location);
-
-        return new HttpResponse(statusLine, responseHeaders, ResponseBody.makeEmptyResponseBody());
+    public static HttpResponse redirectBy302StatusCode(@Nonnull String location) {
+        return redirectBy302StatusCode(location, Collections.EMPTY_MAP);
     }
 
     @Nonnull
-    public static HttpResponse redirectBy302StatusCode(String location, Map<String, String> additionalHeaders) {
+    public static HttpResponse redirectBy302StatusCode(@Nonnull String location, @Nonnull Map<String, String> additionalHeaders) {
         StatusLine statusLine = makeStatusLine(HttpStatus.FOUND);
         ResponseHeaders responseHeaders = new ResponseHeaders();
-        responseHeaders.put("Location", location);
+        responseHeaders.put(ResponseHeaders.LOCATION, location);
 
         additionalHeaders.entrySet().stream()
                 .forEach(e -> responseHeaders.put(e.getKey(), e.getValue()));
@@ -74,27 +87,23 @@ public class HttpResponse {
     }
 
     @Nonnull
-    private static ResponseHeaders makeContentHeaders(String contentType, int contentLength) {
+    private static ResponseHeaders makeContentHeaders(@Nonnull String filePath) throws IOException, URISyntaxException {
+        MimeType mimeType = MimeTypeUtil.findMimeTypeByPath(filePath);
+
+        return makeContentHeaders(mimeType.makeContentTypeValue(), FileIoUtils.loadFileFromClasspath(filePath).length);
+    }
+
+    @Nonnull
+    private static ResponseHeaders makeContentHeaders(@Nonnull String contentType, int contentLength) {
         ResponseHeaders responseHeaders = new ResponseHeaders();
-        responseHeaders.put("Content-Type", contentType);
-        responseHeaders.put("Content-Length", Integer.toString(contentLength));
+        responseHeaders.put(ResponseHeaders.CONTENT_TYPE, contentType);
+        responseHeaders.put(ResponseHeaders.CONTENT_LENGTH, Integer.toString(contentLength));
 
         return responseHeaders;
     }
 
     @Nonnull
-    private static ResponseHeaders makeContentHeaders(String filePath) throws IOException, URISyntaxException {
-        ResponseHeaders responseHeaders = new ResponseHeaders();
-        String filenameExtension = StringUtils.getFilenameExtension(filePath);
-        MimeType mimeType = MimeTypeUtil.findMimeTypeByFileExtension(filenameExtension);
-        responseHeaders.put("Content-Type", mimeType.makeContentTypeValue());
-        responseHeaders.put("Content-Length", FileIoUtils.loadFileFromClasspath(filePath).length);
-
-        return responseHeaders;
-    }
-
-    @Nonnull
-    private static StatusLine makeStatusLine(HttpStatus httpStatus) {
+    private static StatusLine makeStatusLine(@Nonnull HttpStatus httpStatus) {
         String statusCode = Integer.toString(httpStatus.getValue());
         String reasonPhase = httpStatus.getReasonPhrase();
         return new StatusLine(new HttpProtocol("HTTP", "1.1"), statusCode, reasonPhase);
@@ -108,24 +117,9 @@ public class HttpResponse {
         String rawResponseString = statusLineString
                 + headersString
                 + "\r\n"
-                + new String(body.getMessageBodyByteArray()); // TODO 수정 필요
+                + new String(body.getMessageBodyByteArray());
 
         return rawResponseString.getBytes();
-    }
-
-    @Nonnull
-    public static HttpResponse makeEmptyHttpResponse() {
-        return new EmptyHttpResponse();
-    }
-
-    public void setHttpStatus(HttpStatus httpStatus) {
-        new StatusLine(new HttpProtocol("HTTP", "1.1"), Integer.toString(httpStatus.getValue()), httpStatus.getReasonPhrase());
-    }
-
-    static class EmptyHttpResponse extends HttpResponse {
-        private EmptyHttpResponse() {
-            super(StatusLine.makeEmptyStatusLine(), ResponseHeaders.makeEmptyResponseHeaders(), null);
-        }
     }
 
     public StatusLine getStatusLine() {

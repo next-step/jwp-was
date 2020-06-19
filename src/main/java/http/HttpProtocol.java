@@ -2,7 +2,9 @@ package http;
 
 import javax.annotation.Nonnull;
 
-public class HttpProtocol implements Protocol {
+import static utils.StringConstant.SLASH;
+
+public class HttpProtocol {
     private final String protocol;
     private final String version;
 
@@ -13,22 +15,12 @@ public class HttpProtocol implements Protocol {
 
     @Nonnull
     public static HttpProtocol from(@Nonnull String httpProtocol) {
-        String[] splitBySlash = httpProtocol.split("/");
+        String[] splitBySlash = httpProtocol.split(SLASH);
         if (splitBySlash.length < 2) {
-            return makeEmptyHttpProtocol();
+            throw new IllegalArgumentException();
         }
 
         return new HttpProtocol(splitBySlash[0], splitBySlash[1]);
-    }
-
-    private static HttpProtocol makeEmptyHttpProtocol() {
-        return new EmptyHttpProtocol();
-    }
-
-    static class EmptyHttpProtocol extends HttpProtocol {
-        private EmptyHttpProtocol() {
-            super("", "");
-        }
     }
 
     public String getProtocol() {

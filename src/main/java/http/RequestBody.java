@@ -7,10 +7,15 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class RequestBody {
-    private QueryMap queryMap;
+import static utils.StringConstant.AMPERSAND;
+import static utils.StringConstant.EQUAL_SIGN;
 
-    private RequestBody(QueryMap queryMap) {
+public class RequestBody {
+    private final String requestBodyString;
+    private final QueryMap queryMap;
+
+    private RequestBody(String requestBodyString, QueryMap queryMap) {
+        this.requestBodyString = requestBodyString;
         this.queryMap = queryMap;
     }
 
@@ -20,12 +25,12 @@ public class RequestBody {
             return null;
         }
 
-        String[] splitByAmpersand = requestBodyString.split("&");
+        String[] splitByAmpersand = requestBodyString.split(AMPERSAND);
         QueryMap queryMap = new QueryMap();
         Arrays.stream(splitByAmpersand)
                 .filter(Objects::nonNull)
                 .forEach(query -> {
-                    String[] splitByEqualSign = query.split("=");
+                    String[] splitByEqualSign = query.split(EQUAL_SIGN);
                     if (splitByEqualSign.length < 2) {
                         return;
                     }
@@ -34,7 +39,11 @@ public class RequestBody {
                     queryMap.put(splitByEqualSign[0], splitByEqualSign[1]);
                 });
 
-        return new RequestBody(queryMap);
+        return new RequestBody(requestBodyString, queryMap);
+    }
+
+    public String getRequestBodyString() {
+        return requestBodyString;
     }
 
     public QueryMap getQueryMap() {
