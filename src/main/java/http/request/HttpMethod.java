@@ -1,4 +1,4 @@
-package http;
+package http.request;
 
 public enum HttpMethod {
     GET,

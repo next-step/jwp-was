@@ -1,7 +1,9 @@
-package http;
+package http.response;
 
+import http.common.HttpHeader;
+import http.common.HttpHeaders;
+import http.request.HttpProtocol;
 import org.slf4j.Logger;
-import utils.FileIoUtils;
 
 
 import java.io.DataOutputStream;
@@ -72,15 +74,6 @@ public class ResponseMessage {
             writeStatusLine(HttpStatus.REDIRECT);
             writeHeader();
         } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    public void responseResource(String location) {
-        try {
-            byte[] body = FileIoUtils.loadFileFromClasspath(location);
-            responseWith(HttpStatus.OK, body, ContentType.HTML);
-        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }

@@ -1,6 +1,7 @@
-package http;
+package http.request;
 
 
+import http.common.HttpHeaders;
 import utils.IOUtils;
 import utils.StringUtils;
 

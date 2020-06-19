@@ -1,4 +1,4 @@
-package http;
+package http.common;
 
 import utils.StringUtils;
 
@@ -32,19 +32,6 @@ public class HttpHeaders {
         return new String[]{values[0], values[1]};
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HttpHeaders httpHeaders = (HttpHeaders) o;
-        return Objects.equals(headers, httpHeaders.headers);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(headers);
-    }
-
     public String get(String name) {
         return this.headers.get(name);
     }
@@ -65,7 +52,20 @@ public class HttpHeaders {
     }
 
     public boolean hasCookieValue(String value) {
-        String cookie = this.headers.get("Cookie");
+        String cookie = this.headers.get(HttpHeader.COOKIE.getText());
         return cookie != null && cookie.contains(value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HttpHeaders httpHeaders = (HttpHeaders) o;
+        return Objects.equals(headers, httpHeaders.headers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(headers);
     }
 }

@@ -1,10 +1,11 @@
 package http;
 
+import http.request.Uri;
+import http.response.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ContentTypeTest {
 
@@ -14,20 +15,10 @@ class ContentTypeTest {
         // given
         Uri uri = Uri.from("/user/index.html");
         // when
-        ContentType contentType = ContentType.from(uri);
+        ContentType contentType = ContentType.from(uri.getExtension());
         String result = contentType.toStringWithCharsetUTF8();
         // then
         assertThat(contentType).isEqualTo(ContentType.HTML);
         assertThat(result).isEqualTo("text/html;charset=utf-8");
-    }
-
-    @Test
-    void test_toRelativePath() {
-        // given
-        Uri uri = Uri.from("/user/index.html");
-        // when
-        String result = ContentType.toRelativePath(uri);
-        // then
-        assertThat(result).isEqualTo("./templates/user/index.html");
     }
 }
