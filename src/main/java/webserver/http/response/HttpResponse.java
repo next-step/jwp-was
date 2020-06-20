@@ -1,9 +1,9 @@
-package webserver.response;
+package webserver.http.response;
 
 import lombok.NoArgsConstructor;
 import webserver.controller.ModelAndView;
 import webserver.http.HttpHeader;
-import webserver.request.HttpRequest;
+import webserver.http.request.HttpRequest;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

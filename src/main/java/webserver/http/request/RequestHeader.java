@@ -1,4 +1,4 @@
-package webserver.request;
+package webserver.http.request;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

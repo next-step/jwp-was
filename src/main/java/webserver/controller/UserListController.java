@@ -4,9 +4,9 @@ import db.DataBase;
 import model.User;
 import utils.StringUtils;
 import webserver.http.HttpHeader;
-import webserver.request.HttpRequest;
-import webserver.request.RequestHeaders;
-import webserver.response.HttpResponse;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestHeaders;
+import webserver.http.response.HttpResponse;
 
 import java.util.Collection;
 

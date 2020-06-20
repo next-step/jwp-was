@@ -1,4 +1,4 @@
-package webserver.response;
+package webserver.http.response;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.FileType;
 import webserver.controller.ModelAndView;
-import webserver.request.RequestLine;
+import webserver.http.request.RequestLine;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

@@ -1,8 +1,8 @@
 package webserver.controller;
 
 import webserver.exception.MethodNotAllowedException;
-import webserver.request.HttpRequest;
-import webserver.response.HttpResponse;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
 public abstract class AbstractController implements Controller {
 

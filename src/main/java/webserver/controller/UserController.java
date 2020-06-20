@@ -2,9 +2,9 @@ package webserver.controller;
 
 import db.DataBase;
 import model.User;
-import webserver.request.HttpRequest;
-import webserver.request.RequestBody;
-import webserver.response.HttpResponse;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestBody;
+import webserver.http.response.HttpResponse;
 
 public class UserController extends AbstractController {
 
