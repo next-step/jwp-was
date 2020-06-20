@@ -18,16 +18,16 @@ public class ResponseHeaders {
 
     private static final Logger log = LoggerFactory.getLogger(ResponseHeaders.class);
 
-    private Map<String, ResponseHeader> responseHeaders = new HashMap<>();
+    private Map<HttpResponseHeader, ResponseHeader> responseHeaders = new HashMap<>();
 
-    public void addHeader(String name, String... values) {
+    public void addHeader(HttpResponseHeader name, String... values) {
         ResponseHeader responseHeader = ResponseHeader.of(name, values);
         responseHeaders.put(name, responseHeader);
     }
 
     public void response(DataOutputStream dos) {
         try {
-            for (String name : responseHeaders.keySet()) {
+            for (HttpResponseHeader name : responseHeaders.keySet()) {
                 dos.writeBytes(name + ": " + responseHeaders.get(name));
             }
             dos.writeBytes("\r\n");

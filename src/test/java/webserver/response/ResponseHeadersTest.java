@@ -12,7 +12,7 @@ class ResponseHeadersTest {
     void addHeader() {
 
         // given
-        String name = "Content-Type";
+        HttpResponseHeader name = HttpResponseHeader.CONTENT_TYPE;
         String[] values = {"text/html", "charset=utf-8"};
         ResponseHeaders responseHeaders = new ResponseHeaders();
 

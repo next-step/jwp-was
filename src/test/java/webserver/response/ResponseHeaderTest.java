@@ -14,7 +14,7 @@ class ResponseHeaderTest {
     void of() {
 
         // given
-        String name = "Content-Type";
+        HttpResponseHeader name = HttpResponseHeader.CONTENT_TYPE;
         String[] values = {"text/html", "charset=utf-8"};
 
         // when
