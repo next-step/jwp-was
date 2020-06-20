@@ -3,7 +3,6 @@ package http;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -17,7 +16,7 @@ public class HttpSession implements Session {
 
     @Override
     public String getId() {
-        return null;
+        return id;
     }
 
     @Override
@@ -25,7 +24,7 @@ public class HttpSession implements Session {
         if (StringUtils.isEmpty(name) || StringUtils.isEmpty(value)) {
             return;
         }
-        String sessionId = UUID.randomUUID().toString();
+
         attributes.put(name, value);
     }
 
@@ -46,6 +45,6 @@ public class HttpSession implements Session {
 
     @Override
     public void invalidate() {
-
+        attributes.clear();
     }
 }
