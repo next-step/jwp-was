@@ -3,6 +3,7 @@ package webserver.controller;
 import db.DataBase;
 import model.User;
 import utils.StringUtils;
+import webserver.http.HttpHeader;
 import webserver.request.HttpRequest;
 import webserver.request.RequestHeaders;
 import webserver.response.HttpResponse;
@@ -15,7 +16,7 @@ public class UserListController extends AbstractController {
     protected ModelAndView doGet(HttpRequest request, HttpResponse response) {
         ModelAndView mav = new ModelAndView();
         RequestHeaders requestHeaders = request.getRequestHeaders();
-        String cookie = requestHeaders.get("Cookie");
+        String cookie = requestHeaders.get(HttpHeader.COOKIE);
         if (StringUtils.isNotBlank(cookie) && cookie.contains("logined=true")) {
             Collection<User> users = DataBase.findAll();
             mav.addModel("users", users);

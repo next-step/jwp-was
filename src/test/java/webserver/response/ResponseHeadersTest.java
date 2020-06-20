@@ -2,6 +2,7 @@ package webserver.response;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.HttpHeader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,7 +13,7 @@ class ResponseHeadersTest {
     void addHeader() {
 
         // given
-        HttpResponseHeader name = HttpResponseHeader.CONTENT_TYPE;
+        HttpHeader name = HttpHeader.CONTENT_TYPE;
         String[] values = {"text/html", "charset=utf-8"};
         ResponseHeaders responseHeaders = new ResponseHeaders();
 

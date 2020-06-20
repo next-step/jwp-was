@@ -2,6 +2,7 @@ package webserver.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.HttpHeader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,6 +20,6 @@ class RequestHeaderTest {
 
         // then
         assertThat(requestHeader)
-                .isEqualTo(new RequestHeader("Host", "localhost:8080"));
+                .isEqualTo(new RequestHeader(HttpHeader.HOST, "localhost:8080"));
     }
 }

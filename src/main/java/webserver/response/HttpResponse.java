@@ -2,13 +2,14 @@ package webserver.response;
 
 import lombok.NoArgsConstructor;
 import webserver.controller.ModelAndView;
+import webserver.http.HttpHeader;
 import webserver.request.HttpRequest;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static webserver.response.HttpResponseHeader.*;
+import static webserver.http.HttpHeader.*;
 
 @NoArgsConstructor
 public class HttpResponse {
@@ -27,7 +28,7 @@ public class HttpResponse {
         if (mav.isRedirect()) {
             responseLine = ResponseLine.of(HttpResponseStatus.FOUND);
             responseHeaders.addHeader(LOCATION,
-                    HTTP_PROTOCOL_PREFIX + request.getRequestHeaders().get("Host") + mav.getRedirectView());
+                    HTTP_PROTOCOL_PREFIX + request.getRequestHeaders().get(HttpHeader.HOST) + mav.getRedirectView());
             return;
         }
         responseLine = ResponseLine.of(HttpResponseStatus.OK);

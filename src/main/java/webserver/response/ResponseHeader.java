@@ -3,6 +3,7 @@ package webserver.response;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import webserver.http.HttpHeader;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,10 +15,10 @@ import static java.util.stream.Collectors.toList;
 @EqualsAndHashCode
 public class ResponseHeader {
 
-    private HttpResponseHeader name;
+    private HttpHeader name;
     private List<String> values;
 
-    public static ResponseHeader of(HttpResponseHeader name, String... values) {
+    public static ResponseHeader of(HttpHeader name, String... values) {
         List<String> headerValues = Arrays.stream(values)
                 .collect(toList());
         return new ResponseHeader(name, headerValues);

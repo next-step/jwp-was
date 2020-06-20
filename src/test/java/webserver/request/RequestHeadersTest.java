@@ -2,6 +2,7 @@ package webserver.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.HttpHeader;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static webserver.http.HttpHeader.*;
 
 public class RequestHeadersTest {
 
@@ -22,10 +24,10 @@ public class RequestHeadersTest {
                 "Connection: keep-alive",
                 "Accept: text/html");
 
-        Map<String, RequestHeader> requestHeaderMap = new HashMap<>();
-        requestHeaderMap.put("Host", RequestHeader.of("Host: localhost:8080"));
-        requestHeaderMap.put("Connection", RequestHeader.of("Connection: keep-alive"));
-        requestHeaderMap.put("Accept", RequestHeader.of("Accept: text/html"));
+        Map<HttpHeader, RequestHeader> requestHeaderMap = new HashMap<>();
+        requestHeaderMap.put(HOST, RequestHeader.of("Host: localhost:8080"));
+        requestHeaderMap.put(CONNECTION, RequestHeader.of("Connection: keep-alive"));
+        requestHeaderMap.put(ACCEPT, RequestHeader.of("Accept: text/html"));
 
 
         // when
@@ -50,7 +52,7 @@ public class RequestHeadersTest {
         RequestHeaders requestHeaders = RequestHeaders.of(requestHeaderTexts);
 
         // then
-        assertThat(requestHeaders.get("Accept"))
+        assertThat(requestHeaders.get(ACCEPT))
                 .isEqualTo("text/html");
     }
 }
