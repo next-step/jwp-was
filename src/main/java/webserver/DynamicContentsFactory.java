@@ -12,16 +12,30 @@ import java.util.Map;
 
 public class DynamicContentsFactory {
 
-    public static <T> byte[] createHTML(String location, T data) throws IOException {
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".html");
-        Handlebars handlebars = new Handlebars(loader);
+    private static final Map<String, Template> cachedTemplates = new HashMap<>();
 
-        Template template = handlebars.compile(location);
+    private static final Handlebars handlebars;
+
+    static {
+        TemplateLoader templateLoader = new ClassPathTemplateLoader();
+        templateLoader.setPrefix("/templates");
+        templateLoader.setSuffix(".html");
+        handlebars = new Handlebars(templateLoader);
+    }
+
+    public static <T> byte[] createHTML(String location, T data) throws IOException {
+        Template template = getTemplate(location);
+
         Map<String, T> parameterMap = new HashMap<>();
         parameterMap.put("data", data);
         String contents = template.apply(parameterMap);
         return contents.getBytes();
+    }
+
+    private static Template getTemplate(String location) throws IOException {
+        if (!cachedTemplates.containsKey(location)) {
+            cachedTemplates.put(location, handlebars.compile(location));
+        }
+        return cachedTemplates.get(location);
     }
 }

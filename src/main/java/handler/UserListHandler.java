@@ -1,15 +1,20 @@
-package webserver.handler;
+package handler;
 
 import db.DataBase;
-import http.*;
+import http.common.HttpHeaders;
+import http.request.RequestMessage;
+import http.response.ContentType;
+import http.response.HttpStatus;
+import http.response.ResponseMessage;
 import model.User;
 import webserver.DynamicContentsFactory;
+import webserver.StaticResourceLoader;
 
 
 import java.io.IOException;
 import java.util.Collection;
 
-public class UserListHandler implements Handler {
+public class UserListHandler extends AbstractHandler {
 
     private static final UserListHandler INSTANCE = new UserListHandler();
 
@@ -22,18 +27,19 @@ public class UserListHandler implements Handler {
 
     @Override
     public void doGet(RequestMessage requestMessage, ResponseMessage responseMessage) throws IOException {
-        Header header = requestMessage.getHeader();
+        HttpHeaders httpHeaders = requestMessage.getHttpHeaders();
 
-        if (header.hasCookieValue("logined=true")) {
+        if (httpHeaders.hasCookieValue("logined=true")) {
             Collection<User> allUsers = DataBase.findAll();
 
             byte[] body = DynamicContentsFactory.createHTML("/user/list", allUsers);
 
-            responseMessage.response200Header(body.length);
-            responseMessage.responseBody(body);
+            responseMessage.responseWith(HttpStatus.OK, body, ContentType.HTML);
             return;
         }
-        responseMessage.responseResource(ContentType.toRelativePath(Uri.from("/user/login.html")));
+
+        byte[] body = StaticResourceLoader.loadResource("/user/login.html");
+        responseMessage.responseWith(HttpStatus.OK, body, ContentType.HTML);
     }
 
     @Override

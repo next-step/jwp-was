@@ -1,4 +1,4 @@
-package http;
+package http.request;
 
 
 import utils.StringUtils;
@@ -26,20 +26,6 @@ public class Uri {
         return new Uri(values[0], new QueryString(values[1]));
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Uri uri = (Uri) o;
-        return Objects.equals(path, uri.path) &&
-                Objects.equals(queryString, uri.queryString);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(path, queryString);
-    }
-
     public String getPath() {
         return this.path;
     }
@@ -55,5 +41,19 @@ public class Uri {
             extension = this.path.substring(indexOfComma + 1);
         }
         return extension;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Uri uri = (Uri) o;
+        return Objects.equals(path, uri.path) &&
+                Objects.equals(queryString, uri.queryString);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path, queryString);
     }
 }

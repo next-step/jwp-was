@@ -1,4 +1,4 @@
-package http;
+package http.request;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -28,6 +28,16 @@ public class QueryString {
                         LinkedMultiValueMap::addAll);
     }
 
+    public List<String> getParameter(String field) {
+        return parameters.get(field);
+    }
+
+    public String getFirstParameter(String field) { return parameters.getFirst(field); }
+
+    public int size() {
+        return parameters.size();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -39,15 +49,5 @@ public class QueryString {
     @Override
     public int hashCode() {
         return Objects.hash(parameters);
-    }
-
-    public List<String> getParameter(String field) {
-        return parameters.get(field);
-    }
-
-    public String getFirstParameter(String field) { return parameters.getFirst(field); }
-
-    public int size() {
-        return parameters.size();
     }
 }

@@ -1,4 +1,4 @@
-package http;
+package http.request;
 
 
 import utils.StringUtils;
@@ -6,7 +6,7 @@ import utils.StringUtils;
 
 import java.util.Arrays;
 
-public enum Protocol {
+public enum HttpProtocol {
 
     HTTP_V1_0("HTTP", "1.0"),
     HTTP_V1_1("HTTP", "1.1"),
@@ -18,20 +18,24 @@ public enum Protocol {
     private final String type;
     private final String version;
 
-    Protocol(String type, String version) {
+    HttpProtocol(String type, String version) {
         this.type = type;
         this.version = version;
     }
 
-    public static Protocol from(String fullProtocol) {
+    public static HttpProtocol from(String fullProtocol) {
         String[] values = StringUtils.splitIntoPair(fullProtocol, SLASH_DELIMITER);
-        return Protocol.of(values[0], values[1]);
+        return HttpProtocol.of(values[0], values[1]);
     }
 
-    public static Protocol of(String protocol, String version) {
-        return Arrays.stream(Protocol.values())
+    public static HttpProtocol of(String protocol, String version) {
+        return Arrays.stream(HttpProtocol.values())
                 .filter(v -> v.type.equals(protocol) && v.version.equals(version))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(protocol + SLASH_DELIMITER + version + PROTOCOL_IS_UNSUPPORTED));
+    }
+
+    public String toJoinedString() {
+        return this.type + SLASH_DELIMITER + this.version;
     }
 }

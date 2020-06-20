@@ -1,10 +1,10 @@
-package webserver.handler;
+package handler;
 
 import db.DataBase;
-import http.Header;
-import http.RequestLine;
-import http.RequestMessage;
-import http.ResponseMessage;
+import http.common.HttpHeaders;
+import http.request.RequestLine;
+import http.request.RequestMessage;
+import http.response.ResponseMessage;
 import model.User;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,21 +40,18 @@ class UserLoginHandlerTest {
         // given
         RequestMessage requestMessage = RequestMessage.create(
                 RequestLine.from("POST /user/login HTTP/1.1"),
-                new Header(Collections.emptyList()),
+                new HttpHeaders(Collections.emptyList()),
                 "userId=crystal&password=password"
         );
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
         // when
-        UserLoginHandler.getInstance().handle(requestMessage, responseMessage);
+        UserLoginHandler.getInstance().service(requestMessage, responseMessage);
         // then
         String result = output.toString();
-        assertThat(result).isEqualTo(
-                        "HTTP/1.1 302 Redirect\r\n" +
-                        "Location: /index.html\r\n" +
-                        "Set-Cookie: logined=true; Path=/\r\n"
-                        + "\r\n");
+        assertThat(result).startsWith("HTTP/1.1 302 Found\r\n").contains("Location: /index.html\r\n",
+                "Set-Cookie: logined=true; Path=/\r\n").endsWith("\r\n");
     }
 
     @DisplayName("비밀번호 불일치로 로그인 실패")
@@ -63,7 +60,7 @@ class UserLoginHandlerTest {
         // given
         RequestMessage requestMessage = RequestMessage.create(
                 RequestLine.from("POST /user/login HTTP/1.1"),
-                new Header(Collections.emptyList()),
+                new HttpHeaders(Collections.emptyList()),
                 "userId=crystal&password=popo"
         );
 
@@ -71,7 +68,7 @@ class UserLoginHandlerTest {
         ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
         byte[] loginFailTemplate = FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html");
         // when
-        UserLoginHandler.getInstance().handle(requestMessage, responseMessage);
+        UserLoginHandler.getInstance().service(requestMessage, responseMessage);
         // then
         byte[] result = output.toByteArray();
         assertThat(result).contains(loginFailTemplate);
@@ -83,7 +80,7 @@ class UserLoginHandlerTest {
         // given
         RequestMessage requestMessage = RequestMessage.create(
                 RequestLine.from("POST /user/login HTTP/1.1"),
-                new Header(Collections.emptyList()),
+                new HttpHeaders(Collections.emptyList()),
                 "userId=keke&password=popo"
         );
 
@@ -91,7 +88,7 @@ class UserLoginHandlerTest {
         ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
         byte[] loginFailTemplate = FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html");
         // when
-        UserLoginHandler.getInstance().handle(requestMessage, responseMessage);
+        UserLoginHandler.getInstance().service(requestMessage, responseMessage);
         // then
         byte[] result = output.toByteArray();
         assertThat(result).contains(loginFailTemplate);

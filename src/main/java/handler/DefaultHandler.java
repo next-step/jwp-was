@@ -1,16 +1,17 @@
-package webserver.handler;
+package handler;
 
-import http.ContentType;
-import http.RequestMessage;
-import http.ResponseMessage;
-import http.Uri;
+import http.request.RequestMessage;
+import http.request.Uri;
+import http.response.ContentType;
+import http.response.HttpStatus;
+import http.response.ResponseMessage;
 import org.slf4j.Logger;
-import utils.FileIoUtils;
+import webserver.StaticResourceLoader;
 
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class DefaultHandler implements Handler {
+public class DefaultHandler extends AbstractHandler {
 
     private static final Logger logger = getLogger(DefaultHandler.class);
 
@@ -19,7 +20,7 @@ public class DefaultHandler implements Handler {
     private DefaultHandler() {
     }
 
-    public static DefaultHandler getInstance() {
+    public static Handler getInstance() {
         return INSTANCE;
     }
 
@@ -28,17 +29,14 @@ public class DefaultHandler implements Handler {
         Uri uri = requestMessage.getUri();
 
         try {
-            byte[] body = FileIoUtils.loadFileFromClasspath(ContentType.toRelativePath(uri));
+            byte[] body = StaticResourceLoader.loadResource(uri.getPath());
 
-            responseMessage.setHeader("Content-Type", ContentType.toMediaTypeFrom(uri));
-            responseMessage.response200Header(body.length);
-            responseMessage.responseBody(body);
+            responseMessage.responseWith(HttpStatus.OK, body, ContentType.from(uri.getExtension()));
         } catch (Exception e) {
             String reason = uri.getPath() + " is not found";
             byte[] body = reason.getBytes();
 
-            responseMessage.response404Header();
-            responseMessage.responseBody(body);
+            responseMessage.responseWith(HttpStatus.NOT_FOUND, body, ContentType.PLAIN);
         }
     }
 

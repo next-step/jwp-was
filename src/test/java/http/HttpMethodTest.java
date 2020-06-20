@@ -1,5 +1,6 @@
 package http;
 
+import http.request.HttpMethod;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,7 @@ public class HttpMethodTest {
     void test_post_canSupportBody_should_pass() {
         // given
         // when
-        boolean result = HttpMethod.POST.canSupportBody();
+        boolean result = HttpMethod.POST.isPost();
         // then
         assertThat(result).isTrue();
     }

@@ -1,4 +1,4 @@
-package http;
+package http.common;
 
 import utils.StringUtils;
 
@@ -9,13 +9,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Header {
+public class HttpHeaders {
 
     private static final String HEADER_DELIMITER = ": ";
     public static final String REQUEST_HEADER_IS_INVALID = "request header is invalid.";
     private final Map<String, String> headers;
 
-    public Header(List<String> headers) {
+    public HttpHeaders(List<String> headers) {
         this.headers = headers.stream()
                 .filter(header -> !StringUtils.isEmpty(header))
                 .map(this::parse)
@@ -32,19 +32,6 @@ public class Header {
         return new String[]{values[0], values[1]};
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Header header = (Header) o;
-        return Objects.equals(headers, header.headers);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(headers);
-    }
-
     public String get(String name) {
         return this.headers.get(name);
     }
@@ -53,7 +40,7 @@ public class Header {
         return this.headers.size();
     }
 
-    public void add(String name, String value) {
+    public void set(String name, String value) {
         this.headers.put(name, value);
     }
 
@@ -65,7 +52,20 @@ public class Header {
     }
 
     public boolean hasCookieValue(String value) {
-        String cookie = this.headers.get("Cookie");
+        String cookie = this.headers.get(HttpHeader.COOKIE.getText());
         return cookie != null && cookie.contains(value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HttpHeaders httpHeaders = (HttpHeaders) o;
+        return Objects.equals(headers, httpHeaders.headers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(headers);
     }
 }
