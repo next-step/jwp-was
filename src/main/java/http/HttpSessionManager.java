@@ -1,25 +1,35 @@
 package http;
 
-import com.google.common.collect.Maps;
+import org.springframework.util.StringUtils;
 
+import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class HttpSessionManager {
-    private final Map<String, HttpSession> httpSessionMap;
+    public static final String SESSION_ID_NAME = "SESSION_ID";
+    private static final Map<String, HttpSession> httpSessionMap = new ConcurrentHashMap<>();
 
-    public HttpSessionManager() {
-        this.httpSessionMap = Maps.newHashMap();
+    private HttpSessionManager() {
     }
 
-    public void addSession(HttpSession session) {
-        httpSessionMap.put(session.getId(), session);
+    public static HttpSession addAndReturnSession() {
+        String sessionId = UUID.randomUUID().toString();
+
+        return httpSessionMap.put(sessionId, new HttpSession(sessionId));
     }
 
-    public void findSession(HttpSession httpSession) {
-        httpSessionMap.get(httpSession.getId());
+    @Nullable
+    public static HttpSession findSessionById(@Nullable String sessionId) {
+        if (StringUtils.isEmpty(sessionId)) {
+            return null;
+        }
+
+        return httpSessionMap.get(sessionId);
     }
 
-    public void removeSession(HttpSession httpSession) {
-        httpSessionMap.remove(httpSession.getId());
+    public static void removeSession(String sessionId) {
+        httpSessionMap.remove(sessionId);
     }
 }

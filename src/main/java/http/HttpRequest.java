@@ -1,6 +1,8 @@
 package http;
 
+import org.springframework.util.StringUtils;
 import utils.IOUtils;
+import utils.StringConstant;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,12 +17,16 @@ public class HttpRequest {
     private final RequestLine requestLine;
     private final RequestHeaders headers;
     private final RequestBody body;
+    private final Cookies cookies;
+    private final HttpSession httpSession;
 
 
-    private HttpRequest(RequestLine requestLine, RequestHeaders headers, RequestBody body) {
+    private HttpRequest(RequestLine requestLine, RequestHeaders headers, RequestBody body, Cookies cookies, HttpSession httpSession) {
         this.requestLine = requestLine;
         this.headers = headers;
         this.body = body;
+        this.cookies = cookies;
+        this.httpSession = httpSession;
     }
 
     @Nonnull
@@ -56,8 +62,30 @@ public class HttpRequest {
         int contentLengthValue = Integer.parseInt(requestHeaders.getOrDefault("Content-Length", "0"));
         String requestBodyString = IOUtils.readData(bufferedReader, contentLengthValue);
         RequestBody requestBody = RequestBody.from(requestBodyString);
+        Cookies cookies = makeCookies(requestHeaders);
+        HttpSession httpSession = makeHttpSession(cookies);
 
-        return new HttpRequest(requestLine, requestHeaders, requestBody);
+        return new HttpRequest(requestLine, requestHeaders, requestBody, cookies, httpSession);
+    }
+
+    private static Cookies makeCookies(RequestHeaders requestHeaders) {
+        return new Cookies(requestHeaders);
+    }
+
+    @Nonnull
+    private static HttpSession makeHttpSession(Cookies cookies) {
+        String sessionId = cookies.findCookieValue(HttpSessionManager.SESSION_ID_NAME);
+        HttpSession httpSession = HttpSessionManager.findSessionById(sessionId);
+        if (httpSession == null) {
+            return HttpSessionManager.addAndReturnSession();
+        }
+
+        return httpSession;
+    }
+
+    @Nullable
+    public String getCookieValue(@Nonnull String name) {
+        return cookies.findCookieValue(name);
     }
 
     @Nullable
@@ -102,7 +130,7 @@ public class HttpRequest {
 
     static class EmptyHttpRequest extends HttpRequest {
         public EmptyHttpRequest() {
-            super(RequestLine.makeEmptyRequestLine(), null, null);
+            super(RequestLine.makeEmptyRequestLine(), null, null, null, null);
         }
     }
 
@@ -116,5 +144,9 @@ public class HttpRequest {
 
     public RequestBody getBody() {
         return body;
+    }
+
+    public HttpSession getHttpSession() {
+        return httpSession;
     }
 }

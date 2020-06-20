@@ -10,7 +10,7 @@ class HttpRequestTest {
     private HttpRequest sut;
 
     @Test
-    void new_httpRequest_bodyExist() throws IOException {
+    void from() throws IOException {
         // given
         String keepAlive = "keep-alive";
         String bodyString = "a=1";
@@ -41,7 +41,7 @@ class HttpRequestTest {
     }
 
     @Test
-    void new_httpRequest() throws IOException {
+    void getHeaders() throws IOException {
         // given
         String keepAlive = "keep-alive";
         String rawRequestString = "GET / HTTP/1.1\n" +
@@ -57,9 +57,9 @@ class HttpRequestTest {
                 "\r\n";
 
         ByteArrayInputStream inputStream = new ByteArrayInputStream(rawRequestString.getBytes());
+        sut = HttpRequest.from(inputStream);
 
         // when
-        sut = HttpRequest.from(inputStream);
         String connectionHeaderValue = sut.getHeaders().get("Connection");
 
         // then
@@ -67,4 +67,44 @@ class HttpRequestTest {
 
     }
 
+    @Test
+    void getCookieValue() throws IOException {
+        // given
+        String cookieName1 = "cookieName1";
+        String cookieName2 = "cookieName2";
+        String cookieValue1 = "cookieValue1";
+        String cookieValue2 = "cookieValue2";
+        String rawRequestString = "GET / HTTP/1.1\n" +
+                "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36\n" +
+                "Cookie: "+ cookieName1 + "=" + cookieValue1 + "; " + cookieName2 + "=" + cookieValue2 + ";\r\n" +
+                "\r\n";
+
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(rawRequestString.getBytes());
+        sut = HttpRequest.from(inputStream);
+
+        // when
+        String value1 = sut.getCookieValue(cookieName1);
+        String value2 = sut.getCookieValue(cookieName2);
+
+        // then
+        assertThat(value1).isEqualTo(cookieValue1);
+        assertThat(value2).isEqualTo(cookieValue2);
+    }
+
+    @Test
+    void getCookieValue_null() throws IOException {
+        // given
+        String rawRequestString = "GET / HTTP/1.1\n" +
+                "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36\n" +
+                "\r\n";
+
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(rawRequestString.getBytes());
+        sut = HttpRequest.from(inputStream);
+
+        // when
+        String value = sut.getCookieValue("anyString");
+
+        // then
+        assertThat(value).isNull();
+    }
 }
