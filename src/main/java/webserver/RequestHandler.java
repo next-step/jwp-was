@@ -35,12 +35,11 @@ public class RequestHandler implements Runnable {
                 final HttpRequest httpRequest = RequestReader.read(in);
                 final HttpResponse httpResponse = new HttpResponse();
 
+                httpRequest.setHttpResponse(httpResponse);
+
                 final String path = httpRequest.getPath();
                 final Controller controller = FrontController.controllerMapping(path);
                 controller.service(httpRequest, httpResponse);
-
-                httpRequest.getSession(false)
-                        .ifPresent(httpSession -> handleSession(httpSession, httpResponse));
 
                 ResponseWriter.write(out, httpResponse);
             } catch (WebServerException e) {
@@ -51,13 +50,6 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    private void handleSession(HttpSession httpSession, HttpResponse httpResponse) {
-        SessionStore.add(httpSession);
-
-        final String sessionId = httpSession.getId();
-        httpResponse.addCookie("JSESSIONID", sessionId);
     }
 
 }

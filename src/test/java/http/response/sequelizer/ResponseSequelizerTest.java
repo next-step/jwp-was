@@ -27,7 +27,18 @@ class ResponseSequelizerTest {
         final HttpResponse httpResponse = new HttpResponse();
         httpResponse.addCookie("a", "1");
         httpResponse.addCookie("b", "2");
-        final String expected = "Set-Cookie: a=1; b=2\r\n";
+        final String expected1 = "Set-Cookie: a=1";
+        final String expected2 = "Set-Cookie: b=2";
+
+        final String result = ResponseSequelizer.COOKIE.sequelize(httpResponse);
+        assertThat(result).contains(expected1, expected2);
+    }
+
+    @Test
+    @DisplayName("httpResponse에 쿠키가 없는 경우 비어있는 문자열이 나온다")
+    public void emptyCookie() {
+        final HttpResponse httpResponse = new HttpResponse();
+        final String expected = "";
 
         final String result = ResponseSequelizer.COOKIE.sequelize(httpResponse);
 

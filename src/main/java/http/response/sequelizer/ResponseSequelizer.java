@@ -7,6 +7,7 @@ import org.apache.logging.log4j.util.Strings;
 
 import java.util.Iterator;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public enum ResponseSequelizer {
     RESPONSE_LINE(ResponseSequelizer::sequelizeResponseLine),
@@ -30,10 +31,9 @@ public enum ResponseSequelizer {
 
     private static String sequelizeCookie(HttpResponse httpResponse) {
         final Cookies cookies = httpResponse.getCookie();
-        if (cookies.isEmpty()) {
-            return Strings.EMPTY;
-        }
-        return HeaderFieldName.SET_COOKIE.stringify() + ": " + cookies.stringify() + "\r\n";
+        return cookies.asList().stream()
+                .map(c -> HeaderFieldName.SET_COOKIE.stringify() + ": " + c + "\r\n")
+                .collect(Collectors.joining());
     }
 
     private static String sequelizeHeader(HttpResponse httpResponse) {

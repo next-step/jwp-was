@@ -10,6 +10,8 @@ import webserver.exceptions.StatusCodeNotFoundException;
 import java.util.Optional;
 
 public class HttpResponse {
+    private static final String SESSION_ID = "JSESSIONID";
+
     private StatusCode statusCode;
     private final ResponseHeader header;
     private final Cookies cookies;
@@ -76,4 +78,7 @@ public class HttpResponse {
         header.addHeader(new HeaderField(HeaderFieldName.LOCATION, redirectUrl));
     }
 
+    public void setSessionId(String sessionId) {
+        cookies.addCookie(SESSION_ID, sessionId);
+    }
 }

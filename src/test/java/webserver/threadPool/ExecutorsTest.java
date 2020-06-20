@@ -1,5 +1,6 @@
-package webserver;
+package webserver.threadPool;
 
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
@@ -14,12 +15,13 @@ public class ExecutorsTest {
 
     private static AtomicInteger counter = new AtomicInteger(0);
 
-    public static void main(String[] args) throws Exception {
-        ExecutorService es = Executors.newFixedThreadPool(100);
+    @Test
+    void test() throws Exception {
+        ExecutorService es = Executors.newFixedThreadPool(5);
 
         StopWatch sw = new StopWatch();
         sw.start();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             es.execute(() -> {
                 int idx = counter.addAndGet(1);
                 try {
@@ -37,4 +39,3 @@ public class ExecutorsTest {
         logger.info("Total Elaspsed: {}", sw.getTotalTimeSeconds());
     }
 }
-

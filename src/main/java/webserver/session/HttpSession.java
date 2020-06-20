@@ -4,15 +4,18 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class HttpSession {
-
     private String id;
     private Attributes attributes;
 
     public static HttpSession create() {
         final HttpSession httpSession = new HttpSession();
         final UUID uuid = UUID.randomUUID();
+
         httpSession.id = uuid.toString();
         httpSession.initAttribute();
+
+        SessionStore.add(httpSession);
+
         return httpSession;
     }
 

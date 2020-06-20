@@ -33,6 +33,11 @@ public class ResponseHeader implements Iterable {
         this.header.put(headerField.getName(), headerField);
     }
 
+    public void addHeader(String name, String value) {
+        HeaderField headerField = new HeaderField(name, value);
+        addHeader(headerField);
+    }
+
     @Override
     public Iterator iterator() {
         return header.keySet().iterator();
