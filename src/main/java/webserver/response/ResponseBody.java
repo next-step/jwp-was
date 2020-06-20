@@ -19,6 +19,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Objects;
 
 @Getter
 @AllArgsConstructor
@@ -49,7 +50,7 @@ public class ResponseBody {
         return responseBody;
     }
 
-    public void addBody(ModelAndView mav) {
+    private void addBody(ModelAndView mav) {
         Map<String, Object> model = mav.getModel();
         String view = mav.getView();
 
@@ -81,6 +82,10 @@ public class ResponseBody {
     }
 
     public void response(DataOutputStream dos) {
+        if (Objects.isNull(file)) {
+            return;
+        }
+
         try {
             dos.write(file, 0, file.length);
             dos.flush();

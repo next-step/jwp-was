@@ -42,13 +42,13 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = HttpRequest.of(br);
             HttpResponse httpResponse = new HttpResponse();
             if (httpRequest.isStaticFileRequest()) {
-                httpResponse = HttpResponse.of(httpRequest);
-                httpResponse.response(dos);
+                httpResponse.response(httpRequest);
             } else {
                 Controller controller = controllers.get(httpRequest.getHost());
                 ModelAndView mav = controller.service(httpRequest, httpResponse);
-                httpResponse.response(dos, mav, httpRequest);
+                httpResponse.response(mav, httpRequest);
             }
+            httpResponse.sendResponse(dos);
             dos.flush();
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
