@@ -3,10 +3,7 @@ package http.common;
 import utils.StringUtils;
 
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class HttpHeaders {
@@ -51,9 +48,13 @@ public class HttpHeaders {
                 .collect(Collectors.joining());
     }
 
-    public boolean hasCookieValue(String value) {
-        String cookie = this.headers.get(HttpHeader.COOKIE.getText());
-        return cookie != null && cookie.contains(value);
+    public boolean isLogin() {
+        HttpCookie cookie = getCookie();
+        return "true".equals(cookie.get("logined"));
+    }
+
+    public HttpCookie getCookie() {
+        return new HttpCookie(get(HttpHeader.COOKIE.getText()));
     }
 
     @Override

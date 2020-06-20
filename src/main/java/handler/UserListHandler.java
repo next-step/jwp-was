@@ -29,7 +29,7 @@ public class UserListHandler extends AbstractHandler {
     public void doGet(RequestMessage requestMessage, ResponseMessage responseMessage) throws IOException {
         HttpHeaders httpHeaders = requestMessage.getHttpHeaders();
 
-        if (httpHeaders.hasCookieValue("logined=true")) {
+        if(httpHeaders.isLogin()) {
             Collection<User> allUsers = DataBase.findAll();
 
             byte[] body = DynamicContentsFactory.createHTML("/user/list", allUsers);

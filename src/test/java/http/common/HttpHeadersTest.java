@@ -1,5 +1,6 @@
-package http;
+package http.common;
 
+import http.common.HttpCookie;
 import http.common.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -79,13 +80,28 @@ public class HttpHeadersTest {
 
     @DisplayName("헤더에 로그인 상태 쿠키값이 있는지 확인")
     @Test
-    void test_hasLoginCookie() {
+    void test_getCookieValue() {
         // given
         List<String> strings = Arrays.asList("Cookie: logined=true");
         HttpHeaders httpHeaders = new HttpHeaders(strings);
         // when
-        boolean result = httpHeaders.hasCookieValue("logined=true");
+        boolean result = httpHeaders.isLogin();
         // then
         assertThat(result).isTrue();
+    }
+
+    @DisplayName("헤더에 Cookie가 없으면 빈 쿠키 반환")
+    @Test
+    void test_getCookie() {
+        // given
+        List<String> strings = Arrays.asList(
+                "Host: localhost:8080",
+                "Connection: keep-alive",
+                "Accept: */*");
+        HttpHeaders httpHeaders = new HttpHeaders(strings);
+        // when
+        HttpCookie cookie = httpHeaders.getCookie();
+        // then
+        assertThat(cookie.size()).isEqualTo(0);
     }
 }
