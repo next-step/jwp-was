@@ -1,16 +1,16 @@
 package http;
 
-import http.request.HttpReqeustHeaders;
+import http.request.HttpRequestHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HttpReqeustHeadersTest {
+public class HttpRequestHeadersTest {
     @Test
     @DisplayName("Header에 값 추가")
     void addTest() {
-        final HttpReqeustHeaders headers = new HttpReqeustHeaders();
+        final HttpRequestHeaders headers = new HttpRequestHeaders();
         headers.addHeader("Authorization: Bearer");
         assertThat(headers.getHeader("Authorization")).isEqualTo("Bearer");
     }
@@ -18,8 +18,8 @@ public class HttpReqeustHeadersTest {
     @Test
     @DisplayName("Content length 가지고 오기")
     void getContentLengthTest() {
-        final HttpReqeustHeaders httpReqeustHeaders = new HttpReqeustHeaders();
-        httpReqeustHeaders.addHeader("Content-length: 4");
-        assertThat(httpReqeustHeaders.getContentLength()).isEqualTo(4);
+        final HttpRequestHeaders httpRequestHeaders = new HttpRequestHeaders();
+        httpRequestHeaders.addHeader("Content-length: 4");
+        assertThat(httpRequestHeaders.getContentLength()).isEqualTo(4);
     }
 }

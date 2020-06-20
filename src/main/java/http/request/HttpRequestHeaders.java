@@ -6,13 +6,13 @@ import http.HttpCookies;
 import java.util.Collection;
 import java.util.Map;
 
-public class HttpReqeustHeaders {
+public class HttpRequestHeaders {
     private static final String HEADER_DELIMITER = ": ";
     private static final String CONTENT_LENGTH = "Content-Length";
     private static final String COOKIE = "Cookie";
     private final Map<String, String> values = Maps.newHashMap();
 
-    public HttpReqeustHeaders() {
+    public HttpRequestHeaders() {
     }
 
     public void addHeader(final String header) {
