@@ -1,7 +1,8 @@
-package webserver.request;
+package webserver.http.request;
 
 import lombok.EqualsAndHashCode;
 import utils.StringUtils;
+import webserver.http.HttpHeader;
 
 import java.util.List;
 import java.util.Map;
@@ -13,21 +14,21 @@ import static java.util.stream.Collectors.toMap;
 @EqualsAndHashCode
 public class RequestHeaders {
 
-    private Map<String, RequestHeader> requestHeaders;
+    private Map<HttpHeader, RequestHeader> requestHeaders;
 
-    public RequestHeaders(Map<String, RequestHeader> requestHeaderTexts) {
+    public RequestHeaders(Map<HttpHeader, RequestHeader> requestHeaderTexts) {
         this.requestHeaders = requestHeaderTexts;
     }
 
     public static RequestHeaders of(List<String> requestHeaderTexts) {
-        Map<String, RequestHeader> requestHeaderMap = requestHeaderTexts.stream()
+        Map<HttpHeader, RequestHeader> requestHeaderMap = requestHeaderTexts.stream()
                 .filter(StringUtils::isNotBlank)
                 .map(RequestHeader::of)
-                .collect(toMap(RequestHeader::getName, Function.identity()));
+                .collect(toMap(RequestHeader::getName, Function.identity(), (requestHeader1, requestHeader2) -> requestHeader1));
         return new RequestHeaders(requestHeaderMap);
     }
 
-    public String get(String name) {
+    public String get(HttpHeader name) {
         RequestHeader requestHeader = requestHeaders.get(name);
         if (Objects.isNull(requestHeader)) {
             return null;

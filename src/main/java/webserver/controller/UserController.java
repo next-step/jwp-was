@@ -2,38 +2,19 @@ package webserver.controller;
 
 import db.DataBase;
 import model.User;
-import webserver.request.HttpRequest;
-import webserver.request.RequestBody;
-import webserver.response.HttpResponse;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestBody;
+import webserver.http.response.HttpResponse;
 
-import java.util.Map;
-
-public class UserController implements Controller {
+public class UserController extends AbstractController {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
-        if (request.isGet()) {
-            doGet(request, response);
-        }
-        if (request.isPost()) {
-            doPost(request, response);
-        }
+    protected ModelAndView doGet(HttpRequest request, HttpResponse response) {
+        return doPost(request, response);
     }
 
-    private void doGet(HttpRequest request, HttpResponse response) {
-        Map<String, String> queryParameters = request.getRequestLine().getQueryParameters();
-        String userId = queryParameters.get("userId");
-        String password = queryParameters.get("password");
-        String name = queryParameters.get("name");
-        String email = queryParameters.get("email");
-
-        User user = new User(userId, password, name, email);
-        DataBase.addUser(user);
-
-        response.response200();
-    }
-
-    private void doPost(HttpRequest request, HttpResponse response) {
+    @Override
+    protected ModelAndView doPost(HttpRequest request, HttpResponse response) {
         RequestBody requestBody = request.getRequestBody();
         String userId = requestBody.get("userId");
         String password = requestBody.get("password");
@@ -43,7 +24,8 @@ public class UserController implements Controller {
         User user = new User(userId, password, name, email);
         DataBase.addUser(user);
 
-        String location = "http://" + request.getRequestHeaders().get("Host") + "/index.html";
-        response.response302(location);
+        ModelAndView mav = new ModelAndView();
+        mav.setView("redirect:/index.html");
+        return mav;
     }
 }

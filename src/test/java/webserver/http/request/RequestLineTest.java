@@ -1,4 +1,4 @@
-package webserver.request;
+package webserver.http.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static webserver.HttpMethod.GET;
-import static webserver.HttpMethod.POST;
+import static webserver.http.HttpMethod.GET;
+import static webserver.http.HttpMethod.POST;
 
 public class RequestLineTest {
 

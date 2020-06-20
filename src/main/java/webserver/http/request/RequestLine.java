@@ -1,10 +1,10 @@
-package webserver.request;
+package webserver.http.request;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import webserver.FileType;
-import webserver.HttpMethod;
 import webserver.Protocol;
+import webserver.http.HttpMethod;
 
 import java.util.Arrays;
 import java.util.Collections;

@@ -2,13 +2,9 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.controller.Controller;
-import webserver.controller.LoginController;
-import webserver.controller.UserController;
-import webserver.controller.UserListController;
-import webserver.request.HttpRequest;
-import webserver.response.HttpResponse;
-import webserver.response.ResponseHeader;
+import webserver.controller.*;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
 import java.io.*;
 import java.net.Socket;
@@ -41,52 +37,20 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            DataOutputStream dos = new DataOutputStream(out);
 
             HttpRequest httpRequest = HttpRequest.of(br);
-            HttpResponse httpResponse;
+            HttpResponse httpResponse = new HttpResponse();
             if (httpRequest.isStaticFileRequest()) {
-                httpResponse = HttpResponse.of(httpRequest);
-                httpResponse.response200();
+                httpResponse.response(httpRequest);
             } else {
-                httpResponse = HttpResponse.of();
                 Controller controller = controllers.get(httpRequest.getHost());
-                controller.service(httpRequest, httpResponse);
+                ModelAndView mav = controller.service(httpRequest, httpResponse);
+                httpResponse.response(mav, httpRequest);
             }
-
-            DataOutputStream dos = new DataOutputStream(out);
-            response(dos, httpResponse);
+            httpResponse.sendResponse(dos);
+            dos.flush();
         } catch (IOException | URISyntaxException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response(DataOutputStream dos, HttpResponse httpResponse) {
-        try {
-            dos.writeBytes(httpResponse.getResponseLine());
-            responseHeader(dos, httpResponse.getResponseHeaders());
-            responseBody(dos, httpResponse.getBody());
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseHeader(DataOutputStream dos, Map<String, ResponseHeader> responseHeaders) {
-        try {
-            for (String name : responseHeaders.keySet()) {
-                dos.writeBytes(name + ": " + responseHeaders.get(name));
-            }
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }

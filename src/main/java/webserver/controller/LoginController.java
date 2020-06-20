@@ -3,33 +3,33 @@ package webserver.controller;
 import db.DataBase;
 import model.User;
 import webserver.exception.NotFoundUserException;
-import webserver.request.HttpRequest;
-import webserver.request.RequestBody;
-import webserver.response.HttpResponse;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestBody;
+import webserver.http.response.HttpResponse;
 
-public class LoginController implements Controller {
+public class LoginController extends AbstractController {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
-        if (request.isPost()) {
-            doPost(request, response);
-        }
+    protected ModelAndView doGet(HttpRequest request, HttpResponse response) {
+        return new ModelAndView();
     }
 
-    private void doPost(HttpRequest request, HttpResponse response) {
+    @Override
+    protected ModelAndView doPost(HttpRequest request, HttpResponse response) {
+        ModelAndView mav = new ModelAndView();
         RequestBody requestBody = request.getRequestBody();
         String userId = requestBody.get("userId");
         String password = requestBody.get("password");
         User user = DataBase.findUserById(userId)
                 .orElseThrow(NotFoundUserException::new);
+
         if (!user.isEqual(password)) {
             response.addCookie("logined=false");
-            String location = "http://" + request.getRequestHeaders().get("Host") + "/user/login_failed.html";
-            response.response302(location);
-            return;
+            mav.setView("redirect:/user/login_failed.html");
+            return mav;
         }
         response.addCookie("logined=true");
-        String location = "http://" + request.getRequestHeaders().get("Host") + "/index.html";
-        response.response302(location);
+        mav.setView("redirect:/index.html");
+        return mav;
     }
 }

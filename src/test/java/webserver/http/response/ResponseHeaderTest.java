@@ -1,7 +1,8 @@
-package webserver.response;
+package webserver.http.response;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.HttpHeader;
 
 import java.util.Arrays;
 
@@ -14,7 +15,7 @@ class ResponseHeaderTest {
     void of() {
 
         // given
-        String name = "Content-Type";
+        HttpHeader name = HttpHeader.CONTENT_TYPE;
         String[] values = {"text/html", "charset=utf-8"};
 
         // when

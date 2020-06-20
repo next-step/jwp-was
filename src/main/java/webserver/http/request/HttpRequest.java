@@ -1,4 +1,4 @@
-package webserver.request;
+package webserver.http.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 import utils.StringUtils;
+import webserver.http.HttpHeader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class HttpRequest {
 
         RequestBody requestBody = null;
         if (requestLine.isPost()) {
-            String data = IOUtils.readData(br, Integer.parseInt(requestHeaders.get("Content-Length")));
+            String data = IOUtils.readData(br, Integer.parseInt(requestHeaders.get(HttpHeader.CONTENT_LENGTH)));
             requestBody = RequestBody.of(data);
         }
 

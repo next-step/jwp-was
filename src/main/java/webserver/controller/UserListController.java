@@ -3,36 +3,32 @@ package webserver.controller;
 import db.DataBase;
 import model.User;
 import utils.StringUtils;
-import webserver.request.HttpRequest;
-import webserver.request.RequestHeaders;
-import webserver.response.HttpResponse;
+import webserver.http.HttpHeader;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestHeaders;
+import webserver.http.response.HttpResponse;
 
-import java.io.IOException;
 import java.util.Collection;
 
-public class UserListController implements Controller {
+public class UserListController extends AbstractController {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
-        if (request.isGet()) {
-            try {
-                doGet(request, response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void doGet(HttpRequest request, HttpResponse response) throws IOException {
+    protected ModelAndView doGet(HttpRequest request, HttpResponse response) {
+        ModelAndView mav = new ModelAndView();
         RequestHeaders requestHeaders = request.getRequestHeaders();
-        String cookie = requestHeaders.get("Cookie");
+        String cookie = requestHeaders.get(HttpHeader.COOKIE);
         if (StringUtils.isNotBlank(cookie) && cookie.contains("logined=true")) {
             Collection<User> users = DataBase.findAll();
-            response.addBody(users);
-            response.response200();
-            return;
+            mav.addModel("users", users);
+            mav.setView("/user/list.html");
+            return mav;
         }
-        String location = "http://" + request.getRequestHeaders().get("Host") + "/user/login.html";
-        response.response302(location);
+        mav.setView("redirect:/user/login.html");
+        return mav;
+    }
+
+    @Override
+    protected ModelAndView doPost(HttpRequest request, HttpResponse response) {
+        return new ModelAndView();
     }
 }
