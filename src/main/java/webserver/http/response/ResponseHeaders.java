@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.HttpHeader;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,16 +22,5 @@ public class ResponseHeaders {
     public void addHeader(HttpHeader name, String... values) {
         ResponseHeader responseHeader = ResponseHeader.of(name, values);
         responseHeaders.put(name, responseHeader);
-    }
-
-    public void response(DataOutputStream dos) {
-        try {
-            for (HttpHeader name : responseHeaders.keySet()) {
-                dos.writeBytes(name + ": " + responseHeaders.get(name));
-            }
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
     }
 }

@@ -15,11 +15,9 @@ import webserver.FileType;
 import webserver.ModelAndView;
 import webserver.http.request.RequestLine;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.Objects;
 
 @Getter
 @AllArgsConstructor
@@ -79,18 +77,5 @@ public class ResponseBody {
 
     public String getContentType() {
         return fileType.getContentType();
-    }
-
-    public void response(DataOutputStream dos) {
-        if (Objects.isNull(file)) {
-            return;
-        }
-
-        try {
-            dos.write(file, 0, file.length);
-            dos.flush();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
     }
 }
