@@ -16,6 +16,7 @@ public class HttpResponse {
 
     private DataOutputStream dos = null;
     private HttpHeaders headers = new HttpHeaders();
+    private HttpResponseCode responseCode;
 
     public HttpResponse(OutputStream out) {
         dos = new DataOutputStream(out);
@@ -25,11 +26,14 @@ public class HttpResponse {
         byte[] body = new byte[0];
         try {
             ContentType contentType = ContentType.getContentType(url);
+
             resourcePath = contentType.getResourcePath();
+
             headers.put("Content-Type", contentType.getMimeType());
             body = getBody(url);
             headers.put("Content-Length", body.length + "");
-            response200Header();
+
+            responseHeader(HttpResponseCode.OK_200);
             responseBody(body);
         } catch (IOException e) {
             e.printStackTrace();
@@ -48,20 +52,9 @@ public class HttpResponse {
         return body;
     }
 
-    public void response200Header() {
+    public void responseHeader(HttpResponseCode code) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes(headers.makeResponseHeader());
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    public void sendRedirect(String redirectUrl) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: " + redirectUrl + "\r\n");
+            dos.writeBytes(HttpResponseCode.getHeaderLine(code));
             dos.writeBytes(headers.makeResponseHeader());
             dos.writeBytes("\r\n");
         } catch (IOException e) {
@@ -80,7 +73,7 @@ public class HttpResponse {
 
     public void responseTemplateBody(byte[] body) {
         headers.put("Content-Length", body.length + "");
-        response200Header();
+        responseHeader(HttpResponseCode.OK_200);
         responseBody(body);
     }
 

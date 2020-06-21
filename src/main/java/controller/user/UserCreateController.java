@@ -4,6 +4,7 @@ import controller.AbstractController;
 import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
+import http.HttpResponseCode;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ public class UserCreateController extends AbstractController {
                 request.getParameter("email"));
         logger.debug("User : {}", user);
         DataBase.addUser(user);
-        response.sendRedirect("/index.html");
+        response.addHeader("Location", "/index.html");
+        response.responseHeader(HttpResponseCode.REDIRECT_300);
     }
 }

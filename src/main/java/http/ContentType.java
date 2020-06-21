@@ -24,7 +24,6 @@ public enum ContentType {
     }
 
     public static ContentType getContentType(String path) {
-
         return Arrays.stream(ContentType.values())
                 .filter(v -> path.endsWith(v.url))
                 .findAny()
@@ -39,4 +38,5 @@ public enum ContentType {
     public String getResourcePath() {
         return resourcePath;
     }
+
 }
