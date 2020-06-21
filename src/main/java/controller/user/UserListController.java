@@ -41,16 +41,6 @@ public class UserListController extends AbstractController {
         //response.forward(request.getPath());
     }
 
-    @Override
-    public void doPost(HttpRequest request, HttpResponse response) {
-        super.doPost(request, response);
-    }
-
-    @Override
-    public void doGet(HttpRequest request, HttpResponse response) {
-        super.doGet(request, response);
-    }
-
     private boolean loginCheck(String line) {
         boolean result = false;
         String loginStatus = line.split("=")[1];
