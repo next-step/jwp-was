@@ -8,6 +8,7 @@ import controller.AbstractController;
 import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
+import http.HttpResponseCode;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,8 @@ public class UserListController extends AbstractController {
     @Override
     public void service(HttpRequest request, HttpResponse response) throws IOException {
         if (!loginCheck(request.getHeader("Cookie"))) {
-            response.sendRedirect("/user/login.html");
+            response.addHeader("Location", "/user/login.html");
+            response.responseHeader(HttpResponseCode.REDIRECT_300);
             return;
         }
 
