@@ -3,6 +3,7 @@ package webserver.controller;
 import db.DataBase;
 import model.User;
 import utils.StringUtils;
+import webserver.ModelAndView;
 import webserver.http.HttpHeader;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestHeaders;
@@ -25,10 +26,5 @@ public class UserListController extends AbstractController {
         }
         mav.setView("redirect:/user/login.html");
         return mav;
-    }
-
-    @Override
-    protected ModelAndView doPost(HttpRequest request, HttpResponse response) {
-        return new ModelAndView();
     }
 }

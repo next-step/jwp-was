@@ -2,17 +2,13 @@ package webserver.controller;
 
 import db.DataBase;
 import model.User;
+import webserver.ModelAndView;
 import webserver.exception.NotFoundUserException;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.response.HttpResponse;
 
 public class LoginController extends AbstractController {
-
-    @Override
-    protected ModelAndView doGet(HttpRequest request, HttpResponse response) {
-        return new ModelAndView();
-    }
 
     @Override
     protected ModelAndView doPost(HttpRequest request, HttpResponse response) {

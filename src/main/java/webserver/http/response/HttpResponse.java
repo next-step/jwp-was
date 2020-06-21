@@ -1,7 +1,7 @@
 package webserver.http.response;
 
 import lombok.NoArgsConstructor;
-import webserver.controller.ModelAndView;
+import webserver.ModelAndView;
 import webserver.http.HttpHeader;
 import webserver.http.request.HttpRequest;
 

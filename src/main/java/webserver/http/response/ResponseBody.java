@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.FileType;
-import webserver.controller.ModelAndView;
+import webserver.ModelAndView;
 import webserver.http.request.RequestLine;
 
 import java.io.DataOutputStream;
