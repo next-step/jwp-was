@@ -1,27 +1,25 @@
 package webserver.http.response;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.ModelAndView;
 import webserver.http.HttpHeader;
-import webserver.http.request.HttpRequest;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Objects;
 
-import static webserver.http.HttpHeader.*;
+import static webserver.http.HttpHeader.SET_COOKIE;
 
 @NoArgsConstructor
+@Getter
 public class HttpResponse {
 
     private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
-    private static final String HTTP_PROTOCOL_PREFIX = "http://";
 
-    private ResponseLine responseLine;
+    private ResponseLine responseLine = new ResponseLine();
     private ResponseHeaders responseHeaders = new ResponseHeaders();
     private ResponseBody responseBody = new ResponseBody();
 
@@ -29,27 +27,7 @@ public class HttpResponse {
         responseHeaders.addHeader(SET_COOKIE, value, "Path=/");
     }
 
-    public void response(ModelAndView mav, HttpRequest request) {
-        if (mav.isRedirect()) {
-            responseLine = ResponseLine.of(HttpResponseStatus.FOUND);
-            responseHeaders.addHeader(LOCATION,
-                    HTTP_PROTOCOL_PREFIX + request.getRequestHeaders().get(HttpHeader.HOST) + mav.getRedirectView());
-            return;
-        }
-        responseLine = ResponseLine.of(HttpResponseStatus.OK);
-        responseBody = ResponseBody.of(mav);
-        responseHeaders.addHeader(CONTENT_TYPE, responseBody.getContentType(), "charset=utf-8");
-        responseHeaders.addHeader(CONTENT_LENGTH, responseBody.getLength());
-    }
-
-    public void response(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        responseLine = ResponseLine.of(HttpResponseStatus.OK);
-        responseBody = ResponseBody.of(httpRequest.getRequestLine());
-        responseHeaders.addHeader(CONTENT_TYPE, responseBody.getContentType(), "charset=utf-8");
-        responseHeaders.addHeader(CONTENT_LENGTH, responseBody.getLength());
-    }
-
-    public void sendResponse(DataOutputStream dos) throws IOException {
+    public void response(DataOutputStream dos) throws IOException {
         responseLine(dos);
         responseHeader(dos);
         responseBody(dos);

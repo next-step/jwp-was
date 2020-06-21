@@ -2,9 +2,13 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.controller.*;
+import webserver.controller.Controller;
+import webserver.controller.LoginController;
+import webserver.controller.UserController;
+import webserver.controller.UserListController;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpResponseProcessor;
 
 import java.io.*;
 import java.net.Socket;
@@ -42,13 +46,13 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = HttpRequest.of(br);
             HttpResponse httpResponse = new HttpResponse();
             if (httpRequest.isStaticFileRequest()) {
-                httpResponse.response(httpRequest);
+                HttpResponseProcessor.setAttribute(httpRequest, httpResponse);
             } else {
                 Controller controller = controllers.get(httpRequest.getHost());
                 ModelAndView mav = controller.service(httpRequest, httpResponse);
-                httpResponse.response(mav, httpRequest);
+                HttpResponseProcessor.setAttribute(mav, httpRequest, httpResponse);
             }
-            httpResponse.sendResponse(dos);
+            httpResponse.response(dos);
             dos.flush();
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
