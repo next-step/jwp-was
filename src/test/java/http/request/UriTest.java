@@ -18,7 +18,6 @@ public class UriTest {
         // then
         assertThat(uri.getPath()).isEqualTo("/users");
         assertThat(uri.getQueryString()).isEqualTo(new QueryString("userId=crystal&password=password&name=Sujung"));
-//        assertThat(uri.equals(Uri.of("/users", "userId=crystal&password=password&name=Sujung"))).isTrue();
     }
 
     @DisplayName("쿼리스트링 없이 경로만 존재하면 쿼리스트링은 비어있다.")

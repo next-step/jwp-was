@@ -58,7 +58,7 @@ class UserListHandlerTest {
 
         RequestMessage requestMessage = RequestMessage.createWithDefaultBody(
                 RequestLine.from("GET /user/list HTTP/1.1"),
-                new HttpHeaders(Arrays.asList("Cookie: JSESSIONID=" + session.getId()))
+        new HttpHeaders(Arrays.asList("Cookie: JSESSIONID=" + session.getId()))
         );
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();

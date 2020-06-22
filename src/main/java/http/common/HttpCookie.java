@@ -11,8 +11,9 @@ public class HttpCookie {
     public static final String SESSION_ID = "JSESSIONID";
     public static final String PATH = "Path";
 
-    public static final String SEMI_COLON = "; ";
+    public static final String SEMI_COLON = ";";
     public static final String EQUAL_SIGN = "=";
+    public static final String SPACE = " ";
 
     private final Map<String, String> cookies;
 
@@ -46,6 +47,7 @@ public class HttpCookie {
         StringBuilder sb = new StringBuilder();
         sb.append(value)
             .append(SEMI_COLON)
+            .append(SPACE)
             .append(PATH)
             .append(EQUAL_SIGN)
             .append(path);

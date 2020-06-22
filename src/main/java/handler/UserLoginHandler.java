@@ -2,9 +2,9 @@ package handler;
 
 import db.DataBase;
 import dto.UserDto;
-import http.common.HttpSession;
 import http.common.HttpCookie;
 import http.common.HttpHeader;
+import http.common.HttpSession;
 import http.request.QueryString;
 import http.request.RequestMessage;
 import http.response.ContentType;
@@ -20,7 +20,8 @@ public class UserLoginHandler extends AbstractHandler {
 
     private static final UserLoginHandler INSTANCE = new UserLoginHandler();
 
-    private UserLoginHandler() { }
+    private UserLoginHandler() {
+    }
 
     public static Handler getInstance() {
         return INSTANCE;
@@ -34,6 +35,7 @@ public class UserLoginHandler extends AbstractHandler {
     public void doPost(RequestMessage requestMessage, ResponseMessage responseMessage) throws IOException {
         QueryString requestBody = requestMessage.readBody();
         User loginUser = DataBase.findUserById(requestBody.getFirstParameter("userId"));
+
 
         if (isLoginSuccess(requestBody, loginUser)) {
             HttpSession session = requestMessage.getSession();
