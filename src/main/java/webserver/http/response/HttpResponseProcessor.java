@@ -13,7 +13,7 @@ public class HttpResponseProcessor {
 
     private static final String HTTP_PROTOCOL_PREFIX = "http://";
 
-    public static void setAttribute(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException, URISyntaxException {
+    public static void init(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException, URISyntaxException {
         ResponseLine responseLine = httpResponse.getResponseLine();
         responseLine.setStatus(HttpResponseStatus.OK);
 
@@ -25,7 +25,7 @@ public class HttpResponseProcessor {
         responseHeaders.addHeader(CONTENT_LENGTH, responseBody.getLength());
     }
 
-    public static void setAttribute(ModelAndView mav, HttpRequest httpRequest, HttpResponse httpResponse) {
+    public static void init(ModelAndView mav, HttpRequest httpRequest, HttpResponse httpResponse) {
         ResponseLine responseLine = httpResponse.getResponseLine();
         ResponseHeaders responseHeaders = httpResponse.getResponseHeaders();
         ResponseBody responseBody = httpResponse.getResponseBody();
