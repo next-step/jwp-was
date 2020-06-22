@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -28,7 +29,7 @@ public class ResponseMessage {
     }
 
     public void setHeader(HttpHeader name, String value) {
-        this.httpHeaders.set(name.getText(), value);
+        this.httpHeaders.setHeader(name, value);
     }
 
     private void setBody(byte[] body) {
@@ -36,7 +37,7 @@ public class ResponseMessage {
         this.body = body;
     }
 
-    public void responseWith(HttpStatus status, byte[] body, ContentType contentType) {
+    public void forward(HttpStatus status, byte[] body, ContentType contentType) {
         setHeader(HttpHeader.CONTENT_TYPE, contentType.toStringWithCharsetUTF8());
         setBody(body);
         write(status);

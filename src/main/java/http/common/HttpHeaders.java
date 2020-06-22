@@ -29,16 +29,16 @@ public class HttpHeaders {
         return new String[]{values[0], values[1]};
     }
 
-    public String get(String name) {
-        return this.headers.get(name);
+    public String getHeaderValueBy(HttpHeader name) {
+        return this.headers.get(name.getText());
     }
 
     public int size() {
         return this.headers.size();
     }
 
-    public void set(String name, String value) {
-        this.headers.put(name, value);
+    public void setHeader(HttpHeader name, String value) {
+        this.headers.put(name.getText(), value);
     }
 
     public String toJoinedString() {
@@ -46,15 +46,6 @@ public class HttpHeaders {
                 .stream()
                 .map(header -> header.getKey() + HEADER_DELIMITER + header.getValue() + "\r\n")
                 .collect(Collectors.joining());
-    }
-
-    public boolean isLogin() {
-        HttpCookie cookie = getCookie();
-        return "true".equals(cookie.get("logined"));
-    }
-
-    public HttpCookie getCookie() {
-        return new HttpCookie(get(HttpHeader.COOKIE.getText()));
     }
 
     @Override

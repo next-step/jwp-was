@@ -1,9 +1,6 @@
-package http;
+package http.response;
 
 import http.common.HttpHeader;
-import http.response.ContentType;
-import http.response.HttpStatus;
-import http.response.ResponseMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -30,7 +27,7 @@ class ResponseMessageTest {
         byte[] body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
         ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
         // when
-        responseMessage.responseWith(HttpStatus.OK, body, ContentType.HTML);
+        responseMessage.forward(HttpStatus.OK, body, ContentType.HTML);
         // then
         logger.debug("response message: {}", output.toString());
     }
@@ -52,7 +49,7 @@ class ResponseMessageTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
         // when
-        responseMessage.responseWith(HttpStatus.NOT_FOUND, "Not Found".getBytes(), ContentType.PLAIN);
+        responseMessage.forward(HttpStatus.NOT_FOUND, "Not Found".getBytes(), ContentType.PLAIN);
         // then
         logger.debug("response message: {}", output.toString());
     }
@@ -63,7 +60,7 @@ class ResponseMessageTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
         // when
-        responseMessage.setHeader(HttpHeader.SET_COOKIE,"logined=true; Path=/");
+        responseMessage.setHeader(HttpHeader.SET_COOKIE, "logined=true; Path=/");
         responseMessage.write(HttpStatus.OK);
         // then
         assertThat(output.toString()).isEqualTo("HTTP/1.1 200 OK\r\n" + "Set-Cookie: logined=true; Path=/\r\n" + "\r\n"

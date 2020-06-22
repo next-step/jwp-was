@@ -3,34 +3,63 @@ package http.common;
 import utils.StringUtils;
 
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class HttpCookie {
 
+    public static final String SESSION_ID = "JSESSIONID";
+    public static final String PATH = "Path";
+
+    public static final String SEMI_COLON = "; ";
+    public static final String EQUAL_SIGN = "=";
+
     private final Map<String, String> cookies;
 
-    public HttpCookie(String cookieContent) {
-        this.cookies = parse(cookieContent);
+    private HttpCookie(Map<String, String> cookies) {
+        this.cookies = cookies;
     }
 
-    private Map<String, String> parse(String cookieContent) {
-        if(cookieContent == null) {
-            return new HashMap<>();
+    public static HttpCookie createEmpty() {
+        return new HttpCookie(new HashMap<>());
+    }
+
+    public static HttpCookie from(String cookieValue) {
+        return new HttpCookie(parse(cookieValue));
+    }
+
+    private static Map<String, String> parse(String cookieContent) {
+        if (StringUtils.isEmpty(cookieContent)) {
+            return Collections.emptyMap();
         }
-        String[] pairs = cookieContent.split(";");
+        String[] pairs = cookieContent.split(SEMI_COLON);
         return Arrays.stream(pairs)
-                .map(pair -> StringUtils.splitIntoPair(pair, "="))
+                .map(pair -> StringUtils.splitIntoPair(pair, EQUAL_SIGN))
                 .collect(Collectors.toMap(e -> e[0].trim(), e -> e[1].trim()));
     }
 
-    public String get(String name) {
+    public String getCookieValueBy(String name) {
         return this.cookies.get(name);
+    }
+
+    public void addCookieValueWithPath(String name, String value, String path) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(value)
+            .append(SEMI_COLON)
+            .append(PATH)
+            .append(EQUAL_SIGN)
+            .append(path);
+        this.cookies.put(name, sb.toString());
     }
 
     public int size() {
         return this.cookies.size();
+    }
+
+    public String toJoinedString() {
+        return this.cookies.entrySet()
+                .stream()
+                .map(header -> header.getKey() + EQUAL_SIGN + header.getValue())
+                .collect(Collectors.joining(SEMI_COLON));
     }
 }
