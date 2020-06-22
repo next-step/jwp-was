@@ -34,4 +34,15 @@ class HttpSessionStorageTest {
         // then
         assertThat(existing).isEqualTo(session);
     }
+
+    @DisplayName("세션 아이디로 세션 객체 삭제")
+    @Test
+    void test_remove() {
+        // given
+        HttpSession session = HttpSessionStorage.getOrCreate(null);
+        // when
+        HttpSessionStorage.remove(session.getId());
+        // then
+        assertThat(HttpSessionStorage.size()).isEqualTo(0);
+    }
 }

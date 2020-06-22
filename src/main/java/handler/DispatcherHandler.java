@@ -14,10 +14,11 @@ public class DispatcherHandler implements Handler {
     private static final Map<String, Handler> handlerMapper = new HashMap<>();
 
     static {
+        handlerMapper.put("/", DefaultHandler.getInstance());
         handlerMapper.put("/user/create", UserCreateHandler.getInstance());
         handlerMapper.put("/user/login", UserLoginHandler.getInstance());
         handlerMapper.put("/user/list", UserListHandler.getInstance());
-        handlerMapper.put("/", DefaultHandler.getInstance());
+        handlerMapper.put("/user/logout", UserLogoutHandler.getInstance());
     }
 
     private DispatcherHandler () {
