@@ -1,10 +1,11 @@
 package webserver.controller;
 
+import webserver.ModelAndView;
 import webserver.exception.MethodNotAllowedException;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
-public abstract class AbstractController implements Controller {
+public class AbstractController implements Controller {
 
     @Override
     public ModelAndView service(HttpRequest request, HttpResponse response) {
@@ -17,7 +18,11 @@ public abstract class AbstractController implements Controller {
         throw new MethodNotAllowedException();
     }
 
-    protected abstract ModelAndView doGet(HttpRequest request, HttpResponse response);
+    protected ModelAndView doGet(HttpRequest request, HttpResponse response) {
+        return new ModelAndView();
+    }
 
-    protected abstract ModelAndView doPost(HttpRequest request, HttpResponse response);
+    protected ModelAndView doPost(HttpRequest request, HttpResponse response) {
+        return new ModelAndView();
+    }
 }

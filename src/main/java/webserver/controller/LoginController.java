@@ -2,17 +2,15 @@ package webserver.controller;
 
 import db.DataBase;
 import model.User;
+import webserver.ModelAndView;
 import webserver.exception.NotFoundUserException;
+import webserver.http.HttpSession;
+import webserver.http.HttpSessionContainer;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.response.HttpResponse;
 
 public class LoginController extends AbstractController {
-
-    @Override
-    protected ModelAndView doGet(HttpRequest request, HttpResponse response) {
-        return new ModelAndView();
-    }
 
     @Override
     protected ModelAndView doPost(HttpRequest request, HttpResponse response) {
@@ -24,11 +22,12 @@ public class LoginController extends AbstractController {
                 .orElseThrow(NotFoundUserException::new);
 
         if (!user.isEqual(password)) {
-            response.addCookie("logined=false");
             mav.setView("redirect:/user/login_failed.html");
             return mav;
         }
-        response.addCookie("logined=true");
+        HttpSession httpSession = HttpSessionContainer.create();
+        httpSession.setAttribute("logined", "true");
+        response.addCookie("JSESSIONID=" + httpSession.getId());
         mav.setView("redirect:/index.html");
         return mav;
     }

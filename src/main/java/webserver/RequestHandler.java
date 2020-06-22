@@ -2,33 +2,23 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.controller.*;
+import webserver.controller.Controller;
+import webserver.controller.ControllerInitializer;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpResponseProcessor;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-    private Map<String, Controller> controllers;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
-        this.controllers = initializeController();
-    }
-
-    private Map<String, Controller> initializeController() {
-        Map<String, Controller> controllers = new HashMap<>();
-        controllers.put("/user/create", new UserController());
-        controllers.put("/user/login", new LoginController());
-        controllers.put("/user/list", new UserListController());
-        return controllers;
     }
 
     public void run() {
@@ -42,13 +32,13 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = HttpRequest.of(br);
             HttpResponse httpResponse = new HttpResponse();
             if (httpRequest.isStaticFileRequest()) {
-                httpResponse.response(httpRequest);
+                HttpResponseProcessor.init(httpRequest, httpResponse);
             } else {
-                Controller controller = controllers.get(httpRequest.getHost());
+                Controller controller = ControllerInitializer.get(httpRequest.getHost());
                 ModelAndView mav = controller.service(httpRequest, httpResponse);
-                httpResponse.response(mav, httpRequest);
+                HttpResponseProcessor.init(mav, httpRequest, httpResponse);
             }
-            httpResponse.sendResponse(dos);
+            httpResponse.response(dos);
             dos.flush();
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());

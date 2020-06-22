@@ -1,22 +1,25 @@
 package webserver.http.response;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import webserver.controller.ModelAndView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.http.HttpHeader;
-import webserver.http.request.HttpRequest;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.util.Map;
+import java.util.Objects;
 
-import static webserver.http.HttpHeader.*;
+import static webserver.http.HttpHeader.SET_COOKIE;
 
 @NoArgsConstructor
+@Getter
 public class HttpResponse {
 
-    private static final String HTTP_PROTOCOL_PREFIX = "http://";
+    private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
 
-    private ResponseLine responseLine;
+    private ResponseLine responseLine = new ResponseLine();
     private ResponseHeaders responseHeaders = new ResponseHeaders();
     private ResponseBody responseBody = new ResponseBody();
 
@@ -24,29 +27,39 @@ public class HttpResponse {
         responseHeaders.addHeader(SET_COOKIE, value, "Path=/");
     }
 
-    public void response(ModelAndView mav, HttpRequest request) {
-        if (mav.isRedirect()) {
-            responseLine = ResponseLine.of(HttpResponseStatus.FOUND);
-            responseHeaders.addHeader(LOCATION,
-                    HTTP_PROTOCOL_PREFIX + request.getRequestHeaders().get(HttpHeader.HOST) + mav.getRedirectView());
+    public void response(DataOutputStream dos) throws IOException {
+        responseLine(dos);
+        responseHeader(dos);
+        responseBody(dos);
+    }
+
+    private void responseLine(DataOutputStream dos) throws IOException {
+        dos.writeBytes(responseLine.response());
+    }
+
+    private void responseHeader(DataOutputStream dos) {
+        Map<HttpHeader, ResponseHeader> headers = responseHeaders.getResponseHeaders();
+        try {
+            for (HttpHeader name : headers.keySet()) {
+                dos.writeBytes(name.getName() + ": " + headers.get(name));
+            }
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    private void responseBody(DataOutputStream dos) {
+        byte[] file = responseBody.getFile();
+        if (Objects.isNull(file)) {
             return;
         }
-        responseLine = ResponseLine.of(HttpResponseStatus.OK);
-        responseBody = ResponseBody.of(mav);
-        responseHeaders.addHeader(CONTENT_TYPE, responseBody.getContentType(), "charset=utf-8");
-        responseHeaders.addHeader(CONTENT_LENGTH, responseBody.getLength());
-    }
 
-    public void response(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        responseLine = ResponseLine.of(HttpResponseStatus.OK);
-        responseBody = ResponseBody.of(httpRequest.getRequestLine());
-        responseHeaders.addHeader(CONTENT_TYPE, responseBody.getContentType(), "charset=utf-8");
-        responseHeaders.addHeader(CONTENT_LENGTH, responseBody.getLength());
-    }
-
-    public void sendResponse(DataOutputStream dos) throws IOException {
-        responseLine.response(dos);
-        responseHeaders.response(dos);
-        responseBody.response(dos);
+        try {
+            dos.write(file, 0, file.length);
+            dos.flush();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
     }
 }
