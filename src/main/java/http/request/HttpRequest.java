@@ -29,8 +29,7 @@ public class HttpRequest {
     public static HttpRequest from(final InputStream in) throws IOException {
         final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         final RequestLine requestLine = RequestLine.of(getRequestLine(br));
-        final RequestParams requestParams = new RequestParams();
-        requestParams.addParams(requestLine.getQueryString());
+        final RequestParams requestParams = RequestParams.from(requestLine.getQueryString());
         final HttpRequestHeaders httpRequestHeaders = getHttpHeaders(br);
         requestParams.addParams(IOUtils.readData(br, httpRequestHeaders.getContentLength()));
         return new HttpRequest(requestLine, requestParams, httpRequestHeaders);
