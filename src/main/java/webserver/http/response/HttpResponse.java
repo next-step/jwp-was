@@ -41,7 +41,7 @@ public class HttpResponse {
         Map<HttpHeader, ResponseHeader> headers = responseHeaders.getResponseHeaders();
         try {
             for (HttpHeader name : headers.keySet()) {
-                dos.writeBytes(name + ": " + headers.get(name));
+                dos.writeBytes(name.getName() + ": " + headers.get(name));
             }
             dos.writeBytes("\r\n");
         } catch (IOException e) {
