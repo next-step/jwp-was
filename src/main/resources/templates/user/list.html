@@ -83,11 +83,11 @@
                 </tr>
               </thead>
               <tbody>
-              {{#users}}
+              {{#each this}}
                 <tr>
-                    <th scope="row">1</th> <td>{{userId}}</td> <td>{{name}}</td> <td>{{email}}</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
+                    <th scope="row">{{@index}}</th> <td>{{userId}}</td> <td>{{name}}</td> <td>{{email}}</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
                 </tr>
-              {{/users}}
+              {{/each}}
                 <!--<tr>
                     <th scope="row">1</th> <td>javajigi</td> <td>자바지기</td> <td>javajigi@sample.net</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
                 </tr>

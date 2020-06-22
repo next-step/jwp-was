@@ -1,7 +1,5 @@
 package http;
 
-import java.applet.Applet;
-
 public class RequestLine {
 
     private final HttpMethod method;
@@ -16,11 +14,19 @@ public class RequestLine {
         this.protocol = protocol;
     }
 
-    public HttpMethod getMapping() {return this.method;}
+    public HttpMethod getMapping() {
+        return this.method;
+    }
 
-    public String getPath() { return this.path; }
+    public String getPath() {
+        return this.path;
+    }
 
-    public Protocol getProtocol() { return this.protocol;}
+    public Protocol getProtocol() {
+        return this.protocol;
+    }
 
-    public QueryStrings getQueryString() { return this.queryStrings;}
+    public QueryStrings getQueryString() {
+        return this.queryStrings;
+    }
 }
