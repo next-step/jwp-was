@@ -19,9 +19,4 @@ public class UserListController extends AbstractController {
         request.addAttribute("users", userList);
         response.templateForward();
     }
-
-    @Override
-    public void doPost(HttpRequest request, HttpResponse response) {
-        response.notExistApi();;
-    }
 }
