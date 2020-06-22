@@ -1,6 +1,9 @@
 package handler;
 
 import db.DataBase;
+import dto.UserDto;
+import http.common.HttpSession;
+import http.common.HttpCookie;
 import http.common.HttpHeader;
 import http.request.QueryString;
 import http.request.RequestMessage;
@@ -17,8 +20,7 @@ public class UserLoginHandler extends AbstractHandler {
 
     private static final UserLoginHandler INSTANCE = new UserLoginHandler();
 
-    private UserLoginHandler() {
-    }
+    private UserLoginHandler() { }
 
     public static Handler getInstance() {
         return INSTANCE;
@@ -33,15 +35,28 @@ public class UserLoginHandler extends AbstractHandler {
         QueryString requestBody = requestMessage.readBody();
         User loginUser = DataBase.findUserById(requestBody.getFirstParameter("userId"));
 
-        if(loginUser != null && loginUser.matchPassword(requestBody.getFirstParameter("password"))) {
-            responseMessage.setHeader(HttpHeader.SET_COOKIE, "logined=true; Path=/");
-            responseMessage.redirectTo("/index.html");
-        } else {
-            byte[] body = StaticResourceLoader.loadResource("/user/login_failed.html");
+        if (isLoginSuccess(requestBody, loginUser)) {
+            HttpSession session = requestMessage.getSession();
+            session.setAttribute("user", new UserDto(loginUser));
 
-            responseMessage.setHeader(HttpHeader.SET_COOKIE, "logined=false");
-            responseMessage.responseWith(HttpStatus.OK, body, ContentType.HTML);
+            setCookieTo(responseMessage, session);
+
+            responseMessage.redirectTo("/index.html");
+            return;
         }
 
+        byte[] body = StaticResourceLoader.loadResource("/user/login_failed.html");
+
+        responseMessage.forward(HttpStatus.OK, body, ContentType.HTML);
+    }
+
+    private boolean isLoginSuccess(QueryString requestBody, User loginUser) {
+        return loginUser != null && loginUser.matchPassword(requestBody.getFirstParameter("password"));
+    }
+
+    private void setCookieTo(ResponseMessage responseMessage, HttpSession session) {
+        HttpCookie cookie = HttpCookie.createEmpty();
+        cookie.addCookieValueWithPath(HttpCookie.SESSION_ID, session.getId(), "/");
+        responseMessage.setHeader(HttpHeader.SET_COOKIE, cookie.toJoinedString());
     }
 }

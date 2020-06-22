@@ -31,12 +31,12 @@ public class DefaultHandler extends AbstractHandler {
         try {
             byte[] body = StaticResourceLoader.loadResource(uri.getPath());
 
-            responseMessage.responseWith(HttpStatus.OK, body, ContentType.from(uri.getExtension()));
+            responseMessage.forward(HttpStatus.OK, body, ContentType.from(uri.getExtension()));
         } catch (Exception e) {
             String reason = uri.getPath() + " is not found";
             byte[] body = reason.getBytes();
 
-            responseMessage.responseWith(HttpStatus.NOT_FOUND, body, ContentType.PLAIN);
+            responseMessage.forward(HttpStatus.NOT_FOUND, body, ContentType.PLAIN);
         }
     }
 

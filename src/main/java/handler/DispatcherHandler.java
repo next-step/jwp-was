@@ -36,7 +36,7 @@ public class DispatcherHandler implements Handler {
     public Handler getHandler(RequestMessage requestMessage) {
         String requestPath = requestMessage.getPath();
         return handlerMapper.entrySet().stream()
-                .filter(e -> requestPath.startsWith(e.getKey()))
+                .filter(e -> requestPath.equals(e.getKey()))
                 .map(Map.Entry::getValue)
                 .findFirst()
                 .orElseGet(DefaultHandler::getInstance);

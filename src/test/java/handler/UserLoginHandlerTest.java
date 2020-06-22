@@ -51,7 +51,7 @@ class UserLoginHandlerTest {
         // then
         String result = output.toString();
         assertThat(result).startsWith("HTTP/1.1 302 Found\r\n").contains("Location: /index.html\r\n",
-                "Set-Cookie: logined=true; Path=/\r\n").endsWith("\r\n");
+                "Set-Cookie: ", "JSESSIONID=", "Path=/").endsWith("\r\n");
     }
 
     @DisplayName("비밀번호 불일치로 로그인 실패")

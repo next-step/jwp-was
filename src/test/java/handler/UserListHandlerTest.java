@@ -1,7 +1,10 @@
 package handler;
 
 import db.DataBase;
+import dto.UserDto;
 import http.common.HttpHeaders;
+import http.common.HttpSession;
+import http.common.HttpSessionStorage;
 import http.request.RequestLine;
 import http.request.RequestMessage;
 import http.response.ResponseMessage;
@@ -46,13 +49,16 @@ class UserListHandlerTest {
         DataBase.deleteAll();
     }
 
-    @DisplayName("쿠키에 로그인상태가 true이면 /user/list 요청 시 유저목록 보여주기")
+    @DisplayName("쿠키의 세션이 서버에 등록되어 있으면 /user/list 요청 시 유저목록 보여주기")
     @Test
     void test_showUserList_when_cookie_has_login() throws IOException {
         // given
+        HttpSession session = HttpSessionStorage.getOrCreate("sessionID");
+        session.setAttribute("user", new UserDto(new User("crystal", "password", "sujung", "crystal@namver.com")));
+
         RequestMessage requestMessage = RequestMessage.createWithDefaultBody(
                 RequestLine.from("GET /user/list HTTP/1.1"),
-                new HttpHeaders(Arrays.asList("Cookie: logined=true"))
+                new HttpHeaders(Arrays.asList("Cookie: JSESSIONID=" + session.getId()))
         );
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -65,13 +71,33 @@ class UserListHandlerTest {
         assertThat(result).contains(MessageFormat.format("<td>{0}</td> <td>{1}</td> <td>{2}</td>", second.getUserId(), second.getName(), second.getEmail()));
     }
 
-    @DisplayName("쿠키에 로그인상태가 없으면 /user/list 요청 시 로그인 페이지 반환")
+    @DisplayName("쿠키에 세션이 없으면 /user/list 요청 시 로그인 페이지 반환")
     @Test
     void test_showLoginPage_when_cookie_has_not_login() throws IOException, URISyntaxException {
         // given
         RequestMessage requestMessage = RequestMessage.createWithDefaultBody(
                 RequestLine.from("GET /user/list HTTP/1.1"),
                 new HttpHeaders(Collections.emptyList())
+        );
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        ResponseMessage responseMessage = new ResponseMessage(new DataOutputStream(output));
+
+        byte[] loginTemplate = FileIoUtils.loadFileFromClasspath("./templates/user/login.html");
+        // when
+        UserListHandler.getInstance().service(requestMessage, responseMessage);
+        // then
+        byte[] result = output.toByteArray();
+        assertThat(result).contains(loginTemplate);
+    }
+
+    @DisplayName("쿠키에 세션이 있으나 등록되지 않았으면 /user/list 요청 시 로그인 페이지 반환")
+    @Test
+    void test_showLoginPage_when_session_not_registered() throws IOException, URISyntaxException {
+        // given
+        RequestMessage requestMessage = RequestMessage.createWithDefaultBody(
+                RequestLine.from("GET /user/list HTTP/1.1"),
+                new HttpHeaders(Arrays.asList("Cookie: JSESSIONID=등록되지 않은 세션아이디"))
         );
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
