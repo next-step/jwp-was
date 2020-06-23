@@ -27,9 +27,4 @@ public class UserLogoutHandler extends AbstractHandler {
         }
         responseMessage.redirectTo("/user/login.html");
     }
-
-    @Override
-    void doPost(RequestMessage requestMessage, ResponseMessage responseMessage) throws IOException {
-
-    }
 }

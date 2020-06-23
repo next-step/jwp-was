@@ -39,8 +39,4 @@ public class DefaultHandler extends AbstractHandler {
             responseMessage.forward(HttpStatus.NOT_FOUND, body, ContentType.PLAIN);
         }
     }
-
-    @Override
-    public void doPost(RequestMessage requestMessage, ResponseMessage responseMessage) {
-    }
 }
