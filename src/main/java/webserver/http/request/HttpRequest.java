@@ -6,12 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 import utils.StringUtils;
+import webserver.http.Cookie;
 import webserver.http.HttpHeader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -77,11 +77,7 @@ public class HttpRequest {
     }
 
     public String getSessionId() {
-        String cookie = requestHeaders.get(HttpHeader.COOKIE);
-        return Arrays.stream(cookie.split("; "))
-                .filter(entry -> entry.startsWith(JSESSIONID))
-                .map(entry -> entry.split("=")[1])
-                .findAny()
-                .orElse(null);
+        Cookie cookie = requestHeaders.getCookie();
+        return cookie.get(JSESSIONID);
     }
 }

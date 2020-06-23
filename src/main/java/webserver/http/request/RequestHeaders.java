@@ -2,6 +2,7 @@ package webserver.http.request;
 
 import lombok.EqualsAndHashCode;
 import utils.StringUtils;
+import webserver.http.Cookie;
 import webserver.http.HttpHeader;
 
 import java.util.List;
@@ -34,5 +35,10 @@ public class RequestHeaders {
             return null;
         }
         return requestHeader.getValue();
+    }
+
+    public Cookie getCookie() {
+        String cookieText = get(HttpHeader.COOKIE);
+        return new Cookie(cookieText);
     }
 }
