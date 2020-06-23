@@ -7,11 +7,6 @@ import model.User;
 
 public class UserCreateController extends AbstractController {
     @Override
-    public void doGet(final HttpRequest request, final HttpResponse response) {
-        response.notExistApi();;
-    }
-
-    @Override
     public void doPost(HttpRequest request, HttpResponse response) {
         User user = new User(
                 request.getParameter("userId"),

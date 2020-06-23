@@ -57,10 +57,6 @@ public class HttpResponse {
         }
     }
 
-    public void notExistApi() {
-        response404Header();
-    }
-
     private void response200Header(int lengthOfBodyContent) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");

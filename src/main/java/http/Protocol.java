@@ -25,6 +25,7 @@ public class Protocol {
     public static Protocol of(final String protocol, final String version) {
         return new Protocol(protocol, version);
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

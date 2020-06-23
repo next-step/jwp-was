@@ -18,7 +18,7 @@ public abstract class AbstractController implements Controller {
         }
     }
 
-    public abstract void doGet(final HttpRequest request, final HttpResponse response) throws Exception;
+    protected void doGet(final HttpRequest request, final HttpResponse response) throws Exception {}
 
-    public abstract void doPost(final HttpRequest request, final HttpResponse response);
+    protected void doPost(final HttpRequest request, final HttpResponse response) throws Exception{}
 }
