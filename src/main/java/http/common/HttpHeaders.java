@@ -3,10 +3,7 @@ package http.common;
 import utils.StringUtils;
 
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class HttpHeaders {
@@ -32,16 +29,16 @@ public class HttpHeaders {
         return new String[]{values[0], values[1]};
     }
 
-    public String get(String name) {
-        return this.headers.get(name);
+    public String getHeaderValueBy(HttpHeader name) {
+        return this.headers.get(name.getText());
     }
 
     public int size() {
         return this.headers.size();
     }
 
-    public void set(String name, String value) {
-        this.headers.put(name, value);
+    public void setHeader(HttpHeader name, String value) {
+        this.headers.put(name.getText(), value);
     }
 
     public String toJoinedString() {
@@ -49,11 +46,6 @@ public class HttpHeaders {
                 .stream()
                 .map(header -> header.getKey() + HEADER_DELIMITER + header.getValue() + "\r\n")
                 .collect(Collectors.joining());
-    }
-
-    public boolean hasCookieValue(String value) {
-        String cookie = this.headers.get(HttpHeader.COOKIE.getText());
-        return cookie != null && cookie.contains(value);
     }
 
     @Override

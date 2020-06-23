@@ -14,10 +14,11 @@ public class DispatcherHandler implements Handler {
     private static final Map<String, Handler> handlerMapper = new HashMap<>();
 
     static {
+        handlerMapper.put("/", DefaultHandler.getInstance());
         handlerMapper.put("/user/create", UserCreateHandler.getInstance());
         handlerMapper.put("/user/login", UserLoginHandler.getInstance());
         handlerMapper.put("/user/list", UserListHandler.getInstance());
-        handlerMapper.put("/", DefaultHandler.getInstance());
+        handlerMapper.put("/user/logout", UserLogoutHandler.getInstance());
     }
 
     private DispatcherHandler () {
@@ -36,7 +37,7 @@ public class DispatcherHandler implements Handler {
     public Handler getHandler(RequestMessage requestMessage) {
         String requestPath = requestMessage.getPath();
         return handlerMapper.entrySet().stream()
-                .filter(e -> requestPath.startsWith(e.getKey()))
+                .filter(e -> requestPath.equals(e.getKey()))
                 .map(Map.Entry::getValue)
                 .findFirst()
                 .orElseGet(DefaultHandler::getInstance);

@@ -23,7 +23,7 @@ public class UserCreateHandler extends AbstractHandler {
         User user = new User(requestMessage.getQueryString());
         byte[] body = user.toString().getBytes();
 
-        responseMessage.responseWith(HttpStatus.OK, body, ContentType.PLAIN);
+        responseMessage.forward(HttpStatus.OK, body, ContentType.PLAIN);
     }
 
     @Override

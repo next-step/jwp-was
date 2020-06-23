@@ -1,10 +1,18 @@
 package http.common;
 
 public enum HttpHeader {
+    // For Common
     CONTENT_TYPE("Content-Type"),
-    SET_COOKIE("Set-Cookie"),
     CONTENT_LENGTH("Content-Length"),
     LOCATION("Location"),
+    CONNECTION("Connection"),
+
+    // For Response
+    SET_COOKIE("Set-Cookie"),
+
+    // For Request
+    HOST("Host"),
+    ACCEPT("Accept"),
     COOKIE("Cookie");
 
     private final String text;

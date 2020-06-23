@@ -28,7 +28,7 @@ public class ResponseMessage {
     }
 
     public void setHeader(HttpHeader name, String value) {
-        this.httpHeaders.set(name.getText(), value);
+        this.httpHeaders.setHeader(name, value);
     }
 
     private void setBody(byte[] body) {
@@ -36,7 +36,7 @@ public class ResponseMessage {
         this.body = body;
     }
 
-    public void responseWith(HttpStatus status, byte[] body, ContentType contentType) {
+    public void forward(HttpStatus status, byte[] body, ContentType contentType) {
         setHeader(HttpHeader.CONTENT_TYPE, contentType.toStringWithCharsetUTF8());
         setBody(body);
         write(status);

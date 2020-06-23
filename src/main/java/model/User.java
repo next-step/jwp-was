@@ -1,6 +1,6 @@
 package model;
 
-import http.QueryString;
+import http.request.QueryString;
 
 public class User {
     private String userId;

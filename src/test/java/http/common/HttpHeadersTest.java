@@ -1,6 +1,5 @@
-package http;
+package http.common;
 
-import http.common.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -29,13 +28,13 @@ public class HttpHeadersTest {
         // then
         assertAll(
                 () -> assertThat(httpHeaders.size()).isEqualTo(3),
-                () -> assertEquals("localhost:8080", httpHeaders.get("Host")),
-                () -> assertEquals("keep-alive", httpHeaders.get("Connection")),
-                () -> assertEquals("*/*", httpHeaders.get("Accept"))
+                () -> assertEquals("localhost:8080", httpHeaders.getHeaderValueBy(HttpHeader.HOST)),
+                () -> assertEquals("keep-alive", httpHeaders.getHeaderValueBy(HttpHeader.CONNECTION)),
+                () -> assertEquals("*/*", httpHeaders.getHeaderValueBy(HttpHeader.ACCEPT))
         );
     }
 
-    @DisplayName("빈 리스로 빈 헤더 생성")
+    @DisplayName("빈 리스트로 빈 헤더 생성")
     @Test
     void test_createEmptyHeader() {
         // given
@@ -75,17 +74,5 @@ public class HttpHeadersTest {
                 () -> assertThat(result).contains("Connection: keep-alive\r\n"),
                 () -> assertThat(result).contains("Accept: */*\r\n")
         );
-    }
-
-    @DisplayName("헤더에 로그인 상태 쿠키값이 있는지 확인")
-    @Test
-    void test_hasLoginCookie() {
-        // given
-        List<String> strings = Arrays.asList("Cookie: logined=true");
-        HttpHeaders httpHeaders = new HttpHeaders(strings);
-        // when
-        boolean result = httpHeaders.hasCookieValue("logined=true");
-        // then
-        assertThat(result).isTrue();
     }
 }

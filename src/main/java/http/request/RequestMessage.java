@@ -1,7 +1,13 @@
 package http.request;
 
 
+import http.common.HttpSession;
+import http.common.HttpSessionStorage;
+import http.common.HttpCookie;
+import http.common.HttpHeader;
 import http.common.HttpHeaders;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 import utils.StringUtils;
 
@@ -13,7 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class RequestMessage {
+    private static final Logger logger = getLogger(RequestMessage.class);
+
     public static final String REQUEST_MESSAGE_IS_INVALID = "request message is invalid.";
 
     private final RequestLine requestLine;
@@ -56,7 +66,7 @@ public class RequestMessage {
     private static String readBody(BufferedReader br, RequestLine requestLine, HttpHeaders httpHeaders) throws IOException {
         String body = "";
         if (requestLine.hasBody()) {
-            int contentLength = Integer.parseInt(httpHeaders.get("Content-Length"));
+            int contentLength = Integer.parseInt(httpHeaders.getHeaderValueBy(HttpHeader.CONTENT_LENGTH));
             body = IOUtils.readData(br, contentLength);
         }
         return body;
@@ -86,12 +96,17 @@ public class RequestMessage {
         return this.requestLine.getMethod();
     }
 
-    public HttpHeaders getHttpHeaders() {
-        return this.httpHeaders;
-    }
-
     public Uri getUri() {
         return this.requestLine.getUri();
+    }
+
+    public HttpCookie getCookie() {
+        return HttpCookie.from(this.httpHeaders.getHeaderValueBy(HttpHeader.COOKIE));
+    }
+
+    public HttpSession getSession() {
+        HttpCookie cookie = getCookie();
+        return HttpSessionStorage.getOrCreate(cookie.getCookieValueBy(HttpCookie.SESSION_ID));
     }
 
     @Override

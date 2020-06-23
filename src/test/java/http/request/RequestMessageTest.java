@@ -1,8 +1,6 @@
-package http;
+package http.request;
 
 import http.common.HttpHeaders;
-import http.request.RequestLine;
-import http.request.RequestMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -55,10 +53,25 @@ class RequestMessageTest {
         RequestMessage requestMessage = RequestMessage.from(br);
         // then
         assertThat(requestMessage.equals(RequestMessage.create(
-                        RequestLine.from("POST /user/create HTTP/1.1"),
-                        new HttpHeaders(Collections.emptyList()),
-                        "userId=crystal&password=password&name=%EC%9E%84%EC%88%98%EC%A0%95&email=crystal%40naver.com"
+                RequestLine.from("POST /user/create HTTP/1.1"),
+                new HttpHeaders(Collections.emptyList()),
+                "userId=crystal&password=password&name=%EC%9E%84%EC%88%98%EC%A0%95&email=crystal%40naver.com"
         )));
-        }
+    }
+
+    @DisplayName("요청에 쿠키가 없을 때 빈 쿠키가 반환")
+    @Test
+    void test_getCookie() throws IOException {
+        // given
+        String input = "GET /user/list HTTP/1.1\r\n" +
+                "Host: localhost:8080\r\n";
+        StringReader sr = new StringReader(input);
+        BufferedReader br = new BufferedReader(sr);
+        // when
+        RequestMessage requestMessage = RequestMessage.from(br);
+        // then
+        assertThat(requestMessage.getCookie().size()).isEqualTo(0);
+    }
+
 
 }
