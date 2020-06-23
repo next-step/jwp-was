@@ -76,10 +76,6 @@ public class RequestLine {
         return Collections.unmodifiableMap(queryParameters);
     }
 
-    public String getPath() {
-        return STATIC_FILE_ROOT_LOCATION + url;
-    }
-
     public FileType getFileType() {
         String[] split = url.split("\\.");
         if (nonExistFileType(split)) {

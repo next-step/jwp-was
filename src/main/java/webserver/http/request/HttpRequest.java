@@ -72,7 +72,7 @@ public class HttpRequest {
         return requestLine.isPost();
     }
 
-    public String getHost() {
+    public String getPath() {
         return requestLine.getUrl().split("\\?")[0];
     }
 

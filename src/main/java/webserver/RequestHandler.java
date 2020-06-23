@@ -34,7 +34,7 @@ public class RequestHandler implements Runnable {
             if (httpRequest.isStaticFileRequest()) {
                 HttpResponseProcessor.init(httpRequest, httpResponse);
             } else {
-                Controller controller = ControllerInitializer.get(httpRequest.getHost());
+                Controller controller = ControllerInitializer.get(httpRequest.getPath());
                 ModelAndView mav = controller.service(httpRequest, httpResponse);
                 HttpResponseProcessor.init(mav, httpRequest, httpResponse);
             }
