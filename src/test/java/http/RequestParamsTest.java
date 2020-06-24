@@ -18,8 +18,7 @@ public class RequestParamsTest {
     @Test
     @DisplayName("쿼리 스트링을 입력하고 값을 가지고 온다")
     void getParameter() {
-        final RequestParams requestParams = new RequestParams();
-        requestParams.addParams("userId=jinwoo&password=1q2w3e4r");
+        final RequestParams requestParams = RequestParams.from("userId=jinwoo&password=1q2w3e4r");
         assertThat(requestParams.getParameter("userId")).isEqualTo("jinwoo");
         assertThat(requestParams.getParameter("password")).isEqualTo("1q2w3e4r");
     }
@@ -28,8 +27,7 @@ public class RequestParamsTest {
     @DisplayName("빈 쿼리 스트링 입력")
     @MethodSource("blankStrings")
     void createEmptyQueryString(final String value) {
-        final RequestParams requestParams = new RequestParams();
-        requestParams.addParams(value);
+        final RequestParams requestParams = RequestParams.from(value);
         assertThat(requestParams).isNotNull();
     }
 }

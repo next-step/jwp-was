@@ -8,7 +8,12 @@ import java.util.Map;
 public class RequestParams {
     private final Map<String, String> values = Maps.newHashMap();
 
-    public RequestParams() {
+    private RequestParams() {}
+
+    public static RequestParams from (String queryString) {
+        final RequestParams requestParams = new RequestParams();
+        requestParams.addParams(queryString);
+        return requestParams;
     }
 
     public void addParams(final String queryString) {

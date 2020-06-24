@@ -11,11 +11,6 @@ public class StaticController extends AbstractController{
         response.staticFileForward();
     }
 
-    @Override
-    public void doPost(HttpRequest request, HttpResponse response) {
-        response.notExistApi();
-    }
-
     private void setContentType(final HttpResponse response, final String path) {
         if (path.endsWith(".css")) {
             response.addHeader("Content-Type", "text/css");

@@ -15,25 +15,24 @@ import java.util.Map;
 public class HttpRequest {
     private final RequestLine requestLine;
     private final RequestParams requestParams;
-    private final HttpReqeustHeaders httpReqeustHeaders;
+    private final HttpRequestHeaders httpRequestHeaders;
     private final Map<String, Object> attributes = Maps.newHashMap();
 
     private HttpRequest(final RequestLine requestLine,
                         final RequestParams requestParams,
-                        final HttpReqeustHeaders httpReqeustHeaders) {
+                        final HttpRequestHeaders httpRequestHeaders) {
         this.requestLine = requestLine;
         this.requestParams = requestParams;
-        this.httpReqeustHeaders = httpReqeustHeaders;
+        this.httpRequestHeaders = httpRequestHeaders;
     }
 
     public static HttpRequest from(final InputStream in) throws IOException {
         final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         final RequestLine requestLine = RequestLine.of(getRequestLine(br));
-        final RequestParams requestParams = new RequestParams();
-        requestParams.addParams(requestLine.getQueryString());
-        final HttpReqeustHeaders httpReqeustHeaders = getHttpHeaders(br);
-        requestParams.addParams(IOUtils.readData(br, httpReqeustHeaders.getContentLength()));
-        return new HttpRequest(requestLine, requestParams, httpReqeustHeaders);
+        final RequestParams requestParams = RequestParams.from(requestLine.getQueryString());
+        final HttpRequestHeaders httpRequestHeaders = getHttpHeaders(br);
+        requestParams.addParams(IOUtils.readData(br, httpRequestHeaders.getContentLength()));
+        return new HttpRequest(requestLine, requestParams, httpRequestHeaders);
     }
 
     private static String getRequestLine(final BufferedReader br) throws IOException {
@@ -44,13 +43,13 @@ public class HttpRequest {
         return line;
     }
 
-    private static HttpReqeustHeaders getHttpHeaders(final BufferedReader br) throws IOException {
-        final HttpReqeustHeaders httpReqeustHeaders = new HttpReqeustHeaders();
+    private static HttpRequestHeaders getHttpHeaders(final BufferedReader br) throws IOException {
+        final HttpRequestHeaders httpRequestHeaders = new HttpRequestHeaders();
         String line;
         while ((line = br.readLine()) != null && !line.equals("")) {
-            httpReqeustHeaders.addHeader(line);
+            httpRequestHeaders.addHeader(line);
         }
-        return httpReqeustHeaders;
+        return httpRequestHeaders;
     }
 
     public Map<String, Object> getAttribute() {
@@ -74,10 +73,10 @@ public class HttpRequest {
     }
 
     public String getHeader(final String key) {
-        return httpReqeustHeaders.getHeader(key);
+        return httpRequestHeaders.getHeader(key);
     }
 
     public HttpCookies getCookies() {
-        return httpReqeustHeaders.getCookies();
+        return httpRequestHeaders.getCookies();
     }
 }
