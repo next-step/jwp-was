@@ -2,6 +2,8 @@ package http.request;
 
 import http.Headers;
 import http.HttpCookies;
+import http.HttpSession;
+import http.HttpSessions;
 
 public class HttpRequestHeaders extends Headers {
     private static final String CONTENT_LENGTH = "Content-Length";
@@ -14,5 +16,9 @@ public class HttpRequestHeaders extends Headers {
 
     public HttpCookies getCookies() {
         return HttpCookies.from(getHeader(COOKIE));
+    }
+
+    public HttpSession getSession() {
+        return HttpSessions.getSession(getCookies().getValue(HttpSessions.SESSION_ID_NAME));
     }
 }
