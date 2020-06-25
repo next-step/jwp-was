@@ -36,8 +36,8 @@ public class ResponseBody {
         if (fileType.equals(FileType.NONE)) {
             this.file = "".getBytes();
         }
-        String path = fileType.getLocation() + requestLine.getUrl();
-        this.file = FileIoUtils.loadFileFromClasspath(path);
+        String filePath = fileType.getLocation() + requestLine.getUrl();
+        this.file = FileIoUtils.loadFileFromClasspath(filePath);
         this.fileType = fileType;
     }
 

@@ -5,7 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -15,11 +16,16 @@ public class ExecutorsTest {
     private static AtomicInteger counter = new AtomicInteger(0);
 
     public static void main(String[] args) throws Exception {
-        ExecutorService es = Executors.newFixedThreadPool(100);
+        ExecutorService es = new ThreadPoolExecutor(
+                250,
+                250,
+                0L,
+                TimeUnit.MICROSECONDS,
+                new LinkedBlockingDeque<>(100));
 
         StopWatch sw = new StopWatch();
         sw.start();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 350; i++) {
             es.execute(() -> {
                 int idx = counter.addAndGet(1);
                 try {

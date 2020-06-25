@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.Cookie;
 import webserver.http.HttpHeader;
 
 import java.io.DataOutputStream;
@@ -23,8 +24,10 @@ public class HttpResponse {
     private ResponseHeaders responseHeaders = new ResponseHeaders();
     private ResponseBody responseBody = new ResponseBody();
 
-    public void addCookie(String value) {
-        responseHeaders.addHeader(SET_COOKIE, value, "Path=/");
+    public void addCookie(Cookie cookie) {
+        Map<String, String> cookies = cookie.getEntries();
+        cookies.forEach((key, value) ->
+                responseHeaders.addHeader(SET_COOKIE, key + "=" + value));
     }
 
     public void response(DataOutputStream dos) throws IOException {

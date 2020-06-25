@@ -4,6 +4,7 @@ import db.DataBase;
 import model.User;
 import webserver.ModelAndView;
 import webserver.exception.NotFoundUserException;
+import webserver.http.Cookie;
 import webserver.http.HttpSession;
 import webserver.http.HttpSessionContainer;
 import webserver.http.request.HttpRequest;
@@ -27,7 +28,10 @@ public class LoginController extends AbstractController {
         }
         HttpSession httpSession = HttpSessionContainer.create();
         httpSession.setAttribute("logined", "true");
-        response.addCookie("JSESSIONID=" + httpSession.getId());
+        Cookie cookie = new Cookie();
+        cookie.add("JSESSIONID", httpSession.getId());
+        cookie.add("Path", "/");
+        response.addCookie(cookie);
         mav.setView("redirect:/index.html");
         return mav;
     }
