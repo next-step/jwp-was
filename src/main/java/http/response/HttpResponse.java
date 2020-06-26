@@ -1,5 +1,6 @@
 package http.response;
 
+import http.HttpStatus;
 import http.request.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ public class HttpResponse {
     private static final String SET_COOKIE = "Set-Cookie: ";
     private final static String COOKIE_PATH = "; Path=/";
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final byte[] EMPTY_BODY = {};
 
     private final HttpRequest request;
     private final DataOutputStream dos;
@@ -38,11 +40,15 @@ public class HttpResponse {
         responseHeaders.addHeader(key, value);
     }
 
+    public void addCookie(final String key, final String value) {
+        responseHeaders.addCookie(key, value);
+    }
+
     public void templateForward() {
         final byte[] body = TemplateUtils.getTemplateData(request);
         addHeader("Content-Type", "text/html;charset=utf-8");
-        response200Header(body.length);
-        responseBody(body);
+        addHeader("Content-Length", String.valueOf(body.length));
+        response(HttpStatus.OK, body);
     }
 
     public void staticFileForward() throws Exception {
@@ -50,26 +56,28 @@ public class HttpResponse {
         final Optional<byte[]> resource = FileIoUtils.loadFileFromClasspath(path);
         if (resource.isPresent()) {
             final byte[] body = resource.get();
-            response200Header(body.length);
-            responseBody(body);
+            addHeader("Content-Length", String.valueOf(body.length));
+            response(HttpStatus.OK, body);
         } else {
-            response404Header();
+            response(HttpStatus.NOT_FOUND, EMPTY_BODY);
         }
     }
 
-    private void response200Header(int lengthOfBodyContent) {
+    public void sendRedirect(final String redirectUrl) {
+        addHeader("Location", redirectUrl);
+        response(HttpStatus.MOVED_TEMPORARILY, EMPTY_BODY);
+    }
+
+    private void response(final HttpStatus status, final byte[] body) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("HTTP/1.1 " + status.getValue() + " " + status.getReasonPhrase() + "\r\n");
             processHeaders();
             dos.writeBytes("\r\n");
+            dos.write(body, 0, body.length);
+            dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    public void addCookie(final String key, final String value) {
-        responseHeaders.addCookie(key, value);
     }
 
     private void processHeaders() {
@@ -83,6 +91,7 @@ public class HttpResponse {
             logger.error(e.getMessage());
         }
     }
+
     private void processSetCookie() throws IOException {
         final Collection<String> keys = responseHeaders.getCookieNames();
         for (String key : keys) {
@@ -91,38 +100,4 @@ public class HttpResponse {
             dos.writeBytes(str);
         }
     }
-
-    public void sendRedirect(final String redirectUrl) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            processHeaders();
-            dos.writeBytes("Location: " + redirectUrl + " \r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-
-    private void responseBody(byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            processHeaders();
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response404Header() {
-        try {
-            dos.writeBytes("HTTP/1.1 404 Not Found \r\n");
-            processHeaders();
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-
 }

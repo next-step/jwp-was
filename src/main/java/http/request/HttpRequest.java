@@ -3,6 +3,7 @@ package http.request;
 import com.google.common.collect.Maps;
 import http.HttpCookies;
 import http.HttpMethod;
+import http.HttpSession;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -78,5 +79,9 @@ public class HttpRequest {
 
     public HttpCookies getCookies() {
         return httpRequestHeaders.getCookies();
+    }
+
+    public HttpSession getSession() {
+        return httpRequestHeaders.getSession();
     }
 }
