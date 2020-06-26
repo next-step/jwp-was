@@ -1,5 +1,6 @@
 package http;
 
+import java.util.Collections;
 import java.util.Objects;
 
 public class RequestPath {
@@ -10,6 +11,9 @@ public class RequestPath {
     }
 
     public static RequestPath of(String path) {
+        if ("".equals(path) || path == null) {
+            throw new IllegalArgumentException();
+        }
         if (!path.contains("?")) {
             return new RequestPath(path);
         }

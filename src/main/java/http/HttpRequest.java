@@ -1,51 +1,42 @@
 package http;
 
-import java.io.*;
-import java.util.Objects;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HttpRequest {
 
     private RequestLine requestLine;
+    private RequestHeaders requestHeaders;
 
     public HttpRequest(InputStream inputStream) throws IOException {
-        String requestLine;
-        do {
-            requestLine = readLine(inputStream);
-            System.out.println(requestLine);
-            if (requestLine == null) {
-                return;
-            }
-        } while (requestLine.equals(""));
-
-        this.requestLine = RequestLineParser.parse(requestLine);
+        buildHttpRequest(inputStream);
     }
 
-    private String readLine(InputStream inputStream) throws IOException {
+    private void buildHttpRequest(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-        return bufferedReader.readLine();
+
+        this.requestLine = RequestLineParser.parse(bufferedReader.readLine());
+        String readLine = bufferedReader.readLine();
+        System.out.println("readLine: " + readLine);
+        List<RequestHeader> requestHeaders = new ArrayList<>();
+
+        while (!"".equals(readLine)) {
+            requestHeaders.add(RequestHeadersParser.parse(readLine));
+            readLine = bufferedReader.readLine();
+        }
+
+        this.requestHeaders = new RequestHeaders(requestHeaders);
     }
 
     public RequestLine getRequestLine() {
         return requestLine;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof HttpRequest)) return false;
-        HttpRequest that = (HttpRequest) o;
-        return Objects.equals(getRequestLine(), that.getRequestLine());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getRequestLine());
-    }
-
-    @Override
-    public String toString() {
-        return "HttpRequest{" +
-                "requestLine=" + requestLine +
-                '}';
+    public RequestHeaders getRequestHeaders() {
+        return requestHeaders;
     }
 }

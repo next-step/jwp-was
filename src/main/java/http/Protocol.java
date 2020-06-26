@@ -12,9 +12,7 @@ public class Protocol {
     }
 
     public static Protocol of(final String protocolAndVersion) {
-        System.out.println("protocolAndVersion: " + protocolAndVersion);
         String[] values = protocolAndVersion.split("/");
-        System.out.println(values[0] + ", " + values[1]);
         return new Protocol(values[0], values[1]);
     }
 

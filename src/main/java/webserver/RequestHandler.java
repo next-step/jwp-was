@@ -37,12 +37,10 @@ public class RequestHandler implements Runnable {
             RequestPath requestPath = requestLine.getRequestPath();
 
             if (requestPath.equals(new RequestPath("/user/create"))) {
-                logger.info("hihi i am create data: {}", requestLine.getQueryStrings().toString());
                 QueryStrings queryStrings = requestLine.getQueryStrings();
                 User userSource = new User(queryStrings);
                 logger.debug(userSource.toString());
             }
-
 
             if (requestPath.getPath().contains(".html")) {
                 DataOutputStream dos = new DataOutputStream(out);

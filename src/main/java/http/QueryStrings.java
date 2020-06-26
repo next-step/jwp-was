@@ -1,36 +1,35 @@
 package http;
 
-import model.User;
-
+import java.lang.annotation.Annotation;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class QueryStrings {
+
     private final List<QueryString> queryStrings;
 
     QueryStrings(List<QueryString> queryStrings) {
         this.queryStrings = queryStrings;
     }
 
-    public static QueryStrings of(String path) {
-        if ("".equals(path) || path == null) {
-            return new QueryStrings(Collections.emptyList());
+    public static QueryStrings ofGet(String path) {
+        if (path.contains("?")) {
+            final String[] pathValues = path.split("\\?");
+            return of(pathValues[1]);
         }
+        return new QueryStrings(Collections.emptyList());
+    }
 
-        if (!path.contains("?")) {
-            return new QueryStrings(Collections.emptyList());
-        }
-
-        final String[] pathValues = path.split("\\?");
-        final String queryStringSource = pathValues[1];
-
-        if (queryStringSource.contains("&")) {
-            final String[] values = queryStringSource.split("&");
+    public static QueryStrings of(String source) {
+        if (source.contains("&")) {
+            final String[] values = source.split("&");
             return new QueryStrings(buildQueryStrings(values));
         }
-        final String[] keyAndValue = queryStringSource.split("=");
+        final String[] keyAndValue = source.split("=");
         return new QueryStrings(Arrays.asList(new QueryString(keyAndValue)));
+    }
+
+    public static QueryStrings of(RequestBody requestBody) {
+        return QueryStrings.of(requestBody.value());
     }
 
     private static List<QueryString> buildQueryStrings(String[] values) {
