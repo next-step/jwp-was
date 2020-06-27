@@ -1,14 +1,16 @@
 package webserver;
 
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.concurrent.*;
-
-
 import handler.DispatcherHandler;
 import handler.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.RejectedExecutionException;
 
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
@@ -16,7 +18,7 @@ public class WebServer {
     private static final int DEFAULT_THREAD_POOL_SIZE = 250;
     private static final int DEFAULT_QUEUE_SIZE = 100;
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String args[]) throws IOException, RejectedExecutionException {
         int port = 0;
         int threadPoolSize = 0;
         int queueSize = 0;
