@@ -2,7 +2,7 @@ package http;
 
 public enum HttpResponseCode {
     OK_200("HTTP/1.1 200 OK \r\n"),
-    REDIRECT_300("HTTP/1.1 302 Found \n");
+    REDIRECT_300("HTTP/1.1 302 Found \r\n");
 
     private String headerLine;
 

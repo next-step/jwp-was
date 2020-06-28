@@ -3,9 +3,7 @@ package controller.login;
 import controller.AbstractController;
 import controller.user.UserCreateController;
 import db.DataBase;
-import http.HttpRequest;
-import http.HttpResponse;
-import http.HttpResponseCode;
+import http.*;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,14 +19,18 @@ public class UserLoginController extends AbstractController {
 
         if (user == null) {
             response.addHeader("Location", "/user/login_failed.html");
-            response.responseHeader(HttpResponseCode.REDIRECT_300);
+            response.sendRedirect(HttpResponseCode.REDIRECT_300);
             return;
         }
 
         if (user.getPassword().equals(request.getParameter("password"))) {
-            response.addHeader("Set-Cookie","logined=true");
+
+            HttpSession session = HttpSessionManager.sessionCreate();
+
+            session.setAttribute("user", user);
+            response.addCookie("JSESSIONID", session.getId());
             response.addHeader("Location", "/index.html");
-            response.responseHeader(HttpResponseCode.REDIRECT_300);
+            response.sendRedirect(HttpResponseCode.REDIRECT_300);
         } else {
             response.forward("/user/login_failed.html");
         }
