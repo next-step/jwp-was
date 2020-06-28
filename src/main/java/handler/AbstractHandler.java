@@ -21,8 +21,8 @@ public abstract class AbstractHandler implements Handler{
         }
     }
 
-    abstract void doGet(RequestMessage requestMessage, ResponseMessage responseMessage) throws IOException;
+    void doGet(RequestMessage requestMessage, ResponseMessage responseMessage) throws IOException {};
 
-    abstract void doPost(RequestMessage requestMessage, ResponseMessage responseMessage) throws IOException;
+    void doPost(RequestMessage requestMessage, ResponseMessage responseMessage) throws IOException {};
 
 }

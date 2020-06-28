@@ -28,10 +28,6 @@ public class UserLoginHandler extends AbstractHandler {
     }
 
     @Override
-    public void doGet(RequestMessage requestMessage, ResponseMessage responseMessage) {
-    }
-
-    @Override
     public void doPost(RequestMessage requestMessage, ResponseMessage responseMessage) throws IOException {
         QueryString requestBody = requestMessage.readBody();
         User loginUser = DataBase.findUserById(requestBody.getFirstParameter("userId"));

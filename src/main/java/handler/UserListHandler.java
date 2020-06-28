@@ -46,11 +46,6 @@ public class UserListHandler extends AbstractHandler {
         responseMessage.forward(HttpStatus.OK, body, ContentType.HTML);
     }
 
-    @Override
-    public void doPost(RequestMessage requestMessage, ResponseMessage responseMessage) {
-
-    }
-
     private boolean isAuthenticated(RequestMessage requestMessage) {
         HttpSession session = requestMessage.getSession();
         UserDto userDto = (UserDto) session.getAttribute("user");
