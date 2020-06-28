@@ -2,6 +2,10 @@ package webserver;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +13,11 @@ import org.slf4j.LoggerFactory;
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
+    private static final int THREAD_CORE_POOL_SIZE = 100;
+    private static final int THREAD_MAXIMUM_POOL_SIZE = 100;
+    private static final int KEEP_ALIVE_TIME = 10;
+    private static final int QUEUE_SIZE = 30;
+
 
     public static void main(String args[]) throws Exception {
         int port = 0;
@@ -22,12 +31,16 @@ public class WebServer {
         try (ServerSocket listenSocket = new ServerSocket(port)) {
             logger.info("Web Application Server started {} port.", port);
 
-            // 클라이언트가 연결될때까지 대기한다.
+            LinkedBlockingDeque<Runnable> queue = new LinkedBlockingDeque<>(QUEUE_SIZE);
+            ExecutorService threadPool = new ThreadPoolExecutor(THREAD_CORE_POOL_SIZE,
+                    THREAD_MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.MILLISECONDS, queue);
+
             Socket connection;
+
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection));
-                thread.start();
+                threadPool.execute(new RequestHandler(connection));
             }
+
         }
     }
 }
