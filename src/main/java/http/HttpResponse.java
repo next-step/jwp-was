@@ -1,6 +1,5 @@
 package http;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -11,6 +10,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+
+import static http.HttpHeader.SET_COOKIE;
 
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
@@ -37,9 +38,8 @@ public class HttpResponse {
 
     public void print() {
         try {
-            System.out.println("@: " + responseHeaders.getContentType());
             dos.writeBytes(responseLine.getResponseLine() + CARRIAGE_RETURN);
-            dos.writeBytes("Content-Type: " + responseHeaders.getContentType() + "; charset=utf-8" + CARRIAGE_RETURN);
+            dos.writeBytes(responseHeaders.getResponseHeaders() + CARRIAGE_RETURN);
             if (!"".equals(responseBody) && responseBody != null) {
                 dos.write(responseBody, 0, responseBody.length);
             }
@@ -50,38 +50,12 @@ public class HttpResponse {
         }
     }
 
-    private byte[] getTemplateFile(String path) throws IOException, URISyntaxException {
-        return FileIoUtils.loadFileFromClasspath("./templates/" + path);
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+    public void setCookie(final boolean cookie) {
+        if (cookie) {
+            responseHeaders.addHeader(SET_COOKIE, Arrays.asList("logined=true; Path=/"));
+            return;
         }
-    }
-
-    private void response302Header(DataOutputStream dos, String path) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \n");
-            dos.writeBytes("Location: " + path + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+        responseHeaders.addHeader(SET_COOKIE, Arrays.asList("logined=false;"));
     }
 
     public void setContentType(final String contentType) {
@@ -91,10 +65,6 @@ public class HttpResponse {
 
     public void setContentLength(String contentLength) {
         responseHeaders.addHeader(HttpHeader.CONTENT_LENGTH, Arrays.asList(contentLength));
-    }
-
-    public byte[] getResponseBody() {
-        return responseBody;
     }
 
     public void setResponseBody(final String requestPath) throws IOException, URISyntaxException {

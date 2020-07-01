@@ -26,6 +26,39 @@ public class UserController extends DefaultController {
 
         if (request.getPath().equals("/user/create")) {
             create(request, response);
+            return;
+        }
+
+        if (request.getPath().equals("/user/login")) {
+            login(request, response);
+            return;
+        }
+
+    }
+
+    private void login(final HttpRequest request, final HttpResponse response) {
+        try {
+            final Map<String, String> requestBody = request.getRequestBody();
+            String userId = requestBody.get("userId");
+            String password = requestBody.get("password");
+
+            User userById = DataBase.findUserById(userId);
+            if (userById.getPassword().equals(password)) {
+                response.buildResponseLine(HttpStatus.FOUND);
+                response.setContentType("text/html; charset=utf-8");
+                response.setCookie(true);
+                response.setResponseBody("/index.html");
+                response.print();
+                return;
+            }
+            response.buildResponseLine(HttpStatus.FOUND);
+            response.setContentType("text/html; charset=utf-8");
+            response.setCookie(false);
+            response.setResponseBody("/user/login_failed.html");
+            response.print();
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+            badRequest(request, response);
         }
 
     }

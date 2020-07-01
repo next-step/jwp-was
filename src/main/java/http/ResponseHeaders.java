@@ -16,10 +16,6 @@ public class ResponseHeaders {
         this.responseHeaders = new HashMap<>();
     }
 
-    public ResponseHeaders(final Map<String, List<String>> headers) {
-        this.responseHeaders = headers;
-    }
-
     public String getResponseHeaders() {
         String responseHeaders = this.responseHeaders.entrySet()
                 .stream()
