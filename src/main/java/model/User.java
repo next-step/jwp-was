@@ -1,5 +1,9 @@
 package model;
 
+import http.RequestBody;
+
+import java.util.Map;
+
 public class User {
     private String userId;
     private String password;
@@ -11,6 +15,14 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public User(final RequestBody requestBody) {
+        Map<String, String> bodys = requestBody.getRequestBody();
+        this.userId = bodys.getOrDefault("userId", "");
+        this.password = bodys.getOrDefault("password", "");
+        this.name = bodys.getOrDefault("name", "");
+        this.email = bodys.getOrDefault("email", "");
     }
 
     public String getUserId() {

@@ -16,6 +16,11 @@ public class Protocol {
         new Protocol(values[0], values[1]);
     }
 
+    public static Protocol of(final String source) {
+        String[] tokens = source.split("/");
+        return new Protocol(tokens[0], tokens[1]);
+    }
+
     public String getProtocol() {
         return protocol;
     }

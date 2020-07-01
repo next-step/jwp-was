@@ -2,10 +2,7 @@ package http;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 class RequestLineParserTest {
 
@@ -31,10 +28,8 @@ class RequestLineParserTest {
 
         RequestLine requestLine = RequestLineParser.parse(source);
 
-        Map<String, String> queryStrings = requestLine.getQueryStrings();
-
-        queryStrings.entrySet()
-                .forEach((entry) -> System.out.println(entry.getKey() + ", " + entry.getValue()));
+        QueryStrings queryStrings = requestLine.getQueryStrings();
+        System.out.println(queryStrings.toString());
     }
 
     @Test
