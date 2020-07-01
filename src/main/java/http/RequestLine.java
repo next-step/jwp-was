@@ -46,5 +46,4 @@ public class RequestLine {
                 ", queryStrings=" + queryStrings +
                 '}';
     }
-
 }

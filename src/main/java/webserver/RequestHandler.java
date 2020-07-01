@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.URISyntaxException;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -33,7 +32,7 @@ public class RequestHandler implements Runnable {
             Controller controller = RequestHandlerMapping.getController(httpRequest);
             controller.handle(httpRequest, httpResponse);
 
-        } catch (IOException | URISyntaxException | NoSuchMethodException e) {
+        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }

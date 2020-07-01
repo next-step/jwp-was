@@ -10,6 +10,7 @@ public class RequestHandlerMapping {
     public static void init() {
         handlers.put("POST /user/create", new UserController());
         handlers.put("POST /user/login", new UserController());
+        handlers.put("GET /user/list", new UserController());
     }
 
     public static Controller getController(final HttpRequest request) {

@@ -9,13 +9,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 
 import static http.HttpHeader.SET_COOKIE;
+import static java.util.Arrays.asList;
 
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
-    private static final String TEMPLATE_PREFIX = "./templates/";
     private static final String CARRIAGE_RETURN = "\r\n";
 
     private final OutputStream out;
@@ -40,9 +39,7 @@ public class HttpResponse {
         try {
             dos.writeBytes(responseLine.getResponseLine() + CARRIAGE_RETURN);
             dos.writeBytes(responseHeaders.getResponseHeaders() + CARRIAGE_RETURN);
-            if (!"".equals(responseBody) && responseBody != null) {
-                dos.write(responseBody, 0, responseBody.length);
-            }
+            dos.write(responseBody, 0, responseBody.length);
             dos.flush();
 
         } catch (IOException e) {
@@ -52,24 +49,58 @@ public class HttpResponse {
 
     public void setCookie(final boolean cookie) {
         if (cookie) {
-            responseHeaders.addHeader(SET_COOKIE, Arrays.asList("logined=true; Path=/"));
+            responseHeaders.addHeader(SET_COOKIE, asList("logined=true; Path=/"));
             return;
         }
-        responseHeaders.addHeader(SET_COOKIE, Arrays.asList("logined=false;"));
+        responseHeaders.addHeader(SET_COOKIE, asList("logined=false;"));
     }
 
     public void setContentType(final String contentType) {
-        System.out.println("contentType: " + contentType);
-        responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, Arrays.asList(contentType));
+        responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, asList(contentType));
     }
 
-    public void setContentLength(String contentLength) {
-        responseHeaders.addHeader(HttpHeader.CONTENT_LENGTH, Arrays.asList(contentLength));
+    public void setCharset(String charset) {
+        String contentType = responseHeaders.getContentType();
+        responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, asList(contentType + ";charset=" + charset));
     }
 
-    public void setResponseBody(final String requestPath) throws IOException, URISyntaxException {
-        responseBody = FileIoUtils.loadFileFromClasspath(TEMPLATE_PREFIX + requestPath);
+    public void setResponseBody(final String requestPath) {
+        try {
+            responseBody = loadFileFromClasspath(requestPath);
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
+
+    private byte[] loadFileFromClasspath(final String requestPath) throws IOException, URISyntaxException {
+        String prefix = "./templates/";
+        if (requestPath.endsWith(".ico")) {
+            prefix = "./templates/";
+            responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, asList("image/x-icon"));
+        } else if (requestPath.endsWith(".html")) {
+            prefix = "./templates/";
+        } else if (requestPath.endsWith(".css")) {
+            prefix = "./static/";
+        } else if (requestPath.endsWith(".js")) {
+            prefix = "./static/";
+        } else if (requestPath.endsWith(".ttf") || requestPath.endsWith(".svg") ||
+                requestPath.endsWith(".eot") || requestPath.endsWith(".woff") ||
+                requestPath.endsWith(".ttf2")) {
+            prefix = "./static/";
+            responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, asList("font/woff"));
+        }
+        byte[] bytes = FileIoUtils.loadFileFromClasspath(prefix + requestPath);
+        return bytes;
+    }
+
+    public void setTemplate(final String template) {
+        this.responseBody = template.getBytes();
+    }
+
+    public String getResponseBody() {
+        return new String(responseBody);
+    }
+
 
     @Override
     public String toString() {

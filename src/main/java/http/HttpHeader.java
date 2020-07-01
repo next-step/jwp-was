@@ -4,8 +4,9 @@ public enum HttpHeader {
 
     CONTENT_TYPE("Content-Type"),
     CONTENT_LENGTH("Content-Length"),
-    SET_COOKIE("Set-Cookie")
-    ;
+    COOKIE("Cookie"),
+    SET_COOKIE("Set-Cookie"),
+    ICON("image/x-icon");
 
     private String value;
 

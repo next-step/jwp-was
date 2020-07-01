@@ -28,8 +28,6 @@ class RequestLineParserTest {
 
         RequestLine requestLine = RequestLineParser.parse(source);
 
-        QueryStrings queryStrings = requestLine.getQueryStrings();
-        System.out.println(queryStrings.toString());
     }
 
     @Test

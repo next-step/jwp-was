@@ -36,10 +36,6 @@ public class RequestHeaders {
         return collectionToCommaDelimitedString(requestHeaders.get(CONTENT_LENGTH));
     }
 
-    public String getAccept() {
-        return collectionToCommaDelimitedString(requestHeaders.get(ACCEPT));
-    }
-
     @Override
     public String toString() {
         return "RequestHeaders{" +
@@ -49,5 +45,13 @@ public class RequestHeaders {
 
     public Map<String, List<String>> getHeaders() {
         return requestHeaders;
+    }
+
+    public String getCookie() {
+        return collectionToCommaDelimitedString(requestHeaders.get(HttpHeader.COOKIE.getValue()));
+    }
+
+    public String getAccept() {
+        return collectionToCommaDelimitedString(requestHeaders.get("Accept"));
     }
 }

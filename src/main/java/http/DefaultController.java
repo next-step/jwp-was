@@ -1,12 +1,10 @@
 package http;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 public abstract class DefaultController implements Controller {
 
     @Override
     public void handle(final HttpRequest request, final HttpResponse response) {
+        setContentType(request, response);
         if (request.isGet()) {
             doGet(request, response);
             return;
@@ -14,21 +12,23 @@ public abstract class DefaultController implements Controller {
         doPost(request, response);
     }
 
+    void setContentType(final HttpRequest request, final HttpResponse response) {
+        final String contentType = ContentType.getContentType(request.getAccept());
+        response.setContentType(contentType);
+    }
+
     void doGet(final HttpRequest request, final HttpResponse response) {
-        System.out.println("DefaultController doGet");
         response.buildResponseLine(HttpStatus.BAD_REQUEST);
-        response.setContentType("test/html; charset=utf-8");
-        response.setContentLength("/user/form.html");
-        try {
-            response.setResponseBody("/user/form.html");
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
+        response.setCharset("utf-8");
+        response.setResponseBody("/user/form.html");
         response.print();
     }
 
     void doPost(final HttpRequest request, final HttpResponse response) {
-        System.out.println("DefaultController doPost");
+        response.buildResponseLine(HttpStatus.BAD_REQUEST);
+        response.setCharset("utf-8");
+        response.setResponseBody("/error/4xx.html");
+        response.print();
     }
 
 }

@@ -20,9 +20,10 @@ public class HttpRequest {
     public HttpRequest(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
-        this.requestLine = RequestLineParser.parse(bufferedReader.readLine());
-        String readLine = bufferedReader.readLine();
+        String requestLine = bufferedReader.readLine();
+        this.requestLine = RequestLineParser.parse(requestLine);
 
+        String readLine = bufferedReader.readLine();
         while (!"".equals(readLine)) {
             readLine = bufferedReader.readLine();
             parseHttpHeader(readLine);
@@ -45,7 +46,6 @@ public class HttpRequest {
     }
 
     public String getHandler() {
-        System.out.println("Handler Mapping getHandler: " + requestLine.getHandlerPath());
         return requestLine.getHandlerPath();
     }
 
@@ -55,6 +55,14 @@ public class HttpRequest {
 
     public Map<String, String> getRequestBody() {
         return requestBody.getRequestBody();
+    }
+
+    public String getCookie() {
+        return requestHeaders.getCookie();
+    }
+
+    public String getAccept() {
+        return requestHeaders.getAccept();
     }
 }
 

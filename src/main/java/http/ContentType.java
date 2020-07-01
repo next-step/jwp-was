@@ -1,7 +1,8 @@
 package http;
 
 public enum ContentType {
-    TEXT_HTML("text/html;charset=utf-8"),
+    TEXT_HTML("text/html"),
+    TEXT_CSS("text/css"),
     ALL("*/*");
 
     private final String contentType;
@@ -10,7 +11,7 @@ public enum ContentType {
         this.contentType = contentType;
     }
 
-    public String getContentType() {
-        return contentType;
+    public static String getContentType(String contentType) {
+        return contentType.split(",")[0];
     }
 }
