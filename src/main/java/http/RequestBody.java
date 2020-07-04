@@ -26,4 +26,11 @@ public class RequestBody {
         }
         return body;
     }
+
+    @Override
+    public String toString() {
+        return "RequestBody{" +
+                "requestBody='" + requestBody + '\'' +
+                '}';
+    }
 }

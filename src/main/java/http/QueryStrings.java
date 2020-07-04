@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
+
 public class QueryStrings {
 
     private static final int PREV = 0;
@@ -28,10 +30,15 @@ public class QueryStrings {
         }
     }
 
+    public String getValue(final String key) {
+        return collectionToCommaDelimitedString(queryStrings.get(key));
+    }
+
     private void buildQueryStrings(final String values) {
         if (values.contains(AMPERSAND)) {
             String[] tokens = values.split(AMPERSAND);
             Stream.of(tokens).forEach(this::putValue);
+            return;
         }
         putValue(values);
     }
@@ -47,4 +54,5 @@ public class QueryStrings {
                 "queryStrings=" + queryStrings +
                 '}';
     }
+
 }

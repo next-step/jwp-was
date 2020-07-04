@@ -37,6 +37,10 @@ public class RequestLine {
         return protocol;
     }
 
+    public String getQueryValue(final String key) {
+        return queryStrings.getValue(key);
+    }
+
     @Override
     public String toString() {
         return "RequestLine{" +

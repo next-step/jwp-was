@@ -39,6 +39,7 @@ public class HttpResponse {
         try {
             dos.writeBytes(responseLine.getResponseLine() + CARRIAGE_RETURN);
             dos.writeBytes(responseHeaders.getResponseHeaders() + CARRIAGE_RETURN);
+            dos.writeBytes(CARRIAGE_RETURN);
             dos.write(responseBody, 0, responseBody.length);
             dos.flush();
 
@@ -65,6 +66,7 @@ public class HttpResponse {
     }
 
     public void setResponseBody(final String requestPath) {
+        responseBody = null;
         try {
             responseBody = loadFileFromClasspath(requestPath);
         } catch (IOException | URISyntaxException e) {
@@ -73,23 +75,18 @@ public class HttpResponse {
     }
 
     private byte[] loadFileFromClasspath(final String requestPath) throws IOException, URISyntaxException {
-        String prefix = "./templates/";
-        if (requestPath.endsWith(".ico")) {
-            prefix = "./templates/";
+        logger.info("requestPath: " + requestPath);
+        String prefix = "./static";
+
+        if (requestPath.contains(".html")) {
+            prefix = "./templates";
+        } else if (requestPath.contains(".ico")) {
             responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, asList("image/x-icon"));
-        } else if (requestPath.endsWith(".html")) {
-            prefix = "./templates/";
-        } else if (requestPath.endsWith(".css")) {
-            prefix = "./static/";
-        } else if (requestPath.endsWith(".js")) {
-            prefix = "./static/";
-        } else if (requestPath.endsWith(".ttf") || requestPath.endsWith(".svg") ||
-                requestPath.endsWith(".eot") || requestPath.endsWith(".woff") ||
-                requestPath.endsWith(".ttf2")) {
-            prefix = "./static/";
-            responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, asList("font/woff"));
         }
+        logger.warn("resource path: " + prefix + requestPath);
+
         byte[] bytes = FileIoUtils.loadFileFromClasspath(prefix + requestPath);
+        logger.info("LoadFileForm: \n" + new String(bytes));
         return bytes;
     }
 
