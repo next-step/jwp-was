@@ -5,17 +5,14 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 public class UserLoginController extends UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserLoginController.class);
 
     @Override
     void doPost(final HttpRequest request, final HttpResponse response) {
         logger.info("UserLoginController - doPost");
-        final Map<String, String> requestBody = request.getRequestBody();
-        String userId = requestBody.get("userId");
-        String password = requestBody.get("password");
+        String userId = request.getParameter("userId");
+        String password = request.getParameter("password");
 
         User userById = DataBase.findUserById(userId);
         if (userById.getPassword().equals(password)) {

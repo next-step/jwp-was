@@ -30,6 +30,11 @@ public class QueryStrings {
         }
     }
 
+    public QueryStrings(final RequestBody requestBody) {
+        this.queryStrings = new HashMap<>();
+        buildQueryStrings(requestBody.getRequestBody());
+    }
+
     public String getValue(final String key) {
         return collectionToCommaDelimitedString(queryStrings.get(key));
     }

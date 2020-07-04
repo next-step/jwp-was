@@ -5,8 +5,6 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 public class UserCreateController extends UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserCreateController.class);
 
@@ -14,11 +12,10 @@ public class UserCreateController extends UserController {
     void doPost(final HttpRequest request, final HttpResponse response) {
         logger.info("UserCreateController - doPost");
 
-        final Map<String, String> requestBody = request.getRequestBody();
-        final String userId = requestBody.get("userId");
-        final String password = requestBody.get("password");
-        final String name = requestBody.get("name");
-        final String email = requestBody.get("email");
+        final String userId = request.getParameter("userId");
+        final String password = request.getParameter("password");
+        final String name = request.getParameter("name");
+        final String email = request.getParameter("email");
 
         final int changeBefore = DataBase.findAll().size();
         User user = new User(userId, password, name, email);

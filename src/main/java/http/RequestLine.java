@@ -5,13 +5,11 @@ public class RequestLine {
     private final Method method;
     private final RequestPath requestPath;
     private final String protocol;
-    private final QueryStrings queryStrings;
 
     protected RequestLine(Method method, String path, String protocol) {
         this.method = method;
         this.requestPath = RequestPath.of(path);
         this.protocol = protocol;
-        this.queryStrings = new QueryStrings(path);
     }
 
     public static RequestLine of(final String method, final String path, final String protocol) {
@@ -33,12 +31,12 @@ public class RequestLine {
         return method;
     }
 
-    public String getProtocol() {
-        return protocol;
+    public String getPath() {
+        return requestPath.getPath();
     }
 
-    public String getQueryValue(final String key) {
-        return queryStrings.getValue(key);
+    public String getProtocol() {
+        return protocol;
     }
 
     @Override
@@ -47,7 +45,7 @@ public class RequestLine {
                 "method=" + method +
                 ", requestPath=" + requestPath +
                 ", protocol=" + protocol +
-                ", queryStrings=" + queryStrings +
                 '}';
     }
+
 }

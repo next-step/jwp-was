@@ -17,14 +17,8 @@ public class RequestBody {
         this.requestBody = requestBody;
     }
 
-    public Map<String, String> getRequestBody() {
-        Map<String, String> body = new HashMap<>();
-        String[] tokens = requestBody.split("&");
-        for (final String token : tokens) {
-            String[] split = token.split("=");
-            body.put(split[0], split[1]);
-        }
-        return body;
+    public String getRequestBody() {
+        return requestBody;
     }
 
     @Override
