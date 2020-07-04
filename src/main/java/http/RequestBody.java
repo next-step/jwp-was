@@ -1,8 +1,5 @@
 package http;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class RequestBody {
 
     private static final String EMPTY = "";

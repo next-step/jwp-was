@@ -65,15 +65,6 @@ public class HttpResponse {
         responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, asList(contentType + ";charset=" + charset));
     }
 
-    public void setResponseBody(final String requestPath) {
-        responseBody = null;
-        try {
-            responseBody = loadFileFromClasspath(requestPath);
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
-
     private byte[] loadFileFromClasspath(final String requestPath) throws IOException, URISyntaxException {
         logger.info("requestPath: " + requestPath);
         String prefix = "./static";
@@ -98,6 +89,14 @@ public class HttpResponse {
         return new String(responseBody);
     }
 
+    public void setResponseBody(final String requestPath) {
+        responseBody = null;
+        try {
+            responseBody = loadFileFromClasspath(requestPath);
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public String toString() {
