@@ -1,5 +1,7 @@
 package http;
 
+import java.util.Objects;
+
 public class RequestLine {
 
     private final Method method;
@@ -39,13 +41,31 @@ public class RequestLine {
         return protocol;
     }
 
+    public String getQuery() {
+        return requestPath.getQuery();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final RequestLine that = (RequestLine) o;
+        return getMethod() == that.getMethod() &&
+                Objects.equals(getRequestPath(), that.getRequestPath()) &&
+                Objects.equals(getProtocol(), that.getProtocol());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMethod(), getRequestPath(), getProtocol());
+    }
+
     @Override
     public String toString() {
         return "RequestLine{" +
                 "method=" + method +
                 ", requestPath=" + requestPath +
-                ", protocol=" + protocol +
+                ", protocol='" + protocol + '\'' +
                 '}';
     }
-
 }

@@ -21,23 +21,17 @@ public class UserListController extends UserController {
         final String[] cookieTokens = cookie.split(";");
         if (cookieTokens.length > 1 && cookieTokens[1].trim().equals("logined=true")) {
             logger.info("=== logined user ===");
-            response.buildResponseLine(HttpStatus.OK);
-            response.setCharset("utf-8");
-            response.setResponseBody("user/list.html");
             try {
                 Template template = getHandlebars()
                         .compile("user/list");
                 String apply = template.apply(DataBase.findAll());
                 response.setTemplate(apply);
-                response.print();
+                response.forward("/user/list.html");
                 return;
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            response.buildResponseLine(HttpStatus.FOUND);
-            response.setCharset("utf-8");
-            response.setResponseBody("/user/login.html");
-            response.print();
+            response.forward("/user/login.html");
         }
         logger.info("=== not logined user ===");
         super.doGet(request, response);

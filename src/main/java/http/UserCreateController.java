@@ -9,6 +9,12 @@ public class UserCreateController extends UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserCreateController.class);
 
     @Override
+    void doGet(final HttpRequest request, final HttpResponse response) {
+        logger.info("UserCreateController - doGet");
+        doPost(request, response);
+    }
+
+    @Override
     void doPost(final HttpRequest request, final HttpResponse response) {
         logger.info("UserCreateController - doPost");
 
@@ -23,10 +29,7 @@ public class UserCreateController extends UserController {
         final int changeAfter = DataBase.findAll().size();
 
         if (changeAfter - 1 == changeBefore) {
-            response.buildResponseLine(HttpStatus.FOUND);
-            response.setContentType("text/html; charset=utf-8");
-            response.setResponseBody("/index.html");
-            response.print();
+            response.sendRedirect("/index.html");
             return;
         }
         super.doPost(request, response);

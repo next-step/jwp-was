@@ -12,6 +12,7 @@ public class RequestHandlerMapping {
     private static Map<String, Controller> handlers = new LinkedHashMap<>();
 
     public static void init() {
+        handlers.put("GET /user/create", new UserCreateController());
         handlers.put("POST /user/create", new UserCreateController());
         handlers.put("POST /user/login", new UserLoginController());
         handlers.put("GET /user/list", new UserListController());
@@ -19,7 +20,6 @@ public class RequestHandlerMapping {
 
     public static Controller getController(final HttpRequest request) {
         final String handler = request.getHandler();
-        logger.info("hander: " + handler);
         return handlers.getOrDefault(handler, new ResourceController());
     }
 }

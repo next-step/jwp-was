@@ -16,18 +16,13 @@ public class UserLoginController extends UserController {
 
         User userById = DataBase.findUserById(userId);
         if (userById.getPassword().equals(password)) {
-            response.buildResponseLine(HttpStatus.FOUND);
-            response.setContentType("text/html; charset=utf-8");
+
+            response.sendRedirect("/index.html");
             response.setCookie(true);
-            response.setResponseBody("/index.html");
-            response.print();
             return;
         }
-        response.buildResponseLine(HttpStatus.FOUND);
-        response.setContentType("text/html; charset=utf-8");
-        response.setCookie(false);
-        response.setResponseBody("/user/login_failed.html");
-        response.print();
+
+        response.sendRedirect("/user/login_failed.html");
 
         super.doPost(request, response);
     }

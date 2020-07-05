@@ -1,11 +1,11 @@
 package http;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static http.HttpHeader.CONTENT_TYPE;
 import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 
 public class ResponseHeaders {
@@ -25,10 +25,8 @@ public class ResponseHeaders {
     }
 
     public void addHeader(HttpHeader header, List<String> headerValues) {
+        List<String> values = responseHeaders.getOrDefault(header, Collections.emptyList());
+        headerValues.addAll(values);
         responseHeaders.put(header.getValue(), headerValues);
-    }
-
-    public String getContentType() {
-        return collectionToCommaDelimitedString(responseHeaders.get(CONTENT_TYPE.getValue()));
     }
 }

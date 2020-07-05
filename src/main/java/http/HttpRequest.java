@@ -22,7 +22,6 @@ public class HttpRequest {
 
     public HttpRequest(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-
         String requestLineString = bufferedReader.readLine();
         requestLine = RequestLineParser.parse(requestLineString);
 
@@ -32,22 +31,27 @@ public class HttpRequest {
             parseHttpHeader(readLine);
             readLine = bufferedReader.readLine();
             if (readLine == null) {
-                return;
+                break;
             }
         }
-
         if (requestHeaders.hasContentLength()) {
             String body = IOUtils.readData(bufferedReader, Integer.parseInt(requestHeaders.getContentLength()));
             requestBody = new RequestBody(body);
         }
+        buildQueryStrings();
+    }
 
-        final Method method = requestLine.getMethod();
-        if (method.equals(Method.GET)) {
-            queryStrings = new QueryStrings(requestLine.getPath());
-        } else {
-            queryStrings = new QueryStrings(requestBody);
+    private void buildQueryStrings() {
+        QueryStrings queryStrings = new QueryStrings();
+        if (!"".equals(requestBody.getRequestBody())) {
+            logger.debug("requestBody not null");
+            queryStrings.buildQueryStrings(requestBody.getRequestBody());
         }
-
+        if (!"".equals(requestLine.getQuery())) {
+            logger.debug("queryParameter not null");
+            queryStrings.buildQueryStrings(requestLine.getQuery());
+        }
+        this.queryStrings = queryStrings;
     }
 
     private void parseHttpHeader(final String readLine) {
@@ -80,16 +84,8 @@ public class HttpRequest {
         return requestLine.getRequestPath();
     }
 
-    public String getRequestBody() {
-        return requestBody.getRequestBody();
-    }
-
     public String getCookie() {
         return requestHeaders.getCookie();
-    }
-
-    public String getAccept() {
-        return requestHeaders.getAccept();
     }
 
     @Override
@@ -98,8 +94,8 @@ public class HttpRequest {
                 "requestLine=" + requestLine +
                 ", requestHeaders=" + requestHeaders +
                 ", requestBody=" + requestBody +
+                ", queryStrings=" + queryStrings +
                 '}';
     }
-
 }
 

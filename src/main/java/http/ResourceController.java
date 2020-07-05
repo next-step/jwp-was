@@ -14,10 +14,7 @@ public class ResourceController extends DefaultController {
     @Override
     void doGet(final HttpRequest request, final HttpResponse response) {
         logger.info("ResourceController - doGet");
-        response.buildResponseLine(HttpStatus.OK);
-        response.setCharset("utf-8");
-        response.setResponseBody(request.getPath());
-        response.print();
+        response.forward(request.getPath());
     }
 
     @Override
