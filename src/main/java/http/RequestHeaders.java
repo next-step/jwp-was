@@ -27,6 +27,10 @@ public class RequestHeaders {
         requestHeaders.put(tokens[0], Arrays.asList(tokens[1].split(COMMA_SEPARATOR)));
     }
 
+    public String getHeader(final String header) {
+        return collectionToCommaDelimitedString(requestHeaders.get(header));
+    }
+
     public boolean hasContentLength() {
         final String contentLength = getContentLength();
         return contentLength != null && !"".equals(contentLength);
@@ -36,17 +40,6 @@ public class RequestHeaders {
         return collectionToCommaDelimitedString(requestHeaders.get(CONTENT_LENGTH));
     }
 
-    @Override
-    public String toString() {
-        return "RequestHeaders{" +
-                "requestHeaders=" + requestHeaders +
-                '}';
-    }
-
-    public Map<String, List<String>> getHeaders() {
-        return requestHeaders;
-    }
-
     public String getCookie() {
         return collectionToCommaDelimitedString(requestHeaders.get(HttpHeader.COOKIE.getValue()));
     }
@@ -54,4 +47,12 @@ public class RequestHeaders {
     public String getAccept() {
         return collectionToCommaDelimitedString(requestHeaders.get("Accept"));
     }
+
+    @Override
+    public String toString() {
+        return "RequestHeaders{" +
+                "requestHeaders=" + requestHeaders +
+                '}';
+    }
+
 }

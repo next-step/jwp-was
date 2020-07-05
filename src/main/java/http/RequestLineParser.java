@@ -7,7 +7,11 @@ public class RequestLineParser {
 
     public static RequestLine parse(String requestLine) {
         String[] tokens = requestLine.split(BLANK);
-        Method method = Method.valueOf(tokens[METHOD_INDEX]);
-        return new RequestLine(method, tokens[PATH_INDEX], tokens[PROTOCOL_INDEX]);
+        try {
+            Method method = Method.valueOf(tokens[METHOD_INDEX]);
+            return new RequestLine(method, tokens[PATH_INDEX], tokens[PROTOCOL_INDEX]);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("No HTTP Protocol");
+        }
     }
 }

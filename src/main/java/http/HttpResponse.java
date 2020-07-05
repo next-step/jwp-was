@@ -7,8 +7,8 @@ import utils.FileIoUtils;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import static http.HttpHeader.SET_COOKIE;
 import static java.util.Arrays.asList;
@@ -19,7 +19,6 @@ public class HttpResponse {
 
     private final OutputStream out;
     private final DataOutputStream dos;
-    private final PrintWriter printWriter;
 
     private ResponseLine responseLine;
     private ResponseHeaders responseHeaders = new ResponseHeaders();
@@ -28,23 +27,75 @@ public class HttpResponse {
     public HttpResponse(final OutputStream out) {
         this.out = out;
         this.dos = new DataOutputStream(out);
-        this.printWriter = new PrintWriter(out);
     }
 
-    public void buildResponseLine(HttpStatus httpStatus) {
+    public void forward(final String path) {
+        buildResponseLine(HttpStatus.OK);
+        setResponseBody(path);
+        print();
+    }
+
+    public void sendRedirect(final String requestPath) {
+        buildResponseLine(HttpStatus.FOUND);
+        setCookie(false);
+        responseHeaders.addHeader(HttpHeader.LOCATION, Arrays.asList(requestPath));
+        setResponseBody(requestPath);
+        print();
+    }
+
+    public void badRequest() {
+        buildResponseLine(HttpStatus.BAD_REQUEST);
+        setResponseBody("/error/4xx.html");
+        print();
+    }
+
+    private void buildResponseLine(HttpStatus httpStatus) {
         this.responseLine = new ResponseLine(httpStatus.getCodeValue(httpStatus), httpStatus.getValue());
     }
 
-    public void print() {
+    private void setResponseBody(final String requestPath) {
+        if (responseBody != null) {
+            return;
+        }
+        try {
+            responseBody = loadFileFromClasspath(requestPath);
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private byte[] loadFileFromClasspath(final String requestPath) throws IOException, URISyntaxException {
+        logger.info("requestPath: " + requestPath);
+        String prefix = "./static";
+
+        if (requestPath.contains(".html")) {
+            prefix = "./templates";
+            responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, asList("text/html;charset=utf-8"));
+        } else if (requestPath.contains(".ico")) {
+            responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, asList("image/x-icon"));
+        }
+        byte[] bytes = FileIoUtils.loadFileFromClasspath(prefix + requestPath);
+        return bytes;
+    }
+
+    private void print() {
         try {
             dos.writeBytes(responseLine.getResponseLine() + CARRIAGE_RETURN);
             dos.writeBytes(responseHeaders.getResponseHeaders() + CARRIAGE_RETURN);
+            dos.writeBytes(CARRIAGE_RETURN);
             dos.write(responseBody, 0, responseBody.length);
             dos.flush();
-
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    public void addHeader(final String key, final String value) {
+        responseHeaders.addHeader(HttpHeader.of(key), Arrays.asList(value));
+    }
+
+    public void setTemplate(final String template) {
+        this.responseBody = template.getBytes();
     }
 
     public void setCookie(final boolean cookie) {
@@ -54,53 +105,6 @@ public class HttpResponse {
         }
         responseHeaders.addHeader(SET_COOKIE, asList("logined=false;"));
     }
-
-    public void setContentType(final String contentType) {
-        responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, asList(contentType));
-    }
-
-    public void setCharset(String charset) {
-        String contentType = responseHeaders.getContentType();
-        responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, asList(contentType + ";charset=" + charset));
-    }
-
-    public void setResponseBody(final String requestPath) {
-        try {
-            responseBody = loadFileFromClasspath(requestPath);
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private byte[] loadFileFromClasspath(final String requestPath) throws IOException, URISyntaxException {
-        String prefix = "./templates/";
-        if (requestPath.endsWith(".ico")) {
-            prefix = "./templates/";
-            responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, asList("image/x-icon"));
-        } else if (requestPath.endsWith(".html")) {
-            prefix = "./templates/";
-        } else if (requestPath.endsWith(".css")) {
-            prefix = "./static/";
-        } else if (requestPath.endsWith(".js")) {
-            prefix = "./static/";
-        } else if (requestPath.endsWith(".ttf") || requestPath.endsWith(".svg") ||
-                requestPath.endsWith(".eot") || requestPath.endsWith(".woff") ||
-                requestPath.endsWith(".ttf2")) {
-            prefix = "./static/";
-            responseHeaders.addHeader(HttpHeader.CONTENT_TYPE, asList("font/woff"));
-        }
-        byte[] bytes = FileIoUtils.loadFileFromClasspath(prefix + requestPath);
-        return bytes;
-    }
-
-    public void setTemplate(final String template) {
-        this.responseBody = template.getBytes();
-    }
-
-    public String getResponseBody() {
-        return new String(responseBody);
-    }
-
 
     @Override
     public String toString() {

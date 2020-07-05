@@ -1,17 +1,17 @@
 package http;
 
+import java.util.Objects;
+
 public class RequestLine {
 
     private final Method method;
     private final RequestPath requestPath;
     private final String protocol;
-    private final QueryStrings queryStrings;
 
     protected RequestLine(Method method, String path, String protocol) {
         this.method = method;
         this.requestPath = RequestPath.of(path);
         this.protocol = protocol;
-        this.queryStrings = new QueryStrings(path);
     }
 
     public static RequestLine of(final String method, final String path, final String protocol) {
@@ -33,8 +33,31 @@ public class RequestLine {
         return method;
     }
 
+    public String getPath() {
+        return requestPath.getPath();
+    }
+
     public String getProtocol() {
         return protocol;
+    }
+
+    public String getQuery() {
+        return requestPath.getQuery();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final RequestLine that = (RequestLine) o;
+        return getMethod() == that.getMethod() &&
+                Objects.equals(getRequestPath(), that.getRequestPath()) &&
+                Objects.equals(getProtocol(), that.getProtocol());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMethod(), getRequestPath(), getProtocol());
     }
 
     @Override
@@ -42,8 +65,7 @@ public class RequestLine {
         return "RequestLine{" +
                 "method=" + method +
                 ", requestPath=" + requestPath +
-                ", protocol=" + protocol +
-                ", queryStrings=" + queryStrings +
+                ", protocol='" + protocol + '\'' +
                 '}';
     }
 }

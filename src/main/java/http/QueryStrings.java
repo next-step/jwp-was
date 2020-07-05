@@ -1,44 +1,54 @@
 package http;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
+
+import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 
 public class QueryStrings {
 
-    private static final int PREV = 0;
-    private static final int NEXT = 1;
+    private static final int KEY_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
 
-    private static final String QUESTION_MARK = "?";
     private static final String AMPERSAND = "&";
-    private static final String ESCAPE_QUEST = "\\?";
     private static final String EQUALS = "=";
     private static final String COMMA = ",";
 
     private final Map<String, List<String>> queryStrings;
 
-    public QueryStrings(String path) {
+    public QueryStrings(final String querySources) {
         this.queryStrings = new HashMap<>();
-        if (path.contains(QUESTION_MARK)) {
-            final String[] pathValues = path.split(ESCAPE_QUEST);
-            String values = pathValues[NEXT];
-            buildQueryStrings(values);
-        }
+        buildQueryStrings(querySources);
     }
 
-    private void buildQueryStrings(final String values) {
+    public QueryStrings() {
+        this.queryStrings = new HashMap<>();
+    }
+
+    public String getValue(final String key) {
+        return collectionToCommaDelimitedString(queryStrings.get(key));
+    }
+
+    public void buildQueryStrings(final String values) {
         if (values.contains(AMPERSAND)) {
             String[] tokens = values.split(AMPERSAND);
             Stream.of(tokens).forEach(this::putValue);
+            return;
         }
         putValue(values);
     }
 
-    private void putValue(final String values) {
-        String[] tokens = values.split(EQUALS);
-        queryStrings.put(tokens[PREV], Arrays.asList(tokens[NEXT].split(COMMA)));
+    public void putValue(final String values) {
+        if (values.contains(EQUALS)) {
+            String[] tokens = values.split(EQUALS);
+            putValue(tokens[KEY_INDEX], Arrays.asList(tokens[VALUE_INDEX].split(COMMA)));
+        }
+    }
+
+    public void putValue(final String key, final List<String> values) {
+        List<String> existingKey = queryStrings.getOrDefault(key, Collections.emptyList());
+        values.addAll(existingKey);
+        queryStrings.put(key, values);
     }
 
     @Override

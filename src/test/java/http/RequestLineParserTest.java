@@ -11,7 +11,7 @@ class RequestLineParserTest {
         RequestLine requestLine = RequestLineParser.parse("GET /users HTTP/1.1");
 
         assertThat(requestLine).isEqualTo(RequestLine.of("GET", "/users", "HTTP/1.1"));
-        assertThat(requestLine.getProtocol()).isEqualTo(new Protocol("HTTP/1.1"));
+        assertThat(requestLine.getProtocol()).isEqualTo("HTTP/1.1");
     }
 
     @Test
@@ -19,7 +19,7 @@ class RequestLineParserTest {
         RequestLine requestLine = RequestLineParser.parse("POST /users HTTP/1.1");
 
         assertThat(requestLine).isEqualTo(RequestLine.of("POST", "/users", "HTTP/1.1"));
-        assertThat(requestLine.getProtocol()).isEqualTo(new Protocol("HTTP/1.1"));
+        assertThat(requestLine.getProtocol()).isEqualTo("HTTP/1.1");
     }
 
     @Test
