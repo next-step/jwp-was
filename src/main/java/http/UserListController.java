@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class UserListController extends UserController {
+public class UserListController extends DefaultController {
     private static final Logger logger = LoggerFactory.getLogger(UserListController.class);
 
     @Override
