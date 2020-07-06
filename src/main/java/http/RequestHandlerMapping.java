@@ -1,25 +1,21 @@
 package http;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class RequestHandlerMapping {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandlerMapping.class);
 
-    private static Map<String, Controller> handlers = new LinkedHashMap<>();
+    private static Map<RequestLine, Controller> handlers = new LinkedHashMap<>();
 
     public static void init() {
-        handlers.put("GET /user/create", new UserCreateController());
-        handlers.put("POST /user/create", new UserCreateController());
-        handlers.put("POST /user/login", new UserLoginController());
-        handlers.put("GET /user/list", new UserListController());
+        handlers.put(new RequestLine(Method.GET, "/user/create", "http/1.1"), new UserCreateController());
+        handlers.put(new RequestLine(Method.POST, "/user/create", "http/1.1"), new UserCreateController());
+        handlers.put(new RequestLine(Method.POST, "/user/login", "http/1.1"), new UserLoginController());
+        handlers.put(new RequestLine(Method.POST, "/user/login", "http/1.1"), new UserLoginController());
+        handlers.put(new RequestLine(Method.GET, "/user/list", "http/1.1"), new UserListController());
     }
 
     public static Controller getController(final HttpRequest request) {
-        final String handler = request.getHandler();
-        return handlers.getOrDefault(handler, new ResourceController());
+        return handlers.getOrDefault(request.getRequestLine(), new ResourceController());
     }
 }

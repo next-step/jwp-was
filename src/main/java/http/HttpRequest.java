@@ -60,6 +60,10 @@ public class HttpRequest {
         }
     }
 
+    public RequestLine getRequestLine() {
+        return requestLine;
+    }
+
     public String getParameter(final String key) {
         return queryStrings.getValue(key);
     }
@@ -74,10 +78,6 @@ public class HttpRequest {
 
     public boolean isGet() {
         return requestLine.getMethod().equals(Method.GET);
-    }
-
-    public String getHandler() {
-        return requestLine.getHandlerPath();
     }
 
     public String getPath() {
@@ -97,5 +97,6 @@ public class HttpRequest {
                 ", queryStrings=" + queryStrings +
                 '}';
     }
+
 }
 
