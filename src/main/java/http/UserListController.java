@@ -17,9 +17,9 @@ public class UserListController extends DefaultController {
     @Override
     void doGet(final HttpRequest request, final HttpResponse response) {
         logger.info("UserListController - doGet");
-        String cookie = request.getCookie();
-        final String[] cookieTokens = cookie.split(";");
-        if (cookieTokens.length > 1 && cookieTokens[1].trim().equals("logined=true")) {
+        logger.debug("request:: {}", request.toString());
+        logger.debug("cookie:: {}", request.getHeader("Cookie"));
+        if (request.isLogined()) {
             logger.info("=== logined user ===");
             try {
                 Template template = getHandlebars()

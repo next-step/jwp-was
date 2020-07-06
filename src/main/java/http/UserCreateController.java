@@ -22,7 +22,9 @@ public class UserCreateController extends DefaultController {
         DataBase.addUser(user);
         final int changeAfter = DataBase.findAll().size();
 
+        logger.debug("create user check - after: {}, before: {}", changeAfter, changeBefore);
         if (changeAfter - 1 == changeBefore) {
+            logger.debug("user create complete");
             response.sendRedirect("/index.html");
             return;
         }

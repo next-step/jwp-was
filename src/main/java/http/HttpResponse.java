@@ -10,7 +10,9 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static http.HttpHeader.COOKIE;
 import static http.HttpHeader.SET_COOKIE;
 import static java.util.Arrays.asList;
 
@@ -25,6 +27,7 @@ public class HttpResponse {
     private ResponseLine responseLine;
     private ResponseHeaders responseHeaders = new ResponseHeaders();
     private byte[] responseBody;
+    private String sessionId;
 
     public HttpResponse(final OutputStream out) {
         this.out = out;
@@ -39,7 +42,6 @@ public class HttpResponse {
 
     public void sendRedirect(final String requestPath) {
         buildResponseLine(HttpStatus.FOUND);
-        setCookie(false);
         responseHeaders.addHeader(HttpHeader.LOCATION, Arrays.asList(requestPath));
         setResponseBody(requestPath);
         print();
@@ -92,26 +94,29 @@ public class HttpResponse {
         }
     }
 
-    public void addHeader(final String key, final String value) {
-        responseHeaders.addHeader(HttpHeader.of(key), Arrays.asList(value));
-    }
-
     public void setTemplate(final String template) {
         this.responseBody = template.getBytes();
     }
 
     public void setCookie(final boolean cookie) {
         if (cookie) {
-            responseHeaders.addHeader(SET_COOKIE, asList("logined=true; Path=/"));
+            List<String> loginedSign = asList("logined=true; Path=/; JSESSIONID=" + sessionId + ";");
+            logger.debug("loginedSign: {}", loginedSign);
+            responseHeaders.addHeader(SET_COOKIE, loginedSign);
             return;
         }
-        responseHeaders.addHeader(SET_COOKIE, asList("logined=false;"));
+        List<String> unloginedSign = asList("logined=false; JSESSIONID=" + sessionId + ";");
+        responseHeaders.addHeader(SET_COOKIE, unloginedSign);
     }
 
     public void setSessionId(final String sessionId) {
-        List<String> existingCookies = responseHeaders.get(SET_COOKIE);
+        this.sessionId = sessionId;
+        List<String> existingCookies = responseHeaders.get(COOKIE);
+        List<String> existingWithoutLogined = existingCookies.stream()
+                .filter(token -> !token.contains("logined"))
+                .collect(Collectors.toList());
         List<String> cookies = asList(JSESSIONID + "=" + sessionId);
-        cookies.addAll(existingCookies);
+        cookies.addAll(existingWithoutLogined);
         responseHeaders.addHeader(SET_COOKIE, cookies);
     }
 

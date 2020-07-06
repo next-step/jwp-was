@@ -25,11 +25,7 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = new HttpRequest(in);
             HttpResponse httpResponse = new HttpResponse(out);
-            HttpSession httpSession = httpRequest.getSession(httpResponse);
-
-            logger.info("===============================================");
-            logger.info("httpSession: {}", httpSession);
-            logger.info("===============================================");
+            httpRequest.getSession(httpResponse);
 
             Controller controller = RequestHandlerMapping.getController(httpRequest);
             controller.handle(httpRequest, httpResponse);

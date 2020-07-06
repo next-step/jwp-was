@@ -11,19 +11,29 @@ public class UserLoginController extends DefaultController {
     @Override
     void doPost(final HttpRequest request, final HttpResponse response) {
         logger.info("UserLoginController - doPost");
+        parameterValidate(request, response);
         String userId = request.getParameter("userId");
         String password = request.getParameter("password");
 
         User userById = DataBase.findUserById(userId);
-        if (userById.getPassword().equals(password)) {
-
-            response.sendRedirect("/index.html");
-            response.setCookie(true);
-            return;
+        if (userById == null) {
+            response.setCookie(false);
+            response.sendRedirect("/user/login_failed.html");
         }
 
+        if (userById.getPassword().equals(password)) {
+            response.setCookie(true);
+            response.sendRedirect("/index.html");
+            return;
+        }
         response.sendRedirect("/user/login_failed.html");
+    }
 
-        super.doPost(request, response);
+    private void parameterValidate(final HttpRequest request, final HttpResponse response) {
+        if (request.getParameter("userId") == null ||
+                request.getParameter("password") == null ) {
+            response.setCookie(false);
+            response.sendRedirect("/user/login_failed.html");
+        }
     }
 }

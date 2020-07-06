@@ -3,10 +3,8 @@ package http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static http.HttpHeader.CONTENT_LENGTH;
@@ -16,9 +14,11 @@ import static java.util.Collections.emptyList;
 import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 
 public class RequestHeaders {
+    private static final Logger logger = LoggerFactory.getLogger(RequestHeaders.class);
+
     public static final String HEADER_SEPARATOR = ": ";
     public static final String COMMA_SEPARATOR = ", ";
-    private static final Logger logger = LoggerFactory.getLogger(RequestHeaders.class);
+
     private static final int KET_INDEX = 0;
     private static final int VALUE_INDEX = 1;
 
@@ -50,15 +50,16 @@ public class RequestHeaders {
         return collectionToCommaDelimitedString(requestHeaders.getOrDefault(COOKIE.getValue(), emptyList()));
     }
 
-    public Optional<String> getSessionId() {
-        String[] tokens = getCookie().split(",");
+    public List<String> getSessionId() {
+        String[] tokens = getCookie().split(";");
+        logger.debug("getCookie(): {}", getCookie());
         return Stream.of(tokens)
                 .map(String::trim)
                 .map(token -> token.split("="))
                 .filter(values -> values.length == 2)
                 .filter(values -> values[0].equals("JSESSIONID"))
                 .map(values -> values[1])
-                .findFirst();
+                .collect(Collectors.toList());
     }
 
     @Override

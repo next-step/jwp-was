@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static http.RequestHeaders.HEADER_SEPARATOR;
 
@@ -89,14 +90,27 @@ public class HttpRequest {
         return requestHeaders.getCookie();
     }
 
-    public HttpSession getSession(final HttpResponse httpResponse) {
-        Optional<String> sessionIdOptional = requestHeaders.getSessionId();
-        if (!sessionIdOptional.isPresent()) {
+    public void getSession(final HttpResponse httpResponse) {
+        List<String> sessionIdCookie = requestHeaders.getSessionId();
+        if (sessionIdCookie.size() == 0) {
             HttpSession httpSession = HttpSessions.addHttpSession();
             httpResponse.setSessionId(httpSession.getId());
-            return httpSession;
+            logger.debug("!!new httpSession: {}", httpSession);
+            return;
         }
-        return HttpSessions.getHttpSession(sessionIdOptional.get());
+        logger.debug("!!existing httpSession: {}", sessionIdCookie.size());
+    }
+
+    public String getSessionId() {
+        List<String> sessionIdCookie = requestHeaders.getSessionId();
+        if (sessionIdCookie.size() >= 1) {
+            return sessionIdCookie.get(sessionIdCookie.size() - 1);
+        }
+        return "";
+    }
+
+    public boolean isLogined() {
+        return getHeader(HttpHeader.COOKIE.getValue()).contains("logined=true");
     }
 
     @Override
