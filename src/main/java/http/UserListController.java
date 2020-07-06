@@ -29,9 +29,8 @@ public class UserListController extends UserController {
                 response.forward("/user/list.html");
                 return;
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new IllegalStateException("handlebars exception");
             }
-            response.forward("/user/login.html");
         }
         logger.info("=== not logined user ===");
         super.doGet(request, response);
