@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.List;
 
 import static http.HttpHeader.SET_COOKIE;
 import static java.util.Arrays.asList;
@@ -16,6 +17,7 @@ import static java.util.Arrays.asList;
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
     private static final String CARRIAGE_RETURN = "\r\n";
+    private static final String JSESSIONID = "JSESSIONID";
 
     private final OutputStream out;
     private final DataOutputStream dos;
@@ -104,6 +106,13 @@ public class HttpResponse {
             return;
         }
         responseHeaders.addHeader(SET_COOKIE, asList("logined=false;"));
+    }
+
+    public void setSessionId(final String sessionId) {
+        List<String> existingCookies = responseHeaders.get(SET_COOKIE);
+        List<String> cookies = asList(JSESSIONID + "=" + sessionId);
+        cookies.addAll(existingCookies);
+        responseHeaders.addHeader(SET_COOKIE, cookies);
     }
 
     @Override

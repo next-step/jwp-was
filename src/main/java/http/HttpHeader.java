@@ -22,14 +22,14 @@ public enum HttpHeader {
         headers.put("image/x-icon", HttpHeader.ICON);
     }
 
-    public static HttpHeader of(final String httpHeader) {
-        return headers.get(httpHeader);
-    }
-
     private String value;
 
     HttpHeader(final String value) {
         this.value = value;
+    }
+
+    public static HttpHeader of(final String httpHeader) {
+        return headers.get(httpHeader);
     }
 
     public String getValue() {

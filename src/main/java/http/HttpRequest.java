@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import static http.RequestHeaders.HEADER_SEPARATOR;
 
@@ -86,6 +87,16 @@ public class HttpRequest {
 
     public String getCookie() {
         return requestHeaders.getCookie();
+    }
+
+    public HttpSession getSession(final HttpResponse httpResponse) {
+        Optional<String> sessionIdOptional = requestHeaders.getSessionId();
+        if (!sessionIdOptional.isPresent()) {
+            HttpSession httpSession = HttpSessions.addHttpSession();
+            httpResponse.setSessionId(httpSession.getId());
+            return httpSession;
+        }
+        return HttpSessions.getHttpSession(sessionIdOptional.get());
     }
 
     @Override
