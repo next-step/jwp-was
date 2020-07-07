@@ -29,4 +29,8 @@ public class ResponseHeaders {
         headerValues.addAll(values);
         responseHeaders.put(header.getValue(), headerValues);
     }
+
+    public List<String> get(final HttpHeader httpHeader) {
+        return responseHeaders.getOrDefault(httpHeader, Collections.emptyList());
+    }
 }

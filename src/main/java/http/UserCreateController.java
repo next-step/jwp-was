@@ -5,14 +5,8 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class UserCreateController extends UserController {
+public class UserCreateController extends DefaultController {
     private static final Logger logger = LoggerFactory.getLogger(UserCreateController.class);
-
-    @Override
-    void doGet(final HttpRequest request, final HttpResponse response) {
-        logger.info("UserCreateController - doGet");
-        doPost(request, response);
-    }
 
     @Override
     void doPost(final HttpRequest request, final HttpResponse response) {
@@ -28,7 +22,9 @@ public class UserCreateController extends UserController {
         DataBase.addUser(user);
         final int changeAfter = DataBase.findAll().size();
 
+        logger.debug("create user check - after: {}, before: {}", changeAfter, changeBefore);
         if (changeAfter - 1 == changeBefore) {
+            logger.debug("user create complete");
             response.sendRedirect("/index.html");
             return;
         }

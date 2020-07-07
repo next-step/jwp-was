@@ -11,15 +11,15 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class UserListController extends UserController {
+public class UserListController extends DefaultController {
     private static final Logger logger = LoggerFactory.getLogger(UserListController.class);
 
     @Override
     void doGet(final HttpRequest request, final HttpResponse response) {
         logger.info("UserListController - doGet");
-        String cookie = request.getCookie();
-        final String[] cookieTokens = cookie.split(";");
-        if (cookieTokens.length > 1 && cookieTokens[1].trim().equals("logined=true")) {
+        logger.debug("request:: {}", request.toString());
+        logger.debug("cookie:: {}", request.getHeader("Cookie"));
+        if (request.isLogined()) {
             logger.info("=== logined user ===");
             try {
                 Template template = getHandlebars()
@@ -29,9 +29,8 @@ public class UserListController extends UserController {
                 response.forward("/user/list.html");
                 return;
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new IllegalStateException("handlebars exception");
             }
-            response.forward("/user/login.html");
         }
         logger.info("=== not logined user ===");
         super.doGet(request, response);

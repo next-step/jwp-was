@@ -53,13 +53,12 @@ public class RequestPath {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final RequestPath that = (RequestPath) o;
-        return Objects.equals(getPath(), that.getPath()) &&
-                Objects.equals(getQuery(), that.getQuery());
+        return Objects.equals(getPath(), that.getPath());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPath(), getQuery());
+        return Objects.hash(getPath());
     }
 
     @Override

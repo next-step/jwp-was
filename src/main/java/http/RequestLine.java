@@ -33,10 +33,6 @@ public class RequestLine {
         return method;
     }
 
-    public String getPath() {
-        return requestPath.getPath();
-    }
-
     public String getProtocol() {
         return protocol;
     }

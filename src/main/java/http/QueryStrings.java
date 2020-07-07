@@ -39,10 +39,15 @@ public class QueryStrings {
     }
 
     public void putValue(final String values) {
-        if (values.contains(EQUALS)) {
-            String[] tokens = values.split(EQUALS);
-            putValue(tokens[KEY_INDEX], Arrays.asList(tokens[VALUE_INDEX].split(COMMA)));
+        if (!values.contains(EQUALS)) {
+            return;
         }
+        
+        String[] tokens = values.split(EQUALS);
+        if (tokens.length != 2) {
+            return;
+        }
+        putValue(tokens[KEY_INDEX], Arrays.asList(tokens[VALUE_INDEX].split(COMMA)));
     }
 
     public void putValue(final String key, final List<String> values) {

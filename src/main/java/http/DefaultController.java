@@ -8,7 +8,6 @@ public abstract class DefaultController implements Controller {
 
     @Override
     public void handle(final HttpRequest request, final HttpResponse response) {
-//        setContentType(request, response);
         if (request.isGet()) {
             doGet(request, response);
             return;
@@ -16,14 +15,9 @@ public abstract class DefaultController implements Controller {
         doPost(request, response);
     }
 
-//    void setContentType(final HttpRequest request, final HttpResponse response) {
-//        final String contentType = ContentType.getContentType(request.getAccept());
-//        response.setContentType(contentType);
-//    }
-
     void doGet(final HttpRequest request, final HttpResponse response) {
         logger.info("DefaultController - doGet");
-        response.forward("/user/form.html");
+        response.badRequest();
     }
 
     void doPost(final HttpRequest request, final HttpResponse response) {
