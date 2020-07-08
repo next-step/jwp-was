@@ -50,7 +50,7 @@ public class RequestHeaders {
         return collectionToCommaDelimitedString(requestHeaders.getOrDefault(COOKIE.getValue(), emptyList()));
     }
 
-    public List<String> getSessionId() {
+    public Optional<String> getSessionId() {
         String[] tokens = getCookie().split(";");
         logger.debug("getCookie(): {}", getCookie());
         return Stream.of(tokens)
@@ -59,7 +59,7 @@ public class RequestHeaders {
                 .filter(values -> values.length == 2)
                 .filter(values -> values[0].equals("JSESSIONID"))
                 .map(values -> values[1])
-                .collect(Collectors.toList());
+                .findFirst();
     }
 
     @Override

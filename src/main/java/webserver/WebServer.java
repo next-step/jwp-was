@@ -32,10 +32,10 @@ public class WebServer {
             ThreadPoolExecutor executor = new ThreadPoolExecutor(
                     250, 250, 3000, TimeUnit.MILLISECONDS, workQueue);
 
-
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
+                System.out.println("ActiveCount: " + executor.getActiveCount());
                 executor.execute(new RequestHandler(connection));
             }
         }

@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.stream.Stream;
 
 import static http.RequestHeaders.HEADER_SEPARATOR;
 
@@ -86,27 +84,8 @@ public class HttpRequest {
         return requestLine.getRequestPath();
     }
 
-    public String getCookie() {
-        return requestHeaders.getCookie();
-    }
-
-    public void getSession(final HttpResponse httpResponse) {
-        List<String> sessionIdCookie = requestHeaders.getSessionId();
-        if (sessionIdCookie.size() == 0) {
-            HttpSession httpSession = HttpSessions.addHttpSession();
-            httpResponse.setSessionId(httpSession.getId());
-            logger.debug("!!new httpSession: {}", httpSession);
-            return;
-        }
-        logger.debug("!!existing httpSession: {}", sessionIdCookie.size());
-    }
-
-    public String getSessionId() {
-        List<String> sessionIdCookie = requestHeaders.getSessionId();
-        if (sessionIdCookie.size() >= 1) {
-            return sessionIdCookie.get(sessionIdCookie.size() - 1);
-        }
-        return "";
+    public void getSession(final HttpResponse response) {
+        requestHeaders.getSessionId().ifPresent(response::setSessionId);
     }
 
     public boolean isLogined() {
