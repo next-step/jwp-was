@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
-    private static final int THREAD_CORE_POOL_SIZE = 100;
-    private static final int THREAD_MAXIMUM_POOL_SIZE = 100;
+    private static final int THREAD_CORE_POOL_SIZE = 250;
+    private static final int THREAD_MAXIMUM_POOL_SIZE = 150;
     private static final int KEEP_ALIVE_TIME = 10;
     private static final int QUEUE_SIZE = 30;
 
