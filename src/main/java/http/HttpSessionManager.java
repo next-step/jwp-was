@@ -1,12 +1,10 @@
 package http;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class HttpSessionManager {
-    private final static Map<String, HttpSession> sessionMap = new HashMap<>();
-
+    private final static ConcurrentHashMap<String, HttpSession> sessionMap = new ConcurrentHashMap<>();
 
     public static HttpSession sessionCreate() {
         String sessionId = UUID.randomUUID().toString();
