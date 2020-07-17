@@ -1,14 +1,11 @@
 package controller.login;
 
 import controller.AbstractController;
-import controller.user.UserCreateController;
 import db.DataBase;
 import http.*;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.DataOutputStream;
 
 public class UserLoginController extends AbstractController {
     private static final Logger logger = LoggerFactory.getLogger(UserLoginController.class);
@@ -28,7 +25,12 @@ public class UserLoginController extends AbstractController {
             HttpSession session = HttpSessionManager.sessionCreate();
 
             session.setAttribute("user", user);
-            response.addCookie("JSESSIONID", session.getId());
+
+            Cookie cookie = new Cookie();
+            cookie.put("JSESSIONID", session.getId());
+            cookie.setPath("/");
+
+            response.addCookie(cookie);
             response.addHeader("Location", "/index.html");
             response.sendRedirect(HttpResponseCode.REDIRECT_300);
         } else {

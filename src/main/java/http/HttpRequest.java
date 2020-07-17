@@ -15,7 +15,7 @@ public class HttpRequest {
     private final RequestLine requestLine;
     private final QueryStrings queryStrings;
     private final HttpHeaders headers;
-    private Cookies cookies = new Cookies();
+    private Cookie cookies = new Cookie();
     private Map<String, String> params = new HashMap<>();
 
     public HttpRequest(InputStream in) throws IOException {
