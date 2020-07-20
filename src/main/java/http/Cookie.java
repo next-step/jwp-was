@@ -44,12 +44,4 @@ public class Cookie {
         put(DOMAIN, domain);
     }
 
-    /* public String makeCookie() {
-        Set<String> keys =  cookies.keySet();
-        String cookieString = "";
-        for(String key: keys) {
-            cookieString += String.format("Set-Cookie: %s=%s", key, cookies.get(key) + "\r\n");
-        }
-        return cookieString;
-    }*/
 }

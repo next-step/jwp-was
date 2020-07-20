@@ -28,7 +28,6 @@ public class UserLoginController extends AbstractController {
 
             Cookie cookie = new Cookie();
             cookie.put("JSESSIONID", session.getId());
-            cookie.setPath("/");
 
             response.addCookie(cookie);
             response.addHeader("Location", "/index.html");
