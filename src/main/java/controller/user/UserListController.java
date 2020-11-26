@@ -9,6 +9,7 @@ import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
 import http.HttpResponseCode;
+import http.HttpSession;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,9 @@ public class UserListController extends AbstractController {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) throws IOException {
-        if (!loginCheck(request.getHeader("Cookie"))) {
+        if (!loginCheck(request.getHttpSession())) {
             response.addHeader("Location", "/user/login.html");
-            response.responseHeader(HttpResponseCode.REDIRECT_300);
+            response.sendRedirect(HttpResponseCode.REDIRECT_300);
             return;
         }
 
@@ -43,12 +44,13 @@ public class UserListController extends AbstractController {
         //response.forward(request.getPath());
     }
 
-    private boolean loginCheck(String line) {
+    private boolean loginCheck(HttpSession session) {
         boolean result = false;
-        String loginStatus = line.split("=")[1];
+        User user = (User) session.getAttribute("user");
 
-        if (loginStatus.equals("true"))
+        if(user != null) {
             result = true;
+        }
 
         return result;
     }

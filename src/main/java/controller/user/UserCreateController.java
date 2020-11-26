@@ -22,6 +22,6 @@ public class UserCreateController extends AbstractController {
         logger.debug("User : {}", user);
         DataBase.addUser(user);
         response.addHeader("Location", "/index.html");
-        response.responseHeader(HttpResponseCode.REDIRECT_300);
+        response.sendRedirect(HttpResponseCode.REDIRECT_300);
     }
 }
