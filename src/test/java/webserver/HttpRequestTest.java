@@ -11,8 +11,7 @@ public class HttpRequestTest {
     @Test
     void request_resttemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        String resourceUrl = "https://edu.nextstep.camp";
-        ResponseEntity<String> response = restTemplate.getForEntity(resourceUrl + "/c/4YUvqn9V", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }
