@@ -3,8 +3,9 @@ package webserver;
 public class RequestLine {
     private static final int MIN_VALUE_SIZE = 3;
     private static final String DELIMITER = " ";
-    private String[] parsed;
 
+    private HttpMethod httpMethod;
+    private QueryString queryString;
     private Protocol protocol;
 
     public RequestLine(final String value) {
@@ -16,7 +17,8 @@ public class RequestLine {
             throw new IllegalArgumentException();
         }
 
-        this.parsed = values;
+        this.httpMethod = HttpMethod.valueOf(values[0]);
+        this.queryString = QueryString.parse(values[1]);
         this.protocol = Protocol.from(values[2]);
     }
 
@@ -27,11 +29,11 @@ public class RequestLine {
     }
 
     public HttpMethod getMethod() {
-        return HttpMethod.valueOf(parsed[0]);
+        return httpMethod;
     }
 
     public String getPath() {
-        return parsed[1];
+        return queryString.getPath();
     }
 
     public String getProtocol() {
@@ -43,6 +45,6 @@ public class RequestLine {
     }
 
     public QueryString toQueryString() {
-        return QueryString.parse(parsed[1]);
+        return queryString;
     }
 }

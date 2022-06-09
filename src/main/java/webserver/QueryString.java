@@ -13,32 +13,44 @@ public class QueryString {
     private static final String EMPTY_VALUE = "";
     public static final String QUERY_PARAM_SYMBOL = "\\?";
 
+    private final String path;
     private final Map<String, String> value;
 
-    private QueryString(final Map<String, String> queryString) {
+    private QueryString(final String path, final Map<String, String> queryString) {
+        this.path = path;
         this.value = queryString;
     }
 
     public static QueryString parse(final String value) {
         if (checkEmpty(value)) {
-            return new QueryString(Collections.emptyMap());
+            return new QueryString(null, Collections.emptyMap());
         }
 
-        return new QueryString(toMap(toParams(value)));
+        return new QueryString(getPath(value), toMap(toParams(value)));
     }
 
     private static boolean checkEmpty(final String value) {
         return value == null || value.length() == 0;
     }
 
-    private static String[] toParams(String value) {
+    private static String[] toParams(final String value) {
         return getSearch(value).split(PARAMETER_DELIMITER);
     }
 
     private static Map<String, String> toMap(String[] params) {
         return Arrays.stream(params)
                 .map(param -> param.split(KEY_VALUE_DELIMITER))
-                .collect(Collectors.toMap(toKey(), toValue()));
+                .collect(Collectors.toUnmodifiableMap(toKey(), toValue()));
+    }
+
+    private static String getPath(final String value) {
+        String[] query = value.split(QUERY_PARAM_SYMBOL);
+
+        if (query.length == 0) {
+            return EMPTY_VALUE;
+        }
+
+        return query[0];
     }
 
     private static String getSearch(final String value) {
@@ -56,10 +68,19 @@ public class QueryString {
     }
 
     private static Function<String[], String> toValue() {
-        return values -> values[1];
+        return values -> {
+            if (values.length != 2) {
+                return "";
+            }
+            return values[1];
+        };
     }
 
     public String get(final String key) {
         return value.get(key);
+    }
+
+    public String getPath() {
+        return path;
     }
 }
