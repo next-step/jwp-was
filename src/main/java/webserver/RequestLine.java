@@ -1,6 +1,12 @@
 package webserver;
 
 public class RequestLine {
+    private final HttpMethod method;
+    private final String path;
+    private final String queryString;
+    private final String protocol;
+    private final String version;
+
     /**
      * HTTP 요청의 Request-Line을 파싱한다.
      *
@@ -30,12 +36,6 @@ public class RequestLine {
         this.protocol = protocol;
         this.version = version;
     }
-
-    private final HttpMethod method;
-    private final String path;
-    private final String queryString;
-    private final String protocol;
-    private final String version;
 
     public HttpMethod getMethod() {
         return this.method;
