@@ -1,8 +1,14 @@
 package webserver;
 
 public class RequestLine {
-    public static RequestLine parse(final String httpRequestStartLine) {
-        final String[] tokens = httpRequestStartLine.split(" ");
+    /**
+     * HTTP 요청의 Request-Line을 파싱한다.
+     *
+     * @see <a href="https://datatracker.ietf.org/doc/html/rfc2616#section-5.1">RFC 2616 - 5.1 Request-Line</a>
+     */
+    public static RequestLine parse(final String httpRequestRequestLine) {
+        final String[] tokens = httpRequestRequestLine.split(" ");
+
         final HttpMethod method = HttpMethod.valueOf(tokens[0]);
 
         final String[] pathAndQueryString = tokens[1].split("\\?");
@@ -43,7 +49,7 @@ public class RequestLine {
         return this.queryString;
     }
 
-    public String getProtocole() {
+    public String getProtocol() {
         return this.protocol;
     }
 
