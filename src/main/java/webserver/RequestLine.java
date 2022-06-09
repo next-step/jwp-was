@@ -29,8 +29,8 @@ public class RequestLine {
         this.protocol = protocol;
     }
 
-    public String getMethod() {
-        return values[0];
+    public HttpMethod getMethod() {
+        return HttpMethod.valueOf(values[0]);
     }
 
     public String getPath() {

@@ -32,5 +32,5 @@
   - 클라이언트에서 서버로 전달되는 데이터의 구조는 name1=value1&name2=value2와 같은 구조로 전달된다.
   - ex) GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1
 
-- [ ] 요구사항 4 - enum 적용(선택)
+- [x] 요구사항 4 - enum 적용(선택)
   - HTTP method인 GET, POST를 enum으로 구현한다.

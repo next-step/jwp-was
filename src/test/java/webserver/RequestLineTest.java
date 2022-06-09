@@ -15,7 +15,7 @@ class RequestLineTest {
     void get() {
         RequestLine requestLine = new RequestLine("GET /users HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getProtocolVersion()).isEqualTo("1.1");
@@ -36,7 +36,7 @@ class RequestLineTest {
     void post() {
         RequestLine requestLine = new RequestLine("POST /users HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo("POST");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getProtocolVersion()).isEqualTo("1.1");
