@@ -23,6 +23,14 @@ public enum Protocol {
         this.version = version;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
     public static Protocol from(String protocol) {
         return Optional.ofNullable(mapper.get(protocol))
                 .orElseThrow(() -> new IllegalProtocolException(protocol));
