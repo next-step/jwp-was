@@ -1,8 +1,8 @@
-package webserver;
+package webserver.request;
 
-import exception.IllegalHttpMethodException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.request.exception.IllegalHttpMethodException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

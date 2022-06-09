@@ -1,4 +1,4 @@
-package webserver;
+package webserver.request;
 
 public class Uri {
     private final String path;

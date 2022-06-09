@@ -1,10 +1,10 @@
-package webserver;
+package webserver.request;
 
-import exception.IllegalProtocolException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import webserver.request.exception.IllegalProtocolException;
 
 public enum Protocol {
     HTTP_1_1("HTTP", "1.1");

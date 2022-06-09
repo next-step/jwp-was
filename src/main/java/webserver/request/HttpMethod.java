@@ -1,6 +1,6 @@
-package webserver;
+package webserver.request;
 
-import exception.IllegalHttpMethodException;
+import webserver.request.exception.IllegalHttpMethodException;
 
 public enum HttpMethod {
     GET, POST;

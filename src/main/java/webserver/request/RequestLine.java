@@ -1,6 +1,6 @@
-package webserver;
+package webserver.request;
 
-import exception.IllegalRequestLineException;
+import webserver.request.exception.IllegalRequestLineException;
 
 public class RequestLine {
     private final HttpMethod method;

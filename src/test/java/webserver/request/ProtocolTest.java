@@ -1,8 +1,8 @@
-package webserver;
+package webserver.request;
 
-import exception.IllegalProtocolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.request.exception.IllegalProtocolException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
