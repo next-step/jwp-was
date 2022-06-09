@@ -1,47 +1,48 @@
 package webserver;
 
 public class RequestLine {
-    private String[] values;
+    private static final int MIN_VALUE_SIZE = 3;
+    private static final String DELIMITER = " ";
+    private String[] parsed;
 
-    private String[] protocol;
+    private Protocol protocol;
 
-    public RequestLine(final String text) {
+    public RequestLine(final String value) {
+        validEmpty(value);
+
+        String[] values = value.split(DELIMITER);
+
+        if (values.length < MIN_VALUE_SIZE) {
+            throw new IllegalArgumentException();
+        }
+
+        this.parsed = values;
+        this.protocol = Protocol.findByAlias(values[2]);
+    }
+
+    private void validEmpty(String text) {
         if (text == null) {
             throw new IllegalArgumentException();
         }
-
-        String[] values = text.split(" ");
-
-        if (values.length != 3) {
-            throw new IllegalArgumentException();
-        }
-
-        String[] protocol = values[2].split("/");
-        if (protocol.length != 2) {
-            throw new IllegalArgumentException();
-        }
-
-        this.values = values;
-        this.protocol = protocol;
     }
 
     public HttpMethod getMethod() {
-        return HttpMethod.valueOf(values[0]);
+        return HttpMethod.valueOf(parsed[0]);
     }
 
     public String getPath() {
-        return values[1];
+        return parsed[1];
     }
 
     public String getProtocol() {
-        return protocol[0];
+        return protocol.getName();
     }
 
     public String getProtocolVersion() {
-        return protocol[1];
+        return protocol.getVersion();
     }
 
     public QueryString toQueryString() {
-        return QueryString.parse(values[1]);
+        return QueryString.parse(parsed[1]);
     }
 }
