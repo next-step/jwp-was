@@ -1,18 +1,25 @@
 package webserver;
 
 import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public enum Protocol {
-    HTTP_1_1("HTTP", "1.1", "HTTP/1.1");
+    HTTP_1_1("HTTP", "1.1");
 
     private final String name;
     private final String version;
-    private final String alias;
 
-    Protocol(final String name, final String version, final String alias) {
+    private static final Map<String, Protocol> mapper = Arrays.stream(values())
+            .collect(Collectors.toUnmodifiableMap(
+                    protocol -> String.format("%s/%s", protocol.name, protocol.version),
+                    protocol -> protocol
+            ));
+
+    Protocol(String name, String version) {
         this.name = name;
         this.version = version;
-        this.alias = alias;
     }
 
     public String getName() {
@@ -23,11 +30,9 @@ public enum Protocol {
         return version;
     }
 
-    public static Protocol findByAlias(String alias) {
-        return Arrays.stream(values())
-                .filter(value -> value.alias.equals(alias))
-                .findAny()
-                .orElseThrow();
+    public static Protocol from(String protocol) {
+        return Optional.ofNullable(mapper.get(protocol))
+                .orElseThrow(() -> new IllegalArgumentException(protocol));
     }
 
 }

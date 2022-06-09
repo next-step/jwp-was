@@ -17,7 +17,7 @@ public class RequestLine {
         }
 
         this.parsed = values;
-        this.protocol = Protocol.findByAlias(values[2]);
+        this.protocol = Protocol.from(values[2]);
     }
 
     private void validEmpty(String text) {
