@@ -1,5 +1,9 @@
 package webserver;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class RequestLine {
     private String[] values;
 
@@ -39,5 +43,13 @@ public class RequestLine {
 
     public String getProtocolVersion() {
         return protocol[1];
+    }
+
+    public Map<String, String> getParameters() {
+        String[] query = values[1].split("\\?");
+        String[] params = query[1].split("&");
+        return Arrays.stream(params)
+                .map(param -> param.split("="))
+                .collect(Collectors.toMap(values -> values[0], values -> values[1]));
     }
 }

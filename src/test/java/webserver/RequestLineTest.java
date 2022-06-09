@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -17,6 +19,17 @@ class RequestLineTest {
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getProtocolVersion()).isEqualTo("1.1");
+    }
+
+    @Test
+    void getWithParameters() {
+        RequestLine requestLine = new RequestLine("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
+
+        Map<String, String> parameters = requestLine.getParameters();
+
+        assertThat(parameters.get("userId")).isEqualTo("javajigi");
+        assertThat(parameters.get("password")).isEqualTo("password");
+        assertThat(parameters.get("name")).isEqualTo("JaeSung");
     }
 
     @Test
