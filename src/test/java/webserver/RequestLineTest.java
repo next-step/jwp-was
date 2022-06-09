@@ -15,4 +15,14 @@ class RequestLineTest {
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getProtocolVersion()).isEqualTo("1.1");
     }
+
+    @Test
+    void post() {
+        RequestLine requestLine = new RequestLine("POST /users HTTP/1.1");
+
+        assertThat(requestLine.getMethod()).isEqualTo("POST");
+        assertThat(requestLine.getPath()).isEqualTo("/users");
+        assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
+        assertThat(requestLine.getProtocolVersion()).isEqualTo("1.1");
+    }
 }
