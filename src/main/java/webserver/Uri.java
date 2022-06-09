@@ -18,10 +18,10 @@ public class Uri {
     }
 
     public static Uri from(String uri) {
-        String[] array = uri.split("\\?");
-        if (array.length <= 1) {
-            return new Uri(array[0], new QueryString());
+        String[] tokens = uri.split("\\?");
+        if (tokens.length <= 1) {
+            return new Uri(tokens[0], new QueryString());
         }
-        return new Uri(array[0], QueryString.from(array[1]));
+        return new Uri(tokens[0], QueryString.from(tokens[1]));
     }
 }
