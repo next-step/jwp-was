@@ -3,7 +3,7 @@ package webserver;
 public class RequestLine {
     public static RequestLine parse(final String httpRequestStartLine) {
         final String[] tokens = httpRequestStartLine.split(" ");
-        final String method = tokens[0];
+        final HttpMethod method = HttpMethod.valueOf(tokens[0]);
 
         final String[] pathAndQueryString = tokens[1].split("\\?");
         final String path = pathAndQueryString[0];
@@ -16,7 +16,7 @@ public class RequestLine {
         return new RequestLine(method, path, queryString, protocol, version);
     }
 
-    private RequestLine(final String method, final String path, final String queryString,
+    private RequestLine(final HttpMethod method, final String path, final String queryString,
                         final String protocol, final String version) {
         this.method = method;
         this.path = path;
@@ -25,13 +25,13 @@ public class RequestLine {
         this.version = version;
     }
 
-    private final String method;
+    private final HttpMethod method;
     private final String path;
     private final String queryString;
     private final String protocol;
     private final String version;
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return this.method;
     }
 

@@ -12,7 +12,7 @@ class RequestLineTest {
         RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
 
         // then
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getQueryString()).isEqualTo("");
         assertThat(requestLine.getProtocole()).isEqualTo("HTTP");
@@ -25,7 +25,7 @@ class RequestLineTest {
         RequestLine requestLine = RequestLine.parse("POST /users HTTP/1.1");
 
         // then
-        assertThat(requestLine.getMethod()).isEqualTo("POST");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getQueryString()).isEqualTo("");
         assertThat(requestLine.getProtocole()).isEqualTo("HTTP");
@@ -38,7 +38,7 @@ class RequestLineTest {
         RequestLine requestLine = RequestLine.parse("GET /users?userId=javajigi&password=JaeSung HTTP/1.1");
 
         // then
-        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getQueryString()).isEqualTo("userId=javajigi&password=JaeSung");
         assertThat(requestLine.getProtocole()).isEqualTo("HTTP");
