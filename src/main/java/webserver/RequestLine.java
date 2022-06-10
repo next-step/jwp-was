@@ -1,23 +1,17 @@
 package webserver;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class RequestLine {
-    private final String httpMethod;
-    private final String path;
-    private final String protocol;
-    private final String version;
 
-    @Nullable
-    private final String queryString;
+    private final HttpMethod httpMethod;
+    private final Uri uri;
+    private final Protocol protocol;
 
-    public RequestLine(String httpMethod, String path, String protocol, String version, @Nullable String queryString) {
+    public RequestLine(HttpMethod httpMethod, Uri uri, Protocol protocol) {
         this.httpMethod = httpMethod;
-        this.path = path;
+        this.uri = uri;
         this.protocol = protocol;
-        this.version = version;
-        this.queryString = queryString;
     }
 
     @Override
@@ -25,11 +19,11 @@ public class RequestLine {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RequestLine that = (RequestLine) o;
-        return Objects.equals(httpMethod, that.httpMethod) && Objects.equals(path, that.path) && Objects.equals(protocol, that.protocol) && Objects.equals(version, that.version) && Objects.equals(queryString, that.queryString);
+        return httpMethod == that.httpMethod && Objects.equals(uri, that.uri) && Objects.equals(protocol, that.protocol);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(httpMethod, path, protocol, version, queryString);
+        return Objects.hash(httpMethod, uri, protocol);
     }
 }

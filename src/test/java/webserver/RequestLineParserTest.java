@@ -14,7 +14,7 @@ public class RequestLineParserTest {
 
         RequestLine actual = new RequestLineParser().parse(input);
 
-        assertThat(actual).isEqualTo(new RequestLine("GET", "/users", "HTTP", "1.1", null));
+        assertThat(actual).isEqualTo(new RequestLine(HttpMethod.valueOf("GET"), Uri.from("/users"), Protocol.from("HTTP/1.1")));
     }
 
     @DisplayName("POST RequestLine을 파싱할 수 있다.")
@@ -24,7 +24,7 @@ public class RequestLineParserTest {
 
         RequestLine actual = new RequestLineParser().parse(input);
 
-        assertThat(actual).isEqualTo(new RequestLine("POST", "/users", "HTTP", "1.1", null));
+        assertThat(actual).isEqualTo(new RequestLine(HttpMethod.valueOf("POST"), Uri.from("/users"), Protocol.from("HTTP/1.1")));
     }
 
     @DisplayName("QueryString이 포함된 GET RequestLine을 파싱할 수 있다.")
@@ -34,6 +34,6 @@ public class RequestLineParserTest {
 
         RequestLine actual = new RequestLineParser().parse(input);
 
-        assertThat(actual).isEqualTo(new RequestLine("GET", "/users", "HTTP", "1.1", "userId=javajigi&password=password&name=JaeSung"));
+        assertThat(actual).isEqualTo(new RequestLine(HttpMethod.valueOf("GET"), Uri.from("/users?userId=javajigi&password=password&name=JaeSung"), Protocol.from("HTTP/1.1")));
     }
 }

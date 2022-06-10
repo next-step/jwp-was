@@ -13,13 +13,17 @@ public class QueryString {
 
     private final Map<String, String> queryString;
 
+    public QueryString() {
+        this.queryString = Collections.emptyMap();
+    }
+
     private QueryString(Map<String, String> input) {
         this.queryString = input;
     }
 
     public static QueryString from(String input) {
         if (Objects.isNull(input)) {
-            return new QueryString(Collections.emptyMap());
+            return new QueryString();
         }
 
         try {

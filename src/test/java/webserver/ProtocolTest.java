@@ -12,7 +12,7 @@ class ProtocolTest {
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {" ", "HTTP/", "/1.1", "HTTP/ ", " /HTTP", " / ", "test"})
-    @DisplayName("input 값이 null 또는 빈값인 경우 예외를 반환한다")
+    @DisplayName("예외를 반환 검증")
     public void invalid(String input) {
         assertThatThrownBy(() -> Protocol.from(input)).isInstanceOf(IllegalArgumentException.class);
     }
