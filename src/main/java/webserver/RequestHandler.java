@@ -1,5 +1,7 @@
 package webserver;
 
+import db.DataBase;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -26,6 +28,11 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
 
             final RequestLine requestLine = RequestLine.parse(br.readLine());
+
+            if (this.isSignUpRequest(requestLine)) {
+                this.handleSignUpRequest(requestLine);;
+            }
+
             byte[] body = FileIoUtils.loadFileFromClasspath("templates/" + requestLine.getPath());
 
             response200Header(dos, body.length);
@@ -33,6 +40,19 @@ public class RequestHandler implements Runnable {
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private boolean isSignUpRequest(final RequestLine requestLine) {
+        return requestLine.getMethod().equals(HttpMethod.GET) && requestLine.getPath().equals("/user/create");
+    }
+
+    private void handleSignUpRequest(final RequestLine requestLine) {
+        final String userId = requestLine.getQueryParameterOrNull("userId");
+        final String password = requestLine.getQueryParameterOrNull("password");
+        final String name = requestLine.getQueryParameterOrNull("name");
+        final String email = requestLine.getQueryParameterOrNull("email");
+
+        DataBase.addUser(new User(userId, password, name, email));
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {

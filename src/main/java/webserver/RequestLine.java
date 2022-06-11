@@ -4,6 +4,7 @@ public class RequestLine {
     private final HttpMethod method;
     private final String path;
     private final String queryString;
+    private final QueryParameters queryParameters;
     private final String protocol;
     private final String version;
 
@@ -33,6 +34,7 @@ public class RequestLine {
         this.method = method;
         this.path = path;
         this.queryString = queryString;
+        this.queryParameters = new QueryParameters(queryString);
         this.protocol = protocol;
         this.version = version;
     }
@@ -55,5 +57,9 @@ public class RequestLine {
 
     public String getVersion() {
         return this.version;
+    }
+
+    public String getQueryParameterOrNull(final String key) {
+        return this.queryParameters.getParameterOrNull(key);
     }
 }
