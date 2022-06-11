@@ -8,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RequestLineTest {
 
-    @DisplayName("Request Line 파싱")
+    @DisplayName("GET 파싱")
     @Test
-    void parseRequestLine() {
+    void parseGETRequestLine() {
         RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
 
         String method = requestLine.getMethod();
@@ -20,6 +20,24 @@ class RequestLineTest {
 
         assertAll(
                 () -> assertThat(method).isEqualTo("GET"),
+                () -> assertThat(path).isEqualTo("/users"),
+                () -> assertThat(protocol).isEqualTo("HTTP"),
+                () -> assertThat(version).isEqualTo("1.1")
+        );
+    }
+
+    @DisplayName("POST 파싱")
+    @Test
+    void parsePOSTRequestLine() {
+        RequestLine requestLine = RequestLine.parse("POST /users HTTP/1.1");
+
+        String method = requestLine.getMethod();
+        String path = requestLine.getPath();
+        String protocol = requestLine.getProtocol();
+        String version = requestLine.getVersion();
+
+        assertAll(
+                () -> assertThat(method).isEqualTo("POST"),
                 () -> assertThat(path).isEqualTo("/users"),
                 () -> assertThat(protocol).isEqualTo("HTTP"),
                 () -> assertThat(version).isEqualTo("1.1")
