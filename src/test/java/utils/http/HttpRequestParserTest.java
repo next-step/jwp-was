@@ -23,9 +23,9 @@ public class HttpRequestParserTest {
 
     private static Stream<Arguments> parse() {
         return Stream.of(
-                Arguments.of("GET /users HTTP/1.1", new HttpRequest("GET", "/users", "HTTP", "1.1", Map.of())),
-                Arguments.of("GET /users?userId=moon HTTP/1.1", new HttpRequest("GET", "/users", "HTTP", "1.1", Map.of("userId", "moon"))),
-                Arguments.of("POST /users HTTP/1.1", new HttpRequest("POST", "/users", "HTTP", "1.1", Map.of()))
+                Arguments.of("GET /users HTTP/1.1", new HttpRequest(HttpMethod.GET, "/users", "HTTP", "1.1", Map.of())),
+                Arguments.of("GET /users?userId=moon HTTP/1.1", new HttpRequest(HttpMethod.GET, "/users", "HTTP", "1.1", Map.of("userId", "moon"))),
+                Arguments.of("POST /users HTTP/1.1", new HttpRequest(HttpMethod.POST, "/users", "HTTP", "1.1", Map.of()))
         );
     }
 

@@ -4,14 +4,14 @@ import java.util.Map;
 import java.util.Objects;
 
 public class HttpRequest {
-    private String method;
+    private HttpMethod method;
     private String path;
     private String protocol;
     private String version;
 
     private Map<String,String> params;
 
-    public HttpRequest(String method,
+    public HttpRequest(HttpMethod method,
                        String path,
                        String protocol,
                        String version,

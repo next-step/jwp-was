@@ -31,7 +31,7 @@ public class HttpRequestParser {
         String path = extractPath(pathWithQueryString, queryStringAt);
         String queryString = extractQueryString(pathWithQueryString, queryStringAt);
 
-        return new HttpRequest(method, path, protocol, version, HttpQueryStringParser.parse(queryString));
+        return new HttpRequest(HttpMethod.valueOf(method), path, protocol, version, HttpQueryStringParser.parse(queryString));
     }
 
     private static String extractPath(String pathWithQueryString, int queryStringAt) {

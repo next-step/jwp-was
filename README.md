@@ -10,12 +10,12 @@
 
 ## 기능구현목록
 
-[ ] 요청 Parsing 유틸 작성
+[x] 요청 Parsing 유틸 작성
 
-[ ] GET 요청 파싱
+[x] GET 요청 파싱
 
-[ ] POST 요청 파싱
+[x] POST 요청 파싱
 
-[ ] Query String 파싱
+[x] Query String 파싱
 
-[ ] enum 적용
+[x] enum 적용
