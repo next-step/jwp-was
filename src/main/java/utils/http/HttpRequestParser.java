@@ -7,9 +7,12 @@ public class HttpRequestParser {
     private static final Pattern REQUEST_LINE_PATTERN = Pattern.compile("(.+) (.+) (.+)/(.+)");
 
     private static final int GROUP_METHOD = 1;
-    private static final int GROUP_PATH = 2;
+    private static final int GROUP_PATH_AND_QUERY_STRING = 2;
     private static final int GROUP_PROTOCOL = 3;
     private static final int GROUP_VERSION = 4;
+
+    private static final String BEGIN_QUERY_STRING = "?";
+    private static final int NOT_FOUND_IDX = -1;
 
     public static HttpRequest parse(String requestLine) {
         Matcher matcher = REQUEST_LINE_PATTERN.matcher(requestLine);
@@ -19,10 +22,29 @@ public class HttpRequestParser {
         }
 
         String method = matcher.group(GROUP_METHOD);
-        String path = matcher.group(GROUP_PATH);
+        String pathWithQueryString = matcher.group(GROUP_PATH_AND_QUERY_STRING);
         String protocol = matcher.group(GROUP_PROTOCOL);
         String version = matcher.group(GROUP_VERSION);
 
-        return new HttpRequest(method, path, protocol, version);
+        int queryStringAt = pathWithQueryString.indexOf(BEGIN_QUERY_STRING);
+
+        String path = extractPath(pathWithQueryString, queryStringAt);
+        String queryString = extractQueryString(pathWithQueryString, queryStringAt);
+
+        return new HttpRequest(method, path, protocol, version, HttpQueryStringParser.parse(queryString));
+    }
+
+    private static String extractPath(String pathWithQueryString, int queryStringAt) {
+        if (queryStringAt == NOT_FOUND_IDX) {
+            return pathWithQueryString;
+        }
+        return pathWithQueryString.substring(0, queryStringAt);
+    }
+
+    private static String extractQueryString(String pathWithQueryString, int queryStringAt) {
+        if (queryStringAt == NOT_FOUND_IDX) {
+            return null;
+        }
+        return pathWithQueryString.substring(queryStringAt + 1);
     }
 }

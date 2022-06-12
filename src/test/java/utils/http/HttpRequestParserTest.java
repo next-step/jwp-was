@@ -1,5 +1,6 @@
 package utils.http;
 
+import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,8 +23,9 @@ public class HttpRequestParserTest {
 
     private static Stream<Arguments> parse() {
         return Stream.of(
-                Arguments.of("GET /users HTTP/1.1", new HttpRequest("GET", "/users", "HTTP", "1.1")),
-                Arguments.of("POST /users HTTP/1.1", new HttpRequest("POST", "/users", "HTTP", "1.1"))
+                Arguments.of("GET /users HTTP/1.1", new HttpRequest("GET", "/users", "HTTP", "1.1", Map.of())),
+                Arguments.of("GET /users?userId=moon HTTP/1.1", new HttpRequest("GET", "/users", "HTTP", "1.1", Map.of("userId", "moon"))),
+                Arguments.of("POST /users HTTP/1.1", new HttpRequest("POST", "/users", "HTTP", "1.1", Map.of()))
         );
     }
 
