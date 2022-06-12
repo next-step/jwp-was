@@ -7,3 +7,15 @@
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+
+## 기능구현목록
+
+[ ] 요청 Parsing 유틸 작성
+
+[ ] GET 요청 파싱
+
+[ ] POST 요청 파싱
+
+[ ] Query String 파싱
+
+[ ] enum 적용
