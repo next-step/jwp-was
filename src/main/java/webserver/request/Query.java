@@ -1,6 +1,7 @@
 package webserver.request;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -11,6 +12,10 @@ public class Query {
 
     public Query(Map<String, String> queryMap) {
         this.queryMap = queryMap;
+    }
+
+    public static Query empty(){
+        return new Query(new HashMap<>());
     }
 
     public static Query from(String queryStr) {

@@ -1,5 +1,9 @@
 package webserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.request.RequestLine;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -7,10 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import webserver.request.RequestLine;
+import java.util.Objects;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -29,7 +30,18 @@ public class RequestHandler implements Runnable {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
 
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            RequestLine requestLine = RequestLine.from(br.readLine());
+            String line = br.readLine();
+            RequestLine requestLine = RequestLine.from(line);
+            // TODO requestLine 처리
+
+            while (!"".equals(line)) {
+                logger.debug("{}", line);
+                line = br.readLine();
+                if (Objects.isNull(line)) {
+                    break;
+                }
+            }
+
 
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
