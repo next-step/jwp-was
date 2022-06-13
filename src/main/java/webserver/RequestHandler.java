@@ -2,6 +2,7 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.RequestLine;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -33,9 +34,7 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
-            final var requestLine = line.split(" ");
-            final var method = requestLine[0];
-            final var path = requestLine[1];
+            final var requestLine = new RequestLine(line);
 
             var dos = new DataOutputStream(out);
             var body = "Hello World".getBytes();

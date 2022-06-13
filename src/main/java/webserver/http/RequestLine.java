@@ -9,15 +9,17 @@ public class RequestLine {
     private static final int INDEX_OF_HTTP_PROTOCOL = 2;
     private static final int LENGTH_OF_REQUEST_LINE = 3;
 
-    private final String method;
+    private final HttpMethod method;
     private final String path;
     private final HttpProtocol httpProtocol;
+    private final QueryString queryString;
 
     public RequestLine(final String requestLine) {
         validateRequestLine(requestLine);
         final var splitRequestLine = splitRequestLine(requestLine);
-        this.method = splitRequestLine[INDEX_OF_METHOD];
+        this.method = HttpMethod.valueOf(splitRequestLine[INDEX_OF_METHOD]);
         this.path = splitRequestLine[INDEX_OF_PATH];
+        this.queryString = new QueryString();
         this.httpProtocol = new HttpProtocol(splitRequestLine[INDEX_OF_HTTP_PROTOCOL]);
     }
 
@@ -35,7 +37,7 @@ public class RequestLine {
         return splitRequestLine;
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
