@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URISyntaxException;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -25,13 +26,22 @@ public class RequestHandler implements Runnable {
             String line = bufferedReader.readLine();
             logger.debug("request line: {}", line);
 
+            Controller controller = match(new Request(line));
+
             while (!line.equals("")) {
                 line = bufferedReader.readLine();
                 logger.debug("header: {}", line);
             }
 
+            Response response;
+            try {
+                response = controller.serving();
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
+            byte[] body = response.getBytes();
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {
@@ -57,5 +67,9 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    public Controller match(Request request) {
+        return new Controller(request);
     }
 }
