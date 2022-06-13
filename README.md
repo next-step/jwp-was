@@ -12,5 +12,5 @@
 - RequestLine을 파싱한다.
   - [x] 소켓으로 HTTP 메시지를 받아서 문자열로 반환한다.
   - [x] 각 GET, POST 요청에 대한 RequestLine을 파싱한다.
-  - [ ] HTTP 메시지의 Query String을 파싱한다.
+  - [x] HTTP 메시지의 Query String을 파싱한다.
   - [x] HTTP Method를 enum으로 관리한다.
