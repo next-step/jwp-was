@@ -3,9 +3,12 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Objects;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -23,6 +26,16 @@ public class RequestHandler implements Runnable {
 
         try (var in = connection.getInputStream();
              var out = connection.getOutputStream()) {
+
+            final var reader = new BufferedReader(new InputStreamReader(in));
+            final var line = reader.readLine();
+            if (Objects.isNull(line)) {
+                return;
+            }
+
+            final var requestLine = line.split(" ");
+            final var method = requestLine[0];
+            final var path = requestLine[1];
 
             var dos = new DataOutputStream(out);
             var body = "Hello World".getBytes();
