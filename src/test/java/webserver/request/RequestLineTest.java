@@ -2,6 +2,7 @@ package webserver.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.common.Protocol;
 import webserver.request.exception.IllegalRequestLineException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,7 +40,7 @@ class RequestLineTest {
     void from() {
         RequestLine requestLine = RequestLine.from("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
         assertAll(
-                () -> assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET),
+                () -> assertThat(requestLine.getMethod()).isEqualTo(RequestMethod.GET),
                 () -> assertThat(requestLine.getPath()).isEqualTo("/users"),
                 () -> assertThat(requestLine.getQuery("userId")).isEqualTo("javajigi"),
                 () -> assertThat(requestLine.getQuery("password")).isEqualTo("password"),
