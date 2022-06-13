@@ -8,7 +8,10 @@ import utils.FileIoUtils;
 import webserver.request.HttpRequest;
 import webserver.request.RequestBody;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
 
@@ -31,7 +34,9 @@ public class RequestHandler implements Runnable {
             final HttpRequest httpRequest = new HttpRequest(in);
 
             if (this.isSignUpRequest(httpRequest)) {
-                this.handleSignUpRequest(httpRequest);;
+                this.handleSignUpRequest(httpRequest);
+                this.response302Header(dos);
+                return;
             }
 
             byte[] body = FileIoUtils.loadFileFromClasspath("templates/" + httpRequest.getPath());
@@ -64,6 +69,15 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(final DataOutputStream dos) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Location: http://localhost:8080/index.html\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
