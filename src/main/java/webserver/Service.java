@@ -4,6 +4,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.common.Protocol;
+import webserver.response.HttpStatus;
+import webserver.response.Response;
+import webserver.response.ResponseBody;
+import webserver.response.ResponseHeader;
 
 public class Service {
     private static final Logger logger = LoggerFactory.getLogger(Controller.class);
@@ -14,25 +19,13 @@ public class Service {
     }
 
     public void helloWorld() {
-        byte[] body = "Hello World".getBytes();
-        response200Header(body.length);
-        responseBody(body);
-    }
-
-    private void response200Header(int lengthOfBodyContent) {
+        ResponseHeader responseHeader = new ResponseHeader(
+                Protocol.HTTP_1_1, HttpStatus.OK
+        ).setContentType("text/html;charset=utf-8");
+        ResponseBody responseBody = new ResponseBody("Hello World");
+        Response response = new Response(responseHeader, responseBody);
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
+            dos.writeBytes(response.toString());
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
