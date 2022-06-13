@@ -5,6 +5,8 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import webserver.request.HttpRequest;
+import webserver.request.RequestBody;
 
 import java.io.*;
 import java.net.Socket;
@@ -24,16 +26,15 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
             DataOutputStream dos = new DataOutputStream(out);
 
-            final RequestLine requestLine = RequestLine.parse(br.readLine());
+            final HttpRequest httpRequest = new HttpRequest(in);
 
-            if (this.isSignUpRequest(requestLine)) {
-                this.handleSignUpRequest(requestLine);;
+            if (this.isSignUpRequest(httpRequest)) {
+                this.handleSignUpRequest(httpRequest);;
             }
 
-            byte[] body = FileIoUtils.loadFileFromClasspath("templates/" + requestLine.getPath());
+            byte[] body = FileIoUtils.loadFileFromClasspath("templates/" + httpRequest.getPath());
 
             response200Header(dos, body.length);
             responseBody(dos, body);
@@ -42,15 +43,17 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private boolean isSignUpRequest(final RequestLine requestLine) {
-        return requestLine.getMethod().equals(HttpMethod.GET) && requestLine.getPath().equals("/user/create");
+    private boolean isSignUpRequest(final HttpRequest httpRequest) {
+        return httpRequest.getMethod().equals(HttpMethod.POST) && httpRequest.getPath().equals("/user/create");
     }
 
-    private void handleSignUpRequest(final RequestLine requestLine) {
-        final String userId = requestLine.getQueryParameterOrNull("userId");
-        final String password = requestLine.getQueryParameterOrNull("password");
-        final String name = requestLine.getQueryParameterOrNull("name");
-        final String email = requestLine.getQueryParameterOrNull("email");
+    private void handleSignUpRequest(final HttpRequest httpRequest) {
+        final RequestBody requestBody = httpRequest.getBody();
+
+        final String userId = requestBody.get("userId");
+        final String password = requestBody.get("password");
+        final String name = requestBody.get("name");
+        final String email = requestBody.get("email");
 
         DataBase.addUser(new User(userId, password, name, email));
     }
