@@ -26,4 +26,12 @@ public class Path {
     public int hashCode() {
         return Objects.hash(path);
     }
+
+    public String getPath() {
+        return path;
+    }
+
+    public boolean match(String str) {
+        return str.equals(path);
+    }
 }
