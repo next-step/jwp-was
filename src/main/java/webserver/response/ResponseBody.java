@@ -11,6 +11,10 @@ public class ResponseBody {
         this.body = body;
     }
 
+    public static ResponseBody from(String body) {
+        return new ResponseBody(body.getBytes());
+    }
+
     public static ResponseBody from(File file) throws IOException {
         return new ResponseBody(Files.readAllBytes(file.toPath()));
     }
@@ -21,5 +25,10 @@ public class ResponseBody {
 
     public byte[] toBytes() {
         return body;
+    }
+
+    @Override
+    public String toString() {
+        return new String(toBytes());
     }
 }

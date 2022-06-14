@@ -54,4 +54,9 @@ public class ResponseHeader {
         sb.append("\r\n");
         return sb.toString().getBytes();
     }
+
+    @Override
+    public String toString() {
+        return new String(toBytes());
+    }
 }

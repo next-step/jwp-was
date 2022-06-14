@@ -16,7 +16,7 @@ class ResponseTest {
                 .setContentType("text/html;charset=utf-8")
                 .setLocation("/index.html")
                 .setCookie("loggedIn=true");
-        ResponseBody responseBody = new ResponseBody("Hello World".getBytes());
+        ResponseBody responseBody = ResponseBody.from("Hello World");
         Response response = new Response(responseHeader, responseBody);
 
         String actual = new String(response.toBytes());

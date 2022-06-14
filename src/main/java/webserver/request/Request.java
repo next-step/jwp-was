@@ -39,6 +39,10 @@ public class Request {
         return requestHeader.getContentLength();
     }
 
+    public String getCookie() {
+        return requestHeader.getCookie();
+    }
+
     public String getBody(String key) {
         return requestBody.get(key);
     }

@@ -41,4 +41,8 @@ public class RequestHeader {
                 headers.getOrDefault("Content-Length", "0")
         );
     }
+
+    public String getCookie() {
+        return headers.getOrDefault("Set-Cookie", "");
+    }
 }

@@ -23,4 +23,9 @@ public class Response {
         System.arraycopy(bodyBytes, 0, responseBytes, headerBytes.length, bodyBytes.length);
         return responseBytes;
     }
+
+    @Override
+    public String toString() {
+        return new String(toBytes());
+    }
 }

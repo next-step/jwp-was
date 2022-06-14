@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.AuthService;
 import service.ResourceService;
 import service.UserService;
 import webserver.request.Request;
@@ -56,6 +57,9 @@ public class Controller implements Runnable {
 
         if (method == POST && path.equals("/user/create")) {
             return UserService.createUser(request);
+        }
+        if (method == POST && path.equals("/user/login")) {
+            return AuthService.login(request);
         }
         if (method == GET) {
             return ResourceService.getResource(request);
