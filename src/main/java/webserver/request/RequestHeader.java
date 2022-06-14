@@ -33,7 +33,7 @@ public class RequestHeader {
 
     public String getContentType() {
         return headers.getOrDefault("Accept", "")
-                .split(", ")[0];
+                .split(",")[0];
     }
 
     public int getContentLength() {

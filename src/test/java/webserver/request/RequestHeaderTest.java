@@ -14,7 +14,7 @@ class RequestHeaderTest {
     @BeforeEach
     void setUp() {
         requestHeader = RequestHeader.from(Arrays.asList(
-                "Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8",
+                "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                 "Content-Length: 64"
         ));
     }

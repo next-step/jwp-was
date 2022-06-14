@@ -9,8 +9,11 @@ import java.io.OutputStream;
 import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.ResourceService;
 import webserver.request.Request;
 import webserver.request.RequestFactory;
+import webserver.request.RequestMethod;
+import webserver.response.Response;
 
 public class Controller implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(Controller.class);
@@ -33,13 +36,19 @@ public class Controller implements Runnable {
             Request request = RequestFactory.createRequest(
                     new BufferedReader(new InputStreamReader(in, "UTF-8"))
             );
-            handleRequest(request, new DataOutputStream(out));
+            Response response = handleRequest(request);
+            DataOutputStream dos = new DataOutputStream(out);
+            dos.write(response.toBytes());
+            dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void handleRequest(Request request, DataOutputStream dos) {
-        new Service(dos).helloWorld();
+    private Response handleRequest(Request request) throws IOException {
+        if (request.getMethod() == RequestMethod.GET) {
+            return ResourceService.getResource(request);
+        }
+        return Response.createNotImplemented();
     }
 }

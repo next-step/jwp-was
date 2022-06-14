@@ -4,8 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RequestFactory {
+    private static final Logger logger = LoggerFactory.getLogger(RequestFactory.class);
+
     private RequestFactory() {}
 
     public static Request createRequest(BufferedReader br) throws IOException {
@@ -16,7 +20,9 @@ public class RequestFactory {
     }
 
     private static RequestLine createRequestLine(BufferedReader br) throws IOException {
-        return RequestLine.from(br.readLine());
+        String requestLine = br.readLine();
+        logger.info(requestLine);
+        return RequestLine.from(requestLine);
     }
 
     private static RequestHeader createRequestHeader(BufferedReader br) throws IOException {
@@ -25,6 +31,7 @@ public class RequestFactory {
              !headerLine.equals("");
              headerLine = br.readLine()
         ) {
+            logger.info(headerLine);
             headerLines.add(headerLine);
         }
         return RequestHeader.from(headerLines);
@@ -34,6 +41,8 @@ public class RequestFactory {
         int contentLength = requestHeader.getContentLength();
         char[] body = new char[contentLength];
         br.read(body, 0, contentLength);
-        return RequestBody.from(String.copyValueOf(body));
+        String requestBody = String.copyValueOf(body);
+        logger.info(requestBody);
+        return RequestBody.from(requestBody);
     }
 }

@@ -1,26 +1,25 @@
 package webserver.response;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class ResponseBody {
-    private final String body;
+    private final byte[] body;
 
-    public ResponseBody(String body) {
+    public ResponseBody(byte[] body) {
         this.body = body;
     }
 
-    public static ResponseBody from(Path path) throws IOException {
-        return new ResponseBody(Files.readString(path));
+    public static ResponseBody from(File file) throws IOException {
+        return new ResponseBody(Files.readAllBytes(file.toPath()));
     }
 
-    public int getBytesLength() {
-        return body.getBytes().length;
+    public int getContentLength() {
+        return body.length;
     }
 
-    @Override
-    public String toString() {
+    public byte[] toBytes() {
         return body;
     }
 }
