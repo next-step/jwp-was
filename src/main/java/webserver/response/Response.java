@@ -4,17 +4,15 @@ public class Response {
     private final ResponseHeader responseHeader;
     private final ResponseBody responseBody;
 
+    public Response(ResponseHeader responseHeader) {
+        this.responseHeader = responseHeader;
+        this.responseBody = new ResponseBody(new byte[0]);
+    }
+
     public Response(ResponseHeader responseHeader, ResponseBody responseBody) {
         this.responseBody = responseBody;
         this.responseHeader = responseHeader
                 .setContentLength(responseBody.getContentLength());
-    }
-
-    public static Response createNotImplemented() {
-        ResponseHeader responseHeader = new ResponseHeader(HttpStatus.NOT_IMPLEMENTED)
-                .setContentType("text/html;charset=utf-8");
-        ResponseBody responseBody = new ResponseBody("Not Implemented Yet".getBytes());
-        return new Response(responseHeader, responseBody);
     }
 
     public byte[] toBytes() {

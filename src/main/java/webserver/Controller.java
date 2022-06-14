@@ -10,10 +10,15 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.ResourceService;
+import service.UserService;
 import webserver.request.Request;
 import webserver.request.RequestFactory;
 import webserver.request.RequestMethod;
 import webserver.response.Response;
+import webserver.response.ResponseFactory;
+
+import static webserver.request.RequestMethod.GET;
+import static webserver.request.RequestMethod.POST;
 
 public class Controller implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(Controller.class);
@@ -46,9 +51,15 @@ public class Controller implements Runnable {
     }
 
     private Response handleRequest(Request request) throws IOException {
-        if (request.getMethod() == RequestMethod.GET) {
+        RequestMethod method = request.getMethod();
+        String path = request.getPath();
+
+        if (method == POST && path.equals("/user/create")) {
+            return UserService.createUser(request);
+        }
+        if (method == GET) {
             return ResourceService.getResource(request);
         }
-        return Response.createNotImplemented();
+        return ResponseFactory.createNotImplemented();
     }
 }

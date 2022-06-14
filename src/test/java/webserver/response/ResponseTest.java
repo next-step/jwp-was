@@ -30,15 +30,16 @@ class ResponseTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("Not Implemented 일 경우 501 을 응답해야 한다.")
+    @DisplayName("body 가 없는 Response 를 만들 수 있다.")
     @Test
-    void testNotImplemented() {
-        String actual = new String(Response.createNotImplemented().toBytes());
-        String expected = "HTTP/1.1 501 Not Implemented \r\n"
-                + "Content-Type: text/html;charset=utf-8 \r\n"
-                + "Content-Length: 19 \r\n"
-                + "\r\n"
-                + "Not Implemented Yet";
+    void testEmptyBody() {
+        Response response = new Response(
+                new ResponseHeader(HttpStatus.FOUND).setLocation("/index.html")
+        );
+        String actual = new String(response.toBytes());
+        String expected = "HTTP/1.1 302 Found \r\n"
+                + "Location: /index.html \r\n"
+                + "\r\n";
         assertThat(actual).isEqualTo(expected);
     }
 }
