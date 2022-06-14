@@ -16,10 +16,10 @@ import webserver.response.Response;
 import webserver.response.ResponseBody;
 import webserver.response.ResponseHeader;
 
-public class UserListService {
-    private UserListService() {}
+public class ListUserService {
+    private ListUserService() {}
 
-    public static Response getUserList(Request request) {
+    public static Response getUserList(Request request) throws IOException {
         boolean loggedIn = request.getCookie().contains("loggedIn=true");
         if (!loggedIn) {
             ResponseHeader responseHeader = new ResponseHeader(HttpStatus.FOUND)
@@ -33,7 +33,7 @@ public class UserListService {
         return new Response(responseHeader, responseBody);
     }
 
-    private static String renderUserList(Collection<User> users) {
+    private static String renderUserList(Collection<User> users) throws IOException {
         Map<String, Object> parameterMap = new HashMap<>();
         parameterMap.put("users", users);
 
@@ -41,11 +41,7 @@ public class UserListService {
         loader.setPrefix("/templates");
         loader.setSuffix("");
         Handlebars handlebars = new Handlebars(loader);
-        try {
-            Template template = handlebars.compile("/user/list.html");
-            return template.apply(parameterMap);
-        } catch (IOException exception) {
-            return "";
-        }
+        Template template = handlebars.compile("/user/list.html");
+        return template.apply(parameterMap);
     }
 }

@@ -19,7 +19,8 @@ class RequestLineTest {
                 () -> assertThat(requestLine.getMethod().name()).isEqualTo("GET"),
                 () -> assertThat(requestLine.getPath()).isEqualTo("/users"),
                 () -> assertThat(requestLine.getProtocol().getName()).isEqualTo("HTTP"),
-                () -> assertThat(requestLine.getProtocol().getVersion()).isEqualTo("1.1")
+                () -> assertThat(requestLine.getProtocol().getVersion()).isEqualTo("1.1"),
+                () -> assertThat(requestLine.hash()).isEqualTo("GET /users")
         );
     }
 
@@ -31,7 +32,8 @@ class RequestLineTest {
                 () -> assertThat(requestLine.getMethod().name()).isEqualTo("POST"),
                 () -> assertThat(requestLine.getPath()).isEqualTo("/users"),
                 () -> assertThat(requestLine.getProtocol().getName()).isEqualTo("HTTP"),
-                () -> assertThat(requestLine.getProtocol().getVersion()).isEqualTo("1.1")
+                () -> assertThat(requestLine.getProtocol().getVersion()).isEqualTo("1.1"),
+                () -> assertThat(requestLine.hash()).isEqualTo("POST /users")
         );
     }
 
@@ -45,7 +47,8 @@ class RequestLineTest {
                 () -> assertThat(requestLine.getQuery("userId")).isEqualTo("javajigi"),
                 () -> assertThat(requestLine.getQuery("password")).isEqualTo("password"),
                 () -> assertThat(requestLine.getQuery("name")).isEqualTo("JaeSung"),
-                () -> assertThat(requestLine.getProtocol()).isEqualTo(Protocol.HTTP_1_1)
+                () -> assertThat(requestLine.getProtocol()).isEqualTo(Protocol.HTTP_1_1),
+                () -> assertThat(requestLine.hash()).isEqualTo("GET /users")
         );
     }
 
@@ -63,5 +66,12 @@ class RequestLineTest {
         assertThatThrownBy(
                 () -> RequestLine.from("GET /users")
         ).isInstanceOf(IllegalRequestLineException.class);
+    }
+
+    @DisplayName("기본 프로토콜은 HTTP1.1 이다.")
+    @Test
+    void defaultProtocol() {
+        assertThat(new RequestLine(RequestMethod.GET, Uri.from("/")).getProtocol())
+                .isEqualTo(Protocol.HTTP_1_1);
     }
 }

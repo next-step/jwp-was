@@ -24,12 +24,14 @@ public class Request {
     public String getQuery(String key) {
         return requestLine.getQuery(key);
     }
-
-
+    
     public Protocol getProtocol() {
         return requestLine.getProtocol();
     }
 
+    public String getRequestLineHash() {
+        return requestLine.hash();
+    }
 
     public String getContentType() {
         return requestHeader.getContentType();

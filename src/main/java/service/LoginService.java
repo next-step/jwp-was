@@ -7,8 +7,8 @@ import webserver.response.HttpStatus;
 import webserver.response.Response;
 import webserver.response.ResponseHeader;
 
-public class AuthService {
-    private AuthService() {}
+public class LoginService {
+    private LoginService() {}
 
     public static Response login(Request request) {
         String userId = request.getBody("userId");

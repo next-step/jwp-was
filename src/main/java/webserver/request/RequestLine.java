@@ -8,7 +8,13 @@ public class RequestLine {
     private final Uri uri;
     private final Protocol protocol;
 
-    public RequestLine(RequestMethod method, Uri uri, Protocol protocol) {
+    public RequestLine(RequestMethod method, Uri uri) {
+        this.method = method;
+        this.uri = uri;
+        this.protocol = Protocol.HTTP_1_1;
+    }
+
+    private RequestLine(RequestMethod method, Uri uri, Protocol protocol) {
         this.method = method;
         this.uri = uri;
         this.protocol = protocol;
@@ -28,6 +34,10 @@ public class RequestLine {
 
     public Protocol getProtocol() {
         return protocol;
+    }
+
+    public String hash() {
+        return String.format("%s %s", getMethod(), getPath());
     }
 
     public static RequestLine from(String requestLine) {

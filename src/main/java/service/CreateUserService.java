@@ -7,8 +7,8 @@ import webserver.response.HttpStatus;
 import webserver.response.Response;
 import webserver.response.ResponseHeader;
 
-public class UserService {
-    private UserService() {}
+public class CreateUserService {
+    private CreateUserService() {}
 
     public static Response createUser(Request request) {
         User user = new User(request.getBody("userId"),
