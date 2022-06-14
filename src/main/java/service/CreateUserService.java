@@ -3,9 +3,8 @@ package service;
 import db.DataBase;
 import model.User;
 import webserver.request.Request;
-import webserver.response.HttpStatus;
 import webserver.response.Response;
-import webserver.response.ResponseHeader;
+import webserver.response.ResponseFactory;
 
 public class CreateUserService {
     private CreateUserService() {}
@@ -17,9 +16,6 @@ public class CreateUserService {
                 request.getBody("email")
         );
         DataBase.addUser(user);
-
-        ResponseHeader responseHeader = new ResponseHeader(HttpStatus.FOUND)
-                .setLocation("/index.html");
-        return new Response(responseHeader);
+        return ResponseFactory.createRedirect("/index.html");
     }
 }

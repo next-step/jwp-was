@@ -15,6 +15,10 @@ public class Response {
                 .setContentLength(responseBody.getContentLength());
     }
 
+    public Response setCookie(String cookie) {
+        return new Response(responseHeader.setCookie(cookie), responseBody);
+    }
+
     public byte[] toBytes() {
         byte[] headerBytes = responseHeader.toBytes();
         byte[] bodyBytes = responseBody.toBytes();

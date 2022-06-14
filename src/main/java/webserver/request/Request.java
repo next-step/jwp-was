@@ -24,7 +24,7 @@ public class Request {
     public String getQuery(String key) {
         return requestLine.getQuery(key);
     }
-    
+
     public Protocol getProtocol() {
         return requestLine.getProtocol();
     }

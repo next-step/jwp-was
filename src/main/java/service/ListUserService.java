@@ -11,10 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import model.User;
 import webserver.request.Request;
-import webserver.response.HttpStatus;
 import webserver.response.Response;
-import webserver.response.ResponseBody;
-import webserver.response.ResponseHeader;
+import webserver.response.ResponseFactory;
 
 public class ListUserService {
     private ListUserService() {}
@@ -22,15 +20,10 @@ public class ListUserService {
     public static Response getUserList(Request request) throws IOException {
         boolean loggedIn = request.getCookie().contains("loggedIn=true");
         if (!loggedIn) {
-            ResponseHeader responseHeader = new ResponseHeader(HttpStatus.FOUND)
-                    .setLocation("/user/login.html");
-            return new Response(responseHeader);
+            return ResponseFactory.createRedirect("/user/login.html");
         }
-        ResponseHeader responseHeader = new ResponseHeader(HttpStatus.OK)
-                .setContentType("text/html;charset=utf-8");
-        String userList = renderUserList(DataBase.findAll());
-        ResponseBody responseBody = ResponseBody.from(userList);
-        return new Response(responseHeader, responseBody);
+        String body = renderUserList(DataBase.findAll());
+        return ResponseFactory.createOK(body);
     }
 
     private static String renderUserList(Collection<User> users) throws IOException {

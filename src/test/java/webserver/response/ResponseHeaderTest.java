@@ -2,7 +2,6 @@ package webserver.response;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.common.Protocol;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -12,7 +11,7 @@ class ResponseHeaderTest {
     @DisplayName("생성한 ResponseHeader 를 bytes 로 변환할 수 있어야 한다.")
     @Test
     void testToString() {
-        ResponseHeader responseHeader = new ResponseHeader(Protocol.HTTP_1_1, HttpStatus.OK)
+        ResponseHeader responseHeader = new ResponseHeader(HttpStatus.OK)
                 .setContentType("text/html;charset=utf-8")
                 .setContentLength(512)
                 .setLocation("/index.html")

@@ -3,9 +3,8 @@ package service;
 import db.DataBase;
 import model.User;
 import webserver.request.Request;
-import webserver.response.HttpStatus;
 import webserver.response.Response;
-import webserver.response.ResponseHeader;
+import webserver.response.ResponseFactory;
 
 public class LoginService {
     private LoginService() {}
@@ -15,14 +14,10 @@ public class LoginService {
         String password = request.getBody("password");
         User user = DataBase.findUserById(userId);
         if (user == null || !user.getPassword().equals(password)) {
-            ResponseHeader responseHeader = new ResponseHeader(HttpStatus.FOUND)
-                    .setLocation("/login_failed.html")
+            return ResponseFactory.createRedirect("/login_failed.html")
                     .setCookie("loggedIn=false");
-            return new Response(responseHeader);
         }
-        ResponseHeader responseHeader = new ResponseHeader(HttpStatus.FOUND)
-                .setLocation("/index.html")
+        return ResponseFactory.createRedirect("/index.html")
                 .setCookie("loggedIn=true");
-        return new Response(responseHeader);
     }
 }

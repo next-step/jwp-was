@@ -7,6 +7,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ResponseFactoryTest {
 
+    @DisplayName("OK 일 경우, body 값을 담아서 200 을 응답해야 한다.")
+    @Test
+    void createOK() {
+        String actual = new String(ResponseFactory.createOK("Hello World").toBytes());
+        String expected = "HTTP/1.1 200 OK \r\n"
+                + "Content-Type: text/html;charset=utf-8 \r\n"
+                + "Content-Length: 11 \r\n"
+                + "\r\n"
+                + "Hello World";
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @DisplayName("Redirect 를 하려할 경우, location 값을 담아서 302 을 응답해야 한다.")
+    @Test
+    void createRedirect() {
+        String actual = new String(ResponseFactory.createRedirect("/index.html").toBytes());
+        String expected = "HTTP/1.1 302 Found \r\n"
+                + "Location: /index.html \r\n"
+                + "\r\n";
+        assertThat(actual).isEqualTo(expected);
+    }
+
     @DisplayName("Unauthorized 일 경우 401 을 응답해야 한다.")
     @Test
     void createUnauthorized() {
