@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.AuthService;
 import service.ResourceService;
+import service.UserListService;
 import service.UserService;
 import webserver.request.Request;
 import webserver.request.RequestFactory;
@@ -60,6 +61,9 @@ public class Controller implements Runnable {
         }
         if (method == POST && path.equals("/user/login")) {
             return AuthService.login(request);
+        }
+        if (method == GET && path.equals("/user/list.html")) {
+            return UserListService.getUserList(request);
         }
         if (method == GET) {
             return ResourceService.getResource(request);

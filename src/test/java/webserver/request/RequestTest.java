@@ -19,7 +19,7 @@ class RequestTest {
         RequestHeader requestHeader = RequestHeader.from(Arrays.asList(
                 "Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8",
                 "Content-Length: 64",
-                "Set-Cookie: logined=true"
+                "Cookie: loggedIn=true"
         ));
         RequestBody requestBody = RequestBody.from(
                 "userId=pyro&password=pw&name=Gho"
@@ -36,7 +36,7 @@ class RequestTest {
 
                 () -> assertThat(request.getContentType()).isEqualTo("text/html"),
                 () -> assertThat(request.getContentLength()).isEqualTo(64),
-                () -> assertThat(request.getCookie()).isEqualTo("logined=true"),
+                () -> assertThat(request.getCookie()).isEqualTo("loggedIn=true"),
 
                 () -> assertThat(request.getBody("userId")).isEqualTo("pyro"),
                 () -> assertThat(request.getBody("password")).isEqualTo("pw"),

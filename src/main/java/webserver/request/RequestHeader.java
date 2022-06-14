@@ -43,6 +43,6 @@ public class RequestHeader {
     }
 
     public String getCookie() {
-        return headers.getOrDefault("Set-Cookie", "");
+        return headers.getOrDefault("Cookie", "");
     }
 }

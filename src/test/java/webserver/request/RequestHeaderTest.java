@@ -16,7 +16,7 @@ class RequestHeaderTest {
         requestHeader = RequestHeader.from(Arrays.asList(
                 "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                 "Content-Length: 64",
-                "Set-Cookie: logined=true"
+                "Cookie: loggedIn=true"
         ));
     }
 
@@ -38,6 +38,6 @@ class RequestHeaderTest {
     @Test
     void getCookie() {
         assertThat(requestHeader.getCookie())
-                .isEqualTo("logined=true");
+                .isEqualTo("loggedIn=true");
     }
 }
