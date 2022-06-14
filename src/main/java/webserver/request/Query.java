@@ -1,10 +1,10 @@
 package webserver.request;
 
-import java.util.Arrays;
+import utils.MapUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class Query {
 
@@ -14,22 +14,17 @@ public class Query {
         this.queryMap = queryMap;
     }
 
-    public static Query empty(){
+    public static Query empty() {
         return new Query(new HashMap<>());
     }
 
     public static Query from(String queryStr) {
-        Map<String, String> queryMap = Arrays.stream(queryStr.split("&"))
-                .map(querySplit -> {
-                    String[] queryKV = querySplit.split("=");
-                    return Map.entry(queryKV[0], queryKV[1]);
-                }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
+        Map<String, String> queryMap = MapUtils.parse(queryStr);
         return new Query(queryMap);
     }
 
     public Map<String, String> getQueryMap() {
-        return queryMap;
+        return new HashMap<>(queryMap);
     }
 
     @Override
