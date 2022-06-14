@@ -1,8 +1,9 @@
 package webserver.response;
 
+import webserver.request.Headers;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 현재 DTO느낌으로 사용하고 있으나 오브젝트로 역할을 가져가야한다.
@@ -10,23 +11,23 @@ import java.util.stream.Collectors;
 public class Response {
 
     private final byte[] body;
-    private final String code;
-    private final String location;
-    private final Map<String, String> cookieMap;
+    private final String code; // TODO enum으로 변경
+    private final Headers headers;
 
-    public Response(byte[] body, String code, String location, Map<String, String> cookieMap) {
+    public Response(byte[] body, String code, Headers headers) {
         this.body = body;
         this.code = code;
-        this.location = location;
-        this.cookieMap = cookieMap;
+        this.headers = headers;
     }
 
     public static Response response202() {
-        return new Response(new byte[]{}, "202", null, new HashMap<>());
+        return new Response(new byte[]{}, "202", Headers.empty());
     }
 
     public static Response response302(String location) {
-        return new Response(new byte[]{}, "302", location, new HashMap<>());
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put(Headers.LOCATION, location);
+        return new Response(new byte[]{}, "302", new Headers(headerMap));
     }
 
     public byte[] getBody() {
@@ -37,21 +38,32 @@ public class Response {
         return code;
     }
 
-    public String getLocation() {
-        return location;
+    public String getCookieStr() {
+        return headers.get("Cookie");
     }
 
-    public Map<String, String> getCookieMap() {
-        return cookieMap;
+    public Headers getHeaders() {
+        return headers;
     }
 
-    public String parseCookie() {
-        return cookieMap.entrySet().stream()
-                .map(e -> e.getKey() + "=" + e.getValue())
-                .collect(Collectors.joining(";"));
+    public void putCookie(String key, String value) {
+        headers.putCookie(key, value);
     }
 
-    public void addCookie(String key, String value) {
-        cookieMap.put(key, value);
+    public void addHeader(String key, String value) {
+        headers.put(key, value);
+    }
+
+    public void setTextHtml() {
+        headers.setTextHtml();
+    }
+
+    public void setTextCss() {
+        headers.setTextCss();
+    }
+
+    public String makeResponseHeader() {
+        headers.put(Headers.CONTENT_LENGTH, String.valueOf(body.length));
+        return headers.response();
     }
 }

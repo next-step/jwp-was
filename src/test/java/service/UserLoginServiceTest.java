@@ -4,6 +4,7 @@ import db.DataBase;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import webserver.request.Headers;
 import webserver.request.RequestBody;
 import webserver.request.RequestLine;
 import webserver.response.Response;
@@ -29,8 +30,8 @@ class UserLoginServiceTest {
         Response response = userLoginService.doPost(requestLine, RequestBody.from("userId=changgunyee&password=password"));
 
         //then
-        assertThat(response.getCookieMap()).containsEntry("logined", "true");
-        assertThat(response.getLocation()).isEqualTo("/index.html");
+        assertThat(response.getCookieStr()).contains("logined=true");
+        assertThat(response.getHeaders().get(Headers.LOCATION)).isEqualTo("/index.html");
         assertThat(response.getCode()).isEqualTo("302");
     }
 
@@ -44,8 +45,8 @@ class UserLoginServiceTest {
         Response response = userLoginService.doPost(requestLine, RequestBody.from("userId=changgunyee&password=password"));
 
         //then
-        assertThat(response.getCookieMap()).containsEntry("logined", "false");
-        assertThat(response.getLocation()).isEqualTo("/user/login_failed.html");
+        assertThat(response.getCookieStr()).contains("logined=false");
+        assertThat(response.getHeaders().get(Headers.LOCATION)).isEqualTo("/user/login_failed.html");
         assertThat(response.getCode()).isEqualTo("302");
     }
 }

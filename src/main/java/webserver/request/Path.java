@@ -32,6 +32,6 @@ public class Path {
     }
 
     public boolean match(String str) {
-        return str.equals(path);
+        return path.matches(str);
     }
 }

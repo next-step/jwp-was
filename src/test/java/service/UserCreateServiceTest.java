@@ -2,6 +2,7 @@ package service;
 
 import db.DataBase;
 import org.junit.jupiter.api.Test;
+import webserver.request.Headers;
 import webserver.request.RequestLine;
 import webserver.response.Response;
 
@@ -21,6 +22,6 @@ class UserCreateServiceTest {
         //then
         assertThat(DataBase.findUserById("javajigi")).isNotNull();
         assertThat(response.getCode()).isEqualTo("302");
-        assertThat(response.getLocation()).isEqualTo("/index.html");
+        assertThat(response.getHeaders().get(Headers.LOCATION)).isEqualTo("/index.html");
     }
 }

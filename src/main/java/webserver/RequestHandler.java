@@ -70,7 +70,7 @@ public class RequestHandler implements Runnable {
 
     private Headers getHeaders(BufferedReader br) throws IOException {
         String line = null;
-        Headers headers = new Headers();
+        Headers headers = Headers.empty();
         while (!"".equals(line)) {
             logger.debug("{}", line);
             line = br.readLine();
@@ -86,10 +86,7 @@ public class RequestHandler implements Runnable {
     private void response200Header(DataOutputStream dos, Response response) {
         try {
             dos.writeBytes(String.format("HTTP/1.1 %s OK \r\n", response.getCode()));
-            dos.writeBytes(String.format("Location: %s\r\n", response.getLocation()));
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes(String.format("Set-Cookie: %s Path=/\r\n", response.parseCookie()));
-            dos.writeBytes("Content-Length: " + response.getBody().length + "\r\n");
+            dos.writeBytes(response.makeResponseHeader());
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());

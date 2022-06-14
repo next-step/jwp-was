@@ -5,6 +5,7 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
+import webserver.request.Headers;
 import webserver.request.RequestLine;
 import webserver.response.Response;
 
@@ -26,7 +27,7 @@ public class UserListService extends GetService {
             Map<String, Object> parameterMap = new HashMap<>();
             parameterMap.put("users", DataBase.findAll());
             String body = template.apply(parameterMap);
-            return new Response(body.getBytes(), "202", null, new HashMap<>());
+            return new Response(body.getBytes(), "202", Headers.empty());
         } catch (IOException e) {
             throw new RuntimeException(e); // TODO custom exception
         }

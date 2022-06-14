@@ -16,11 +16,11 @@ public class UserLoginService extends PostService {
         try {
             DataBase.login(userId, password);
             Response response = Response.response302("/index.html");
-            response.addCookie("logined", "true");
+            response.putCookie("logined", "true");
             return response;
         } catch (FailedLoginException e) {
             Response response = Response.response302("/user/login_failed.html");
-            response.addCookie("logined", "false");
+            response.putCookie("logined", "false");
             return response;
         }
     }
