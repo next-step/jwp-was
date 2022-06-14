@@ -4,16 +4,17 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import webserver.request.HttpRequest;
 import webserver.request.RequestBody;
+import webserver.response.Cookie;
+import webserver.response.HttpResponse;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -29,20 +30,31 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            DataOutputStream dos = new DataOutputStream(out);
-
             final HttpRequest httpRequest = new HttpRequest(in);
+            final HttpResponse httpResponse = new HttpResponse(out);
 
             if (this.isSignUpRequest(httpRequest)) {
                 this.handleSignUpRequest(httpRequest);
-                this.response302Header(dos);
+                httpResponse.responseRedirect("/index.html");
                 return;
             }
 
-            byte[] body = FileIoUtils.loadFileFromClasspath("templates/" + httpRequest.getPath());
+            if (this.isLoginRequest(httpRequest)) {
+                final boolean loginSuccess = this.handleLoginRequest(httpRequest);
 
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+                if (loginSuccess) {
+                    httpResponse.setCookie(new Cookie("logined", "true"));
+                    httpResponse.responseRedirect("/index.html");
+                    return;
+                }
+
+                httpResponse.setCookie(new Cookie("logined", "false"));
+                httpResponse.responseRedirect("/user/login_failed.html");
+                return;
+            }
+
+            httpResponse.setBodyContentPath(httpRequest.getPath());
+            httpResponse.responseOK();
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
@@ -63,32 +75,18 @@ public class RequestHandler implements Runnable {
         DataBase.addUser(new User(userId, password, name, email));
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+    private boolean isLoginRequest(final HttpRequest httpRequest) {
+        return httpRequest.getMethod().equals(HttpMethod.POST) && httpRequest.getPath().equals("/user/login");
     }
 
-    private void response302Header(final DataOutputStream dos) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: http://localhost:8080/index.html\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
+    private boolean handleLoginRequest(final HttpRequest httpRequest) {
+        final RequestBody requestBody = httpRequest.getBody();
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+        final String userId = requestBody.get("userId");
+        final String password = requestBody.get("password");
+
+        final Optional<User> user = DataBase.findUserById(userId);
+        return user.map(it -> it.isPasswordMatched(password))
+                .orElse(false);
     }
 }
