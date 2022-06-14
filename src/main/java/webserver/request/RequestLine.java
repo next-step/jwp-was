@@ -4,21 +4,21 @@ import java.util.Objects;
 
 public class RequestLine {
     private final HttpMethod httpMethod;
-    private final Url url;
+    private final Path path;
     private final Protocol protocol;
 
-    private RequestLine(HttpMethod httpMethod, Url url, Protocol protocol) {
+    private RequestLine(HttpMethod httpMethod, Path path, Protocol protocol) {
         this.httpMethod = httpMethod;
-        this.url = url;
+        this.path = path;
         this.protocol = protocol;
     }
 
     public static RequestLine from(String readLine) {
         String[] lineSplit = readLine.split(" ");
         HttpMethod httpMethod = HttpMethod.from(lineSplit[0]);
-        Url url = Url.from(lineSplit[1]);
+        Path path = Path.from(lineSplit[1]);
         Protocol protocol = Protocol.from(lineSplit[2]);
-        return new RequestLine(httpMethod, url, protocol);
+        return new RequestLine(httpMethod, path, protocol);
     }
 
     @Override
@@ -27,21 +27,21 @@ public class RequestLine {
         if (!(o instanceof RequestLine)) return false;
         RequestLine that = (RequestLine) o;
         return httpMethod == that.httpMethod &&
-                Objects.equals(url, that.url) &&
+                Objects.equals(path, that.path) &&
                 Objects.equals(protocol, that.protocol);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(httpMethod, url, protocol);
+        return Objects.hash(httpMethod, path, protocol);
     }
 
     public HttpMethod getHttpMethod() {
         return httpMethod;
     }
 
-    public Url getPath() {
-        return url;
+    public Path getPath() {
+        return path;
     }
 
     public Protocol getProtocol() {
