@@ -3,6 +3,7 @@ package webserver.request;
 import java.util.Objects;
 
 public class Protocol {
+    private static final String SLASH = "/";
     private final String type;
     private final String version;
 
@@ -12,7 +13,7 @@ public class Protocol {
     }
 
     public static Protocol from(String protocolStr) {
-        String[] protocolSplit = protocolStr.split("/");
+        String[] protocolSplit = protocolStr.split(SLASH);
         return new Protocol(protocolSplit[0], protocolSplit[1]);
     }
 
