@@ -9,7 +9,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.RequestLine;
+import webserver.request.Request;
+import webserver.request.RequestFactory;
 
 public class Controller implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(Controller.class);
@@ -29,17 +30,16 @@ public class Controller implements Runnable {
         );
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            handleRequest(
-                    RequestLine.from(br.readLine()),
-                    new Service(new DataOutputStream(out))
+            Request request = RequestFactory.createRequest(
+                    new BufferedReader(new InputStreamReader(in, "UTF-8"))
             );
+            handleRequest(request, new DataOutputStream(out));
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void handleRequest(RequestLine requestLine, Service service) {
-        service.helloWorld();
+    private void handleRequest(Request request, DataOutputStream dos) {
+        new Service(dos).helloWorld();
     }
 }
