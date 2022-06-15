@@ -26,12 +26,13 @@ class PostUserLoginControllerTest {
                 "JaeSung",
                 "javajigi@slipp.net"
         ));
+        String body = "userId=javajigi&password=P@ssw0rD";
         RequestLine requestLine = RequestLine.from("POST /user/login HTTP/1.1");
         RequestHeader requestHeader = RequestHeader.from(Arrays.asList(
                 "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                "Content-Length: 0"
+                "Content-Length: " + body.getBytes().length
         ));
-        RequestBody requestBody = RequestBody.from("userId=javajigi&password=P@ssw0rD");
+        RequestBody requestBody = RequestBody.from(body);
         Request request = new Request(requestLine, requestHeader, requestBody);
 
         // when
@@ -51,12 +52,13 @@ class PostUserLoginControllerTest {
     @Test
     void doPostLoginFailed() throws IOException {
         // given
+        String body = "userId=id&password=pw";
         RequestLine requestLine = RequestLine.from("POST /user/login HTTP/1.1");
         RequestHeader requestHeader = RequestHeader.from(Arrays.asList(
                 "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                "Content-Length: 0"
+                "Content-Length: " + body.getBytes().length
         ));
-        RequestBody requestBody = RequestBody.from("userId=id&password=pw");
+        RequestBody requestBody = RequestBody.from(body);
         Request request = new Request(requestLine, requestHeader, requestBody);
 
         // when
