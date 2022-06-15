@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class HttpRequest {
     private final RequestLine requestLine;
@@ -64,5 +65,13 @@ public class HttpRequest {
 
     public String getPath() {
         return this.requestLine.getPath();
+    }
+
+    public String getCookie(final String cookieName) {
+        return Arrays.stream(this.headers.get("Cookie").split("; "))
+                .filter(it -> it.startsWith(cookieName + "="))
+                .findFirst()
+                .map(it -> it.split("=")[1])
+                .orElseThrow(() -> new IllegalArgumentException("Cannot get Cookie: " + cookieName));
     }
 }

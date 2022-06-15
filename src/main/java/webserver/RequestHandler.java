@@ -1,5 +1,9 @@
 package webserver;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
@@ -14,6 +18,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class RequestHandler implements Runnable {
@@ -50,6 +57,33 @@ public class RequestHandler implements Runnable {
 
                 httpResponse.setCookie(new Cookie("logined", "false"));
                 httpResponse.responseRedirect("/user/login_failed.html");
+                return;
+            }
+
+            if (httpRequest.getPath().equals("/user/list")) {
+                final boolean logined = Boolean.parseBoolean(httpRequest.getCookie("logined"));
+
+                if (!logined) {
+                    httpResponse.responseRedirect("/index.html");
+                    return;
+                }
+
+                // TODO refactor
+                TemplateLoader loader = new ClassPathTemplateLoader();
+                loader.setPrefix("/templates");
+                loader.setSuffix(".html");
+                Handlebars handlebars = new Handlebars(loader);
+                handlebars.registerHelper("inc", (context, options) -> (int) context + 1);
+
+                final Collection<User> users = DataBase.findAll();
+                final Map<String, Object> params = Map.of("users", users);
+
+                Template template = handlebars.compile("user/list");
+                String page = template.apply(params);
+
+                httpResponse.setContentType("text/html;charset=utf-8");
+                httpResponse.setBody(page);
+                httpResponse.responseOK();
                 return;
             }
 
