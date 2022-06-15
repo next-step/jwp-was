@@ -45,23 +45,40 @@ public class HttpResponse {
 
     public void setBodyContentPath(final String contentPath) throws IOException, URISyntaxException {
         if (contentPath.endsWith(".html")) {
-            final byte[] body = FileIoUtils.loadFileFromClasspath("templates/" + contentPath);
+            final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + contentPath);
             this.setBody(body);
             this.setContentType("text/html;charset=utf-8");
 
         } else if (contentPath.endsWith(".css")) {
-            final byte[] body = FileIoUtils.loadFileFromClasspath("static/" + contentPath);
+            final byte[] body = FileIoUtils.loadFileFromClasspath("static" + contentPath);
             this.setBody(body);
             this.setContentType("text/css;charset=utf-8");
 
         } else if (contentPath.endsWith(".js")) {
-            final byte[] body = FileIoUtils.loadFileFromClasspath("static/" + contentPath);
+            final byte[] body = FileIoUtils.loadFileFromClasspath("static" + contentPath);
             this.setBody(body);
             this.setContentType("text/javascript;charset=utf-8");
+
+        } else if (contentPath.contains("/fonts/")) {
+            final byte[] body = FileIoUtils.loadFileFromClasspath("static" + contentPath);
+            this.setBody(body);
+            final String extension = this.getExtensionFrom(contentPath);
+            this.setContentType("font/" + extension + ";charset=utf-8");
+
+        } else if (contentPath.equals("/favicon.ico")) {
+            final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + contentPath);
+            this.setBody(body);
+            this.setContentType("image/x-icon;charset=utf-8");
 
         } else {
             throw new IllegalArgumentException("Failed to response content - content path: " + contentPath);
         }
+    }
+
+    private String getExtensionFrom(final String contentPath) {
+        return contentPath.substring(
+                contentPath.lastIndexOf(".") + 1
+        );
     }
 
     public void responseOK() throws IOException {
