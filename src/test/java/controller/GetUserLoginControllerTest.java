@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class GetUserLoginControllerTest {
 
-    @DisplayName("GET 으로 로그인을 성공하면, 쿠키 값이 loggedIn=true 가 되고, index.html 로 Redirect 한다.")
+    @DisplayName("로그인을 성공하면, 쿠키 값이 loggedIn=true 가 되고, index.html 로 Redirect 한다.")
     @Test
     void doGetLoginSuccess() throws IOException {
         // given
@@ -48,7 +48,7 @@ class GetUserLoginControllerTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("GET 으로 로그인을 실패하면, 쿠키 값이 loggedIn=false 가 되고, login_failed.html 로 Redirect 한다.")
+    @DisplayName("로그인을 실패하면, 쿠키 값이 loggedIn=false 가 되고, login_failed.html 로 Redirect 한다.")
     @Test
     void doGetLoginFailed() throws IOException {
         // given

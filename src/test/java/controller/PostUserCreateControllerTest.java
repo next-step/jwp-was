@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PostUserCreateControllerTest {
 
-    @DisplayName("POST 요청이 성공시, index.html 로 Redirect 된다.")
+    @DisplayName("회원가입 성공시, index.html 로 Redirect 된다.")
     @Test
     void doPost() throws IOException {
         // given

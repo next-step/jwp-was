@@ -17,7 +17,7 @@ class CreateUserServiceTest {
             + "&name=JaeSung"
             + "&email=javajigi@slipp.net";
 
-    @DisplayName("GET 요청이 성공시, index.html 로 Redirect 된다.")
+    @DisplayName("GET 회원가입 요청이 성공시, index.html 로 Redirect 된다.")
     @Test
     void doGet() {
         // given
@@ -42,7 +42,7 @@ class CreateUserServiceTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("POST 요청이 성공시, index.html 로 Redirect 된다.")
+    @DisplayName("POST 회원가입 요청이 성공시, index.html 로 Redirect 된다.")
     @Test
     void doPost() {
         // given

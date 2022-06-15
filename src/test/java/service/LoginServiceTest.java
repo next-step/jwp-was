@@ -22,7 +22,7 @@ class LoginServiceTest {
             "javajigi@slipp.net"
     );
 
-    @DisplayName("GET 으로 로그인을 성공하면, 쿠키 값이 loggedIn=true 가 되고, index.html 로 Redirect 한다.")
+    @DisplayName("GET 로그인 요청이 성공하면, 쿠키 값이 loggedIn=true 가 되고, index.html 로 Redirect 한다.")
     @Test
     void doGetLoginSuccess() {
         // given
@@ -49,7 +49,7 @@ class LoginServiceTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("GET 으로 로그인을 실패하면, 쿠키 값이 loggedIn=false 가 되고, login_failed.html 로 Redirect 한다.")
+    @DisplayName("GET 로그인 요청이 실패하면, 쿠키 값이 loggedIn=false 가 되고, login_failed.html 로 Redirect 한다.")
     @Test
     void doGetLoginFailed() {
         // given
@@ -75,7 +75,7 @@ class LoginServiceTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("POST 로 로그인을 성공하면, 쿠키 값이 loggedIn=true 가 되고, index.html 로 Redirect 한다.")
+    @DisplayName("POST 로그인 요청이 성공하면, 쿠키 값이 loggedIn=true 가 되고, index.html 로 Redirect 한다.")
     @Test
     void doPostLoginSuccess() {
         // given
@@ -101,7 +101,7 @@ class LoginServiceTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("POST 로 로그인을 실패하면, 쿠키 값이 loggedIn=false 가 되고, login_failed.html 로 Redirect 한다.")
+    @DisplayName("POST 로그인 요청이 실패하면, 쿠키 값이 loggedIn=false 가 되고, login_failed.html 로 Redirect 한다.")
     @Test
     void doPostLoginFailed() {
         // given

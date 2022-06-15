@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class GetUserListControllerTest {
 
-    @DisplayName("로그인이 되어 있지 않으면, login.html 로 Redirect 된다.")
+    @DisplayName("유저목록 조회시 로그인이 되어 있지 않으면, login.html 로 Redirect 된다.")
     @Test
     void notLoggedIn() throws IOException {
         // given
@@ -39,7 +39,7 @@ class GetUserListControllerTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("로그인이 되어 있다면, 200 을 응답한다.")
+    @DisplayName("유저목록 조회시 로그인이 되어 있다면, 200 을 응답한다.")
     @Test
     void success() throws IOException {
         // given
