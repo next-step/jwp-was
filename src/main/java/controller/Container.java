@@ -1,14 +1,9 @@
-package webserver;
+package controller;
 
-import controller.Controller;
-import controller.CreateUserController;
-import controller.IndexController;
-import controller.ListUserController;
-import controller.LoginController;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import service.ResourceService;
+import service.GetResourceService;
 import webserver.request.Request;
 import webserver.response.Response;
 import webserver.response.ResponseFactory;
@@ -21,10 +16,12 @@ public class Container {
     private static final Map<String, Controller> container = new HashMap<>();
 
     static {
-        container.put("GET /", new IndexController());
-        container.put("POST /user/create", new CreateUserController());
-        container.put("POST /user/login", new LoginController());
-        container.put("GET /user/list.html", new ListUserController());
+        container.put("GET /", new GetIndexController());
+        container.put("GET /user/create", new GetUserCreateController());
+        container.put("GET /user/login", new GetUserLoginController());
+        container.put("GET /user/list.html", new GetUserListController());
+        container.put("POST /user/create", new PostUserCreateController());
+        container.put("POST /user/login", new PostUserLoginController());
     }
 
     public static Response handle(Request request) throws IOException {
@@ -33,7 +30,7 @@ public class Container {
             return controller.service(request);
         }
         if (request.getMethod() == GET) {
-            return ResourceService.getResource(request);
+            return GetResourceService.doGet(request);
         }
         return ResponseFactory.createNotImplemented();
     }

@@ -5,9 +5,9 @@ import service.ListUserService;
 import webserver.request.Request;
 import webserver.response.Response;
 
-public class ListUserController implements Controller {
+public class GetUserListController implements Controller {
     @Override
     public Response service(Request request) throws IOException {
-        return ListUserService.getUserList(request);
+        return ListUserService.doGet(request);
     }
 }

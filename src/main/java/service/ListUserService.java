@@ -17,7 +17,7 @@ import webserver.response.ResponseFactory;
 public class ListUserService {
     private ListUserService() {}
 
-    public static Response getUserList(Request request) throws IOException {
+    public static Response doGet(Request request) throws IOException {
         boolean loggedIn = request.getCookie().contains("loggedIn=true");
         if (!loggedIn) {
             return ResponseFactory.createRedirect("/user/login.html");
