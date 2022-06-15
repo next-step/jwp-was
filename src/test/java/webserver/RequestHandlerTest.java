@@ -13,9 +13,10 @@ class RequestHandlerTest {
     void index() throws IOException, URISyntaxException {
         RequestHandler requestHandler = new RequestHandler(null);
 
-        Controller controller = requestHandler.match(new Request("GET /index.html HTTP/1.1"));
+        Request request = new Request("GET /index.html HTTP/1.1");
 
-        Response response = controller.serving();
+        Controller controller = requestHandler.match(request.getRequestLine().getPath());
+        Response response = controller.serving(request);
 
         assertThat(response.getPath()).isEqualTo("index.html");
         assertThat(response.getContentType()).isEqualTo("text/html;charset=utf-8");
