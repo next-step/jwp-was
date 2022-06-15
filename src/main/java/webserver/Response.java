@@ -1,20 +1,14 @@
 package webserver;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Response {
     private String path;
-    private byte[] bytes;
 
-    public Response(String path) throws IOException, URISyntaxException {
+    public Response(String path) {
         this.path = path;
-
-        String filePath = "./webapp/" + path;
-
-        this.bytes = Files.readAllBytes(Paths.get(filePath));
     }
 
     public String getContentType() {
@@ -25,7 +19,7 @@ public class Response {
         return path;
     }
 
-    public byte[] getBytes() {
-        return bytes;
+    public byte[] getBytes() throws IOException {
+        return Files.readAllBytes(Paths.get("./webapp/" + path));
     }
 }

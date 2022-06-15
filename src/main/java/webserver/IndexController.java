@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 
 public class IndexController implements Controller {
 
-    public Response serving(Request request) throws IOException, URISyntaxException {
+    public Response serving(Request request) {
         RequestLine requestLine = request.getRequestLine();
 
         String path = requestLine.getPath();

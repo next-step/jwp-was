@@ -36,10 +36,10 @@
   - HTTP method인 GET, POST를 enum으로 구현한다.
 
 ### Step 2
-- [ ] 요구사항 1 
+- [x] 요구사항 1 
   - http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
 
-- [ ] 요구사항 2
+- [x] 요구사항 2
   - “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입 할 수 있다.
   - Restful 예제: /create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net
 

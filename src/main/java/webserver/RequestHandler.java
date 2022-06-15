@@ -71,12 +71,12 @@ public class RequestHandler implements Runnable {
     }
 
     public Controller match(String url) {
-        if (url.indexOf(".js") != -1 || url.indexOf(".css") != -1 || url.indexOf(".ico") != -1) {
+        if (url.indexOf(".js") != -1 || url.indexOf(".css") != -1 || url.indexOf(".ico") != -1 || url.indexOf(".html") != -1) {
             return new StaticResourceController();
         }
 
-        if (url.indexOf("index") != -1) {
-            return new IndexController();
+        if (url.indexOf("/user/create") != -1) {
+            return new CreatUserController();
         }
 
         return null;

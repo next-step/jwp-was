@@ -11,7 +11,7 @@ public class StaticResourceController implements Controller {
 
         String[] split = path.split("/");
 
-        if (path.indexOf(".ico") != -1) {
+        if (path.indexOf(".ico") != -1 || path.indexOf(".html") != -1) {
             return new Response(path.replace(split[0], ""));
         }
 
