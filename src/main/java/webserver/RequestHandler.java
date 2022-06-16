@@ -1,8 +1,17 @@
 package webserver;
 
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.Service;
+import utils.IOUtils;
+import webserver.handler.ApiHandler;
+import webserver.handler.Handler;
+import webserver.handler.ResourceHandler;
+import webserver.request.Headers;
+import webserver.request.RequestBody;
 import webserver.request.RequestLine;
+import webserver.response.Response;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -11,12 +20,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.List;
 import java.util.Objects;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+
+    private static final List<Handler> handlers = Lists.newArrayList(new ApiHandler(), new ResourceHandler());
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -32,39 +44,58 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             String line = br.readLine();
             RequestLine requestLine = RequestLine.from(line);
-            // TODO requestLine 처리
+            Headers headers = getHeaders(br);
 
-            while (!"".equals(line)) {
-                logger.debug("{}", line);
-                line = br.readLine();
-                if (Objects.isNull(line)) {
+            int contentLength = headers.getContentLength();
+            String body = IOUtils.readData(br, contentLength);
+            logger.debug("Body: {}", body);
+            RequestBody requestBody = RequestBody.from(body);
+
+            Response response = Response.response202();
+            for (Handler handler : handlers) {
+                Service service = handler.find(requestLine);
+                if (Objects.nonNull(service)) {
+                    response = service.doService(requestLine, requestBody);
                     break;
                 }
             }
 
-
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            response200Header(dos, response);
+            responseBody(dos, response);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private Headers getHeaders(BufferedReader br) throws IOException {
+        String line = null;
+        Headers headers = Headers.empty();
+        while (!"".equals(line)) {
+            logger.debug("{}", line);
+            line = br.readLine();
+            if (Objects.isNull(line)) {
+                break;
+            }
+
+            headers.addHeaderByLine(line);
+        }
+        return headers;
+    }
+
+    private void response200Header(DataOutputStream dos, Response response) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes(String.format("HTTP/1.1 %s OK \r\n", response.getCode()));
+            dos.writeBytes(response.makeResponseHeader());
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
+    private void responseBody(DataOutputStream dos, Response response) {
         try {
+            byte[] body = response.getBody();
             dos.write(body, 0, body.length);
             dos.flush();
         } catch (IOException e) {

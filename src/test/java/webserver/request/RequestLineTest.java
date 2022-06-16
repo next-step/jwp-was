@@ -15,7 +15,7 @@ class RequestLineTest {
 
         assertAll(
                 () -> assertEquals(requestLine.getHttpMethod(), HttpMethod.from("GET")),
-                () -> assertEquals(requestLine.getPath(), Url.from("/users")),
+                () -> assertEquals(requestLine.getUri(), Uri.from("/users")),
                 () -> assertEquals(requestLine.getProtocol(), Protocol.from("HTTP/1.1"))
         );
     }
@@ -27,7 +27,7 @@ class RequestLineTest {
 
         assertAll(
                 () -> assertEquals(requestLine.getHttpMethod(), HttpMethod.from("POST")),
-                () -> assertEquals(requestLine.getPath(), Url.from("/users")),
+                () -> assertEquals(requestLine.getUri(), Uri.from("/users")),
                 () -> assertEquals(requestLine.getProtocol(), Protocol.from("HTTP/1.1"))
         );
     }
@@ -39,7 +39,7 @@ class RequestLineTest {
 
         assertAll(
                 () -> assertEquals(requestLine.getHttpMethod(), HttpMethod.from("GET")),
-                () -> assertEquals(requestLine.getPath(), Url.from("/users?userId=javajigi&password=password&name=JaeSung")),
+                () -> assertEquals(requestLine.getUri(), Uri.from("/users?userId=javajigi&password=password&name=JaeSung")),
                 () -> assertEquals(requestLine.getProtocol(), Protocol.from("HTTP/1.1"))
         );
     }
