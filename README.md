@@ -10,10 +10,15 @@
 
 
 
-## step1. 요구사항
+## step1
 HTTP 요청과 RequestLine을 파싱해 원하는 값을 가져올 수 있는 API를 제공해야 한다.(RequestLine은 HTTP 요청의 첫번째 라인을 의미한다.)
 
 - 요청 값을 파싱해서 결과 값을 반환하는 Parser 클래스와 parse 메소드를 구현한다.
 - 파싱된 결과 값을 저장할 오브젝트(RequestLine)를 추가한다.
   - HttpMethod, Protocol(protocol, version), Uri(path, QueryString) 오브젝트로 구성된다.
 
+## step2
+
+1. http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
+   1. get request header, requestLine
+   2. path 파일 읽어 응답

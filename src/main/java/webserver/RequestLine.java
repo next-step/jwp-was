@@ -14,6 +14,18 @@ public class RequestLine {
         this.protocol = protocol;
     }
 
+    public HttpMethod getHttpMethod() {
+        return httpMethod;
+    }
+
+    public Uri getUri() {
+        return uri;
+    }
+
+    public Protocol getProtocol() {
+        return protocol;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
