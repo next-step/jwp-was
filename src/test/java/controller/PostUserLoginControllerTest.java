@@ -4,6 +4,7 @@ import db.DataBase;
 import java.io.IOException;
 import java.util.Arrays;
 import model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.request.Request;
@@ -15,6 +16,11 @@ import webserver.response.Response;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PostUserLoginControllerTest {
+
+    @BeforeEach
+    void setUp() {
+        DataBase.clear();
+    }
 
     @DisplayName("POST 로그인 요청이 성공하면, 쿠키 값이 loggedIn=true 가 되고, index.html 로 Redirect 한다.")
     @Test

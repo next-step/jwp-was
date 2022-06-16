@@ -1,10 +1,8 @@
 package db;
 
+import com.google.common.collect.Maps;
 import java.util.Collection;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
-
 import model.User;
 
 public class DataBase {
@@ -20,5 +18,9 @@ public class DataBase {
 
     public static Collection<User> findAll() {
         return users.values();
+    }
+
+    public static void clear() {
+        users.clear();
     }
 }
