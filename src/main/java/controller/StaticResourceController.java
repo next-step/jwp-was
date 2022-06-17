@@ -1,11 +1,12 @@
-package webserver;
+package controller;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import webserver.Request;
+import webserver.RequestLine;
+import webserver.Response;
 
 public class StaticResourceController implements Controller {
 
-    public Response serving(Request request) throws IOException, URISyntaxException {
+    public Response serving(Request request) {
         RequestLine requestLine = request.getRequestLine();
         String path = requestLine.getPath();
 

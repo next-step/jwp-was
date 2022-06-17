@@ -27,7 +27,6 @@ public class RequestHandler implements Runnable {
             logger.debug("request line: {}", line);
 
             Request request = new Request(line);
-            Controller controller = match(request.getRequestLine().getPath());
 
             while (!line.equals("")) {
                 line = bufferedReader.readLine();
@@ -36,7 +35,7 @@ public class RequestHandler implements Runnable {
 
             Response response;
             try {
-                response = controller.serving(request);
+                response = DispatcherServlet.match(request);
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }
@@ -68,17 +67,5 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    public Controller match(String url) {
-        if (url.indexOf(".js") != -1 || url.indexOf(".css") != -1 || url.indexOf(".ico") != -1 || url.indexOf(".html") != -1) {
-            return new StaticResourceController();
-        }
-
-        if (url.indexOf("/user/create") != -1) {
-            return new CreatUserController();
-        }
-
-        return null;
     }
 }

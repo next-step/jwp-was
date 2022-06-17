@@ -1,7 +1,6 @@
 package webserver;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import controller.Controller;
 
 public class IndexController implements Controller {
 

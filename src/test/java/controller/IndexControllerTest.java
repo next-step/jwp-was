@@ -1,21 +1,24 @@
-package webserver;
+package controller;
 
+import controller.Controller;
 import org.junit.jupiter.api.Test;
+import webserver.IndexController;
+import webserver.Request;
+import webserver.Response;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RequestHandlerTest {
+class IndexControllerTest {
 
     @Test
-    void index() throws IOException, URISyntaxException {
-        RequestHandler requestHandler = new RequestHandler(null);
-
+    void serving() throws IOException, URISyntaxException {
         Request request = new Request("GET /index.html HTTP/1.1");
 
-        Controller controller = requestHandler.match(request.getRequestLine().getPath());
+        Controller controller = new IndexController();
+
         Response response = controller.serving(request);
 
         assertThat(response.getPath()).isEqualTo("index.html");
