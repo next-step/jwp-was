@@ -10,6 +10,6 @@ public class IndexController implements Controller {
         String path = requestLine.getPath();
         String[] split = path.split("/");
 
-        return new Response(path.replace(split[0], ""));
+        return new Response("text/html;charset=utf-8", path.replace(split[0], ""));
     }
 }

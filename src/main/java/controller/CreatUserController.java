@@ -9,7 +9,7 @@ import webserver.Response;
 public class CreatUserController implements Controller {
     public Response serving(Request request) {
         DataBase.addUser(getUser(request));
-        return new Response("/index.html");
+        return new Response("text/html;charset=utf-8", "/index.html");
     }
 
     private User getUser(Request request) {

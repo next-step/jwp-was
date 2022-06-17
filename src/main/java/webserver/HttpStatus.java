@@ -10,4 +10,9 @@ public enum HttpStatus {
         this.code = code;
         this.message = message;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%d %s", code, message);
+    }
 }

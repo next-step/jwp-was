@@ -66,5 +66,5 @@
     - 로그인하지 않은 상태라면 로그인 페이지(login.html)로 이동한다.
   - 동적으로 html을 생성하기 위해 handlebars.java template engine을 활용한다.
 
-- [ ] 요구사항 7
+- [x] 요구사항 7
   - Stylesheet 파일을 지원하도록 구현하도록 한다.

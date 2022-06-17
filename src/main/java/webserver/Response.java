@@ -5,14 +5,17 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Response {
-    private String path;
 
-    public Response(String path) {
+    private final String contentType;
+    private final String path;
+
+    public Response(final String contentType, final String path) {
+        this.contentType = contentType;
         this.path = path;
     }
 
     public String getContentType() {
-        return "text/html;charset=utf-8";
+        return contentType;
     }
 
     public String getPath() {
@@ -20,7 +23,27 @@ public class Response {
     }
 
     public byte[] getBytes() throws IOException {
-        return Files.readAllBytes(Paths.get("./webapp/" + path));
+        byte[] body = Files.readAllBytes(Paths.get("./webapp/" + path));
+        byte[] header = getHeader(body.length);
+        return getBytes(header, body);
+    }
+
+    private byte[] getBytes(byte[] header, byte[] body) {
+        byte[] responseBytes = new byte[header.length + body.length];
+        System.arraycopy(header, 0, responseBytes, 0, header.length);
+        System.arraycopy(body, 0, responseBytes, header.length, body.length);
+        return responseBytes;
+    }
+
+    private byte[] getHeader(long bodyLength) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.format("%s %s \r\n", "HTTP/1.1", getStatus().toString()));
+        stringBuilder.append(String.format("Content-Type: %s \r\n", contentType));
+        stringBuilder.append(String.format("Content-Length: %s \r\n", bodyLength));
+
+        stringBuilder.append("\r\n");
+
+        return stringBuilder.toString().getBytes();
     }
 
     public HttpStatus getStatus() {
