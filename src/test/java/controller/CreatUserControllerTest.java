@@ -4,6 +4,7 @@ import db.DataBase;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import webserver.HttpStatus;
 import webserver.Request;
 import webserver.Response;
 
@@ -32,6 +33,7 @@ class CreatUserControllerTest {
 
         Response response = controller.serving(request);
 
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
         assertThat(response.getContentType()).isEqualTo("text/html;charset=utf-8");
         assertThat(response.getPath()).isEqualTo("/index.html");
 

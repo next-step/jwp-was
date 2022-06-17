@@ -22,4 +22,8 @@ public class Response {
     public byte[] getBytes() throws IOException {
         return Files.readAllBytes(Paths.get("./webapp/" + path));
     }
+
+    public HttpStatus getStatus() {
+        return HttpStatus.OK;
+    }
 }

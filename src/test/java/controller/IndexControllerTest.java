@@ -2,6 +2,7 @@ package controller;
 
 import controller.Controller;
 import org.junit.jupiter.api.Test;
+import webserver.HttpStatus;
 import webserver.IndexController;
 import webserver.Request;
 import webserver.Response;
@@ -21,7 +22,8 @@ class IndexControllerTest {
 
         Response response = controller.serving(request);
 
-        assertThat(response.getPath()).isEqualTo("index.html");
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getPath()).isEqualTo("/index.html");
         assertThat(response.getContentType()).isEqualTo("text/html;charset=utf-8");
     }
 
