@@ -1,4 +1,4 @@
-package webserver.request.exception;
+package webserver.common.exception;
 
 public class IllegalProtocolException extends RuntimeException {
     private static final String MESSAGE = "%s; 부적절한 Protocol 입니다.";

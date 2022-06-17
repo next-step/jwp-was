@@ -1,19 +1,26 @@
 package webserver.request;
 
+import webserver.common.Protocol;
 import webserver.request.exception.IllegalRequestLineException;
 
 public class RequestLine {
-    private final HttpMethod method;
+    private final RequestMethod method;
     private final Uri uri;
     private final Protocol protocol;
 
-    public RequestLine(HttpMethod method, Uri uri, Protocol protocol) {
+    public RequestLine(RequestMethod method, Uri uri) {
+        this.method = method;
+        this.uri = uri;
+        this.protocol = Protocol.HTTP_1_1;
+    }
+
+    private RequestLine(RequestMethod method, Uri uri, Protocol protocol) {
         this.method = method;
         this.uri = uri;
         this.protocol = protocol;
     }
 
-    public HttpMethod getMethod() {
+    public RequestMethod getMethod() {
         return method;
     }
 
@@ -29,6 +36,10 @@ public class RequestLine {
         return protocol;
     }
 
+    public String hash() {
+        return String.format("%s %s", getMethod(), getPath());
+    }
+
     public static RequestLine from(String requestLine) {
         if (requestLine == null) {
             throw new IllegalRequestLineException("NULL");
@@ -39,7 +50,7 @@ public class RequestLine {
             throw new IllegalRequestLineException(requestLine);
         }
         return new RequestLine(
-                HttpMethod.from(requestInfo[0]),
+                RequestMethod.from(requestInfo[0]),
                 Uri.from(requestInfo[1]),
                 Protocol.from(requestInfo[2])
         );
