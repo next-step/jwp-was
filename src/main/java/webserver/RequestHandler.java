@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
+import db.DataBase;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -36,7 +38,10 @@ public class RequestHandler implements Runnable {
             RequestLine requestLine = new RequestLineParser().parse(readLine);
             String path = requestLine.getUri().getPath();
 
-            System.out.println("path = " + path);
+            if ("/user/create".equals(path)) {
+                QueryString queryString = requestLine.getUri().getQueryString();
+                DataBase.addUser(new User(queryString.get("userId"), queryString.get("password"), queryString.get("name"), queryString.get("email")));
+            }
 
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = FileIoUtils.loadFileFromClasspath("./templates/" + path);
