@@ -10,15 +10,18 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import model.User;
-import webserver.request.Request;
 import webserver.response.Response;
 import webserver.response.ResponseFactory;
 
-public class ListUserService {
-    private ListUserService() {}
+public class UserService {
+    private UserService() {}
 
-    public static Response doGet(Request request) throws IOException {
-        boolean loggedIn = request.getCookie().contains("loggedIn=true");
+    public static Response createUser(User user) {
+        DataBase.addUser(user);
+        return ResponseFactory.createRedirect("/index.html");
+    }
+
+    public static Response getUserList(boolean loggedIn) throws IOException {
         if (!loggedIn) {
             return ResponseFactory.createRedirect("/user/login.html");
         }

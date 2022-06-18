@@ -4,9 +4,14 @@ import webserver.request.Request;
 import webserver.response.Response;
 import webserver.response.ResponseFactory;
 
-public class GetIndexController implements Controller {
+public class RedirectIndexController extends AbstractController {
     @Override
-    public Response service(Request request) {
+    Response doGet(Request request) {
         return ResponseFactory.createRedirect("/index.html");
+    }
+
+    @Override
+    Response doPost(Request request) {
+        return ResponseFactory.createNotImplemented();
     }
 }

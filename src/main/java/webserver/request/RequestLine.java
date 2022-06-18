@@ -36,10 +36,6 @@ public class RequestLine {
         return protocol;
     }
 
-    public String hash() {
-        return String.format("%s %s", getMethod(), getPath());
-    }
-
     public static RequestLine from(String requestLine) {
         if (requestLine == null) {
             throw new IllegalRequestLineException("NULL");
