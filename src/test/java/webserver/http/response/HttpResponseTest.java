@@ -1,6 +1,8 @@
-package webserver.response;
+package webserver.http.response;
 
 import org.junit.jupiter.api.Test;
+import webserver.http.Cookie;
+import webserver.http.response.HttpResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -104,7 +106,8 @@ class HttpResponseTest {
         assertThat(rawHttpResponse)
                 .isEqualTo("HTTP/1.1 302 Found \r\n" +
                         "Location: /index.html\r\n" +
-                        "Set-Cookie: logined=true; Path=/\r\n"
+                        "Set-Cookie: logined=true; Path=/\r\n" +
+                        "\r\n"
                 );
     }
 }

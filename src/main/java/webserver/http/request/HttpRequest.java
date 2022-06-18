@@ -1,13 +1,13 @@
-package webserver.request;
+package webserver.http.request;
 
 import utils.IOUtils;
-import webserver.HttpMethod;
+import webserver.http.Cookie;
+import webserver.http.HttpMethod;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
 public class HttpRequest {
     private final RequestLine requestLine;
@@ -67,11 +67,11 @@ public class HttpRequest {
         return this.requestLine.getPath();
     }
 
-    public String getCookie(final String cookieName) {
-        return Arrays.stream(this.headers.get("Cookie").split("; "))
-                .filter(it -> it.startsWith(cookieName + "="))
-                .findFirst()
-                .map(it -> it.split("=")[1])
-                .orElseThrow(() -> new IllegalArgumentException("Cannot get Cookie: " + cookieName));
+    public Cookie getCookie(final String cookieName) {
+        return this.headers.getCookie(cookieName);
+    }
+
+    public String getQueryParameter(final String key) {
+        return this.requestLine.getQueryParameter(key);
     }
 }

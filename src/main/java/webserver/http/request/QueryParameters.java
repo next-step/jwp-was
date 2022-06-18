@@ -1,4 +1,4 @@
-package webserver.request;
+package webserver.http.request;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +23,17 @@ public class QueryParameters {
         return new HashMap<>(this.parameters);
     }
 
-    public String getParameterOrNull(final String key) {
+    public String get(final String key) {
+        final String parameter = this.getOrNull(key);
+
+        if (parameter == null){
+            throw new IllegalArgumentException("Cannot get query parameter for " + key);
+        }
+
+        return parameter;
+    }
+
+    public String getOrNull(final String key) {
         return this.parameters.get(key);
     }
 }

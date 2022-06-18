@@ -1,13 +1,15 @@
-package webserver.request;
+package webserver.http.request;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import webserver.http.Cookie;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
 public class RequestHeaders {
     private final Map<String, String> headers;
+    private final List<Cookie> cookies;
 
     public static Builder builder() {
         return new Builder();
@@ -15,6 +17,21 @@ public class RequestHeaders {
 
     private RequestHeaders(final Map<String, String> headers) {
         this.headers = headers;
+        this.cookies = this.getCookies();
+    }
+
+    private List<Cookie> getCookies() {
+        final String cookies = this.getOrNull("Cookie");
+
+        if (cookies == null) {
+            return Collections.emptyList();
+        }
+
+        return Arrays.stream(cookies.split(";"))
+                .filter(it -> !it.isBlank())
+                .map(it -> it.trim().split("="))
+                .map(it -> new Cookie(it[0], it[1]))
+                .collect(Collectors.toList());
     }
 
     public String get(final String headerName) {
@@ -55,11 +72,20 @@ public class RequestHeaders {
         return this.get("Accept");
     }
 
+    public Cookie getCookie(final String cookieName) {
+        return this.cookies.stream()
+                .filter(it -> it.getName().equals(cookieName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Cannot get Cookie: " + cookieName));
+    }
+
+    // RequestHeaders.Builder
     public static class Builder {
         private final List<String> headerNameAndValues = new ArrayList<>();
 
-        public void add(final String headerNameAndValue) {
+        public Builder add(final String headerNameAndValue) {
             this.headerNameAndValues.add(headerNameAndValue);
+            return this;
         }
 
         public RequestHeaders build() {

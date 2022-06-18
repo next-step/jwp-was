@@ -8,10 +8,12 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.HttpRequest;
-import webserver.request.RequestBody;
-import webserver.response.Cookie;
-import webserver.response.HttpResponse;
+import webserver.http.Cookie;
+import webserver.http.HttpMethod;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestBody;
+import webserver.http.response.HttpResponse;
+import webserver.http.template.handlebars.HandlebarsTemplateLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,14 +21,13 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private Socket connection;
+    private final Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -61,25 +62,18 @@ public class RequestHandler implements Runnable {
             }
 
             if (httpRequest.getPath().equals("/user/list")) {
-                final boolean logined = Boolean.parseBoolean(httpRequest.getCookie("logined"));
+                final boolean logined = Boolean.parseBoolean(httpRequest.getCookie("logined").getValue());
 
                 if (!logined) {
                     httpResponse.responseRedirect("/index.html");
                     return;
                 }
 
-                // TODO refactor
-                TemplateLoader loader = new ClassPathTemplateLoader();
-                loader.setPrefix("/templates");
-                loader.setSuffix(".html");
-                Handlebars handlebars = new Handlebars(loader);
-                handlebars.registerHelper("inc", (context, options) -> (int) context + 1);
-
                 final Collection<User> users = DataBase.findAll();
                 final Map<String, Object> params = Map.of("users", users);
 
-                Template template = handlebars.compile("user/list");
-                String page = template.apply(params);
+                final HandlebarsTemplateLoader handlebarsTemplateLoader = new HandlebarsTemplateLoader();
+                final String page = handlebarsTemplateLoader.load("user/list", params);
 
                 httpResponse.setContentType("text/html;charset=utf-8");
                 httpResponse.setBody(page);

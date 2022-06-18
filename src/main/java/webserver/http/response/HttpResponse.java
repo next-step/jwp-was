@@ -1,18 +1,17 @@
-package webserver.response;
+package webserver.http.response;
 
 import utils.FileIoUtils;
+import webserver.http.Cookie;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 
-// Add VOs
 public class HttpResponse {
-    private final Map<String, String> headers = new HashMap<>();
+    private final ResponseHeaders headers = new ResponseHeaders();
     private byte[] body = null;
 
     private final DataOutputStream out;
@@ -22,7 +21,7 @@ public class HttpResponse {
     }
 
     public void setContentType(final String contentType) {
-        this.headers.put("Content-Type", contentType);
+        this.headers.add("Content-Type", contentType);
     }
 
     public void setCookie(final Cookie cookie) throws IOException {
@@ -30,7 +29,7 @@ public class HttpResponse {
                 cookie.getName() + "=" + cookie.getValue() + "; " +
                         "Path" + "=" + cookie.getPath();
 
-        this.headers.put("Set-Cookie: ", setCookieHeaderValue);
+        this.headers.add("Set-Cookie", setCookieHeaderValue);
     }
 
     public void setBody(final String body) {
@@ -39,9 +38,8 @@ public class HttpResponse {
 
     public void setBody(final byte[] body) {
         this.body = body;
-        this.headers.put("Content-Length", Integer.toString(this.body.length));
+        this.headers.add("Content-Length", Integer.toString(this.body.length));
     }
-
 
     public void setBodyContentPath(final String contentPath) throws IOException, URISyntaxException {
         if (contentPath.endsWith(".html")) {
@@ -96,8 +94,10 @@ public class HttpResponse {
     }
 
     private void writeResponseHeaders() throws IOException {
-        if (!this.headers.isEmpty()) {
-            for (final Map.Entry<String, String> header : this.headers.entrySet()) {
+        final Map<String, String> headers = this.headers.getAll();
+
+        if (!headers.isEmpty()) {
+            for (final Map.Entry<String, String> header : headers.entrySet()) {
                 final String headerName = header.getKey();
                 final String headerValue = header.getValue();
                 this.out.writeBytes(headerName + ": " + headerValue + "\r\n");
