@@ -6,10 +6,16 @@ import java.nio.file.Paths;
 
 public class Response {
 
+    private final HttpStatus httpStatus;
     private final String contentType;
     private final String path;
 
     public Response(final String contentType, final String path) {
+        this(HttpStatus.OK, contentType, path);
+    }
+
+    public Response(final HttpStatus httpStatus, final String contentType, final String path) {
+        this.httpStatus = httpStatus;
         this.contentType = contentType;
         this.path = path;
     }
@@ -47,6 +53,6 @@ public class Response {
     }
 
     public HttpStatus getStatus() {
-        return HttpStatus.OK;
+        return httpStatus;
     }
 }

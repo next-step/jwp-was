@@ -21,18 +21,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-
-            String line = bufferedReader.readLine();
-            logger.debug("request line: {}", line);
-
-            Request request = new Request(line);
-
-            while (!line.equals("")) {
-                line = bufferedReader.readLine();
-                logger.debug("header: {}", line);
-            }
-
+            Request request = RequestFactory.create(new BufferedReader(new InputStreamReader(in, "UTF-8")));
             Response response;
             try {
                 response = DispatcherServlet.match(request);

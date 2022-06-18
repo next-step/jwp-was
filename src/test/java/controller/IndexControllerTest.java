@@ -1,11 +1,7 @@
 package controller;
 
-import controller.Controller;
 import org.junit.jupiter.api.Test;
-import webserver.HttpStatus;
-import webserver.IndexController;
-import webserver.Request;
-import webserver.Response;
+import webserver.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -16,11 +12,9 @@ class IndexControllerTest {
 
     @Test
     void serving() throws IOException, URISyntaxException {
-        Request request = new Request("GET /index.html HTTP/1.1");
+        Request request = new Request(new RequestLine("GET /index.html HTTP/1.1"), null, null);
 
-        Controller controller = new IndexController();
-
-        Response response = controller.serving(request);
+        Response response = DispatcherServlet.match(request);
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
         assertThat(response.getPath()).isEqualTo("/index.html");

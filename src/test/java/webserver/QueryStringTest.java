@@ -17,6 +17,15 @@ class QueryStringTest {
     }
 
     @Test
+    void parseWithoutPath() {
+        QueryString queryString = QueryString.parse("userId=javajigi&password=password&name=JaeSung");
+
+        assertThat(queryString.get("userId")).isEqualTo("javajigi");
+        assertThat(queryString.get("password")).isEqualTo("password");
+        assertThat(queryString.get("name")).isEqualTo("JaeSung");
+    }
+
+    @Test
     void parseEmpty() {
         QueryString queryString = QueryString.parse(null);
 

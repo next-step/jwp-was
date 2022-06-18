@@ -1,6 +1,8 @@
-package webserver;
+package controller;
 
-import controller.Controller;
+import webserver.Request;
+import webserver.RequestLine;
+import webserver.Response;
 
 public class IndexController implements Controller {
 

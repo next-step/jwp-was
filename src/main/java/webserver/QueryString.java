@@ -57,7 +57,7 @@ public class QueryString {
         String[] query = value.split(QUERY_PARAM_SYMBOL);
 
         if (query.length != HAS_PARAMS_SIZE) {
-            return EMPTY_VALUE;
+            return value;
         }
 
         return query[1];

@@ -4,22 +4,35 @@ import webserver.Request;
 import webserver.RequestLine;
 import webserver.Response;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class StaticResourceController implements Controller {
 
     public Response serving(Request request) {
         RequestLine requestLine = request.getRequestLine();
-        String path = requestLine.getPath();
+        String resourcePath = getResourcePath(requestLine.getPath());
 
-        String[] split = path.split("/");
-
-        if (path.indexOf(".ico") != -1 || path.indexOf(".html") != -1) {
-            return new Response(request.getContentType(), path.replace(split[0], ""));
+        if (!isExists(resourcePath)) {
+            throw new IllegalArgumentException("NotFound");
         }
 
-//        if (path.indexOf(".css") != -1) {
-//            return new Response("text/css", "static" + path.replace(split[0], ""));
-//        }
+        return new Response(request.getContentType(), resourcePath);
+    }
 
-        return new Response(request.getContentType(), "static" + path.replace(split[0], ""));
+    private boolean isExists(String resourcePath) {
+        return Files.exists(Paths.get("./webapp/" + resourcePath));
+    }
+
+    public String getResourcePath(String path) {
+        String[] split = path.split("/");
+
+        String filePath = path.replace(split[0], "");
+
+        if (path.indexOf(".ico") != -1 || path.indexOf(".html") != -1) {
+            return filePath;
+        }
+
+        return "static" + path;
     }
 }

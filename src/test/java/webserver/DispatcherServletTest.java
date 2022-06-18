@@ -11,11 +11,11 @@ class DispatcherServletTest {
 
     @Test
     void match() throws IOException, URISyntaxException {
-        Request request = new Request("GET /index.html HTTP/1.1");
+        Request request = new Request(new RequestLine("GET /index.html HTTP/1.1"), null, null);
 
         Response response = DispatcherServlet.match(request);
 
-        assertThat(response.getPath()).isEqualTo("index.html");
+        assertThat(response.getPath()).isEqualTo("/index.html");
         assertThat(response.getContentType()).isEqualTo("text/html;charset=utf-8");
     }
 
