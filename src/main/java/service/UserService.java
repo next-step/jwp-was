@@ -1,15 +1,12 @@
 package service;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import model.User;
+import utils.TemplateUtils;
 import webserver.response.Response;
 import webserver.response.ResponseFactory;
 
@@ -30,14 +27,9 @@ public class UserService {
     }
 
     private static String renderUserList(Collection<User> users) throws IOException {
+        String templateLocation = "/user/list.html";
         Map<String, Object> parameterMap = new HashMap<>();
         parameterMap.put("users", users);
-
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix("");
-        Handlebars handlebars = new Handlebars(loader);
-        Template template = handlebars.compile("/user/list.html");
-        return template.apply(parameterMap);
+        return TemplateUtils.render(templateLocation, parameterMap);
     }
 }
