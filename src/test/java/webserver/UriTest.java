@@ -19,6 +19,6 @@ class UriTest {
         assertThat(actual.getPath()).isEqualTo("/users");
         assertThat(actual.getQueryString().get("userId")).isEqualTo("javajigi");
         assertThat(actual2.getPath()).isEqualTo("/users");
-        assertThat(actual2.getQueryString()).isEqualTo(new QueryString());
+        assertThat(actual2.getQueryString()).isEqualTo(new HttpParameter());
     }
 }

@@ -4,6 +4,8 @@ import java.util.Objects;
 
 public class RequestLine {
 
+    private final static String SPACE_DELIMITER = " ";
+
     private final HttpMethod httpMethod;
     private final Uri uri;
     private final Protocol protocol;
@@ -12,6 +14,14 @@ public class RequestLine {
         this.httpMethod = httpMethod;
         this.uri = uri;
         this.protocol = protocol;
+    }
+
+    public static RequestLine from(String input) {
+        String[] splitInput = input.split(SPACE_DELIMITER);
+
+        return new RequestLine(HttpMethod.valueOf(splitInput[0]),
+                Uri.from(splitInput[1]),
+                Protocol.from(splitInput[2]));
     }
 
     public HttpMethod getHttpMethod() {
