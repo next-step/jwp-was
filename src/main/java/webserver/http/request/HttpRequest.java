@@ -71,6 +71,10 @@ public class HttpRequest {
         return this.headers.getCookie(cookieName);
     }
 
+    public Cookie getCookieOrNull(final String cookieName) {
+        return this.headers.getCookieOrNull(cookieName);
+    }
+
     public String getQueryParameter(final String key) {
         return this.requestLine.getQueryParameter(key);
     }

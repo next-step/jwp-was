@@ -73,10 +73,20 @@ public class RequestHeaders {
     }
 
     public Cookie getCookie(final String cookieName) {
+        final Cookie cookie = this.getCookieOrNull(cookieName);
+
+        if (cookie == null) {
+            throw new IllegalArgumentException("Cannot get Cookie: " + cookieName);
+        }
+
+        return cookie;
+    }
+
+    public Cookie getCookieOrNull(final String cookieName) {
         return this.cookies.stream()
                 .filter(it -> it.getName().equals(cookieName))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Cannot get Cookie: " + cookieName));
+                .orElse(null);
     }
 
     // RequestHeaders.Builder

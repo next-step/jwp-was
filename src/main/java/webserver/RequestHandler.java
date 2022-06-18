@@ -58,7 +58,12 @@ public class RequestHandler implements Runnable {
             }
 
             if (httpRequest.getPath().equals("/user/list")) {
-                final boolean logined = Boolean.parseBoolean(httpRequest.getCookie("logined").getValue());
+                Cookie cookie = httpRequest.getCookieOrNull("logined");
+
+                boolean logined = false;
+                if (cookie != null) {
+                    logined = Boolean.parseBoolean(cookie.getValue());
+                }
 
                 if (!logined) {
                     httpResponse.responseRedirect("/index.html");
