@@ -10,7 +10,7 @@ public class LoginService {
 
     public static Response login(String userId, String password) {
         User user = DataBase.findUserById(userId);
-        if (user == null || !user.getPassword().equals(password)) {
+        if (user == null || !user.matchPassword(password)) {
             return ResponseFactory.createRedirect("/login_failed.html")
                     .setCookie("loggedIn=false");
         }
