@@ -48,4 +48,13 @@ public class RequestLine {
     public int hashCode() {
         return Objects.hash(httpMethod, uri, protocol);
     }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "httpMethod=" + httpMethod +
+                ", uri=" + uri +
+                ", protocol=" + protocol +
+                '}';
+    }
 }

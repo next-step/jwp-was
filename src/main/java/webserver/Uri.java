@@ -48,4 +48,12 @@ public class Uri {
     public int hashCode() {
         return Objects.hash(path, queryString);
     }
+
+    @Override
+    public String toString() {
+        return "Uri{" +
+                "path='" + path + '\'' +
+                ", queryString=" + queryString +
+                '}';
+    }
 }

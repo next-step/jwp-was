@@ -2,6 +2,7 @@ package webserver;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -11,9 +12,11 @@ public class HttpHeader {
     private static final String CONTENT_LENGTH = "Content-Length";
 
     private final Map<String, String> header;
+    private final Cookies cookies;
 
-    private HttpHeader(Map<String, String> header) {
+    private HttpHeader(Map<String, String> header, Cookies cookies) {
         this.header = header;
+        this.cookies = cookies;
     }
 
     public static HttpHeader from(List<String> request) {
@@ -25,7 +28,11 @@ public class HttpHeader {
                         keyValue -> keyValue[1]
                 ));
 
-        return new HttpHeader(collect);
+        Cookies cookies = Optional.ofNullable(collect.get("Cookie"))
+                .map(Cookies::from)
+                .orElse(new Cookies());
+
+        return new HttpHeader(collect, cookies);
     }
 
     public String get(String key) {
@@ -42,8 +49,8 @@ public class HttpHeader {
         }
     }
 
-    public boolean isSetCookie() {
-        return header.containsKey("Cookie") &&
-                "logined=true".equals(get("Cookie"));
+    public boolean isLogined() {
+        Cookie cookie = cookies.get("logined");
+        return !Objects.isNull(cookie) && Boolean.parseBoolean(cookie.getValue());
     }
 }

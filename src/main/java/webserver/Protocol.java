@@ -43,4 +43,12 @@ public class Protocol {
     public int hashCode() {
         return Objects.hash(protocol, version);
     }
+
+    @Override
+    public String toString() {
+        return "Protocol{" +
+                "protocol='" + protocol + '\'' +
+                ", version='" + version + '\'' +
+                '}';
+    }
 }

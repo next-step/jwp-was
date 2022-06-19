@@ -41,6 +41,7 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
             RequestLine requestLine = RequestLine.from(br.readLine());
+            logger.debug("RequestLine : {}", requestLine);
 
             String line = null;
             List<String> request = new ArrayList<>();
@@ -53,10 +54,11 @@ public class RequestHandler implements Runnable {
                     break;
                 }
             }
+
             request.forEach(logger::debug);
 
             HttpHeader httpHeader = HttpHeader.from(request);
-            boolean logined = httpHeader.isSetCookie();
+            boolean logined = httpHeader.isLogined();
 
             int contentLength = httpHeader.getContentLength();
             HttpParameter httpBody = HttpParameter.from(IOUtils.readData(br, contentLength));
@@ -84,7 +86,7 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
-            if ("/user/list".equals(path)) {
+            if ("/user/list.html".equals(path)) {
                 if (!logined) {
                     httpResponse.responseRedirectSetCookie("/user/login_failed.html", false);
                     return;

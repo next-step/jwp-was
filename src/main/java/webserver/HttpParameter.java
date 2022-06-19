@@ -59,4 +59,11 @@ public class HttpParameter {
     public int hashCode() {
         return Objects.hash(parameter);
     }
+
+    @Override
+    public String toString() {
+        return "HttpParameter{" +
+                "parameter=" + parameter +
+                '}';
+    }
 }

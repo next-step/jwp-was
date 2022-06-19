@@ -48,6 +48,6 @@ class HttpHeaderTest {
 
         HttpHeader actual = HttpHeader.from(requestHeader);
 
-        assertThat(actual.isSetCookie()).isTrue();
+        assertThat(actual.isLogined()).isTrue();
     }
 }
