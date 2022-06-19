@@ -46,7 +46,7 @@
 - [x] 요구사항 3
   - http://localhost:8080/user/form.html 파일의 form 태그 method를 get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.
 
-- [ ] 요구사항 4
+- [x] 요구사항 4
   - “회원가입”을 완료 후 /index.html 페이지로 이동한다.
 
 - [ ] 요구사항 5

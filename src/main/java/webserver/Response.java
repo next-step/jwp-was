@@ -46,6 +46,7 @@ public class Response {
         stringBuilder.append(String.format("%s %s \r\n", "HTTP/1.1", getStatus().toString()));
         stringBuilder.append(String.format("Content-Type: %s \r\n", contentType));
         stringBuilder.append(String.format("Content-Length: %s \r\n", bodyLength));
+        stringBuilder.append(String.format("Location: %s \r\n", path));
 
         stringBuilder.append("\r\n");
 

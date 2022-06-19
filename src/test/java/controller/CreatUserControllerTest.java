@@ -38,7 +38,7 @@ class CreatUserControllerTest {
 
         Response response = DispatcherServlet.match(request);
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(response.getContentType()).isEqualTo("text/html;charset=utf-8");
         assertThat(response.getPath()).isEqualTo("/index.html");
 
