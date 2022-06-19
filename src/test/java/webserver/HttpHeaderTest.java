@@ -32,11 +32,22 @@ class HttpHeaderTest {
 
 
     @DisplayName("key 값 조회 시 결과가 없으면 예외를 반환한다")
+    @Test
     public void invalidGet() {
         List<String> requestHeader = List.of("Host: localhost:8080");
 
         HttpHeader actual = HttpHeader.from(requestHeader);
 
         assertThatThrownBy(() -> actual.get("connection")).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("로그인 성공 여부를 확인할 수 있다")
+    @Test
+    public void isLogined() {
+        List<String> requestHeader = List.of("Cookie: logined=true");
+
+        HttpHeader actual = HttpHeader.from(requestHeader);
+
+        assertThat(actual.isSetCookie()).isTrue();
     }
 }

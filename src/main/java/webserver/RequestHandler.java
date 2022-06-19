@@ -47,6 +47,7 @@ public class RequestHandler implements Runnable {
                     break;
                 }
             }
+
             HttpHeader httpHeader = HttpHeader.from(request);
 
             int contentLength = httpHeader.getContentLength();
@@ -54,6 +55,18 @@ public class RequestHandler implements Runnable {
 
             HttpResponse httpResponse = new HttpResponse(new DataOutputStream(out));
             String path = requestLine.getUri().getPath();
+
+            if ("/user/login".equals(path)) {
+                User user = DataBase.findUserById(httpBody.get("userId"));
+
+                if (Objects.nonNull(user) && user.getPassword().equals(httpBody.get("password"))) {
+                    httpResponse.responseRedirectSetCookie("/index.html", true);
+                    return;
+                }
+
+                httpResponse.responseRedirectSetCookie("/user/login_failed.html", false);
+                return;
+            }
 
             if ("/user/create".equals(path)) {
                 DataBase.addUser(new User(httpBody.get("userId"), httpBody.get("password"), httpBody.get("name"), httpBody.get("email")));
@@ -63,7 +76,7 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
-            httpResponse.responseOk(path);
+            httpResponse.responseOk(path, httpHeader.isSetCookie());
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (URISyntaxException e) {

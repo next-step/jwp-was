@@ -41,4 +41,9 @@ public class HttpHeader {
             return 0;
         }
     }
+
+    public boolean isSetCookie() {
+        return header.containsKey("Cookie") &&
+                "logined=true".equals(get("Cookie"));
+    }
 }
