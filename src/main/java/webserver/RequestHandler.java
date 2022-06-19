@@ -4,7 +4,6 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -53,42 +52,22 @@ public class RequestHandler implements Runnable {
             int contentLength = httpHeader.getContentLength();
             HttpParameter httpBody = HttpParameter.from(IOUtils.readData(br, contentLength));
 
+            HttpResponse httpResponse = new HttpResponse(new DataOutputStream(out));
             String path = requestLine.getUri().getPath();
 
             if ("/user/create".equals(path)) {
                 DataBase.addUser(new User(httpBody.get("userId"), httpBody.get("password"), httpBody.get("name"), httpBody.get("email")));
-                DataBase.findAll().forEach(user -> logger.debug("user : {}", user));
+                DataBase.findAll().forEach(user -> logger.debug("{}", user));
+
+                httpResponse.responseRedirect("/index.html");
+                return;
             }
 
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = FileIoUtils.loadFileFromClasspath("./templates/" + path);
-
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            httpResponse.responseOk(path);
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
         }
     }
 }
