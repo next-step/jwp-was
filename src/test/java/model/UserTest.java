@@ -25,7 +25,7 @@ class UserTest {
         assertThat(user.matchPassword("P@ssw0rD")).isTrue();
     }
 
-    @DisplayName("비밀번호가 다르면 true 를 반환해야한다.")
+    @DisplayName("비밀번호가 다르면 false 를 반환해야한다.")
     @Test
     void matchPasswordFalse() {
         assertThat(user.matchPassword("pw")).isFalse();

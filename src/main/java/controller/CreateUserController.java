@@ -4,25 +4,32 @@ import model.User;
 import service.UserService;
 import webserver.request.Request;
 import webserver.response.Response;
+import webserver.response.ResponseFactory;
 
 public class CreateUserController extends AbstractController {
     @Override
     Response doGet(Request request) {
-        User user = new User(request.getQuery("userId"),
+        return createUser(
+                request.getQuery("userId"),
                 request.getQuery("password"),
                 request.getQuery("name"),
                 request.getQuery("email")
         );
-        return UserService.createUser(user);
     }
 
     @Override
     Response doPost(Request request) {
-        User user = new User(request.getBody("userId"),
+        return createUser(
+                request.getBody("userId"),
                 request.getBody("password"),
                 request.getBody("name"),
                 request.getBody("email")
         );
-        return UserService.createUser(user);
+    }
+
+    private Response createUser(String userId, String password, String name, String email) {
+        User user = new User(userId, password, name, email);
+        UserService.createUser(user);
+        return ResponseFactory.createRedirect("/index.html");
     }
 }
