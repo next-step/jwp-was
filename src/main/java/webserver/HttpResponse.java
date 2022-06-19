@@ -44,14 +44,35 @@ public class HttpResponse {
     }
 
     public void responseOk(String path, boolean logined) throws IOException, URISyntaxException {
-        final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + path);
-
         dos.writeBytes("HTTP/1.1 200 OK \r\n");
-        response200Header(body.length);
-        setCookie(logined);
-        dos.writeBytes("\r\n");
 
-        responseBody(body);
+        if (path.endsWith(".html")) {
+            final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + path);
+            response200Header(body.length);
+            setCookie(logined);
+            dos.writeBytes("\r\n");
+            responseBody(body);
+        } else if (path.endsWith(".css")) {
+            final byte[] body = FileIoUtils.loadFileFromClasspath("static" + path);
+            dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
+            dos.writeBytes("\r\n");
+            responseBody(body);
+        } else if (path.endsWith(".js")) {
+            final byte[] body = FileIoUtils.loadFileFromClasspath("static" + path);
+            dos.writeBytes("Content-Type: text/javascript;charset=utf-8\r\n");
+            dos.writeBytes("\r\n");
+            responseBody(body);
+        } else if (path.contains("/fonts/")) {
+            final byte[] body = FileIoUtils.loadFileFromClasspath("static" + path);
+            dos.writeBytes("Content-Type: font/" + path.substring(path.lastIndexOf(".") + 1) + ";charset=utf-8\r\n");
+            dos.writeBytes("\r\n");
+            responseBody(body);
+        } else if (path.equals("/favicon.ico")) {
+            final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + path);
+            dos.writeBytes("image/x-icon;charset=utf-8\r\n");
+            dos.writeBytes("\r\n");
+            responseBody(body);
+        }
     }
 
     public void responseOkBody(String body, boolean logined) throws IOException {
