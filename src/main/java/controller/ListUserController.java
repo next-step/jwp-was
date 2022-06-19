@@ -1,10 +1,9 @@
 package controller;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import model.User;
+import model.Users;
 import service.UserService;
 import utils.TemplateUtils;
 import webserver.request.Request;
@@ -18,7 +17,7 @@ public class ListUserController extends AbstractController {
         if (!loggedIn) {
             return ResponseFactory.createRedirect("/user/login.html");
         }
-        String body = renderUserList(UserService.getUserList());
+        String body = renderUserList(UserService.getUsers());
         return ResponseFactory.createOK(body);
     }
 
@@ -27,10 +26,10 @@ public class ListUserController extends AbstractController {
         return ResponseFactory.createNotImplemented();
     }
 
-    private static String renderUserList(Collection<User> users) throws IOException {
+    private static String renderUserList(Users users) throws IOException {
         String templateLocation = "/user/list.html";
         Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put("users", users);
+        parameterMap.put("users", users.toList());
         return TemplateUtils.render(templateLocation, parameterMap);
     }
 }

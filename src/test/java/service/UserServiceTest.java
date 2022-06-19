@@ -16,7 +16,7 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         DataBase.clear();
-        users = Fixture.createUsers();
+        users = Fixture.createUserList();
         users.forEach(DataBase::addUser);
     }
 
@@ -24,7 +24,7 @@ class UserServiceTest {
     @Test
     void getUserList() {
         assertThat(
-                UserService.getUserList()
+                UserService.getUsers().toList()
         ).hasSameElementsAs(users);
     }
 
@@ -40,7 +40,7 @@ class UserServiceTest {
         UserService.createUser(user);
 
         assertThat(
-                UserService.getUserList()
+                UserService.getUsers().toList()
         ).contains(user);
     }
 }

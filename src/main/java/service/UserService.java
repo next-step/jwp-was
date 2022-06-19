@@ -1,15 +1,14 @@
 package service;
 
 import db.DataBase;
-import java.util.ArrayList;
-import java.util.List;
 import model.User;
+import model.Users;
 
 public class UserService {
     private UserService() {}
 
-    public static List<User> getUserList() {
-        return new ArrayList<>(DataBase.findAll());
+    public static Users getUsers() {
+        return Users.from(DataBase.findAll());
     }
 
     public static void createUser(User user) {

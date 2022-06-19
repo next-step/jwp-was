@@ -8,7 +8,7 @@ import model.User;
 public class Fixture {
     private Fixture() {}
 
-    public static List<User> createUsers() {
+    public static List<User> createUserList() {
         return IntStream.range(1, 10)
                 .mapToObj(number -> new User(
                         "userId" + number,
