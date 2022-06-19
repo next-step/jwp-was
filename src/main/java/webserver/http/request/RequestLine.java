@@ -1,13 +1,25 @@
-package webserver;
+package webserver.http.request;
+
+import webserver.http.HttpMethod;
+
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 public class RequestLine {
+    private final HttpMethod method;
+    private final String path;
+    private final QueryParameters queryParameters;
+    private final String protocol;
+    private final String version;
+
     /**
      * HTTP 요청의 Request-Line을 파싱한다.
      *
      * @see <a href="https://datatracker.ietf.org/doc/html/rfc2616#section-5.1">RFC 2616 - 5.1 Request-Line</a>
      */
-    public static RequestLine parse(final String httpRequestRequestLine) {
-        final String[] tokens = httpRequestRequestLine.split(" ");
+    public static RequestLine parse(final String httpRequestLine) {
+        final String decodedRequestLine = URLDecoder.decode(httpRequestLine, StandardCharsets.UTF_8);
+        final String[] tokens = decodedRequestLine.split(" ");
 
         final HttpMethod method = HttpMethod.valueOf(tokens[0]);
 
@@ -26,16 +38,10 @@ public class RequestLine {
                         final String protocol, final String version) {
         this.method = method;
         this.path = path;
-        this.queryString = queryString;
+        this.queryParameters = new QueryParameters(queryString);
         this.protocol = protocol;
         this.version = version;
     }
-
-    private final HttpMethod method;
-    private final String path;
-    private final String queryString;
-    private final String protocol;
-    private final String version;
 
     public HttpMethod getMethod() {
         return this.method;
@@ -45,15 +51,15 @@ public class RequestLine {
         return this.path;
     }
 
-    public String getQueryString() {
-        return this.queryString;
-    }
-
     public String getProtocol() {
         return this.protocol;
     }
 
     public String getVersion() {
         return this.version;
+    }
+
+    public String getQueryParameter(final String key) {
+        return this.queryParameters.get(key);
     }
 }
