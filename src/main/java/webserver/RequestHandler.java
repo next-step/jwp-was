@@ -1,5 +1,9 @@
 package webserver;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
@@ -16,7 +20,9 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class RequestHandler implements Runnable {
@@ -47,8 +53,10 @@ public class RequestHandler implements Runnable {
                     break;
                 }
             }
+            request.forEach(logger::debug);
 
             HttpHeader httpHeader = HttpHeader.from(request);
+            boolean logined = httpHeader.isSetCookie();
 
             int contentLength = httpHeader.getContentLength();
             HttpParameter httpBody = HttpParameter.from(IOUtils.readData(br, contentLength));
@@ -76,7 +84,30 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
-            httpResponse.responseOk(path, httpHeader.isSetCookie());
+            if ("/user/list".equals(path)) {
+                if (!logined) {
+                    httpResponse.responseRedirectSetCookie("/user/login_failed.html", false);
+                    return;
+                }
+
+                Collection<User> users = DataBase.findAll();
+                Map<String, Collection<User>> collectionMap = Map.of("users", users);
+
+                TemplateLoader loader = new ClassPathTemplateLoader();
+                loader.setPrefix("/templates");
+                loader.setSuffix(".html");
+
+                Handlebars handlebars = new Handlebars(loader);
+                handlebars.registerHelper("inc", (context, options) -> (int) context + 1);
+
+                Template template = handlebars.compile("user/list");
+                String page = template.apply(collectionMap);
+
+                httpResponse.responseOkBody(page, true);
+                return;
+            }
+
+            httpResponse.responseOk(path, logined);
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (URISyntaxException e) {

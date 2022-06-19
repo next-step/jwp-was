@@ -7,6 +7,7 @@ import utils.FileIoUtils;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
@@ -42,20 +43,23 @@ public class HttpResponse {
         }
     }
 
-    public void responseOk(String path, boolean isLogined) throws IOException, URISyntaxException {
+    public void responseOk(String path, boolean logined) throws IOException, URISyntaxException {
         final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + path);
 
         dos.writeBytes("HTTP/1.1 200 OK \r\n");
         response200Header(body.length);
-
-        if (isLogined) {
-            logger.debug("enableCookie is true");
-            setCookie(true);
-        }
-
+        setCookie(logined);
         dos.writeBytes("\r\n");
 
         responseBody(body);
+    }
+
+    public void responseOkBody(String body, boolean logined) throws IOException {
+        dos.writeBytes("HTTP/1.1 200 OK \r\n");
+        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+        setCookie(logined);
+        dos.writeBytes("\r\n");
+        responseBody(body.getBytes(StandardCharsets.UTF_8));
     }
 
     public void setCookie(boolean enable) throws IOException {
