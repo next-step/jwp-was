@@ -17,7 +17,7 @@ public class ListUserController extends AbstractController {
         if (!loggedIn) {
             return ResponseFactory.createRedirect("/user/login.html");
         }
-        String body = renderUserList(UserService.getUsers());
+        String body = renderUserList(UserService.findAll());
         return ResponseFactory.createOK(body);
     }
 

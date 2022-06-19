@@ -29,7 +29,7 @@ public class CreateUserController extends AbstractController {
 
     private Response createUser(String userId, String password, String name, String email) {
         User user = new User(userId, password, name, email);
-        UserService.createUser(user);
+        UserService.save(user);
         return ResponseFactory.createRedirect("/index.html");
     }
 }

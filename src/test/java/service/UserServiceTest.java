@@ -20,27 +20,27 @@ class UserServiceTest {
         users.forEach(DataBase::addUser);
     }
 
-    @DisplayName("유저목록 조회 DB 에 저장된 모든 유저들을 반환한다.")
+    @DisplayName("유저목록 조회시, DB 에 저장된 모든 유저들을 반환한다.")
     @Test
-    void getUserList() {
+    void findAll() {
         assertThat(
-                UserService.getUsers().toList()
+                UserService.findAll().toList()
         ).hasSameElementsAs(users);
     }
 
     @DisplayName("회원가입 시, DB 에 User 가 추가된다.")
     @Test
-    void createUser() {
+    void save() {
         String userId = "javajigi";
         String password = "P@ssw0rD";
         String name = "JaeSung";
         String email = "javajigi@slipp.net";
         User user = new User(userId, password, name, email);
 
-        UserService.createUser(user);
+        UserService.save(user);
 
         assertThat(
-                UserService.getUsers().toList()
+                UserService.findAll().toList()
         ).contains(user);
     }
 }
