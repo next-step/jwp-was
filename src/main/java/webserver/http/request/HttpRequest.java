@@ -51,7 +51,7 @@ public class HttpRequest {
         return this.requestLine;
     }
 
-    public RequestHeaders convertToRequestHeaders() {
+    public RequestHeaders getRequestHeaders() {
         return this.headers;
     }
 
@@ -67,15 +67,7 @@ public class HttpRequest {
         return this.requestLine.getPath();
     }
 
-    public Cookie getCookie(final String cookieName) {
-        return this.headers.getCookie(cookieName);
-    }
-
     public Cookie getCookieOrNull(final String cookieName) {
         return this.headers.getCookieOrNull(cookieName);
-    }
-
-    public String getQueryParameter(final String key) {
-        return this.requestLine.getQueryParameter(key);
     }
 }
