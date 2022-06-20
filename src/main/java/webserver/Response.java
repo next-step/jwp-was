@@ -11,8 +11,14 @@ public class Response {
     private final String path;
     private final String cookie;
 
+    private final String body;
+
     public Response(final String contentType, final String path, final String cookie) {
-        this(HttpStatus.OK, contentType, path, cookie);
+        this(HttpStatus.OK, contentType, path, cookie, null);
+    }
+
+    public Response(final String contentType, final String path, final String cookie, final String body) {
+        this(HttpStatus.OK, contentType, path, cookie, body);
     }
 
     public Response(final HttpStatus httpStatus, final String contentType, final String path, final String cookie) {
@@ -20,6 +26,15 @@ public class Response {
         this.contentType = contentType;
         this.path = path;
         this.cookie = cookie;
+        this.body = null;
+    }
+
+    public Response(final HttpStatus httpStatus, final String contentType, final String path, final String cookie, final String body) {
+        this.httpStatus = httpStatus;
+        this.contentType = contentType;
+        this.path = path;
+        this.cookie = cookie;
+        this.body = body;
     }
 
     public String getContentType() {
@@ -31,9 +46,16 @@ public class Response {
     }
 
     public byte[] getBytes() throws IOException {
-        byte[] body = Files.readAllBytes(Paths.get("./webapp/" + path));
+        byte[] body = getBody();
         byte[] header = getHeader(body.length);
         return getBytes(header, body);
+    }
+
+    private byte[] getBody() throws IOException {
+        if (body != null) {
+            return body.getBytes();
+        }
+        return Files.readAllBytes(Paths.get("./webapp/" + path));
     }
 
     private byte[] getBytes(byte[] header, byte[] body) {

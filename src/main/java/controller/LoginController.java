@@ -4,10 +4,7 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.HttpStatus;
-import webserver.QueryString;
-import webserver.Request;
-import webserver.Response;
+import webserver.*;
 
 public class LoginController implements Controller {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -26,6 +23,11 @@ public class LoginController implements Controller {
 
     private User getUserFromRequest(Request request) {
         QueryString queryString = request.getRequestLine().toQueryString();
+
+        if (request.getRequestLine().getMethod() == HttpMethod.POST) {
+            queryString = QueryString.parse(request.getRequestBody());
+        }
+
         return new User(
                 queryString.get("userId"),
                 queryString.get("password"),

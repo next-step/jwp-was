@@ -18,6 +18,8 @@ public class DispatcherServlet {
         mapper.put("GET /", new IndexController());
         mapper.put("POST /user/create", new CreatUserController());
         mapper.put("GET /user/login", new LoginController());
+        mapper.put("POST /user/login", new LoginController());
+        mapper.put("GET /user/list.html", new UserListController());
     }
 
     public static Response match(Request request) throws IOException, URISyntaxException {

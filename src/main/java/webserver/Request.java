@@ -32,6 +32,13 @@ public class Request {
                 .split(",")[0];
     }
 
+    public String getCookie() {
+        if (headers == null) {
+            return "";
+        }
+        return headers.getOrDefault("Cookie", "");
+    }
+
     public String getRequestBody() {
         if (headers == null) {
             return "";
