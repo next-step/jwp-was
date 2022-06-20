@@ -61,7 +61,7 @@ public class RequestHandler implements Runnable {
             boolean logined = httpHeader.isLogined();
 
             int contentLength = httpHeader.getContentLength();
-            HttpParameter httpBody = HttpParameter.from(IOUtils.readData(br, contentLength));
+            RequestBody httpBody = RequestBody.from(IOUtils.readData(br, contentLength));
 
             HttpResponse httpResponse = new HttpResponse(new DataOutputStream(out));
             String path = requestLine.getUri().getPath();

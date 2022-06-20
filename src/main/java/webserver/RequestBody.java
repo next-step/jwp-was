@@ -7,24 +7,23 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class HttpParameter {
-
+public class RequestBody {
     private final static String QUERY_STRING_DELIMITER = "&";
     private final static String KEY_VALUE_DELIMITER = "=";
 
     private final Map<String, String> parameter;
 
-    public HttpParameter() {
+    public RequestBody() {
         this.parameter = Collections.emptyMap();
     }
 
-    private HttpParameter(Map<String, String> input) {
+    private RequestBody(Map<String, String> input) {
         this.parameter = input;
     }
 
-    public static HttpParameter from(String input) {
+    public static RequestBody from(String input) {
         if (Objects.isNull(input) || input.isEmpty()) {
-            return new HttpParameter();
+            return new RequestBody();
         }
 
         try {
@@ -36,7 +35,7 @@ public class HttpParameter {
                             keyValue -> keyValue[1]
                     ));
 
-            return new HttpParameter(collect);
+            return new RequestBody(collect);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new IllegalArgumentException(e);
         }
@@ -45,25 +44,5 @@ public class HttpParameter {
     public String get(String key) {
         return Optional.ofNullable(parameter.get(key))
                 .orElseThrow(IllegalArgumentException::new);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HttpParameter that = (HttpParameter) o;
-        return Objects.equals(parameter, that.parameter);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(parameter);
-    }
-
-    @Override
-    public String toString() {
-        return "HttpParameter{" +
-                "parameter=" + parameter +
-                '}';
     }
 }

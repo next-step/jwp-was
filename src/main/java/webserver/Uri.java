@@ -7,9 +7,9 @@ public class Uri {
     private static final String URI_DELIMITER = "\\?";
 
     private final String path;
-    private final HttpParameter queryString;
+    private final QueryString queryString;
 
-    private Uri(String path, HttpParameter queryString) {
+    private Uri(String path, QueryString queryString) {
         this.path = path;
         this.queryString = queryString;
     }
@@ -22,17 +22,17 @@ public class Uri {
         String[] split = input.split(URI_DELIMITER);
 
         if (split.length <= 1) {
-            return new Uri(split[0], new HttpParameter());
+            return new Uri(split[0], new QueryString());
         }
 
-        return new Uri(split[0], HttpParameter.from(split[1]));
+        return new Uri(split[0], QueryString.from(split[1]));
     }
 
     public String getPath() {
         return path;
     }
 
-    public HttpParameter getQueryString() {
+    public QueryString getQueryString() {
         return queryString;
     }
 
