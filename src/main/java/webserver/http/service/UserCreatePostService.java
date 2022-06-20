@@ -27,6 +27,6 @@ public class UserCreatePostService extends PostService {
 
         DataBase.addUser(user);
 
-        httpResponse.redirect302("/index.html");
+        httpResponse.redirect("/index.html");
     }
 }

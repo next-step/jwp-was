@@ -1,5 +1,7 @@
 package webserver.http.request;
 
+import webserver.http.Header;
+
 public class HttpRequest implements Request {
     private final RequestLine requestLine;
 
@@ -39,5 +41,14 @@ public class HttpRequest implements Request {
 
     public boolean isPost() {
         return getMethod() == Method.POST;
+    }
+
+
+    public Protocol getProtocol() {
+        return requestLine.getProtocol();
+    }
+
+    public Version getVersion() {
+        return requestLine.getVersion();
     }
 }

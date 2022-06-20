@@ -17,4 +17,8 @@ public enum Version {
                      .findFirst()
                      .orElseThrow(() -> new IllegalArgumentException("지원하지 않는 버전입니다."));
     }
+
+    public String getValue() {
+        return value;
+    }
 }

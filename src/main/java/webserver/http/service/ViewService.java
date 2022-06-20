@@ -29,7 +29,7 @@ public class ViewService implements Service {
 
     @Override
     public void doService(HttpRequest httpRequest, HttpResponse httpResponse) {
-        httpResponse.body(read(httpRequest.getPath()));
+        httpResponse.ok(read(httpRequest.getPath()));
     }
 
     private byte[] read(String path) {

@@ -2,7 +2,7 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.request.Header;
+import webserver.http.Header;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.request.RequestLine;
@@ -41,7 +41,7 @@ public class RequestHandler implements Runnable {
             RequestBody requestBody = RequestBody.of(bufferedReader, header.getContentLength());
 
             HttpRequest httpRequest = new HttpRequest(requestLine, header, requestBody);
-            HttpResponse httpResponse = new HttpResponse();
+            HttpResponse httpResponse = new HttpResponse(httpRequest);
 
             doService(httpRequest, httpResponse);
 
@@ -68,20 +68,14 @@ public class RequestHandler implements Runnable {
 
     private void responseHeader(DataOutputStream dos, HttpResponse httpResponse) {
         try {
-            if (httpResponse.getStatus() == 200) {
-                dos.writeBytes("HTTP/1.1 200 OK \r\n");
-                dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-                dos.writeBytes("Content-Length: " + httpResponse.getLength() + "\r\n");
-                dos.writeBytes("\r\n");
-            }
-
-            if (httpResponse.getStatus() == 302) {
-                dos.writeBytes("HTTP/1.1 302 OK \r\n");
-                dos.writeBytes("Location: " + httpResponse.getLocation() + " \r\n");
-                dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-                dos.writeBytes("Content-Length: " + httpResponse.getLength() + "\r\n");
-                dos.writeBytes("\r\n");
-            }
+            httpResponse.toResponseHeader().forEach(header -> {
+                try {
+                    dos.writeBytes(header + "\r\n");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

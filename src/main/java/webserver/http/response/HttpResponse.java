@@ -1,23 +1,24 @@
 package webserver.http.response;
 
+import webserver.http.Header;
+import webserver.http.request.HttpRequest;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
 public class HttpResponse implements Response {
+
+    private ResponseLine responseLine;
 
     private byte[] body;
 
-    private int status = 200;
+    private Header header = new Header(new HashMap<>());
 
-    private String statusMessage = "OK";
-
-    private String location;
-
-    public void redirect302(String location) {
-        this.status = 302;
-        this.statusMessage = "Found";
-        this.location = location;
-    }
-
-    public void body(byte[] body) {
-        this.body = body;
+    public HttpResponse(HttpRequest httpRequest) {
+        responseLine = new ResponseLine(httpRequest.getProtocol(), httpRequest.getVersion());
     }
 
     @Override
@@ -32,16 +33,38 @@ public class HttpResponse implements Response {
 
     @Override
     public int getStatus() {
-        return status;
+        return responseLine.getHttpStatus().status;
     }
 
     @Override
     public String getStatusMessage() {
-        return statusMessage;
+        return responseLine.getHttpStatus().getStatusMessage();
     }
 
     @Override
     public String getLocation() {
-        return location;
+        return header.get("location");
+    }
+
+    public void ok(byte[] body) {
+        responseLine.ok();
+        this.body = body;
+        header.put("Content-Type", "text/html;charset=utf-8");
+        header.put("Content-Length", String.valueOf(getLength()));
+    }
+
+    public void redirect(String location) {
+        responseLine.redirect();
+        header.put("Location", location);
+        header.put("Content-Type", "text/html;charset=utf-8");
+        header.put("Content-Length", String.valueOf(getLength()));
+    }
+
+    public List<String> toResponseHeader() {
+        List<String> responseHeader = new ArrayList();
+        responseHeader.add(responseLine.toString());
+        responseHeader.addAll(header.toHeaderStrings());
+        return responseHeader;
+
     }
 }

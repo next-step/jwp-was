@@ -21,5 +21,7 @@ public class UserCreateGetService extends GetService {
                 queryString.get("email"));
 
         DataBase.addUser(user);
+
+        httpResponse.ok(null);
     }
 }
