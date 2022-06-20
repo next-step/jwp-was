@@ -2,7 +2,6 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.IOUtils;
 import webserver.http.request.Header;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
@@ -47,7 +46,7 @@ public class RequestHandler implements Runnable {
             doService(httpRequest, httpResponse);
 
             DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, httpResponse);
+            responseHeader(dos, httpResponse);
             responseBody(dos, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -67,12 +66,22 @@ public class RequestHandler implements Runnable {
         service.doService(httpRequest, httpResponse);
     }
 
-    private void response200Header(DataOutputStream dos, HttpResponse httpResponse) {
+    private void responseHeader(DataOutputStream dos, HttpResponse httpResponse) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + httpResponse.getLength() + "\r\n");
-            dos.writeBytes("\r\n");
+            if (httpResponse.getStatus() == 200) {
+                dos.writeBytes("HTTP/1.1 200 OK \r\n");
+                dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+                dos.writeBytes("Content-Length: " + httpResponse.getLength() + "\r\n");
+                dos.writeBytes("\r\n");
+            }
+
+            if (httpResponse.getStatus() == 302) {
+                dos.writeBytes("HTTP/1.1 302 OK \r\n");
+                dos.writeBytes("Location: " + httpResponse.getLocation() + " \r\n");
+                dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+                dos.writeBytes("Content-Length: " + httpResponse.getLength() + "\r\n");
+                dos.writeBytes("\r\n");
+            }
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
