@@ -1,11 +1,11 @@
-package webserver.http;
+package webserver.http.request;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.ServletRequest;
-
 public class RequestLine {
-
+    private static final Logger logger = LoggerFactory.getLogger(RequestLine.class);
     private static final String DELIMITER = " ";
     private static final String VERSION_DELIMITER = "/";
 
@@ -25,6 +25,7 @@ public class RequestLine {
     }
 
     public static RequestLine parse(String readLine) {
+        logger.debug("request line : {}", readLine);
         if (!StringUtils.hasText(readLine)) {
             throw new IllegalArgumentException("요청 정보가 올바르지 않습니다.");
         }

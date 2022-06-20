@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request;
 
 import org.springframework.util.StringUtils;
 
@@ -7,9 +7,9 @@ public class Uri {
 
     private String path;
 
-    private String queryString;
+    private QueryString queryString;
 
-    private Uri(String path, String queryString) {
+    private Uri(String path, QueryString queryString) {
         this.path = path;
         this.queryString = queryString;
     }
@@ -21,7 +21,7 @@ public class Uri {
 
         String[] values = token.split(QUERY_STRING_DELIMITER);
         if (values.length > 1) {
-            return new Uri(values[0], values[1]);
+            return new Uri(values[0], QueryString.of(values[1]));
         }
 
         return new Uri(token, null);
@@ -31,7 +31,7 @@ public class Uri {
         return path;
     }
 
-    public String getQueryString() {
+    public QueryString getQueryString() {
         return queryString;
     }
 }
