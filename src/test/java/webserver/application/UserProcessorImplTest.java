@@ -22,15 +22,12 @@ class UserProcessorImplTest {
 
     @Test
     void isValidUser() {
-        // given
         String userId = "javajigi";
         String password = "1234";
         given(userRepository.findUserById(userId)).willReturn(new User(userId,password, "자바지기", ""));
 
-        // when
         boolean actual = sut.isValidUser(userId, password);
 
-        // then
         assertThat(actual).isTrue();
     }
 }
