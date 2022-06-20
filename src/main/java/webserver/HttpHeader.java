@@ -28,7 +28,7 @@ public class HttpHeader {
                         keyValue -> keyValue[1]
                 ));
 
-        Cookies cookies = Optional.ofNullable(collect.get("Cookie"))
+        Cookies cookies = Optional.ofNullable(collect.get(Cookie.COOKIE_KEY_NAME))
                 .map(Cookies::from)
                 .orElse(new Cookies());
 
@@ -41,9 +41,8 @@ public class HttpHeader {
     }
 
     public int getContentLength() {
-        String contentLength = header.get(CONTENT_LENGTH);
         try {
-            return Integer.parseInt(contentLength);
+            return Integer.parseInt(header.get(CONTENT_LENGTH));
         } catch (Exception e) {
             return 0;
         }
@@ -51,6 +50,6 @@ public class HttpHeader {
 
     public boolean isLogined() {
         Cookie cookie = cookies.get("logined");
-        return !Objects.isNull(cookie) && Boolean.parseBoolean(cookie.getValue());
+        return Objects.nonNull(cookie) && Boolean.parseBoolean(cookie.getValue());
     }
 }

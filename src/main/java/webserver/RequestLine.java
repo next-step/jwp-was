@@ -24,16 +24,8 @@ public class RequestLine {
                 Protocol.from(splitInput[2]));
     }
 
-    public HttpMethod getHttpMethod() {
-        return httpMethod;
-    }
-
     public Uri getUri() {
         return uri;
-    }
-
-    public Protocol getProtocol() {
-        return protocol;
     }
 
     @Override

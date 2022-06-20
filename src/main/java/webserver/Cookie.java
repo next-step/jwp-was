@@ -3,6 +3,8 @@ package webserver;
 import java.util.Objects;
 
 public class Cookie {
+
+    public static String COOKIE_KEY_NAME = "Cookie";
     private final String name;
     private final String value;
 

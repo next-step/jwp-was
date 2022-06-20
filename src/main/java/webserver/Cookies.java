@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 public class Cookies {
 
     private final static String COOKIE_DELIMITER = "; ";
+    private final static String KEY_VALUE_DELIMITER = "=";
+
     private final List<Cookie> cookies;
 
     public Cookies() {
@@ -20,7 +22,7 @@ public class Cookies {
     public static Cookies from(String input) {
         List<Cookie> cookies = Arrays.stream(input.split(COOKIE_DELIMITER))
                 .map(it -> {
-                    String[] keyValue = it.split("=");
+                    String[] keyValue = it.split(KEY_VALUE_DELIMITER);
                     return new Cookie(keyValue[0], keyValue[1]);
                 })
                 .collect(Collectors.toUnmodifiableList());
