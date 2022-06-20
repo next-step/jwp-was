@@ -65,6 +65,9 @@ public class HttpResponse implements Response {
         responseHeader.add(responseLine.toString());
         responseHeader.addAll(header.toHeaderStrings());
         return responseHeader;
+    }
 
+    public void setCookie(String cookie) {
+        header.put("Set-Cookie", cookie);
     }
 }

@@ -7,6 +7,7 @@ import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.request.RequestLine;
 import webserver.http.response.HttpResponse;
+import webserver.http.service.LoginService;
 import webserver.http.service.Service;
 import webserver.http.service.UserCreateGetService;
 import webserver.http.service.UserCreatePostService;
@@ -57,7 +58,8 @@ public class RequestHandler implements Runnable {
         ViewService viewService = new ViewService();
         UserCreateGetService userCreateGetService = new UserCreateGetService();
         UserCreatePostService userCreatePostService = new UserCreatePostService();
-        List<Service> services = List.of(viewService, userCreateGetService, userCreatePostService);
+        LoginService loginService = new LoginService();
+        List<Service> services = List.of(viewService, userCreateGetService, userCreatePostService, loginService);
 
         Service service = services.stream()
                                   .filter(it -> it.find(httpRequest))
