@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Header {
+    private static final String CONTENT_LENGTH = "Content-Length";
     private final Map<String, String> values;
 
     public Header(Map<String, String> values) {
@@ -25,5 +26,9 @@ public class Header {
         } while (!"".equals(readLine));
 
         return new Header(values);
+    }
+
+    public int getContentLength() {
+        return values.get(CONTENT_LENGTH) == null ? 0 : Integer.valueOf(values.get(CONTENT_LENGTH));
     }
 }

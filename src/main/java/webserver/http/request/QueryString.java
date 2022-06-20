@@ -13,12 +13,12 @@ public class QueryString {
         this.queryStrings = queryStrings;
     }
 
-    public static QueryString of(String values) {
-        if (Objects.isNull(values)) {
+    public static QueryString of(String value) {
+        if (Objects.isNull(value)) {
             return null;
         }
 
-        Map<String, String> collect = Arrays.stream(values.split("&"))
+        Map<String, String> collect = Arrays.stream(value.split("&"))
                                             .map(token -> token.split("="))
                                             .collect(toMap(strings -> strings[0], strings -> strings[1]));
 

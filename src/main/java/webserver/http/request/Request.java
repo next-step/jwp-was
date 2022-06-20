@@ -7,4 +7,6 @@ public interface Request {
     Method getMethod();
 
     QueryString getQueryString();
+
+    RequestBody getRequestBody();
 }

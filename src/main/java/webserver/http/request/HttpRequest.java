@@ -5,9 +5,12 @@ public class HttpRequest implements Request {
 
     private final Header header;
 
-    public HttpRequest(RequestLine requestLine, Header header) {
+    private final RequestBody requestBody;
+
+    public HttpRequest(RequestLine requestLine, Header header, RequestBody requestBody) {
         this.requestLine = requestLine;
         this.header = header;
+        this.requestBody = requestBody;
     }
 
     @Override
@@ -23,5 +26,18 @@ public class HttpRequest implements Request {
     @Override
     public QueryString getQueryString() {
         return requestLine.getUri().getQueryString();
+    }
+
+    @Override
+    public RequestBody getRequestBody() {
+        return requestBody;
+    }
+
+    public boolean isGet() {
+        return getMethod() == Method.GET;
+    }
+
+    public boolean isPost() {
+        return getMethod() == Method.POST;
     }
 }

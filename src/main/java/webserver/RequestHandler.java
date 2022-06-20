@@ -2,13 +2,15 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.IOUtils;
 import webserver.http.request.Header;
 import webserver.http.request.HttpRequest;
-import webserver.http.request.Method;
+import webserver.http.request.RequestBody;
 import webserver.http.request.RequestLine;
 import webserver.http.response.HttpResponse;
 import webserver.http.service.Service;
-import webserver.http.service.UserCreateService;
+import webserver.http.service.UserCreateGetService;
+import webserver.http.service.UserCreatePostService;
 import webserver.http.service.ViewService;
 
 import java.io.BufferedReader;
@@ -37,8 +39,9 @@ public class RequestHandler implements Runnable {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
             RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
             Header header = Header.of(bufferedReader);
+            RequestBody requestBody = RequestBody.of(bufferedReader, header.getContentLength());
 
-            HttpRequest httpRequest = new HttpRequest(requestLine, header);
+            HttpRequest httpRequest = new HttpRequest(requestLine, header, requestBody);
             HttpResponse httpResponse = new HttpResponse();
 
             doService(httpRequest, httpResponse);
@@ -53,16 +56,15 @@ public class RequestHandler implements Runnable {
 
     private void doService(HttpRequest httpRequest, HttpResponse httpResponse) {
         ViewService viewService = new ViewService();
-        UserCreateService userCreateService = new UserCreateService();
-        List<Service> services = List.of(viewService, userCreateService);
+        UserCreateGetService userCreateGetService = new UserCreateGetService();
+        UserCreatePostService userCreatePostService = new UserCreatePostService();
+        List<Service> services = List.of(viewService, userCreateGetService, userCreatePostService);
 
-        if (httpRequest.getMethod() == Method.GET) {
-            Service service = services.stream()
-                                      .filter(it -> it.find(httpRequest))
-                                      .findFirst()
-                                      .orElseThrow();
-            service.doService(httpRequest, httpResponse);
-        }
+        Service service = services.stream()
+                                  .filter(it -> it.find(httpRequest))
+                                  .findFirst()
+                                  .orElseThrow();
+        service.doService(httpRequest, httpResponse);
     }
 
     private void response200Header(DataOutputStream dos, HttpResponse httpResponse) {

@@ -6,17 +6,19 @@ import webserver.http.request.HttpRequest;
 import webserver.http.request.QueryString;
 import webserver.http.response.HttpResponse;
 
-public class UserCreateService implements Service {
+public class UserCreateGetService extends GetService {
     @Override
-    public boolean find(HttpRequest httpRequest) {
+    protected boolean pathMatch(HttpRequest httpRequest) {
         return httpRequest.getPath().equals("/user/create");
     }
 
     @Override
     public void doService(HttpRequest httpRequest, HttpResponse httpResponse) {
         QueryString queryString = httpRequest.getQueryString();
-        String userId = queryString.get("userId");
-        User user = new User(userId, queryString.get("password"), queryString.get("name"), queryString.get("email"));
+        User user = new User(queryString.get("userId"),
+                queryString.get("password"),
+                queryString.get("name"),
+                queryString.get("email"));
 
         DataBase.addUser(user);
     }
