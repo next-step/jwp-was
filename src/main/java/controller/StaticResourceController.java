@@ -17,7 +17,7 @@ public class StaticResourceController implements Controller {
             throw new IllegalArgumentException("NotFound");
         }
 
-        return new Response(request.getContentType(), resourcePath);
+        return new Response(request.getContentType(), resourcePath, null);
     }
 
     private boolean isExists(String resourcePath) {

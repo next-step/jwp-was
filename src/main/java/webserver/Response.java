@@ -9,15 +9,17 @@ public class Response {
     private final HttpStatus httpStatus;
     private final String contentType;
     private final String path;
+    private final String cookie;
 
-    public Response(final String contentType, final String path) {
-        this(HttpStatus.OK, contentType, path);
+    public Response(final String contentType, final String path, final String cookie) {
+        this(HttpStatus.OK, contentType, path, cookie);
     }
 
-    public Response(final HttpStatus httpStatus, final String contentType, final String path) {
+    public Response(final HttpStatus httpStatus, final String contentType, final String path, final String cookie) {
         this.httpStatus = httpStatus;
         this.contentType = contentType;
         this.path = path;
+        this.cookie = cookie;
     }
 
     public String getContentType() {
@@ -48,6 +50,10 @@ public class Response {
         stringBuilder.append(String.format("Content-Length: %s \r\n", bodyLength));
         stringBuilder.append(String.format("Location: %s \r\n", path));
 
+        if (cookie != null) {
+            stringBuilder.append(String.format("Set-Cookie: %s \r\n", cookie));
+        }
+
         stringBuilder.append("\r\n");
 
         return stringBuilder.toString().getBytes();
@@ -55,5 +61,9 @@ public class Response {
 
     public HttpStatus getStatus() {
         return httpStatus;
+    }
+
+    public String getCookie() {
+        return cookie;
     }
 }

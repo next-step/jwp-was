@@ -1,9 +1,6 @@
 package webserver;
 
-import controller.Controller;
-import controller.CreatUserController;
-import controller.IndexController;
-import controller.StaticResourceController;
+import controller.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -20,6 +17,7 @@ public class DispatcherServlet {
     static {
         mapper.put("GET /", new IndexController());
         mapper.put("POST /user/create", new CreatUserController());
+        mapper.put("GET /user/login", new LoginController());
     }
 
     public static Response match(Request request) throws IOException, URISyntaxException {
@@ -35,7 +33,7 @@ public class DispatcherServlet {
             return new StaticResourceController()
                     .serving(request);
         } catch (IllegalArgumentException iae) {
-            return new Response(HttpStatus.NOT_FOUND, "", "");
+            return new Response(HttpStatus.NOT_FOUND, "", "", null);
         }
 
     }

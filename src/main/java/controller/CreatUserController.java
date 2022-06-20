@@ -15,7 +15,7 @@ public class CreatUserController implements Controller {
     public Response serving(Request request) {
         DataBase.addUser(getUserFromRequest(request));
         logger.debug("findAll: {}", DataBase.findAll());
-        return new Response(HttpStatus.FOUND, "text/html;charset=utf-8", "/index.html");
+        return new Response(HttpStatus.FOUND, "text/html;charset=utf-8", "/index.html", null);
     }
 
     private User getUserFromRequest(Request request) {
