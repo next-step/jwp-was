@@ -1,21 +1,22 @@
-package webserver;
+package webserver.domain.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import webserver.domain.http.QueryString;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class RequestBodyTest {
+class QueryStringTest {
 
-    @DisplayName("RequestBody 객체를 생성할 수 있다")
+    @DisplayName("파라미터 객체를 생성할 수 있다")
     @Test
     public void create() {
-        String input = "userId=javajigi&password=password&name=JaeSung";
+        String queryString = "userId=javajigi&password=password&name=JaeSung";
 
-        RequestBody actual = RequestBody.from(input);
+        QueryString actual = QueryString.from(queryString);
 
         assertThat(actual.get("userId")).isEqualTo("javajigi");
         assertThat(actual.get("password")).isEqualTo("password");
@@ -26,7 +27,7 @@ class RequestBodyTest {
     @ParameterizedTest
     @ValueSource(strings = {"=&=", "&password=password", "=", " "})
     public void invalid(String input) {
-        assertThatThrownBy(() -> RequestBody.from(input)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> QueryString.from(input)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("key값 조회 시 결과가 없으면 예외를 반환한다")
@@ -34,7 +35,7 @@ class RequestBodyTest {
     public void invalidGet() {
         String input = "userId=javajigi&password=password&name=JaeSung";
 
-        RequestBody actual = RequestBody.from(input);
+        QueryString actual = QueryString.from(input);
 
         assertThatThrownBy(() -> actual.get("userName")).isInstanceOf(IllegalArgumentException.class);
     }

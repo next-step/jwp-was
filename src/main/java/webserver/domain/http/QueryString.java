@@ -1,4 +1,4 @@
-package webserver;
+package webserver.domain.http;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -7,23 +7,24 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class RequestBody {
+public class QueryString {
+
     private final static String QUERY_STRING_DELIMITER = "&";
     private final static String KEY_VALUE_DELIMITER = "=";
 
     private final Map<String, String> parameter;
 
-    public RequestBody() {
+    public QueryString() {
         this.parameter = Collections.emptyMap();
     }
 
-    private RequestBody(Map<String, String> input) {
+    private QueryString(Map<String, String> input) {
         this.parameter = input;
     }
 
-    public static RequestBody from(String input) {
+    public static QueryString from(String input) {
         if (Objects.isNull(input) || input.isEmpty()) {
-            return new RequestBody();
+            return new QueryString();
         }
 
         try {
@@ -35,7 +36,7 @@ public class RequestBody {
                             keyValue -> keyValue[1]
                     ));
 
-            return new RequestBody(collect);
+            return new QueryString(collect);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new IllegalArgumentException(e);
         }
@@ -44,5 +45,25 @@ public class RequestBody {
     public String get(String key) {
         return Optional.ofNullable(parameter.get(key))
                 .orElseThrow(IllegalArgumentException::new);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        QueryString that = (QueryString) o;
+        return Objects.equals(parameter, that.parameter);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(parameter);
+    }
+
+    @Override
+    public String toString() {
+        return "HttpParameter{" +
+                "parameter=" + parameter +
+                '}';
     }
 }

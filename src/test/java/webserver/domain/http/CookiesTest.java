@@ -1,7 +1,8 @@
-package webserver;
+package webserver.domain.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.domain.http.Cookies;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -1,4 +1,4 @@
-package webserver;
+package webserver.domain.http;
 
 import java.util.Arrays;
 import java.util.List;
