@@ -2,6 +2,9 @@ package webserver.request;
 
 import webserver.common.Protocol;
 
+import static webserver.request.RequestMethod.GET;
+import static webserver.request.RequestMethod.POST;
+
 public class Request {
     private final RequestLine requestLine;
     private final RequestHeader requestHeader;
@@ -13,8 +16,12 @@ public class Request {
         this.requestBody = requestBody;
     }
 
-    public RequestMethod getMethod() {
-        return requestLine.getMethod();
+    public boolean isGet() {
+        return GET == requestLine.getMethod();
+    }
+
+    public boolean isPost() {
+        return POST == requestLine.getMethod();
     }
 
     public String getPath() {
@@ -28,10 +35,7 @@ public class Request {
     public Protocol getProtocol() {
         return requestLine.getProtocol();
     }
-
-    public String getRequestLineHash() {
-        return requestLine.hash();
-    }
+    
 
     public String getContentType() {
         return requestHeader.getContentType();

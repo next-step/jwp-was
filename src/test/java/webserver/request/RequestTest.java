@@ -27,13 +27,13 @@ class RequestTest {
         Request request = new Request(requestLine, requestHeader, requestBody);
 
         assertAll(
-                () -> assertThat(request.getMethod()).isEqualTo(RequestMethod.GET),
+                () -> assertThat(request.isGet()).isTrue(),
+                () -> assertThat(request.isPost()).isFalse(),
                 () -> assertThat(request.getPath()).isEqualTo("/users"),
                 () -> assertThat(request.getQuery("userId")).isEqualTo("javajigi"),
                 () -> assertThat(request.getQuery("password")).isEqualTo("password"),
                 () -> assertThat(request.getQuery("name")).isEqualTo("JaeSung"),
                 () -> assertThat(request.getProtocol()).isEqualTo(Protocol.HTTP_1_1),
-                () -> assertThat(request.getRequestLineHash()).isEqualTo("GET /users"),
 
                 () -> assertThat(request.getContentType()).isEqualTo("text/html"),
                 () -> assertThat(request.getContentLength()).isEqualTo(64),
