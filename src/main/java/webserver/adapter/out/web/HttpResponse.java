@@ -18,11 +18,15 @@ public class HttpResponse {
         this.dos = new DataOutputStream(dos);
     }
 
-    public void responseRedirectSetCookie(String redirectUrl, boolean enableCookie) throws IOException, URISyntaxException {
+    public void responseRedirect(String redirectUrl, boolean enableCookie, boolean logined) {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            response302Header(redirectUrl);
-            setCookie(enableCookie);
+            dos.writeBytes("Location: " + redirectUrl + "\r\n");
+
+            if (enableCookie) {
+                setCookie(logined);
+            }
+
             dos.writeBytes("\r\n");
 
             responseBody(new byte[]{});
@@ -31,24 +35,22 @@ public class HttpResponse {
         }
     }
 
-    public void responseRedirect(String redirectUrl) throws IOException, URISyntaxException {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            response302Header(redirectUrl);
-            dos.writeBytes("\r\n");
+    public void responseBody(String body, boolean logined) throws IOException {
+        dos.writeBytes("HTTP/1.1 200 OK \r\n");
+        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+        setCookie(logined);
+        dos.writeBytes("\r\n");
 
-            responseBody(new byte[]{});
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+        responseBody(body.getBytes(StandardCharsets.UTF_8));
     }
 
-    public void responseOk(String path, boolean logined) throws IOException, URISyntaxException {
+    public void responseForward(String path, boolean logined) throws IOException, URISyntaxException {
         dos.writeBytes("HTTP/1.1 200 OK \r\n");
 
         if (path.endsWith(".html")) {
             final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + path);
-            response200Header(body.length);
+            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + body.length + "\r\n");
             setCookie(logined);
             dos.writeBytes("\r\n");
             responseBody(body);
@@ -75,29 +77,11 @@ public class HttpResponse {
         }
     }
 
-    public void responseOkBody(String body, boolean logined) throws IOException {
-        dos.writeBytes("HTTP/1.1 200 OK \r\n");
-        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-        setCookie(logined);
-        dos.writeBytes("\r\n");
-        responseBody(body.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public void setCookie(boolean enable) throws IOException {
+    private void setCookie(boolean enable) throws IOException {
         dos.writeBytes("Set-Cookie: logined=" + enable + "; Path=/ \r\n");
     }
 
-    private void response200Header(int lengthOfBodyContent) throws IOException {
-        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-        dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-
-    }
-
-    private void response302Header(String redirectUrl) throws IOException {
-        dos.writeBytes("Location: " + redirectUrl + "\r\n");
-    }
-
-    public void responseBody(byte[] body) throws IOException {
+    private void responseBody(byte[] body) throws IOException {
         dos.write(body, 0, body.length);
         dos.flush();
 

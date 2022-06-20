@@ -47,23 +47,23 @@ public class UserController {
             boolean validUser = userProcessor.isValidUser(body.get("userId"), body.get("password"));
 
             if (validUser) {
-                httpResponse.responseRedirectSetCookie("/index.html", true);
+                httpResponse.responseRedirect("/index.html", true, true);
                 return;
             }
 
-            httpResponse.responseRedirectSetCookie("/user/login_failed.html", false);
+            httpResponse.responseRedirect("/user/login_failed.html", true, false);
             return;
         }
 
         if (USER_CREATE_PATH.equals(path)) {
             userProcessor.createUser(body.get("userId"), body.get("password"), body.get("name"), body.get("email"));
-            httpResponse.responseRedirect("/index.html");
+            httpResponse.responseRedirect("/index.html", false, false);
             return;
         }
 
         if (USER_LIST_PATH.equals(path)) {
             if (!header.isLogined()) {
-                httpResponse.responseRedirectSetCookie("/user/login_failed.html", false);
+                httpResponse.responseRedirect("/user/login_failed.html", true, false);
                 return;
             }
 
@@ -79,7 +79,7 @@ public class UserController {
             Template template = handlebars.compile("user/list");
             String page = template.apply(Map.of("users", users));
 
-            httpResponse.responseOkBody(page, true);
+            httpResponse.responseBody(page, true);
         }
     }
 }

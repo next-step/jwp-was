@@ -49,12 +49,13 @@ public class RequestHandler implements Runnable {
             String path = requestLine.getUri().getPath();
 
             UserController userController = new UserController(userProcessor);
+
             if (userController.isSupport(path)) {
                 userController.handle(requestLine, httpHeader, httpBody, httpResponse);
                 return;
             }
 
-            httpResponse.responseOk(path, httpHeader.isLogined());
+            httpResponse.responseForward(path, httpHeader.isLogined());
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (URISyntaxException e) {
