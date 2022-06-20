@@ -8,10 +8,10 @@ import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
 
-public class SignUpController implements Controller {
+public class SignUpController extends AbstractController {
 
     @Override
-    public void service(final HttpRequest request, final HttpResponse response) throws IOException {
+    protected void doPost(final HttpRequest request, final HttpResponse response) throws IOException {
         final RequestBody requestBody = request.getBody();
 
         final String userId = requestBody.get("userId");

@@ -110,4 +110,19 @@ class HttpResponseTest {
                         "\r\n"
                 );
     }
+
+    @Test
+    void Method_Not_Allowed_응답() throws IOException {
+        // given
+        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        final HttpResponse httpResponse = new HttpResponse(byteArrayOutputStream);
+
+        // when
+        httpResponse.responseMethodNotAllowed();
+
+        // then
+        final String rawHttpResponse = byteArrayOutputStream.toString();
+        assertThat(rawHttpResponse)
+                .isEqualTo("HTTP/1.1 405 Method Not Allowed \r\n");
+    }
 }

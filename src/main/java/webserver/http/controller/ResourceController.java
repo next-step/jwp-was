@@ -6,10 +6,10 @@ import webserver.http.response.HttpResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class ResourceController implements Controller {
+public class ResourceController extends AbstractController {
 
     @Override
-    public void service(final HttpRequest request, final HttpResponse response) throws IOException {
+    protected void doGet(final HttpRequest request, final HttpResponse response) throws IOException {
         try {
             response.setBodyContentPath(request.getPath());
             response.responseOK();

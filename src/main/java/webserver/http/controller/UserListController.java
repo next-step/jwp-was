@@ -11,10 +11,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
-public class UserListController implements Controller {
+public class UserListController extends AbstractController {
 
     @Override
-    public void service(final HttpRequest request, final HttpResponse response) throws IOException {
+    protected void doGet(final HttpRequest request, final HttpResponse response) throws IOException {
         Cookie cookie = request.getCookieOrNull("logined");
 
         boolean logined = false;

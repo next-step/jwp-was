@@ -93,6 +93,12 @@ public class HttpResponse {
         this.out.flush();
     }
 
+    public void responseMethodNotAllowed() throws IOException {
+        this.out.writeBytes("HTTP/1.1 405 Method Not Allowed \r\n");
+        this.writeResponseHeaders();
+        this.out.flush();
+    }
+
     private void writeResponseHeaders() throws IOException {
         final Map<String, String> headers = this.headers.getAll();
 
