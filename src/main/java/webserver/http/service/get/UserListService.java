@@ -1,16 +1,11 @@
-package webserver.http.service;
+package webserver.http.service.get;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.User;
 import utils.TemplateUtils;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

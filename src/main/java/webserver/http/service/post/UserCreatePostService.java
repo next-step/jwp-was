@@ -1,4 +1,4 @@
-package webserver.http.service;
+package webserver.http.service.post;
 
 import db.DataBase;
 import model.User;

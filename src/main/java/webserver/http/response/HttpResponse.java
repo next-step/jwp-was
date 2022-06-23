@@ -4,8 +4,6 @@ import webserver.http.Header;
 import webserver.http.request.HttpRequest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,6 +46,7 @@ public class HttpResponse implements Response {
 
     public void ok(byte[] body) {
         responseLine.ok();
+
         this.body = body;
         header.put("Content-Type", "text/html;charset=utf-8");
         header.put("Content-Length", String.valueOf(getLength()));
@@ -55,6 +54,7 @@ public class HttpResponse implements Response {
 
     public void redirect(String location) {
         responseLine.redirect();
+
         header.put("Location", location);
         header.put("Content-Type", "text/html;charset=utf-8");
         header.put("Content-Length", String.valueOf(getLength()));

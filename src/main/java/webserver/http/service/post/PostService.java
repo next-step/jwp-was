@@ -1,6 +1,7 @@
-package webserver.http.service;
+package webserver.http.service.post;
 
 import webserver.http.request.HttpRequest;
+import webserver.http.service.Service;
 
 import java.util.List;
 
