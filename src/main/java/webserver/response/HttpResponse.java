@@ -1,6 +1,7 @@
 package webserver.response;
 
 import webserver.request.Headers;
+import webserver.request.Protocol;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,22 +14,36 @@ public class HttpResponse {
     private final byte[] body;
     private final String code; // TODO enum으로 변경
     private final Headers headers;
+    private final Protocol protocol;
 
-    public HttpResponse(byte[] body, String code, Headers headers) {
+    public HttpResponse(byte[] body, String code, Headers headers, Protocol protocol) {
         this.body = body;
         this.code = code;
         this.headers = headers;
+        this.protocol = protocol;
+    }
+
+    public HttpResponse(byte[] body, String code) {
+        this.body = body;
+        this.code = code;
+        this.headers = Headers.empty();
+        this.protocol = Protocol.defaultProtocol();
     }
 
     public static HttpResponse response202() {
-        return new HttpResponse(new byte[]{}, "202", Headers.empty());
+        return new HttpResponse(new byte[]{}, "202", Headers.empty(), Protocol.defaultProtocol());
     }
 
     public static HttpResponse response302(String location) {
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put(Headers.LOCATION, location);
-        return new HttpResponse(new byte[]{}, "302", new Headers(headerMap));
+        return new HttpResponse(new byte[]{}, "302", new Headers(headerMap), Protocol.defaultProtocol());
     }
+
+    public static HttpResponse response404() {
+        return new HttpResponse(new byte[]{}, "404", Headers.empty(), Protocol.defaultProtocol());
+    }
+
 
     public byte[] getBody() {
         return body;
@@ -62,8 +77,9 @@ public class HttpResponse {
         headers.setTextCss();
     }
 
-    public String makeResponseHeader() {
+    public String response() {
+        String result = String.format("%s %s OK \r\n", protocol.response(), code);
         headers.put(Headers.CONTENT_LENGTH, String.valueOf(body.length));
-        return headers.response();
+        return result + headers.response();
     }
 }

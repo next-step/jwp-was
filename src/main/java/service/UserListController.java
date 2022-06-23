@@ -5,7 +5,6 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
-import webserver.request.Headers;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
@@ -27,14 +26,9 @@ public class UserListController extends GetController {
             Map<String, Object> parameterMap = new HashMap<>();
             parameterMap.put("users", DataBase.findAll());
             String body = template.apply(parameterMap);
-            return new HttpResponse(body.getBytes(), "202", Headers.empty());
+            return new HttpResponse(body.getBytes(), "202");
         } catch (IOException e) {
             throw new RuntimeException(e); // TODO custom exception
         }
-    }
-
-    @Override
-    public boolean canServe(HttpRequest httpRequest) {
-        return httpRequest.matchPath("/user/list.html");
     }
 }

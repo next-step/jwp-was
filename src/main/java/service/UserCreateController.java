@@ -15,9 +15,4 @@ public class UserCreateController extends GetController {
         DataBase.addUser(user);
         return HttpResponse.response302("/index.html");
     }
-
-    @Override
-    public boolean canServe(HttpRequest httpRequest) {
-        return httpRequest.matchPath("/user/create");
-    }
 }

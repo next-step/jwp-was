@@ -2,7 +2,6 @@ package service;
 
 import com.google.common.collect.Sets;
 import utils.FileIoUtils;
-import webserver.request.Headers;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
@@ -23,21 +22,26 @@ public class ResourceController extends GetController {
         String pathStr = httpRequest.getPathStr();
         try {
             if (pathStr.contains(".html")) { // TODO refactoring
-                HttpResponse httpResponse = new HttpResponse(FileIoUtils.loadFileFromClasspath(getHtmlFilePath(pathStr)), "202", Headers.empty());
+                HttpResponse httpResponse = new HttpResponse(FileIoUtils.loadFileFromClasspath(getHtmlFilePath(pathStr)), "202");
                 httpResponse.setTextHtml();
                 return httpResponse;
             } else if (pathStr.contains(".css")) {
-                HttpResponse httpResponse = new HttpResponse(FileIoUtils.loadFileFromClasspath(getStaticFilePath(pathStr)), "202", Headers.empty());
+                HttpResponse httpResponse = new HttpResponse(FileIoUtils.loadFileFromClasspath(getStaticFilePath(pathStr)), "202");
                 httpResponse.setTextCss();
                 return httpResponse;
             } else {
-                HttpResponse httpResponse = new HttpResponse(FileIoUtils.loadFileFromClasspath(getStaticFilePath(pathStr)), "202", Headers.empty());
+                HttpResponse httpResponse = new HttpResponse(FileIoUtils.loadFileFromClasspath(getStaticFilePath(pathStr)), "202");
                 return httpResponse;
             }
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e); // TODO custom exception
         }
 
+    }
+
+    public boolean canServe(HttpRequest httpRequest) {
+        return ALLOWED_RESOURCES.stream()
+                .anyMatch(httpRequest::matchPath);
     }
 
     private String getStaticFilePath(String pathStr) {
@@ -48,9 +52,4 @@ public class ResourceController extends GetController {
         return TEMPLATE_PATH + str;
     }
 
-    @Override
-    public boolean canServe(HttpRequest httpRequest) {
-        return ALLOWED_RESOURCES.stream()
-                .anyMatch(httpRequest::matchPath);
-    }
 }

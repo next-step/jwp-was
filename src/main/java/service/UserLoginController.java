@@ -25,9 +25,4 @@ public class UserLoginController extends PostController {
             return httpResponse;
         }
     }
-
-    @Override
-    public boolean canServe(HttpRequest httpRequest) {
-        return httpRequest.matchPath("/user/login");
-    }
 }

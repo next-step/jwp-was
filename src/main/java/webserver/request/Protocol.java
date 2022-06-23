@@ -38,4 +38,12 @@ public class Protocol {
     public int hashCode() {
         return Objects.hash(getType(), getVersion());
     }
+
+    public String response() {
+        return type + SLASH + version;
+    }
+
+    public static Protocol defaultProtocol() {
+        return new Protocol("HTTP", "1.1");
+    }
 }
