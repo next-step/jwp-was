@@ -71,15 +71,15 @@ public class HttpRequest {
         return uri.matchPath(str);
     }
 
-    public Headers getHeaders() {
-        return headers;
-    }
-
     public Body getBody() {
         return body;
     }
 
     public Map<String, String> getQueryMap() {
         return uri.getQueryMap();
+    }
+
+    public String getContentType() {
+        return headers.get(Headers.CONTENT_TYPE);
     }
 }

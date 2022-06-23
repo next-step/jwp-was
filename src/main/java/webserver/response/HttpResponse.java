@@ -48,13 +48,6 @@ public class HttpResponse {
         headers.putCookie(key, value);
     }
 
-    public void addHeader(String key, String value) {
-        headers.put(key, value);
-    }
-
-    public void setTextHtml() {
-        headers.setTextHtml();
-    }
 
     public void setTextCss() {
         headers.setTextCss();
@@ -64,5 +57,9 @@ public class HttpResponse {
         String result = String.format("%s %s OK \r\n", protocol.response(), code);
         headers.put(Headers.CONTENT_LENGTH, String.valueOf(body.length));
         return result + headers.response();
+    }
+
+    public void setContentType(String contentType) {
+        headers.put(Headers.CONTENT_TYPE, contentType);
     }
 }
