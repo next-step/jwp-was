@@ -3,7 +3,6 @@ package webserver.http.service.get;
 import utils.FileIoUtils;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
-import webserver.http.service.Service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -11,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ViewService extends GetService {
+public class ResourceService extends GetService {
     private static final List<String> applyFileExtension = List.of(".html", ".css", ".ico", ".js");
     private static final Map<String, String> resourcePath = new HashMap<>();
 
@@ -30,6 +29,10 @@ public class ViewService extends GetService {
 
     @Override
     public void doService(HttpRequest httpRequest, HttpResponse httpResponse) {
+        if (httpRequest.getPath().endsWith("css")) {
+            httpResponse.okWithContentType(read(httpRequest.getPath()), "text/css,*/*;q=0.1");
+            return;
+        }
         httpResponse.ok(read(httpRequest.getPath()));
     }
 

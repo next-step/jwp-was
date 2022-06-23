@@ -48,6 +48,11 @@ public class HttpRequest implements Request {
     }
 
     @Override
+    public String getHeader(String key) {
+        return header.get(key);
+    }
+
+    @Override
     public String getCookie(String key) {
         return header.getCookie(key);
     }

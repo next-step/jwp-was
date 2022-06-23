@@ -52,6 +52,14 @@ public class HttpResponse implements Response {
         header.put("Content-Length", String.valueOf(getLength()));
     }
 
+    public void okWithContentType(byte[] body, String contentType) {
+        responseLine.ok();
+
+        this.body = body;
+        header.put("Content-Type", contentType);
+        header.put("Content-Length", String.valueOf(getLength()));
+    }
+
     public void redirect(String location) {
         responseLine.redirect();
 

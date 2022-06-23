@@ -10,5 +10,7 @@ public interface Request {
 
     RequestBody getRequestBody();
 
+    String getHeader(String key);
+
     String getCookie(String key);
 }
