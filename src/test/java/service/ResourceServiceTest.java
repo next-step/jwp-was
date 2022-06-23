@@ -1,19 +1,23 @@
 package service;
 
 import org.junit.jupiter.api.Test;
-import webserver.request.RequestLine;
+import utils.IOUtils;
+import webserver.request.HttpRequest;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ResourceServiceTest {
 
     @Test
-    void canServe() {
-        RequestLine requestLine = RequestLine.from("GET /user/login.html HTTP/1.1");
+    void canServe() throws IOException {
+        String reqeustStr = "GET /user/login.html HTTP/1.1";
+        HttpRequest httpRequest = HttpRequest.from(IOUtils.toBufferedReader(reqeustStr));
 
-        ResourceService resourceService = new ResourceService();
-        boolean b = resourceService.canServe(requestLine);
+        ResourceController resourceService = new ResourceController();
+        boolean canServe = resourceService.canServe(httpRequest);
 
-        assertThat(b).isTrue();
+        assertThat(canServe).isTrue();
     }
 }

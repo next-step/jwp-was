@@ -3,14 +3,14 @@ package service;
 import com.google.common.collect.Sets;
 import utils.FileIoUtils;
 import webserver.request.Headers;
-import webserver.request.RequestLine;
-import webserver.response.Response;
+import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Set;
 
-public class ResourceService extends GetService {
+public class ResourceController extends GetController {
 
     private static final String TEMPLATE_PATH = "./templates";
 
@@ -19,20 +19,20 @@ public class ResourceService extends GetService {
     private static final Set<String> ALLOWED_RESOURCES = Sets.newHashSet("/index.html", "\\/.*\\.html", "\\/.*\\.css");
 
     @Override
-    public Response doGet(RequestLine requestLine) {
-        String pathStr = requestLine.getPathStr();
+    public HttpResponse doGet(HttpRequest httpRequest) {
+        String pathStr = httpRequest.getPathStr();
         try {
             if (pathStr.contains(".html")) { // TODO refactoring
-                Response response = new Response(FileIoUtils.loadFileFromClasspath(getHtmlFilePath(pathStr)), "202", Headers.empty());
-                response.setTextHtml();
-                return response;
+                HttpResponse httpResponse = new HttpResponse(FileIoUtils.loadFileFromClasspath(getHtmlFilePath(pathStr)), "202", Headers.empty());
+                httpResponse.setTextHtml();
+                return httpResponse;
             } else if (pathStr.contains(".css")) {
-                Response response = new Response(FileIoUtils.loadFileFromClasspath(getStaticFilePath(pathStr)), "202", Headers.empty());
-                response.setTextCss();
-                return response;
+                HttpResponse httpResponse = new HttpResponse(FileIoUtils.loadFileFromClasspath(getStaticFilePath(pathStr)), "202", Headers.empty());
+                httpResponse.setTextCss();
+                return httpResponse;
             } else {
-                Response response = new Response(FileIoUtils.loadFileFromClasspath(getStaticFilePath(pathStr)), "202", Headers.empty());
-                return response;
+                HttpResponse httpResponse = new HttpResponse(FileIoUtils.loadFileFromClasspath(getStaticFilePath(pathStr)), "202", Headers.empty());
+                return httpResponse;
             }
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e); // TODO custom exception
@@ -49,8 +49,8 @@ public class ResourceService extends GetService {
     }
 
     @Override
-    public boolean canServe(RequestLine requestLine) {
+    public boolean canServe(HttpRequest httpRequest) {
         return ALLOWED_RESOURCES.stream()
-                .anyMatch(requestLine::matchPath);
+                .anyMatch(httpRequest::matchPath);
     }
 }

@@ -1,20 +1,24 @@
 package service;
 
 import org.junit.jupiter.api.Test;
-import webserver.request.RequestLine;
-import webserver.response.Response;
+import utils.IOUtils;
+import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class UserListServiceTest {
 
     @Test
-    void doGet() {
-        RequestLine requestLine = RequestLine.from("GET /user/list.html HTTP/1.1");
+    void doGet() throws IOException {
+        String requestStr = "GET /user/list.html HTTP/1.1";
+        HttpRequest httpRequest = HttpRequest.from(IOUtils.toBufferedReader(requestStr));
 
-        UserListService userListService = new UserListService();
-        Response response = userListService.doGet(requestLine);
+        UserListController userListService = new UserListController();
+        HttpResponse httpResponse = userListService.doGet(httpRequest);
 
-        assertThat(response.getCode()).isEqualTo("202");
+        assertThat(httpResponse.getCode()).isEqualTo("202");
     }
 }

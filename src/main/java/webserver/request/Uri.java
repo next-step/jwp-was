@@ -1,6 +1,7 @@
 package webserver.request;
 
 
+import java.util.Map;
 import java.util.Objects;
 
 public class Uri {
@@ -53,5 +54,9 @@ public class Uri {
 
     public boolean matchPath(String str) {
         return path.match(str);
+    }
+
+    public Map<String, String> getQueryMap() {
+        return query.getQueryMap();
     }
 }

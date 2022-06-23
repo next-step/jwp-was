@@ -8,26 +8,26 @@ import java.util.Map;
 /**
  * 현재 DTO느낌으로 사용하고 있으나 오브젝트로 역할을 가져가야한다.
  */
-public class Response {
+public class HttpResponse {
 
     private final byte[] body;
     private final String code; // TODO enum으로 변경
     private final Headers headers;
 
-    public Response(byte[] body, String code, Headers headers) {
+    public HttpResponse(byte[] body, String code, Headers headers) {
         this.body = body;
         this.code = code;
         this.headers = headers;
     }
 
-    public static Response response202() {
-        return new Response(new byte[]{}, "202", Headers.empty());
+    public static HttpResponse response202() {
+        return new HttpResponse(new byte[]{}, "202", Headers.empty());
     }
 
-    public static Response response302(String location) {
+    public static HttpResponse response302(String location) {
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put(Headers.LOCATION, location);
-        return new Response(new byte[]{}, "302", new Headers(headerMap));
+        return new HttpResponse(new byte[]{}, "302", new Headers(headerMap));
     }
 
     public byte[] getBody() {

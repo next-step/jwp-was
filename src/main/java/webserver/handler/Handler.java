@@ -1,18 +1,18 @@
 package webserver.handler;
 
-import service.Service;
-import webserver.request.RequestLine;
+import service.Controller;
+import webserver.request.HttpRequest;
 
 import java.util.List;
 
 public abstract class Handler {
 
-    public Service find(RequestLine requestLine) {
+    public Controller find(HttpRequest httpRequest) {
         return getServices().stream()
-                .filter(service -> service.canServe(requestLine))
+                .filter(service -> service.canServe(httpRequest))
                 .findFirst()
                 .orElse(null);
     }
 
-    public abstract List<Service> getServices();
+    public abstract List<Controller> getServices();
 }

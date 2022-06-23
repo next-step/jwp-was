@@ -2,8 +2,11 @@ package webserver.request;
 
 import utils.CookieUtils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Headers {
@@ -23,7 +26,21 @@ public class Headers {
         return new Headers(new HashMap<>());
     }
 
-    public void addHeaderByLine(String line) {
+    public static Headers from(BufferedReader br) throws IOException {
+        String line = null;
+        Headers headers = Headers.empty();
+        while (!"".equals(line)) {
+            line = br.readLine();
+            if (Objects.isNull(line)) {
+                break;
+            }
+
+            headers.addHeaderByLine(line);
+        }
+        return headers;
+    }
+
+    private void addHeaderByLine(String line) {
         String[] split = line.split(": ", 2);
         if (split.length < 2) {
             return;

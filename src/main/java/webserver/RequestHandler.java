@@ -3,15 +3,12 @@ package webserver;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import service.Service;
-import utils.IOUtils;
+import service.Controller;
 import webserver.handler.ApiHandler;
 import webserver.handler.Handler;
 import webserver.handler.ResourceHandler;
-import webserver.request.Headers;
-import webserver.request.RequestBody;
-import webserver.request.RequestLine;
-import webserver.response.Response;
+import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -42,60 +39,40 @@ public class RequestHandler implements Runnable {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
 
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            String line = br.readLine();
-            RequestLine requestLine = RequestLine.from(line);
-            Headers headers = getHeaders(br);
+            HttpRequest httpRequest = HttpRequest.from(br);
 
-            int contentLength = headers.getContentLength();
-            String body = IOUtils.readData(br, contentLength);
-            logger.debug("Body: {}", body);
-            RequestBody requestBody = RequestBody.from(body);
 
-            Response response = Response.response202();
+            HttpResponse httpResponse = HttpResponse.response202();
             for (Handler handler : handlers) {
-                Service service = handler.find(requestLine);
-                if (Objects.nonNull(service)) {
-                    response = service.doService(requestLine, requestBody);
+                Controller controller = handler.find(httpRequest);
+                if (Objects.nonNull(controller)) {
+                    httpResponse = controller.doService(httpRequest);
                     break;
                 }
             }
 
             DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, response);
-            responseBody(dos, response);
+            response200Header(dos, httpResponse);
+            responseBody(dos, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private Headers getHeaders(BufferedReader br) throws IOException {
-        String line = null;
-        Headers headers = Headers.empty();
-        while (!"".equals(line)) {
-            logger.debug("{}", line);
-            line = br.readLine();
-            if (Objects.isNull(line)) {
-                break;
-            }
 
-            headers.addHeaderByLine(line);
-        }
-        return headers;
-    }
-
-    private void response200Header(DataOutputStream dos, Response response) {
+    private void response200Header(DataOutputStream dos, HttpResponse httpResponse) {
         try {
-            dos.writeBytes(String.format("HTTP/1.1 %s OK \r\n", response.getCode()));
-            dos.writeBytes(response.makeResponseHeader());
+            dos.writeBytes(String.format("HTTP/1.1 %s OK \r\n", httpResponse.getCode()));
+            dos.writeBytes(httpResponse.makeResponseHeader());
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void responseBody(DataOutputStream dos, Response response) {
+    private void responseBody(DataOutputStream dos, HttpResponse httpResponse) {
         try {
-            byte[] body = response.getBody();
+            byte[] body = httpResponse.getBody();
             dos.write(body, 0, body.length);
             dos.flush();
         } catch (IOException e) {
