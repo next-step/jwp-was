@@ -6,8 +6,6 @@ import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.response.HttpResponse;
 
-import javax.servlet.http.HttpServletResponse;
-
 public class UserCreatePostService extends PostService {
     @Override
     protected boolean pathMatch(HttpRequest httpRequest) {

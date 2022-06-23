@@ -1,7 +1,5 @@
 package webserver.http;
 
-import webserver.http.request.Cookies;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;

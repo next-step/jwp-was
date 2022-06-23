@@ -2,7 +2,11 @@ package webserver.http.service;
 
 import webserver.http.request.HttpRequest;
 
+import java.util.List;
+
 public abstract class PostService implements Service {
+    public static List<Service> services = List.of(new UserCreatePostService(), new LoginService());
+
     @Override
     public boolean find(HttpRequest httpRequest) {
         return httpRequest.isPost() && pathMatch(httpRequest);

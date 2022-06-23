@@ -2,17 +2,12 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.Header;
+import webserver.exception.RequestPathNotFoundException;
 import webserver.http.request.HttpRequest;
-import webserver.http.request.RequestBody;
-import webserver.http.request.RequestLine;
 import webserver.http.response.HttpResponse;
-import webserver.http.service.LoginService;
+import webserver.http.service.GetService;
+import webserver.http.service.PostService;
 import webserver.http.service.Service;
-import webserver.http.service.UserCreateGetService;
-import webserver.http.service.UserCreatePostService;
-import webserver.http.service.UserListService;
-import webserver.http.service.ViewService;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -21,7 +16,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.List;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -53,18 +47,25 @@ public class RequestHandler implements Runnable {
     }
 
     private void doService(HttpRequest httpRequest, HttpResponse httpResponse) {
-        ViewService viewService = new ViewService();
-        UserCreateGetService userCreateGetService = new UserCreateGetService();
-        UserCreatePostService userCreatePostService = new UserCreatePostService();
-        UserListService userListService = new UserListService();
-        LoginService loginService = new LoginService();
-        List<Service> services = List.of(viewService, userCreateGetService, userCreatePostService, loginService, userListService);
+        if (httpRequest.isGet()) {
+            Service service = GetService.services.stream()
+                                                 .filter(it -> it.find(httpRequest))
+                                                 .findFirst()
+                                                 .orElseThrow(() -> new RequestPathNotFoundException(httpRequest.getPath()));
+            service.doService(httpRequest, httpResponse);
+            return;
+        }
 
-        Service service = services.stream()
-                                  .filter(it -> it.find(httpRequest))
-                                  .findFirst()
-                                  .orElseThrow(() -> new IllegalArgumentException("리소스를 찾을수 없습니다."));
-        service.doService(httpRequest, httpResponse);
+        if (httpRequest.isPost()) {
+            Service service = PostService.services.stream()
+                                      .filter(it -> it.find(httpRequest))
+                                      .findFirst()
+                                      .orElseThrow(() -> new RequestPathNotFoundException(httpRequest.getPath()));
+            service.doService(httpRequest, httpResponse);
+            return;
+        }
+
+        throw new RequestPathNotFoundException(httpRequest.getPath());
     }
 
     private void responseHeader(DataOutputStream dos, HttpResponse httpResponse) {
