@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class HandlebarsTest {
     private static final Logger log = LoggerFactory.getLogger(HandlebarsTest.class);
 
@@ -44,6 +46,7 @@ public class HandlebarsTest {
         Map<String, Object> users = new HashMap<>();
         users.put("users", List.of(user, user2));
         String listPage = template.apply(users);
-        log.debug("listPage : {}", listPage);
+
+        assertThat(listPage).contains("<th scope=\"row\">1</th> <td>dean</td> <td>dean</td> <td>dean@gmail.com</td><td><a href=\"#\" class=\"btn btn-success\" role=\"button\">수정</a></td>");
     }
 }

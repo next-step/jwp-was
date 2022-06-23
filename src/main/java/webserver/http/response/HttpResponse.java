@@ -41,7 +41,7 @@ public class HttpResponse implements Response {
 
     @Override
     public String getLocation() {
-        return header.get("location");
+        return header.get("Location");
     }
 
     public void ok(byte[] body) {

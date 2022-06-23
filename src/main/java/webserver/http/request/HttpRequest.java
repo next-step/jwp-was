@@ -13,14 +13,18 @@ public class HttpRequest implements Request {
 
     private final RequestBody requestBody;
 
-    public HttpRequest(BufferedReader bufferedReader) throws IOException {
+    public HttpRequest(RequestLine requestLine, Header header, RequestBody requestBody) {
+        this.requestLine = requestLine;
+        this.header = header;
+        this.requestBody = requestBody;
+    }
+
+    public static HttpRequest of(BufferedReader bufferedReader) throws IOException {
         RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
         Header header = Header.of(bufferedReader);
         RequestBody requestBody = RequestBody.of(bufferedReader, header.getContentLength());
 
-        this.requestLine = requestLine;
-        this.header = header;
-        this.requestBody = requestBody;
+        return new HttpRequest(requestLine, header, requestBody);
     }
 
     @Override
@@ -55,7 +59,6 @@ public class HttpRequest implements Request {
     public boolean isPost() {
         return getMethod() == Method.POST;
     }
-
 
     public Protocol getProtocol() {
         return requestLine.getProtocol();

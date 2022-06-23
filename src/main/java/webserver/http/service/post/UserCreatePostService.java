@@ -12,7 +12,6 @@ public class UserCreatePostService extends PostService {
         return httpRequest.getPath()
                           .equals("/user/create");
     }
-
     @Override
     public void doService(HttpRequest httpRequest, HttpResponse httpResponse) {
         RequestBody requestBody = httpRequest.getRequestBody();

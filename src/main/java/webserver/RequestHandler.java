@@ -33,7 +33,7 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 
-            HttpRequest httpRequest = new HttpRequest(bufferedReader);
+            HttpRequest httpRequest = HttpRequest.of(bufferedReader);
             HttpResponse httpResponse = new HttpResponse(httpRequest);
 
             doService(httpRequest, httpResponse);

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ViewService implements Service {
+public class ViewService extends GetService {
     private static final List<String> applyFileExtension = List.of(".html", ".css", ".ico", ".js");
     private static final Map<String, String> resourcePath = new HashMap<>();
 
@@ -23,9 +23,9 @@ public class ViewService implements Service {
     }
 
     @Override
-    public boolean find(HttpRequest httpRequest) {
+    protected boolean pathMatch(HttpRequest httpRequest) {
         return applyFileExtension.stream()
-                          .anyMatch(extension -> httpRequest.getPath().endsWith(extension));
+                                 .anyMatch(extension -> httpRequest.getPath().endsWith(extension));
     }
 
     @Override
