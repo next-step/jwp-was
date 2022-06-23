@@ -2,6 +2,10 @@ package webserver.http.request;
 
 import webserver.http.Header;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Objects;
+
 public class HttpRequest implements Request {
     private final RequestLine requestLine;
 
@@ -9,7 +13,11 @@ public class HttpRequest implements Request {
 
     private final RequestBody requestBody;
 
-    public HttpRequest(RequestLine requestLine, Header header, RequestBody requestBody) {
+    public HttpRequest(BufferedReader bufferedReader) throws IOException {
+        RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
+        Header header = Header.of(bufferedReader);
+        RequestBody requestBody = RequestBody.of(bufferedReader, header.getContentLength());
+
         this.requestLine = requestLine;
         this.header = header;
         this.requestBody = requestBody;
@@ -26,13 +34,18 @@ public class HttpRequest implements Request {
     }
 
     @Override
-    public QueryString getQueryString() {
-        return requestLine.getUri().getQueryString();
+    public RequestParameters getRequestParameters() {
+        return requestLine.getUri().getRequestParameters();
     }
 
     @Override
     public RequestBody getRequestBody() {
         return requestBody;
+    }
+
+    @Override
+    public String getCookie(String key) {
+        return header.getCookie(key);
     }
 
     public boolean isGet() {
@@ -50,5 +63,13 @@ public class HttpRequest implements Request {
 
     public Version getVersion() {
         return requestLine.getVersion();
+    }
+
+    public boolean isLogined() {
+        String logined = header.getCookie("logined");
+        if (Objects.nonNull(logined) && logined.equals("true")) {
+            return true;
+        }
+        return false;
     }
 }

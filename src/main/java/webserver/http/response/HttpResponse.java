@@ -15,7 +15,7 @@ public class HttpResponse implements Response {
 
     private byte[] body;
 
-    private Header header = new Header(new HashMap<>());
+    private Header header = new Header(new HashMap<>(), null);
 
     public HttpResponse(HttpRequest httpRequest) {
         responseLine = new ResponseLine(httpRequest.getProtocol(), httpRequest.getVersion());

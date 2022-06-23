@@ -3,7 +3,7 @@ package webserver.http.service;
 import db.DataBase;
 import model.User;
 import webserver.http.request.HttpRequest;
-import webserver.http.request.QueryString;
+import webserver.http.request.RequestParameters;
 import webserver.http.response.HttpResponse;
 
 public class UserCreateGetService extends GetService {
@@ -14,11 +14,11 @@ public class UserCreateGetService extends GetService {
 
     @Override
     public void doService(HttpRequest httpRequest, HttpResponse httpResponse) {
-        QueryString queryString = httpRequest.getQueryString();
-        User user = new User(queryString.get("userId"),
-                queryString.get("password"),
-                queryString.get("name"),
-                queryString.get("email"));
+        RequestParameters requestParameters = httpRequest.getRequestParameters();
+        User user = new User(requestParameters.get("userId"),
+                requestParameters.get("password"),
+                requestParameters.get("name"),
+                requestParameters.get("email"));
 
         DataBase.addUser(user);
 

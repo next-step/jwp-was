@@ -7,11 +7,11 @@ public class Uri {
 
     private String path;
 
-    private QueryString queryString;
+    private RequestParameters requestParameters;
 
-    private Uri(String path, QueryString queryString) {
+    private Uri(String path, RequestParameters requestParameters) {
         this.path = path;
-        this.queryString = queryString;
+        this.requestParameters = requestParameters;
     }
 
     public static Uri valueOf(String token) {
@@ -21,7 +21,7 @@ public class Uri {
 
         String[] values = token.split(QUERY_STRING_DELIMITER);
         if (values.length > 1) {
-            return new Uri(values[0], QueryString.of(values[1]));
+            return new Uri(values[0], RequestParameters.of(values[1]));
         }
 
         return new Uri(token, null);
@@ -31,7 +31,7 @@ public class Uri {
         return path;
     }
 
-    public QueryString getQueryString() {
-        return queryString;
+    public RequestParameters getRequestParameters() {
+        return requestParameters;
     }
 }

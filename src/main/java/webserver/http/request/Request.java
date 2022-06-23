@@ -6,7 +6,9 @@ public interface Request {
 
     Method getMethod();
 
-    QueryString getQueryString();
+    RequestParameters getRequestParameters();
 
     RequestBody getRequestBody();
+
+    String getCookie(String key);
 }

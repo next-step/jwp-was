@@ -7,7 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import webserver.http.request.Method;
 import webserver.http.request.Protocol;
-import webserver.http.request.QueryString;
+import webserver.http.request.RequestParameters;
 import webserver.http.request.RequestLine;
 import webserver.http.request.Version;
 
@@ -60,17 +60,17 @@ class RequestLineTest {
 
         Method method = requestLine.getMethod();
         String path = requestLine.getUri().getPath();
-        QueryString queryString = requestLine.getUri()
-                                             .getQueryString();
+        RequestParameters requestParameters = requestLine.getUri()
+                                                         .getRequestParameters();
         Protocol protocol = requestLine.getProtocol();
         Version version = requestLine.getVersion();
 
         assertAll(
                 () -> assertThat(method).isEqualTo(Method.GET),
                 () -> assertThat(path).isEqualTo("/users"),
-                () -> assertThat(queryString.get("userId")).isEqualTo("dean"),
-                () -> assertThat(queryString.get("password")).isEqualTo("password"),
-                () -> assertThat(queryString.get("name")).isEqualTo("Dongchul"),
+                () -> assertThat(requestParameters.get("userId")).isEqualTo("dean"),
+                () -> assertThat(requestParameters.get("password")).isEqualTo("password"),
+                () -> assertThat(requestParameters.get("name")).isEqualTo("Dongchul"),
                 () -> assertThat(protocol).isEqualTo(Protocol.HTTP),
                 () -> assertThat(version).isEqualTo(Version.V_1_1)
         );

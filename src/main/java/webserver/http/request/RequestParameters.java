@@ -6,14 +6,14 @@ import java.util.Objects;
 
 import static java.util.stream.Collectors.toMap;
 
-public class QueryString {
+public class RequestParameters {
     private final Map<String, String> queryStrings;
 
-    public QueryString(Map<String, String> queryStrings) {
+    public RequestParameters(Map<String, String> queryStrings) {
         this.queryStrings = queryStrings;
     }
 
-    public static QueryString of(String value) {
+    public static RequestParameters of(String value) {
         if (Objects.isNull(value)) {
             return null;
         }
@@ -22,7 +22,7 @@ public class QueryString {
                                             .map(token -> token.split("="))
                                             .collect(toMap(strings -> strings[0], strings -> strings[1]));
 
-        return new QueryString(collect);
+        return new RequestParameters(collect);
     }
 
     public String get(String key) {

@@ -11,6 +11,7 @@ import webserver.http.service.LoginService;
 import webserver.http.service.Service;
 import webserver.http.service.UserCreateGetService;
 import webserver.http.service.UserCreatePostService;
+import webserver.http.service.UserListService;
 import webserver.http.service.ViewService;
 
 import java.io.BufferedReader;
@@ -37,11 +38,8 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-            RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
-            Header header = Header.of(bufferedReader);
-            RequestBody requestBody = RequestBody.of(bufferedReader, header.getContentLength());
 
-            HttpRequest httpRequest = new HttpRequest(requestLine, header, requestBody);
+            HttpRequest httpRequest = new HttpRequest(bufferedReader);
             HttpResponse httpResponse = new HttpResponse(httpRequest);
 
             doService(httpRequest, httpResponse);
@@ -58,13 +56,14 @@ public class RequestHandler implements Runnable {
         ViewService viewService = new ViewService();
         UserCreateGetService userCreateGetService = new UserCreateGetService();
         UserCreatePostService userCreatePostService = new UserCreatePostService();
+        UserListService userListService = new UserListService();
         LoginService loginService = new LoginService();
-        List<Service> services = List.of(viewService, userCreateGetService, userCreatePostService, loginService);
+        List<Service> services = List.of(viewService, userCreateGetService, userCreatePostService, loginService, userListService);
 
         Service service = services.stream()
                                   .filter(it -> it.find(httpRequest))
                                   .findFirst()
-                                  .orElseThrow();
+                                  .orElseThrow(() -> new IllegalArgumentException("리소스를 찾을수 없습니다."));
         service.doService(httpRequest, httpResponse);
     }
 
