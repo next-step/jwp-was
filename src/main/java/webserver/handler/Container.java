@@ -8,6 +8,7 @@ import service.UserListController;
 import service.UserLoginController;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
+import webserver.response.HttpResponseFactory;
 
 import java.util.Map;
 import java.util.Objects;
@@ -34,6 +35,6 @@ public class Container {
             return RESOURCE_CONTROLLER.doService(request);
         }
 
-        return HttpResponse.response404();
+        return HttpResponseFactory.response404();
     }
 }

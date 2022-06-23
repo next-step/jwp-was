@@ -5,6 +5,7 @@ import db.FailedLoginException;
 import webserver.request.Body;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
+import webserver.response.HttpResponseFactory;
 
 public class UserLoginController extends PostController {
 
@@ -16,11 +17,11 @@ public class UserLoginController extends PostController {
 
         try {
             DataBase.login(userId, password);
-            HttpResponse httpResponse = HttpResponse.response302("/index.html");
+            HttpResponse httpResponse = HttpResponseFactory.response302("/index.html");
             httpResponse.putCookie("logined", "true");
             return httpResponse;
         } catch (FailedLoginException e) {
-            HttpResponse httpResponse = HttpResponse.response302("/user/login_failed.html");
+            HttpResponse httpResponse = HttpResponseFactory.response302("/user/login_failed.html");
             httpResponse.putCookie("logined", "false");
             return httpResponse;
         }
