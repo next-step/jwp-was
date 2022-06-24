@@ -1,4 +1,4 @@
-package webserver;
+package webserver.domain.http;
 
 import java.util.Objects;
 
@@ -47,5 +47,13 @@ public class Uri {
     @Override
     public int hashCode() {
         return Objects.hash(path, queryString);
+    }
+
+    @Override
+    public String toString() {
+        return "Uri{" +
+                "path='" + path + '\'' +
+                ", queryString=" + queryString +
+                '}';
     }
 }

@@ -1,4 +1,4 @@
-package webserver;
+package webserver.domain.http;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,21 +8,22 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class QueryString {
+
     private final static String QUERY_STRING_DELIMITER = "&";
     private final static String KEY_VALUE_DELIMITER = "=";
 
-    private final Map<String, String> queryString;
+    private final Map<String, String> parameter;
 
     public QueryString() {
-        this.queryString = Collections.emptyMap();
+        this.parameter = Collections.emptyMap();
     }
 
     private QueryString(Map<String, String> input) {
-        this.queryString = input;
+        this.parameter = input;
     }
 
     public static QueryString from(String input) {
-        if (Objects.isNull(input)) {
+        if (Objects.isNull(input) || input.isEmpty()) {
             return new QueryString();
         }
 
@@ -30,6 +31,7 @@ public class QueryString {
             Map<String, String> collect = Arrays.stream(input.split(QUERY_STRING_DELIMITER))
                     .map(query -> query.split(KEY_VALUE_DELIMITER))
                     .collect(Collectors.toUnmodifiableMap(
+
                             keyValue -> keyValue[0],
                             keyValue -> keyValue[1]
                     ));
@@ -41,7 +43,7 @@ public class QueryString {
     }
 
     public String get(String key) {
-        return Optional.ofNullable(queryString.get(key))
+        return Optional.ofNullable(parameter.get(key))
                 .orElseThrow(IllegalArgumentException::new);
     }
 
@@ -50,11 +52,18 @@ public class QueryString {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         QueryString that = (QueryString) o;
-        return Objects.equals(queryString, that.queryString);
+        return Objects.equals(parameter, that.parameter);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(QUERY_STRING_DELIMITER, KEY_VALUE_DELIMITER, queryString);
+        return Objects.hash(parameter);
+    }
+
+    @Override
+    public String toString() {
+        return "HttpParameter{" +
+                "parameter=" + parameter +
+                '}';
     }
 }

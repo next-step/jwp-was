@@ -5,6 +5,9 @@ import java.net.Socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.adapter.in.RequestHandler;
+import webserver.adapter.out.persistence.UserRepositoryImpl;
+import webserver.application.UserProcessorImpl;
 
 public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
@@ -25,7 +28,7 @@ public class WebApplicationServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection));
+                Thread thread = new Thread(new RequestHandler(connection, new UserProcessorImpl(new UserRepositoryImpl())));
                 thread.start();
             }
         }

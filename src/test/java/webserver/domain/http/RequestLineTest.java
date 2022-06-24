@@ -1,18 +1,22 @@
-package webserver;
+package webserver.domain.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.domain.http.HttpMethod;
+import webserver.domain.http.Protocol;
+import webserver.domain.http.RequestLine;
+import webserver.domain.http.Uri;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RequestLineParserTest {
+public class RequestLineTest {
 
     @DisplayName("GET RequestLine을 파싱할 수 있다.")
     @Test
     public void parseGetRequest() {
         String input = "GET /users HTTP/1.1";
 
-        RequestLine actual = new RequestLineParser().parse(input);
+        RequestLine actual = RequestLine.from(input);
 
         assertThat(actual).isEqualTo(new RequestLine(HttpMethod.valueOf("GET"), Uri.from("/users"), Protocol.from("HTTP/1.1")));
     }
@@ -22,7 +26,7 @@ public class RequestLineParserTest {
     public void parsePostReqeust() {
         String input = "POST /users HTTP/1.1";
 
-        RequestLine actual = new RequestLineParser().parse(input);
+        RequestLine actual = RequestLine.from(input);
 
         assertThat(actual).isEqualTo(new RequestLine(HttpMethod.valueOf("POST"), Uri.from("/users"), Protocol.from("HTTP/1.1")));
     }
@@ -32,7 +36,7 @@ public class RequestLineParserTest {
     public void parseQueryStringRequest() {
         String input = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
 
-        RequestLine actual = new RequestLineParser().parse(input);
+        RequestLine actual = RequestLine.from(input);
 
         assertThat(actual).isEqualTo(new RequestLine(HttpMethod.valueOf("GET"), Uri.from("/users?userId=javajigi&password=password&name=JaeSung"), Protocol.from("HTTP/1.1")));
     }
