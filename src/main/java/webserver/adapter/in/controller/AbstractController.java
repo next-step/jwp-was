@@ -20,10 +20,10 @@ public abstract class AbstractController implements Controller {
     }
 
     public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
-        throw new RuntimeException("Not Implementation");
+        throw new RuntimeException("Not implemented");
     }
 
     public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
-        throw new RuntimeException("Not Implementation");
+        throw new RuntimeException("Not implemented");
     }
 }

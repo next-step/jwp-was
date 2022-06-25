@@ -34,4 +34,17 @@ class HttpRequestTest {
         assertThat(actual.getHttpHeader().get("Connection")).isEqualTo("keep-alive");
         assertThat(actual.getRequestBody().get("userId")).isEqualTo("javajigi");
     }
+
+    @Test
+    public void request_POST2() throws Exception {
+        InputStream in = new FileInputStream(testDirectory + "Http_POST2.txt");
+
+        HttpRequest actual = new HttpRequest(in);
+
+        assertThat(actual.getHttpMethod()).isEqualTo(HttpMethod.POST);
+        assertThat(actual.getUri().getPath()).isEqualTo("/user/create");
+        assertThat(actual.getHttpHeader().get("Connection")).isEqualTo("keep-alive");
+        assertThat(actual.getUri().getQueryString().get("id")).isEqualTo("1");
+        assertThat(actual.getRequestBody().get("userId")).isEqualTo("javajigi");
+    }
 }
