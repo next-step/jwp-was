@@ -2,6 +2,7 @@ package webserver.adapter.in;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.adapter.in.controller.Controller;
 import webserver.adapter.out.web.HttpResponse;
 import webserver.application.UserProcessor;
 
@@ -11,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -31,11 +33,10 @@ public class RequestHandler implements Runnable {
             HttpResponse httpResponse = new HttpResponse(new DataOutputStream(out));
 
             String path = httpRequest.getUri().getPath();
+            Controller controller = new RequestMapper(userProcessor).getController(path);
 
-            UserController userController = new UserController(userProcessor);
-
-            if (userController.isSupport(path)) {
-                userController.handle(httpRequest, httpResponse);
+            if (Objects.nonNull(controller)) {
+                controller.service(httpRequest, httpResponse);
                 return;
             }
 
