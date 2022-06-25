@@ -73,12 +73,9 @@ public class Headers {
         headerMap.put(COOKIE_KEY_NAME, cookieMapStr);
     }
 
-    public void setTextHtml() {
-        headerMap.put(CONTENT_TYPE, "text/html; charset=utf-8");
-    }
-
-    public void setTextCss() {
-        headerMap.put(CONTENT_TYPE, "text/css");
+    public String getCookie(String key) {
+        Map<String, String> cookies = CookieUtils.strToCookieMap(headerMap.get(COOKIE_KEY_NAME));
+        return cookies.getOrDefault(key, null);
     }
 
     public String response() {
@@ -91,9 +88,5 @@ public class Headers {
                     return key + ": " + entry.getValue();
                 })
                 .collect(Collectors.joining("\r\n")) + "\r\n";
-    }
-
-    public void setContentLength(int length) {
-        headerMap.put(CONTENT_LENGTH, String.valueOf(length));
     }
 }

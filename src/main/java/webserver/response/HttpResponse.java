@@ -48,11 +48,6 @@ public class HttpResponse {
         headers.putCookie(key, value);
     }
 
-
-    public void setTextCss() {
-        headers.setTextCss();
-    }
-
     public String response() {
         String result = String.format("%s %s OK \r\n", protocol.response(), code);
         headers.put(Headers.CONTENT_LENGTH, String.valueOf(body.length));
