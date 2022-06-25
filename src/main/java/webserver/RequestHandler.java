@@ -2,9 +2,9 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.HttpMethod;
+import webserver.http.RequestRouter;
+import webserver.http.controller.Controller;
 import webserver.http.controller.LoginController;
-import webserver.http.controller.ResourceController;
 import webserver.http.controller.SignUpController;
 import webserver.http.controller.UserListController;
 import webserver.http.request.HttpRequest;
@@ -16,7 +16,15 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class RequestHandler implements Runnable {
+    private static final RequestRouter requestRouter = new RequestRouter();
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+
+    static {
+        requestRouter
+                .add("/user/create", new SignUpController())
+                .add("/user/login", new LoginController())
+                .add("/user/list", new UserListController());
+    }
 
     private final Socket connection;
 
@@ -32,22 +40,14 @@ public class RequestHandler implements Runnable {
             final HttpRequest httpRequest = new HttpRequest(in);
             final HttpResponse httpResponse = new HttpResponse(out);
 
-            if (httpRequest.getMethod().equals(HttpMethod.POST) && httpRequest.getPath().equals("/user/create")) {
-                new SignUpController().service(httpRequest, httpResponse);
+            final Controller controllerOrNull = requestRouter.getRoutedControllerOrNull(httpRequest);
+
+            if (controllerOrNull != null) {
+                controllerOrNull.service(httpRequest, httpResponse);
                 return;
             }
 
-            if (httpRequest.getMethod().equals(HttpMethod.POST) && httpRequest.getPath().equals("/user/login")) {
-                new LoginController().service(httpRequest, httpResponse);
-                return;
-            }
-
-            if (httpRequest.getMethod().equals(HttpMethod.GET) && httpRequest.getPath().equals("/user/list")) {
-                new UserListController().service(httpRequest, httpResponse);
-                return;
-            }
-
-            new ResourceController().service(httpRequest, httpResponse);
+            httpResponse.responseNotFound();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
