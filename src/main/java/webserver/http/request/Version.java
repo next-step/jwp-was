@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request;
 
 import java.util.Arrays;
 
@@ -16,5 +16,9 @@ public enum Version {
                      .filter(version -> version.value.equals(value))
                      .findFirst()
                      .orElseThrow(() -> new IllegalArgumentException("지원하지 않는 버전입니다."));
+    }
+
+    public String getValue() {
+        return value;
     }
 }

@@ -1,13 +1,21 @@
 package webserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.exception.RequestPathNotFoundException;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
+import webserver.http.service.Service;
+import webserver.http.service.get.GetService;
+import webserver.http.service.post.PostService;
+
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -23,30 +31,61 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+
+            HttpRequest httpRequest = HttpRequest.of(bufferedReader);
+            HttpResponse httpResponse = new HttpResponse(httpRequest);
+
+            doService(httpRequest, httpResponse);
+
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            responseHeader(dos, httpResponse);
+            responseBody(dos, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void doService(HttpRequest httpRequest, HttpResponse httpResponse) {
+        if (httpRequest.isGet()) {
+            Service service = GetService.services.stream()
+                                                 .filter(it -> it.find(httpRequest))
+                                                 .findFirst()
+                                                 .orElseThrow(() -> new RequestPathNotFoundException(httpRequest.getPath()));
+            service.doService(httpRequest, httpResponse);
+            return;
+        }
+
+        if (httpRequest.isPost()) {
+            Service service = PostService.services.stream()
+                                      .filter(it -> it.find(httpRequest))
+                                      .findFirst()
+                                      .orElseThrow(() -> new RequestPathNotFoundException(httpRequest.getPath()));
+            service.doService(httpRequest, httpResponse);
+            return;
+        }
+
+        throw new RequestPathNotFoundException(httpRequest.getPath());
+    }
+
+    private void responseHeader(DataOutputStream dos, HttpResponse httpResponse) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            httpResponse.toResponseHeader().forEach(header -> {
+                try {
+                    dos.writeBytes(header + "\r\n");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
+    private void responseBody(DataOutputStream dos, HttpResponse httpResponse) {
         try {
-            dos.write(body, 0, body.length);
+            dos.write(httpResponse.getBody(), 0, httpResponse.getLength());
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
