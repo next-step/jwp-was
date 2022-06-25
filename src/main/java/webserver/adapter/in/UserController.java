@@ -6,9 +6,6 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import webserver.adapter.out.web.HttpResponse;
 import webserver.application.UserProcessor;
-import webserver.domain.http.HttpHeader;
-import webserver.domain.http.RequestBody;
-import webserver.domain.http.RequestLine;
 import webserver.domain.user.User;
 
 import java.io.IOException;
@@ -40,11 +37,11 @@ public class UserController {
                 .anyMatch(handler -> handler.equals(path));
     }
 
-    public void handle(RequestLine requestLine, HttpHeader header, RequestBody body, HttpResponse httpResponse) throws IOException, URISyntaxException {
-        String path = requestLine.getUri().getPath();
+    public void handle(HttpRequest request, HttpResponse httpResponse) throws IOException, URISyntaxException {
+        String path = request.getUri().getPath();
 
         if (USER_LOGIN_PATH.equals(path)) {
-            boolean validUser = userProcessor.isValidUser(body.get("userId"), body.get("password"));
+            boolean validUser = userProcessor.isValidUser(request.getRequestBody().get("userId"), request.getRequestBody().get("password"));
 
             if (validUser) {
                 httpResponse.responseRedirect("/index.html", true, true);
@@ -56,13 +53,13 @@ public class UserController {
         }
 
         if (USER_CREATE_PATH.equals(path)) {
-            userProcessor.createUser(body.get("userId"), body.get("password"), body.get("name"), body.get("email"));
+            userProcessor.createUser(request.getRequestBody().get("userId"), request.getRequestBody().get("password"), request.getRequestBody().get("name"), request.getRequestBody().get("email"));
             httpResponse.responseRedirect("/index.html", false, false);
             return;
         }
 
         if (USER_LIST_PATH.equals(path)) {
-            if (!header.isLogined()) {
+            if (!request.getHttpHeader().isLogined()) {
                 httpResponse.responseRedirect("/user/login_failed.html", true, false);
                 return;
             }
