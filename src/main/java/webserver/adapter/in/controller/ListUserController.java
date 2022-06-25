@@ -24,7 +24,7 @@ public class ListUserController extends AbstractController {
     @Override
     public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
         if (!httpRequest.getHttpHeader().isLogined()) {
-            httpResponse.responseRedirect("/user/login_failed.html", true, false);
+            httpResponse.responseRedirect("/user/login_failed.html");
             return;
         }
 
@@ -40,6 +40,6 @@ public class ListUserController extends AbstractController {
         Template template = handlebars.compile("user/list");
         String page = template.apply(Map.of("users", users));
 
-        httpResponse.responseBody(page, true);
+        httpResponse.responseBody(page);
     }
 }

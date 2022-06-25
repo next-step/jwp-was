@@ -5,6 +5,8 @@ import webserver.adapter.out.web.HttpResponse;
 import webserver.application.UserProcessor;
 import webserver.domain.http.RequestBody;
 
+import java.io.IOException;
+
 public class CreateUserController extends AbstractController {
 
     private final UserProcessor userProcessor;
@@ -14,10 +16,10 @@ public class CreateUserController extends AbstractController {
     }
 
     @Override
-    public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
         RequestBody body = httpRequest.getRequestBody();
         userProcessor.createUser(body.get("userId"), body.get("password"), body.get("name"), body.get("email"));
 
-        httpResponse.responseRedirect("/index.html", false, false);
+        httpResponse.responseRedirect("/index.html");
     }
 }

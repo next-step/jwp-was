@@ -40,7 +40,7 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
-            httpResponse.responseForward(path, httpRequest.getHttpHeader().isLogined());
+            httpResponse.responseForward(path);
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (URISyntaxException e) {

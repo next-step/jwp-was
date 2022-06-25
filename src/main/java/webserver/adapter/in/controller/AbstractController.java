@@ -23,7 +23,7 @@ public abstract class AbstractController implements Controller {
         throw new RuntimeException("Not implemented");
     }
 
-    public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
         throw new RuntimeException("Not implemented");
     }
 }
