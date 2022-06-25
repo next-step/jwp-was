@@ -6,6 +6,7 @@ import webserver.request.Body;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.response.HttpResponseFactory;
+import webserver.session.HttpSession;
 
 public class UserLoginController extends PostController {
 
@@ -20,7 +21,7 @@ public class UserLoginController extends PostController {
         try {
             String sessionId = userLoginService.login(userId, password);
             HttpResponse httpResponse = HttpResponseFactory.response302("/index.html");
-            httpResponse.putCookie("sessionId", sessionId);
+            httpResponse.putCookie(HttpSession.COOKIE_KEY, sessionId);
             return httpResponse;
         } catch (FailedLoginException e) {
             return HttpResponseFactory.response302("/user/login_failed.html");
