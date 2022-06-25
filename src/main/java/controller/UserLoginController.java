@@ -1,13 +1,15 @@
-package service;
+package controller;
 
-import db.DataBase;
-import db.FailedLoginException;
+import service.FailedLoginException;
+import service.UserLoginService;
 import webserver.request.Body;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.response.HttpResponseFactory;
 
 public class UserLoginController extends PostController {
+
+    private static final UserLoginService userLoginService = new UserLoginService();
 
     @Override
     public HttpResponse doPost(HttpRequest httpRequest) {
@@ -16,14 +18,12 @@ public class UserLoginController extends PostController {
         String password = body.get("password");
 
         try {
-            DataBase.login(userId, password);
+            String sessionId = userLoginService.login(userId, password);
             HttpResponse httpResponse = HttpResponseFactory.response302("/index.html");
-            httpResponse.putCookie("logined", "true");
+            httpResponse.putCookie("sessionId", sessionId);
             return httpResponse;
         } catch (FailedLoginException e) {
-            HttpResponse httpResponse = HttpResponseFactory.response302("/user/login_failed.html");
-            httpResponse.putCookie("logined", "false");
-            return httpResponse;
+            return HttpResponseFactory.response302("/user/login_failed.html");
         }
     }
 }

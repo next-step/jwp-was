@@ -1,4 +1,4 @@
-package service;
+package controller;
 
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;

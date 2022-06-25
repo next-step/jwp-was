@@ -1,14 +1,15 @@
-package service;
+package controller;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
+import service.FailedLoginException;
+import service.UserLoginService;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.response.HttpResponseFactory;
-import webserver.session.FailedSessionLoginException;
 import webserver.session.HttpSession;
 
 import java.io.IOException;
@@ -17,15 +18,15 @@ import java.util.Map;
 
 public class UserListController extends GetController {
 
-
     private static final UserLoginService userLoginService = new UserLoginService();
 
     @Override
     HttpResponse doGet(HttpRequest httpRequest) {
         String sessionId = httpRequest.getCookie(HttpSession.COOKIE_KEY);
         try {
-            userLoginService.login(sessionId);
-        } catch (FailedSessionLoginException e) {
+            userLoginService.
+                    login(sessionId);
+        } catch (FailedLoginException e) {
             return HttpResponseFactory.response302("/user/login");
         }
 

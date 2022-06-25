@@ -82,4 +82,8 @@ public class HttpRequest {
     public String getContentType() {
         return headers.get(Headers.CONTENT_TYPE);
     }
+
+    public String getCookie(String key) {
+        return headers.getCookie(key);
+    }
 }

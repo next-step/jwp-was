@@ -1,11 +1,11 @@
 package webserver.handler;
 
 import com.google.common.collect.Maps;
-import service.Controller;
-import service.ResourceController;
-import service.UserCreateController;
-import service.UserListController;
-import service.UserLoginController;
+import controller.Controller;
+import controller.ResourceController;
+import controller.UserCreateController;
+import controller.UserListController;
+import controller.UserLoginController;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.response.HttpResponseFactory;

@@ -1,4 +1,4 @@
-package service;
+package controller;
 
 import org.junit.jupiter.api.Test;
 import utils.IOUtils;

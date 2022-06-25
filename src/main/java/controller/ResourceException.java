@@ -1,4 +1,4 @@
-package service;
+package controller;
 
 public class ResourceException extends RuntimeException {
 
