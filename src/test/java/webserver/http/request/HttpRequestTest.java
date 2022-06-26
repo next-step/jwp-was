@@ -3,10 +3,6 @@ package webserver.http.request;
 import org.junit.jupiter.api.Test;
 import webserver.http.Cookie;
 import webserver.http.HttpMethod;
-import webserver.http.request.HttpRequest;
-import webserver.http.request.RequestBody;
-import webserver.http.request.RequestHeaders;
-import webserver.http.request.RequestLine;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -42,7 +38,7 @@ class HttpRequestTest {
             assertThat(requestLine.getQueryParameter("query")).isEqualTo("abc");
 
             // then - Request Headers
-            final RequestHeaders headers = httpRequest.convertToRequestHeaders();
+            final RequestHeaders headers = httpRequest.getRequestHeaders();
             assertThat(headers.getHost()).isEqualTo("localhost:8080");
             assertThat(headers.getConnection()).isEqualTo("keep-alive");
             assertThat(headers.getContentLength()).isEqualTo(93);
