@@ -4,7 +4,9 @@ import webserver.http.controller.Controller;
 import webserver.http.controller.NotFoundController;
 import webserver.http.controller.ResourceController;
 import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +19,11 @@ public class RequestRouter {
     public RequestRouter add(final String path, final Controller controller) {
         this.controllers.put(path, controller);
         return this;
+    }
+
+    public void route(final HttpRequest request, final HttpResponse response) throws IOException {
+        final Controller routedController = this.getRoutedController(request);
+        routedController.service(request, response);
     }
 
     public Controller getRoutedController(final HttpRequest request) {
