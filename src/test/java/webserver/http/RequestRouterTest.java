@@ -25,7 +25,7 @@ class RequestRouterTest {
         when(request.getPath()).thenReturn("/a");
 
         // when
-        final Controller routedController = requestRouter.getRoutedControllerOrNull(request);
+        final Controller routedController = requestRouter.getRoutedController(request);
 
         // then
         assertThat(routedController).isSameAs(aController);
@@ -42,7 +42,7 @@ class RequestRouterTest {
         when(request.getPath()).thenReturn("/b");
 
         // when
-        final Controller routedController = requestRouter.getRoutedControllerOrNull(request);
+        final Controller routedController = requestRouter.getRoutedController(request);
 
         // then
         assertThat(routedController).isNull();
@@ -64,7 +64,7 @@ class RequestRouterTest {
         when(request.getPath()).thenReturn(requestPath);
 
         // when
-        final Controller routedController = requestRouter.getRoutedControllerOrNull(request);
+        final Controller routedController = requestRouter.getRoutedController(request);
 
         // then
         assertThat(routedController).isInstanceOf(ResourceController.class);

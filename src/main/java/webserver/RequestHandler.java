@@ -40,14 +40,8 @@ public class RequestHandler implements Runnable {
             final HttpRequest httpRequest = new HttpRequest(in);
             final HttpResponse httpResponse = new HttpResponse(out);
 
-            final Controller controllerOrNull = requestRouter.getRoutedControllerOrNull(httpRequest);
-
-            if (controllerOrNull != null) {
-                controllerOrNull.service(httpRequest, httpResponse);
-                return;
-            }
-
-            httpResponse.responseNotFound();
+            final Controller routedController = requestRouter.getRoutedController(httpRequest);
+            routedController.service(httpRequest, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
