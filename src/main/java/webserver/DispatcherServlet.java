@@ -1,7 +1,11 @@
 package webserver;
 
-import controller.*;
-
+import controller.Controller;
+import controller.CreatUserController;
+import controller.IndexController;
+import controller.LoginController;
+import controller.StaticResourceController;
+import controller.UserListController;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -35,7 +39,7 @@ public class DispatcherServlet {
             return new StaticResourceController()
                     .service(request);
         } catch (IllegalArgumentException iae) {
-            return new Response(HttpStatus.NOT_FOUND, "", "", null);
+            return new Response(HttpStatus.NOT_FOUND, MediaType.TEXT_HTML_UTF8, "", null);
         }
 
     }

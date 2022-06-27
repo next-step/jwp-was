@@ -15,10 +15,10 @@ public class LoginController implements Controller {
         User userById = DataBase.findUserById(user.getUserId());
 
         if (userById == null || !userById.getPassword().equals(user.getPassword())) {
-            return new Response(HttpStatus.BAD_REQUEST, "text/html;charset=utf-8", "/user/login_failed.html", "logined=false; Path=/");
+            return new Response(HttpStatus.BAD_REQUEST, MediaType.TEXT_HTML_UTF8, "/user/login_failed.html", "logined=false; Path=/");
         }
 
-        return new Response(HttpStatus.FOUND, "text/html;charset=utf-8", "/index.html", "logined=true; Path=/");
+        return new Response(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", "logined=true; Path=/");
     }
 
     private User getUserFromRequest(Request request) {

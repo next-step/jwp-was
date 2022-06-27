@@ -1,5 +1,6 @@
 package controller;
 
+import webserver.MediaType;
 import webserver.Request;
 import webserver.RequestLine;
 import webserver.Response;
@@ -12,6 +13,6 @@ public class IndexController implements Controller {
         String path = requestLine.getPath();
         String[] split = path.split("/");
 
-        return new Response("text/html;charset=utf-8", path.replace(split[0], ""), null);
+        return new Response(MediaType.TEXT_HTML_UTF8, path.replace(split[0], ""), null);
     }
 }

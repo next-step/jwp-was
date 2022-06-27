@@ -18,7 +18,7 @@ class IndexControllerTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
         assertThat(response.getPath()).isEqualTo("/index.html");
-        assertThat(response.getContentType()).isEqualTo("text/html;charset=utf-8");
+        assertThat(response.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
     }
 
 }

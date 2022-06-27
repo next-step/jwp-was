@@ -29,7 +29,7 @@ class UserListControllerTest {
         Response response = DispatcherServlet.match(request);
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getContentType()).isEqualTo("text/html;charset=utf-8");
+        assertThat(response.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
         assertThat(response.getPath()).isEqualTo("/user/list.html");
     }
 
@@ -50,7 +50,7 @@ class UserListControllerTest {
         Response response = DispatcherServlet.match(request);
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
-        assertThat(response.getContentType()).isEqualTo("text/html;charset=utf-8");
+        assertThat(response.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
         assertThat(response.getPath()).isEqualTo("/index.html");
     }
 }

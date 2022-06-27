@@ -7,6 +7,7 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.User;
 import webserver.HttpStatus;
+import webserver.MediaType;
 import webserver.Request;
 import webserver.Response;
 
@@ -19,11 +20,11 @@ public class UserListController implements Controller {
 
     public Response service(Request request) throws IOException {
         if (!checkLogin(getCookie(request))) {
-            return new Response(HttpStatus.FOUND, "text/html;charset=utf-8", "/index.html", null);
+            return new Response(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", null);
 
         }
 
-        return new Response(HttpStatus.OK, "text/html;charset=utf-8", "/user/list.html", rendering(DataBase.findAll()));
+        return new Response(HttpStatus.OK, MediaType.TEXT_HTML_UTF8, "/user/list.html", rendering(DataBase.findAll()));
     }
 
     private String rendering(Collection<User> users) throws IOException {

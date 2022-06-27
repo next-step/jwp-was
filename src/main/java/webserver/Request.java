@@ -1,48 +1,53 @@
 package webserver;
 
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 public class Request {
-    private static final Logger logger = LoggerFactory.getLogger(Request.class);
 
-    private final RequestLine requestLine;
+  private static final Logger logger = LoggerFactory.getLogger(Request.class);
 
-    private final Map<String, String> headers;
+  private final RequestLine requestLine;
 
-    private final String requestBody;
+  private final Map<String, String> headers;
 
-    public RequestLine getRequestLine() {
-        return requestLine;
+  private final String requestBody;
+
+  public RequestLine getRequestLine() {
+    return requestLine;
+  }
+
+  public Request(final RequestLine requestLine, final Map<String, String> requestHeaders, final String requestBody) {
+    this.requestLine = requestLine;
+    this.headers = requestHeaders;
+    this.requestBody = requestBody;
+  }
+
+  public MediaType getContentType() {
+    if (headers == null) {
+      return MediaType.TEXT_HTML_UTF8;
     }
 
-    public Request(final RequestLine requestLine, final Map<String, String> requestHeaders, final String requestBody) {
-        this.requestLine = requestLine;
-        this.headers = requestHeaders;
-        this.requestBody = requestBody;
-    }
+    return new MediaType(getAccept());
+  }
 
-    public String getContentType() {
-        if (headers == null) {
-            return "text/html;charset=utf-8";
-        }
-        return headers.getOrDefault("Accept", "")
-                .split(",")[0];
-    }
+  private String getAccept() {
+    return headers.getOrDefault("Accept", "")
+        .split(",")[0];
+  }
 
-    public String getCookie() {
-        if (headers == null) {
-            return "";
-        }
-        return headers.getOrDefault("Cookie", "");
+  public String getCookie() {
+    if (headers == null) {
+      return "";
     }
+    return headers.getOrDefault("Cookie", "");
+  }
 
-    public String getRequestBody() {
-        if (headers == null) {
-            return "";
-        }
-        return requestBody;
+  public String getRequestBody() {
+    if (headers == null) {
+      return "";
     }
+    return requestBody;
+  }
 }

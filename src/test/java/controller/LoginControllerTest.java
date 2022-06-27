@@ -43,7 +43,7 @@ class LoginControllerTest {
         Response response = DispatcherServlet.match(request);
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
-        assertThat(response.getContentType()).isEqualTo("text/html;charset=utf-8");
+        assertThat(response.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
         assertThat(response.getPath()).isEqualTo("/index.html");
         assertThat(response.getCookie()).isEqualTo("logined=true; Path=/");
 
@@ -68,7 +68,7 @@ class LoginControllerTest {
         Response response = DispatcherServlet.match(request);
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getContentType()).isEqualTo("text/html;charset=utf-8");
+        assertThat(response.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
         assertThat(response.getPath()).isEqualTo("/user/login_failed.html");
         assertThat(response.getCookie()).isEqualTo("logined=false; Path=/");
 
