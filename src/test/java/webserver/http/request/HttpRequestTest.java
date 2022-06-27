@@ -5,12 +5,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.Header;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class HttpRequestTest {
+    private String testDirectory = "./src/test/resources/";
 
     @DisplayName("Http Request 객체를 생성할수 있다.")
     @Test
@@ -41,20 +49,24 @@ class HttpRequestTest {
 
     @DisplayName("RequestParameters를 알수 있다")
     @Test
-    void getRequestParameters() {
-        HttpRequest httpRequest = new HttpRequest(
-                RequestLine.parse("GET /users?username=dean HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), null);
-        assertThat(httpRequest.getRequestParameters().get("username")).isEqualTo("dean");
+    void getRequestParameters() throws IOException {
+        InputStream in = new FileInputStream(new File(testDirectory + "HttpGet.txt"));
+        HttpRequest httpRequest = HttpRequest.of(new BufferedReader(new InputStreamReader(in)));
+
+        assertThat(httpRequest.getRequestParameters().get("userId")).isEqualTo("dean");
+        assertThat(httpRequest.getMethod()).isEqualTo(Method.GET);
+        assertThat(httpRequest.getPath()).isEqualTo("/user/create");
     }
 
-    @DisplayName("Cookie 값을 알수 있다")
+    @DisplayName("RequestBody 값을 알수 있다")
     @Test
-    void getRequestBody() {
-        HttpRequest httpRequest = new HttpRequest(
-                RequestLine.parse("GET /users HTTP/1.1"),
-                new Header(Collections.emptyMap(), Map.of("logined", "true")), null);
-        assertThat(httpRequest.getCookie("logined")).isEqualTo("true");
+    void getRequestBody() throws IOException {
+        InputStream in = new FileInputStream(new File(testDirectory + "HttpPost.txt"));
+        HttpRequest httpRequest = HttpRequest.of(new BufferedReader(new InputStreamReader(in)));
+
+        assertThat(httpRequest.getRequestBody().get("userId")).isEqualTo("dean");
+        assertThat(httpRequest.getMethod()).isEqualTo(Method.POST);
+        assertThat(httpRequest.getPath()).isEqualTo("/user/create");
     }
 
     @DisplayName("로그인 여부를 알수 있다.")
