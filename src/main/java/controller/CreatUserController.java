@@ -12,7 +12,7 @@ import webserver.Response;
 public class CreatUserController implements Controller {
     private static final Logger logger = LoggerFactory.getLogger(CreatUserController.class);
 
-    public Response serving(Request request) {
+    public Response service(Request request) {
         DataBase.addUser(getUserFromRequest(request));
         logger.debug("findAll: {}", DataBase.findAll());
         return new Response(HttpStatus.FOUND, "text/html;charset=utf-8", "/index.html", null);

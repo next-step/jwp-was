@@ -9,7 +9,7 @@ import webserver.*;
 public class LoginController implements Controller {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-    public Response serving(Request request) {
+    public Response service(Request request) {
         User user = getUserFromRequest(request);
 
         User userById = DataBase.findUserById(user.getUserId());

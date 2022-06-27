@@ -6,7 +6,7 @@ import webserver.Response;
 
 public class IndexController implements Controller {
 
-    public Response serving(Request request) {
+    public Response service(Request request) {
         RequestLine requestLine = request.getRequestLine();
 
         String path = requestLine.getPath();

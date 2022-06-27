@@ -28,12 +28,12 @@ public class DispatcherServlet {
 
         if (mapper.containsKey(path)) {
             return mapper.get(path)
-                    .serving(request);
+                    .service(request);
         }
 
         try {
             return new StaticResourceController()
-                    .serving(request);
+                    .service(request);
         } catch (IllegalArgumentException iae) {
             return new Response(HttpStatus.NOT_FOUND, "", "", null);
         }

@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class UserListController implements Controller {
 
-    public Response serving(Request request) throws IOException {
+    public Response service(Request request) throws IOException {
         if (!checkLogin(getCookie(request))) {
             return new Response(HttpStatus.FOUND, "text/html;charset=utf-8", "/index.html", null);
 

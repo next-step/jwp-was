@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 public class StaticResourceController implements Controller {
 
-    public Response serving(Request request) {
+    public Response service(Request request) {
         RequestLine requestLine = request.getRequestLine();
         String resourcePath = getResourcePath(requestLine.getPath());
 
