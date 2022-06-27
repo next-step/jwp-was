@@ -1,12 +1,11 @@
 package webserver;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RequestFactory {
     private static final Logger logger = LoggerFactory.getLogger(RequestFactory.class);
@@ -27,13 +26,21 @@ public class RequestFactory {
             line = bufferedReader.readLine();
             logger.debug("header: {}", line);
 
-            if (!line.equals("")) {
-                String[] keyValue = line.split(": ");
-                headers.put(keyValue[0], keyValue[1]);
-            }
+            saveHeaderLine(line, headers);
         }
 
         return headers;
+    }
+
+    private static void saveHeaderLine(String line, Map<String, String> headers) {
+        if (!line.equals("")) {
+            String[] keyValue = line.split(": ");
+            setHeader(headers, keyValue);
+        }
+    }
+
+    private static void setHeader(Map<String, String> headers, String[] keyValue) {
+        headers.put(keyValue[0], keyValue[1]);
     }
 
     private static String createRequestBody(BufferedReader br, Map<String, String> headers) throws IOException {

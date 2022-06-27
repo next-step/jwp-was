@@ -1,11 +1,10 @@
 package controller;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import webserver.Request;
 import webserver.RequestLine;
 import webserver.Response;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class StaticResourceController implements Controller {
 
