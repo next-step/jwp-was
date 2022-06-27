@@ -9,14 +9,14 @@ import java.util.List;
 
 public class HttpResponse implements Response {
 
-    private ResponseLine responseLine;
+    private StatusLine statusLine;
 
     private byte[] body;
 
     private Header header = new Header(new HashMap<>(), null);
 
     public HttpResponse(HttpRequest httpRequest) {
-        responseLine = new ResponseLine(httpRequest.getProtocol(), httpRequest.getVersion());
+        statusLine = new StatusLine(httpRequest.getProtocol(), httpRequest.getVersion());
     }
 
     @Override
@@ -31,12 +31,12 @@ public class HttpResponse implements Response {
 
     @Override
     public int getStatus() {
-        return responseLine.getHttpStatus().status;
+        return statusLine.getHttpStatus().status;
     }
 
     @Override
     public String getStatusMessage() {
-        return responseLine.getHttpStatus().getStatusMessage();
+        return statusLine.getHttpStatus().getStatusMessage();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class HttpResponse implements Response {
     }
 
     public void ok(byte[] body) {
-        responseLine.ok();
+        statusLine.ok();
 
         this.body = body;
         header.put("Content-Type", "text/html;charset=utf-8");
@@ -53,7 +53,7 @@ public class HttpResponse implements Response {
     }
 
     public void okWithContentType(byte[] body, String contentType) {
-        responseLine.ok();
+        statusLine.ok();
 
         this.body = body;
         header.put("Content-Type", contentType);
@@ -61,7 +61,7 @@ public class HttpResponse implements Response {
     }
 
     public void redirect(String location) {
-        responseLine.redirect();
+        statusLine.redirect();
 
         header.put("Location", location);
         header.put("Content-Type", "text/html;charset=utf-8");
@@ -70,7 +70,7 @@ public class HttpResponse implements Response {
 
     public List<String> toResponseHeader() {
         List<String> responseHeader = new ArrayList();
-        responseHeader.add(responseLine.toString());
+        responseHeader.add(statusLine.toString());
         responseHeader.addAll(header.toHeaderStrings());
         return responseHeader;
     }
