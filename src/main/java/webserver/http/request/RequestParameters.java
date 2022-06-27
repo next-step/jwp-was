@@ -1,6 +1,7 @@
 package webserver.http.request;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ public class RequestParameters {
 
     public static RequestParameters of(String value) {
         if (Objects.isNull(value)) {
-            return null;
+            return new RequestParameters(Collections.emptyMap());
         }
 
         Map<String, String> collect = Arrays.stream(value.split("&"))
