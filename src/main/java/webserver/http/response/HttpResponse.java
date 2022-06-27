@@ -1,11 +1,16 @@
 package webserver.http.response;
 
+import utils.FileIoUtils;
+import utils.ResourceUtils;
 import webserver.http.Header;
 import webserver.http.request.HttpRequest;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HttpResponse implements Response {
 
@@ -44,19 +49,23 @@ public class HttpResponse implements Response {
         return header.get("Location");
     }
 
+    public void forward(String path) {
+        String contentType = "text/html;charset=utf-8";
+        if (path.endsWith("css")) {
+            contentType =  "text/css,*/*;q=0.1";
+        }
+
+        statusLine.ok();
+        body = FileIoUtils.loadFileFromClasspath(ResourceUtils.resourcePath.get(path.substring(path.lastIndexOf(".") + 1)) + path);
+        header.put("Content-Type", contentType);
+        header.put("Content-Length", String.valueOf(getLength()));
+    }
+
     public void ok(byte[] body) {
         statusLine.ok();
 
         this.body = body;
         header.put("Content-Type", "text/html;charset=utf-8");
-        header.put("Content-Length", String.valueOf(getLength()));
-    }
-
-    public void okWithContentType(byte[] body, String contentType) {
-        statusLine.ok();
-
-        this.body = body;
-        header.put("Content-Type", contentType);
         header.put("Content-Length", String.valueOf(getLength()));
     }
 
