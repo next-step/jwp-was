@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import utils.FileIoUtils;
+import utils.ResourceUtils;
 import webserver.http.Header;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestLine;
@@ -41,15 +42,11 @@ class ResourceServiceTest {
                 new Header(Collections.emptyMap(), Collections.emptyMap()), null);
         HttpResponse httpResponse = new HttpResponse(httpRequest);
 
-        Map<String, String> resourcePath = new HashMap<>();
-        resourcePath.put("html", "./templates");
-        resourcePath.put("css", "./static");
-        resourcePath.put("ico", "./templates");
-        resourcePath.put("js", "./static");
-
         resourceService.doService(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getBody()).isEqualTo(FileIoUtils.loadFileFromClasspath(resourcePath.get(path.substring(path.lastIndexOf(".") + 1)) + path));
+        assertThat(httpResponse.getBody())
+                .isEqualTo(FileIoUtils.loadFileFromClasspath(
+                        ResourceUtils.resourcePath.get(path.substring(path.lastIndexOf(".") + 1)) + path));
     }
 
     @DisplayName("Css 파일인 경우 Content-Type을 text/css,*/*;q=0.1 로 변경한다.")

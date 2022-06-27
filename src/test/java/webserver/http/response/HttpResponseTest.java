@@ -2,10 +2,16 @@ package webserver.http.response;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import utils.FileIoUtils;
+import utils.ResourceUtils;
 import webserver.http.Header;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestLine;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class HttpResponseTest {
-
     @DisplayName("Http Response 객체를 생성할수 있다.")
     @Test
     void create() {
@@ -58,4 +63,19 @@ class HttpResponseTest {
         );
     }
 
+    @DisplayName("forward 요청시 리소스 파일을 제공한다.")
+    @ValueSource(strings = {"/index.html", "/favicon.ico", "/css/styles.css", "/js/scripts.js"})
+    @ParameterizedTest
+    void forward(String path) throws IOException, URISyntaxException {
+        HttpRequest httpRequest = new HttpRequest(
+                RequestLine.parse("GET " + path + " HTTP/1.1"),
+                new Header(Collections.emptyMap(), Collections.emptyMap()), null);
+        HttpResponse httpResponse = new HttpResponse(httpRequest);
+
+        httpResponse.forward(path);
+
+        assertThat(httpResponse.getBody())
+                .isEqualTo(FileIoUtils.loadFileFromClasspath(
+                        ResourceUtils.resourcePath.get(path.substring(path.lastIndexOf(".") + 1)) + path));
+    }
 }

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class HttpResponse implements Response {
 
@@ -85,6 +86,13 @@ public class HttpResponse implements Response {
     }
 
     public void setCookie(String cookie) {
-        header.put("Set-Cookie", cookie);
+        if (Objects.isNull(header.get("Set-Cookie"))) {
+            header.put("Set-Cookie", cookie);
+            return;
+        }
+
+        String cookieValues = header.get("Set-Cookie");
+        header.put("Set-Cookie", cookieValues + "; " + cookie);
     }
+
 }
