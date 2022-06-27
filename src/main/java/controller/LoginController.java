@@ -14,7 +14,7 @@ public class LoginController implements Controller {
 
         User userById = DataBase.findUserById(user.getUserId());
 
-        if (userById == null || !userById.getPassword().equals(user.getPassword())) {
+        if (userById == null || !userById.checkPassword(user.getPassword())) {
             return new Response(HttpStatus.BAD_REQUEST, MediaType.TEXT_HTML_UTF8, "/user/login_failed.html", "logined=false; Path=/");
         }
 

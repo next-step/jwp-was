@@ -45,7 +45,7 @@ class CreatUserControllerTest {
         User user = DataBase.findUserById("javajigi");
 
         assertThat(user.getUserId()).isEqualTo("javajigi");
-        assertThat(user.getPassword()).isEqualTo("password");
+        assertThat(user.checkPassword("password")).isTrue();
         assertThat(user.getName()).isEqualTo("JaeSung");
         assertThat(user.getEmail()).isEqualTo("javajigi@slipp.net");
     }
