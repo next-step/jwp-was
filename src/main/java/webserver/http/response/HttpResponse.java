@@ -5,12 +5,9 @@ import utils.ResourceUtils;
 import webserver.http.Header;
 import webserver.http.request.HttpRequest;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class HttpResponse implements Response {

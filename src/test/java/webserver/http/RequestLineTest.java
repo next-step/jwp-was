@@ -7,8 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import webserver.http.request.Method;
 import webserver.http.request.Protocol;
-import webserver.http.request.RequestParameters;
 import webserver.http.request.RequestLine;
+import webserver.http.request.RequestParameters;
 import webserver.http.request.Version;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -5,7 +5,6 @@ import model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.Header;
-import webserver.http.controller.LoginController;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.request.RequestLine;
