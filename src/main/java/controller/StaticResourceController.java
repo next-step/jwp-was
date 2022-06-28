@@ -1,37 +1,36 @@
 package controller;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.net.URL;
+import utils.FileIoUtils;
 import webserver.Request;
 import webserver.RequestLine;
 import webserver.Response;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class StaticResourceController implements Controller {
 
     public Response service(Request request) {
         RequestLine requestLine = request.getRequestLine();
-        String resourcePath = getResourcePath(requestLine.getPath());
+        String path = requestLine.getPath();
+        String resourcePath = FileIoUtils.getResourcePath(requestLine.getPath());
 
         if (!isExists(resourcePath)) {
             throw new IllegalArgumentException("NotFound");
         }
 
-        return new Response(request.getContentType(), resourcePath, null);
+        return new Response(request.getContentType(), path, null);
     }
 
     private boolean isExists(String resourcePath) {
-        return Files.exists(Paths.get("./webapp/" + resourcePath));
-    }
+        URL resource = StaticResourceController.class.getClassLoader().getResource(resourcePath);
 
-    public String getResourcePath(String path) {
-        String[] split = path.split("/");
-
-        String filePath = path.replace(split[0], "");
-
-        if (path.indexOf(".ico") != -1 || path.indexOf(".html") != -1) {
-            return filePath;
+        if (resource == null) {
+            return false;
         }
 
-        return "static" + path;
+        String path = resource.getPath();
+        return Files.exists(Paths.get(path));
     }
 }

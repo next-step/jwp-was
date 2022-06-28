@@ -1,8 +1,10 @@
 package webserver;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import utils.FileIoUtils;
 
 public class Response {
 
@@ -53,17 +55,17 @@ public class Response {
         return path;
     }
 
-    public byte[] getBytes() throws IOException {
+    public byte[] getBytes() throws IOException, URISyntaxException {
         byte[] body = getBody();
         byte[] header = getHeader(body.length);
         return getBytes(header, body);
     }
 
-    private byte[] getBody() throws IOException {
+    private byte[] getBody() throws IOException, URISyntaxException {
         if (body != null) {
             return body.getBytes();
         }
-        return Files.readAllBytes(Paths.get("./webapp/" + path));
+        return FileIoUtils.loadFileFromClasspath(FileIoUtils.getResourcePath(path));
     }
 
     private byte[] getBytes(byte[] header, byte[] body) {

@@ -33,9 +33,9 @@ public class UserListController implements Controller {
 
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix("/templates");
-        loader.setSuffix("");
+        loader.setSuffix(".html");
         Handlebars handlebars = new Handlebars(loader);
-        Template template = handlebars.compile("/user/list.html");
+        Template template = handlebars.compile("/user/list");
         return template.apply(parameterMap);
     }
 
