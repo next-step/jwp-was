@@ -21,7 +21,7 @@ class LoginControllerTest {
     }
 
     @Test
-    void serving() throws IOException, URISyntaxException {
+    void match() throws IOException, URISyntaxException {
         DataBase.addUser(new User(
                 "javajigi",
                 "P@ssw0rD",
@@ -53,7 +53,7 @@ class LoginControllerTest {
     }
 
     @Test
-    void serving_fail() throws IOException, URISyntaxException {
+    void match_fail() throws IOException, URISyntaxException {
         RequestLine requestLine = new RequestLine("GET /user/login?userId=test&password=111 HTTP/1.1");
 
         Map<String, String> headers = new LinkedHashMap<>();

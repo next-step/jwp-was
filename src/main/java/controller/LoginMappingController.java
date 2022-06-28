@@ -2,14 +2,25 @@ package controller;
 
 import db.DataBase;
 import model.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import webserver.*;
 
-public class LoginController implements Controller {
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+public class LoginMappingController extends RequestMappingControllerAdapter {
+    @Override
+    public boolean checkUrl(String url) {
+        return "/user/login".equals(url);
+    }
 
-    public Response service(Request request) {
+    @Override
+    public Response doGet(Request request) {
+        return login(request);
+    }
+
+    @Override
+    public Response doPost(Request request) {
+        return login(request);
+    }
+
+    private Response login(Request request) {
         User user = getUserFromRequest(request);
 
         User userById = DataBase.findUserById(user.getUserId());

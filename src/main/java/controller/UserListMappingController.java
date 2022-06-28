@@ -16,9 +16,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserListController implements Controller {
+public class UserListMappingController extends RequestMappingControllerAdapter {
+    @Override
+    public boolean checkUrl(String url) {
+        return "/user/list.html".equals(url);
+    }
 
-    public Response service(Request request) throws IOException {
+    @Override
+
+    public Response doGet(Request request) throws IOException {
         if (!checkLogin(getCookie(request))) {
             return new Response(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", null);
 
@@ -52,5 +58,4 @@ public class UserListController implements Controller {
 
         return request.getCookie();
     }
-
 }
