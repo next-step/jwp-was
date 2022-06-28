@@ -2,13 +2,9 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.exception.RequestPathNotFoundException;
 import webserver.http.controller.Controller;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
-import webserver.http.service.Service;
-import webserver.http.service.get.GetService;
-import webserver.http.service.post.PostService;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

@@ -6,7 +6,6 @@ import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.request.RequestParameters;
 import webserver.http.response.HttpResponse;
-import webserver.http.service.post.PostService;
 
 public class UserCreateController extends AbstractController {
 

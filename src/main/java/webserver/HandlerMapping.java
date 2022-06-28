@@ -23,7 +23,6 @@ public class HandlerMapping {
         handlers.put("/user/login", new LoginController());
         handlers.put("/user/create", new UserCreateController());
         handlers.put("/user/list", new UserListController());
-        handlers.put("/user/login", new LoginController());
         handlers.put("resource", new ResourceController());
     }
 

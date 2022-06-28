@@ -5,7 +5,6 @@ import model.User;
 import utils.TemplateUtils;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
-import webserver.http.service.get.GetService;
 
 import java.util.Collection;
 import java.util.HashMap;
