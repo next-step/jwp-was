@@ -1,5 +1,6 @@
 package webserver.http.controller;
 
+import webserver.exception.UnSupportedHttpMethodException;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
@@ -9,13 +10,15 @@ public abstract class AbstractController implements Controller {
     public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
         if (httpRequest.isGet()) {
             doGet(httpRequest, httpResponse);
+            return;
         }
 
         if (httpRequest.isPost()) {
             doPost(httpRequest, httpResponse);
+            return;
         }
 
-        // TODO Throw
+        throw new UnSupportedHttpMethodException();
     }
 
     void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
