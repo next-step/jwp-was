@@ -27,7 +27,7 @@ class ResourceContollerTest {
         ResourceController resourceController = new ResourceController();
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("GET " + path + " HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), null);
+                new Header(Collections.emptyMap(), Collections.emptyList()), null);
         HttpResponse httpResponse = new HttpResponse(httpRequest);
 
         resourceController.service(httpRequest, httpResponse);
@@ -44,7 +44,7 @@ class ResourceContollerTest {
         ResourceController resourceController = new ResourceController();
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("GET " + path + " HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), null);
+                new Header(Collections.emptyMap(), Collections.emptyList()), null);
         HttpResponse httpResponse = new HttpResponse(httpRequest);
 
         Map<String, String> resourcePath = new HashMap<>();

@@ -24,7 +24,7 @@ class HttpResponseTest {
     void create() {
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("GET /users?username=dean HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), null);
+                new Header(Collections.emptyMap(), Collections.emptyList()), null);
 
         assertThatCode(() -> new HttpResponse(httpRequest)).doesNotThrowAnyException();
     }
@@ -34,7 +34,7 @@ class HttpResponseTest {
     void ok_200() {
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("GET /users?username=dean HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), null);
+                new Header(Collections.emptyMap(), Collections.emptyList()), null);
         HttpResponse httpResponse = new HttpResponse(httpRequest);
 
         httpResponse.ok("ok".getBytes());
@@ -51,7 +51,7 @@ class HttpResponseTest {
     void redirect_302() {
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("GET /users?username=dean HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), null);
+                new Header(Collections.emptyMap(), Collections.emptyList()), null);
         HttpResponse httpResponse = new HttpResponse(httpRequest);
 
         httpResponse.redirect("/index");
@@ -69,7 +69,7 @@ class HttpResponseTest {
     void forward(String path) throws IOException, URISyntaxException {
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("GET " + path + " HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), null);
+                new Header(Collections.emptyMap(), Collections.emptyList()), null);
         HttpResponse httpResponse = new HttpResponse(httpRequest);
 
         httpResponse.forward(path);

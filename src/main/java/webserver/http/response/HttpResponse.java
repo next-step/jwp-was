@@ -2,6 +2,7 @@ package webserver.http.response;
 
 import utils.FileIoUtils;
 import utils.ResourceUtils;
+import webserver.http.Cookie;
 import webserver.http.Header;
 import webserver.http.request.HttpRequest;
 
@@ -82,14 +83,14 @@ public class HttpResponse implements Response {
         return responseHeader;
     }
 
-    public void setCookie(String cookie) {
+    public void setCookie(Cookie cookie) {
         if (Objects.isNull(header.get("Set-Cookie"))) {
-            header.put("Set-Cookie", cookie);
+            header.put("Set-Cookie", cookie.toString());
             return;
         }
 
         String cookieValues = header.get("Set-Cookie");
-        header.put("Set-Cookie", cookieValues + "; " + cookie);
+        header.put("Set-Cookie", cookieValues + "; " + cookie.toString());
     }
 
 }

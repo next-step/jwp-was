@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.Header;
+import webserver.http.Cookie;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collections;
-import java.util.Map;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,7 +25,7 @@ class HttpRequestTest {
     void create() {
         Assertions.assertThatCode(() -> new HttpRequest(
                 RequestLine.parse("GET /users HTTP/1.1"),
-                          new Header(Collections.emptyMap(), Collections.emptyMap()), null))
+                          new Header(Collections.emptyMap(), Collections.emptyList()), null))
                   .doesNotThrowAnyException();
     }
 
@@ -33,7 +34,7 @@ class HttpRequestTest {
     void getPath() {
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("GET /users HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), null);
+                new Header(Collections.emptyMap(), Collections.emptyList()), null);
         assertThat(httpRequest.getPath()).isEqualTo("/users");
     }
 
@@ -42,7 +43,7 @@ class HttpRequestTest {
     void getMethod() {
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("GET /users HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), null);
+                new Header(Collections.emptyMap(), Collections.emptyList()), null);
         assertThat(httpRequest.getMethod()).isEqualTo(Method.GET);
     }
 
@@ -73,7 +74,7 @@ class HttpRequestTest {
     void isLogined() {
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("GET /users HTTP/1.1"),
-                new Header(Collections.emptyMap(), Map.of("logined", "true")), null);
+                new Header(Collections.emptyMap(), List.of(Cookie.of("logined", "true"))), null);
         assertThat(httpRequest.isLogined()).isTrue();
     }
 

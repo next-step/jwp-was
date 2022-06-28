@@ -24,7 +24,7 @@ class UserCreateControllerTest {
 
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("GET /user/create?userId=dean&password=password&name=dongchul&email=dean@naver.com HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), null);
+                new Header(Collections.emptyMap(), Collections.emptyList()), null);
 
         userCreateController.service(httpRequest, new HttpResponse(httpRequest));
 
@@ -48,7 +48,7 @@ class UserCreateControllerTest {
 
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("POST /user/create HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), requestBody);
+                new Header(Collections.emptyMap(), Collections.emptyList()), requestBody);
 
         userCreateController.service(httpRequest, new HttpResponse(httpRequest));
 

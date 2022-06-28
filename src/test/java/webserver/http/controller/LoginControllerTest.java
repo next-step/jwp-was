@@ -30,7 +30,7 @@ class LoginControllerTest {
 
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("POST /user/login HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), requestBody);
+                new Header(Collections.emptyMap(), Collections.emptyList()), requestBody);
 
         HttpResponse httpResponse = new HttpResponse(httpRequest);
 
@@ -53,7 +53,7 @@ class LoginControllerTest {
 
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("POST /user/login HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), requestBody);
+                new Header(Collections.emptyMap(), Collections.emptyList()), requestBody);
 
         HttpResponse httpResponse = new HttpResponse(httpRequest);
 

@@ -7,10 +7,11 @@ import org.junit.jupiter.api.Test;
 import webserver.http.Header;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestLine;
+import webserver.http.Cookie;
 import webserver.http.response.HttpResponse;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +23,7 @@ class UserListControllerTest {
         UserListController userListController = new UserListController();
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("GET /user/list HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), null);
+                new Header(Collections.emptyMap(), Collections.emptyList()), null);
 
         HttpResponse httpResponse = new HttpResponse(httpRequest);
         userListController.service(httpRequest, httpResponse);
@@ -37,12 +38,9 @@ class UserListControllerTest {
 
         DataBase.addUser(new User("dean", "password", "dongchul", "dean@naver.com"));
 
-        HashMap<String, String> cookies = new HashMap<>();
-        cookies.put("logined", "true");
-
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("GET /user/list HTTP/1.1"),
-                new Header(Collections.emptyMap(), cookies), null);
+                new Header(Collections.emptyMap(), List.of(Cookie.of("logined", "true"))), null);
         HttpResponse httpResponse = new HttpResponse(httpRequest);
 
         userListController.service(httpRequest, httpResponse);
