@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class HttpSessionManager {
+    public final static String SESSION_COOKIE_NAME = "JSESSIONID";
+
     private final static Map<String, HttpSession> sessions = new HashMap<>();
 
     public static HttpSession createSession() {

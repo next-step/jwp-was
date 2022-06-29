@@ -22,7 +22,7 @@ public class HttpResponse {
         this.headers.add("Content-Type", contentType);
     }
 
-    public void setCookie(final Cookie cookie) throws IOException {
+    public void setCookie(final Cookie cookie) {
         final String setCookieHeaderValue =
                 cookie.getName() + "=" + cookie.getValue() + "; " +
                         "Path" + "=" + cookie.getPath();

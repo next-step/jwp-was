@@ -3,16 +3,24 @@ package webserver.http.request;
 import utils.IOUtils;
 import webserver.http.Cookie;
 import webserver.http.HttpMethod;
+import webserver.http.response.HttpResponse;
+import webserver.http.session.HttpSession;
+import webserver.http.session.HttpSessionManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import static java.util.Objects.requireNonNull;
+
 public class HttpRequest {
     private final RequestLine requestLine;
     private final RequestHeaders headers;
     private final RequestBody body;
+
+    // The response with which this request is associated.
+    private HttpResponse response;
 
     public HttpRequest(final InputStream in) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -69,5 +77,32 @@ public class HttpRequest {
 
     public Cookie getCookieOrNull(final String cookieName) {
         return this.headers.getCookieOrNull(cookieName);
+    }
+
+    public void setResponse(final HttpResponse response) {
+        this.response = response;
+    }
+
+    public HttpSession getSession() {
+        requireNonNull(this.response);
+
+        final HttpSession existingSession = this.getExistingSessionOrNull();
+        if (existingSession != null) {
+            return existingSession;
+        }
+
+        final HttpSession session = HttpSessionManager.createSession();
+        this.response.setCookie(new Cookie(HttpSessionManager.SESSION_COOKIE_NAME, session.getId()));
+        return session;
+    }
+
+    private HttpSession getExistingSessionOrNull() {
+        final Cookie sessionCookie = this.getCookieOrNull(HttpSessionManager.SESSION_COOKIE_NAME);
+
+        if (sessionCookie == null) {
+            return null;
+        }
+
+        return HttpSessionManager.getSessionOrNull(sessionCookie.getValue());
     }
 }
