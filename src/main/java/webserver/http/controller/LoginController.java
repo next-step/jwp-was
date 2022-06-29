@@ -2,10 +2,11 @@ package webserver.http.controller;
 
 import db.DataBase;
 import model.User;
-import webserver.http.Cookie;
+import webserver.http.controller.utils.SessionUtils;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.response.HttpResponse;
+import webserver.http.session.HttpSession;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -24,12 +25,11 @@ public class LoginController extends AbstractController {
                 .orElse(false);
 
         if (loginSuccess) {
-            response.setCookie(new Cookie("logined", "true"));
-            response.responseRedirect("/index.html");
+            final HttpSession session = request.getSession();
+            SessionUtils.setUser(session, user.get());
             return;
         }
 
-        response.setCookie(new Cookie("logined", "false"));
         response.responseRedirect("/user/login_failed.html");
     }
 }

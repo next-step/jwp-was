@@ -3,8 +3,10 @@ package webserver.http.controller;
 import db.DataBase;
 import model.User;
 import webserver.http.Cookie;
+import webserver.http.controller.utils.SessionUtils;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.http.session.HttpSession;
 import webserver.http.template.handlebars.HandlebarsTemplateLoader;
 
 import java.io.IOException;
@@ -15,14 +17,10 @@ public class UserListController extends AbstractController {
 
     @Override
     protected void doGet(final HttpRequest request, final HttpResponse response) throws IOException {
-        Cookie cookie = request.getCookieOrNull("logined");
+        final HttpSession session = request.getSession();
+        final User loginedUser = SessionUtils.getUserOrNull(session);
 
-        boolean logined = false;
-        if (cookie != null) {
-            logined = Boolean.parseBoolean(cookie.getValue());
-        }
-
-        if (!logined) {
+        if (loginedUser == null) {
             response.responseRedirect("/index.html");
             return;
         }
