@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.http.controller.AbstractController;
 import webserver.http.controller.Controller;
+import webserver.http.controller.NotFoundController;
 import webserver.http.controller.ResourceController;
 import webserver.http.request.HttpRequest;
 
@@ -32,7 +33,7 @@ class RequestRouterTest {
     }
 
     @Test
-    void 요청_경로에_일치하는_Controller가_등록되지_않는_경우_null_리턴() {
+    void 요청_경로에_일치하는_Controller가_등록되지_않는_경우_NotFoundController_리턴() {
         // given
         final RequestRouter requestRouter = new RequestRouter();
         requestRouter.add("/a", new AbstractController() {
@@ -45,7 +46,7 @@ class RequestRouterTest {
         final Controller routedController = requestRouter.getRoutedController(request);
 
         // then
-        assertThat(routedController).isNull();
+        assertThat(routedController).isInstanceOf(NotFoundController.class);
     }
 
     @ParameterizedTest
