@@ -63,3 +63,16 @@
   - else를 사용하지 않아 indent를 줄일 수 있다.
 - 규칙 3: 모든 원시값과 문자열을 포장한다.
 - 규칙 8: 일급 콜렉션을 쓴다.
+
+### Step4: 세션 구현하기
+
+서블릿에서 지원하는 HttpSession API의 일부를 지원해야 한다.  
+HttpSession의 가장 중요하고 핵심이 되는 다음 5가지 메소드를 구현한다.
+
+- String getId(): 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환
+- void setAttribute(String name, Object value): 현재 세션에 value 인자로 전달되는 객체를 name 인자 이름으로 저장
+- Object getAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환
+- void removeAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
+- void invalidate(): 현재 세션에 저장되어 있는 모든 값을 삭제
+
+세션은 클라이언트와 서버 간에 상태 값을 공유하기 위해 고유한 아이디를 활용하고, 이 고유한 아이디는 쿠키를 활용해 공유한다.
