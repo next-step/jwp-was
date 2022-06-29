@@ -20,22 +20,22 @@ public class HttpSessionImpl implements HttpSession {
 
     @Override
     public void setAttribute(String name, Object value) {
-
+        session.put(name, value);
     }
 
     @Override
     public Object getAttribute(String name) {
-        return null;
+        return session.get(name);
     }
 
     @Override
     public void removeAttribute(String name) {
-
+        session.remove(name);
     }
 
     @Override
     public void invalidate() {
-
+        session.clear();
     }
 
     @Override
