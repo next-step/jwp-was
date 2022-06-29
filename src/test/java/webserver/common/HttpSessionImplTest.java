@@ -1,4 +1,4 @@
-package webserver.session;
+package webserver.common;
 
 import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;

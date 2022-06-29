@@ -1,7 +1,8 @@
 package webserver.request;
 
-import webserver.request.exception.IllegalQueryStringException;
-import webserver.request.exception.IllegalQueryStringKeyException;
+import webserver.common.QueryString;
+import webserver.common.exception.IllegalQueryStringException;
+import webserver.common.exception.IllegalQueryStringKeyException;
 import webserver.request.exception.IllegalRequestBodyException;
 import webserver.request.exception.IllegalRequestBodyKeyException;
 

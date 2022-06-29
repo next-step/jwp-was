@@ -1,10 +1,10 @@
-package webserver.session;
+package webserver.common;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
-import webserver.session.exception.IllegalSessionIdException;
+import webserver.common.exception.IllegalSessionIdException;
 
 public class SessionContainer {
 

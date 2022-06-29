@@ -1,9 +1,9 @@
-package webserver.session;
+package webserver.common;
 
 import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.session.exception.IllegalSessionIdException;
+import webserver.common.exception.IllegalSessionIdException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

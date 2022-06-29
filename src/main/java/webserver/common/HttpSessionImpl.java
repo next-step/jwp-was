@@ -1,4 +1,4 @@
-package webserver.session;
+package webserver.common;
 
 import java.util.Enumeration;
 import java.util.HashMap;

@@ -1,9 +1,9 @@
-package webserver.request;
+package webserver.common;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.request.exception.IllegalQueryStringException;
-import webserver.request.exception.IllegalQueryStringKeyException;
+import webserver.common.exception.IllegalQueryStringException;
+import webserver.common.exception.IllegalQueryStringKeyException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
