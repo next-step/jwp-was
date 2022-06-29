@@ -2,6 +2,7 @@ package webserver.response;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.common.HttpCookie;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,7 +15,7 @@ class ResponseTest {
         ResponseHeader responseHeader = new ResponseHeader(HttpStatus.OK)
                 .setContentType("text/html;charset=utf-8")
                 .setLocation("/index.html")
-                .setCookie("loggedIn=true");
+                .setCookie(HttpCookie.from("loggedIn=true"));
         ResponseBody responseBody = ResponseBody.from("Hello World");
         Response response = new Response(responseHeader, responseBody);
 
@@ -45,10 +46,10 @@ class ResponseTest {
     @DisplayName("Response 의 Cookie 를 변경할 수 있다.")
     @Test
     void setCookie() {
-        ResponseHeader responseHeader = new ResponseHeader().setCookie("loggedIn=true");
+        ResponseHeader responseHeader = new ResponseHeader().setCookie(HttpCookie.from("loggedIn=true"));
         Response response = new Response(responseHeader);
 
-        String actual = new String(response.setCookie("loggedIn=false").toBytes());
+        String actual = new String(response.setCookie(HttpCookie.from("loggedIn=false")).toBytes());
         String expected = "HTTP/1.1 200 OK \r\n"
                 + "Set-Cookie: loggedIn=false \r\n"
                 + "Content-Length: 0 \r\n"

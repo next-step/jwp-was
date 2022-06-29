@@ -1,6 +1,7 @@
 package controller;
 
 import service.AuthService;
+import webserver.common.HttpCookie;
 import webserver.request.Request;
 import webserver.response.Response;
 import webserver.response.ResponseFactory;
@@ -26,9 +27,9 @@ public class LoginController extends AbstractController {
         boolean loggedIn = AuthService.login(userId, password);
         if (loggedIn) {
             return ResponseFactory.createRedirect("/index.html")
-                    .setCookie("loggedIn=true");
+                    .setCookie(HttpCookie.from("loggedIn=true"));
         }
         return ResponseFactory.createRedirect("/login_failed.html")
-                .setCookie("loggedIn=false");
+                .setCookie(HttpCookie.from("loggedIn=false"));
     }
 }

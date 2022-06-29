@@ -38,4 +38,15 @@ class QueryStringTest {
                 () -> queryString.get("Illegal_Key")
         ).isInstanceOf(IllegalQueryStringKeyException.class);
     }
+
+    @DisplayName("key 와 value 를 통해 쿼리 스트링을 편집할 수 있다.")
+    @Test
+    void put() {
+        QueryString queryString = QueryString.from("a=b");
+        queryString.put("name", "JaeSung")
+                .put("userId", "javajigi");
+
+        assertThat(queryString.toString())
+                .isEqualTo("a=b&name=JaeSung&userId=javajigi");
+    }
 }

@@ -1,5 +1,7 @@
 package webserver.response;
 
+import webserver.common.HttpCookie;
+
 public class Response {
     private final ResponseHeader responseHeader;
     private final ResponseBody responseBody;
@@ -15,7 +17,7 @@ public class Response {
                 .setContentLength(responseBody.getContentLength());
     }
 
-    public Response setCookie(String cookie) {
+    public Response setCookie(HttpCookie cookie) {
         return new Response(responseHeader.setCookie(cookie), responseBody);
     }
 

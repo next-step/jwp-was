@@ -2,6 +2,7 @@ package webserver.response;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import webserver.common.HttpCookie;
 import webserver.common.Protocol;
 
 public class ResponseHeader {
@@ -41,8 +42,8 @@ public class ResponseHeader {
         return put("Location", location);
     }
 
-    public ResponseHeader setCookie(String cookie) {
-        return put("Set-Cookie", cookie);
+    public ResponseHeader setCookie(HttpCookie cookie) {
+        return put("Set-Cookie", cookie.toString());
     }
 
     public byte[] toBytes() {

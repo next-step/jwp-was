@@ -2,6 +2,7 @@ package webserver.response;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.common.HttpCookie;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -15,7 +16,7 @@ class ResponseHeaderTest {
                 .setContentType("text/html;charset=utf-8")
                 .setContentLength(512)
                 .setLocation("/index.html")
-                .setCookie("loggedIn=true");
+                .setCookie(HttpCookie.from("loggedIn=true"));
 
         String actual = new String(responseHeader.toBytes());
         String expected = "HTTP/1.1 200 OK \r\n"
