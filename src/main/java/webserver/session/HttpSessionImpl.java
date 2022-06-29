@@ -15,7 +15,7 @@ public class HttpSessionImpl implements HttpSession {
 
     @Override
     public String getId() {
-        return null;
+        return uuid.toString();
     }
 
     @Override
