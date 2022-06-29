@@ -17,6 +17,10 @@ public class Response {
                 .setContentLength(responseBody.getContentLength());
     }
 
+    public HttpCookie getCookie() {
+        return responseHeader.getCookie();
+    }
+
     public Response setCookie(HttpCookie cookie) {
         return new Response(responseHeader.setCookie(cookie), responseBody);
     }

@@ -13,8 +13,8 @@ import webserver.response.ResponseFactory;
 public class ListUserController extends AbstractController {
     @Override
     Response doGet(Request request) throws IOException {
-        boolean loggedIn = request.getCookie().contains("loggedIn=true");
-        if (!loggedIn) {
+        Object loggedIn = request.getSession().getAttribute("loggedIn");
+        if (loggedIn == null || !(boolean) loggedIn) {
             return ResponseFactory.createRedirect("/user/login.html");
         }
         String body = renderUserList(UserService.findAll());

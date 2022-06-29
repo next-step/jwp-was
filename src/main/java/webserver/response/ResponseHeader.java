@@ -46,6 +46,10 @@ public class ResponseHeader {
         return put("Set-Cookie", cookie.toString());
     }
 
+    public HttpCookie getCookie() {
+        return HttpCookie.from(headers.get("Set-Cookie"));
+    }
+
     public byte[] toBytes() {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("%s %s \r\n", protocol.toString(), httpStatus.toString()));

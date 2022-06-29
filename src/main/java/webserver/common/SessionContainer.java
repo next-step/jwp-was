@@ -16,6 +16,12 @@ public class SessionContainer {
         container.put(httpSession.getId(), httpSession);
     }
 
+    public static HttpSession createSession() {
+        HttpSession httpSession = new HttpSessionImpl();
+        add(httpSession);
+        return httpSession;
+    }
+
     public static HttpSession get(String sessionId) {
         return Optional.ofNullable(container.get(sessionId))
                 .orElseThrow(() -> new IllegalSessionIdException(sessionId));

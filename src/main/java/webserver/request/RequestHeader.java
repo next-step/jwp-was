@@ -3,6 +3,7 @@ package webserver.request;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import webserver.common.HttpCookie;
 
 public class RequestHeader {
     private final Map<String, String> headers = new LinkedHashMap<>();
@@ -42,7 +43,7 @@ public class RequestHeader {
         );
     }
 
-    public String getCookie() {
-        return headers.getOrDefault("Cookie", "");
+    public HttpCookie getCookie() {
+        return HttpCookie.from(headers.getOrDefault("Cookie", ""));
     }
 }
