@@ -27,6 +27,7 @@ public class LoginController extends AbstractController {
         if (loginSuccess) {
             final HttpSession session = request.getSession();
             SessionUtils.setUser(session, user.get());
+            response.responseRedirect("/index.html");
             return;
         }
 

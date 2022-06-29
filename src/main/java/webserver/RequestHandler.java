@@ -38,6 +38,7 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             final HttpRequest httpRequest = new HttpRequest(in);
             final HttpResponse httpResponse = new HttpResponse(out);
+            httpRequest.setResponse(httpResponse);
 
             requestRouter.route(httpRequest, httpResponse);
         } catch (IOException e) {
