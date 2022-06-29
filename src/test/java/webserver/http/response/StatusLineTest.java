@@ -7,12 +7,12 @@ import webserver.http.request.Version;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-class ResponseLineTest {
+class StatusLineTest {
 
     @DisplayName("ResponseLine을 생성할수 있다.")
     @Test
     void create() {
-        assertThatCode(() -> new ResponseLine(Protocol.HTTP, Version.of("1.1")));
+        assertThatCode(() -> new StatusLine(Protocol.HTTP, Version.of("1.1")));
     }
 
 }

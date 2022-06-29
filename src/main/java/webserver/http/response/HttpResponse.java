@@ -1,22 +1,26 @@
 package webserver.http.response;
 
+import utils.FileIoUtils;
+import utils.ResourceUtils;
+import webserver.http.Cookie;
 import webserver.http.Header;
 import webserver.http.request.HttpRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class HttpResponse implements Response {
 
-    private ResponseLine responseLine;
+    private StatusLine statusLine;
 
     private byte[] body;
 
     private Header header = new Header(new HashMap<>(), null);
 
     public HttpResponse(HttpRequest httpRequest) {
-        responseLine = new ResponseLine(httpRequest.getProtocol(), httpRequest.getVersion());
+        statusLine = new StatusLine(httpRequest.getProtocol(), httpRequest.getVersion());
     }
 
     @Override
@@ -31,12 +35,12 @@ public class HttpResponse implements Response {
 
     @Override
     public int getStatus() {
-        return responseLine.getHttpStatus().status;
+        return statusLine.getHttpStatus().status;
     }
 
     @Override
     public String getStatusMessage() {
-        return responseLine.getHttpStatus().getStatusMessage();
+        return statusLine.getHttpStatus().getStatusMessage();
     }
 
     @Override
@@ -44,24 +48,28 @@ public class HttpResponse implements Response {
         return header.get("Location");
     }
 
+    public void forward(String path) {
+        String contentType = "text/html;charset=utf-8";
+        if (path.endsWith("css")) {
+            contentType =  "text/css,*/*;q=0.1";
+        }
+
+        statusLine.ok();
+        body = FileIoUtils.loadFileFromClasspath(ResourceUtils.resourcePath.get(path.substring(path.lastIndexOf(".") + 1)) + path);
+        header.put("Content-Type", contentType);
+        header.put("Content-Length", String.valueOf(getLength()));
+    }
+
     public void ok(byte[] body) {
-        responseLine.ok();
+        statusLine.ok();
 
         this.body = body;
         header.put("Content-Type", "text/html;charset=utf-8");
         header.put("Content-Length", String.valueOf(getLength()));
     }
 
-    public void okWithContentType(byte[] body, String contentType) {
-        responseLine.ok();
-
-        this.body = body;
-        header.put("Content-Type", contentType);
-        header.put("Content-Length", String.valueOf(getLength()));
-    }
-
     public void redirect(String location) {
-        responseLine.redirect();
+        statusLine.redirect();
 
         header.put("Location", location);
         header.put("Content-Type", "text/html;charset=utf-8");
@@ -70,12 +78,19 @@ public class HttpResponse implements Response {
 
     public List<String> toResponseHeader() {
         List<String> responseHeader = new ArrayList();
-        responseHeader.add(responseLine.toString());
+        responseHeader.add(statusLine.toString());
         responseHeader.addAll(header.toHeaderStrings());
         return responseHeader;
     }
 
-    public void setCookie(String cookie) {
-        header.put("Set-Cookie", cookie);
+    public void setCookie(Cookie cookie) {
+        if (Objects.isNull(header.get("Set-Cookie"))) {
+            header.put("Set-Cookie", cookie.toString());
+            return;
+        }
+
+        String cookieValues = header.get("Set-Cookie");
+        header.put("Set-Cookie", cookieValues + "; " + cookie.toString());
     }
+
 }

@@ -2,12 +2,9 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.exception.RequestPathNotFoundException;
+import webserver.http.controller.Controller;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
-import webserver.http.service.Service;
-import webserver.http.service.get.GetService;
-import webserver.http.service.post.PostService;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -19,6 +16,8 @@ import java.net.Socket;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+
+    private static final HandlerMapping handlerMapping = new HandlerMapping();
 
     private Socket connection;
 
@@ -47,25 +46,8 @@ public class RequestHandler implements Runnable {
     }
 
     private void doService(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (httpRequest.isGet()) {
-            Service service = GetService.services.stream()
-                                                 .filter(it -> it.find(httpRequest))
-                                                 .findFirst()
-                                                 .orElseThrow(() -> new RequestPathNotFoundException(httpRequest.getPath()));
-            service.doService(httpRequest, httpResponse);
-            return;
-        }
-
-        if (httpRequest.isPost()) {
-            Service service = PostService.services.stream()
-                                      .filter(it -> it.find(httpRequest))
-                                      .findFirst()
-                                      .orElseThrow(() -> new RequestPathNotFoundException(httpRequest.getPath()));
-            service.doService(httpRequest, httpResponse);
-            return;
-        }
-
-        throw new RequestPathNotFoundException(httpRequest.getPath());
+        Controller controller = handlerMapping.getHandler(httpRequest.getPath());
+        controller.service(httpRequest, httpResponse);
     }
 
     private void responseHeader(DataOutputStream dos, HttpResponse httpResponse) {

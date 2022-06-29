@@ -3,14 +3,14 @@ package webserver.http.response;
 import webserver.http.request.Protocol;
 import webserver.http.request.Version;
 
-public class ResponseLine {
+public class StatusLine {
     private Protocol protocol;
 
     private Version version;
 
     private HttpStatus httpStatus;
 
-    public ResponseLine(Protocol protocol, Version version) {
+    public StatusLine(Protocol protocol, Version version) {
         this.protocol = protocol;
         this.version = version;
     }

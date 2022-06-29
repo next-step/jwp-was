@@ -1,4 +1,4 @@
-package webserver.http.service.post;
+package webserver.http.controller;
 
 import db.DataBase;
 import model.User;
@@ -15,22 +15,11 @@ import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class LoginServiceTest {
-    @DisplayName("POST /user/login 요청을 처리할수 있다.")
-    @Test
-    void pathMatch() {
-        LoginService loginService = new LoginService();
-        HttpRequest httpRequest = new HttpRequest(
-                RequestLine.parse("POST /user/login HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), null);
-
-        assertThat(loginService.pathMatch(httpRequest)).isTrue();
-    }
-
+class LoginControllerTest {
     @DisplayName("로그인 성공시 index 페이지로 이동한다.")
     @Test
     void loginSuccess() {
-        LoginService loginService = new LoginService();
+        LoginController loginController = new LoginController();
 
         DataBase.addUser(new User("dean", "password", "", ""));
 
@@ -41,11 +30,11 @@ class LoginServiceTest {
 
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("POST /user/login HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), requestBody);
+                new Header(Collections.emptyMap(), Collections.emptyList()), requestBody);
 
         HttpResponse httpResponse = new HttpResponse(httpRequest);
 
-        loginService.doService(httpRequest, httpResponse);
+        loginController.service(httpRequest, httpResponse);
 
         assertThat(httpResponse.getLocation()).isEqualTo("/index.html");
     }
@@ -53,7 +42,7 @@ class LoginServiceTest {
     @DisplayName("로그인 실패시 login_failed 페이지로 이동한다.")
     @Test
     void loginFail() {
-        LoginService loginService = new LoginService();
+        LoginController loginController = new LoginController();
 
         DataBase.addUser(new User("dean", "password", "", ""));
 
@@ -64,11 +53,11 @@ class LoginServiceTest {
 
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("POST /user/login HTTP/1.1"),
-                new Header(Collections.emptyMap(), Collections.emptyMap()), requestBody);
+                new Header(Collections.emptyMap(), Collections.emptyList()), requestBody);
 
         HttpResponse httpResponse = new HttpResponse(httpRequest);
 
-        loginService.doService(httpRequest, httpResponse);
+        loginController.service(httpRequest, httpResponse);
 
         assertThat(httpResponse.getLocation()).isEqualTo("/user/login_failed.html");
     }

@@ -1,22 +1,18 @@
-package webserver.http.service.post;
+package webserver.http.controller;
 
 import db.DataBase;
 import model.User;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
+import webserver.http.Cookie;
 import webserver.http.response.HttpResponse;
 
 import java.util.Objects;
 
-public class LoginService extends PostService {
+public class LoginController extends AbstractController {
 
     @Override
-    protected boolean pathMatch(HttpRequest httpRequest) {
-        return httpRequest.getPath().equals("/user/login");
-    }
-
-    @Override
-    public void doService(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
         RequestBody requestBody = httpRequest.getRequestBody();
         String userId = requestBody.get("userId");
         String password = requestBody.get("password");
@@ -28,10 +24,10 @@ public class LoginService extends PostService {
 
         if (user.getPassword().equals(password)) {
             httpResponse.redirect("/index.html");
-            httpResponse.setCookie("logined=true; Path=/");
+            httpResponse.setCookie(new Cookie("logined", "true", "/"));
             return;
         }
         httpResponse.redirect("/user/login_failed.html");
-        httpResponse.setCookie("logined=false; Path=/");
+        httpResponse.setCookie(new Cookie("logined", "false", "/"));
     }
 }

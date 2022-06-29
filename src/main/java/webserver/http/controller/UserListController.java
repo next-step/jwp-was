@@ -1,4 +1,4 @@
-package webserver.http.service.get;
+package webserver.http.controller;
 
 import db.DataBase;
 import model.User;
@@ -10,15 +10,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserListService extends GetService {
+public class UserListController extends AbstractController {
 
     @Override
-    protected boolean pathMatch(HttpRequest httpRequest) {
-        return httpRequest.getPath().equals("/user/list");
-    }
-
-    @Override
-    public void doService(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
         if (!httpRequest.isLogined()) {
             httpResponse.redirect("/user/login.html");
             return;

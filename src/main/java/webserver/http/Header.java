@@ -2,6 +2,7 @@ package webserver.http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -10,18 +11,19 @@ import java.util.stream.Collectors;
 
 public class Header {
     private static final String CONTENT_LENGTH = "Content-Length";
+
     private final Map<String, String> values;
 
-    private final Map<String, String> cookies;
+    private final List<Cookie> cookies;
 
-    public Header(Map<String, String> values, Map<String, String> cookies) {
-        this.values = values;
+    public Header(Map<String, String> values, List<Cookie> cookies) {
+        this.values = values;;
         this.cookies = cookies;
     }
 
     public static Header of(BufferedReader bufferedReader) throws IOException {
         Map<String, String> values = new HashMap<>();
-        Map<String, String> cookies = new HashMap<>();
+        List<Cookie> cookies = new ArrayList<>();
 
         String readLine;
         do {
@@ -39,11 +41,11 @@ public class Header {
         return new Header(values, cookies);
     }
 
-    private static void createCookies(Map<String, String> cookies, String cookieValues) {
+    private static void createCookies(List<Cookie> cookieList, String cookieValues) {
         String[] tokens = cookieValues.split("; ");
         Arrays.stream(tokens).forEach(token -> {
             String[] keyValues = token.split("=");
-            cookies.put(keyValues[0], keyValues[1]);
+            cookieList.add(Cookie.of(keyValues[0], keyValues[1]));
         });
     }
 
@@ -60,7 +62,10 @@ public class Header {
     }
 
     public String getCookie(String key) {
-        return cookies.get(key);
+        return cookies.stream()
+                      .filter(cookie -> cookie.getKey().equals(key))
+                      .findFirst()
+                      .orElse(Cookie.empty).getValue();
     }
 
     public List<String> toHeaderStrings() {

@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class TemplateUtils {
 
-    public static byte[] createHandlarsView(String location, Map<String, Object> users) {
+    public static byte[] createHandlarsView(String location, Map<String, Object> data) {
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix("/templates");
         loader.setSuffix(".html");
@@ -18,7 +18,7 @@ public class TemplateUtils {
 
         try {
             Template template = handlebars.compile(location);
-            return template.apply(users).getBytes();
+            return template.apply(data).getBytes();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
