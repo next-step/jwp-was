@@ -7,9 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RequestParamsTest {
     @Test
     public void add() throws Exception {
-        RequestParams params = new RequestParams();
-        params.addQueryString("id=1");
-        params.addBody("userId=javajigi&password=password");
+        DefaultRequestParams params = new DefaultRequestParams("id=1", "userId=javajigi&password=password");
         assertThat(params.getParameter("id")).isEqualTo("1");
         assertThat(params.getParameter("userId")).isEqualTo("javajigi");
         assertThat(params.getParameter("password")).isEqualTo("password");

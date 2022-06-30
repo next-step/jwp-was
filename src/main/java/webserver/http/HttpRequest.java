@@ -5,13 +5,16 @@ public class HttpRequest {
 
     private final HttpHeaders headers;
 
-    private RequestParams requestParams = new RequestParams();
+    private RequestParams requestParams;
 
     public HttpRequest(RequestLine requestLine, HttpHeaders headers, String body) {
+        this(requestLine, headers, new CachedRequestParams(new DefaultRequestParams(requestLine.getQueryString(), body)));
+    }
+
+    public HttpRequest(RequestLine requestLine, HttpHeaders headers, RequestParams requestParams) {
         this.requestLine = requestLine;
         this.headers = headers;
-        this.requestParams.addQueryString(requestLine.getQueryString());
-        this.requestParams.addBody(body);
+        this.requestParams = requestParams;
     }
 
     public HttpMethod getMethod() {
