@@ -3,8 +3,12 @@ package webserver.http.request;
 import org.junit.jupiter.api.Test;
 import webserver.http.Cookie;
 import webserver.http.HttpMethod;
+import webserver.http.response.HttpResponse;
+import webserver.http.session.HttpSession;
+import webserver.http.session.HttpSessionManager;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -53,6 +57,31 @@ class HttpRequestTest {
             assertThat(requestBody.get("password")).isEqualTo("password");
             assertThat(requestBody.get("name")).isEqualTo("박재성");
             assertThat(requestBody.get("email")).isEqualTo("javajigi@slipp.net");
+        }
+    }
+
+    @Test
+    void HttpSession을_가져오면_새로운_세션이_HttpSessionManager에_등록된다() throws IOException {
+        // given
+        final String rawHttpRequest = "GET /user/list HTTP/1.1\n" +
+                "Host: localhost:8080\n" +
+                "Connection: keep-alive\n" +
+                "Accept: */*\n" +
+                "\n";
+
+        try (final InputStream in = new ByteArrayInputStream(rawHttpRequest.getBytes(StandardCharsets.UTF_8))) {
+            final HttpRequest httpRequest = new HttpRequest(in);
+
+            final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            final HttpResponse httpResponse = new HttpResponse(byteArrayOutputStream);
+
+            httpRequest.setResponse(httpResponse);
+
+            // when
+            final HttpSession session = httpRequest.getSession();
+
+            // then
+            assertThat(HttpSessionManager.getSessionOrNull(session.getId())).isSameAs(session);
         }
     }
 }

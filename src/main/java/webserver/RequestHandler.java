@@ -3,7 +3,6 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.RequestRouter;
-import webserver.http.controller.Controller;
 import webserver.http.controller.LoginController;
 import webserver.http.controller.SignUpController;
 import webserver.http.controller.UserListController;
@@ -39,15 +38,9 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             final HttpRequest httpRequest = new HttpRequest(in);
             final HttpResponse httpResponse = new HttpResponse(out);
+            httpRequest.setResponse(httpResponse);
 
-            final Controller controllerOrNull = requestRouter.getRoutedControllerOrNull(httpRequest);
-
-            if (controllerOrNull != null) {
-                controllerOrNull.service(httpRequest, httpResponse);
-                return;
-            }
-
-            httpResponse.responseNotFound();
+            requestRouter.route(httpRequest, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

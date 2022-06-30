@@ -1,14 +1,18 @@
 package webserver.http;
 
 import webserver.http.controller.Controller;
+import webserver.http.controller.NotFoundController;
 import webserver.http.controller.ResourceController;
 import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RequestRouter {
     private static final ResourceController resourceController = new ResourceController();
+    private static final NotFoundController notFoundController = new NotFoundController();
 
     private final Map<String, Controller> controllers = new HashMap<>();
 
@@ -17,7 +21,12 @@ public class RequestRouter {
         return this;
     }
 
-    public Controller getRoutedControllerOrNull(final HttpRequest request) {
+    public void route(final HttpRequest request, final HttpResponse response) throws IOException {
+        final Controller routedController = this.getRoutedController(request);
+        routedController.service(request, response);
+    }
+
+    public Controller getRoutedController(final HttpRequest request) {
         final Controller routedController = this.controllers.getOrDefault(request.getPath(), null);
 
         if (routedController != null) {
@@ -28,7 +37,7 @@ public class RequestRouter {
             return resourceController;
         }
 
-        return null;
+        return notFoundController;
     }
 
     private boolean isResourceRequest(final HttpRequest request) {
