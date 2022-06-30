@@ -6,9 +6,9 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import webserver.common.exception.IllegalSessionIdException;
 
-public class SessionContainer {
+public class SessionManager {
 
-    private SessionContainer() {}
+    private SessionManager() {}
 
     private static final Map<String, HttpSession> container = new HashMap<>();
 

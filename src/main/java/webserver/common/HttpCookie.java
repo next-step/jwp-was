@@ -24,9 +24,9 @@ public class HttpCookie {
     public HttpSession getSession() {
         try {
             String sessionId = get(SESSION_KEY);
-            return SessionContainer.get(sessionId);
+            return SessionManager.get(sessionId);
         } catch (IllegalCookieKeyException | IllegalSessionIdException e) {
-            HttpSession httpSession = SessionContainer.createSession();
+            HttpSession httpSession = SessionManager.createSession();
             put(SESSION_KEY, httpSession.getId());
             return httpSession;
         }
