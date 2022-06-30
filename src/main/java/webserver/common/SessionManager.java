@@ -26,4 +26,9 @@ public class SessionManager {
         return Optional.ofNullable(container.get(sessionId))
                 .orElseThrow(() -> new IllegalSessionIdException(sessionId));
     }
+
+    public static void invalidate(String sessionId) {
+        get(sessionId).invalidate();
+        container.remove(sessionId);
+    }
 }

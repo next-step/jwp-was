@@ -22,6 +22,19 @@ class SessionManagerTest {
 
     }
 
+    @DisplayName("sessionId 를 통해 등록한 세션을 제거할 수 있다.")
+    @Test
+    void invalidate() {
+        HttpSession httpSession = new HttpSessionImpl();
+        SessionManager.add(httpSession);
+
+        String sessionId = httpSession.getId();
+        SessionManager.invalidate(sessionId);
+        assertThat(SessionManager.get(sessionId))
+                .isNull();
+
+    }
+
     @DisplayName("sessionId 를 통해 세션을 가져오지 못할 경우, IllegalSessionIdException 이 발생한다.")
     @Test
     void illegalSessionId() {
