@@ -30,9 +30,9 @@ class SessionManagerTest {
 
         String sessionId = httpSession.getId();
         SessionManager.invalidate(sessionId);
-        assertThat(SessionManager.get(sessionId))
-                .isNull();
-
+        assertThatThrownBy(
+                () -> SessionManager.get(sessionId)
+        ).isInstanceOf(IllegalSessionIdException.class);
     }
 
     @DisplayName("sessionId 를 통해 세션을 가져오지 못할 경우, IllegalSessionIdException 이 발생한다.")
