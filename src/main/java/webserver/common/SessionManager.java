@@ -4,9 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
+import webserver.common.exception.IllegalCookieKeyException;
 import webserver.common.exception.IllegalSessionIdException;
 
 public class SessionManager {
+
+    private static final String SESSION_COOKIE_KEY = "sessionId";
 
     private SessionManager() {}
 
@@ -25,6 +28,17 @@ public class SessionManager {
     public static HttpSession get(String sessionId) {
         return Optional.ofNullable(container.get(sessionId))
                 .orElseThrow(() -> new IllegalSessionIdException(sessionId));
+    }
+
+    public static HttpSession getSession(HttpCookie httpCookie) {
+        try {
+            String sessionId = httpCookie.get(SESSION_COOKIE_KEY);
+            return get(sessionId);
+        } catch (IllegalCookieKeyException | IllegalSessionIdException e) {
+            HttpSession httpSession = createSession();
+            httpCookie.put(SESSION_COOKIE_KEY, httpSession.getId());
+            return httpSession;
+        }
     }
 
     public static void invalidate(String sessionId) {

@@ -46,7 +46,7 @@ class PostUserLoginControllerTest {
         // when
         Response response = Container.handle(request);
         String actual = response.toString();
-        HttpSession httpSession = response.getCookie().getSession();
+        HttpSession httpSession = response.getSession();
 
         //then
         String expected = "HTTP/1.1 302 Found \r\n"
@@ -73,7 +73,7 @@ class PostUserLoginControllerTest {
         // when
         Response response = Container.handle(request);
         String actual = response.toString();
-        HttpSession httpSession = response.getCookie().getSession();
+        HttpSession httpSession = response.getSession();
 
         //then
         String expected = "HTTP/1.1 302 Found \r\n"

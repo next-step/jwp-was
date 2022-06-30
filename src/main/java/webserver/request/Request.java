@@ -3,6 +3,7 @@ package webserver.request;
 import javax.servlet.http.HttpSession;
 import webserver.common.HttpCookie;
 import webserver.common.Protocol;
+import webserver.common.SessionManager;
 
 import static webserver.request.RequestMethod.GET;
 import static webserver.request.RequestMethod.POST;
@@ -52,7 +53,7 @@ public class Request {
     }
 
     public HttpSession getSession() {
-        return getCookie().getSession();
+        return SessionManager.getSession(getCookie());
     }
 
     public String getBody(String key) {

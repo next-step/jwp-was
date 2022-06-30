@@ -47,7 +47,7 @@ class LoginControllerTest {
         // when
         Response response = new LoginController().service(request);
         String actual = response.toString();
-        HttpSession httpSession = response.getCookie().getSession();
+        HttpSession httpSession = response.getSession();
 
         //then
         String expected = "HTTP/1.1 302 Found \r\n"
@@ -74,7 +74,7 @@ class LoginControllerTest {
         // when
         Response response = new LoginController().service(request);
         String actual = response.toString();
-        HttpSession httpSession = response.getCookie().getSession();
+        HttpSession httpSession = response.getSession();
 
         //then
         String expected = "HTTP/1.1 302 Found \r\n"
@@ -100,7 +100,7 @@ class LoginControllerTest {
         // when
         Response response = new LoginController().service(request);
         String actual = response.toString();
-        HttpSession httpSession = response.getCookie().getSession();
+        HttpSession httpSession = response.getSession();
 
         //then
         String expected = "HTTP/1.1 302 Found \r\n"
@@ -127,7 +127,7 @@ class LoginControllerTest {
         // when
         Response response = new LoginController().service(request);
         String actual = response.toString();
-        HttpSession httpSession = response.getCookie().getSession();
+        HttpSession httpSession = response.getSession();
 
         //then
         String expected = "HTTP/1.1 302 Found \r\n"

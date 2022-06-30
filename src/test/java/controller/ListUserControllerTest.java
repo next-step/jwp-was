@@ -38,7 +38,7 @@ class ListUserControllerTest {
         Request request = new Request(requestLine, requestHeader, requestBody);
 
         Response response = Container.handle(request);
-        sessionId = response.getCookie().getSession().getId();
+        sessionId = response.getSession().getId();
     }
 
     @DisplayName("GET 유저목록 조회 요청시 로그인이 되어 있지 않으면, login.html 로 Redirect 된다.")

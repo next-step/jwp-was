@@ -2,6 +2,7 @@ package controller;
 
 import service.AuthService;
 import webserver.common.HttpCookie;
+import webserver.common.SessionManager;
 import webserver.request.Request;
 import webserver.response.Response;
 import webserver.response.ResponseFactory;
@@ -27,7 +28,8 @@ public class LoginController extends AbstractController {
 
     private Response login(String userId, String password, HttpCookie httpCookie) {
         boolean loggedIn = AuthService.login(userId, password);
-        httpCookie.getSession().setAttribute("loggedIn", loggedIn);
+        SessionManager.getSession(httpCookie)
+                .setAttribute("loggedIn", loggedIn);
         return (
                 loggedIn ? ResponseFactory.createRedirect("/index.html")
                         : ResponseFactory.createRedirect("/login_failed.html")

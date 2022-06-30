@@ -1,6 +1,8 @@
 package webserver.response;
 
+import javax.servlet.http.HttpSession;
 import webserver.common.HttpCookie;
+import webserver.common.SessionManager;
 
 public class Response {
     private final ResponseHeader responseHeader;
@@ -15,6 +17,10 @@ public class Response {
         this.responseBody = responseBody;
         this.responseHeader = responseHeader
                 .setContentLength(responseBody.getContentLength());
+    }
+
+    public HttpSession getSession() {
+        return SessionManager.getSession(getCookie());
     }
 
     public HttpCookie getCookie() {
