@@ -7,23 +7,14 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import webserver.WasBaseTest;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-public class HttpResponseTest {
-    private String outputDirectory = "./out/";
-
-    @BeforeEach
-    void setUp() {
-        File directory = new File(outputDirectory);
-        if (! directory.exists()){
-            directory.mkdir();
-        }
-    }
-
+public class HttpResponseTest extends WasBaseTest {
     @Test
     public void responseForward() throws Exception {
         HttpResponse response = new HttpResponse(createOutputStream("HTTP_Body.txt"));
@@ -53,9 +44,5 @@ public class HttpResponseTest {
         HttpResponse response = new HttpResponse(createOutputStream("HTTP_Cookie.txt"));
         response.addHeader("Set-Cookie", "logined=true");
         response.sendRedirect("/index.html");
-    }
-
-    private OutputStream createOutputStream(String filename) throws FileNotFoundException {
-        return new FileOutputStream(new File(outputDirectory + filename));
     }
 }
