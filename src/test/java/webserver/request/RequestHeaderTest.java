@@ -37,7 +37,7 @@ class RequestHeaderTest {
     @DisplayName("RequestHeader 로 부터 Cookie 를 가져올 수 있다.")
     @Test
     void getCookie() {
-        assertThat(requestHeader.getCookie())
-                .isEqualTo("loggedIn=true");
+        assertThat(requestHeader.getCookie().get("loggedIn"))
+                .isEqualTo("true");
     }
 }

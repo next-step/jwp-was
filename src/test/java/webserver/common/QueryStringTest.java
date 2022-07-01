@@ -1,9 +1,9 @@
-package webserver.request;
+package webserver.common;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.request.exception.IllegalQueryStringException;
-import webserver.request.exception.IllegalQueryStringKeyException;
+import webserver.common.exception.IllegalQueryStringException;
+import webserver.common.exception.IllegalQueryStringKeyException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,5 +37,16 @@ class QueryStringTest {
         assertThatThrownBy(
                 () -> queryString.get("Illegal_Key")
         ).isInstanceOf(IllegalQueryStringKeyException.class);
+    }
+
+    @DisplayName("key 와 value 를 통해 쿼리 스트링을 편집할 수 있다.")
+    @Test
+    void put() {
+        QueryString queryString = QueryString.from("a=b");
+        queryString.put("name", "JaeSung")
+                .put("userId", "javajigi");
+
+        assertThat(queryString.toString())
+                .isEqualTo("a=b&name=JaeSung&userId=javajigi");
     }
 }

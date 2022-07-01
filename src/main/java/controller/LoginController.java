@@ -1,6 +1,8 @@
 package controller;
 
 import service.AuthService;
+import webserver.common.HttpCookie;
+import webserver.common.SessionManager;
 import webserver.request.Request;
 import webserver.response.Response;
 import webserver.response.ResponseFactory;
@@ -10,7 +12,8 @@ public class LoginController extends AbstractController {
     Response doGet(Request request) {
         return login(
                 request.getQuery("userId"),
-                request.getQuery("password")
+                request.getQuery("password"),
+                request.getCookie()
         );
     }
 
@@ -18,17 +21,18 @@ public class LoginController extends AbstractController {
     Response doPost(Request request) {
         return login(
                 request.getBody("userId"),
-                request.getBody("password")
+                request.getBody("password"),
+                request.getCookie()
         );
     }
 
-    private Response login(String userId, String password) {
+    private Response login(String userId, String password, HttpCookie httpCookie) {
         boolean loggedIn = AuthService.login(userId, password);
-        if (loggedIn) {
-            return ResponseFactory.createRedirect("/index.html")
-                    .setCookie("loggedIn=true");
-        }
-        return ResponseFactory.createRedirect("/login_failed.html")
-                .setCookie("loggedIn=false");
+        SessionManager.getSession(httpCookie)
+                .setAttribute("loggedIn", loggedIn);
+        return (
+                loggedIn ? ResponseFactory.createRedirect("/index.html")
+                        : ResponseFactory.createRedirect("/login_failed.html")
+        ).setCookie(httpCookie);
     }
 }

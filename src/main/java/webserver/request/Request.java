@@ -1,6 +1,9 @@
 package webserver.request;
 
+import javax.servlet.http.HttpSession;
+import webserver.common.HttpCookie;
 import webserver.common.Protocol;
+import webserver.common.SessionManager;
 
 import static webserver.request.RequestMethod.GET;
 import static webserver.request.RequestMethod.POST;
@@ -35,7 +38,7 @@ public class Request {
     public Protocol getProtocol() {
         return requestLine.getProtocol();
     }
-    
+
 
     public String getContentType() {
         return requestHeader.getContentType();
@@ -45,8 +48,12 @@ public class Request {
         return requestHeader.getContentLength();
     }
 
-    public String getCookie() {
+    public HttpCookie getCookie() {
         return requestHeader.getCookie();
+    }
+
+    public HttpSession getSession() {
+        return SessionManager.getSession(getCookie());
     }
 
     public String getBody(String key) {

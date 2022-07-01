@@ -1,7 +1,10 @@
 package controller;
 
+import db.DataBase;
 import java.io.IOException;
 import java.util.Arrays;
+import model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.request.Request;
@@ -13,6 +16,30 @@ import webserver.response.Response;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ListUserControllerTest {
+
+    private String sessionId;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        DataBase.clear();
+        DataBase.addUser(new User(
+                "javajigi",
+                "P@ssw0rD",
+                "JaeSung",
+                "javajigi@slipp.net"
+        ));
+        String body = "userId=javajigi&password=P@ssw0rD";
+        RequestLine requestLine = RequestLine.from("POST /user/login HTTP/1.1");
+        RequestHeader requestHeader = RequestHeader.from(Arrays.asList(
+                "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Content-Length: " + body.getBytes().length
+        ));
+        RequestBody requestBody = RequestBody.from(body);
+        Request request = new Request(requestLine, requestHeader, requestBody);
+
+        Response response = Container.handle(request);
+        sessionId = response.getSession().getId();
+    }
 
     @DisplayName("GET 유저목록 조회 요청시 로그인이 되어 있지 않으면, login.html 로 Redirect 된다.")
     @Test
@@ -48,7 +75,7 @@ class ListUserControllerTest {
         );
         RequestHeader requestHeader = RequestHeader.from(Arrays.asList(
                 "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                "Cookie: loggedIn=true"
+                "Cookie: sessionId=" + sessionId
         ));
         RequestBody requestBody = RequestBody.from("");
         Request request = new Request(requestLine, requestHeader, requestBody);
