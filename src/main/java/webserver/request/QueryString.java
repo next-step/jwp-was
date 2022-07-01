@@ -1,12 +1,12 @@
-package webserver.common;
+package webserver.request;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import webserver.common.exception.IllegalQueryStringException;
-import webserver.common.exception.IllegalQueryStringKeyException;
+import webserver.request.exception.IllegalQueryStringException;
+import webserver.request.exception.IllegalQueryStringKeyException;
 
 public class QueryString {
     private final Map<String, String> queryString;
