@@ -12,7 +12,6 @@ public class MvcTest extends WasBaseTest {
 
     @BeforeEach
     void setUp() throws Exception {
-
         requestMapping = new FakeRequestMapping();
     }
 

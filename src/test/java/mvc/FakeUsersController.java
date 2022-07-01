@@ -2,8 +2,6 @@ package mvc;
 
 import model.User;
 import mvc.controller.AbstractController;
-import mvc.view.TemplateViewResolver;
-import mvc.view.View;
 import was.http.HttpRequest;
 import was.http.HttpResponse;
 
@@ -18,9 +16,6 @@ public class FakeUsersController extends AbstractController {
                 new User("sanjigi", "password", "산지기", "sanjigi@slipp.net")
         );
         request.addAttribute("users", users);
-
-        TemplateViewResolver viewResolver = new TemplateViewResolver();
-        View view = viewResolver.resolveViewName("list");
-        view.render(request, response);
+        render(request, response, "list");
     }
 }

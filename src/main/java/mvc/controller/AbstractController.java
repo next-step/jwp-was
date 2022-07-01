@@ -1,5 +1,7 @@
 package mvc.controller;
 
+import mvc.view.TemplateViewResolver;
+import mvc.view.View;
 import was.http.HttpMethod;
 import was.http.HttpRequest;
 import was.http.HttpResponse;
@@ -20,5 +22,11 @@ public abstract class AbstractController implements Controller {
     }
 
     protected void doGet(HttpRequest request, HttpResponse response) throws Exception {
+    }
+
+    protected void render(HttpRequest request, HttpResponse response, String viewName) throws Exception {
+        TemplateViewResolver viewResolver = new TemplateViewResolver();
+        View view = viewResolver.resolveViewName("list");
+        view.render(request, response);
     }
 }
