@@ -18,7 +18,7 @@ public class TemplateView implements View {
     public void render(HttpRequest request, HttpResponse response) throws Exception {
         logger.debug("attributes : {}", request.getAttributes());
         byte[] body = template.apply(request.getAttributes()).getBytes();
-        response.response200Header(body.length);
+        response.addHeader("Content-Type", "text/html");
         response.responseBody(body);
     }
 }

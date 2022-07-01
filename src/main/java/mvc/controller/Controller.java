@@ -1,7 +1,7 @@
 package mvc.controller;
 
-import http.HttpRequest;
-import http.HttpResponse;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 public interface Controller {
     void service(HttpRequest request, HttpResponse response) throws Exception;

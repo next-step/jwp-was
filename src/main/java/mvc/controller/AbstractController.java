@@ -1,8 +1,8 @@
 package mvc.controller;
 
-import http.HttpMethod;
-import http.HttpRequest;
-import http.HttpResponse;
+import webserver.http.HttpMethod;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 public abstract class AbstractController implements Controller {
     @Override

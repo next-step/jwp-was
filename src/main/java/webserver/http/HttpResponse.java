@@ -13,9 +13,7 @@ import java.util.Set;
 public class HttpResponse {
     private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
 
-    private HttpRequest request;
-
-    private DataOutputStream dos = null;
+    private DataOutputStream dos;
 
     private Map<String, String> headers = new HashMap<String, String>();
 
@@ -25,16 +23,6 @@ public class HttpResponse {
 
     public void addHeader(String key, String value) {
         headers.put(key, value);
-    }
-
-    public void response200Header(int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            processHeaders();
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
     }
 
     public void responseBody(byte[] body) {
