@@ -3,7 +3,7 @@ package mvc;
 import mvc.controller.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.HttpRequest;
+import was.http.HttpRequest;
 
 import java.util.HashMap;
 import java.util.Map;

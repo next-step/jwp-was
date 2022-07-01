@@ -3,9 +3,9 @@ package mvc;
 import mvc.controller.Controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import webserver.WasBaseTest;
-import webserver.http.HttpRequest;
-import webserver.http.HttpResponse;
+import was.WasBaseTest;
+import was.http.HttpRequest;
+import was.http.HttpResponse;
 
 public class MvcTest extends WasBaseTest {
     private RequestMapping requestMapping;

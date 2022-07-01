@@ -4,8 +4,8 @@ import model.User;
 import mvc.controller.AbstractController;
 import mvc.view.TemplateViewResolver;
 import mvc.view.View;
-import webserver.http.HttpRequest;
-import webserver.http.HttpResponse;
+import was.http.HttpRequest;
+import was.http.HttpResponse;
 
 import java.util.Arrays;
 import java.util.List;

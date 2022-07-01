@@ -2,9 +2,9 @@ package mvc.view;
 
 import model.User;
 import org.junit.jupiter.api.Test;
-import webserver.WasBaseTest;
-import webserver.http.HttpRequest;
-import webserver.http.HttpResponse;
+import was.WasBaseTest;
+import was.http.HttpRequest;
+import was.http.HttpResponse;
 
 import java.util.Arrays;
 import java.util.List;

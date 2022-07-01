@@ -1,4 +1,4 @@
-package webserver.http;
+package was.http;
 
 import org.junit.jupiter.api.Test;
 

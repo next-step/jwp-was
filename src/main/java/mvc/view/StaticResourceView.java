@@ -3,8 +3,8 @@ package mvc.view;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import webserver.http.HttpRequest;
-import webserver.http.HttpResponse;
+import was.http.HttpRequest;
+import was.http.HttpResponse;
 
 import java.util.Optional;
 

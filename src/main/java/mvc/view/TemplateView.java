@@ -3,8 +3,8 @@ package mvc.view;
 import com.github.jknack.handlebars.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.HttpRequest;
-import webserver.http.HttpResponse;
+import was.http.HttpRequest;
+import was.http.HttpResponse;
 
 public class TemplateView implements View {
     private static final Logger logger = LoggerFactory.getLogger(TemplateView.class);

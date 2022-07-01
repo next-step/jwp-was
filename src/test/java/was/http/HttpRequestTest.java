@@ -1,7 +1,7 @@
-package webserver.http;
+package was.http;
 
 import org.junit.jupiter.api.Test;
-import webserver.WasBaseTest;
+import was.WasBaseTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

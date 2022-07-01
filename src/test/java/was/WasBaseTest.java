@@ -1,9 +1,9 @@
-package webserver;
+package was;
 
-import webserver.http.BufferedReaderAsHttpRequest;
-import webserver.http.CachedHttpRequest;
-import webserver.http.HttpRequest;
-import webserver.http.HttpRequestPipe;
+import was.http.BufferedReaderAsHttpRequest;
+import was.http.CachedHttpRequest;
+import was.http.HttpRequest;
+import was.http.HttpRequestPipe;
 
 import java.io.*;
 

@@ -1,4 +1,4 @@
-package webserver.http;
+package was.http;
 
 public enum HttpMethod {
     GET, POST;
