@@ -10,13 +10,19 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TemplateViewResolverTest {
+    private HttpRequest request;
+
     private String testDirectory = "./src/test/resources/";
 
-    private HttpRequest request;
+    private String outputDirectory = "./out/";
 
     @BeforeEach
     void setUp() throws Exception {
-        request = request("HTTP_GET_with_QueryString.txt");
+        File directory = new File(outputDirectory);
+        if (! directory.exists()){
+            directory.mkdir();
+        }
+        request = request("http/HTTP_GET_without_QueryString.txt");
     }
 
     @Test
@@ -39,6 +45,6 @@ public class TemplateViewResolverTest {
     }
 
     private OutputStream createOutputStream(String filename) throws FileNotFoundException {
-        return new FileOutputStream(new File(testDirectory + filename));
+        return new FileOutputStream(new File(outputDirectory + filename));
     }
 }

@@ -13,7 +13,7 @@ public class HttpRequestTest {
 
     @Test
     public void request_GET_without_QueryString() throws Exception {
-        HttpRequest request = request("HTTP_GET_without_QueryString.txt");
+        HttpRequest request = request("http/HTTP_GET_without_QueryString.txt");
 
         assertThat(request.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(request.getPath()).isEqualTo("/users");
@@ -22,7 +22,7 @@ public class HttpRequestTest {
 
     @Test
     public void request_GET_with_QueryString() throws Exception {
-        HttpRequest request = request("HTTP_GET_with_QueryString.txt");
+        HttpRequest request = request("http/HTTP_GET_with_QueryString.txt");
 
         assertThat(request.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(request.getPath()).isEqualTo("/users");
@@ -32,7 +32,7 @@ public class HttpRequestTest {
 
     @Test
     public void request_POST_with_body1() throws Exception {
-        HttpRequest request = request("HTTP_POST_with_body1.txt");
+        HttpRequest request = request("http/HTTP_POST_with_body1.txt");
 
         assertThat(request.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(request.getPath()).isEqualTo("/users");
@@ -42,7 +42,7 @@ public class HttpRequestTest {
 
     @Test
     public void request_POST_with_body2() throws Exception {
-        HttpRequest request = request("HTTP_POST_with_body2.txt");
+        HttpRequest request = request("http/HTTP_POST_with_body2.txt");
 
         assertThat(request.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(request.getPath()).isEqualTo("/users");

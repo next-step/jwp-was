@@ -5,6 +5,7 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -13,7 +14,15 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 public class HttpResponseTest {
-    private String testDirectory = "./src/test/resources/";
+    private String outputDirectory = "./out/";
+
+    @BeforeEach
+    void setUp() {
+        File directory = new File(outputDirectory);
+        if (! directory.exists()){
+            directory.mkdir();
+        }
+    }
 
     @Test
     public void responseForward() throws Exception {
@@ -47,6 +56,6 @@ public class HttpResponseTest {
     }
 
     private OutputStream createOutputStream(String filename) throws FileNotFoundException {
-        return new FileOutputStream(new File(testDirectory + filename));
+        return new FileOutputStream(new File(outputDirectory + filename));
     }
 }
