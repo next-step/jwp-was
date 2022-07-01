@@ -26,7 +26,7 @@ class QueryStringTest {
     @Test
     void illegalQueryString() {
         assertThatThrownBy(
-                () -> QueryString.from("=&=")
+                () -> QueryString.from("==")
         ).isInstanceOf(IllegalQueryStringException.class);
     }
 

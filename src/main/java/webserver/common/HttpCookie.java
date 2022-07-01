@@ -9,6 +9,8 @@ import webserver.common.exception.IllegalCookieException;
 import webserver.common.exception.IllegalCookieKeyException;
 
 public class HttpCookie {
+    private static final String MAP_DELIMITER = "=";
+    private static final String COOKIE_DELIMITER = "; ";
     private final Map<String, String> cookies;
 
     public HttpCookie() {
@@ -30,21 +32,20 @@ public class HttpCookie {
     }
 
     public static HttpCookie from(String cookieString) {
-        if (!cookieString.contains("=")) {
+        if (!cookieString.contains(MAP_DELIMITER)) {
             return new HttpCookie();
         }
-        String[] queries = cookieString.split("&");
+        String[] cookies = cookieString.split(COOKIE_DELIMITER);
         try {
-            return new HttpCookie(parse(queries));
+            return new HttpCookie(parse(cookies));
         } catch (ArrayIndexOutOfBoundsException exception) {
             throw new IllegalCookieException(cookieString);
         }
     }
 
     private static Map<String, String> parse(String[] cookies) {
-        String delimiter = "=";
         return Arrays.stream(cookies)
-                .map(cookie -> cookie.split(delimiter))
+                .map(cookie -> cookie.split(MAP_DELIMITER))
                 .collect(Collectors.toMap(
                         tuple -> tuple[0],
                         tuple -> tuple[1]
@@ -54,7 +55,7 @@ public class HttpCookie {
     @Override
     public String toString() {
         return cookies.entrySet().stream()
-                .map(entry -> String.format("%s=%s", entry.getKey(), entry.getValue()))
-                .collect(Collectors.joining("&"));
+                .map(entry -> String.format("%s%s%s", entry.getKey(), MAP_DELIMITER, entry.getValue()))
+                .collect(Collectors.joining(COOKIE_DELIMITER));
     }
 }
