@@ -52,4 +52,8 @@ public class HttpHeader {
         Cookie cookie = cookies.get("logined");
         return Objects.nonNull(cookie) && Boolean.parseBoolean(cookie.getValue());
     }
+
+    public Cookies getCookies() {
+        return cookies;
+    }
 }

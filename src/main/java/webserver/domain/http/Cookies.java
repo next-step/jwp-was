@@ -2,6 +2,7 @@ package webserver.domain.http;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Cookies {
@@ -35,5 +36,13 @@ public class Cookies {
                 .filter(it -> it.getName().equals(key))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public HttpSession getSession() {
+        Cookie cookie = get(HttpSession.SESSION_ID);
+        if (Objects.isNull(cookie)) {
+            return HttpSessions.create();
+        }
+        return HttpSessions.get(cookie.getValue());
     }
 }
