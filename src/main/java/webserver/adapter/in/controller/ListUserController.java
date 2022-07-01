@@ -7,11 +7,13 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import webserver.adapter.in.HttpRequest;
 import webserver.adapter.out.web.HttpResponse;
 import webserver.application.UserProcessor;
+import webserver.domain.http.HttpSession;
 import webserver.domain.user.User;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 
 public class ListUserController extends AbstractController {
 
@@ -23,7 +25,7 @@ public class ListUserController extends AbstractController {
 
     @Override
     public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
-        if (!httpRequest.getHttpHeader().isLogined()) {
+        if (!isLogined(httpRequest.getHttpHeader().getCookies().getSession())) {
             httpResponse.responseRedirect("/user/login_failed.html");
             return;
         }
@@ -41,5 +43,15 @@ public class ListUserController extends AbstractController {
         String page = template.apply(Map.of("users", users));
 
         httpResponse.responseBody(page);
+    }
+
+    private boolean isLogined(HttpSession session) {
+        Object user = session.getAttribute("user");
+
+        if (Objects.isNull(user)) {
+            return false;
+        }
+
+        return true;
     }
 }

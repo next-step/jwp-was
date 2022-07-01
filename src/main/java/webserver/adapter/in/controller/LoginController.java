@@ -3,9 +3,12 @@ package webserver.adapter.in.controller;
 import webserver.adapter.in.HttpRequest;
 import webserver.adapter.out.web.HttpResponse;
 import webserver.application.UserProcessor;
+import webserver.domain.http.HttpSession;
 import webserver.domain.http.RequestBody;
+import webserver.domain.user.User;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class LoginController extends AbstractController {
 
@@ -18,10 +21,12 @@ public class LoginController extends AbstractController {
     @Override
     public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
         RequestBody body = httpRequest.getRequestBody();
-        boolean validUser = userProcessor.isValidUser(body.get("userId"), body.get("password"));
+        User user = userProcessor.findUser(body.get("userId"));
 
-        if (validUser) {
-            httpResponse.responseCookies("/index.html", true);
+        if (Objects.nonNull(user) && user.verifyPassword(body.get("password"))) {
+            HttpSession session = httpRequest.getHttpHeader().getCookies().getSession();
+            session.setAttribute("user", user);
+            httpResponse.responseCookiesAndSession("/index.html", true, session.getId());
             return;
         }
 

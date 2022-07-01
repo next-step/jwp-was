@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import webserver.adapter.in.controller.Controller;
 import webserver.adapter.out.web.HttpResponse;
 import webserver.application.UserProcessor;
+import webserver.domain.http.HttpSession;
+import webserver.domain.http.HttpSessions;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -31,6 +33,11 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = new HttpRequest(in);
             HttpResponse httpResponse = new HttpResponse(new DataOutputStream(out));
+
+            if (Objects.isNull(httpRequest.getHttpHeader().getCookies().get(HttpSession.SESSION_ID))) {
+                HttpSession session = HttpSessions.create();
+                httpResponse.addSessionCookie(session.getId());
+            }
 
             String path = httpRequest.getUri().getPath();
             Controller controller = new RequestMapper(userProcessor).getController(path);

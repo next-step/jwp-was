@@ -4,7 +4,6 @@ import webserver.domain.user.User;
 import webserver.domain.user.UserRepository;
 
 import java.util.Collection;
-import java.util.Objects;
 
 public class UserProcessorImpl implements UserProcessor {
 
@@ -15,9 +14,8 @@ public class UserProcessorImpl implements UserProcessor {
     }
 
     @Override
-    public boolean isValidUser(String userId, String password) {
-        User user = userRepository.findUserById(userId);
-        return Objects.nonNull(user) && user.getPassword().equals(password);
+    public User findUser(String userId) {
+        return userRepository.findUserById(userId);
     }
 
     @Override

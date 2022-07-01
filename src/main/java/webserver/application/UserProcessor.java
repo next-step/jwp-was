@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public interface UserProcessor {
 
-    boolean isValidUser(String userId, String password);
+    User findUser(String userId);
 
     void createUser(String userId, String password, String name, String email);
 

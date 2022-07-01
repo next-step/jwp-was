@@ -3,6 +3,7 @@ package webserver.adapter.out.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import webserver.domain.http.HttpSession;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -40,6 +41,12 @@ public class HttpResponse {
         responseBody(new byte[]{});
     }
 
+    public void responseCookiesAndSession(String redirectUrl, boolean logined, String sessionId) throws IOException {
+        redirect(redirectUrl);
+        addHeader("Set-Cookie", HttpSession.SESSION_ID + "=" + sessionId + "; logined=" + logined + "; Path=/");
+        responseBody(new byte[]{});
+    }
+
     public void responseBody(String body) throws IOException {
         dos.writeBytes(HTTP_200);
         addHeader("Content-Type", "text/html;charset=utf-8");
@@ -73,6 +80,14 @@ public class HttpResponse {
         }
     }
 
+    public void addSessionCookie(String sessionId) {
+        addHeader("Set-Cookie", HttpSession.SESSION_ID + "=" + sessionId);
+    }
+
+    private void addHeader(String key, String value) {
+        headers.put(key, value);
+    }
+
     private void redirect(String redirectUrl) throws IOException {
         dos.writeBytes(HTTP_302);
         addHeader("Location", redirectUrl);
@@ -83,10 +98,6 @@ public class HttpResponse {
         dos.writeBytes("\r\n");
         dos.write(body, 0, body.length);
         dos.flush();
-    }
-
-    private void addHeader(String key, String value) {
-        headers.put(key, value);
     }
 
     private void setHeader() {
