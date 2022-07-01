@@ -1,6 +1,6 @@
 package mvc.view;
 
-import model.User;
+import users.model.User;
 import org.junit.jupiter.api.Test;
 import was.WasBaseTest;
 import was.http.HttpRequest;

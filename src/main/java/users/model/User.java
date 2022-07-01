@@ -1,4 +1,4 @@
-package model;
+package users.model;
 
 public class User {
     private String userId;
@@ -27,6 +27,10 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public boolean login(String password) {
+        return this.password.equals(password);
     }
 
     @Override

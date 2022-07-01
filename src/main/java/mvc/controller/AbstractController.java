@@ -26,7 +26,7 @@ public abstract class AbstractController implements Controller {
 
     protected void render(HttpRequest request, HttpResponse response, String viewName) throws Exception {
         TemplateViewResolver viewResolver = new TemplateViewResolver();
-        View view = viewResolver.resolveViewName("list");
+        View view = viewResolver.resolveViewName(viewName);
         view.render(request, response);
     }
 }

@@ -1,6 +1,6 @@
 package mvc;
 
-import model.User;
+import users.model.User;
 import mvc.controller.AbstractController;
 import was.http.HttpRequest;
 import was.http.HttpResponse;
