@@ -1,11 +1,16 @@
 package webserver.http;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class HttpRequest {
     private final RequestLine requestLine;
 
     private final HttpHeaders headers;
 
     private RequestParams requestParams;
+
+    private final Map<String, Object> attributes = new HashMap<>();
 
     public HttpRequest(RequestLine requestLine, HttpHeaders headers, String body) {
         this(requestLine, headers, new CachedRequestParams(new DefaultRequestParams(requestLine.getQueryString(), body)));
@@ -39,5 +44,13 @@ public class HttpRequest {
 
     public HttpSession getSession() {
         return headers.getSession();
+    }
+
+    public void addAttribute(String name, Object value) {
+        attributes.put(name, value);
+    }
+
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 }
