@@ -1,8 +1,8 @@
 package controller;
 
 import db.DataBase;
+import http.*;
 import model.User;
-import webserver.*;
 
 public class LoginMappingController extends RequestMappingControllerAdapter {
     @Override
@@ -11,32 +11,32 @@ public class LoginMappingController extends RequestMappingControllerAdapter {
     }
 
     @Override
-    public Response doGet(Request request) {
-        return login(request);
+    public HttpResponse doGet(HttpRequest httpRequest) {
+        return login(httpRequest);
     }
 
     @Override
-    public Response doPost(Request request) {
-        return login(request);
+    public HttpResponse doPost(HttpRequest httpRequest) {
+        return login(httpRequest);
     }
 
-    private Response login(Request request) {
-        User user = getUserFromRequest(request);
+    private HttpResponse login(HttpRequest httpRequest) {
+        User user = getUserFromRequest(httpRequest);
 
         User userById = DataBase.findUserById(user.getUserId());
 
         if (userById == null || !userById.checkPassword(user.getPassword())) {
-            return new Response(HttpStatus.BAD_REQUEST, MediaType.TEXT_HTML_UTF8, "/user/login_failed.html", "logined=false; Path=/");
+            return new HttpResponse(HttpStatus.BAD_REQUEST, MediaType.TEXT_HTML_UTF8, "/user/login_failed.html", "logined=false; Path=/");
         }
 
-        return new Response(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", "logined=true; Path=/");
+        return new HttpResponse(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", "logined=true; Path=/");
     }
 
-    private User getUserFromRequest(Request request) {
-        QueryString queryString = request.getRequestLine().toQueryString();
+    private User getUserFromRequest(HttpRequest httpRequest) {
+        QueryString queryString = httpRequest.getRequestLine().toQueryString();
 
-        if (request.getRequestLine().getMethod() == HttpMethod.POST) {
-            queryString = QueryString.parse(request.getRequestBody());
+        if (httpRequest.getRequestLine().getMethod() == RequestMethod.POST) {
+            queryString = QueryString.parse(httpRequest.getRequestBody());
         }
 
         return new User(

@@ -1,12 +1,11 @@
-package webserver;
+package http;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import utils.FileIoUtils;
 
-public class Response {
+public class HttpResponse {
 
     private final HttpStatus httpStatus;
     private final MediaType contentType;
@@ -15,23 +14,23 @@ public class Response {
 
     private final String body;
 
-    public Response(final MediaType contentType, final String path, final String cookie) {
+    public HttpResponse(final MediaType contentType, final String path, final String cookie) {
         this(HttpStatus.OK, contentType, path, cookie, null);
     }
 
-    public Response(final MediaType contentType, final String path, final String cookie, final String body) {
+    public HttpResponse(final MediaType contentType, final String path, final String cookie, final String body) {
         this(HttpStatus.OK, contentType, path, cookie, body);
     }
 
-    public Response(final String contentType, final String path, final String cookie) {
+    public HttpResponse(final String contentType, final String path, final String cookie) {
         this(HttpStatus.OK, new MediaType(contentType), path, cookie, null);
     }
 
-    public Response(final String contentType, final String path, final String cookie, final String body) {
+    public HttpResponse(final String contentType, final String path, final String cookie, final String body) {
         this(HttpStatus.OK, new MediaType(contentType), path, cookie, body);
     }
 
-    public Response(final HttpStatus httpStatus, final MediaType contentType, final String path, final String cookie) {
+    public HttpResponse(final HttpStatus httpStatus, final MediaType contentType, final String path, final String cookie) {
         this.httpStatus = httpStatus;
         this.contentType = contentType;
         this.path = path;
@@ -39,7 +38,7 @@ public class Response {
         this.body = null;
     }
 
-    public Response(final HttpStatus httpStatus, final MediaType contentType, final String path, final String cookie, final String body) {
+    public HttpResponse(final HttpStatus httpStatus, final MediaType contentType, final String path, final String cookie, final String body) {
         this.httpStatus = httpStatus;
         this.contentType = contentType;
         this.path = path;

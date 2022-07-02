@@ -1,13 +1,13 @@
 package controller;
 
-import webserver.Request;
-import webserver.Response;
+import http.HttpRequest;
+import http.HttpResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 public interface RequestController {
-    Response doGet(Request request) throws IOException, URISyntaxException;
+    HttpResponse doGet(HttpRequest httpRequest) throws IOException, URISyntaxException;
 
-    Response doPost(Request request) throws IOException, URISyntaxException;
+    HttpResponse doPost(HttpRequest httpRequest) throws IOException, URISyntaxException;
 }

@@ -1,12 +1,12 @@
-package webserver;
+package http;
 
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Request {
+public class HttpRequest {
 
-  private static final Logger logger = LoggerFactory.getLogger(Request.class);
+  private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
 
   private final RequestLine requestLine;
 
@@ -18,7 +18,7 @@ public class Request {
     return requestLine;
   }
 
-  public Request(final RequestLine requestLine, final Map<String, String> requestHeaders, final String requestBody) {
+  public HttpRequest(final RequestLine requestLine, final Map<String, String> requestHeaders, final String requestBody) {
     this.requestLine = requestLine;
     this.headers = requestHeaders;
     this.requestBody = requestBody;

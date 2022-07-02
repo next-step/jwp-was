@@ -1,21 +1,21 @@
 package controller;
 
-import webserver.HttpStatus;
-import webserver.MediaType;
-import webserver.Request;
-import webserver.Response;
+import http.HttpRequest;
+import http.HttpStatus;
+import http.MediaType;
+import http.HttpResponse;
 
 import java.io.IOException;
 
 public abstract class RequestMappingControllerAdapter implements RequestController, RequestMapping {
 
     @Override
-    public Response doGet(Request request) throws IOException {
-        return new Response(HttpStatus.NOT_FOUND, MediaType.TEXT_HTML_UTF8, "", null);
+    public HttpResponse doGet(HttpRequest httpRequest) throws IOException {
+        return new HttpResponse(HttpStatus.NOT_FOUND, MediaType.TEXT_HTML_UTF8, "", null);
     }
 
     @Override
-    public Response doPost(Request request) {
-        return new Response(HttpStatus.NOT_FOUND, MediaType.TEXT_HTML_UTF8, "", null);
+    public HttpResponse doPost(HttpRequest httpRequest) {
+        return new HttpResponse(HttpStatus.NOT_FOUND, MediaType.TEXT_HTML_UTF8, "", null);
     }
 }

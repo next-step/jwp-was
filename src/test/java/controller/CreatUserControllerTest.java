@@ -1,6 +1,7 @@
 package controller;
 
 import db.DataBase;
+import http.*;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,16 +32,16 @@ class CreatUserControllerTest {
         headers.put("Accept", "*/*");
 
 
-        Request request = new Request(
+        HttpRequest httpRequest = new HttpRequest(
                 requestLine,
                 headers,
                 body);
 
-        Response response = DispatcherServlet.match(request);
+        HttpResponse httpResponse = RequestControllerContainer.match(httpRequest);
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
-        assertThat(response.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
-        assertThat(response.getPath()).isEqualTo("/index.html");
+        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
+        assertThat(httpResponse.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
+        assertThat(httpResponse.getPath()).isEqualTo("/index.html");
 
         User user = DataBase.findUserById("javajigi");
 
@@ -59,11 +60,11 @@ class CreatUserControllerTest {
                 "email=javajigi@slipp.net" +
                 " HTTP/1.1");
 
-        Request request = new Request(requestLine, null, null);
+        HttpRequest httpRequest = new HttpRequest(requestLine, null, null);
 
-        Response response = DispatcherServlet.match(request);
+        HttpResponse httpResponse = RequestControllerContainer.match(httpRequest);
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
 
         User user = DataBase.findUserById("javajigi");
 

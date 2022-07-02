@@ -1,28 +1,29 @@
-package webserver;
+package http;
 
+import http.RequestMethod;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class HttpMethodTest {
+class HttpRequestMethodTest {
 
     @Test
     void GET() {
-        assertThat(HttpMethod.valueOf("GET"))
-                .isEqualTo(HttpMethod.GET);
+        assertThat(RequestMethod.valueOf("GET"))
+                .isEqualTo(RequestMethod.GET);
     }
 
     @Test
     void POST() {
-        assertThat(HttpMethod.valueOf("POST"))
-                .isEqualTo(HttpMethod.POST);
+        assertThat(RequestMethod.valueOf("POST"))
+                .isEqualTo(RequestMethod.POST);
     }
 
     @Test
     void invalidValue() {
         assertThatThrownBy(
-                () -> HttpMethod.valueOf("INVALID_METHOD")
+                () -> RequestMethod.valueOf("INVALID_METHOD")
         ).isInstanceOf(IllegalArgumentException.class);
     }
 }

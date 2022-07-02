@@ -6,10 +6,10 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.User;
-import webserver.HttpStatus;
-import webserver.MediaType;
-import webserver.Request;
-import webserver.Response;
+import http.HttpStatus;
+import http.MediaType;
+import http.HttpRequest;
+import http.HttpResponse;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -24,13 +24,13 @@ public class UserListMappingController extends RequestMappingControllerAdapter {
 
     @Override
 
-    public Response doGet(Request request) throws IOException {
-        if (!checkLogin(getCookie(request))) {
-            return new Response(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", null);
+    public HttpResponse doGet(HttpRequest httpRequest) throws IOException {
+        if (!checkLogin(getCookie(httpRequest))) {
+            return new HttpResponse(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", null);
 
         }
 
-        return new Response(HttpStatus.OK, MediaType.TEXT_HTML_UTF8, "/user/list.html", rendering(DataBase.findAll()));
+        return new HttpResponse(HttpStatus.OK, MediaType.TEXT_HTML_UTF8, "/user/list.html", rendering(DataBase.findAll()));
     }
 
     private String rendering(Collection<User> users) throws IOException {
@@ -49,13 +49,13 @@ public class UserListMappingController extends RequestMappingControllerAdapter {
         return cookie.indexOf("logined=true") != -1;
     }
 
-    private String getCookie(Request request) {
-        String cookie = request.getCookie();
+    private String getCookie(HttpRequest httpRequest) {
+        String cookie = httpRequest.getCookie();
 
         if (cookie == null) {
             return "";
         }
 
-        return request.getCookie();
+        return httpRequest.getCookie();
     }
 }

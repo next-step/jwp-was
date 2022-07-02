@@ -1,4 +1,4 @@
-package webserver;
+package http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,10 +13,10 @@ public class RequestFactory {
     private RequestFactory() {
     }
 
-    public static Request create(BufferedReader bufferedReader) throws IOException {
+    public static HttpRequest create(BufferedReader bufferedReader) throws IOException {
         String requestLine = bufferedReader.readLine();
         Map<String, String> header = createHeader(bufferedReader, requestLine);
-        return new Request(new RequestLine(requestLine), header, createRequestBody(bufferedReader, header));
+        return new HttpRequest(new RequestLine(requestLine), header, createRequestBody(bufferedReader, header));
     }
 
     private static Map<String, String> createHeader(BufferedReader bufferedReader, String line) throws IOException {

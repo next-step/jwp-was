@@ -1,5 +1,6 @@
 package controller;
 
+import http.*;
 import org.junit.jupiter.api.Test;
 import webserver.*;
 
@@ -21,16 +22,16 @@ class UserListControllerTest {
         headers.put("Accept", "*/*");
 
 
-        Request request = new Request(
+        HttpRequest httpRequest = new HttpRequest(
                 requestLine,
                 headers,
                 null);
 
-        Response response = DispatcherServlet.match(request);
+        HttpResponse httpResponse = RequestControllerContainer.match(httpRequest);
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
-        assertThat(response.getPath()).isEqualTo("/user/list.html");
+        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.OK);
+        assertThat(httpResponse.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
+        assertThat(httpResponse.getPath()).isEqualTo("/user/list.html");
     }
 
     @Test
@@ -42,15 +43,15 @@ class UserListControllerTest {
         headers.put("Accept", "*/*");
 
 
-        Request request = new Request(
+        HttpRequest httpRequest = new HttpRequest(
                 requestLine,
                 headers,
                 null);
 
-        Response response = DispatcherServlet.match(request);
+        HttpResponse httpResponse = RequestControllerContainer.match(httpRequest);
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
-        assertThat(response.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
-        assertThat(response.getPath()).isEqualTo("/index.html");
+        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
+        assertThat(httpResponse.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
+        assertThat(httpResponse.getPath()).isEqualTo("/index.html");
     }
 }

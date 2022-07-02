@@ -1,10 +1,10 @@
 package controller;
 
 import db.DataBase;
+import http.*;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.*;
 
 public class CreatUserMappingController extends RequestMappingControllerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(CreatUserMappingController.class);
@@ -15,14 +15,14 @@ public class CreatUserMappingController extends RequestMappingControllerAdapter 
     }
 
     @Override
-    public Response doPost(Request request) {
-        DataBase.addUser(getUserFromRequest(request));
+    public HttpResponse doPost(HttpRequest httpRequest) {
+        DataBase.addUser(getUserFromRequest(httpRequest));
         logger.debug("findAll: {}", DataBase.findAll());
-        return new Response(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", null);
+        return new HttpResponse(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", null);
     }
 
-    private User getUserFromRequest(Request request) {
-        QueryString queryString = QueryString.parse(request.getRequestBody());
+    private User getUserFromRequest(HttpRequest httpRequest) {
+        QueryString queryString = QueryString.parse(httpRequest.getRequestBody());
         return new User(
                 queryString.get("userId"),
                 queryString.get("password"),
