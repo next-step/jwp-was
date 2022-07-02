@@ -1,4 +1,4 @@
-package http;
+package webserver.http;
 
 public class MediaType {
 

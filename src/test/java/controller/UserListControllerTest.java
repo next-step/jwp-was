@@ -1,11 +1,8 @@
 package controller;
 
-import http.*;
 import org.junit.jupiter.api.Test;
-import webserver.RequestControllerContainer;
+import webserver.http.*;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

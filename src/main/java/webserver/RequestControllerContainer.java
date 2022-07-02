@@ -1,7 +1,9 @@
 package webserver;
 
 import controller.*;
-import http.*;
+import webserver.http.HttpRequest;
+import webserver.http.RequestController;
+import webserver.http.RequestMappingControllerAdapter;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -26,7 +28,7 @@ public class RequestControllerContainer {
     }
 
     public static RequestController match(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        String url = httpRequest.getRequestLine().getPath();
+        String url = httpRequest.getPath();
 
         Optional<RequestMappingControllerAdapter> optionalController = container.stream()
                 .filter(controller -> controller.checkUrl(url))

@@ -1,6 +1,6 @@
-package http;
+package webserver.http;
 
-import http.QueryString;
+import webserver.http.QueryString;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

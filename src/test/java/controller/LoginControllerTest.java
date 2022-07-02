@@ -1,10 +1,10 @@
 package controller;
 
 import db.DataBase;
-import http.*;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import webserver.http.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

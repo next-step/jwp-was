@@ -1,10 +1,10 @@
 package webserver;
 
 import controller.IndexMappingController;
-import http.HttpRequest;
-import http.HttpResponse;
-import http.MediaType;
-import http.RequestLine;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.MediaType;
+import webserver.http.RequestLine;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

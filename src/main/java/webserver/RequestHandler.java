@@ -1,9 +1,9 @@
 package webserver;
 
-import controller.RequestController;
-import http.HttpRequest;
-import http.HttpResponse;
-import http.RequestFactory;
+import webserver.http.RequestController;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.RequestFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,7 +1,7 @@
 package controller;
 
 import db.DataBase;
-import http.*;
+import webserver.http.*;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,19 +15,18 @@ public class CreatUserMappingController extends RequestMappingControllerAdapter 
     }
 
     @Override
-    public HttpResponse doPost(HttpRequest httpRequest) {
-        DataBase.addUser(getUserFromRequest(httpRequest));
+    public HttpResponse doPost(Request request) {
+        DataBase.addUser(getUserFromRequest(request));
         logger.debug("findAll: {}", DataBase.findAll());
         return new HttpResponse(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", null);
     }
 
-    private User getUserFromRequest(HttpRequest httpRequest) {
-        QueryString queryString = QueryString.parse(httpRequest.getRequestBody());
+    private User getUserFromRequest(Request request) {
         return new User(
-                queryString.get("userId"),
-                queryString.get("password"),
-                queryString.get("name"),
-                queryString.get("email")
+                request.getParameter("userId"),
+                request.getParameter("password"),
+                request.getParameter("name"),
+                request.getParameter("email")
         );
     }
 }

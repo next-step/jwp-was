@@ -1,4 +1,4 @@
-package http;
+package webserver.http;
 
 public enum HttpStatus {
     OK(200, "OK"),

@@ -1,7 +1,7 @@
 package controller;
 
 import db.DataBase;
-import http.*;
+import webserver.http.*;
 import model.User;
 
 public class LoginMappingController extends RequestMappingControllerAdapter {
@@ -11,17 +11,17 @@ public class LoginMappingController extends RequestMappingControllerAdapter {
     }
 
     @Override
-    public HttpResponse doGet(HttpRequest httpRequest) {
-        return login(httpRequest);
+    public HttpResponse doGet(Request request) {
+        return login(request);
     }
 
     @Override
-    public HttpResponse doPost(HttpRequest httpRequest) {
-        return login(httpRequest);
+    public HttpResponse doPost(Request request) {
+        return login(request);
     }
 
-    private HttpResponse login(HttpRequest httpRequest) {
-        User user = getUserFromRequest(httpRequest);
+    private HttpResponse login(Request request) {
+        User user = getUserFromRequest(request);
 
         User userById = DataBase.findUserById(user.getUserId());
 
@@ -32,18 +32,12 @@ public class LoginMappingController extends RequestMappingControllerAdapter {
         return new HttpResponse(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", "logined=true; Path=/");
     }
 
-    private User getUserFromRequest(HttpRequest httpRequest) {
-        QueryString queryString = httpRequest.getRequestLine().toQueryString();
-
-        if (httpRequest.getRequestLine().getMethod() == RequestMethod.POST) {
-            queryString = QueryString.parse(httpRequest.getRequestBody());
-        }
-
+    private User getUserFromRequest(Request request) {
         return new User(
-                queryString.get("userId"),
-                queryString.get("password"),
-                queryString.get("name"),
-                queryString.get("email")
+                request.getParameter("userId"),
+                request.getParameter("password"),
+                request.getParameter("name"),
+                request.getParameter("email")
         );
     }
 }

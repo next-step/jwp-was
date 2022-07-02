@@ -1,6 +1,6 @@
-package http;
+package webserver.http;
 
-import http.Protocol;
+import webserver.http.Protocol;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

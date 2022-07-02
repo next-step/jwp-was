@@ -1,10 +1,10 @@
-package http;
+package webserver.http;
 
 public class RequestLine {
     private static final int MIN_VALUE_SIZE = 3;
     private static final String DELIMITER = " ";
 
-    private RequestMethod requestMethod;
+    private HttpMethod requestMethod;
     private QueryString queryString;
     private Protocol protocol;
 
@@ -17,7 +17,7 @@ public class RequestLine {
             throw new IllegalArgumentException();
         }
 
-        this.requestMethod = RequestMethod.valueOf(values[0]);
+        this.requestMethod = HttpMethod.valueOf(values[0]);
         this.queryString = QueryString.parse(values[1]);
         this.protocol = Protocol.from(values[2]);
     }
@@ -28,7 +28,7 @@ public class RequestLine {
         }
     }
 
-    public RequestMethod getMethod() {
+    public HttpMethod getMethod() {
         return requestMethod;
     }
 

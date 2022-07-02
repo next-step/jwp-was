@@ -1,7 +1,7 @@
 package controller;
 
-import http.*;
 import org.junit.jupiter.api.Test;
+import webserver.http.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

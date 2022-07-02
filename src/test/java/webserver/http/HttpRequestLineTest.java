@@ -1,11 +1,11 @@
-package http;
+package webserver.http;
 
-import http.RequestMethod;
-import http.QueryString;
-import http.RequestLine;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import webserver.http.HttpMethod;
+import webserver.http.QueryString;
+import webserver.http.RequestLine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -16,7 +16,7 @@ class HttpRequestLineTest {
     void get() {
         RequestLine requestLine = new RequestLine("GET /users HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo(RequestMethod.GET);
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getProtocolVersion()).isEqualTo("1.1");
@@ -35,7 +35,7 @@ class HttpRequestLineTest {
     void post() {
         RequestLine requestLine = new RequestLine("POST /users HTTP/1.1");
 
-        assertThat(requestLine.getMethod()).isEqualTo(RequestMethod.POST);
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(requestLine.getPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getProtocolVersion()).isEqualTo("1.1");
