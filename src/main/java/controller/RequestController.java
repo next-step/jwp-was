@@ -3,11 +3,10 @@ package controller;
 import http.HttpRequest;
 import http.HttpResponse;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 public interface RequestController {
-    HttpResponse doGet(HttpRequest httpRequest) throws IOException, URISyntaxException;
+    HttpResponse service(HttpRequest httpRequest) throws Exception;
 
-    HttpResponse doPost(HttpRequest httpRequest) throws IOException, URISyntaxException;
+    HttpResponse doGet(HttpRequest httpRequest) throws Exception;
+
+    HttpResponse doPost(HttpRequest httpRequest) throws Exception;
 }

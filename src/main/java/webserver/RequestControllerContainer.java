@@ -16,6 +16,8 @@ public class RequestControllerContainer {
 
     private static final List<RequestMappingControllerAdapter> container = new LinkedList<>();
 
+    private static RequestController staticController = new StaticResourceController();
+
     static {
         container.add(new IndexMappingController());
         container.add(new CreatUserMappingController());
@@ -23,7 +25,7 @@ public class RequestControllerContainer {
         container.add(new UserListMappingController());
     }
 
-    public static HttpResponse match(HttpRequest httpRequest) throws IOException, URISyntaxException {
+    public static RequestController match(HttpRequest httpRequest) throws IOException, URISyntaxException {
         String url = httpRequest.getRequestLine().getPath();
 
         Optional<RequestMappingControllerAdapter> optionalController = container.stream()
@@ -31,23 +33,9 @@ public class RequestControllerContainer {
                 .findAny();
 
         if (optionalController.isPresent()) {
-            return execute(httpRequest, optionalController.get());
+            return optionalController.get();
         }
 
-        try {
-            return new StaticResourceController().doGet(httpRequest);
-        } catch (IllegalArgumentException iae) {
-            return new HttpResponse(HttpStatus.NOT_FOUND, MediaType.TEXT_HTML_UTF8, "", null);
-        }
-    }
-
-    private static HttpResponse execute(HttpRequest httpRequest, RequestController controller) throws IOException, URISyntaxException {
-        RequestMethod method = httpRequest.getRequestLine().getMethod();
-
-        if (method == RequestMethod.POST) {
-            return controller.doPost(httpRequest);
-        }
-
-        return controller.doGet(httpRequest);
+        return staticController;
     }
 }

@@ -1,14 +1,14 @@
 package webserver;
 
+import controller.RequestController;
 import http.HttpRequest;
-import http.RequestFactory;
 import http.HttpResponse;
+import http.RequestFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.URISyntaxException;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -27,21 +27,15 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = RequestFactory.create(new BufferedReader(new InputStreamReader(in, "UTF-8")));
-            HttpResponse httpResponse;
-            try {
-                httpResponse = RequestControllerContainer.match(httpRequest);
-            } catch (URISyntaxException e) {
-                throw new RuntimeException(e);
-            }
-
+            RequestController controller = RequestControllerContainer.match(httpRequest);
+            HttpResponse httpResponse = controller.service(httpRequest);
             DataOutputStream dos = new DataOutputStream(out);
             write(dos, httpResponse.getBytes());
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
+
 
     private void write(DataOutputStream dos, byte[] response) {
         try {

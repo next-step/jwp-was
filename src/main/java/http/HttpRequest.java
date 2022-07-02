@@ -14,14 +14,18 @@ public class HttpRequest {
 
   private final String requestBody;
 
-  public RequestLine getRequestLine() {
-    return requestLine;
-  }
-
   public HttpRequest(final RequestLine requestLine, final Map<String, String> requestHeaders, final String requestBody) {
     this.requestLine = requestLine;
     this.headers = requestHeaders;
     this.requestBody = requestBody;
+  }
+
+  public RequestLine getRequestLine() {
+    return requestLine;
+  }
+
+  public String getPath() {
+    return requestLine.getPath();
   }
 
   public MediaType getContentType() {

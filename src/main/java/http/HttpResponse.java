@@ -1,17 +1,15 @@
 package http;
 
+import utils.FileIoUtils;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import utils.FileIoUtils;
-
 public class HttpResponse {
-
     private final HttpStatus httpStatus;
     private final MediaType contentType;
     private final String path;
     private final String cookie;
-
     private final String body;
 
     public HttpResponse(final MediaType contentType, final String path, final String cookie) {

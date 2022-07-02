@@ -5,10 +5,7 @@ import http.*;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import webserver.*;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -22,7 +19,7 @@ class LoginControllerTest {
     }
 
     @Test
-    void match() throws IOException, URISyntaxException {
+    void match() throws Exception {
         DataBase.addUser(new User(
                 "javajigi",
                 "P@ssw0rD",
@@ -41,7 +38,7 @@ class LoginControllerTest {
                 headers,
                 null);
 
-        HttpResponse httpResponse = RequestControllerContainer.match(httpRequest);
+        HttpResponse httpResponse = new LoginMappingController().service(httpRequest);
 
         assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(httpResponse.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
@@ -54,7 +51,7 @@ class LoginControllerTest {
     }
 
     @Test
-    void match_fail() throws IOException, URISyntaxException {
+    void match_fail() throws Exception {
         RequestLine requestLine = new RequestLine("GET /user/login?userId=test&password=111 HTTP/1.1");
 
         Map<String, String> headers = new LinkedHashMap<>();
@@ -66,7 +63,7 @@ class LoginControllerTest {
                 headers,
                 null);
 
-        HttpResponse httpResponse = RequestControllerContainer.match(httpRequest);
+        HttpResponse httpResponse = new LoginMappingController().service(httpRequest);
 
         assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(httpResponse.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);

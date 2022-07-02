@@ -5,10 +5,7 @@ import http.*;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import webserver.*;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -22,7 +19,7 @@ class CreatUserControllerTest {
     }
 
     @Test
-    void serving_post() throws IOException, URISyntaxException {
+    void serving_post() throws Exception {
         RequestLine requestLine = new RequestLine("POST /user/create HTTP/1.1");
         String body = "userId=javajigi&password=password&name=JaeSung&email=javajigi@slipp.net";
 
@@ -37,7 +34,7 @@ class CreatUserControllerTest {
                 headers,
                 body);
 
-        HttpResponse httpResponse = RequestControllerContainer.match(httpRequest);
+        HttpResponse httpResponse = new CreatUserMappingController().service(httpRequest);
 
         assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(httpResponse.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
@@ -52,7 +49,7 @@ class CreatUserControllerTest {
     }
 
     @Test
-    void serving_get() throws IOException, URISyntaxException {
+    void serving_get() throws Exception {
         RequestLine requestLine = new RequestLine("GET /user/create?" +
                 "userId=javajigi&" +
                 "password=password&" +
@@ -62,7 +59,7 @@ class CreatUserControllerTest {
 
         HttpRequest httpRequest = new HttpRequest(requestLine, null, null);
 
-        HttpResponse httpResponse = RequestControllerContainer.match(httpRequest);
+        HttpResponse httpResponse = new CreatUserMappingController().service(httpRequest);
 
         assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
 

@@ -1,23 +1,21 @@
 package webserver;
 
+import controller.IndexMappingController;
 import http.HttpRequest;
+import http.HttpResponse;
 import http.MediaType;
 import http.RequestLine;
-import http.HttpResponse;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RequestControllerContainerTest {
 
     @Test
-    void match() throws IOException, URISyntaxException {
+    void match() throws Exception {
         HttpRequest httpRequest = new HttpRequest(new RequestLine("GET /index.html HTTP/1.1"), null, null);
 
-        HttpResponse httpResponse = RequestControllerContainer.match(httpRequest);
+        HttpResponse httpResponse = new IndexMappingController().service(httpRequest);
 
         assertThat(httpResponse.getPath()).isEqualTo("/index.html");
         assertThat(httpResponse.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
