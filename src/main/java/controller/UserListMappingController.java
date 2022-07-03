@@ -5,8 +5,8 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
-import webserver.http.*;
 import model.User;
+import webserver.http.*;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -21,8 +21,8 @@ public class UserListMappingController extends RequestMappingControllerAdapter {
 
     @Override
 
-    public HttpResponse doGet(Request request) throws IOException {
-        if (!checkLogin(getCookie(request))) {
+    public HttpResponse doGet(HttpRequest httpRequest) throws IOException {
+        if (!checkLogin(getCookie(httpRequest))) {
             return new HttpResponse(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", null);
 
         }
@@ -46,7 +46,7 @@ public class UserListMappingController extends RequestMappingControllerAdapter {
         return cookie.indexOf("logined=true") != -1;
     }
 
-    private String getCookie(Request httpRequest) {
+    private String getCookie(HttpRequest httpRequest) {
         String cookie = httpRequest.getHeader("Cookie");
 
         if (cookie == null) {

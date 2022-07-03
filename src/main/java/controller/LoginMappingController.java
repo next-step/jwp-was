@@ -11,17 +11,17 @@ public class LoginMappingController extends RequestMappingControllerAdapter {
     }
 
     @Override
-    public HttpResponse doGet(Request request) {
-        return login(request);
+    public HttpResponse doGet(HttpRequest httpRequest) {
+        return login(httpRequest);
     }
 
     @Override
-    public HttpResponse doPost(Request request) {
-        return login(request);
+    public HttpResponse doPost(HttpRequest httpRequest) {
+        return login(httpRequest);
     }
 
-    private HttpResponse login(Request request) {
-        User user = getUserFromRequest(request);
+    private HttpResponse login(HttpRequest httpRequest) {
+        User user = getUserFromRequest(httpRequest);
 
         User userById = DataBase.findUserById(user.getUserId());
 
@@ -32,12 +32,12 @@ public class LoginMappingController extends RequestMappingControllerAdapter {
         return new HttpResponse(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", "logined=true; Path=/");
     }
 
-    private User getUserFromRequest(Request request) {
+    private User getUserFromRequest(HttpRequest httpRequest) {
         return new User(
-                request.getParameter("userId"),
-                request.getParameter("password"),
-                request.getParameter("name"),
-                request.getParameter("email")
+                httpRequest.getParameter("userId"),
+                httpRequest.getParameter("password"),
+                httpRequest.getParameter("name"),
+                httpRequest.getParameter("email")
         );
     }
 }

@@ -15,18 +15,18 @@ public class CreatUserMappingController extends RequestMappingControllerAdapter 
     }
 
     @Override
-    public HttpResponse doPost(Request request) {
-        DataBase.addUser(getUserFromRequest(request));
+    public HttpResponse doPost(HttpRequest httpRequest) {
+        DataBase.addUser(getUserFromRequest(httpRequest));
         logger.debug("findAll: {}", DataBase.findAll());
         return new HttpResponse(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", null);
     }
 
-    private User getUserFromRequest(Request request) {
+    private User getUserFromRequest(HttpRequest httpRequest) {
         return new User(
-                request.getParameter("userId"),
-                request.getParameter("password"),
-                request.getParameter("name"),
-                request.getParameter("email")
+                httpRequest.getParameter("userId"),
+                httpRequest.getParameter("password"),
+                httpRequest.getParameter("name"),
+                httpRequest.getParameter("email")
         );
     }
 }

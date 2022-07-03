@@ -1,8 +1,8 @@
 package controller;
 
+import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.MediaType;
-import webserver.http.Request;
 import webserver.http.RequestMappingControllerAdapter;
 
 public class IndexMappingController extends RequestMappingControllerAdapter {
@@ -13,7 +13,7 @@ public class IndexMappingController extends RequestMappingControllerAdapter {
     }
 
     @Override
-    public HttpResponse doGet(Request request) {
+    public HttpResponse doGet(HttpRequest httpRequest) {
         return new HttpResponse(MediaType.TEXT_HTML_UTF8, "/index.html", null);
     }
 }

@@ -1,8 +1,8 @@
 package controller;
 
-import webserver.http.HttpResponse;
-import webserver.http.Request;
 import utils.FileIoUtils;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 import webserver.http.RequestController;
 
 import java.net.URL;
@@ -12,19 +12,19 @@ import java.nio.file.Paths;
 public class StaticResourceController implements RequestController {
 
     @Override
-    public HttpResponse service(Request request) throws Exception {
-        return doGet(request);
+    public HttpResponse service(HttpRequest httpRequest) throws Exception {
+        return doGet(httpRequest);
     }
 
     @Override
-    public HttpResponse doGet(Request request) {
-        String resourcePath = FileIoUtils.getResourcePath(request.getPath());
+    public HttpResponse doGet(HttpRequest httpRequest) {
+        String resourcePath = FileIoUtils.getResourcePath(httpRequest.getPath());
 
         if (!isExists(resourcePath)) {
             throw new IllegalArgumentException("NotFound");
         }
 
-        return new HttpResponse(request.getHeader("Accept"), request.getPath(), null);
+        return new HttpResponse(httpRequest.getHeader("Accept"), httpRequest.getPath(), null);
     }
 
     private boolean isExists(String resourcePath) {
@@ -39,7 +39,7 @@ public class StaticResourceController implements RequestController {
     }
 
     @Override
-    public HttpResponse doPost(Request httpRequest) {
+    public HttpResponse doPost(HttpRequest httpRequest) {
         return null;
     }
 

@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public class HttpRequest implements Request {
-
-    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
-
+public class HttpRequest {
     private final RequestLine requestLine;
 
     private final Map<String, String> headers;
@@ -21,23 +18,19 @@ public class HttpRequest implements Request {
         this.queryString = QueryString.parse(requestBody);
     }
 
-    @Override
     public HttpMethod getMethod() {
         return requestLine.getMethod();
     }
 
-    @Override
     public String getPath() {
         return requestLine.getPath();
     }
 
-    @Override
     public String getHeader(String name) {
         return headers.getOrDefault(name, "")
                 .split(",")[0];
     }
 
-    @Override
     public String getParameter(String name) {
         return getQueryString().get(name);
     }
