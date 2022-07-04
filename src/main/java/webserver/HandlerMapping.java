@@ -18,7 +18,7 @@ public class HandlerMapping {
 
     private static final Controller NOT_FOUND = new NotFoundController();
 
-    private static Map<String, Controller> handlers = new HashMap<>();
+    protected static Map<String, Controller> handlers = new HashMap<>();
 
     static {
         handlers.put("/user/login", new LoginController());
