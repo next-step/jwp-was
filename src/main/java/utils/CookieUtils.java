@@ -26,7 +26,7 @@ public class CookieUtils {
                 .filter(str -> str.contains(EQUAL))
                 .map(str -> str.split(EQUAL))
                 .filter(kv -> kv.length > 1)
-                .collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
+                .collect(Collectors.toMap(kv -> kv[0].trim(), kv -> kv[1].trim(), (o1, o2) -> o1));
     }
 
     public static String cookieMapToStr(Map<String, String> cookieMap) {

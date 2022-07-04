@@ -1,4 +1,4 @@
-package db;
+package service;
 
 public class FailedLoginException extends Throwable {
 

@@ -1,32 +1,43 @@
 package service;
 
 import db.DataBase;
-import db.FailedLoginException;
-import webserver.request.RequestBody;
-import webserver.request.RequestLine;
-import webserver.response.Response;
+import model.User;
+import webserver.session.HttpSession;
+import webserver.session.HttpSessionManager;
 
-public class UserLoginService extends PostService {
+import java.util.Objects;
 
-    @Override
-    public Response doPost(RequestLine requestLine, RequestBody requestBody) {
-        String userId = requestBody.get("userId");
-        String password = requestBody.get("password");
+public class UserLoginService {
 
-        try {
-            DataBase.login(userId, password);
-            Response response = Response.response302("/index.html");
-            response.putCookie("logined", "true");
-            return response;
-        } catch (FailedLoginException e) {
-            Response response = Response.response302("/user/login_failed.html");
-            response.putCookie("logined", "false");
-            return response;
+    private static final String SESSION_USER_KEY = "user";
+
+    public User login(String sessionId) throws FailedLoginException {
+        HttpSession session = HttpSessionManager.getSession(sessionId);
+        if (Objects.isNull(session)) {
+            throw new FailedLoginException(sessionId);
         }
+
+        Object user = session.getAttribute(SESSION_USER_KEY);
+        if (Objects.isNull(user) || !(user instanceof User)) {
+            throw new FailedLoginException(sessionId);
+        }
+
+        return (User) user;
     }
 
-    @Override
-    public boolean canServe(RequestLine requestLine) {
-        return requestLine.matchPath("/user/login");
+    public String login(String userId, String password) throws FailedLoginException {
+        User user = DataBase.findUserById(userId);
+        if (Objects.isNull(user)) {
+            throw new FailedLoginException(userId);
+        }
+
+        if (!user.matchPassword(password)) {
+            throw new FailedLoginException(password);
+        }
+
+        HttpSession session = HttpSessionManager.createSession();
+        session.setAttribute("user", user);
+
+        return session.getId();
     }
 }
