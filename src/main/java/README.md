@@ -89,3 +89,9 @@ Host: localhost:8080
 Accept: text/css,*/*;q=0.1
 Connection: keep-alive
 ```
+
+### 세션 구현하기
+
+## 요구사항 
+서블릿에서 지원하는 HttpSession API의 일부를 지원해야 한다.
+HttpSession API 중 구현할 메소드는 getId(), setAttribute(String name, Object value), getAttribute(String name), removeAttribute(String name), invalidate() 5개이다. HttpSession의 가장 중요하고 핵심이 되는 메소드이다.
