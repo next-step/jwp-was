@@ -22,10 +22,10 @@ public abstract class AbstractController implements Controller {
     }
 
     void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-        throw new UnsupportedOperationException("지원하지 않은 기능입니다.");
+        throw new UnSupportedHttpMethodException();
     }
 
     void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
-        throw new UnsupportedOperationException("지원하지 않은 기능입니다.");
+        throw new UnSupportedHttpMethodException();
     }
 }
