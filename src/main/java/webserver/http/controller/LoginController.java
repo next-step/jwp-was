@@ -2,6 +2,8 @@ package webserver.http.controller;
 
 import db.DataBase;
 import model.User;
+import webserver.http.HttpSession;
+import webserver.http.HttpSessionManager;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.Cookie;
@@ -23,8 +25,11 @@ public class LoginController extends AbstractController {
         }
 
         if (user.getPassword().equals(password)) {
+            HttpSession session = httpRequest.getSession();
+            session.setAttribute("logined", true);
+
+            HttpSessionManager.setSession(session);
             httpResponse.redirect("/index.html");
-            httpResponse.setCookie(new Cookie("logined", "true", "/"));
             return;
         }
         httpResponse.redirect("/user/login_failed.html");
