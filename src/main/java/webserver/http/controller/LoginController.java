@@ -2,11 +2,11 @@ package webserver.http.controller;
 
 import db.DataBase;
 import model.User;
+import webserver.http.Cookie;
 import webserver.http.HttpSession;
 import webserver.http.HttpSessionManager;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
-import webserver.http.Cookie;
 import webserver.http.response.HttpResponse;
 
 import java.util.Objects;

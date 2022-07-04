@@ -2,8 +2,6 @@ package webserver.http.request;
 
 import webserver.http.HttpSession;
 
-import java.util.UUID;
-
 public interface Request {
 
     String getPath();
