@@ -1,5 +1,6 @@
 package webserver;
 
+import utils.ResourceUtils;
 import webserver.http.controller.Controller;
 import webserver.http.controller.LoginController;
 import webserver.http.controller.NotFoundController;
@@ -8,12 +9,12 @@ import webserver.http.controller.UserCreateController;
 import webserver.http.controller.UserListController;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class HandlerMapping {
 
-    private static final List<String> applyFileExtension = List.of(".html", ".css", ".ico", ".js");
+    private static final Set<String> applyFileExtension = ResourceUtils.resourcePath.keySet();
 
     private static final Controller NOT_FOUND = new NotFoundController();
 
