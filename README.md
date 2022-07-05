@@ -76,3 +76,19 @@ HttpSession의 가장 중요하고 핵심이 되는 다음 5가지 메소드를 
 - void invalidate(): 현재 세션에 저장되어 있는 모든 값을 삭제
 
 세션은 클라이언트와 서버 간에 상태 값을 공유하기 위해 고유한 아이디를 활용하고, 이 고유한 아이디는 쿠키를 활용해 공유한다.
+
+### Step5: Thread Pool 적용
+
+ExecutorsTest와 HttpRequestTest 활용해 다양한 학습 테스트를 진행해 보면서 WAS의 Thead Pool 동작 원리를 이해해본다.
+
+#### 요구사항 1
+
+- Java에서 기본으로 제공하는 ThreadPoolExecutor를 활용해 ThreadPool 기능을 추가한다.
+- 최대 ThradPool의 크기는 250, 모든 Thread가 사용 중인(Busy) 상태이면 100명까지 대기 상태가 되도록 구현한다.
+  - [JAVA 쓰레드풀 분석 - newFixedThreadPool 는 어떻게 동작하는가?](https://hamait.tistory.com/937)
+  - java.util.concurrent.Executors에서 제공하는 api 활용
+
+#### 요구사항 2
+
+- Spring에서 제공하는 RestTemplate을 활용해 서버의 ThreadPool 수보다 많은 요청을 동시에 보내본다.
+- [The Guide to RestTemplate](https://www.baeldung.com/rest-template)
