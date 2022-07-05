@@ -13,12 +13,12 @@ class RequestLineTest {
 
         final String requestInput = "GET /users HTTP/1.1";
 
-        HttpRequest getRequest = new RequestLine(requestInput).toRequest();
+        HttpRequest httpRequest = new RequestLine(requestInput).toRequest();
 
-        then(getRequest).isNotNull();
-        then(getRequest.getHttpMethod()).isEqualTo("GET");
-        then(getRequest.getPath()).isEqualTo("/users");
-        then(getRequest.getVersion()).isEqualTo("1.1");
+        then(httpRequest).isNotNull();
+        then(httpRequest.getHttpMethod()).isEqualTo(HttpMethod.GET);
+        then(httpRequest.getPath()).isEqualTo("/users");
+        then(httpRequest.getVersion()).isEqualTo("1.1");
     }
 
     @DisplayName("POST Method의 대한 정보를 파싱한다.")
@@ -27,11 +27,25 @@ class RequestLineTest {
 
         final String requestInput = "POST /users HTTP/1.1";
 
-        HttpRequest getRequest = new RequestLine(requestInput).toRequest();
+        HttpRequest httpRequest = new RequestLine(requestInput).toRequest();
 
-        then(getRequest).isNotNull();
-        then(getRequest.getHttpMethod()).isEqualTo("POST");
-        then(getRequest.getPath()).isEqualTo("/users");
-        then(getRequest.getVersion()).isEqualTo("1.1");
+        then(httpRequest).isNotNull();
+        then(httpRequest.getHttpMethod()).isEqualTo(HttpMethod.POST);
+        then(httpRequest.getPath()).isEqualTo("/users");
+        then(httpRequest.getVersion()).isEqualTo("1.1");
+    }
+
+    @DisplayName("Query String 파서 검증")
+    @Test
+    void queryStringParserTest() {
+
+        final String queryString = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+
+        HttpRequest httpRequest = new RequestLine(queryString).toRequest();
+
+        then(httpRequest).isNotNull();
+        then(httpRequest.getHttpMethod()).isEqualTo(HttpMethod.GET);
+        then(httpRequest.getPath()).isEqualTo("/users");
+        then(httpRequest.getVersion()).isEqualTo("1.1");
     }
 }
