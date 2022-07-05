@@ -7,6 +7,8 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 class RequestLineTest {
 
+    private static final String HTTP_VERSION_EXPECTED = "1.1";
+
     @DisplayName("GET Method의 대한 정보를 파싱한다.")
     @Test
     void getMethodRequest(){
@@ -17,8 +19,8 @@ class RequestLineTest {
 
         then(httpRequest).isNotNull();
         then(httpRequest.getHttpMethod()).isEqualTo(HttpMethod.GET);
-        then(httpRequest.getPath()).isEqualTo("/users");
-        then(httpRequest.getVersion()).isEqualTo("1.1");
+        then(httpRequest.getUri().getPath()).isEqualTo("/users");
+        then(httpRequest.getHttpProtocol().getVersion()).isEqualTo(HTTP_VERSION_EXPECTED);
     }
 
     @DisplayName("POST Method의 대한 정보를 파싱한다.")
@@ -31,8 +33,8 @@ class RequestLineTest {
 
         then(httpRequest).isNotNull();
         then(httpRequest.getHttpMethod()).isEqualTo(HttpMethod.POST);
-        then(httpRequest.getPath()).isEqualTo("/users");
-        then(httpRequest.getVersion()).isEqualTo("1.1");
+        then(httpRequest.getUri().getPath()).isEqualTo("/users");
+        then(httpRequest.getHttpProtocol().getVersion()).isEqualTo(HTTP_VERSION_EXPECTED);
     }
 
     @DisplayName("Query String 파서 검증")
@@ -45,7 +47,7 @@ class RequestLineTest {
 
         then(httpRequest).isNotNull();
         then(httpRequest.getHttpMethod()).isEqualTo(HttpMethod.GET);
-        then(httpRequest.getPath()).isEqualTo("/users");
-        then(httpRequest.getVersion()).isEqualTo("1.1");
+        then(httpRequest.getUri().getPath()).isEqualTo("/users");
+        then(httpRequest.getHttpProtocol().getVersion()).isEqualTo(HTTP_VERSION_EXPECTED);
     }
 }
