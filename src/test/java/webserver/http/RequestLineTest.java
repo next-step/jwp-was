@@ -4,50 +4,53 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RequestLineTest {
 
-    private static final String HTTP_VERSION_EXPECTED = "1.1";
-
-    @DisplayName("GET Method의 대한 정보를 파싱한다.")
+    @DisplayName("GET Request 검증")
     @Test
-    void getMethodRequest(){
+    void getMethodRequest() {
 
-        final String requestInput = "GET /users HTTP/1.1";
-
-        HttpRequest httpRequest = new RequestLine(requestInput).toRequest();
+        HttpRequest httpRequest = new RequestLine(RequestFixture.ofGetRequest()).toRequest();
 
         then(httpRequest).isNotNull();
         then(httpRequest.getHttpMethod()).isEqualTo(HttpMethod.GET);
-        then(httpRequest.getUri().getPath()).isEqualTo("/users");
-        then(httpRequest.getHttpProtocol().getVersion()).isEqualTo(HTTP_VERSION_EXPECTED);
+        then(httpRequest.getUri().getPath()).isEqualTo(RequestFixture.PATH);
+        then(httpRequest.getHttpProtocol().toString()).isEqualTo(RequestFixture.PROTOCOL);
     }
 
-    @DisplayName("POST Method의 대한 정보를 파싱한다.")
+    @DisplayName("POST Request 검증")
     @Test
-    void postMethodRequest(){
+    void postMethodRequest() {
 
-        final String requestInput = "POST /users HTTP/1.1";
-
-        HttpRequest httpRequest = new RequestLine(requestInput).toRequest();
+        HttpRequest httpRequest = new RequestLine(RequestFixture.ofPostRequest()).toRequest();
 
         then(httpRequest).isNotNull();
         then(httpRequest.getHttpMethod()).isEqualTo(HttpMethod.POST);
-        then(httpRequest.getUri().getPath()).isEqualTo("/users");
-        then(httpRequest.getHttpProtocol().getVersion()).isEqualTo(HTTP_VERSION_EXPECTED);
+        then(httpRequest.getUri().getPath()).isEqualTo(RequestFixture.PATH);
+        then(httpRequest.getHttpProtocol().toString()).isEqualTo(RequestFixture.PROTOCOL);
     }
 
-    @DisplayName("Query String 파서 검증")
+    @DisplayName("Query String 검증")
     @Test
-    void queryStringParserTest() {
+    void queryStringRequest() {
 
-        final String queryString = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
-
-        HttpRequest httpRequest = new RequestLine(queryString).toRequest();
+        HttpRequest httpRequest = new RequestLine(RequestFixture.ofGetAndQueryStringRequest()).toRequest();
 
         then(httpRequest).isNotNull();
         then(httpRequest.getHttpMethod()).isEqualTo(HttpMethod.GET);
-        then(httpRequest.getUri().getPath()).isEqualTo("/users");
-        then(httpRequest.getHttpProtocol().getVersion()).isEqualTo(HTTP_VERSION_EXPECTED);
+        then(httpRequest.getUri().getPath()).isEqualTo(RequestFixture.PATH);
+        then(httpRequest.getHttpProtocol().toString()).isEqualTo(RequestFixture.PROTOCOL);
+    }
+
+    @DisplayName("잘못된 요청 검증")
+    @Test
+    void badRequest() {
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new RequestLine(RequestFixture.ofBadRequest())
+        );
     }
 }

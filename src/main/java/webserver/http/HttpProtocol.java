@@ -14,14 +14,14 @@ public class HttpProtocol {
     public HttpProtocol(final String protocol) {
 
         final String[] splitProtocol = protocol.split(URI_SEPARATOR);
-        protocolPolicy(splitProtocol);
+        protocolValidate(splitProtocol);
 
         this.protocol = splitProtocol[PROTOCOL_INDEX];
         this.version = splitProtocol[VERSION_INDEX];
     }
 
-    private void protocolPolicy(final String[] splitProtocol) {
-        if(splitProtocol.length == 0) {
+    private void protocolValidate(final String[] splitProtocol) {
+        if(splitProtocol.length <= 1) {
             throw new IllegalArgumentException("잘못된 Protocol 정보 입니다.");
         }
     }
@@ -32,5 +32,10 @@ public class HttpProtocol {
 
     public String getVersion() {
         return version;
+    }
+
+    @Override
+    public String toString() {
+        return String.join("/", protocol, version);
     }
 }
