@@ -5,10 +5,13 @@ import model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.Header;
+import webserver.http.HttpSession;
+import webserver.http.HttpSessionManager;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestLine;
 import webserver.http.Cookie;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpResponseThreadLocal;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +29,8 @@ class UserListControllerTest {
                 new Header(Collections.emptyMap(), Collections.emptyList()), null);
 
         HttpResponse httpResponse = new HttpResponse(httpRequest);
+        HttpResponseThreadLocal.threadLocal.set(httpResponse);
+
         userListController.service(httpRequest, httpResponse);
 
         assertThat(httpResponse.getLocation()).isEqualTo("/user/login.html");
@@ -38,10 +43,15 @@ class UserListControllerTest {
 
         DataBase.addUser(new User("dean", "password", "dongchul", "dean@naver.com"));
 
+        HttpSessionManager.setSession(new HttpSession("jsessionId"));
+
         HttpRequest httpRequest = new HttpRequest(
                 RequestLine.parse("GET /user/list HTTP/1.1"),
-                new Header(Collections.emptyMap(), List.of(Cookie.of("logined", "true"))), null);
+                new Header(Collections.emptyMap(), List.of(Cookie.of("JSESSIONID", "jsessionId"))), null);
+        httpRequest.getSession().setAttribute("logined", true);
+
         HttpResponse httpResponse = new HttpResponse(httpRequest);
+        HttpResponseThreadLocal.threadLocal.set(httpResponse);
 
         userListController.service(httpRequest, httpResponse);
 

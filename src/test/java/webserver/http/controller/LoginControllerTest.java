@@ -9,6 +9,7 @@ import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.request.RequestLine;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpResponseThreadLocal;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ class LoginControllerTest {
                 new Header(Collections.emptyMap(), Collections.emptyList()), requestBody);
 
         HttpResponse httpResponse = new HttpResponse(httpRequest);
+        HttpResponseThreadLocal.threadLocal.set(httpResponse);
 
         loginController.service(httpRequest, httpResponse);
 

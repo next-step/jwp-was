@@ -2,7 +2,7 @@ package webserver.http;
 
 public class Cookie {
 
-    public static final Cookie empty = new Cookie("", "", "");
+    public static final Cookie empty = new Cookie(null, null, null);
 
     private String key;
 

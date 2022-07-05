@@ -1,10 +1,16 @@
 package webserver.http.request;
 
+import webserver.http.Cookie;
 import webserver.http.Header;
+import webserver.http.HttpSession;
+import webserver.http.HttpSessionManager;
+import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpResponseThreadLocal;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.UUID;
 
 public class HttpRequest implements Request {
     private final RequestLine requestLine;
@@ -57,6 +63,24 @@ public class HttpRequest implements Request {
         return header.getCookie(key);
     }
 
+    @Override
+    public HttpSession getSession() {
+        String jsessionId = getCookie("JSESSIONID");
+
+        if (Objects.isNull(jsessionId)) {
+            jsessionId = UUID.randomUUID().toString();
+
+            HttpResponse httpResponse = HttpResponseThreadLocal.threadLocal.get();
+            httpResponse.setCookie(Cookie.of("JSESSIONID", jsessionId));
+
+            HttpSession httpSession = new HttpSession(jsessionId);
+            HttpSessionManager.setSession(httpSession);
+
+            return httpSession;
+        }
+        return HttpSessionManager.getSession(jsessionId);
+    }
+
     public boolean isGet() {
         return getMethod() == Method.GET;
     }
@@ -74,10 +98,13 @@ public class HttpRequest implements Request {
     }
 
     public boolean isLogined() {
-        String logined = header.getCookie("logined");
-        if (Objects.nonNull(logined) && logined.equals("true")) {
-            return true;
+        HttpSession session = getSession();
+        Object logined = session.getAttribute("logined");
+
+        if (Objects.isNull(logined)) {
+            return false;
         }
-        return false;
+
+        return (boolean) logined;
     }
 }

@@ -1,9 +1,9 @@
 package webserver;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.http.controller.LoginController;
 import webserver.http.controller.NotFoundController;
@@ -14,16 +14,19 @@ import webserver.http.controller.UserListController;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class HandlerMappingTest {
 
     @DisplayName("정의된 EndPoint에 해당하는 Controller 를 반환한다.")
-    @MethodSource("handlers")
-    @ParameterizedTest
-    void handlerMapping(String path, Class clazz) {
+    @Test
+    void handlerMapping() {
         HandlerMapping handlerMapping = new HandlerMapping();
 
-        assertThat(handlerMapping.getHandler(path)).isInstanceOf(clazz);
+        assertAll(
+                () -> HandlerMapping.handlers.keySet()
+                                            .forEach(key -> assertThat(handlerMapping.getHandler(key)).isEqualTo(HandlerMapping.handlers.get(key)))
+        );
     }
 
 

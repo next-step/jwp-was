@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import webserver.http.controller.Controller;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpResponseThreadLocal;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -34,12 +35,15 @@ public class RequestHandler implements Runnable {
 
             HttpRequest httpRequest = HttpRequest.of(bufferedReader);
             HttpResponse httpResponse = new HttpResponse(httpRequest);
+            HttpResponseThreadLocal.threadLocal.set(httpResponse);
 
             doService(httpRequest, httpResponse);
 
             DataOutputStream dos = new DataOutputStream(out);
             responseHeader(dos, httpResponse);
             responseBody(dos, httpResponse);
+
+            HttpResponseThreadLocal.threadLocal.remove();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
