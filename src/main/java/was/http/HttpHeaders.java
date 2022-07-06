@@ -41,4 +41,8 @@ class HttpHeaders {
     HttpSession getSession() {
         return HttpSessionStorage.getSession(getCookies().getCookie(HttpSessionStorage.SESSION_ID_NAME));
     }
+
+    boolean isRequestedSessionIdFromCookie() {
+        return getCookies().isRequestedSessionIdFromCookie();
+    }
 }

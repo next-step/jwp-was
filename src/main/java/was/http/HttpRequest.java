@@ -53,4 +53,8 @@ public class HttpRequest {
     public Map<String, Object> getAttributes() {
         return attributes;
     }
+
+    public boolean isRequestedSessionIdFromCookie() {
+        return headers.isRequestedSessionIdFromCookie();
+    }
 }

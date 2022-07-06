@@ -31,7 +31,7 @@ public class RequestHandler implements Runnable {
             HttpRequest request = httpRequestPipe.request();
             HttpResponse response = new HttpResponse(out);
 
-            if (request.getCookies().getCookie(HttpSessionStorage.SESSION_ID_NAME) == null) {
+            if (!request.isRequestedSessionIdFromCookie()) {
                 response.addHeader("Set-Cookie", HttpSessionStorage.SESSION_ID_NAME + "=" + UUID.randomUUID());
             }
 
