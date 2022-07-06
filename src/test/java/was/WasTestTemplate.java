@@ -7,18 +7,18 @@ import was.http.HttpRequestPipe;
 
 import java.io.*;
 
-public class WasBaseTest {
+public final class WasTestTemplate {
     private String testDirectory = "./src/test/resources/";
 
     private String outputDirectory = "./out/";
 
-    protected HttpRequest request(String fileName) throws Exception {
+    public HttpRequest request(String fileName) throws Exception {
         InputStream in = new FileInputStream(new File(testDirectory + fileName));
         HttpRequestPipe httpRequestPipe = new CachedHttpRequest(new BufferedReaderAsHttpRequest(in));
         return httpRequestPipe.request();
     }
 
-    protected OutputStream createOutputStream(String filename) throws FileNotFoundException {
+    public OutputStream createOutputStream(String filename) throws FileNotFoundException {
         createOutputDirectoryDontExist();
         return new FileOutputStream(new File(outputDirectory + filename));
     }
