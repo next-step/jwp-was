@@ -1,7 +1,5 @@
 package webserver.request;
 
-import webserver.common.QueryString;
-
 public class Uri {
     private final String path;
     private final QueryString queryString;

@@ -13,7 +13,7 @@ class HttpCookieTest {
     @DisplayName("쿠키의 String 을 파싱해서 값을 가져올 수 있어야 한다.")
     @Test
     void parse() {
-        HttpCookie httpCookie = HttpCookie.from("userId=javajigi&password=password&name=JaeSung");
+        HttpCookie httpCookie = HttpCookie.from("userId=javajigi; password=password; name=JaeSung");
         assertAll(
                 () -> assertThat(httpCookie.get("userId")).isEqualTo("javajigi"),
                 () -> assertThat(httpCookie.get("password")).isEqualTo("password"),
@@ -25,7 +25,7 @@ class HttpCookieTest {
     @Test
     void illegalCookie() {
         assertThatThrownBy(
-                () -> HttpCookie.from("=&=")
+                () -> HttpCookie.from("==")
         ).isInstanceOf(IllegalCookieException.class);
     }
 
@@ -46,6 +46,6 @@ class HttpCookieTest {
                 .put("userId", "javajigi");
 
         assertThat(httpCookie.toString())
-                .isEqualTo("a=b&name=JaeSung&userId=javajigi");
+                .isEqualTo("a=b; name=JaeSung; userId=javajigi");
     }
 }
