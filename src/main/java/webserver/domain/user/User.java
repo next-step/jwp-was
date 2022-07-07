@@ -15,6 +15,10 @@ public class User {
         this.email = email;
     }
 
+    public boolean verifyPassword(String password) {
+        return Objects.equals(this.password, password);
+    }
+
     public String getUserId() {
         return userId;
     }

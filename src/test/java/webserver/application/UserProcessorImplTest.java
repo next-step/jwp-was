@@ -21,13 +21,13 @@ class UserProcessorImplTest {
     }
 
     @Test
-    void isValidUser() {
+    void findUser() {
         String userId = "javajigi";
         String password = "1234";
-        given(userRepository.findUserById(userId)).willReturn(new User(userId,password, "자바지기", ""));
+        given(userRepository.findUserById(userId)).willReturn(new User(userId, password, "자바지기", ""));
 
-        boolean actual = sut.isValidUser(userId, password);
+        User actual = sut.findUser(userId);
 
-        assertThat(actual).isTrue();
+        assertThat(actual).isEqualTo(new User(userId, password, "자바지기", ""));
     }
 }
