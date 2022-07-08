@@ -5,11 +5,12 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
-import model.User;
-import webserver.http.*;
+import model.Users;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.RequestMappingControllerAdapter;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,16 +25,15 @@ public class UserListMappingController extends RequestMappingControllerAdapter {
         if (!checkLogin(getCookie(httpRequest))) {
             httpResponse.redirect("/index.html");
             return;
-
         }
 
         httpResponse.addHeader("Content-Type", httpRequest.getHeader("Accept"));
         httpResponse.ok(rendering(DataBase.findAll()).getBytes());
     }
 
-    private String rendering(Collection<User> users) throws IOException {
+    private String rendering(Users users) throws IOException {
         Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put("users", users);
+        parameterMap.put("users", users.toList());
 
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix("/templates");

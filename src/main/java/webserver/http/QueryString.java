@@ -85,6 +85,6 @@ public class QueryString {
     }
 
     public Map<String, String> toParams() {
-        return Collections.unmodifiableMap(value);
+        return Map.copyOf(value);
     }
 }

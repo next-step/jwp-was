@@ -6,6 +6,7 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 
 import model.User;
+import model.Users;
 
 public class DataBase {
     private static Map<String, User> users = Maps.newHashMap();
@@ -18,8 +19,8 @@ public class DataBase {
         return users.get(userId);
     }
 
-    public static Collection<User> findAll() {
-        return users.values();
+    public static Users findAll() {
+        return Users.from(users.values());
     }
 
     public static void clear() {
