@@ -27,8 +27,7 @@ public class LoginController extends AbstractController {
         if (user.getPassword().equals(password)) {
             HttpSession session = httpRequest.getSession();
             session.setAttribute("logined", true);
-
-            HttpSessionManager.setSession(session);
+            
             httpResponse.redirect("/index.html");
             return;
         }

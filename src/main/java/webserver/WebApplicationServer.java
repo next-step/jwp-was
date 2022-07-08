@@ -5,12 +5,22 @@ import org.slf4j.LoggerFactory;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
     private static final int DEFAULT_PORT = 8080;
 
+    private static final int CORE_POOL_SIZE = 50;
+    private static final int MAXIMUM_POOL_SIZE = 250;
+    private static final int KEEP_ALIVE_TIME = 0;
+    private static final int WAITING_QUEUE_SIZE = 100;
+
     public static void main(String args[]) throws Exception {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, new LinkedBlockingQueue<>(WAITING_QUEUE_SIZE));
+
         int port = 0;
         if (args == null || args.length == 0) {
             port = DEFAULT_PORT;
@@ -25,8 +35,7 @@ public class WebApplicationServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection));
-                thread.start();
+                threadPoolExecutor.execute(new RequestHandler(connection));
             }
         }
     }
