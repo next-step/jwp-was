@@ -13,10 +13,10 @@ public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
     private static final int DEFAULT_PORT = 8080;
 
-    private static final int CORE_POOL_SIZE = 5;
-    private static final int MAXIMUM_POOL_SIZE = 10;
+    private static final int CORE_POOL_SIZE = 50;
+    private static final int MAXIMUM_POOL_SIZE = 250;
     private static final int KEEP_ALIVE_TIME = 0;
-    private static final int WAITING_QUEUE_SIZE = 10;
+    private static final int WAITING_QUEUE_SIZE = 100;
 
     public static void main(String args[]) throws Exception {
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, new LinkedBlockingQueue<>(WAITING_QUEUE_SIZE));
