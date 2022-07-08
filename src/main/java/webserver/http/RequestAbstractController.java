@@ -2,21 +2,22 @@ package webserver.http;
 
 public abstract class RequestAbstractController implements RequestController {
     @Override
-    public HttpResponse service(HttpRequest httpRequest) throws Exception {
+    public void service(HttpRequest httpRequest, HttpResponse response) throws Exception {
         if (httpRequest.getMethod() == HttpMethod.POST) {
-            return doPost(httpRequest);
+            doPost(httpRequest, response);
+            return;
         }
 
-        return doGet(httpRequest);
+        doGet(httpRequest, response);
     }
 
     @Override
-    public HttpResponse doGet(HttpRequest httpRequest) throws Exception {
-        return new HttpResponse(HttpStatus.NOT_FOUND, MediaType.TEXT_HTML_UTF8, "", null);
+    public void doGet(HttpRequest httpRequest, HttpResponse response) throws Exception {
+        response.notfound();
     }
 
     @Override
-    public HttpResponse doPost(HttpRequest httpRequest) throws Exception {
-        return new HttpResponse(HttpStatus.NOT_FOUND, MediaType.TEXT_HTML_UTF8, "", null);
+    public void doPost(HttpRequest httpRequest, HttpResponse response) throws Exception {
+        response.notfound();
     }
 }

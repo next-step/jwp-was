@@ -26,13 +26,13 @@ public class RequestFactory {
             line = bufferedReader.readLine();
             logger.debug("header: {}", line);
 
-            saveHeaderLine(line, headers);
+            addHeadLine(line, headers);
         }
 
         return headers;
     }
 
-    private static void saveHeaderLine(String line, Map<String, String> headers) {
+    private static void addHeadLine(String line, Map<String, String> headers) {
         if (!line.equals("")) {
             String[] keyValue = line.split(": ");
             setHeader(headers, keyValue);

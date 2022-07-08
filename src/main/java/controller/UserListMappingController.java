@@ -20,14 +20,15 @@ public class UserListMappingController extends RequestMappingControllerAdapter {
     }
 
     @Override
-
-    public HttpResponse doGet(HttpRequest httpRequest) throws IOException {
+    public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
         if (!checkLogin(getCookie(httpRequest))) {
-            return new HttpResponse(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", null);
+            httpResponse.redirect("/index.html");
+            return;
 
         }
 
-        return new HttpResponse(HttpStatus.OK, MediaType.TEXT_HTML_UTF8, "/user/list.html", rendering(DataBase.findAll()));
+        httpResponse.addHeader("Content-Type", httpRequest.getHeader("Accept"));
+        httpResponse.ok(rendering(DataBase.findAll()).getBytes());
     }
 
     private String rendering(Collection<User> users) throws IOException {

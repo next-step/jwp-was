@@ -1,11 +1,11 @@
 package webserver;
 
-import webserver.http.RequestController;
-import webserver.http.HttpRequest;
-import webserver.http.HttpResponse;
-import webserver.http.RequestFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.RequestController;
+import webserver.http.RequestFactory;
 
 import java.io.*;
 import java.net.Socket;
@@ -27,21 +27,12 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = RequestFactory.create(new BufferedReader(new InputStreamReader(in, "UTF-8")));
+            HttpResponse httpResponse = new HttpResponse(out);
+
             RequestController controller = RequestControllerContainer.match(httpRequest);
-            HttpResponse httpResponse = controller.service(httpRequest);
-            DataOutputStream dos = new DataOutputStream(out);
-            write(dos, httpResponse.getBytes());
+
+            controller.service(httpRequest, httpResponse);
         } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-
-    private void write(DataOutputStream dos, byte[] response) {
-        try {
-            dos.write(response, 0, response.length);
-            dos.flush();
-        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }

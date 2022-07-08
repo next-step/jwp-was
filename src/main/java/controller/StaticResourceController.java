@@ -3,28 +3,32 @@ package controller;
 import utils.FileIoUtils;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.RequestAbstractController;
 import webserver.http.RequestController;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class StaticResourceController implements RequestController {
+public class StaticResourceController extends RequestAbstractController {
 
     @Override
-    public HttpResponse service(HttpRequest httpRequest) throws Exception {
-        return doGet(httpRequest);
+    public void service(HttpRequest httpRequest, HttpResponse httpResponse) throws Exception {
+        doGet(httpRequest, httpResponse);
     }
 
     @Override
-    public HttpResponse doGet(HttpRequest httpRequest) {
+    public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException, URISyntaxException {
         String resourcePath = FileIoUtils.getResourcePath(httpRequest.getPath());
 
         if (!isExists(resourcePath)) {
             throw new IllegalArgumentException("NotFound");
         }
 
-        return new HttpResponse(httpRequest.getHeader("Accept"), httpRequest.getPath(), null);
+        httpResponse.addHeader("Content-Type", httpRequest.getHeader("Accept"));
+        httpResponse.ok(FileIoUtils.loadFileFromClasspath(FileIoUtils.getResourcePath(httpRequest.getPath())));
     }
 
     private boolean isExists(String resourcePath) {
@@ -36,11 +40,6 @@ public class StaticResourceController implements RequestController {
 
         String path = resource.getPath();
         return Files.exists(Paths.get(path));
-    }
-
-    @Override
-    public HttpResponse doPost(HttpRequest httpRequest) {
-        return null;
     }
 
 }

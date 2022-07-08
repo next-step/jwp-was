@@ -5,8 +5,6 @@ import webserver.http.HttpRequest;
 import webserver.http.RequestController;
 import webserver.http.RequestMappingControllerAdapter;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +25,7 @@ public class RequestControllerContainer {
         container.add(new UserListMappingController());
     }
 
-    public static RequestController match(HttpRequest httpRequest) throws IOException, URISyntaxException {
+    public static RequestController match(HttpRequest httpRequest) {
         String url = httpRequest.getPath();
 
         Optional<RequestMappingControllerAdapter> optionalController = container.stream()

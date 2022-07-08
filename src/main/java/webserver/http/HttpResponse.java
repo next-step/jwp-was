@@ -1,98 +1,114 @@
 package webserver.http;
 
-import utils.FileIoUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpResponse {
-    private final HttpStatus httpStatus;
-    private final MediaType contentType;
-    private final String path;
-    private final String cookie;
-    private final String body;
+    private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
+    private DataOutputStream dos;
 
-    public HttpResponse(final MediaType contentType, final String path, final String cookie) {
-        this(HttpStatus.OK, contentType, path, cookie, null);
+    private Map<String, String> headers = new HashMap<>();
+
+    private HttpStatus httpStatus;
+
+    private String body;
+
+    public HttpResponse(OutputStream out) {
+        this.dos = new DataOutputStream(out);
     }
 
-    public HttpResponse(final MediaType contentType, final String path, final String cookie, final String body) {
-        this(HttpStatus.OK, contentType, path, cookie, body);
+    public void addHeader(String name, String value) {
+        headers.put(name, value);
     }
 
-    public HttpResponse(final String contentType, final String path, final String cookie) {
-        this(HttpStatus.OK, new MediaType(contentType), path, cookie, null);
+    public void ok() {
+        ok(null);
     }
 
-    public HttpResponse(final String contentType, final String path, final String cookie, final String body) {
-        this(HttpStatus.OK, new MediaType(contentType), path, cookie, body);
+    public void ok(byte[] body) {
+        httpStatus = HttpStatus.OK;
+
+        response(dos, body);
     }
 
-    public HttpResponse(final HttpStatus httpStatus, final MediaType contentType, final String path, final String cookie) {
+    public void redirect(String location) {
+        redirect(HttpStatus.FOUND, location);
+    }
+
+    public void redirect(HttpStatus httpStatus, String location) {
         this.httpStatus = httpStatus;
-        this.contentType = contentType;
-        this.path = path;
-        this.cookie = cookie;
-        this.body = null;
+
+        addHeader("Content-Type", MediaType.TEXT_HTML_UTF8.toString());
+        addHeader("Location", location);
+
+        response(dos, null);
     }
 
-    public HttpResponse(final HttpStatus httpStatus, final MediaType contentType, final String path, final String cookie, final String body) {
-        this.httpStatus = httpStatus;
-        this.contentType = contentType;
-        this.path = path;
-        this.cookie = cookie;
-        this.body = body;
+
+    public void notfound() {
+        httpStatus = HttpStatus.NOT_FOUND;
+
+        addHeader("Content-Type", MediaType.TEXT_HTML_UTF8.toString());
+
+        response(dos, null);
     }
 
-    public MediaType getContentType() {
-        return contentType;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public byte[] getBytes() throws IOException, URISyntaxException {
-        byte[] body = getBody();
-        byte[] header = getHeader(body.length);
-        return getBytes(header, body);
-    }
-
-    private byte[] getBody() throws IOException, URISyntaxException {
-        if (body != null) {
-            return body.getBytes();
+    private void response(DataOutputStream dos, byte[] body) {
+        byte[] bytes = null;
+        try {
+            bytes = toBytes(body);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
-        return FileIoUtils.loadFileFromClasspath(FileIoUtils.getResourcePath(path));
+        write(dos, bytes);
     }
 
-    private byte[] getBytes(byte[] header, byte[] body) {
-        byte[] responseBytes = new byte[header.length + body.length];
-        System.arraycopy(header, 0, responseBytes, 0, header.length);
-        System.arraycopy(body, 0, responseBytes, header.length, body.length);
-        return responseBytes;
+    private byte[] toBytes(byte[] body) throws IOException, URISyntaxException {
+        if (body == null) {
+            return getHeader(0);
+        }
+
+        byte[] header = getHeader(body.length);
+        return merge(header, body);
     }
 
     private byte[] getHeader(long bodyLength) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format("%s %s \r\n", "HTTP/1.1", getStatus().toString()));
-        stringBuilder.append(String.format("Content-Type: %s \r\n", contentType));
-        stringBuilder.append(String.format("Content-Length: %s \r\n", bodyLength));
-        stringBuilder.append(String.format("Location: %s \r\n", path));
+        stringBuilder.append(String.format("%s %s \r\n", Protocol.HTTP_1_1, httpStatus.toString()));
 
-        if (cookie != null) {
-            stringBuilder.append(String.format("Set-Cookie: %s \r\n", cookie));
+        for (String key : headers.keySet()) {
+            stringBuilder.append(String.format("%s: %s \r\n", key, headers.get(key)));
         }
+
+        stringBuilder.append(String.format("Content-Length: %s \r\n", bodyLength));
 
         stringBuilder.append("\r\n");
 
         return stringBuilder.toString().getBytes();
     }
 
-    public HttpStatus getStatus() {
-        return httpStatus;
+    private byte[] merge(byte[] header, byte[] body) {
+        byte[] responseBytes = new byte[header.length + body.length];
+        System.arraycopy(header, 0, responseBytes, 0, header.length);
+        System.arraycopy(body, 0, responseBytes, header.length, body.length);
+        return responseBytes;
     }
 
-    public String getCookie() {
-        return cookie;
+    private void write(DataOutputStream dos, byte[] response) {
+        try {
+            dos.write(response, 0, response.length);
+            dos.flush();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 }

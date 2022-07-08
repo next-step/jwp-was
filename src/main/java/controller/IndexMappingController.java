@@ -13,7 +13,7 @@ public class IndexMappingController extends RequestMappingControllerAdapter {
     }
 
     @Override
-    public HttpResponse doGet(HttpRequest httpRequest) {
-        return new HttpResponse(MediaType.TEXT_HTML_UTF8, "/index.html", null);
+    public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
+        httpResponse.redirect("/index.html");
     }
 }

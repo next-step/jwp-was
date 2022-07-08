@@ -15,10 +15,11 @@ public class CreatUserMappingController extends RequestMappingControllerAdapter 
     }
 
     @Override
-    public HttpResponse doPost(HttpRequest httpRequest) {
+    public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
         DataBase.addUser(getUserFromRequest(httpRequest));
         logger.debug("findAll: {}", DataBase.findAll());
-        return new HttpResponse(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", null);
+
+        httpResponse.redirect("/index.html");
     }
 
     private User getUserFromRequest(HttpRequest httpRequest) {

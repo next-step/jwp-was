@@ -1,9 +1,9 @@
 package webserver.http;
 
 public interface RequestController {
-    HttpResponse service(HttpRequest httpRequest) throws Exception;
+    void service(HttpRequest httpRequest, HttpResponse response) throws Exception;
 
-    HttpResponse doGet(HttpRequest httpRequest) throws Exception;
+    void doGet(HttpRequest httpRequest, HttpResponse response) throws Exception;
 
-    HttpResponse doPost(HttpRequest httpRequest) throws Exception;
+    void doPost(HttpRequest httpRequest, HttpResponse response) throws Exception;
 }

@@ -4,8 +4,14 @@ import db.DataBase;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import webserver.http.*;
+import webserver.RequestControllerContainer;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.HttpStatus;
+import webserver.http.RequestLine;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -19,7 +25,7 @@ class CreatUserControllerTest {
     }
 
     @Test
-    void serving_post() throws Exception {
+    void service_post() throws Exception {
         RequestLine requestLine = new RequestLine("POST /user/create HTTP/1.1");
         String body = "userId=javajigi&password=password&name=JaeSung&email=javajigi@slipp.net";
 
@@ -28,17 +34,19 @@ class CreatUserControllerTest {
         headers.put("Content-Length", String.valueOf(body.getBytes().length));
         headers.put("Accept", "*/*");
 
+        OutputStream outputStream = new ByteArrayOutputStream();
 
-        HttpRequest httpRequest = new HttpRequest(
-                requestLine,
-                headers,
-                body);
+        HttpRequest httpRequest = new HttpRequest(requestLine, headers, body);
+        HttpResponse httpResponse = new HttpResponse(outputStream);
 
-        HttpResponse httpResponse = new CreatUserMappingController().service(httpRequest);
+        RequestControllerContainer.match(httpRequest)
+                .service(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
-        assertThat(httpResponse.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
-        assertThat(httpResponse.getPath()).isEqualTo("/index.html");
+        String response = outputStream.toString();
+
+        assertThat(response).contains("HTTP/1.1 " + HttpStatus.FOUND + " \r\n");
+        assertThat(response).contains("Content-Type: text/html;charset=utf-8 \r\n");
+        assertThat(response).contains("Location: /index.html \r\n");
 
         User user = DataBase.findUserById("javajigi");
 
@@ -57,11 +65,18 @@ class CreatUserControllerTest {
                 "email=javajigi@slipp.net" +
                 " HTTP/1.1");
 
+        OutputStream outputStream = new ByteArrayOutputStream();
+
         HttpRequest httpRequest = new HttpRequest(requestLine, null, null);
+        HttpResponse httpResponse = new HttpResponse(outputStream);
 
-        HttpResponse httpResponse = new CreatUserMappingController().service(httpRequest);
+        RequestControllerContainer.match(httpRequest)
+                .service(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+        String response = outputStream.toString();
+
+        assertThat(response).contains("HTTP/1.1 " + HttpStatus.NOT_FOUND + " \r\n");
+        assertThat(response).contains("Content-Type: text/html;charset=utf-8 \r\n");
 
         User user = DataBase.findUserById("javajigi");
 

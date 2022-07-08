@@ -4,22 +4,27 @@ import db.DataBase;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import webserver.http.*;
+import webserver.RequestControllerContainer;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.HttpStatus;
+import webserver.http.RequestLine;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class LoginControllerTest {
-
     @BeforeEach
     void setUp() {
         DataBase.clear();
     }
 
     @Test
-    void match() throws Exception {
+    void service() throws Exception {
         DataBase.addUser(new User(
                 "javajigi",
                 "P@ssw0rD",
@@ -32,46 +37,44 @@ class LoginControllerTest {
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put("Accept", "*/*");
 
+        OutputStream outputStream = new ByteArrayOutputStream();
 
-        HttpRequest httpRequest = new HttpRequest(
-                requestLine,
-                headers,
-                null);
+        HttpRequest httpRequest = new HttpRequest(requestLine, headers, null);
+        HttpResponse httpResponse = new HttpResponse(outputStream);
 
-        HttpResponse httpResponse = new LoginMappingController().service(httpRequest);
+        RequestControllerContainer.match(httpRequest)
+                .service(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
-        assertThat(httpResponse.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
-        assertThat(httpResponse.getPath()).isEqualTo("/index.html");
-        assertThat(httpResponse.getCookie()).isEqualTo("logined=true; Path=/");
+        String response = outputStream.toString();
 
-        String result = new String(httpResponse.getBytes());
-
-        assertThat(result.indexOf("Set-Cookie: logined=true; Path=/") != -1).isTrue();
+        assertThat(response).contains("HTTP/1.1 " + HttpStatus.FOUND + " \r\n");
+        assertThat(response).contains("Content-Type: text/html;charset=utf-8 \r\n");
+        assertThat(response).contains("Set-Cookie: logined=true; Path=/ \r\n");
+        assertThat(response).contains("Location: /index.html \r\n");
+        assertThat(response).contains("Content-Length: 0 \r\n");
     }
 
     @Test
-    void match_fail() throws Exception {
+    void service_fail() throws Exception {
         RequestLine requestLine = new RequestLine("GET /user/login?userId=test&password=111 HTTP/1.1");
 
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put("Accept", "*/*");
 
+        OutputStream outputStream = new ByteArrayOutputStream();
 
-        HttpRequest httpRequest = new HttpRequest(
-                requestLine,
-                headers,
-                null);
+        HttpRequest httpRequest = new HttpRequest(requestLine, headers, null);
+        HttpResponse httpResponse = new HttpResponse(outputStream);
 
-        HttpResponse httpResponse = new LoginMappingController().service(httpRequest);
+        RequestControllerContainer.match(httpRequest)
+                .service(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(httpResponse.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
-        assertThat(httpResponse.getPath()).isEqualTo("/user/login_failed.html");
-        assertThat(httpResponse.getCookie()).isEqualTo("logined=false; Path=/");
+        String response = outputStream.toString();
 
-        String result = new String(httpResponse.getBytes());
-
-        assertThat(result.indexOf("Set-Cookie: logined=false; Path=/") != -1).isTrue();
+        assertThat(response).contains("HTTP/1.1 " + HttpStatus.BAD_REQUEST + " \r\n");
+        assertThat(response).contains("Content-Type: text/html;charset=utf-8 \r\n");
+        assertThat(response).contains("Set-Cookie: logined=false; Path=/ \r\n");
+        assertThat(response).contains("Location: /user/login_failed.html \r\n");
+        assertThat(response).contains("Content-Length: 0 \r\n");
     }
 }

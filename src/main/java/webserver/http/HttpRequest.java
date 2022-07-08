@@ -1,8 +1,5 @@
 package webserver.http;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Map;
 
 public class HttpRequest {
@@ -27,6 +24,10 @@ public class HttpRequest {
     }
 
     public String getHeader(String name) {
+        if (headers == null) {
+            return "";
+        }
+
         return headers.getOrDefault(name, "")
                 .split(",")[0];
     }
