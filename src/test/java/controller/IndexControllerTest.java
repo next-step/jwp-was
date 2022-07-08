@@ -1,24 +1,34 @@
 package controller;
 
 import org.junit.jupiter.api.Test;
-import webserver.*;
+import webserver.RequestControllerContainer;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.HttpStatus;
+import webserver.http.RequestLine;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class IndexControllerTest {
 
     @Test
-    void serving() throws IOException, URISyntaxException {
-        Request request = new Request(new RequestLine("GET /index.html HTTP/1.1"), null, null);
+    void service() throws Exception {
+        OutputStream outputStream = new ByteArrayOutputStream();
 
-        Response response = DispatcherServlet.match(request);
+        HttpRequest httpRequest = new HttpRequest(new RequestLine("GET / HTTP/1.1"), null, null);
+        HttpResponse httpResponse = new HttpResponse(outputStream);
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getPath()).isEqualTo("/index.html");
-        assertThat(response.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
+        RequestControllerContainer.match(httpRequest)
+                .service(httpRequest, httpResponse);
+
+        String response = outputStream.toString();
+
+        assertThat(response).contains("HTTP/1.1 " + HttpStatus.FOUND + " \r\n");
+        assertThat(response).contains("Content-Type: text/html;charset=utf-8 \r\n");
+        assertThat(response).contains("Location: /index.html \r\n");
+        assertThat(response).contains("Content-Length: 0 \r\n");
     }
-
 }

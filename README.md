@@ -68,3 +68,23 @@
 
 - [x] 요구사항 7
   - Stylesheet 파일을 지원하도록 구현하도록 한다.
+
+### Step3: HTTP 웹 서버 리팩토링
+
+- 모든 로직에 단위 테스트를 구현한다. 단, 테스트하기 어려운 UI 로직은 제외
+  - 핵심 로직을 구현하는 코드와 UI를 담당하는 로직을 구분한다.
+  - UI 로직을 InputView, ResultView와 같은 클래스를 추가해 분리한다.
+- 자바 코드 컨벤션을 지키면서 프로그래밍한다.
+  - 이 과정의 Code Style은 intellij idea Code Style. Java을 따른다.
+  - intellij idea Code Style. Java을 따르려면 code formatting 단축키(Windows : Ctrl + Alt + L. Mac : ⌥ (Option) + ⌘ (Command) + L.)를 사용한다.
+- 규칙 1: 한 메서드에 오직 한 단계의 들여쓰기(indent)만 한다.
+  - indent가 2이상인 메소드의 경우 메소드를 분리하면 indent를 줄일 수 있다.
+  - else를 사용하지 않아 indent를 줄일 수 있다.
+- 규칙 3: 모든 원시값과 문자열을 포장한다.
+- 규칙 8: 일급 콜렉션을 쓴다.
+
+- 리팩토링 힌트 - 1단계 
+  - 메소드 분리 및 클래스 분리
+- 리팩토링 힌트 - 2단계
+  - 클라이언트 요청 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpRequest)
+  - 클라이언트 응답 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpResponse)

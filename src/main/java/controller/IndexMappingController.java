@@ -1,9 +1,9 @@
 package controller;
 
-import webserver.MediaType;
-import webserver.Request;
-import webserver.RequestLine;
-import webserver.Response;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.MediaType;
+import webserver.http.RequestMappingControllerAdapter;
 
 public class IndexMappingController extends RequestMappingControllerAdapter {
 
@@ -13,8 +13,7 @@ public class IndexMappingController extends RequestMappingControllerAdapter {
     }
 
     @Override
-    public Response doGet(Request request) {
-        RequestLine requestLine = request.getRequestLine();
-        return new Response(MediaType.TEXT_HTML_UTF8, requestLine.getPath(), null);
+    public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
+        httpResponse.redirect("/index.html");
     }
 }

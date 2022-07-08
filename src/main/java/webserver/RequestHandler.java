@@ -1,15 +1,14 @@
 package webserver;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.RequestController;
+import webserver.http.RequestFactory;
+
+import java.io.*;
+import java.net.Socket;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -21,32 +20,19 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
+        logger.debug(
+                "New Client Connect! Connected IP : {}, Port : {}",
+                connection.getInetAddress(),
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            Request request = RequestFactory.create(new BufferedReader(new InputStreamReader(in, "UTF-8")));
-            Response response;
-            try {
-                response = DispatcherServlet.match(request);
-            } catch (URISyntaxException e) {
-                throw new RuntimeException(e);
-            }
+            HttpRequest httpRequest = RequestFactory.create(new BufferedReader(new InputStreamReader(in, "UTF-8")));
+            HttpResponse httpResponse = new HttpResponse(out);
 
-            DataOutputStream dos = new DataOutputStream(out);
-            write(dos, response.getBytes());
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        } catch (URISyntaxException e) {
-            logger.error(e.getMessage());
-        }
-    }
+            RequestController controller = RequestControllerContainer.match(httpRequest);
 
-    private void write(DataOutputStream dos, byte[] response) {
-        try {
-            dos.write(response, 0, response.length);
-            dos.flush();
-        } catch (IOException e) {
+            controller.service(httpRequest, httpResponse);
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }

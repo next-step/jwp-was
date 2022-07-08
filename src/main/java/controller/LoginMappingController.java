@@ -2,7 +2,7 @@ package controller;
 
 import db.DataBase;
 import model.User;
-import webserver.*;
+import webserver.http.*;
 
 public class LoginMappingController extends RequestMappingControllerAdapter {
     @Override
@@ -11,39 +11,36 @@ public class LoginMappingController extends RequestMappingControllerAdapter {
     }
 
     @Override
-    public Response doGet(Request request) {
-        return login(request);
+    public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
+        login(httpRequest, httpResponse);
     }
 
     @Override
-    public Response doPost(Request request) {
-        return login(request);
+    public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+        login(httpRequest, httpResponse);
     }
 
-    private Response login(Request request) {
-        User user = getUserFromRequest(request);
+    private void login(HttpRequest httpRequest, HttpResponse httpResponse) {
+        User user = getUserFromRequest(httpRequest);
 
         User userById = DataBase.findUserById(user.getUserId());
 
         if (userById == null || !userById.checkPassword(user.getPassword())) {
-            return new Response(HttpStatus.BAD_REQUEST, MediaType.TEXT_HTML_UTF8, "/user/login_failed.html", "logined=false; Path=/");
+            httpResponse.addHeader("Set-Cookie", "logined=false; Path=/");
+            httpResponse.redirect(HttpStatus.BAD_REQUEST, "/user/login_failed.html");
+            return;
         }
 
-        return new Response(HttpStatus.FOUND, MediaType.TEXT_HTML_UTF8, "/index.html", "logined=true; Path=/");
+        httpResponse.addHeader("Set-Cookie", "logined=true; Path=/");
+        httpResponse.redirect("/index.html");
     }
 
-    private User getUserFromRequest(Request request) {
-        QueryString queryString = request.getRequestLine().toQueryString();
-
-        if (request.getRequestLine().getMethod() == HttpMethod.POST) {
-            queryString = QueryString.parse(request.getRequestBody());
-        }
-
+    private User getUserFromRequest(HttpRequest httpRequest) {
         return new User(
-                queryString.get("userId"),
-                queryString.get("password"),
-                queryString.get("name"),
-                queryString.get("email")
+                httpRequest.getParameter("userId"),
+                httpRequest.getParameter("password"),
+                httpRequest.getParameter("name"),
+                httpRequest.getParameter("email")
         );
     }
 }

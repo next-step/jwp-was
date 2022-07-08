@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -13,7 +13,7 @@ public enum Protocol {
 
     private static final Map<String, Protocol> mapper = Arrays.stream(values())
             .collect(Collectors.toUnmodifiableMap(
-                    protocol -> String.format("%s/%s", protocol.name, protocol.version),
+                    protocol -> protocol.toString(),
                     protocol -> protocol
             ));
 
@@ -30,9 +30,15 @@ public enum Protocol {
         return version;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s/%s", name, version);
+    }
+
     public static Protocol from(String protocol) {
         return Optional.ofNullable(mapper.get(protocol))
                 .orElseThrow(() -> new IllegalArgumentException(protocol));
     }
+
 
 }

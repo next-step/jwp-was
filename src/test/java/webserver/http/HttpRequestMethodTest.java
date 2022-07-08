@@ -1,11 +1,12 @@
-package webserver;
+package webserver.http;
 
 import org.junit.jupiter.api.Test;
+import webserver.http.HttpMethod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class HttpMethodTest {
+class HttpRequestMethodTest {
 
     @Test
     void GET() {

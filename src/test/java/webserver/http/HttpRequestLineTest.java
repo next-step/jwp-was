@@ -1,13 +1,16 @@
-package webserver;
+package webserver.http;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import webserver.http.HttpMethod;
+import webserver.http.QueryString;
+import webserver.http.RequestLine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class RequestLineTest {
+class HttpRequestLineTest {
 
     @Test
     void get() {

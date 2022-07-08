@@ -1,10 +1,14 @@
 package controller;
 
 import org.junit.jupiter.api.Test;
-import webserver.*;
+import webserver.RequestControllerContainer;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.HttpStatus;
+import webserver.http.RequestLine;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -13,44 +17,46 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserListControllerTest {
 
     @Test
-    void serving() throws IOException, URISyntaxException {
+    void service() throws Exception {
         RequestLine requestLine = new RequestLine("GET /user/list.html HTTP/1.1");
 
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put("Cookie", "logined=true; Path=/");
-        headers.put("Accept", "*/*");
+        headers.put("Accept", "text/html;charset=utf-8");
 
+        OutputStream outputStream = new ByteArrayOutputStream();
 
-        Request request = new Request(
-                requestLine,
-                headers,
-                null);
+        HttpRequest httpRequest = new HttpRequest(requestLine, headers, null);
+        HttpResponse httpResponse = new HttpResponse(outputStream);
 
-        Response response = DispatcherServlet.match(request);
+        RequestControllerContainer.match(httpRequest)
+                .service(httpRequest, httpResponse);
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
-        assertThat(response.getPath()).isEqualTo("/user/list.html");
+        String response = outputStream.toString();
+
+        assertThat(response).contains("HTTP/1.1 " + HttpStatus.OK + " \r\n");
+        assertThat(response).contains("Content-Type: text/html;charset=utf-8 \r\n");
     }
 
     @Test
-    void serving_unauthorized() throws IOException, URISyntaxException {
+    void service_unauthorized() throws Exception {
         RequestLine requestLine = new RequestLine("GET /user/list.html HTTP/1.1");
 
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put("Cookie", "logined=false; Path=/");
-        headers.put("Accept", "*/*");
+        headers.put("Accept", "text/html;charset=utf-8");
 
+        OutputStream outputStream = new ByteArrayOutputStream();
 
-        Request request = new Request(
-                requestLine,
-                headers,
-                null);
+        HttpRequest httpRequest = new HttpRequest(requestLine, headers, null);
+        HttpResponse httpResponse = new HttpResponse(outputStream);
 
-        Response response = DispatcherServlet.match(request);
+        RequestControllerContainer.match(httpRequest)
+                .service(httpRequest, httpResponse);
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
-        assertThat(response.getContentType()).isEqualTo(MediaType.TEXT_HTML_UTF8);
-        assertThat(response.getPath()).isEqualTo("/index.html");
+        String response = outputStream.toString();
+
+        assertThat(response).contains("HTTP/1.1 " + HttpStatus.FOUND + " \r\n");
+        assertThat(response).contains("Content-Type: text/html;charset=utf-8 \r\n");
     }
 }

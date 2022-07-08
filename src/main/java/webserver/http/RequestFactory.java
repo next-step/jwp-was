@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,27 +13,27 @@ public class RequestFactory {
     private RequestFactory() {
     }
 
-    public static Request create(BufferedReader bufferedReader) throws IOException {
+    public static HttpRequest create(BufferedReader bufferedReader) throws IOException {
         String requestLine = bufferedReader.readLine();
         Map<String, String> header = createHeader(bufferedReader, requestLine);
-        return new Request(new RequestLine(requestLine), header, createRequestBody(bufferedReader, header));
+        return new HttpRequest(new RequestLine(requestLine), header, createRequestBody(bufferedReader, header));
     }
 
     private static Map<String, String> createHeader(BufferedReader bufferedReader, String line) throws IOException {
         Map<String, String> headers = new LinkedHashMap<>();
 
-        while (!line.equals("")) {
+        while (line != null && !line.isBlank()) {
             line = bufferedReader.readLine();
             logger.debug("header: {}", line);
 
-            saveHeaderLine(line, headers);
+            addHeadLine(line, headers);
         }
 
         return headers;
     }
 
-    private static void saveHeaderLine(String line, Map<String, String> headers) {
-        if (!line.equals("")) {
+    private static void addHeadLine(String line, Map<String, String> headers) {
+        if (line != null && !line.isBlank()) {
             String[] keyValue = line.split(": ");
             setHeader(headers, keyValue);
         }

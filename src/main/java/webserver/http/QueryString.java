@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -82,5 +82,9 @@ public class QueryString {
 
     public String getPath() {
         return path;
+    }
+
+    public Map<String, String> toParams() {
+        return Map.copyOf(value);
     }
 }
