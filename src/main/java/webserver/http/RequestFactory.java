@@ -22,7 +22,7 @@ public class RequestFactory {
     private static Map<String, String> createHeader(BufferedReader bufferedReader, String line) throws IOException {
         Map<String, String> headers = new LinkedHashMap<>();
 
-        while (!line.equals("")) {
+        while (line != null && !line.isBlank()) {
             line = bufferedReader.readLine();
             logger.debug("header: {}", line);
 
@@ -33,7 +33,7 @@ public class RequestFactory {
     }
 
     private static void addHeadLine(String line, Map<String, String> headers) {
-        if (!line.equals("")) {
+        if (line != null && !line.isBlank()) {
             String[] keyValue = line.split(": ");
             setHeader(headers, keyValue);
         }

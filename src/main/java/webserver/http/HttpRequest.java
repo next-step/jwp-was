@@ -1,5 +1,6 @@
 package webserver.http;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest {
@@ -7,12 +8,24 @@ public class HttpRequest {
 
     private final Map<String, String> headers;
 
-    private final QueryString queryString;
+    private final Map<String, String> params;
 
     public HttpRequest(final RequestLine requestLine, final Map<String, String> headers, final String requestBody) {
         this.requestLine = requestLine;
         this.headers = headers;
-        this.queryString = QueryString.parse(requestBody);
+        this.params = getParams(requestLine, requestBody);
+    }
+
+    private Map<String, String> getParams(RequestLine requestLine, String requestBody) {
+        Map<String, String> params = new HashMap<>();
+
+        QueryString searchParams = requestLine.toQueryString();
+        params.putAll(searchParams.toParams());
+
+        QueryString bodyParams = QueryString.parse(requestBody);
+        params.putAll(bodyParams.toParams());
+
+        return params;
     }
 
     public HttpMethod getMethod() {
@@ -33,16 +46,6 @@ public class HttpRequest {
     }
 
     public String getParameter(String name) {
-        return getQueryString().get(name);
-    }
-
-    private QueryString getQueryString() {
-        QueryString parse = requestLine.toQueryString();
-
-        if (getMethod() == HttpMethod.POST) {
-            parse = queryString;
-        }
-
-        return parse;
+        return params.get(name);
     }
 }

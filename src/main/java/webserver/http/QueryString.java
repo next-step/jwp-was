@@ -83,4 +83,8 @@ public class QueryString {
     public String getPath() {
         return path;
     }
+
+    public Map<String, String> toParams() {
+        return Collections.unmodifiableMap(value);
+    }
 }
