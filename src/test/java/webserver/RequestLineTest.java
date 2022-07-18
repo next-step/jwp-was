@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import exception.IllegalRequestLineException;
+import exception.IllegalRequestPathException;
 
 class RequestLineTest {
 
@@ -54,5 +55,12 @@ class RequestLineTest {
 	void illegalRequestLine(String requestLine) {
 		assertThatThrownBy(() -> new RequestLine(requestLine))
 			.isInstanceOf(IllegalRequestLineException.class);
+	}
+
+	@DisplayName("HTTP 요청 path가 '/'로 시작하지 않으면 IllegalRequestPathException 예외가 발생한다.")
+	@Test
+	void illegalRequestPath() {
+		assertThatThrownBy(() -> new RequestLine("GET users HTTP/1.1"))
+			.isInstanceOf(IllegalRequestPathException.class);
 	}
 }

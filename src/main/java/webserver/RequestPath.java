@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import exception.IllegalRequestPathException;
+
 public class RequestPath {
 
 	private static final String QUESTION_MARK = "?";
@@ -33,9 +35,6 @@ public class RequestPath {
 	}
 
 	private void parseQueryString(String queryString) {
-		if (queryString.isEmpty()) {
-			return;
-		}
 		Arrays.stream(queryString.split(AMPERSAND)).forEach(parameter -> {
 			String[] nameValuePair = parameter.split(EQUAL_SIGN);
 			parameters.put(nameValuePair[INDEX_ZERO], Collections.singletonList(nameValuePair[INDEX_ONE]));
@@ -55,7 +54,7 @@ public class RequestPath {
 
 	private static void validate(String path) {
 		if (!path.startsWith(SLASH)) {
-			throw new IllegalArgumentException();
+			throw new IllegalRequestPathException(path);
 		}
 	}
 
