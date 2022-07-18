@@ -13,6 +13,9 @@ public class QueryParams {
 	private static final String PARAM_DELIMITER = "&";
 	private static final String KEY_VALUE_DELIMITER = "=";
 
+	private static final int KEY_INDEX = 0;
+	private static final int VALUE_INDEX = 1;
+
 	private final Map<String, String> values;
 
 	private QueryParams(Map<String, String> values) {
@@ -20,14 +23,14 @@ public class QueryParams {
 	}
 
 	public static QueryParams of(String queryString) {
-		var targetQuery = fetchQuery(queryString);
+		var query = fetchQuery(queryString);
 
-		var params = Arrays.stream(targetQuery.split(PARAM_DELIMITER))
+		var params = Arrays.stream(query.split(PARAM_DELIMITER))
 			.collect(Collectors.toList());
 
 		var values = params.stream()
 			.map(it -> it.split(KEY_VALUE_DELIMITER))
-			.map(it -> Map.entry(it[0], it[1]))
+			.map(it -> Map.entry(it[KEY_INDEX], it[VALUE_INDEX]))
 			.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (p1, p2) -> p2));
 
 		return new QueryParams(values);
@@ -46,6 +49,6 @@ public class QueryParams {
 	}
 
 	public Map<String, String> get() {
-		return values;
+		return Map.copyOf(values);
 	}
 }

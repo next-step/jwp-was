@@ -1,4 +1,4 @@
-package http;
+package http.request;
 
 import java.util.Map;
 
@@ -11,9 +11,7 @@ public class RequestLine {
 	private static final String REQUEST_LINE_DELIMITER = " ";
 	private static final String QUERY_PARAMETER_DELIMITER = "\\?";
 
-	private static final int PATH_ONLY_LENGTH = 1;
-	private static final int PATH_WITH_PARAMETER_INDEX = 1;
-	private static final int QUERY_PARAM_INDEX = 1;
+	private static final int ONLY_PATH = 1;
 
 	private final HttpMethod httpMethod;
 	private final String path;
@@ -21,20 +19,22 @@ public class RequestLine {
 	private final QueryParams queryParams;
 
 	public RequestLine(String line) {
-		var data = line.split(REQUEST_LINE_DELIMITER);
-		var pathWithParameters = data[PATH_WITH_PARAMETER_INDEX].split(QUERY_PARAMETER_DELIMITER);
+		var specs = line.split(REQUEST_LINE_DELIMITER);
 
-		this.httpMethod = HttpMethod.valueOf(data[0]);
+		this.httpMethod = HttpMethod.valueOf(specs[0]);
+		this.protocol = Protocol.of(specs[2]);
+
+		var pathWithParameters = specs[1]
+			.split(QUERY_PARAMETER_DELIMITER);
 		this.path = pathWithParameters[0];
 		this.queryParams = parseParameters(pathWithParameters);
-		this.protocol = Protocol.of(data[2]);
 	}
 
 	private QueryParams parseParameters(String[] pathWithParameters) {
-		if (pathWithParameters.length == PATH_ONLY_LENGTH) {
+		if (pathWithParameters.length == ONLY_PATH) {
 			return QueryParams.EMPTY;
 		}
-		return QueryParams.of(pathWithParameters[QUERY_PARAM_INDEX]);
+		return QueryParams.of(pathWithParameters[1]);
 	}
 
 	public String getMethod() {
