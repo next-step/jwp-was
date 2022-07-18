@@ -17,7 +17,7 @@ public class RequestLine {
 	public RequestLine(String value) {
 		String[] tokens = value.split(DELIMITER);
 		validate(tokens);
-		this.method = HttpMethod.valueOf(tokens[INDEX_OF_METHOD]);
+		this.method = HttpMethod.from(tokens[INDEX_OF_METHOD]);
 		this.requestPath = RequestPath.from(tokens[INDEX_OF_PATH]);
 		this.httpVersion = new HttpVersion(tokens[INDEX_OF_HTTP_VERSION]);
 	}
