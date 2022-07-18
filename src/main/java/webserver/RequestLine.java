@@ -9,7 +9,7 @@ public class RequestLine {
 	private static final int INDEX_OF_HTTP_VERSION = 2;
 
 	private final HttpMethod method;
-	private final String path;
+	private final RequestPath requestPath;
 	private final HttpVersion httpVersion;
 
 	public RequestLine(String value) {
@@ -18,7 +18,7 @@ public class RequestLine {
 			throw new IllegalArgumentException();
 		}
 		this.method = HttpMethod.valueOf(tokens[INDEX_OF_METHOD]);
-		this.path = tokens[INDEX_OF_PATH];
+		this.requestPath = new RequestPath(tokens[INDEX_OF_PATH]);
 		this.httpVersion = new HttpVersion(tokens[INDEX_OF_HTTP_VERSION]);
 	}
 
@@ -26,8 +26,8 @@ public class RequestLine {
 		return method;
 	}
 
-	public String getPath() {
-		return path;
+	public String getRequestPath() {
+		return requestPath.getPath();
 	}
 
 	public String getProtocol() {
@@ -36,5 +36,9 @@ public class RequestLine {
 
 	public String getVersion() {
 		return httpVersion.getVersion();
+	}
+
+	public String getParameter(String name) {
+		return requestPath.getParameter(name);
 	}
 }
