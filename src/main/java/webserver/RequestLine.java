@@ -1,5 +1,7 @@
 package webserver;
 
+import exception.IllegalRequestLineException;
+
 public class RequestLine {
 
 	private static final String DELIMITER = " ";
@@ -22,7 +24,7 @@ public class RequestLine {
 
 	private void validate(String[] tokens) {
 		if (tokens.length != VALID_NUMBER_OF_TOKENS) {
-			throw new IllegalArgumentException();
+			throw new IllegalRequestLineException(tokens);
 		}
 	}
 
