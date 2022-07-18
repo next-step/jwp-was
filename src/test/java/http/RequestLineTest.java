@@ -37,4 +37,19 @@ class RequestLineTest {
 			() -> assertThat(requestLine.getVersion()).isEqualTo("1.1")
 		);
 	}
+
+	@DisplayName("Request Parameter를 읽을 수 있다.")
+	@Test
+	void getQueryParams() {
+		var line = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+
+		var requestLine = new RequestLine(line);
+
+		var params = requestLine.getQueryParams();
+		assertAll(
+			() -> assertThat(params.get("userId")).isEqualTo("javajigi"),
+			() -> assertThat(params.get("password")).isEqualTo("password"),
+			() -> assertThat(params.get("name")).isEqualTo("JaeSung")
+		);
+	}
 }

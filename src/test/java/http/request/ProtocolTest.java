@@ -14,7 +14,7 @@ class ProtocolTest {
 		var protocol = Protocol.of("HTTP/1.1");
 
 		assertAll(
-			() -> assertThat(protocol.getProtocolType()).isEqualTo("HTTP"),
+			() -> assertThat(protocol.getProtocolType().name()).isEqualTo("HTTP"),
 			() -> assertThat(protocol.getVersion()).isEqualTo("1.1")
 		);
 	}
