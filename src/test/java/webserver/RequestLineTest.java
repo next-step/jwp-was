@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import exception.IllegalHttpMethodException;
 import exception.IllegalHttpVersionException;
 import exception.IllegalRequestLineException;
 import exception.IllegalRequestPathException;
@@ -72,5 +73,12 @@ class RequestLineTest {
 	void illegalHttpVersion() {
 		assertThatThrownBy(() -> new RequestLine("GET /users HTTP1.1"))
 			.isInstanceOf(IllegalHttpVersionException.class);
+	}
+
+	@DisplayName("HTTP 메서드가 유효하지 않으면 IllegalHttpMethodException 예외가 발생한다.")
+	@Test
+	void illegalHttpMethod() {
+		assertThatThrownBy(() -> new RequestLine("CUSTOM /users HTTP/1.1"))
+			.isInstanceOf(IllegalHttpMethodException.class);
 	}
 }

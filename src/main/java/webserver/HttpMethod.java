@@ -2,6 +2,8 @@ package webserver;
 
 import java.util.Arrays;
 
+import exception.IllegalHttpMethodException;
+
 public enum HttpMethod {
 	GET("GET"),
 	POST("POST");
@@ -16,6 +18,6 @@ public enum HttpMethod {
 		return Arrays.stream(values())
 			.filter(method -> method.value.equalsIgnoreCase(value))
 			.findFirst()
-			.orElseThrow(IllegalArgumentException::new);
+			.orElseThrow(() -> new IllegalHttpMethodException(value));
 	}
 }
