@@ -13,14 +13,12 @@ class RequestLineTest {
     private RequestLine requestLine = RequestLine.getInstance();
 
     @Test
-    @DisplayName("요청 정보에 따른 파싱")
-    void parsing() {
+    @DisplayName("요청 정보에 따른 파싱 (get)")
+    void parsing_get() {
         String data = "GET /users HTTP/1.1";
-        final RequestLine parsing = requestLine.parsing(data);
+        RequestLine parsing = requestLine.parsing(data);
         assertThat(parsing.getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(parsing.getPath()).isEqualTo("/users");
-        assertThat(parsing.getProtocol()).isEqualTo("HTTP");
-        assertThat(parsing.getVersion()).isEqualTo("1.1");
+        assertThatRequestData(parsing);
     }
 
     @Test
@@ -29,5 +27,28 @@ class RequestLineTest {
         String data = "GETT /users HTTP/1.1";
         assertThatThrownBy(() -> requestLine.parsing(data))
                 .isInstanceOf(NotExistHttpMethodException.class);
+    }
+
+    @Test
+    @DisplayName("요청 정보에 따른 파싱 (post)")
+    void parsing_post() {
+        String data = "POST /users HTTP/1.1";
+        RequestLine parsing = requestLine.parsing(data);
+        assertThat(parsing.getMethod()).isEqualTo(HttpMethod.POST);
+        assertThatRequestData(parsing);
+    }
+
+    private void assertThatRequestData(RequestLine parsing) {
+        assertThat(parsing.getPath()).isEqualTo("/users");
+        assertThat(parsing.getProtocol()).isEqualTo("HTTP");
+        assertThat(parsing.getVersion()).isEqualTo("1.1");
+    }
+
+    @Test
+    @DisplayName("queryParam 파싱 테스트")
+    void query_param() {
+        String data = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+
+        assertThat(requestLine.getQueryParam(data)).isEqualTo("userId=javajigi&password=password&name=JaeSung");
     }
 }
