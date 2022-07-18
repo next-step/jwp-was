@@ -24,14 +24,14 @@ public class IOUtilsTest {
         logger.debug("parse body : {}", IOUtils.readData(br, data.length()));
     }
 
-	@DisplayName("inputstream을 읽을 수 있다.")
-	@Test
-	void testReadData() {
-		String input = "test1\ntest2\ntest3";
-		var inputStream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
+    @DisplayName("inputstream을 읽을 수 있다.")
+    @Test
+    void testReadData() {
+        String input = "test1\ntest2\ntest3";
+        var inputStream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
 
-		var actual = IOUtils.readData(inputStream);
+        var actual = IOUtils.readData(inputStream);
 
-		assertThat(actual).containsExactly("test1", "test2", "test3");
-	}
+        assertThat(actual).containsExactly("test1", "test2", "test3");
+    }
 }

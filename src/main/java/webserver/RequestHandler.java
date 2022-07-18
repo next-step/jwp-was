@@ -23,10 +23,10 @@ public class RequestHandler implements Runnable {
 
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
+            connection.getPort());
 
         try (InputStream inputStream = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            var lines =  IOUtils.readData(inputStream);
+            var lines = IOUtils.readData(inputStream);
             var requestLine = new RequestLine(lines.get(0));
 
             DataOutputStream dos = new DataOutputStream(out);
