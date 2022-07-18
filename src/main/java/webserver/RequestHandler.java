@@ -27,6 +27,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+
             DataOutputStream dos = new DataOutputStream(out);
             Request request = IOUtils.convertRequest(in);
             logger.debug("requestLine : {}", request.getRequestLine());

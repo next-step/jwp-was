@@ -21,3 +21,4 @@ public enum HttpMethod {
                 .anyMatch(method -> requestMethod.equals(method.name));
     }
 }
+
