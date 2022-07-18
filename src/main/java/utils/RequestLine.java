@@ -33,6 +33,16 @@ public class RequestLine {
         return setting(HttpMethod.valueOf(method), path, protocolAndVersion[0], protocolAndVersion[1]);
     }
 
+    public String getQueryParam(String requestLine) {
+        String[] requestLineArr = requestLine.split(" ");
+        String path = requestLineArr[1];
+        if (path.contains("?")) {
+            int firstIndex = path.indexOf("?") + 1;
+            return path.substring(firstIndex);
+        }
+        return "";
+    }
+
     private RequestLine setting(HttpMethod method, String path, String protocol, String version) {
         this.method = method;
         this.path = path;
