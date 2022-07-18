@@ -33,10 +33,12 @@ class RequestLineTest {
 	@Test
 	void parseQueryString() {
 		RequestLine requestLine = new RequestLine("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
+		String queryString = requestLine.getQueryString();
 		String userId = requestLine.getParameter("userId");
 		String password = requestLine.getParameter("password");
 		String name = requestLine.getParameter("name");
 
+		assertThat(queryString).isEqualTo("userId=javajigi&password=password&name=JaeSung");
 		assertThat(userId).isEqualTo("javajigi");
 		assertThat(password).isEqualTo("password");
 		assertThat(name).isEqualTo("JaeSung");

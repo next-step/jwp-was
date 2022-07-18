@@ -3,38 +3,68 @@ package webserver;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public class RequestPath {
 
+	private static final String QUESTION_MARK = "?";
+	private static final String AMPERSAND = "&";
+	private static final String SLASH = "/";
+	private static final String EQUAL_SIGN = "=";
+	private static final int INDEX_ZERO = 0;
+	private static final int INDEX_ONE = 1;
+
 	private final String path;
+	private final String queryString;
 	private final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
-	public RequestPath(String path) {
-		if (!path.startsWith("/")) {
-			throw new IllegalArgumentException();
-		}
-		if (path.contains("?")) {
-			parseQueryParameters(path);
-			this.path = path.substring(0, path.indexOf("?"));
-			return;
-		}
+	private RequestPath(String path) {
 		this.path = path;
+		this.queryString = null;
 	}
 
-	private void parseQueryParameters(String path) {
-		String queryString = path.substring(path.indexOf("?") + 1);
-		String[] queryParameters = queryString.split("&");
-		Arrays.stream(queryParameters).forEach(parameter -> {
-			String[] nameValuePair = parameter.split("=");
-			parameters.put(nameValuePair[0], Collections.singletonList(nameValuePair[1]));
+	private RequestPath(String path, String queryString) {
+		this.path = path;
+		this.queryString = queryString;
+		parseQueryString(queryString);
+	}
+
+	private void parseQueryString(String queryString) {
+		if (queryString.isEmpty()) {
+			return;
+		}
+		Arrays.stream(queryString.split(AMPERSAND)).forEach(parameter -> {
+			String[] nameValuePair = parameter.split(EQUAL_SIGN);
+			parameters.put(nameValuePair[INDEX_ZERO], Collections.singletonList(nameValuePair[INDEX_ONE]));
 		});
+	}
+
+	public static RequestPath from(String requestPath) {
+		validate(requestPath);
+		if (requestPath.contains(QUESTION_MARK)) {
+			String[] tokens = requestPath.split(Pattern.quote(QUESTION_MARK));
+			String path = tokens[INDEX_ZERO];
+			String queryString = tokens[INDEX_ONE];
+			return new RequestPath(path, queryString);
+		}
+		return new RequestPath(requestPath);
+	}
+
+	private static void validate(String path) {
+		if (!path.startsWith(SLASH)) {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	public String getPath() {
 		return path;
+	}
+
+	public String getQueryString() {
+		return queryString;
 	}
 
 	public String getParameter(String name) {
@@ -42,6 +72,6 @@ public class RequestPath {
 		if (values.isEmpty()) {
 			return null;
 		}
-		return values.get(0);
+		return values.get(INDEX_ZERO);
 	}
 }

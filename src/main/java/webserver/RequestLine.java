@@ -14,12 +14,16 @@ public class RequestLine {
 
 	public RequestLine(String value) {
 		String[] tokens = value.split(DELIMITER);
+		validate(tokens);
+		this.method = HttpMethod.valueOf(tokens[INDEX_OF_METHOD]);
+		this.requestPath = RequestPath.from(tokens[INDEX_OF_PATH]);
+		this.httpVersion = new HttpVersion(tokens[INDEX_OF_HTTP_VERSION]);
+	}
+
+	private void validate(String[] tokens) {
 		if (tokens.length != VALID_NUMBER_OF_TOKENS) {
 			throw new IllegalArgumentException();
 		}
-		this.method = HttpMethod.valueOf(tokens[INDEX_OF_METHOD]);
-		this.requestPath = new RequestPath(tokens[INDEX_OF_PATH]);
-		this.httpVersion = new HttpVersion(tokens[INDEX_OF_HTTP_VERSION]);
 	}
 
 	public HttpMethod getMethod() {
@@ -36,6 +40,10 @@ public class RequestLine {
 
 	public String getVersion() {
 		return httpVersion.getVersion();
+	}
+
+	public String getQueryString() {
+		return requestPath.getQueryString();
 	}
 
 	public String getParameter(String name) {
