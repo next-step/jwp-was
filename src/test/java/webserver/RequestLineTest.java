@@ -16,4 +16,14 @@ class RequestLineTest {
 		assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
 		assertThat(requestLine.getVersion()).isEqualTo("1.1");
 	}
+
+	@DisplayName("HTTP POST 요청의 첫 번째 라인을 파싱한다.")
+	@Test
+	void parseHttpPostRequest() {
+		RequestLine requestLine = new RequestLine("POST /users HTTP/1.1");
+		assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
+		assertThat(requestLine.getPath()).isEqualTo("/users");
+		assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
+		assertThat(requestLine.getVersion()).isEqualTo("1.1");
+	}
 }
