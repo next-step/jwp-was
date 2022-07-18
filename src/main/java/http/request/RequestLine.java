@@ -2,10 +2,6 @@ package http.request;
 
 import java.util.Map;
 
-import http.request.HttpMethod;
-import http.request.Protocol;
-import http.request.QueryParams;
-
 public class RequestLine {
 
 	private static final String REQUEST_LINE_DELIMITER = " ";
