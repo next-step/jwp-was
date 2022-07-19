@@ -1,10 +1,14 @@
 package webserver;
 
+import error.NotHttpMethodConstantException;
+import org.springframework.http.HttpMethod;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class RequestLineParser {
-    private final String method;
+    private final HttpMethod method;
     private final String path;
     private final String protocol;
     private final String version;
@@ -12,7 +16,7 @@ public class RequestLineParser {
 
     public RequestLineParser(String requestLine) {
         String[] requestLineElements = requestLine.split(" ");
-        this.method = requestLineElements[0];
+        this.method = stringToHttpMethod(requestLineElements[0]);
         if (!requestLineElements[1].contains("?")) {
             this.path = requestLineElements[1];
             this.queryString = null;
@@ -25,7 +29,7 @@ public class RequestLineParser {
         this.version = requestLineElements[2].split("/")[1];
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
@@ -54,5 +58,17 @@ public class RequestLineParser {
             querySet.put(parameter,value);
         }
         return querySet;
+    }
+
+    public HttpMethod stringToHttpMethod(String method) {
+        System.out.println(method);
+        if (Objects.equals(method, "POST")) {
+            System.out.println(method);
+            return HttpMethod.POST;
+        } else if (Objects.equals(method, "GET")) {
+            return HttpMethod.GET;
+        } else {
+            throw new NotHttpMethodConstantException();
+        }
     }
 }
