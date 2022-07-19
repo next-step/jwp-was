@@ -4,21 +4,22 @@ import java.util.Objects;
 
 public class RequestLine {
     private static final int VALID_NUMBER_OF_PROPERTIES = 3;
+    public static final String PROPERTIES_DELIMITER = " ";
 
     private HttpMethod method;
     private String path;
-    private String protocol;
+    private Protocol protocol;
 
-    private RequestLine(HttpMethod method, String path, String protocol) {
+    private RequestLine(HttpMethod method, String path, Protocol protocol) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
     }
 
     public static RequestLine from(String httpRequest) {
-        String[] properties = httpRequest.split(" ");
+        String[] properties = httpRequest.split(PROPERTIES_DELIMITER);
         validate(properties);
-        return new RequestLine(HttpMethod.from(properties[0]), properties[1], properties[2]);
+        return new RequestLine(HttpMethod.from(properties[0]), properties[1], Protocol.from(properties[2]));
     }
 
     private static void validate(String[] parsedLine) {
@@ -29,6 +30,10 @@ public class RequestLine {
 
     public HttpMethod getMethod() {
         return method;
+    }
+
+    public Protocol getProtocol() {
+        return protocol;
     }
 
     @Override
