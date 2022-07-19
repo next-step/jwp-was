@@ -62,4 +62,36 @@ public class RequestLineParserTest {
         );
 
     }
+
+    @Test
+    @DisplayName("쿼리스트링 판정 정규식 테스트")
+    void queryStringRegexTest() {
+        String regex = "^(\\/[a-zA-Z]*)*\\?([^=]+=+[^=]+)+[^=]+(=+[^=]+)?$";
+
+        String severalQueryString = "/users?userId=javajigi&password=password&name=JaeSung";
+        String singleQueryString = "/system/users?userId=javajigi";
+
+        assertAll(
+                () -> assertThat(severalQueryString.matches(regex)).isTrue(),
+                () -> assertThat(singleQueryString.matches(regex)).isTrue()
+        );
+    }
+
+    @Test
+    @DisplayName("requestLine parsing시, queryString이 포함되어 있다면 queryString도 파싱한다.")
+    void queryStringParsingTest() {
+        //given
+        String path = "/users?userId=javajigi&password=password&name=JaeSung";
+        String queryString = "userId=javajigi&password=password&name=JaeSung";
+
+        //when
+        Map<String, String> queryStringRequestLineResult = RequestLineParser.parsing(GET_QUERY_STRING_REQUEST_LINE);
+
+        //then
+        assertAll(
+                () -> assertThat(queryStringRequestLineResult.get("path")).isEqualTo(path),
+                () -> assertThat(queryStringRequestLineResult.get("queryString")).isEqualTo(queryString)
+        );
+
+    }
 }
