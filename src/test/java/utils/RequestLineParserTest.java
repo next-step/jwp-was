@@ -1,7 +1,10 @@
 package utils;
 
+import enums.HttpMethod;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -31,5 +34,32 @@ public class RequestLineParserTest {
                 () -> assertThat(RequestLineParser.isRequestLinePattern(POST_REQUEST_LINE)).isTrue(),
                 () -> assertThat(RequestLineParser.isRequestLinePattern(GET_QUERY_STRING_REQUEST_LINE)).isTrue()
         );
+    }
+
+    @Test
+    @DisplayName("requestLine을 method, path(request-target), protocol, version으로 분리 할 수 있다.")
+    void parsingTest() {
+        //given
+        String path = "/users";
+        String protocol = "HTTP";
+        String protocolVersion = "1.1";
+
+        //when
+        Map<String, String> getRequestLineResult = RequestLineParser.parsing(GET_REQUEST_LINE);
+        Map<String, String> postRequestLineResult = RequestLineParser.parsing(POST_REQUEST_LINE);
+
+        //then
+        assertAll(
+                () -> assertThat(getRequestLineResult.get("method")).isEqualTo(HttpMethod.GET.name()),
+                () -> assertThat(getRequestLineResult.get("path")).isEqualTo(path),
+                () -> assertThat(getRequestLineResult.get("protocol")).isEqualTo(protocol),
+                () -> assertThat(getRequestLineResult.get("protocolVersion")).isEqualTo(protocolVersion),
+
+                () -> assertThat(postRequestLineResult.get("method")).isEqualTo(HttpMethod.POST.name()),
+                () -> assertThat(postRequestLineResult.get("path")).isEqualTo(path),
+                () -> assertThat(postRequestLineResult.get("protocol")).isEqualTo(protocol),
+                () -> assertThat(postRequestLineResult.get("protocolVersion")).isEqualTo(protocolVersion)
+        );
+
     }
 }
