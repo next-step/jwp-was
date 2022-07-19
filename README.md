@@ -7,3 +7,8 @@
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+
+## Step1
+- GET요청 파싱을 위한 RequestParser 클래스 생성 및 테스트코드 작성
+- POST요청 파싱을 위한 RequestParser 클래스 생성 및 테스트코드 작성
+- ENUM 적용
