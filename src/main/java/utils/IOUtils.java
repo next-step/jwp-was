@@ -37,11 +37,21 @@ public class IOUtils {
     public static RequestLine getFirstLine(InputStream is) throws IOException {
         final RequestLine requestLine = RequestLine.getInstance();
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            BufferedReader br = getBufferedReader(is);
             return requestLine.parsing(br.readLine());
         } catch (IOException e) {
             logger.error(e.getMessage());
             throw e;
         }
+    }
+
+    public static RequestHeader getRequestHeader(InputStream is) throws IOException {
+
+        RequestHeader requestHeader = RequestHeader.getInstance();
+        return requestHeader.parsing(getBufferedReader(is));
+    }
+
+    private static BufferedReader getBufferedReader(InputStream is) {
+        return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
     }
 }
