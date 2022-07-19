@@ -3,17 +3,15 @@ package domain;
 import java.util.Objects;
 
 public class HttpRequest {
-    private final String method;
-    private final String path;
-    private final String protocol;
-    private final String version;
+    private final HttpMethod httpMethod;
+    private final HttpPath httpPath;
+    private final HttpProtocol httpProtocol;
 
-    public HttpRequest(String method, String path, String protocol, String version) {
+    public HttpRequest(HttpMethod httpMethod, HttpPath httpPath, HttpProtocol httpProtocol) {
 
-        this.method = method;
-        this.path = path;
-        this.protocol = protocol;
-        this.version = version;
+        this.httpMethod = httpMethod;
+        this.httpPath = httpPath;
+        this.httpProtocol = httpProtocol;
     }
 
     @Override
@@ -21,11 +19,11 @@ public class HttpRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HttpRequest that = (HttpRequest) o;
-        return Objects.equals(method, that.method) && Objects.equals(path, that.path) && Objects.equals(protocol, that.protocol) && Objects.equals(version, that.version);
+        return Objects.equals(httpMethod, that.httpMethod) && Objects.equals(httpPath, that.httpPath) && Objects.equals(httpProtocol, that.httpProtocol);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(method, path, protocol, version);
+        return Objects.hash(httpMethod, httpPath, httpProtocol);
     }
 }

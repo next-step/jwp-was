@@ -17,6 +17,7 @@ public class RequestLineParserTest {
         HttpRequest httpRequest = requestLineParser.parse("GET /users HTTP/1.1");
 
         // then
-        assertThat(httpRequest).isEqualTo(new HttpRequest("GET", "/users", "HTTP", "1.1"));
+        assertThat(httpRequest).isEqualTo(
+                new HttpRequest(new HttpMethod("GET"), new HttpPath("/users"), new HttpProtocol("HTTP/1.1")));
     }
 }
