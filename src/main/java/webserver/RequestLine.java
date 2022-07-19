@@ -14,13 +14,13 @@ public class RequestLine {
 
     private final HttpMethod method;
 
-    private final String path;
+    private final RequestPath requestPath;
 
     private final HttpProtocol protocol;
 
-    private RequestLine(HttpMethod method, String path, HttpProtocol protocol) {
+    private RequestLine(HttpMethod method, RequestPath requestPath, HttpProtocol protocol) {
         this.method = method;
-        this.path = path;
+        this.requestPath = requestPath;
         this.protocol = protocol;
     }
 
@@ -33,7 +33,7 @@ public class RequestLine {
 
         return new RequestLine(
                 HttpMethod.valueOf(requestLineValues[METHOD_IDX]),
-                requestLineValues[PATH_IDX],
+                new RequestPath(requestLineValues[PATH_IDX]),
                 HttpProtocol.parseOf(requestLineValues[PROTOCOL_IDX]));
     }
 
@@ -45,7 +45,7 @@ public class RequestLine {
         return protocol;
     }
 
-    String getPath() {
-        return path;
+    RequestPath getPath() {
+        return requestPath;
     }
 }

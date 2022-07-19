@@ -23,7 +23,7 @@ class RequestLineTest {
         // then
         assertThat(requestLine.getMethod()).isEqualTo(method);
         assertThat(requestLine.getProtocol()).isEqualTo(new HttpProtocol(protocolName, protocolVersion));
-        assertThat(requestLine.getPath()).isEqualTo(path);
+        assertThat(requestLine.getPath()).isEqualTo(new RequestPath(path));
     }
 
     @DisplayName("Http Request Line 형식에 맞지 않으면 RequestLine 을 파싱할 수 없다.")
