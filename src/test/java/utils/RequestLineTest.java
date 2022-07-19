@@ -1,6 +1,7 @@
 package utils;
 
 import exception.NotExistHttpMethodException;
+import model.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,5 +51,14 @@ class RequestLineTest {
         String data = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
 
         assertThat(requestLine.getQueryParam(data)).isEqualTo("userId=javajigi&password=password&name=JaeSung");
+    }
+
+    @Test
+    @DisplayName("queryParam")
+    void query_param_get() {
+        String requestUri = "/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
+        User saveUser = requestLine.queryStringToUser(requestUri);
+        User user = new User("javajigi", "password", "%EB%B0%95%EC%9E%AC%EC%84%B1", "javajigi%40slipp.net");
+        assertThat(saveUser).isEqualTo(user);
     }
 }
