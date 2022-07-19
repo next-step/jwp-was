@@ -7,3 +7,18 @@
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+
+## 1단계 - TDD 실습
+### 요구사항 공통부
+* HTTP 요청의 첫번째 라인을 의미하는 RequestLine을 구현해야 한다. 
+* 각 요청을 파싱하여 보여주기 위한 ResultView를 구현해야 한다.
+
+### 요구사항1 - GET 요청
+* HTTP GET 요청에 대한 RequestLine을 파싱한다.
+* 파싱하는 로직 구현을 TDD로 구현한다.
+* "GET /users HTTP/1.1" 결과
+  * method는 GET
+  * path는 /users
+  * protocol은 HTTP
+  * version은 1.1
+  
