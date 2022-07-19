@@ -30,7 +30,7 @@ class RequestLineTest {
         final RequestLine parse = RequestLine.parse(requestLine);
 
         assertAll(
-            () -> assertThat(parse.getMethod()).isEqualTo("GET"),
+            () -> assertThat(parse.getMethod()).isSameAs(HttpMethod.GET),
             () -> assertThat(parse.getPath()).isEqualTo("/users"),
             () -> assertThat(parse.getProtocol()).isEqualTo("HTTP"),
             () -> assertThat(parse.getVersion()).isEqualTo("1.1")
@@ -45,7 +45,7 @@ class RequestLineTest {
         final RequestLine parse = RequestLine.parse(requestLine);
 
         assertAll(
-            () -> assertThat(parse.getMethod()).isEqualTo("POST"),
+            () -> assertThat(parse.getMethod()).isSameAs(HttpMethod.POST),
             () -> assertThat(parse.getPath()).isEqualTo("/users"),
             () -> assertThat(parse.getProtocol()).isEqualTo("HTTP"),
             () -> assertThat(parse.getVersion()).isEqualTo("1.1")

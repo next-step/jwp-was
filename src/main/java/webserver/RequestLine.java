@@ -14,12 +14,12 @@ public class RequestLine {
     private static final String EMPTY_QUERY_STRING = "";
 
 
-    private final String method;
+    private final HttpMethod method;
     private final String path;
     private final String protocol;
     private final String version;
 
-    private RequestLine(final String method, final String path, final String protocol, final String version) {
+    private RequestLine(final HttpMethod method, final String path, final String protocol, final String version) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
@@ -32,7 +32,7 @@ public class RequestLine {
         }
 
         final String[] tokens = requestLine.split(DELIMITER);
-        final String method = tokens[INDEX_OF_METHOD];
+        final HttpMethod method = HttpMethod.of(tokens[INDEX_OF_METHOD]);
         final String path = tokens[INDEX_OF_PATH];
         final String[] protocolAndVersion = tokens[INDEX_OF_PROTOCOL_AND_VERSION].split(PROTOCOL_DELIMITER);
         final String protocol = protocolAndVersion[INDEX_OF_PROTOCOL];
@@ -41,7 +41,7 @@ public class RequestLine {
         return new RequestLine(method, path, protocol, version);
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
