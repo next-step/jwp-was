@@ -12,8 +12,8 @@
 # 기능 목록
 - RequestLine 파싱 
   - [x] 문자열이 비어 있으면 파싱할 수 없다.
-  - [ ] GET 요청
-    - [ ] method, path, protocol, version
+  - [x] GET 요청
+    - [x] method, path, protocol, version
   - [ ] POST 요청
   - [ ] Query String 파싱 
   - [ ] http method enum 적용
