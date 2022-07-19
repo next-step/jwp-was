@@ -29,6 +29,17 @@ public class RequestLineTest {
         assertThat(requestLine.getProtocol().getVersion()).isEqualTo("1.1");
     }
 
+    @DisplayName("유효한 GET 요청(Query String 포함)으로 RequestLine 파싱하는 테스트")
+    @Test
+    void from_get_query_string() {
+        String httpRequest = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+        RequestLine requestLine = RequestLine.from(httpRequest);
+        System.out.println(requestLine);
+        assertThat(requestLine).isNotNull();
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
+        assertThat(requestLine.getProtocol().getVersion()).isEqualTo("1.1");
+    }
+
     @DisplayName("잘못된 요청으로 RequestLine 파싱하는 경우 예외 발생 테스트")
     @Test
     void exception() {

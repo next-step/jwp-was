@@ -3,7 +3,8 @@ package webserver;
 import java.util.Objects;
 
 public class Protocol {
-    public static final String PROPERTIES_DELIMITER = "/";
+    private static final int VALID_NUMBER_OF_PROPERTIES = 2;
+    private static final String PROPERTIES_DELIMITER = "/";
     private String name;
     private String version;
 
@@ -14,7 +15,14 @@ public class Protocol {
 
     public static Protocol from(String protocol) {
         String properties[] = protocol.split(PROPERTIES_DELIMITER);
+        validate(properties);
         return new Protocol(properties[0], properties[1]);
+    }
+
+    private static void validate(String[] properties) {
+        if (properties.length != VALID_NUMBER_OF_PROPERTIES) {
+            throw new IllegalArgumentException(String.format("필요한 속성의 개수[%d]를 만족하지 않습니다.", VALID_NUMBER_OF_PROPERTIES));
+        }
     }
 
     public String getName() {

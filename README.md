@@ -31,5 +31,10 @@
   * protocol은 HTTP
   * version은 1.1
 
+### 요구사항3 - Query String 파싱
+* HTTP 요청(request)의 Query String으로 전달되는 데이터를 파싱한다.
+* 클라이언트에서 서버로 전달되는 데이터의 구조는 name1=value1&name2=value2와 같은 구조로 전달된다.
+* 파싱하는 로직 구현을 TDD로 구현한다.
+
 ### 요구사항4 - enum 적용
 * HTTP method인 GET, POST를 eunm으로 구현한다.
