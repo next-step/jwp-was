@@ -1,6 +1,7 @@
 package utils;
 
 import exception.HttpNotFoundException;
+import exception.ProtocolNotFoundException;
 import model.RequestLine;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +29,6 @@ public class HttpParserTest {
         RequestLine requestLine = HttpParser.parseRequestLine(httpRequestFirstLine);
 
         // then
-        assert requestLine != null;
         Assertions.assertThat(httpMethod).isEqualTo(requestLine.getHttpMethod().toString());
         Assertions.assertThat(protocol).isEqualTo(requestLine.getProtocol().toString());
         Assertions.assertThat(protocolVersion).isEqualTo(requestLine.getProtocolVersion());
@@ -48,7 +48,6 @@ public class HttpParserTest {
 
         String path = this.getPath(requestLineData);
 
-        assert requestLine != null;
         String parsedPath = requestLine.getPath();
 
         Map<String, String> queryParameters = this.getQueryParameters(requestLineData);
@@ -66,22 +65,32 @@ public class HttpParserTest {
 
     }
 
-    @DisplayName("RequestLine method, path, protocol, version 파싱시 에러케이스 검증")
+    @DisplayName("RequestLine method 파싱시 에러케이스 검증")
     @ParameterizedTest
     @ValueSource(strings = {"GOT /users?userId=fistkim101&password=1004 HTTP/1.1", "PST /users?name=jk&phoneNumber=01012345678 HTTP/1.1"})
-    void parseRequestLineExceptionTest(String httpRequestFirstLine) {
+    void parseRequestLineHttpMethodExceptionTest(String httpRequestFirstLine) {
 
         Assertions.assertThatExceptionOfType(HttpNotFoundException.class)
                 .isThrownBy(() -> HttpParser.parseRequestLine(httpRequestFirstLine));
 
     }
 
+    @DisplayName("RequestLine protocol 파싱시 에러케이스 검증")
+    @ParameterizedTest
+    @ValueSource(strings = {"GET /users?userId=fistkim101&password=1004 HTTTTP/1.1", "POST /users?name=jk&phoneNumber=01012345678 TP/1.1"})
+    void parseRequestLineProtocolExceptionTest(String httpRequestFirstLine) {
+
+        Assertions.assertThatExceptionOfType(ProtocolNotFoundException.class)
+                .isThrownBy(() -> HttpParser.parseRequestLine(httpRequestFirstLine));
+
+    }
+
     private String getPath(String[] requestLineData) {
-        return requestLineData[1].split("`?`")[0];
+        return requestLineData[1].split("\\?")[0];
     }
 
     private Map<String, String> getQueryParameters(String[] requestLineData) {
-        String[] parameterKeyAndValues = requestLineData[1].split("`?`")[1].split("&");
+        String[] parameterKeyAndValues = requestLineData[1].split("\\?")[1].split("&");
         Map<String, String> parameters = new HashMap<>();
         Arrays.stream(parameterKeyAndValues)
                 .forEach(parameter -> {

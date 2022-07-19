@@ -8,10 +8,10 @@ public enum HttpMethod {
 
     GET, POST;
 
-    public static HttpMethod getMethod(String method) {
+    public static HttpMethod find(String method) {
         return Arrays.stream(HttpMethod.values())
                 .filter(httpMethod -> method.toUpperCase().equals(httpMethod.name()))
                 .findAny()
-                .orElseThrow(() -> new HttpNotFoundException(new IllegalArgumentException()));
+                .orElseThrow(HttpNotFoundException::new);
     }
 }
