@@ -17,10 +17,10 @@
 
 - HTTP GET 요청에 대한 RequestLine을 파싱
 
-> GET /users HTTP/1.1
-> method는 GET
-> path는 /users
-> protocol은 HTTP
+> GET /users HTTP/1.1  
+> method는 GET  
+> path는 /users  
+> protocol은 HTTP  
 > version은 1.1
 
 
