@@ -21,4 +21,15 @@
   * path는 /users
   * protocol은 HTTP
   * version은 1.1
-  
+
+### 요구사항2 - POST 요청
+* HTTP POST 요청에 대한 RequestLine을 파싱한다.
+* 파싱하는 로직 구현을 TDD로 구현한다.
+* "GET /users HTTP/1.1" 결과
+  * method는 POST
+  * path는 /users
+  * protocol은 HTTP
+  * version은 1.1
+
+### 요구사항4 - enum 적용
+* HTTP method인 GET, POST를 eunm으로 구현한다.

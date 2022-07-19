@@ -1,16 +1,15 @@
 package webserver;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 public class RequestLine {
     private static final int VALID_NUMBER_OF_PROPERTIES = 3;
 
-    private String method;
+    private HttpMethod method;
     private String path;
     private String protocol;
 
-    private RequestLine(String method, String path, String protocol) {
+    private RequestLine(HttpMethod method, String path, String protocol) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
@@ -19,7 +18,7 @@ public class RequestLine {
     public static RequestLine from(String httpRequest) {
         String[] properties = httpRequest.split(" ");
         validate(properties);
-        return new RequestLine(properties[0], properties[1], properties[2]);
+        return new RequestLine(HttpMethod.from(properties[0]), properties[1], properties[2]);
     }
 
     private static void validate(String[] parsedLine) {
@@ -28,12 +27,16 @@ public class RequestLine {
         }
     }
 
+    public HttpMethod getMethod() {
+        return method;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RequestLine that = (RequestLine) o;
-        return Objects.equals(method, that.method) && Objects.equals(path, that.path) && Objects.equals(protocol, that.protocol);
+        return method == that.method && Objects.equals(path, that.path) && Objects.equals(protocol, that.protocol);
     }
 
     @Override
@@ -44,7 +47,7 @@ public class RequestLine {
     @Override
     public String toString() {
         return "RequestLine{" +
-                "method='" + method + '\'' +
+                "method=" + method +
                 ", path='" + path + '\'' +
                 ", protocol='" + protocol + '\'' +
                 '}';
