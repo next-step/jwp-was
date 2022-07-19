@@ -5,9 +5,9 @@
 ## RequestLine 파싱
 - RequestLine을 파싱해 원하는 값을 가져올 수 있는 API를 제공
 ### 요구사항 1 - GET 요청
-- [ ] HTTP GET 요청에 대한 RequestLine을 파싱한다.
-- [ ] 파싱하는 로직 구현을 TDD로 구현한다.
-- [ ] "GET /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다. 
+- [X] HTTP GET 요청에 대한 RequestLine을 파싱한다.
+- [X] 파싱하는 로직 구현을 TDD로 구현한다.
+- [X] "GET /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다. 
   - method는 GET
   - path는 /users
   - protocol은 HTTP
