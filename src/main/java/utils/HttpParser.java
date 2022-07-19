@@ -6,6 +6,7 @@ import types.HttpMethod;
 import types.Protocol;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +35,12 @@ public class HttpParser {
     }
 
     private static Map<String, String> getQueryParameters(String[] requestLineData) {
-        String rawParameters = requestLineData[1].split(PATH_SEPARATOR)[1];
+        String pathAndParameters = requestLineData[1];
+        if (!pathAndParameters.contains(QUERY_PARAMETER_SEPARATOR)) {
+            return Collections.emptyMap();
+        }
+
+        String rawParameters = pathAndParameters.split(PATH_SEPARATOR)[1];
         String[] parameterKeyAndValues = rawParameters.split(QUERY_PARAMETER_SEPARATOR);
         Map<String, String> parameters = new HashMap<>();
         Arrays.stream(parameterKeyAndValues)
