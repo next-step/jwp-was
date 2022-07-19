@@ -16,7 +16,7 @@
    1. RequestLine을 파싱해 원하는 값을 가져올 수 있는 API를 제공해야 한다.
    2. RequestLine은 HTTP 요청의 첫번째 라인을 의미한다.
 
-- [ ] 요구사항 1 - GET 요청
+- [x] 요구사항 1 - GET 요청
    1. HTTP GET 요청에 대한 RequestLine을 파싱한다.
    2. 파싱하는 로직 구현을 TDD로 구현한다.
    3. 예를 들어 "GET /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다.
@@ -25,7 +25,7 @@
    6. protocol은 HTTP
    7. version은 1.1
 
-- [ ] 요구사항 2 - POST 요청 HTTP POST 요청에 대한 RequestLine을 파싱한다.
+- [x] 요구사항 2 - POST 요청 HTTP POST 요청에 대한 RequestLine을 파싱한다.
    1. 파싱하는 로직 구현을 TDD로 구현한다.
    2. 예를 들어 "POST /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다.
    3. method는 POST
