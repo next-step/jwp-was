@@ -1,7 +1,5 @@
 package utils;
 
-import exception.NotExistHttpMethodException;
-
 import java.util.Arrays;
 
 public enum HttpMethod {
