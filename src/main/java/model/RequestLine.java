@@ -6,11 +6,11 @@ import types.Protocol;
 import java.util.Map;
 
 public class RequestLine {
-    private HttpMethod httpMethod;
-    private String path;
-    private Map<String, String> queryParameters;
-    private Protocol protocol;
-    private String protocolVersion;
+    private final HttpMethod httpMethod;
+    private final String path;
+    private final Map<String, String> queryParameters;
+    private final Protocol protocol;
+    private final String protocolVersion;
 
     public RequestLine(HttpMethod httpMethod, String path, Map<String, String> queryParameters, Protocol protocol, String protocolVersion) {
         this.httpMethod = httpMethod;
