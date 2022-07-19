@@ -13,7 +13,7 @@ public class RequestPath {
 
     private void validatePath(String path) {
         if (path != null && !path.startsWith("/")) {
-            throw new IllegalArgumentException(String.format("[%s] RequestPath 형식이 아닙니다.", path));
+            throw new IllegalArgumentException(String.format("[%s] 유효한 RequestPath 가 아님", path));
         }
     }
 

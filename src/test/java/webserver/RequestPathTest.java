@@ -15,7 +15,7 @@ class RequestPathTest {
     void validateRequestPathTest() {
         assertThatThrownBy(() -> new RequestPath("user"))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[user] RequestPath 형식이 아닙니다.");
+                .hasMessageContaining("유효한 RequestPath 가 아님");
     }
 
     @DisplayName("RequestPath 를 파싱해서 쿼리스트링을 알 수 있다.")

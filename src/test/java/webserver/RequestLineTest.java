@@ -12,17 +12,17 @@ class RequestLineTest {
     @DisplayName("Http Request Line 을 파싱하면 메서드, 경로, 프로토콜 정보를 알 수 있다.")
     @CsvSource(
             value = {
-            "GET /users HTTP/1.1:GET:/users:HTTP:1.1",
-            "POST /users HTTP/1.1:POST:/users:HTTP:1.1",},
+            "GET /users HTTP/1.1:GET:/users:1.1",
+            "POST /users HTTP/1.1:POST:/users:1.1",},
             delimiter = ':')
     @ParameterizedTest
-    void parseSuccessTest(String httpRequestLine, HttpMethod method, String path, String protocolName, String protocolVersion) {
+    void parseSuccessTest(String httpRequestLine, HttpMethod method, String path, String protocolVersion) {
         // given // when
         RequestLine requestLine = RequestLine.parseOf(httpRequestLine);
 
         // then
         assertThat(requestLine.getMethod()).isEqualTo(method);
-        assertThat(requestLine.getProtocol()).isEqualTo(new HttpProtocol(protocolName, protocolVersion));
+        assertThat(requestLine.getProtocolVersion()).isEqualTo(new ProtocolVersion(protocolVersion));
         assertThat(requestLine.getPath()).isEqualTo(new RequestPath(path));
     }
 
@@ -32,7 +32,7 @@ class RequestLineTest {
     void parseFailTest(String invalidRequestLine) {
         assertThatThrownBy(() -> RequestLine.parseOf(invalidRequestLine))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("RequestLine 파싱 실패 [" + invalidRequestLine + "]");
+                .hasMessageContaining("유효한 RequestLine 이 아님");
     }
 
 }

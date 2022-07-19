@@ -16,9 +16,9 @@ public class RequestLine {
 
     private final RequestPath requestPath;
 
-    private final HttpProtocol protocol;
+    private final ProtocolVersion protocol;
 
-    private RequestLine(HttpMethod method, RequestPath requestPath, HttpProtocol protocol) {
+    private RequestLine(HttpMethod method, RequestPath requestPath, ProtocolVersion protocol) {
         this.method = method;
         this.requestPath = requestPath;
         this.protocol = protocol;
@@ -28,20 +28,20 @@ public class RequestLine {
         String[] requestLineValues = httpRequestLine.split(REQUEST_LINE_DELIMITER);
 
         if (requestLineValues.length != REQUEST_LINE_LENGTH) {
-            throw new IllegalArgumentException(String.format("RequestLine 파싱 실패 [%s]", httpRequestLine));
+            throw new IllegalArgumentException(String.format("[%s] 유효한 RequestLine 이 아님", httpRequestLine));
         }
 
         return new RequestLine(
                 HttpMethod.valueOf(requestLineValues[METHOD_IDX]),
                 new RequestPath(requestLineValues[PATH_IDX]),
-                HttpProtocol.parseOf(requestLineValues[PROTOCOL_IDX]));
+                ProtocolVersion.parseOf(requestLineValues[PROTOCOL_IDX]));
     }
 
     HttpMethod getMethod() {
         return method;
     }
 
-    HttpProtocol getProtocol() {
+    ProtocolVersion getProtocolVersion() {
         return protocol;
     }
 
