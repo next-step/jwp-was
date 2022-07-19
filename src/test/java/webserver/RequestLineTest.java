@@ -1,7 +1,6 @@
-package utils;
+package webserver;
 
 import model.HttpMethodType;
-import model.UnSupportMethodType;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +16,7 @@ public class RequestLineTest {
         final RequestLine requestLine= new RequestLine(request);
 
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethodType.GET);
-        assertThat(requestLine.getPath()).isEqualTo("/users");
+        assertThat(requestLine.getRequestPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }
@@ -30,7 +29,7 @@ public class RequestLineTest {
         final RequestLine requestLine= new RequestLine(request);
 
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethodType.POST);
-        assertThat(requestLine.getPath()).isEqualTo("/users");
+        assertThat(requestLine.getRequestPath()).isEqualTo("/users");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }
@@ -42,5 +41,15 @@ public class RequestLineTest {
 
         assertThatThrownBy(() -> new RequestLine(request))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 쿼리스트링_파싱기능() {
+
+        final String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+
+        final RequestLine requestLine = new RequestLine(request);
+
+
     }
 }

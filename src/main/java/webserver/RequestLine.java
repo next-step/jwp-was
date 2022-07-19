@@ -1,6 +1,8 @@
-package utils;
+package webserver;
 
 import model.HttpMethodType;
+
+import java.util.List;
 
 public class RequestLine {
 
@@ -13,13 +15,13 @@ public class RequestLine {
     public static final String REGEX_SLASH = "/";
 
     private HttpMethodType method;
-    private String path;
+    private RequestPath request;
     private String protocol;
     private String version;
 
     public RequestLine(String requestLine) {
         this.method = parsingMethod(requestLine);
-        this.path = parsingPath(requestLine);
+        this.request = parsingPath(requestLine);
         this.protocol = parsingProtocol(requestLine);
         this.version = parsingVersion(requestLine);
     }
@@ -29,8 +31,8 @@ public class RequestLine {
                 requestLine.split(REGEX_BLANK)[METHOD_INDEX]);
     }
 
-    private String parsingPath(String requestLine) {
-        return requestLine.split(REGEX_BLANK)[PATH_INDEX];
+    private RequestPath parsingPath(String requestLine) {
+        return new RequestPath(requestLine.split(REGEX_BLANK)[PATH_INDEX]);
     }
 
     private String parsingProtocol(String requestLine) {
@@ -47,8 +49,12 @@ public class RequestLine {
         return method;
     }
 
-    public String getPath() {
-        return path;
+    public String getRequestPath() {
+        return request.getPath();
+    }
+
+    public List<String> getValuesOfParam(String key) {
+        return request.getParams().get(key);
     }
 
     public String getProtocol() {
