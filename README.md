@@ -10,8 +10,8 @@
 
 ----
 ## 구현할 기능 목록
-- [ ] Request Line은 RFC7230 (https://www.rfc-editor.org/rfc/rfc7230) -> 3.1.1. Request Line 의 정의에 따라 String 타입의 `method SP request-target SP HTTP-version CRLF` 의 구조를 가진다.
-- [ ] method는 Enum으로 구현하여야 하며 형태는 RFC7231 (https://www.rfc-editor.org/rfc/rfc7231#section-4) 의 정의에 따라  
+- [x] Request Line은 RFC7230 (https://www.rfc-editor.org/rfc/rfc7230) -> 3.1.1. Request Line 의 정의에 따라 String 타입의 `method SP request-target SP HTTP-version CRLF` 의 구조를 가진다.
+- [x] method는 Enum으로 구현하여야 하며 형태는 RFC7231 (https://www.rfc-editor.org/rfc/rfc7231#section-4) 의 정의에 따라  
   `GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE`의 형태를 가진다.
 - [ ] HttpParser는 RequestLine을 method, path(request-target), protocaol, version으로 분리 할 수 있다.
 - [ ] Request Line 객체를 만든다.
