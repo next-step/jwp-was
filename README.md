@@ -12,7 +12,7 @@
 # 단계별 요구사항
 ## Step 1 TDD 실습
 
-- [ ] RequestLine 파싱하기
+- [x] RequestLine 파싱하기
    1. RequestLine을 파싱해 원하는 값을 가져올 수 있는 API를 제공해야 한다.
    2. RequestLine은 HTTP 요청의 첫번째 라인을 의미한다.
 
