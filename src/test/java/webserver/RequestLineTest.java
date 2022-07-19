@@ -52,7 +52,24 @@ class RequestLineTest {
         );
     }
 
+    @DisplayName("Query String 없음")
+    @Test
+    void empty_query_string() {
+        final String requestLine = "GET /users HTTP/1.1";
 
+        final RequestLine parse = RequestLine.parse(requestLine);
 
+        assertThat(parse.getQueryString()).isEmpty();
+    }
+
+    @DisplayName("Query String 파싱")
+    @Test
+    void parsing_a_query_string() {
+        final String requestLine = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+
+        final RequestLine parse = RequestLine.parse(requestLine);
+
+        assertThat(parse.getQueryString()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
+    }
 
 }

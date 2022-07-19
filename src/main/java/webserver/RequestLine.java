@@ -11,6 +11,7 @@ public class RequestLine {
     private static final int INDEX_OF_VERSION = 1;
     private static final String DELIMITER = " ";
     private static final String PROTOCOL_DELIMITER = "/";
+    private static final String EMPTY_QUERY_STRING = "";
 
 
     private final String method;
@@ -54,5 +55,17 @@ public class RequestLine {
 
     public String getVersion() {
         return version;
+    }
+
+    public String getQueryString() {
+        final String[] tokens = path.split("\\?");
+        if (hasQueryString(tokens)) {
+            return tokens[1];
+        }
+        return EMPTY_QUERY_STRING;
+    }
+
+    private boolean hasQueryString(final String[] tokens) {
+        return tokens.length == 2;
     }
 }
