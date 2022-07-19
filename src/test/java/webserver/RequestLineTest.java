@@ -22,4 +22,20 @@ public class RequestLineTest {
                 () -> assertThat(requestLineParser.getVersion()).isEqualTo("1.1")
         );
     }
+
+    @Test
+    @DisplayName("POST요청에 대한 RequestLine을 파싱한다.")
+    void POST요청_파싱_테스트() {
+        //given
+        String requestLine = "POST /users HTTP/1.1";
+        //when
+        RequestLineParser requestLineParser = new RequestLineParser(requestLine);
+        //then
+        assertAll(
+                () -> assertThat(requestLineParser.getMethod()).isEqualTo("POST"),
+                () -> assertThat(requestLineParser.getPath()).isEqualTo("/users"),
+                () -> assertThat(requestLineParser.getProtocol()).isEqualTo("HTTP"),
+                () -> assertThat(requestLineParser.getVersion()).isEqualTo("1.1")
+        );
+    }
 }
