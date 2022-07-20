@@ -15,5 +15,7 @@
   - [x] GET 요청
     - [x] method, path, protocol, version
   - [x] POST 요청
-  - [ ] Query String 파싱 
-  - [ ] http method enum 적용
+  - [x] Query String 파싱 
+  - [x] http method enum 적용
+  - [x] Path 클래스로 분리
+  - [x] Protocol 클래스로 분리
