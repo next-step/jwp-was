@@ -18,16 +18,13 @@ public class HttpParserTest {
     @ValueSource(strings = {"GET /users?userId=fistkim101&password=1004 HTTP/1.1", "POST /users?userId=fistkim101&password=1004 HTTP/1.1"})
     void parseRequestLineTest(String httpRequestFirstLine) {
 
-        // given
         String[] requestLineData = httpRequestFirstLine.split(" ");
         String httpMethod = requestLineData[0];
         String protocolName = requestLineData[2].split("/")[0];
         String protocolVersion = requestLineData[2].split("/")[1];
 
-        // when
         RequestLine requestLine = HttpParser.parseRequestLine(httpRequestFirstLine);
 
-        // then
         Assertions.assertThat(httpMethod).isEqualTo(requestLine.getHttpMethod().toString());
         Assertions.assertThat(protocolName).isEqualTo(requestLine.getProtocol().getName());
         Assertions.assertThat(protocolVersion).isEqualTo(requestLine.getProtocol().getVersion());
@@ -39,16 +36,13 @@ public class HttpParserTest {
     @ValueSource(strings = {"GET /users?userId=fistkim101&password=1004 HTTP/1.1"})
     void parseRequestLineQueryParametersTest(String httpRequestFirstLine) {
 
-        // given
         String path = "/users";
         Map<String, String> queryParameters = new HashMap<>(Map.of("userId", "fistkim101", "password", "1004"));
 
-        // when
         RequestLine requestLine = HttpParser.parseRequestLine(httpRequestFirstLine);
         String parsedPath = requestLine.getPath();
         Map<String, String> parsedQueryParameters = requestLine.getQueryParameters();
 
-        // then
         Assertions.assertThat(path).isEqualTo(parsedPath);
         Assertions.assertThat(queryParameters.keySet().size()).isEqualTo(parsedQueryParameters.keySet().size());
         for (Map.Entry<String, String> entry : queryParameters.entrySet()) {
