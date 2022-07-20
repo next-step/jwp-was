@@ -5,6 +5,7 @@ import utils.HttpMethod;
 public class RequestLine {
 	private static final String REQUEST_DELIMITER = " ";
 	private static final String PROTOCOL_VERSION_DELIMITER = "/";
+	private static final String QUERY_STRING_DELIMITER = "\\?";
 	private static final int REQUEST_PARSING_NUMBER = 3;
 	private static final int PROTOCOL_VERSION_PARSING_NUMBER = 2;
 
@@ -12,16 +13,18 @@ public class RequestLine {
 	private String path;
 	private String protocol;
 	private String version;
+	private RequestPathQueryString requestPathQueryString;
 
 	protected RequestLine() {
 
 	}
 
-	private RequestLine(HttpMethod method, String path, String protocol, String version) {
+	private RequestLine(HttpMethod method, String path, String protocol, String version, RequestPathQueryString requestPathQueryString) {
 		this.method = method;
 		this.path = path;
 		this.protocol = protocol;
 		this.version = version;
+		this.requestPathQueryString = requestPathQueryString;
 	}
 
 	public RequestLine parse(String request) {
@@ -30,11 +33,21 @@ public class RequestLine {
 		String[] parsingRequest = request.split(REQUEST_DELIMITER);
 		validateParsingResult(parsingRequest);
 
+		String method = parsingRequest[0];
+		String path = parsingRequest[1];
+		RequestPathQueryString requestPathQueryString = new RequestPathQueryString();
+		if(path.contains("?")) {
+			String[] parsingPath = path.split(QUERY_STRING_DELIMITER);
+			path = parsingPath[0];
+			String stringQuery = parsingPath[1];
+			requestPathQueryString = parsingQueryString(stringQuery);
+		}
+
 		String[] parsingProtocolVersion = parsingRequest[2].split(PROTOCOL_VERSION_DELIMITER);
 		validateProtocolVersionParsingResult(parsingProtocolVersion);
 
-		return new RequestLine(HttpMethod.valueOf(parsingRequest[0]), parsingRequest[1], parsingProtocolVersion[0],
-			parsingProtocolVersion[1]);
+		return new RequestLine(HttpMethod.valueOf(method), path, parsingProtocolVersion[0],
+			parsingProtocolVersion[1], requestPathQueryString);
 	}
 
 	private void validateProtocolVersionParsingResult(String[] parsingProtocolVersion) {
@@ -78,5 +91,13 @@ public class RequestLine {
 
 	public String getVersion() {
 		return this.version;
+	}
+
+	public RequestPathQueryString getRequestPathQueryString() {
+		return this.requestPathQueryString;
+	}
+
+	private RequestPathQueryString parsingQueryString(String path) {
+		return new RequestPathQueryString(path);
 	}
 }
