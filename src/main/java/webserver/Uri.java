@@ -1,11 +1,16 @@
 package webserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Uri {
+    private static final Logger log = LoggerFactory.getLogger(Uri.class);
     private final String path;
     private final QueryStringParser queryString;
 
     public Uri(String uri) {
         if (!uri.contains("?")) {
+            log.info("Query가 없습니다.");
             this.path = uri;
             this.queryString = null;
         }
