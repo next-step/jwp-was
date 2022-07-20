@@ -33,7 +33,7 @@ class ProtocolTest {
         );
     }
 
-    @DisplayName("유효하지 않은 프로토콜 문자열")
+    @DisplayName("유효하지 않은 프로토콜 문자열은 파싱할 수 없다")
     @Test
     void invalid_protocol_and_version_string() {
         assertThatThrownBy(() -> Protocol.parse("protocol"))
