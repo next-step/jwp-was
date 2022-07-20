@@ -25,4 +25,10 @@ public class HttpRequest {
     public int hashCode() {
         return Objects.hash(httpMethod, httpPath, httpProtocol);
     }
+
+    @Override
+    public String toString() {
+        return String.format("Method: %s, Path: %s, Protocol: %s, Version: %s",
+                httpMethod, httpPath, httpProtocol.getProtocol(), httpProtocol.getVersion());
+    }
 }

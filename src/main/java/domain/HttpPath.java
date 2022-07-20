@@ -62,4 +62,9 @@ public class HttpPath {
     public int hashCode() {
         return Objects.hash(path, queryStrings);
     }
+
+    @Override
+    public String toString() {
+        return path;
+    }
 }

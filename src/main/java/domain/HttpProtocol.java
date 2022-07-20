@@ -24,6 +24,14 @@ public class HttpProtocol {
         }
     }
 
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
