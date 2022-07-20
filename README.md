@@ -5,5 +5,15 @@
 * 코드 리뷰 피드백에 대한 개선 작업을 하고 다시 PUSH한다.
 * 모든 피드백을 완료하면 다음 단계를 도전하고 앞의 과정을 반복한다.
 
+## 구현할 기능 목록
+
+### 1단계
+
+#### RequestLine 파싱 하기
+
+* GET 요청 파싱
+* POST 요청 파싱
+* Query String 파싱
+
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
