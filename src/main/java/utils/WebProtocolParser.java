@@ -3,12 +3,12 @@ package utils;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WebProtocolParser {
+public class WebProtocolParser implements Parser {
     private static final Integer PROTOCOL_INDEX = 0;
     private static final Integer PROTOCOL_VERSION_INDEX = 1;
     private static final String VERSION_SEPARATOR = "/";
 
-    public static Map<String, String> parse(String protocol) {
+    public Map<String, String> parse(String protocol) {
         String[] split = protocol.split(VERSION_SEPARATOR);
 
         HashMap<String, String> parsedProtocol = new HashMap<>();

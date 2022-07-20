@@ -9,6 +9,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class QueryStringParserTest {
+    QueryStringParser queryStringParser = new QueryStringParser();
+
     @Test
     @DisplayName("쿼리스트링 판정 정규식 테스트")
     void queryStringRegexTest() {
@@ -31,7 +33,7 @@ class QueryStringParserTest {
         String queryString = "userId=javajigi&password=password&name=JaeSung";
 
         //when
-        Map<String, String> queryStringParseResult = QueryStringParser.parse(path);
+        Map<String, String> queryStringParseResult = queryStringParser.parse(path);
 
         //then
         assertThat(queryStringParseResult.get("queryString")).isEqualTo(queryString);

@@ -13,6 +13,7 @@ public class RequestLineParserTest {
     static String GET_REQUEST_LINE = "GET /users HTTP/1.1";
     static String POST_REQUEST_LINE = "POST /users HTTP/1.1";
     static String GET_QUERY_STRING_REQUEST_LINE = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+    RequestLineParser requestLineParser = new RequestLineParser();
 
     @Test
     @DisplayName("Request Line이 올바른 형식을 가지는지 테스트")
@@ -29,9 +30,9 @@ public class RequestLineParserTest {
     @DisplayName("isRequestLinePattern 메소드는 입력값이 RequestLine 형식 여부를 반환한다.")
     void isRequestLinePatternTest() {
         assertAll(
-                () -> assertThat(RequestLineParser.isRequestLinePattern(GET_REQUEST_LINE)).isTrue(),
-                () -> assertThat(RequestLineParser.isRequestLinePattern(POST_REQUEST_LINE)).isTrue(),
-                () -> assertThat(RequestLineParser.isRequestLinePattern(GET_QUERY_STRING_REQUEST_LINE)).isTrue()
+                () -> assertThat(requestLineParser.isRequestLinePattern(GET_REQUEST_LINE)).isTrue(),
+                () -> assertThat(requestLineParser.isRequestLinePattern(POST_REQUEST_LINE)).isTrue(),
+                () -> assertThat(requestLineParser.isRequestLinePattern(GET_QUERY_STRING_REQUEST_LINE)).isTrue()
         );
     }
 
@@ -44,8 +45,8 @@ public class RequestLineParserTest {
         String protocolVersion = "1.1";
 
         //when
-        Map<String, String> getRequestLineResult = RequestLineParser.parse(GET_REQUEST_LINE);
-        Map<String, String> postRequestLineResult = RequestLineParser.parse(POST_REQUEST_LINE);
+        Map<String, String> getRequestLineResult = requestLineParser.parse(GET_REQUEST_LINE);
+        Map<String, String> postRequestLineResult = requestLineParser.parse(POST_REQUEST_LINE);
 
         //then
         assertAll(
@@ -69,7 +70,7 @@ public class RequestLineParserTest {
         String queryString = "userId=javajigi&password=password&name=JaeSung";
 
         //when
-        Map<String, String> queryStringRequestLineResult = RequestLineParser.parse(GET_QUERY_STRING_REQUEST_LINE);
+        Map<String, String> queryStringRequestLineResult = requestLineParser.parse(GET_QUERY_STRING_REQUEST_LINE);
 
         //then
         assertAll(
