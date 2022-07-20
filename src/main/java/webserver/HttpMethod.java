@@ -21,4 +21,8 @@ public enum HttpMethod {
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("올바르지 못한 HTTP METHOD 입니다."));
     }
+
+    public String getMethod() {
+        return this.method;
+    }
 }
