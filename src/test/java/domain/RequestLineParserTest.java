@@ -18,7 +18,7 @@ public class RequestLineParserTest {
 
         // then
         assertThat(httpRequest).isEqualTo(
-                new HttpRequest(new HttpMethod("GET"), new HttpPath("/users"), new HttpProtocol("HTTP/1.1")));
+                new HttpRequest(HttpMethod.GET, new HttpPath("/users"), new HttpProtocol("HTTP/1.1")));
     }
 
     @DisplayName("POST RequestLine을 파싱하여 HttpRequest를 얻는다.")
@@ -32,7 +32,7 @@ public class RequestLineParserTest {
 
         // then
         assertThat(httpRequest).isEqualTo(
-                new HttpRequest(new HttpMethod("POST"), new HttpPath("/users"), new HttpProtocol("HTTP/1.1")));
+                new HttpRequest(HttpMethod.POST, new HttpPath("/users"), new HttpProtocol("HTTP/1.1")));
     }
 
     @DisplayName("Query String이 있는 RequestLine을 파싱하여 HttpRequest를 얻는다.")
@@ -46,6 +46,6 @@ public class RequestLineParserTest {
 
         // then
         assertThat(httpRequest).isEqualTo(
-                new HttpRequest(new HttpMethod("GET"), new HttpPath("/users?userId=javajigi&password=password&name=JaeSung"), new HttpProtocol("HTTP/1.1")));
+                new HttpRequest(HttpMethod.GET, new HttpPath("/users?userId=javajigi&password=password&name=JaeSung"), new HttpProtocol("HTTP/1.1")));
     }
 }
