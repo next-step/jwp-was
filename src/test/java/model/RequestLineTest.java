@@ -29,4 +29,15 @@ class RequestLineTest {
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }
 
+    @DisplayName("GET 쿼리 스트링 테스트")
+    @Test
+    void queryString() {
+        RequestLine requestLine = RequestLine.parsing("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
+        assertThat(requestLine.getMethod()).isEqualTo("GET");
+        assertThat(requestLine.getPath()).isEqualTo("/users");
+        assertThat(requestLine.getParameters()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
+        assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
+        assertThat(requestLine.getVersion()).isEqualTo("1.1");
+    }
+
 }
