@@ -8,7 +8,6 @@ public class HttpRequest {
     private final HttpProtocol httpProtocol;
 
     public HttpRequest(HttpMethod httpMethod, HttpPath httpPath, HttpProtocol httpProtocol) {
-
         this.httpMethod = httpMethod;
         this.httpPath = httpPath;
         this.httpProtocol = httpProtocol;

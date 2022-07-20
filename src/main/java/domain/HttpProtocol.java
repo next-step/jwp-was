@@ -3,11 +3,13 @@ package domain;
 import java.util.Objects;
 
 public class HttpProtocol {
+    private static final String PROTOCOL_DELIMITER = "/";
+
     private final String protocol;
     private final String version;
 
     public HttpProtocol(String protocolSpec) {
-        final String[] splitProtocolSpec = protocolSpec.split("/");
+        final String[] splitProtocolSpec = protocolSpec.split(PROTOCOL_DELIMITER);
         protocol = splitProtocolSpec[0];
         version = splitProtocolSpec[1];
     }
