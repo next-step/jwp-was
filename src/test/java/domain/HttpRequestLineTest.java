@@ -48,4 +48,23 @@ public class HttpRequestLineTest {
 		assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
 		assertThat(requestLine.getVersion()).isEqualTo("1.1");
 	}
+
+	@Test
+	@DisplayName("Query String 파싱")
+	public void parseQueryString() {
+		// given
+		String line = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+
+		// when
+		HttpRequestLine requestLine = HttpRequestLine.of(line);
+
+		// then
+		assertThat(requestLine.getMethod()).isEqualTo("GET");
+		assertThat(requestLine.getPath()).isEqualTo("/users");
+		assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
+		assertThat(requestLine.getVersion()).isEqualTo("1.1");
+		assertThat(requestLine.getParameters().get("userId")).isEqualTo("javajigi");
+		assertThat(requestLine.getParameters().get("password")).isEqualTo("password");
+		assertThat(requestLine.getParameters().get("name")).isEqualTo("JaeSung");
+	}
 }
