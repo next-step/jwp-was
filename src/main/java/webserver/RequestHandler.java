@@ -10,9 +10,13 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
+import javax.xml.crypto.Data;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import db.DataBase;
+import model.User;
 import utils.FileIoUtils;
 
 public class RequestHandler implements Runnable {
@@ -46,7 +50,6 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length);
             responseBody(dos, body);
-            reader.close();
 
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
@@ -55,12 +58,25 @@ public class RequestHandler implements Runnable {
 
     private byte[] getBody(RequestLine requestLine) throws IOException, URISyntaxException {
         String path = requestLine.getRequestPath();
+
         if (path.startsWith("/index.html")) {
             return FileIoUtils.loadFileFromClasspath("./templates/index.html");
         }
+
         if (path.startsWith("/user/form.html")) {
             return FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
         }
+
+        if (path.startsWith("/user/create")) {
+            String userId = requestLine.getParameter("userId");
+            String password = requestLine.getParameter("password");
+            String name = requestLine.getParameter("name");
+            String email = requestLine.getParameter("email");
+
+            User user = new User(userId, password, name, email);
+            DataBase.addUser(user);
+        }
+
         return new byte[0];
     }
 
