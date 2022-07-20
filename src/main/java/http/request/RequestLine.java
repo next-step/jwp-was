@@ -3,20 +3,21 @@ package http.request;
 public class RequestLine {
 
     private static final String REQUEST_LINE_DELIMITER = " ";
-    private static final String QUERY_PARAMETER_DELIMITER = "\\?";
+    private static final int HTTP_INDEX = 0;
+    private static final int PATH_INDEX = 1;
+    private static final int PROTOCOL_INDEX = 2;
 
     private HttpMethod httpMethod;
-    private String path;
+    private Path path;
     private Protocol protocol;
 
     public RequestLine (String url) {
         String[] splits = url.split(REQUEST_LINE_DELIMITER);
-        String[] pathIncludeParameters = splits[1].split(QUERY_PARAMETER_DELIMITER);
-        validateHttpMethod(splits[0]);
+        validateHttpMethod(splits[HTTP_INDEX]);
 
-        this.httpMethod = HttpMethod.valueOf(splits[0]);
-        this.path = pathIncludeParameters[0];
-        this.protocol = Protocol.of(splits[2]);
+        this.httpMethod = HttpMethod.valueOf(splits[HTTP_INDEX]);
+        this.path = Path.from(splits[PATH_INDEX]);
+        this.protocol = Protocol.from(splits[PROTOCOL_INDEX]);
     }
 
     private void validateHttpMethod(String str) {
@@ -30,7 +31,7 @@ public class RequestLine {
     }
 
     public String getPath() {
-        return path;
+        return path.getPathWithOutParam();
     }
 
     public String getProtocolType() {
