@@ -9,7 +9,6 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-
 public class RequestLineParserTest {
     static String GET_REQUEST_LINE = "GET /users HTTP/1.1";
     static String POST_REQUEST_LINE = "POST /users HTTP/1.1";
@@ -45,8 +44,8 @@ public class RequestLineParserTest {
         String protocolVersion = "1.1";
 
         //when
-        Map<String, String> getRequestLineResult = RequestLineParser.parsing(GET_REQUEST_LINE);
-        Map<String, String> postRequestLineResult = RequestLineParser.parsing(POST_REQUEST_LINE);
+        Map<String, String> getRequestLineResult = RequestLineParser.parse(GET_REQUEST_LINE);
+        Map<String, String> postRequestLineResult = RequestLineParser.parse(POST_REQUEST_LINE);
 
         //then
         assertAll(
@@ -60,21 +59,6 @@ public class RequestLineParserTest {
                 () -> assertThat(postRequestLineResult.get("protocol")).isEqualTo(protocol),
                 () -> assertThat(postRequestLineResult.get("protocolVersion")).isEqualTo(protocolVersion)
         );
-
-    }
-
-    @Test
-    @DisplayName("쿼리스트링 판정 정규식 테스트")
-    void queryStringRegexTest() {
-        String regex = "^(\\/[a-zA-Z]*)*\\?([^=]+=+[^=]+)+[^=]+(=+[^=]+)?$";
-
-        String severalQueryString = "/users?userId=javajigi&password=password&name=JaeSung";
-        String singleQueryString = "/system/users?userId=javajigi";
-
-        assertAll(
-                () -> assertThat(severalQueryString.matches(regex)).isTrue(),
-                () -> assertThat(singleQueryString.matches(regex)).isTrue()
-        );
     }
 
     @Test
@@ -85,13 +69,12 @@ public class RequestLineParserTest {
         String queryString = "userId=javajigi&password=password&name=JaeSung";
 
         //when
-        Map<String, String> queryStringRequestLineResult = RequestLineParser.parsing(GET_QUERY_STRING_REQUEST_LINE);
+        Map<String, String> queryStringRequestLineResult = RequestLineParser.parse(GET_QUERY_STRING_REQUEST_LINE);
 
         //then
         assertAll(
                 () -> assertThat(queryStringRequestLineResult.get("path")).isEqualTo(path),
                 () -> assertThat(queryStringRequestLineResult.get("queryString")).isEqualTo(queryString)
         );
-
     }
 }

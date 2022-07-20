@@ -11,28 +11,26 @@ public class RequestLineParser {
     public static final Integer METHOD_INDEX = 0;
     public static final Integer PATH_INDEX = 1;
     public static final Integer PROTOCOL_WITH_VERSION_INDEX = 2;
-    public static final Integer PROTOCOL_INDEX = 0;
-    public static final Integer PROTOCOL_VERSION_INDEX = 1;
-    public static final String VERSION_SEPARATOR = "/";
-    public static final String QUERYSTRING_SEPARATOR = "/";
 
     static boolean isRequestLinePattern(String requestLine) {
         return REQUEST_LINE.matcher(requestLine).matches();
     }
 
-    public static Map<String, String> parsing(String requestLine) {
+    public static Map<String, String> parse(String requestLine) {
         validateCanParsing(requestLine);
 
-        HashMap<String, String> parsedRequest = new HashMap<>();
-
         String[] split = requestLine.split(REQUEST_LINE_SEPARATOR);
-
+        HashMap<String, String> parsedRequest = new HashMap<>();
         parsedRequest.put("method", split[METHOD_INDEX]);
         parsedRequest.put("path", split[PATH_INDEX]);
-        parsedRequest.putAll(parsingProtocol(split[PROTOCOL_WITH_VERSION_INDEX]));
+
+        Map<String, String> parsedProtocol = WebProtocolParser.parse(split[PROTOCOL_WITH_VERSION_INDEX]);
+        parsedRequest.putAll(parsedProtocol);
 
         if (QUERY_STRING.matcher(parsedRequest.get("path")).matches()) {
-            parsedRequest.putAll(parsingQueryString(parsedRequest.get("path")));
+            Map<String, String> parsedQueryString = QueryStringParser.parse(parsedRequest.get("path"));
+
+            parsedRequest.putAll(parsedQueryString);
         }
 
         return parsedRequest;
@@ -42,24 +40,5 @@ public class RequestLineParser {
         if (!isRequestLinePattern(requestLine)) {
             throw new IllegalArgumentException("Request Line이 올바른 형식을 가지고 있지 않습니다.");
         }
-    }
-
-    private static Map<String, String> parsingProtocol(String protocol) {
-        String[] split = protocol.split(VERSION_SEPARATOR);
-
-        HashMap<String, String> parsedProtocol = new HashMap<>();
-        parsedProtocol.put("protocol", split[PROTOCOL_INDEX]);
-        parsedProtocol.put("protocolVersion", split[PROTOCOL_VERSION_INDEX]);
-
-        return parsedProtocol;
-    }
-
-    private static Map<String, String> parsingQueryString(String path) {
-        String queryString = path.substring(path.indexOf(QUERYSTRING_SEPARATOR) + 1);
-
-        HashMap<String, String> parsedQueryString = new HashMap<>();
-        parsedQueryString.put("queryString", queryString);
-
-        return parsedQueryString;
     }
 }
