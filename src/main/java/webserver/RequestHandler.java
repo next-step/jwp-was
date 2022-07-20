@@ -18,6 +18,8 @@ import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final String REQUEST_LINE_DELIMITER = "\r\n";
+    private static final String VALIDATION_MESSAGE = "잘못된 요청입니다.";
 
     private final Socket connection;
 
@@ -43,11 +45,14 @@ public class RequestHandler implements Runnable {
     private void printRequestLine(InputStream in) throws IOException {
         final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         final String request = IOUtils.readData(br, 1024);
-        final String requestLine = Arrays.stream(request.split("\r\n"))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 요청입니다."));
-        final HttpRequest httpRequest = new RequestLineParser().parse(requestLine);
+        final HttpRequest httpRequest = new RequestLineParser().parse(getRequestLine(request));
         logger.debug(httpRequest.toString());
+    }
+
+    private String getRequestLine(String request) {
+        return Arrays.stream(request.split(REQUEST_LINE_DELIMITER))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(VALIDATION_MESSAGE));
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
