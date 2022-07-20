@@ -1,8 +1,9 @@
 package utils;
 
+import model.WebProtocol;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,16 +15,16 @@ class WebProtocolParserTest {
     void parsingTest() {
         //given
         String protocolWithVersion = "HTTP/1.1";
-        String protocol = "HTTP";
+        String protocolType = "HTTP";
         String protocolVersion = "1.1";
 
         //when
-        Map<String, String> webProtocolParseResult = webProtocolParser.parse(protocolWithVersion);
+        WebProtocol webProtocolParseResult = webProtocolParser.parse(protocolWithVersion);
 
         //then
         assertAll(
-                () -> assertThat(webProtocolParseResult.get("protocol")).isEqualTo(protocol),
-                () -> assertThat(webProtocolParseResult.get("protocolVersion")).isEqualTo(protocolVersion)
+                () -> assertThat(webProtocolParseResult.getType()).isEqualTo(protocolType),
+                () -> assertThat(webProtocolParseResult.getVersion()).isEqualTo(protocolVersion)
         );
     }
 }

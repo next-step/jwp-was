@@ -1,10 +1,9 @@
 package utils;
 
 import enums.HttpMethod;
+import model.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -41,24 +40,24 @@ public class RequestLineParserTest {
     void parsingTest() {
         //given
         String path = "/users";
-        String protocol = "HTTP";
+        String protocolType = "HTTP";
         String protocolVersion = "1.1";
 
         //when
-        Map<String, String> getRequestLineResult = requestLineParser.parse(GET_REQUEST_LINE);
-        Map<String, String> postRequestLineResult = requestLineParser.parse(POST_REQUEST_LINE);
+        RequestLine getRequestLineResult = requestLineParser.parse(GET_REQUEST_LINE);
+        RequestLine postRequestLineResult = requestLineParser.parse(POST_REQUEST_LINE);
 
         //then
         assertAll(
-                () -> assertThat(getRequestLineResult.get("method")).isEqualTo(HttpMethod.GET.name()),
-                () -> assertThat(getRequestLineResult.get("path")).isEqualTo(path),
-                () -> assertThat(getRequestLineResult.get("protocol")).isEqualTo(protocol),
-                () -> assertThat(getRequestLineResult.get("protocolVersion")).isEqualTo(protocolVersion),
+                () -> assertThat(getRequestLineResult.getHttpMethod()).isEqualTo(HttpMethod.GET),
+                () -> assertThat(getRequestLineResult.getPath()).isEqualTo(path),
+                () -> assertThat(getRequestLineResult.getWebProtocol().getType()).isEqualTo(protocolType),
+                () -> assertThat(getRequestLineResult.getWebProtocol().getVersion()).isEqualTo(protocolVersion),
 
-                () -> assertThat(postRequestLineResult.get("method")).isEqualTo(HttpMethod.POST.name()),
-                () -> assertThat(postRequestLineResult.get("path")).isEqualTo(path),
-                () -> assertThat(postRequestLineResult.get("protocol")).isEqualTo(protocol),
-                () -> assertThat(postRequestLineResult.get("protocolVersion")).isEqualTo(protocolVersion)
+                () -> assertThat(postRequestLineResult.getHttpMethod()).isEqualTo(HttpMethod.POST),
+                () -> assertThat(postRequestLineResult.getPath()).isEqualTo(path),
+                () -> assertThat(postRequestLineResult.getWebProtocol().getType()).isEqualTo(protocolType),
+                () -> assertThat(postRequestLineResult.getWebProtocol().getVersion()).isEqualTo(protocolVersion)
         );
     }
 
@@ -70,12 +69,12 @@ public class RequestLineParserTest {
         String queryString = "userId=javajigi&password=password&name=JaeSung";
 
         //when
-        Map<String, String> queryStringRequestLineResult = requestLineParser.parse(GET_QUERY_STRING_REQUEST_LINE);
+        RequestLine queryStringRequestLineResult = requestLineParser.parse(GET_QUERY_STRING_REQUEST_LINE);
 
         //then
         assertAll(
-                () -> assertThat(queryStringRequestLineResult.get("path")).isEqualTo(path),
-                () -> assertThat(queryStringRequestLineResult.get("queryString")).isEqualTo(queryString)
+                () -> assertThat(queryStringRequestLineResult.getPath()).isEqualTo(path),
+                () -> assertThat(queryStringRequestLineResult.getQueryString()).isEqualTo(queryString)
         );
     }
 }

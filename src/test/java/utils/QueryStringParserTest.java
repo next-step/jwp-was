@@ -3,8 +3,6 @@ package utils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,9 +31,9 @@ class QueryStringParserTest {
         String queryString = "userId=javajigi&password=password&name=JaeSung";
 
         //when
-        Map<String, String> queryStringParseResult = queryStringParser.parse(path);
+        String queryStringParseResult = queryStringParser.parse(path);
 
         //then
-        assertThat(queryStringParseResult.get("queryString")).isEqualTo(queryString);
+        assertThat(queryStringParseResult).isEqualTo(queryString);
     }
 }
