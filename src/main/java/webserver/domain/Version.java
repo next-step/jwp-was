@@ -11,6 +11,11 @@ public class Version {
         this.number = number;
     }
 
+    @Override
+    public String toString() {
+        return number;
+    }
+
     private void validate(String number) {
         String[] elements = number.split(VERSION_DELIMITER);
 
