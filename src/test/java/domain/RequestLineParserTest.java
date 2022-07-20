@@ -1,5 +1,6 @@
 package domain;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -9,12 +10,16 @@ import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("RequestLineParser 단위 테스트")
 public class RequestLineParserTest {
+    private RequestLineParser requestLineParser;
+
+    @BeforeEach
+    void setUp() {
+        requestLineParser = new RequestLineParser();
+    }
+
     @DisplayName("GET RequestLine을 파싱하여 HttpRequest를 얻는다.")
     @Test
     void parseForGet() {
-        // given
-        RequestLineParser requestLineParser = new RequestLineParser();
-
         // when
         HttpRequest httpRequest = requestLineParser.parse("GET /users HTTP/1.1");
 
@@ -26,9 +31,6 @@ public class RequestLineParserTest {
     @DisplayName("POST RequestLine을 파싱하여 HttpRequest를 얻는다.")
     @Test
     void parseForPost() {
-        // given
-        RequestLineParser requestLineParser = new RequestLineParser();
-
         // when
         HttpRequest httpRequest = requestLineParser.parse("POST /users HTTP/1.1");
 
@@ -40,9 +42,6 @@ public class RequestLineParserTest {
     @DisplayName("Query String이 있는 RequestLine을 파싱하여 HttpRequest를 얻는다.")
     @Test
     void parseWithQueryString() {
-        // given
-        RequestLineParser requestLineParser = new RequestLineParser();
-
         // when
         HttpRequest httpRequest = requestLineParser.parse("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
 
@@ -58,10 +57,6 @@ public class RequestLineParserTest {
             "GET /users HTTP/1.1 HTTP/1.1",
     })
     void parseException(String requestLine) {
-        // given
-        RequestLineParser requestLineParser = new RequestLineParser();
-
-        // when & then
         assertThatThrownBy(() -> requestLineParser.parse(requestLine))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(RequestLineParser.VALIDATION_MESSAGE);
