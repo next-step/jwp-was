@@ -40,8 +40,8 @@ public class HttpParserTest {
         Map<String, String> queryParameters = new HashMap<>(Map.of("userId", "fistkim101", "password", "1004"));
 
         RequestLine requestLine = HttpParser.parseRequestLine(httpRequestFirstLine);
-        String parsedPath = requestLine.getPath();
-        Map<String, String> parsedQueryParameters = requestLine.getQueryParameters();
+        String parsedPath = requestLine.getUrlPath().getPath();
+        Map<String, String> parsedQueryParameters = requestLine.getUrlPath().getQueryParameter().getParameters();
 
         Assertions.assertThat(path).isEqualTo(parsedPath);
         Assertions.assertThat(queryParameters.keySet().size()).isEqualTo(parsedQueryParameters.keySet().size());
