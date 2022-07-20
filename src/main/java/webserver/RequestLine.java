@@ -1,6 +1,6 @@
 package webserver;
 
-import model.HttpMethodType;
+import model.HttpMethod;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public class RequestLine {
     public static final int PROTOCOL_AND_VERSION_INDEX = 2;
     public static final String REGEX_BLANK = " ";
 
-    private HttpMethodType method;
+    private HttpMethod method;
     private RequestPath request;
     private Protocol protocol;
 
@@ -21,8 +21,8 @@ public class RequestLine {
         this.protocol = parsingProtocol(requestLine);
     }
 
-    private HttpMethodType parsingMethod(String requestLine) {
-        return HttpMethodType.getType(
+    private HttpMethod parsingMethod(String requestLine) {
+        return HttpMethod.getType(
                 requestLine.split(REGEX_BLANK)[METHOD_INDEX]);
     }
 
@@ -34,7 +34,7 @@ public class RequestLine {
         return new Protocol(requestLine.split(REGEX_BLANK)[PROTOCOL_AND_VERSION_INDEX]);
     }
 
-    public HttpMethodType getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
