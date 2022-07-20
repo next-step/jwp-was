@@ -9,9 +9,9 @@
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
 
 ### 기능 요구사항
-- [ ] GET 요청
-  - [ ] HTTP GET 요청에 대한 RequestLine을 파싱한다
-  - [ ]  "GET /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다.
+- [X] GET 요청
+  - [X] HTTP GET 요청에 대한 RequestLine을 파싱한다
+  - [X]  "GET /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다.
       - method는 GET
       - path는 /users
       - protocol은 HTTP
