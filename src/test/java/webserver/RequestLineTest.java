@@ -20,9 +20,9 @@ public class RequestLineTest {
         //then
         assertAll(
                 () -> assertThat(requestLineParser.getMethod()).isEqualTo(HttpMethod.GET),
-                () -> assertThat(requestLineParser.getPath()).isEqualTo("/users"),
-                () -> assertThat(requestLineParser.getProtocol()).isEqualTo("HTTP"),
-                () -> assertThat(requestLineParser.getVersion()).isEqualTo("1.1")
+                () -> assertThat(requestLineParser.getUri().getPath()).isEqualTo("/users"),
+                () -> assertThat(requestLineParser.getProtocolAndVersion().getProtocol()).isEqualTo("HTTP"),
+                () -> assertThat(requestLineParser.getProtocolAndVersion().getVersion()).isEqualTo("1.1")
         );
     }
 
@@ -36,9 +36,9 @@ public class RequestLineTest {
         //then
         assertAll(
                 () -> assertThat(requestLineParser.getMethod()).isEqualTo(HttpMethod.POST),
-                () -> assertThat(requestLineParser.getPath()).isEqualTo("/users"),
-                () -> assertThat(requestLineParser.getProtocol()).isEqualTo("HTTP"),
-                () -> assertThat(requestLineParser.getVersion()).isEqualTo("1.1")
+                () -> assertThat(requestLineParser.getUri().getPath()).isEqualTo("/users"),
+                () -> assertThat(requestLineParser.getProtocolAndVersion().getProtocol()).isEqualTo("HTTP"),
+                () -> assertThat(requestLineParser.getProtocolAndVersion().getVersion()).isEqualTo("1.1")
         );
     }
 
@@ -51,8 +51,8 @@ public class RequestLineTest {
         RequestLineParser requestLineParser = new RequestLineParser(requestLine);
         //then
         assertAll(
-                () -> assertThat(requestLineParser.getQueryString().get("name1")).isEqualTo("value1"),
-                () -> assertThat(requestLineParser.getQueryString().get("name2")).isEqualTo("value2")
+                () -> assertThat(requestLineParser.getUri().getQueryString().getQueryParameters().get("name1")).isEqualTo("value1"),
+                () -> assertThat(requestLineParser.getUri().getQueryString().getQueryParameters().get("name2")).isEqualTo("value2")
         );
     }
 
