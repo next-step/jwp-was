@@ -29,16 +29,29 @@ public class RequestParamMap {
     }
 
     private static Map<String, String> parseQueryString(final String requestUrl) {
-        Map<String, String> requestParamMap = new HashMap<>();
-        String queryString = containQueryStringStartCharacter(requestUrl);
-        String[] splitQueryString = queryString.split(REQUEST_URL_PARAMETER_DELIMITER);
+        if (requestUrl.contains(QUERY_STRING_START_CHARACTER)) {
+            String queryString = requestUrl.split(REQUEST_URL_PATH_DELIMITER)[QUERY_STRING_INDEX];
+            String[] splitQueryString = queryString.split(REQUEST_URL_PARAMETER_DELIMITER);
 
+            return getRequestParamMap(splitQueryString);
+        }
+
+        return new HashMap<>();
+    }
+
+    private static Map<String, String> getRequestParamMap(String[] splitQueryString) {
+        Map<String, String> requestParamMap = new HashMap<>();
+        
         for (String parameter : splitQueryString) {
             String[] splitParameter = parameter.split(REQUEST_URL_KEY_VALUE_DELIMITER);
             requestParamMap.put(splitParameter[PARAMETER_KEY_INDEX], splitParameter[PARAMETER_VALUE_INDEX]);
         }
 
         return requestParamMap;
+    }
+
+    private static boolean existQueryString(String requestUrl) {
+        return requestUrl.contains(QUERY_STRING_START_CHARACTER);
     }
 
     private static String containQueryStringStartCharacter(String requestUrl) {
