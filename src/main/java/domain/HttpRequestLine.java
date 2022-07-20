@@ -10,14 +10,12 @@ public class HttpRequestLine {
 
 	private HttpMethod httpMethod;
 	private String httpPath;
-	private String protocol;
-	private String version;
+	private HttpProtocol httpProtocol;
 
 	public HttpRequestLine(String method, String path, String protocol) {
 		this.httpMethod = HttpMethod.valueOf(method);
 		this.httpPath = path;
-		this.protocol = protocol.split("/")[0];
-		this.version = protocol.split("/")[1];
+		this.httpProtocol = HttpProtocol.of(protocol);
 	}
 
 	public static HttpRequestLine of(String line) {
@@ -37,10 +35,10 @@ public class HttpRequestLine {
 	}
 
 	public String getProtocol() {
-		return protocol;
+		return httpProtocol.getProtocol();
 	}
 
 	public String getVersion() {
-		return version;
+		return httpProtocol.getVersion();
 	}
 }
