@@ -54,4 +54,12 @@ class RequestLineTest {
         RequestLine requestLine = RequestLine.parse(request);
         assertThat(requestLine).isEqualTo(new RequestLine("GET", "/users", "HTTP", "1.1"));
     }
+
+    @Test
+    @DisplayName("POST 요청에 대한 RequestLine 을 파싱한다.")
+    void parse_POST_RequestLine() {
+        String request = "POST /users HTTP/1.1";
+        RequestLine requestLine = RequestLine.parse(request);
+        assertThat(requestLine).isEqualTo(new RequestLine("POST", "/users", "HTTP", "1.1"));
+    }
 }
