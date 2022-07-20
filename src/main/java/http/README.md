@@ -53,6 +53,7 @@
 
 * Path
   * `?`로 path의 QueryString을 분리
+  * QueryString이 있는 경우와 없는 경우를 고려
 
 * QueryParameters
   * `&`로 QueryString 분리
