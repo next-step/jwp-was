@@ -12,7 +12,7 @@ public class Protocol {
         this.version = version;
     }
 
-    public static Protocol of(String protocol) {
+    public static Protocol from(String protocol) {
         String[] protocolSplits = protocol.split(DELIMITER);
         validateProtocol(protocolSplits[0]);
 

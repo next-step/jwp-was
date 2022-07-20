@@ -11,7 +11,7 @@ class ProtocolTest {
     @DisplayName("프로토콜 객체 생성 성공")
     @Test
     void createProtocolSuccess() {
-        Protocol protocol = Protocol.of("HTTP/1.1");
+        Protocol protocol = Protocol.from("HTTP/1.1");
 
         assertAll(
                 () -> assertThat(protocol.getProtocolType()).isEqualTo("HTTP"),
@@ -23,7 +23,7 @@ class ProtocolTest {
     @Test
     void protocolNotSupportLowerCase() {
         assertThatThrownBy(
-                () -> Protocol.of("http/1.1")
+                () -> Protocol.from("http/1.1")
         ).isInstanceOf(IllegalArgumentException.class);
     }
 }
