@@ -42,7 +42,7 @@ class RequestLineTest {
     void createGetTest() {
         RequestLine getRequest = RequestLine.of("GET /users HTTP/1.1");
 
-        assertThat(getRequest).isEqualTo(RequestLine.of(HttpMethod.GET, "/users", RequestProtocol.HTTP, "1.1"));
+        assertThat(getRequest).isEqualTo(RequestLine.of(HttpMethod.GET, "/users", RequestProtocol.HTTP_1_1));
     }
 
     @DisplayName("POST 요청 테스트")
@@ -50,7 +50,7 @@ class RequestLineTest {
     void createPostTest() {
         RequestLine postRequest = RequestLine.of("POST /users HTTP/1.1");
 
-        assertThat(postRequest).isEqualTo(RequestLine.of(HttpMethod.POST, "/users", RequestProtocol.HTTP, "1.1"));
+        assertThat(postRequest).isEqualTo(RequestLine.of(HttpMethod.POST, "/users", RequestProtocol.HTTP_1_1));
     }
 
     @DisplayName("Query String 파싱 테스트")
@@ -58,7 +58,7 @@ class RequestLineTest {
     void createGetWithQueryStringTest() {
         RequestLine getRequest = RequestLine.of("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
 
-        assertThat(getRequest).isEqualTo(RequestLine.of(HttpMethod.GET, "/users?userId=javajigi&password=password&name=JaeSung", RequestProtocol.HTTP, "1.1"));
+        assertThat(getRequest).isEqualTo(RequestLine.of(HttpMethod.GET, "/users?userId=javajigi&password=password&name=JaeSung", RequestProtocol.HTTP_1_1));
     }
 
 }
