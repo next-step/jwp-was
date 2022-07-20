@@ -2,6 +2,8 @@ package domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -47,5 +49,21 @@ public class RequestLineParserTest {
         // then
         assertThat(httpRequest).isEqualTo(
                 new HttpRequest(HttpMethod.GET, new HttpPath("/users?userId=javajigi&password=password&name=JaeSung"), new HttpProtocol("HTTP/1.1")));
+    }
+
+    @DisplayName("HTTP 요청 형식이 맞지 않으면 예외를 발생한다.")
+    @ParameterizedTest(name = "{displayName} - {arguments}")
+    @ValueSource(strings = {
+            "GET /users",
+            "GET /users HTTP/1.1 HTTP/1.1",
+    })
+    void parseException(String requestLine) {
+        // given
+        RequestLineParser requestLineParser = new RequestLineParser();
+
+        // when & then
+        assertThatThrownBy(() -> requestLineParser.parse(requestLine))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(RequestLineParser.VALIDATION_MESSAGE);
     }
 }

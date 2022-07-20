@@ -6,19 +6,28 @@ import java.util.Map;
 import java.util.Objects;
 
 public class HttpPath {
+    public static final String VALIDATION_MESSAGE = "경로가 형식에 맞지 않습니다.";
     private static final String PATH_DELIMITER = "\\?";
     private static final String QUERY_STRING_DELIMITER = "&";
     private static final String QUERY_STRING_ITEM_DELIMITER = "=";
-    private static final int PAIR_LENGTH = 2;
+    private static final int CORRECT_LENGTH = 2;
 
     private final String path;
     private final List<Map<String, String>> queryStrings = new ArrayList<>();
 
     public HttpPath(String pathSpec) {
         final String[] splitPathSpec = pathSpec.split(PATH_DELIMITER);
+        validatePathSpec(splitPathSpec);
+
         this.path = splitPathSpec[0];
-        if (splitPathSpec.length == PAIR_LENGTH) {
+        if (splitPathSpec.length == CORRECT_LENGTH) {
             setQueryStrings(splitPathSpec[1]);
+        }
+    }
+
+    private void validatePathSpec(String[] splitPathSpec) {
+        if (splitPathSpec.length > CORRECT_LENGTH) {
+            throw new IllegalArgumentException(VALIDATION_MESSAGE);
         }
     }
 
@@ -30,9 +39,14 @@ public class HttpPath {
     }
 
     private void addQueryString(String splitQueryStringSpec) {
-        final String[] items = splitQueryStringSpec.split(QUERY_STRING_ITEM_DELIMITER);
-        if (items.length == PAIR_LENGTH) {
-            queryStrings.add(Map.of(items[0], items[1]));
+        final String[] querystringItems = splitQueryStringSpec.split(QUERY_STRING_ITEM_DELIMITER);
+        validateQueryStringItems(querystringItems);
+        queryStrings.add(Map.of(querystringItems[0], querystringItems[1]));
+    }
+
+    private void validateQueryStringItems(String[] items) {
+        if (items.length != CORRECT_LENGTH) {
+            throw new IllegalArgumentException("경로가 형식에 맞지 않습니다.");
         }
     }
 
