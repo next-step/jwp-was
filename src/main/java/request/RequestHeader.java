@@ -1,5 +1,6 @@
 package request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestHeader {
     private static final Logger logger = LoggerFactory.getLogger(RequestHeader.class);
 
@@ -44,7 +46,6 @@ public class RequestHeader {
             br.readLine();
             String line = br.readLine();
             while (!line.equals("")) {
-                System.out.println(line);
                 String[] headerArr = line.split(":");
                 headerInfo.put(headerArr[0], headerArr[1].trim());
                 line = br.readLine();

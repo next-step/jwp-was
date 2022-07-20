@@ -21,7 +21,7 @@ class RequestHeaderTest {
         RequestHeader parsingRequestHeader = requestHeader.parsing(br);
         assertThat(parsingRequestHeader.getHost()).isEqualTo("localhost");
         assertThat(parsingRequestHeader.getConnection()).isEqualTo("keep-alive");
-        assertThat(parsingRequestHeader.getContentLength()).isEqualTo(59);
+        assertThat(parsingRequestHeader.getContentLength()).isEqualTo(93);
         assertThat(parsingRequestHeader.getContentType()).isEqualTo("application/x-www-form-urlencoded");
         assertThat(parsingRequestHeader.getAccept()).isEqualTo("*/*");
     }

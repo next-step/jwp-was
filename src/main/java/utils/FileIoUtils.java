@@ -5,11 +5,11 @@ import org.slf4j.LoggerFactory;
 import webserver.RequestHandler;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public class FileIoUtils {
 
@@ -20,6 +20,7 @@ public class FileIoUtils {
     public static byte[] loadFileFromClasspath(String filePath) throws IOException, URISyntaxException {
         String changePath = changePath(filePath);
         logger.debug("현재 파일 경로 : {}", changePath);
+
         Path path = Paths.get(FileIoUtils.class.getClassLoader().getResource(changePath).toURI());
         return Files.readAllBytes(path);
     }
@@ -29,5 +30,15 @@ public class FileIoUtils {
             return CLASSPATH_STATIC + path;
         }
         return CLASSPATH_TEMPLATE + path;
+    }
+
+    public static boolean isLastEndWithHtml(String path) {
+
+        return path.endsWith(".html");
+    }
+
+    public static byte[] redirect() throws URISyntaxException, IOException {
+        Path path = Paths.get(Objects.requireNonNull(FileIoUtils.class.getClassLoader().getResource(changePath("/index.html"))).toURI());
+        return Files.readAllBytes(path);
     }
 }

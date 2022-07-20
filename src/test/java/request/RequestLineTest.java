@@ -2,6 +2,7 @@ package request;
 
 import exception.NotExistHttpMethodException;
 import model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import request.RequestLine;
@@ -14,17 +15,21 @@ import static org.assertj.core.api.Assertions.*;
 
 class RequestLineTest {
 
-    private RequestLine requestLine = RequestLine.getInstance();
+    private RequestLine requestLine;
+
+    @BeforeEach
+    void setup() throws IOException {
+        BufferedReader br = HelpData.getHelpData("GET");
+        requestLine = RequestLine.getInstance().parsing(br);
+    }
 
     @Test
     @DisplayName("요청 정보에 따른 파싱 (get)")
-    void parsing_get() throws IOException {
-        BufferedReader br = HelpData.getHelpData("GET");
-        RequestLine parsing = requestLine.parsing(br);
-        assertThat(parsing.getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(parsing.getPath()).isEqualTo("/users");
-        assertThat(parsing.getProtocol()).isEqualTo("HTTP");
-        assertThat(parsing.getVersion()).isEqualTo("1.1");
+    void parsing_get() {
+        assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
+        assertThat(requestLine.getPath()).isEqualTo("/users?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net");
+        assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
+        assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }
 
     @Test
@@ -50,16 +55,13 @@ class RequestLineTest {
     @Test
     @DisplayName("queryParam 파싱 테스트")
     void query_param() {
-        String data = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
-
-        assertThat(requestLine.getQueryParam(data)).isEqualTo("userId=javajigi&password=password&name=JaeSung");
+        assertThat(requestLine.getQueryParam()).isEqualTo("userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net");
     }
 
     @Test
     @DisplayName("queryParam")
     void query_param_get() {
-        String requestUri = "/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
-        User saveUser = requestLine.queryStringToUser(requestUri);
+        User saveUser = requestLine.queryStringToUser();
         User user = new User("javajigi", "password", "%EB%B0%95%EC%9E%AC%EC%84%B1", "javajigi%40slipp.net");
         assertThat(saveUser).isEqualTo(user);
     }

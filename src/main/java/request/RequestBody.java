@@ -1,5 +1,6 @@
 package request;
 
+import db.DataBase;
 import model.User;
 import utils.IOUtils;
 import utils.RequestUtils;
@@ -31,8 +32,9 @@ public class RequestBody {
         return new RequestBody(IOUtils.readData(br, contentLength));
     }
 
-    public User bodyToUser(String body) {
-        return RequestUtils.convertToUser(body);
+    public User bodyToUser() {
+        User user = RequestUtils.convertToUser(body);
+        return user;
     }
 
     public String getBody() {

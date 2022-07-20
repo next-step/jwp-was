@@ -40,6 +40,10 @@ public class IOUtils {
         return RequestLine.getInstance().parsing(getBufferedReader(is));
     }
 
+    public static Request convertRequest(InputStream is) throws IOException {
+        return Request.parsing(getBufferedReader(is));
+    }
+
 
     private static BufferedReader getBufferedReader(InputStream is) {
         return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));

@@ -1,5 +1,6 @@
 package request;
 
+import db.DataBase;
 import exception.NotExistHttpMethodException;
 import model.User;
 import org.slf4j.Logger;
@@ -14,8 +15,8 @@ import java.util.Map;
 
 public class RequestLine {
     private static final Logger logger = LoggerFactory.getLogger(RequestLine.class);
-
     private static final String NOT_EXIST_HTTP_METHOD = "존재하지 않는 HTTP METHOD 입니다.";
+
     private String path;
     private HttpMethod method;
     private String protocol;
@@ -45,9 +46,8 @@ public class RequestLine {
         return setting(HttpMethod.valueOf(method), path, protocolAndVersion[0], protocolAndVersion[1]);
     }
 
-    public String getQueryParam(String requestLine) {
-        String[] requestLineArr = requestLine.split(" ");
-        String path = requestLineArr[1];
+    public String getQueryParam() {
+
         if (path.contains("?")) {
             int firstIndex = path.indexOf("?") + 1;
             return path.substring(firstIndex);
@@ -55,12 +55,12 @@ public class RequestLine {
         return "";
     }
 
-    public User queryStringToUser(String queryParam) {
-        String[] queryStringArr = queryParam.split("\\?");
+    public User queryStringToUser() {
+        String[] queryStringArr = this.path.split("\\?");
         String queryString = queryStringArr[1];
         logger.debug("queryParam {}", queryString);
-
-        return RequestUtils.convertToUser(queryString);
+        User user = RequestUtils.convertToUser(queryString);
+        return user;
     }
 
     private RequestLine setting(HttpMethod method, String path, String protocol, String version) {
