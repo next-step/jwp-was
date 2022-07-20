@@ -7,3 +7,15 @@
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+
+
+# 기능 목록
+- RequestLine 파싱 
+  - [x] 문자열이 비어 있으면 파싱할 수 없다.
+  - [x] GET 요청
+    - [x] method, path, protocol, version
+  - [x] POST 요청
+  - [x] Query String 파싱 
+  - [x] http method enum 적용
+  - [x] Path 클래스로 분리
+  - [x] Protocol 클래스로 분리
