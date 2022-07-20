@@ -12,7 +12,6 @@ public class UriComponentsBuilderTest {
 
     @Test
     void request_path_를_쿼리맵으로_변환한다() {
-
         String requestPath = "/test?param1=ab&param2=cd&param2=ef";
 
         MultiValueMap<String, String> parameters =

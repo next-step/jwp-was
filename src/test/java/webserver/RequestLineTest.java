@@ -10,7 +10,6 @@ public class RequestLineTest {
 
     @Test
     void GET_요청을_파싱한다() {
-
         String request = "GET /users HTTP/1.1";
 
         final RequestLine requestLine= new RequestLine(request);
@@ -23,7 +22,6 @@ public class RequestLineTest {
 
     @Test
     void POST_요청을_파싱한다() {
-
         String request = "POST /users HTTP/1.1";
 
         final RequestLine requestLine= new RequestLine(request);
@@ -36,7 +34,6 @@ public class RequestLineTest {
 
     @Test
     void 지원하지않는_메소드면_예외발생() {
-
         String request = "PATCH /users HTTP/1.1";
 
         assertThatThrownBy(() -> new RequestLine(request))
@@ -45,11 +42,10 @@ public class RequestLineTest {
 
     @Test
     void 쿼리스트링_파싱기능() {
-
         final String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
 
         final RequestLine requestLine = new RequestLine(request);
 
-
+        assertThat(requestLine.getValuesOfParam("userId").get(0)).isEqualTo("javajigi");
     }
 }

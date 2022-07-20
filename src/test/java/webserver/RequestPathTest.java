@@ -8,7 +8,6 @@ public class RequestPathTest {
 
     @Test
     void path_를_map으로_변환해서_값_가져오기() {
-
         String request = "/users?userId=javajigi&password=password&name=JaeSung";
 
         final RequestPath requestPath = new RequestPath(request);
@@ -20,7 +19,6 @@ public class RequestPathTest {
 
     @Test
     void path_값_가져오기() {
-
         String request = "/users?userId=javajigi&password=password&name=JaeSung";
 
         final RequestPath requestPath = new RequestPath(request);
