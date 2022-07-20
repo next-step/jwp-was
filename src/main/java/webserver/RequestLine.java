@@ -11,6 +11,7 @@ public class RequestLine {
     private static final int VERSION_INDEX = 1;
     private static final int PROTOCOL_AND_VERSION_INDEX = 2;
     private static final int REQUEST_PARSING_ELEMENT_NUMBER = 3;
+    private static final int PROTOCOL_AND_VERSION_PARSING_ELEMENT_NUMBER = 2;
 
     private String method;
     private String path;
@@ -58,7 +59,7 @@ public class RequestLine {
     }
 
     private static void validateProtocolAndVersionLength(int length) {
-        if (length != REQUEST_PARSING_ELEMENT_NUMBER) {
+        if (length != PROTOCOL_AND_VERSION_PARSING_ELEMENT_NUMBER) {
             throw new IllegalArgumentException(String.format("[protocol/version] 을 '/'으로 파싱한 정보 갯수가 [protocol] + [version]로 총 2이여야 합니다. 현재 파싱된 정보 갯수 : %d", length));
         }
     }
@@ -83,7 +84,7 @@ public class RequestLine {
 
     private static void validateVersion(String version) {
         try {
-            Integer.parseInt(version);
+            Double.parseDouble(version);
         } catch (NumberFormatException e) {
             throw new NumberFormatException(String.format("%s는 숫자가 아닙니다.", version));
         }
