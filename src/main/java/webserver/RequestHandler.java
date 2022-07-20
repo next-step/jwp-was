@@ -10,18 +10,16 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
-import javax.xml.crypto.Data;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import db.DataBase;
 import model.User;
 import utils.FileIoUtils;
+import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final String BLANK_STRING = "";
 
     private final Socket connection;
 
@@ -36,16 +34,11 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream();
              OutputStream out = connection.getOutputStream()) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+            RequestLine requestLine = new RequestLine(reader.readLine());
+            HttpHeaders headers = HttpHeaders.from(reader);
 
-            String line = reader.readLine();
-            RequestLine requestLine = new RequestLine(line);
-
-            while (line != null && !BLANK_STRING.equals(line)) {
-                logger.info("header = {}", line);
-                line = reader.readLine();
-            }
-
-            byte[] body = getBody(requestLine);
+            String requestBody = IOUtils.readData(reader, headers.getContentLength());
+            byte[] body = getBody(requestLine, requestBody);
 
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length);
@@ -56,7 +49,7 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private byte[] getBody(RequestLine requestLine) throws IOException, URISyntaxException {
+    private byte[] getBody(RequestLine requestLine, String requestBody) throws IOException, URISyntaxException {
         String path = requestLine.getRequestPath();
 
         if (path.startsWith("/index.html")) {
@@ -68,10 +61,11 @@ public class RequestHandler implements Runnable {
         }
 
         if (path.startsWith("/user/create")) {
-            String userId = requestLine.getParameter("userId");
-            String password = requestLine.getParameter("password");
-            String name = requestLine.getParameter("name");
-            String email = requestLine.getParameter("email");
+            Parameters parameters = new Parameters(requestBody);
+            String userId = parameters.getParameter("userId");
+            String password = parameters.getParameter("password");
+            String name = parameters.getParameter("name");
+            String email = parameters.getParameter("email");
 
             User user = new User(userId, password, name, email);
             DataBase.addUser(user);
