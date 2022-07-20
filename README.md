@@ -16,9 +16,9 @@
       - path는 /users
       - protocol은 HTTP
       - version은 1.1
-- [ ] POST 요청
-  - [ ] HTTP POST 요청에 대한 RequestLine을 파싱한다.
-  - [ ] "POST /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다.
+- [X] POST 요청
+  - [X] HTTP POST 요청에 대한 RequestLine을 파싱한다.
+  - [X] "POST /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다.
     - method는 POST
     - path는 /users
     - protocol은 HTTP
@@ -26,5 +26,5 @@
 - [ ] Query String 파싱
   - [ ] HTTP 요청(request)의 Query String으로 전달되는 데이터를 파싱한다.
   - [ ] 클라이언트에서 서버로 전달되는 데이터의 구조는 name1=value1&name2=value2와 같은 구조로 전달된다.
-- [ ] enum 적용(선택)
-  - [ ] HTTP method인 GET, POST를 enum으로 구현한다.
+- [X] enum 적용(선택)
+  - [X] HTTP method인 GET, POST를 enum으로 구현한다.
