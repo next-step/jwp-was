@@ -37,6 +37,22 @@ class RequestLineTest {
         );
     }
 
+    @DisplayName("QueryString을 포함한 GET 요청 파싱")
+    @Test
+    void parsing_a_get_request_with_query_string() {
+        final String requestLine = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+
+        final RequestLine parse = RequestLine.parse(requestLine);
+
+        assertAll(
+            () -> assertThat(parse.getMethod()).isSameAs(HttpMethod.GET),
+            () -> assertThat(parse.getPath()).isEqualTo("/users"),
+            () -> assertThat(parse.getProtocol()).isEqualTo("HTTP"),
+            () -> assertThat(parse.getVersion()).isEqualTo("1.1"),
+            () -> assertThat(parse.getQueryString()).isEqualTo("userId=javajigi&password=password&name=JaeSung")
+        );
+    }
+
     @DisplayName("POST 요청 파싱")
     @Test
     void parsing_a_post_request() {
@@ -50,26 +66,6 @@ class RequestLineTest {
             () -> assertThat(parse.getProtocol()).isEqualTo("HTTP"),
             () -> assertThat(parse.getVersion()).isEqualTo("1.1")
         );
-    }
-
-    @DisplayName("Query String 없음")
-    @Test
-    void empty_query_string() {
-        final String requestLine = "GET /users HTTP/1.1";
-
-        final RequestLine parse = RequestLine.parse(requestLine);
-
-        assertThat(parse.getQueryString()).isEmpty();
-    }
-
-    @DisplayName("Query String 파싱")
-    @Test
-    void parsing_a_query_string() {
-        final String requestLine = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
-
-        final RequestLine parse = RequestLine.parse(requestLine);
-
-        assertThat(parse.getQueryString()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
     }
 
 }
