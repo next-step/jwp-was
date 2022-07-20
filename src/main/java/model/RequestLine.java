@@ -1,6 +1,8 @@
 package model;
 
 public class RequestLine {
+    private static final String SPACE = " ";
+    private static final String SLASH = "/";
     private String method;
     private String path;
     private String protocol;
@@ -14,10 +16,10 @@ public class RequestLine {
     }
 
     public static RequestLine parsing(String firstLine) {
-        String[] requestDataArray = firstLine.split(" ");
+        String[] requestDataArray = firstLine.split(SPACE);
         String method = requestDataArray[0];
         String path = requestDataArray[1];
-        String[] protocolAndVersion = requestDataArray[2].split("/");
+        String[] protocolAndVersion = requestDataArray[2].split(SLASH);
         return new RequestLine(method, path, protocolAndVersion[0], protocolAndVersion[1]);
     }
 
