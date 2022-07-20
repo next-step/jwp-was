@@ -1,20 +1,18 @@
 package utils;
 
-import java.util.HashMap;
-import java.util.Map;
+import model.WebProtocol;
 
 public class WebProtocolParser implements Parser {
     private static final Integer PROTOCOL_INDEX = 0;
     private static final Integer PROTOCOL_VERSION_INDEX = 1;
     private static final String VERSION_SEPARATOR = "/";
 
-    public Map<String, String> parse(String protocol) {
+    public WebProtocol parse(String protocol) {
         String[] split = protocol.split(VERSION_SEPARATOR);
 
-        HashMap<String, String> parsedProtocol = new HashMap<>();
-        parsedProtocol.put("protocol", split[PROTOCOL_INDEX]);
-        parsedProtocol.put("protocolVersion", split[PROTOCOL_VERSION_INDEX]);
+        String type = split[PROTOCOL_INDEX];
+        String version = split[PROTOCOL_VERSION_INDEX];
 
-        return parsedProtocol;
+        return new WebProtocol(type, version);
     }
 }

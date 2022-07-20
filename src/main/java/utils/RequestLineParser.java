@@ -1,7 +1,8 @@
 package utils;
 
-import java.util.HashMap;
-import java.util.Map;
+import model.RequestLine;
+import model.WebProtocol;
+
 import java.util.regex.Pattern;
 
 public class RequestLineParser implements Parser {
@@ -16,26 +17,24 @@ public class RequestLineParser implements Parser {
         return REQUEST_LINE.matcher(requestLine).matches();
     }
 
-    public Map<String, String> parse(String requestLine) {
+    public RequestLine parse(String requestLine) {
         validateCanParsing(requestLine);
 
         String[] split = requestLine.split(REQUEST_LINE_SEPARATOR);
-        HashMap<String, String> parsedRequest = new HashMap<>();
-        parsedRequest.put("method", split[METHOD_INDEX]);
-        parsedRequest.put("path", split[PATH_INDEX]);
+        String method = split[METHOD_INDEX];
+        String path = split[PATH_INDEX];
 
         WebProtocolParser webProtocolParser = new WebProtocolParser();
-        Map<String, String> parsedProtocol = webProtocolParser.parse(split[PROTOCOL_WITH_VERSION_INDEX]);
-        parsedRequest.putAll(parsedProtocol);
+        WebProtocol webProtocol = webProtocolParser.parse(split[PROTOCOL_WITH_VERSION_INDEX]);
 
-        if (QUERY_STRING.matcher(parsedRequest.get("path")).matches()) {
+        if (QUERY_STRING.matcher(path).matches()) {
             QueryStringParser queryStringParser = new QueryStringParser();
-            Map<String, String> parsedQueryString = queryStringParser.parse(parsedRequest.get("path"));
+            String queryString = queryStringParser.parse(path);
 
-            parsedRequest.putAll(parsedQueryString);
+            return new RequestLine(method, path, queryString, webProtocol);
         }
 
-        return parsedRequest;
+        return new RequestLine(method, path, webProtocol);
     }
 
     private void validateCanParsing(String requestLine) throws IllegalArgumentException {
