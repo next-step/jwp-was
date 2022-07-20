@@ -1,12 +1,21 @@
 package model;
 
+import exception.NotFoundHttpMethodException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("RequestLine 테스트")
 class RequestLineTest {
+
+    @DisplayName("HttpMethod 를 찾을 수 없는 경우")
+    @Test
+    void notFoundHttpMethod() {
+        assertThatThrownBy(() -> RequestLine.parsing("DELETE /users?userId=jdragon HTTP/1.1"))
+                .isInstanceOf(NotFoundHttpMethodException.class);
+    }
 
 
     @DisplayName("GET 요청시 RequestLine 생성 테스트")
