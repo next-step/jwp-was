@@ -21,7 +21,7 @@ public class HttpParserTest {
         // given
         String[] requestLineData = httpRequestFirstLine.split(" ");
         String httpMethod = requestLineData[0];
-        String protocol = requestLineData[2].split("/")[0];
+        String protocolName = requestLineData[2].split("/")[0];
         String protocolVersion = requestLineData[2].split("/")[1];
 
         // when
@@ -29,8 +29,8 @@ public class HttpParserTest {
 
         // then
         Assertions.assertThat(httpMethod).isEqualTo(requestLine.getHttpMethod().toString());
-        Assertions.assertThat(protocol).isEqualTo(requestLine.getProtocol().toString());
-        Assertions.assertThat(protocolVersion).isEqualTo(requestLine.getProtocolVersion());
+        Assertions.assertThat(protocolName).isEqualTo(requestLine.getProtocol().getName());
+        Assertions.assertThat(protocolVersion).isEqualTo(requestLine.getProtocol().getVersion());
 
     }
 
