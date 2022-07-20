@@ -10,14 +10,12 @@ public class RequestLine {
     private final String path;
     private final Map<String, String> queryParameters;
     private final Protocol protocol;
-    private final String protocolVersion;
 
-    public RequestLine(HttpMethod httpMethod, String path, Map<String, String> queryParameters, Protocol protocol, String protocolVersion) {
+    public RequestLine(HttpMethod httpMethod, String path, Map<String, String> queryParameters, Protocol protocol) {
         this.httpMethod = httpMethod;
         this.path = path;
         this.queryParameters = queryParameters;
         this.protocol = protocol;
-        this.protocolVersion = protocolVersion;
     }
 
     public HttpMethod getHttpMethod() {
@@ -36,18 +34,13 @@ public class RequestLine {
         return protocol;
     }
 
-    public String getProtocolVersion() {
-        return protocolVersion;
-    }
-
     @Override
     public String toString() {
         return "RequestLine{" +
-                "httpMethod=" + httpMethod.name() +
+                "httpMethod=" + httpMethod +
                 ", path='" + path + '\'' +
                 ", queryParameters=" + queryParameters +
-                ", protocol='" + protocol.name() + '\'' +
-                ", protocolVersion='" + protocolVersion + '\'' +
+                ", protocol=" + protocol.name() + "/" + protocol.getVersion() +
                 '}';
     }
 }

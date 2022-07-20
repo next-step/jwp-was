@@ -25,9 +25,8 @@ public class HttpParser {
         String path = getPath(requestLineData);
         Map<String, String> queryParameters = getQueryParameters(requestLineData);
         Protocol protocol = getProtocol(requestLineData);
-        String version = getProtocolVersion(requestLineData);
 
-        return new RequestLine(httpMethod, path, queryParameters, protocol, version);
+        return new RequestLine(httpMethod, path, queryParameters, protocol);
     }
 
     private static String getPath(String[] requestLineData) {
@@ -60,16 +59,7 @@ public class HttpParser {
             throw new IllegalArgumentException();
         }
 
-        return Protocol.find(protocol.split(PROTOCOL_VERSION_SEPARATOR)[0]);
-    }
-
-    private static String getProtocolVersion(String[] requestLineData) {
-        String protocol = requestLineData[2];
-        if (!StringUtils.hasText(protocol)) {
-            throw new IllegalArgumentException();
-        }
-
-        return protocol.split(PROTOCOL_VERSION_SEPARATOR)[1];
+        return Protocol.find(protocol);
     }
 
 }
