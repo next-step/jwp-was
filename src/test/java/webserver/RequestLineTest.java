@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class RequestLineTest {
 	private RequestLine requestLine = new RequestLine();
@@ -29,5 +32,40 @@ public class RequestLineTest {
 			() -> assertThat(result.getProtocol()).isEqualTo(protocol),
 			() -> assertThat(result.getVersion()).isEqualTo(version)
 		);
+	}
+
+	@ParameterizedTest(name = "GET 요청의 값이 null 또는 비어있는 경우, 예외처리 된다.")
+	@NullAndEmptySource
+	void exceptionRequestIsNullOrEmpty(String request) {
+		// when & then
+		assertThatThrownBy(() -> requestLine.parse(request))
+			.isInstanceOf(IllegalArgumentException.class);
+	}
+
+	@ParameterizedTest(name = "GET 요청의 속성들이 충분하지 않은 경우, 예외처리 된다.")
+	@ValueSource(strings = {"GET /users", "GET /users HTTP/1.1GET /users HTTP/1.1"})
+	void exceptionRequestNotFitPropertyNumber(String request) {
+		// when & then
+		assertThatThrownBy(() -> requestLine.parse(request))
+			.isInstanceOf(IllegalArgumentException.class);
+	}
+
+	@DisplayName("요청의 메서드 값이 GET이 아닌 경우, 예외처리 된다.")
+	@Test
+	void exceptionRequestMethodNotMatchedHttpMethod() {
+		// given
+		String request = "GAT /users HTTP/1.1";
+
+		// when & then
+		assertThatThrownBy(() -> requestLine.parse(request))
+			.isInstanceOf(IllegalArgumentException.class);
+	}
+
+	@ParameterizedTest(name = "GET 요청에 대해 Protocol과 Version의 파싱 결과 갯수가 알맞지 않는 경우, 예외처리 된다.")
+	@ValueSource(strings = {"GET /users HTTP1.1", "GET /users HTTP/1.1/1.2/1.3"})
+	void exceptoinProtocolAndVersionNotFitNumber(String request) {
+		// when & then
+		assertThatThrownBy(() -> requestLine.parse(request))
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 }
