@@ -24,6 +24,12 @@ class RequestLineTest {
     }
 
     @Test
+    @DisplayName("HTTP 요청을 공백으로 구분한 데이터 갯수가 3이 아닐 경우 예외가 발생한다.")
+    void throw_exception_request_parse_element_number_not_3() {
+        assertThatThrownBy(() -> RequestLine.parse("GET users HTTP/1.1 test")).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     @DisplayName("HTTP 요청 method 가 GET, POST 가 아닐 경우 예외가 발생한다.")
     void throw_exception_request_method_not_GET_or_POST() {
         assertThatThrownBy(() -> RequestLine.parse("GETS /users HTTP/1.1")).isInstanceOf(IllegalArgumentException.class);
@@ -33,6 +39,12 @@ class RequestLineTest {
     @DisplayName("HTTP 요청 path 가 '/' 로 시작하지 않을 경우 예외가 발생한다.")
     void throw_exception_request_path_not_start_slash() {
         assertThatThrownBy(() -> RequestLine.parse("GET users HTTP/1.1")).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("HTTP protocol 과 version 을 '/'으로 구분한 데이터 갯수가 2가 아닐 경우 예외가 발생한다.")
+    void throw_exception_protocol_and_version_parse_element_number_not_2() {
+        assertThatThrownBy(() -> RequestLine.parse("GET users HTTP/1.1/test")).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
