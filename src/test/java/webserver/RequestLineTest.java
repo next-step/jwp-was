@@ -3,6 +3,8 @@ package webserver;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -88,15 +90,22 @@ public class RequestLineTest {
 		);
 	}
 
-	// @DisplayName("유효한 요청에 대해 Query String 파싱이 정상적으로 이루어졋다.")
-	// @Test
-	// void parsingQueryParameter() {
-	//     // given
-	// 	String request = "GET /users/userId=younlll&password=pwdtest HTTP/1.1"
-	//
-	//     // when
-	// 	RequestLine result
-	//
-	//     // then
-	// }
+	@DisplayName("유효한 요청에 대해 Query String 파싱이 정상적으로 이루어졋다.")
+	@Test
+	void parsingQueryParameter() {
+	    // given
+		String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+
+	    // when
+		RequestLine result = requestLine.parse(request);
+
+	    // then
+		Map<String, String> queryString = result.getRequestPathQueryString().getQueryStringOfPath();
+		assertAll(
+			() -> assertThat(queryString).hasSize(3),
+			() -> assertThat(queryString.get("userId")).isEqualTo("javajigi"),
+			() -> assertThat(queryString.get("password")).isEqualTo("password"),
+			() -> assertThat(queryString.get("name")).isEqualTo("JaeSung")
+		);
+	}
 }
