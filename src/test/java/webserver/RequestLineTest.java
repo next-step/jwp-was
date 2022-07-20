@@ -9,6 +9,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import utils.HttpMethod;
+
 public class RequestLineTest {
 	private RequestLine requestLine = new RequestLine();
 
@@ -16,7 +18,6 @@ public class RequestLineTest {
 	@Test
 	void parsingGetRequest() {
 		// given
-		String method = "GET";
 		String path = "/users";
 		String protocol = "HTTP";
 		String version = "1.1";
@@ -27,7 +28,7 @@ public class RequestLineTest {
 
 		// then
 		assertAll(
-			() -> assertThat(result.getMethod()).isEqualTo(method),
+			() -> assertThat(result.getMethod()).isEqualTo(HttpMethod.GET),
 			() -> assertThat(result.getPath()).isEqualTo(path),
 			() -> assertThat(result.getProtocol()).isEqualTo(protocol),
 			() -> assertThat(result.getVersion()).isEqualTo(version)
@@ -70,7 +71,6 @@ public class RequestLineTest {
 	@Test
 	void parsingPostRequest() {
 		// given
-		String method = "POST";
 		String path = "/users";
 		String protocol = "HTTP";
 		String version = "1.1";
@@ -81,10 +81,22 @@ public class RequestLineTest {
 
 		// then
 		assertAll(
-			() -> assertThat(result.getMethod()).isEqualTo(method),
+			() -> assertThat(result.getMethod()).isEqualTo(HttpMethod.POST),
 			() -> assertThat(result.getPath()).isEqualTo(path),
 			() -> assertThat(result.getProtocol()).isEqualTo(protocol),
 			() -> assertThat(result.getVersion()).isEqualTo(version)
 		);
 	}
+
+	// @DisplayName("유효한 요청에 대해 Query String 파싱이 정상적으로 이루어졋다.")
+	// @Test
+	// void parsingQueryParameter() {
+	//     // given
+	// 	String request = "GET /users/userId=younlll&password=pwdtest HTTP/1.1"
+	//
+	//     // when
+	// 	RequestLine result
+	//
+	//     // then
+	// }
 }
