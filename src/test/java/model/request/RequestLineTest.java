@@ -3,6 +3,8 @@ package model.request;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.Method;
+import webserver.http.Type;
+import webserver.http.Version;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,9 +22,9 @@ class RequestLineTest {
 
         // Assert
         assertThat(requestLine.getMethod()).isEqualTo(Method.GET);
+        assertThat(requestLine.getProtocolType()).isEqualTo(Type.HTTP);
+        assertThat(requestLine.getProtocolVersion()).isEqualTo(Version.VERSION1_1);
 //        assertThat(requestLine.getPath()).isEqualTo("/users");
-//        assertThat(requestLine.getProtocol()).isEqualTo(Protocol.HTTP);
-//        assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }
 
     @Test
@@ -36,8 +38,8 @@ class RequestLineTest {
 
         // Assert
         assertThat(requestLine.getMethod()).isEqualTo(Method.POST);
+        assertThat(requestLine.getProtocolType()).isEqualTo(Type.HTTP);
+        assertThat(requestLine.getProtocolVersion()).isEqualTo(Version.VERSION1_1);
 //        assertThat(requestLine.getPath()).isEqualTo("/users");
-//        assertThat(requestLine.getProtocol()).isEqualTo(Protocol.HTTP);
-//        assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }
 }
