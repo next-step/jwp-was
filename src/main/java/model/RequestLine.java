@@ -1,10 +1,8 @@
 package model;
 
-public class RequestLine {
-    private static final String SPACE = " ";
-    private static final String SLASH = "/";
-    private static final String QUERY_STRING_DELIMITER = "\\?";
+import static utils.DelimiterConstants.*;
 
+public class RequestLine {
     private String method;
     private String path;
     private String parameters;
