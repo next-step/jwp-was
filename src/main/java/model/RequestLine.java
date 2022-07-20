@@ -1,9 +1,6 @@
 package model;
 
-import exception.HttpMethodExceptionMessage;
-import exception.NotFoundHttpMethodException;
-
-import static utils.DelimiterConstants.*;
+import static utils.DelimiterConstants.QUERY_STRING_DELIMITER;
 
 public class RequestLine {
     private HttpMethod method;
@@ -20,23 +17,20 @@ public class RequestLine {
         this.version = version;
     }
 
-    public static RequestLine parsing(String firstLine) {
-        String[] requestDataArray = firstLine.split(SPACE);
-        HttpMethod method = HttpMethod.of(requestDataArray[0])
-                .orElseThrow( () -> new NotFoundHttpMethodException(HttpMethodExceptionMessage.NOT_FOUND_MESSAGE));
-        String path = requestDataArray[1];
-        String parameters = "";
-        if (hasParameters(method, path)) {
+    public static RequestLine createGetRequest(HttpMethod method, String path, String[] protocolAndVersion) {
+        if (hasParameters(path)) {
             String[] splitPath = path.split(QUERY_STRING_DELIMITER);
-            path = splitPath[0];
-            parameters = splitPath[1];
+            return new RequestLine(method, splitPath[0], splitPath[1], protocolAndVersion[0], protocolAndVersion[1]);
         }
-        String[] protocolAndVersion = requestDataArray[2].split(SLASH);
-        return new RequestLine(method, path, parameters, protocolAndVersion[0], protocolAndVersion[1]);
+        return new RequestLine(method, path, "", protocolAndVersion[0], protocolAndVersion[1]);
     }
 
-    private static boolean hasParameters(HttpMethod method, String path) {
-        return HttpMethod.GET.equals(method) && path.split(QUERY_STRING_DELIMITER).length >= 2;
+    public static RequestLine createPostRequest(HttpMethod method, String path, String[] protocolAndVersion) {
+        return new RequestLine(method, path, "", protocolAndVersion[0], protocolAndVersion[1]);
+    }
+
+    private static boolean hasParameters(String path) {
+        return path.split(QUERY_STRING_DELIMITER).length >= 2;
     }
 
     public HttpMethod getMethod() {
