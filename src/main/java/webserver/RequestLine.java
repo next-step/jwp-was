@@ -11,15 +11,14 @@ public class RequestLine {
     private static final int INDEX_OF_VERSION = 1;
     private static final String DELIMITER = " ";
     private static final String PROTOCOL_DELIMITER = "/";
-    private static final String EMPTY_QUERY_STRING = "";
 
 
     private final HttpMethod method;
-    private final String path;
+    private final Path path;
     private final String protocol;
     private final String version;
 
-    private RequestLine(final HttpMethod method, final String path, final String protocol, final String version) {
+    private RequestLine(final HttpMethod method, final Path path, final String protocol, final String version) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
@@ -38,7 +37,7 @@ public class RequestLine {
         final String protocol = protocolAndVersion[INDEX_OF_PROTOCOL];
         final String version = protocolAndVersion[INDEX_OF_VERSION];
 
-        return new RequestLine(method, path, protocol, version);
+        return new RequestLine(method, Path.from(path), protocol, version);
     }
 
     public HttpMethod getMethod() {
@@ -46,7 +45,7 @@ public class RequestLine {
     }
 
     public String getPath() {
-        return path;
+        return path.getLocation();
     }
 
     public String getProtocol() {
@@ -58,14 +57,7 @@ public class RequestLine {
     }
 
     public String getQueryString() {
-        final String[] tokens = path.split("\\?");
-        if (hasQueryString(tokens)) {
-            return tokens[1];
-        }
-        return EMPTY_QUERY_STRING;
+        return path.getQueryString();
     }
 
-    private boolean hasQueryString(final String[] tokens) {
-        return tokens.length == 2;
-    }
 }
