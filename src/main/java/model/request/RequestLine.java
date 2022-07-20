@@ -1,32 +1,26 @@
 package model.request;
 
+import webserver.http.Method;
+
 public class RequestLine {
 
-    private Method method;
-    private String path;
-    private Protocol protocol;
-    private String version;
+    private static final String DELIMITER = " ";
+    private static final int INDEX_METHOD = 0;
+    private final Method method;
 
-    private RequestLine() {
+    public RequestLine(Method method) {
+        this.method = method;
     }
 
-    public static RequestLine parse(String input) {
-        return new RequestLine();
+    public static RequestLine parse(String request) {
+        String[] requestElements = request.split(DELIMITER);
+
+        Method method = Method.from(requestElements[INDEX_METHOD]);
+
+        return new RequestLine(method);
     }
 
     public Method getMethod() {
         return method;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public Protocol getProtocol() {
-        return protocol;
-    }
-
-    public String getVersion() {
-        return version;
     }
 }
