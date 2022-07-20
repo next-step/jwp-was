@@ -1,6 +1,8 @@
 package utils;
 
+import model.QueryParameter;
 import model.RequestLine;
+import model.UrlPath;
 import org.springframework.util.StringUtils;
 import types.HttpMethod;
 import types.Protocol;
@@ -16,21 +18,21 @@ public class HttpParser {
     public static final String PATH_SEPARATOR = "\\?";
     public static final String QUERY_PARAMETER_SEPARATOR = "&";
     public static final String QUERY_PARAMETER_KEY_VALUE_SEPARATOR = "=";
-    public static final String PROTOCOL_VERSION_SEPARATOR = "/";
 
     public static RequestLine parseRequestLine(String requestLine) {
         String[] requestLineData = requestLine.split(REQUEST_LINE_SEPARATOR);
 
         HttpMethod httpMethod = HttpMethod.find(requestLineData[0]);
-        String path = getPath(requestLineData);
-        Map<String, String> queryParameters = getQueryParameters(requestLineData);
+        UrlPath path = getPath(requestLineData);
         Protocol protocol = getProtocol(requestLineData);
 
-        return new RequestLine(httpMethod, path, queryParameters, protocol);
+        return new RequestLine(httpMethod, path, protocol);
     }
 
-    private static String getPath(String[] requestLineData) {
-        return requestLineData[1].split(PATH_SEPARATOR)[0];
+    private static UrlPath getPath(String[] requestLineData) {
+        String path = requestLineData[1].split(PATH_SEPARATOR)[0];
+        Map<String, String> queryParameters = getQueryParameters(requestLineData);
+        return new UrlPath(path, new QueryParameter(queryParameters));
     }
 
     private static Map<String, String> getQueryParameters(String[] requestLineData) {
