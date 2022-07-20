@@ -2,7 +2,9 @@ package utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.RequestHandler;
+import request.Request;
+import request.RequestHeader;
+import request.RequestLine;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,21 +37,9 @@ public class IOUtils {
      *          Request의 inputStream이며, Request 정보를 가지고 있다.
      */
     public static RequestLine getFirstLine(InputStream is) throws IOException {
-        final RequestLine requestLine = RequestLine.getInstance();
-        try {
-            BufferedReader br = getBufferedReader(is);
-            return requestLine.parsing(br.readLine());
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-            throw e;
-        }
+        return RequestLine.getInstance().parsing(getBufferedReader(is));
     }
 
-    public static RequestHeader getRequestHeader(InputStream is) throws IOException {
-
-        RequestHeader requestHeader = RequestHeader.getInstance();
-        return requestHeader.parsing(getBufferedReader(is));
-    }
 
     private static BufferedReader getBufferedReader(InputStream is) {
         return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));

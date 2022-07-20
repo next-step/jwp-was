@@ -1,6 +1,6 @@
 package view;
 
-import utils.RequestLine;
+import request.RequestLine;
 
 public class ResultView {
     public void printRequestLine(RequestLine requestLine) {

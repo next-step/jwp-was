@@ -1,10 +1,14 @@
-package utils;
+package request;
 
 import exception.NotExistHttpMethodException;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.HttpMethod;
+import utils.RequestUtils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +32,8 @@ public class RequestLine {
         return InnerInstanceRequestLine.instance;
     }
 
-    public RequestLine parsing(String firstLine) {
+    public RequestLine parsing(BufferedReader br) throws IOException {
+        String firstLine = br.readLine();
         String[] requestDataArray = firstLine.split(" ");
         String method = requestDataArray[0];
         String path = requestDataArray[1];
@@ -55,13 +60,7 @@ public class RequestLine {
         String queryString = queryStringArr[1];
         logger.debug("queryParam {}", queryString);
 
-        Map<String, String> requestMap = new HashMap<>();
-        for (String couple : queryString.split("\\&")) {
-            String[] keyValue = couple.split("=");
-            requestMap.put(keyValue[0], keyValue[1]);
-        }
-
-        return new User(requestMap.get("userId"), requestMap.get("password"), requestMap.get("name"), requestMap.get("email"));
+        return RequestUtils.convertToUser(queryString);
     }
 
     private RequestLine setting(HttpMethod method, String path, String protocol, String version) {
