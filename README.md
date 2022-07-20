@@ -13,7 +13,7 @@
   - [ ] HTTP GET 요청에 대한 RequestLine을 파싱한다
   - [ ]  "GET /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다.
       - method는 GET
-      - path는 /user
+      - path는 /users
       - protocol은 HTTP
       - version은 1.1
 - [ ] POST 요청
