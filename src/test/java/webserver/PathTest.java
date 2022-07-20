@@ -23,9 +23,13 @@ class PathTest {
     }
 
     @DisplayName("QueryString이 없는 경우 파싱")
-    @Test
-    void has_no_query_string() {
-        final Path path = Path.from("/users");
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "/users",
+        "/users?"
+    })
+    void has_no_query_string(String uri) {
+        final Path path = Path.from(uri);
 
         assertAll(
             () -> assertThat(path.getLocation()).isEqualTo("/users"),
