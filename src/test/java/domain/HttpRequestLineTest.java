@@ -63,8 +63,8 @@ public class HttpRequestLineTest {
 		assertThat(requestLine.getPath()).isEqualTo("/users");
 		assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
 		assertThat(requestLine.getVersion()).isEqualTo("1.1");
-		assertThat(requestLine.getParameters().get("userId")).isEqualTo("javajigi");
-		assertThat(requestLine.getParameters().get("password")).isEqualTo("password");
-		assertThat(requestLine.getParameters().get("name")).isEqualTo("JaeSung");
+		assertThat(requestLine.getParameters().getValue("userId")).isEqualTo("javajigi");
+		assertThat(requestLine.getParameters().getValue("password")).isEqualTo("password");
+		assertThat(requestLine.getParameters().getValue("name")).isEqualTo("JaeSung");
 	}
 }

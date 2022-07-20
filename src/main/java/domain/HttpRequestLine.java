@@ -1,9 +1,5 @@
 package domain;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 public class HttpRequestLine {
 	private static final String MESSAGE_INVALID_REQUEST_LINE = "유효하지 않은 Request Line 입니다.";
 	private static final String REQUEST_LINE_DELIMITER = " ";
@@ -13,17 +9,13 @@ public class HttpRequestLine {
 	private static final int INDEX_PROTOCOL_VERSION = 2;
 
 	private HttpMethod httpMethod;
-	private String httpPath;
+	private HttpPath httpPath;
 	private HttpProtocol httpProtocol;
-	private Map<String, String> parameters;
 
 	public HttpRequestLine(String method, String path, String protocol) {
 		this.httpMethod = HttpMethod.valueOf(method);
-		this.httpPath = path.split("\\?")[0];
+		this.httpPath = HttpPath.of(path);
 		this.httpProtocol = HttpProtocol.of(protocol);
-		this.parameters = Arrays.stream(path.split("\\?")[1].split("&"))
-								.map(s -> (s.split("=")))
-								.collect(Collectors.toMap(s -> s[0], s -> s[1]));
 	}
 
 	public static HttpRequestLine of(String line) {
@@ -39,7 +31,7 @@ public class HttpRequestLine {
 	}
 
 	public String getPath() {
-		return httpPath;
+		return httpPath.getPath();
 	}
 
 	public String getProtocol() {
@@ -50,7 +42,7 @@ public class HttpRequestLine {
 		return httpProtocol.getVersion();
 	}
 
-	public Map<String, String> getParameters() {
-		return parameters;
+	public QueryParameter getParameters() {
+		return httpPath.getParameter();
 	}
 }
