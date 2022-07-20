@@ -8,7 +8,7 @@ public class RequestLine {
 	private static final int REQUEST_PARSING_NUMBER = 3;
 	private static final int PROTOCOL_VERSION_PARSING_NUMBER = 2;
 
-	private String method;
+	private HttpMethod method;
 	private String path;
 	private String protocol;
 	private String version;
@@ -17,7 +17,7 @@ public class RequestLine {
 
 	}
 
-	private RequestLine(String method, String path, String protocol, String version) {
+	private RequestLine(HttpMethod method, String path, String protocol, String version) {
 		this.method = method;
 		this.path = path;
 		this.protocol = protocol;
@@ -33,7 +33,7 @@ public class RequestLine {
 		String[] parsingProtocolVersion = parsingRequest[2].split(PROTOCOL_VERSION_DELIMITER);
 		validateProtocolVersionParsingResult(parsingProtocolVersion);
 
-		return new RequestLine(parsingRequest[0], parsingRequest[1], parsingProtocolVersion[0],
+		return new RequestLine(HttpMethod.valueOf(parsingRequest[0]), parsingRequest[1], parsingProtocolVersion[0],
 			parsingProtocolVersion[1]);
 	}
 
@@ -64,7 +64,7 @@ public class RequestLine {
 		}
 	}
 
-	public String getMethod() {
+	public HttpMethod getMethod() {
 		return this.method;
 	}
 
