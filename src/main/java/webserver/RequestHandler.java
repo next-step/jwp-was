@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,23 +31,37 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream();
              OutputStream out = connection.getOutputStream()) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
-            String line;
-            while ((line = reader.readLine()) != null && !BLANK_STRING.equals(line)) {
+            String line = reader.readLine();
+            RequestLine requestLine = new RequestLine(line);
+
+            while (line != null && !BLANK_STRING.equals(line)) {
                 logger.info("header = {}", line);
+                line = reader.readLine();
             }
 
-            byte[] body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
+            byte[] body = getBody(requestLine);
 
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length);
             responseBody(dos, body);
-            dos.close();
+            reader.close();
 
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private byte[] getBody(RequestLine requestLine) throws IOException, URISyntaxException {
+        String path = requestLine.getRequestPath();
+        if (path.startsWith("/index.html")) {
+            return FileIoUtils.loadFileFromClasspath("./templates/index.html");
+        }
+        if (path.startsWith("/user/form.html")) {
+            return FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
+        }
+        return new byte[0];
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
