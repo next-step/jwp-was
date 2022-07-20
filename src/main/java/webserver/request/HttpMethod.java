@@ -1,4 +1,4 @@
-package webserver;
+package webserver.request;
 
 import exception.UnSupportedHttpMethodException;
 import java.util.Arrays;
