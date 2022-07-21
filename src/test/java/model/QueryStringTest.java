@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,13 +22,14 @@ public class QueryStringTest {
     @Test
     @DisplayName("파라미터가 있을 경우 검증")
     void isExistParameter() {
+        Map<String, Object> parameter = new HashMap<>();
+        parameter.put("name", "김배민");
+        parameter.put("age", "3");
+        QueryString 비교값 = new QueryString(parameter);
+
         QueryString queryString = QueryString.parser("name=김배민&age=3");
 
-        assertAll(() -> {
-            assertThat(queryString.getParameter("name")).isEqualTo("김배민");
-            assertThat(queryString.getParameter("age")).isEqualTo("3");
-        });
-
+        assertThat(queryString).isEqualTo(비교값);
     }
 
 }

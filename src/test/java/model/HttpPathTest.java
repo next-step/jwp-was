@@ -1,5 +1,7 @@
 package model;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,13 +14,11 @@ public class HttpPathTest {
     @DisplayName("path에 queryString이 없는 경우")
     void isEmptyQueryString() {
         String path = "/nextstep";
+        HttpPath 비교값 = new HttpPath("/nextstep", new QueryString());
 
         HttpPath httpPath = HttpPath.Instance(path);
 
-        assertAll(() -> {
-            assertThat(httpPath.getPath()).isEqualTo("/nextstep");
-            assertThat(httpPath.getQueryString()).isEqualTo(new QueryString());
-        });
+        assertThat(httpPath).isEqualTo(비교값);
     }
 
     @Test
@@ -26,13 +26,14 @@ public class HttpPathTest {
     void isExistQueryString() {
         String path = "/nextstep?name=김배민&age=3";
 
+        Map<String, Object> parameter = new HashMap<>();
+        parameter.put("name", "김배민");
+        parameter.put("age", "3");
+        HttpPath 비교값 = new HttpPath("/nextstep", new QueryString(parameter));
+
         HttpPath httpPath = HttpPath.Instance(path);
 
-        assertAll(() -> {
-            assertThat(httpPath.getPath()).isEqualTo("/nextstep");
-            assertThat(httpPath.getQueryString().getParameter("name")).isEqualTo("김배민");
-            assertThat(httpPath.getQueryString().getParameter("age")).isEqualTo("3");
-        });
+        assertThat(httpPath).isEqualTo(비교값);
     }
 
 }

@@ -1,6 +1,8 @@
 package model;
 
 import constant.HttpMethod;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,17 +15,17 @@ public class RequestLineTest {
     @DisplayName("Get 메소드 테스트 하기")
     void requestLineByGet() {
         String line = "GET /nextstep?name=김배민&age=3 HTTP/1.1";
+        Map<String, Object> param = new HashMap<>();
+        param.put("name", "김배민");
+        param.put("age", "3");
+        QueryString queryString = new QueryString(param);
 
         RequestLine requestLine = RequestLine.from(line);
-        QueryString queryString = requestLine.getQueryString();
 
         assertAll(() -> {
-            assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
-            assertThat(requestLine.getPath()).isEqualTo("/nextstep");
-            assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
-            assertThat(requestLine.getVersion()).isEqualTo("1.1");
-            assertThat(queryString.getParameter("name")).isEqualTo("김배민");
-            assertThat(queryString.getParameter("age")).isEqualTo("3");
+            assertThat(requestLine.getHttpMethod()).isEqualTo(HttpMethod.GET);
+            assertThat(requestLine.getHttpPath()).isEqualTo(new HttpPath("/nextstep", queryString));
+            assertThat(requestLine.getHttpProtocol()).isEqualTo(new HttpProtocol("HTTP", "1.1"));
         });
     }
 
@@ -31,17 +33,17 @@ public class RequestLineTest {
     @DisplayName("POST 메소드 테스트 하기")
     void requestLineByPost() {
         String line = "POST /nextstep?name=김배민&age=3 HTTP2/1.2";
+        Map<String, Object> param = new HashMap<>();
+        param.put("name", "김배민");
+        param.put("age", "3");
+        QueryString queryString = new QueryString(param);
 
         RequestLine requestLine = RequestLine.from(line);
-        QueryString queryString = requestLine.getQueryString();
 
         assertAll(() -> {
-            assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
-            assertThat(requestLine.getPath()).isEqualTo("/nextstep");
-            assertThat(requestLine.getProtocol()).isEqualTo("HTTP2");
-            assertThat(requestLine.getVersion()).isEqualTo("1.2");
-            assertThat(queryString.getParameter("name")).isEqualTo("김배민");
-            assertThat(queryString.getParameter("age")).isEqualTo("3");
+            assertThat(requestLine.getHttpMethod()).isEqualTo(HttpMethod.POST);
+            assertThat(requestLine.getHttpPath()).isEqualTo(new HttpPath("/nextstep", queryString));
+            assertThat(requestLine.getHttpProtocol()).isEqualTo(new HttpProtocol("HTTP2", "1.2"));
         });
 
     }

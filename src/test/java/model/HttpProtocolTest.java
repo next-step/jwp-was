@@ -13,12 +13,10 @@ public class HttpProtocolTest {
     void verifyProtocolAndVersion() {
         String protocol = "HTTP/1.1";
 
+        HttpProtocol 비교값 = new HttpProtocol("HTTP", "1.1");
         HttpProtocol httpProtocol = HttpProtocol.Instance(protocol);
 
-        assertAll(() -> {
-            assertThat(httpProtocol.getProtocol()).isEqualTo("HTTP");
-            assertThat(httpProtocol.getVersion()).isEqualTo("1.1");
-        });
+        assertThat(httpProtocol).isEqualTo(비교값);
     }
 
 }

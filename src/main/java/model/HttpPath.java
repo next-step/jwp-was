@@ -1,6 +1,6 @@
 package model;
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import java.util.Objects;
 
 public class HttpPath {
     public static String DELIMITER = "\\?";
@@ -36,4 +36,21 @@ public class HttpPath {
                 : new HttpPath(pathSplit[PATH_INDEX]);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        HttpPath httpPath = (HttpPath) o;
+        return Objects.equals(path, httpPath.path) && Objects.equals(queryString,
+            httpPath.queryString);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path, queryString);
+    }
 }
