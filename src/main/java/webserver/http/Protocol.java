@@ -52,6 +52,9 @@ public class Protocol {
 
     @Override
     public String toString() {
-        return "Protocol{type=" + type + ", version=" + version + '}';
+        return "Protocol{" +
+                "type=" + type +
+                ", version=" + version +
+                '}';
     }
 }

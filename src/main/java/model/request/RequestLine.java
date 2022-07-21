@@ -3,6 +3,7 @@ package model.request;
 import webserver.http.*;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class RequestLine {
 
@@ -49,5 +50,27 @@ public class RequestLine {
 
     public Version getProtocolVersion() {
         return protocol.getVersion();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestLine that = (RequestLine) o;
+        return method == that.method && Objects.equals(path, that.path) && Objects.equals(protocol, that.protocol);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(method, path, protocol);
+    }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method=" + method +
+                ", path=" + path +
+                ", protocol=" + protocol +
+                '}';
     }
 }

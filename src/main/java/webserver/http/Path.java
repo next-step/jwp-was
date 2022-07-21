@@ -1,6 +1,7 @@
 package webserver.http;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class Path {
 
@@ -38,5 +39,26 @@ public class Path {
             return queryString.getParameterMap();
         }
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Path path = (Path) o;
+        return Objects.equals(value, path.value) && Objects.equals(queryString, path.queryString);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, queryString);
+    }
+
+    @Override
+    public String toString() {
+        return "Path{" +
+                "value='" + value + '\'' +
+                ", queryString=" + queryString +
+                '}';
     }
 }
