@@ -7,3 +7,18 @@
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+
+## 1단계 - TDD 실습
+HTTP 요청/응답을 파싱해 원하는 값을 가져올 수 있는 API를 TDD로 구현한다.
+
+- 요구사항
+  - RequestLine 을 파싱해 원하는 값을 가져올 수 있는 API 를 제공한다.
+  - RequestLine 은 HTTP 요청의 첫 번째 라인을 의미한다.
+    - GET / POST 요청을 파싱한다.
+    - Http 요청의 Query String 을 파싱한다.
+    - Http Method enum 을 적용한다.
+
+- 구현
+  - RequestLine 구현
+  - 관련 테스트 작성
+  - HTTP Method enum 구현

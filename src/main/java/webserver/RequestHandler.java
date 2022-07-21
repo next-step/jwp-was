@@ -1,13 +1,11 @@
 package webserver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -24,12 +22,31 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
+            showRequest(in);
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
+        }
+    }
+
+    public void showRequest(InputStream in) {
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            String s = IOUtils.readData(br, br.read());
+
+            String line = br.readLine();
+            while (line != null) {
+                System.out.println(line);
+                line = br.readLine();
+            }
+
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
