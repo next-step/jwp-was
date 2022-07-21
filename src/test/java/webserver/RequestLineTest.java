@@ -41,4 +41,18 @@ public class RequestLineTest {
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.getProtocolVersion()).isEqualTo("1.1")
         );
     }
+
+    @Test
+    @DisplayName("GET요청 + Query String 이 정상적으로 파싱되었는지 테스트")
+    void requestLineGetWithQueryStringTest() {
+        RequestLine requestLine = RequestLine.from("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
+
+        assertAll(
+                () -> org.assertj.core.api.Assertions.assertThat(requestLine.getMethod()).isEqualTo("GET"),
+                () -> org.assertj.core.api.Assertions.assertThat(requestLine.getPath()).isEqualTo("/users"),
+                () -> org.assertj.core.api.Assertions.assertThat(requestLine.getQueryString()).isEqualTo("userId=javajigi&password=password&name=JaeSung"),
+                () -> org.assertj.core.api.Assertions.assertThat(requestLine.getProtocolName()).isEqualTo("HTTP"),
+                () -> org.assertj.core.api.Assertions.assertThat(requestLine.getProtocolVersion()).isEqualTo("1.1")
+        );
+    }
 }

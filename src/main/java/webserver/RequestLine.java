@@ -40,6 +40,10 @@ public class RequestLine {
         return path.getPath();
     }
 
+    public String getQueryString() {
+        return path.getQueryString();
+    }
+
     public String getProtocolName() {
         return protocolInfo.getProtocol();
     }
