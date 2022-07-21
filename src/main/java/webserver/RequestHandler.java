@@ -4,12 +4,15 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
 import utils.IOUtils;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -37,35 +40,44 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
             response(requestLine, headers, requestBody, dos);
 
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response(RequestLine requestLine, HttpHeaders headers, String requestBody, DataOutputStream dos) {
+    private void response(RequestLine requestLine, HttpHeaders headers, String requestBody, DataOutputStream dos) throws IOException, URISyntaxException {
         String path = requestLine.getRequestPath();
         HttpMethod method = requestLine.getMethod();
-        String cookie = headers.get("Cookie");
+        String cookie = headers.getCookie();
+        String contentType = headers.getAccept();
         byte[] body = new byte[0];
+
+        boolean isStaticResourcePath = Stream.of(".js", ".css", ".woff", ".ttf", ".ico")
+            .anyMatch(path::endsWith);
+
+        if (isStaticResourcePath) {
+            body = FileIoUtils.loadFileFromClasspath("./static/" + path);
+            response200Header(dos, body.length, contentType);
+        }
 
         if (method.isGet() && ("/".equals(path) || "/index.html".equals(path))) {
             body = responseView( "index");
-            response200Header(dos, body.length);
+            response200Header(dos, body.length, contentType);
         }
 
         if (method.isGet() && "/user/form.html".equals(path)) {
             body = responseView("user/form");
-            response200Header(dos, body.length);
+            response200Header(dos, body.length, contentType);
         }
 
         if (method.isGet() && "/user/login.html".equals(path)) {
             body = responseView( "user/login");
-            response200Header(dos, body.length);
+            response200Header(dos, body.length, contentType);
         }
 
         if (method.isGet() && "/user/list".equals(path)) {
             body = showUsers(cookie);
-            response200Header(dos, body.length);
+            response200Header(dos, body.length, contentType);
         }
 
         if (method.isPost() && "/user/create".equals(path)) {
@@ -125,10 +137,10 @@ public class RequestHandler implements Runnable {
         return body;
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dos, int lengthOfBodyContent, String contentType) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Type: " + contentType + "; charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
