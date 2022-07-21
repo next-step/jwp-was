@@ -31,9 +31,9 @@ public class RequestLineTest {
 		// then
 		assertAll(
 			() -> assertThat(result.getMethod()).isEqualTo(HttpMethod.GET),
-			() -> assertThat(result.getPath()).isEqualTo(path),
-			() -> assertThat(result.getProtocol()).isEqualTo(protocol),
-			() -> assertThat(result.getVersion()).isEqualTo(version)
+			() -> assertThat(result.getHttpPath().getPath()).isEqualTo(path),
+			() -> assertThat(result.getHttpProtocol().getProtocol()).isEqualTo(protocol),
+			() -> assertThat(result.getHttpProtocol().getVersion()).isEqualTo(version)
 		);
 	}
 
@@ -84,9 +84,9 @@ public class RequestLineTest {
 		// then
 		assertAll(
 			() -> assertThat(result.getMethod()).isEqualTo(HttpMethod.POST),
-			() -> assertThat(result.getPath()).isEqualTo(path),
-			() -> assertThat(result.getProtocol()).isEqualTo(protocol),
-			() -> assertThat(result.getVersion()).isEqualTo(version)
+			() -> assertThat(result.getHttpPath().getPath()).isEqualTo(path),
+			() -> assertThat(result.getHttpProtocol().getProtocol()).isEqualTo(protocol),
+			() -> assertThat(result.getHttpProtocol().getVersion()).isEqualTo(version)
 		);
 	}
 
