@@ -12,18 +12,15 @@ public class RequestPath {
 	private static final int INDEX_ONE = 1;
 
 	private final String path;
-	private final String queryString;
 	private final Parameters parameters;
 
 	private RequestPath(String path) {
 		this.path = path;
-		this.queryString = null;
 		this.parameters = null;
 	}
 
 	private RequestPath(String path, String queryString) {
 		this.path = path;
-		this.queryString = queryString;
 		this.parameters = new Parameters(queryString);
 	}
 
@@ -49,7 +46,10 @@ public class RequestPath {
 	}
 
 	public String getQueryString() {
-		return queryString;
+		if (parameters == null) {
+			return null;
+		}
+		return parameters.getQueryString();
 	}
 
 	public String getParameter(String name) {

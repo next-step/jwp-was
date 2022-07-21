@@ -1,11 +1,11 @@
 package webserver;
 
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 public class Parameters {
 
@@ -14,9 +14,11 @@ public class Parameters {
     private static final int INDEX_ZERO = 0;
     private static final int INDEX_ONE = 1;
 
+    private final String queryString;
     private final MultiValueMap<String, String> parameters;
 
     public Parameters(String queryString) {
+        this.queryString = queryString;
         this.parameters = parseQueryString(queryString);
     }
 
@@ -29,6 +31,9 @@ public class Parameters {
         return params;
     }
 
+    public String getQueryString() {
+        return queryString;
+    }
 
     public String getParameter(String name) {
         List<String> values = this.parameters.get(name);
