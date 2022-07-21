@@ -47,18 +47,15 @@ public class RequestHandler implements Runnable {
         byte[] body = new byte[0];
 
         if (method.isGet() && ("/".equals(path) || "/index.html".equals(path))) {
-            body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
-            response200Header(dos, body.length);
+            body = response200WithView(dos, "index");
         }
 
         if (method.isGet() && "/user/form.html".equals(path)) {
-            body = FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
-            response200Header(dos, body.length);
+            body = response200WithView(dos,"user/form");
         }
 
         if (method.isGet() && "/user/login.html".equals(path)) {
-            body = FileIoUtils.loadFileFromClasspath("./templates/user/login.html");
-            response200Header(dos, body.length);
+            body = response200WithView(dos, "user/login");
         }
 
         if (method.isPost() && "/user/create".equals(path)) {
@@ -70,6 +67,16 @@ public class RequestHandler implements Runnable {
         }
 
         responseBody(dos, body);
+    }
+
+    private byte[] response200WithView(DataOutputStream dos, String viewName) throws IOException, URISyntaxException {
+        byte[] body = FileIoUtils.loadFileFromClasspath(viewResolver(viewName));
+        response200Header(dos, body.length);
+        return body;
+    }
+
+    private String viewResolver(String viewName) {
+        return String.format("./templates/%s.html", viewName);
     }
 
     private void createUser(String requestBody, DataOutputStream dos) {
@@ -92,10 +99,10 @@ public class RequestHandler implements Runnable {
         User user = DataBase.findUserById(userId);
         if (user != null && password.equals(user.getPassword())) {
             response302HeaderWithLoginSuccessCookie(dos);
-            return FileIoUtils.loadFileFromClasspath("./templates/index.html");
+            return FileIoUtils.loadFileFromClasspath(viewResolver("index"));
         }
 
-        byte[] body = FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html");
+        byte[] body = FileIoUtils.loadFileFromClasspath(viewResolver("user/login_failed"));
         response200HeaderWithLoginFailedCookie(dos, body.length);
         return body;
     }
