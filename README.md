@@ -17,3 +17,8 @@ HTTP 요청/응답을 파싱해 원하는 값을 가져올 수 있는 API를 TDD
     - GET / POST 요청을 파싱한다.
     - Http 요청의 Query String 을 파싱한다.
     - Http Method enum 을 적용한다.
+
+- 구현
+  - RequestLine 구현
+  - 관련 테스트 작성
+  - HTTP Method enum 구현
