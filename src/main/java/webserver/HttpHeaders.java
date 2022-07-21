@@ -1,5 +1,8 @@
 package webserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -7,6 +10,7 @@ import java.util.Map;
 
 public class HttpHeaders  {
 
+    private static final Logger logger = LoggerFactory.getLogger(HttpHeaders.class);
     private static final String BLANK = "";
     private static final String DELIMITER_FOR_HEADER = ": ";
     private static final int INDEX_HEADER_NAME = 0;
@@ -23,6 +27,7 @@ public class HttpHeaders  {
         Map<String, String> headers = new LinkedHashMap<>();
         String line = reader.readLine();
         while (line != null && !BLANK.equals(line)) {
+            logger.debug("header = {}", line);
             String[] tokens = line.split(DELIMITER_FOR_HEADER);
             headers.put(tokens[INDEX_HEADER_NAME], tokens[INDEX_HEADER_VALUE]);
             line = reader.readLine();

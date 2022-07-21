@@ -32,6 +32,7 @@ public class RequestHandler implements Runnable {
             HttpHeaders headers = HttpHeaders.from(reader);
 
             String requestBody = IOUtils.readData(reader, headers.getContentLength());
+            logger.debug("request body = {}", requestBody);
             DataOutputStream dos = new DataOutputStream(out);
             response(requestLine, requestBody, dos);
 

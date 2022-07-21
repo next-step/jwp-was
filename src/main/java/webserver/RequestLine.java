@@ -1,9 +1,12 @@
 package webserver;
 
 import exception.IllegalRequestLineException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RequestLine {
 
+	private static final Logger logger = LoggerFactory.getLogger(RequestLine.class);
 	private static final String DELIMITER = " ";
 	private static final int VALID_NUMBER_OF_TOKENS = 3;
 	private static final int INDEX_OF_METHOD = 0;
@@ -20,6 +23,7 @@ public class RequestLine {
 		this.method = HttpMethod.from(tokens[INDEX_OF_METHOD]);
 		this.requestPath = RequestPath.from(tokens[INDEX_OF_PATH]);
 		this.httpVersion = new HttpVersion(tokens[INDEX_OF_HTTP_VERSION]);
+		logger.debug("request line = {}", value);
 	}
 
 	private void validate(String[] tokens) {
