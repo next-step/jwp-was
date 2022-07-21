@@ -8,6 +8,8 @@ import java.util.StringTokenizer;
 public class QueryString {
     public static String DELIMITER = "&";
     public static String QUERY_DELIMITER = "=";
+    public static int QUERY_STRING_KEY_INDEX = 0;
+    public static int QUERY_STRING_VALUE_INDEX = 1;
 
     private Map<String, Object> queryString;
 
@@ -24,17 +26,13 @@ public class QueryString {
         return !queryString.isEmpty() ? queryString.toString() : "";
     }
 
-    public Object getParameter(String key) {
-        return queryString.get(key);
-    }
-
     public static QueryString parser(String parameter) {
         StringTokenizer stringTokenizer = new StringTokenizer(parameter, DELIMITER);
         Map<String, Object> map = new HashMap<>();
 
         while(stringTokenizer.hasMoreTokens()) {
             String[] token = stringTokenizer.nextToken().split(QUERY_DELIMITER);
-            map.put(token[0], token[1]);
+            map.put(token[QUERY_STRING_KEY_INDEX], token[QUERY_STRING_VALUE_INDEX]);
         }
 
         return new QueryString(map);
