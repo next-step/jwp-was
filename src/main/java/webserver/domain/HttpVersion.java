@@ -1,7 +1,6 @@
 package webserver.domain;
 
-
-import exception.HttpVersionNotFound;
+import exception.ResourceNotFound;
 
 import java.util.Arrays;
 
@@ -21,7 +20,7 @@ public enum HttpVersion {
         return Arrays.stream(values())
                 .filter(value -> versionName.equals(value.name))
                 .findFirst()
-                .orElseThrow(() -> new HttpVersionNotFound());
+                .orElseThrow(() -> new ResourceNotFound());
     }
 
     public String getName() {

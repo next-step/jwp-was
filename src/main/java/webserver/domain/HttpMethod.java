@@ -1,6 +1,6 @@
 package webserver.domain;
 
-import exception.HttpMethodNotFound;
+import exception.ResourceNotFound;
 
 import java.util.Arrays;
 
@@ -16,6 +16,6 @@ public enum HttpMethod {
         return Arrays.stream(values())
                 .filter(value -> value.name().equals(version))
                 .findFirst()
-                .orElseThrow(() -> new HttpMethodNotFound());
+                .orElseThrow(() -> new ResourceNotFound());
     }
 }

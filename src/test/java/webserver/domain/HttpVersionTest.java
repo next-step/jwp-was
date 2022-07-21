@@ -1,6 +1,6 @@
 package webserver.domain;
 
-import exception.HttpVersionNotFound;
+import exception.ResourceNotFound;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ public class HttpVersionTest {
     void notExistsVersion(){
         String inValidVersion = "1.5";
 
-        assertThatExceptionOfType(HttpVersionNotFound.class)
+        assertThatExceptionOfType(ResourceNotFound.class)
                 .isThrownBy(() -> HttpVersion.from(inValidVersion));
     }
 }

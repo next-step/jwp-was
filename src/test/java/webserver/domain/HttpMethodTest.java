@@ -1,6 +1,6 @@
 package webserver.domain;
 
-import exception.HttpMethodNotFound;
+import exception.ResourceNotFound;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -24,7 +24,7 @@ public class HttpMethodTest {
     @ParameterizedTest
     @ValueSource(strings = {"GETT", "GE", "ET", "G"})
     void notExistsHttpMethod(String input){
-        assertThatExceptionOfType(HttpMethodNotFound.class)
+        assertThatExceptionOfType(ResourceNotFound.class)
                 .isThrownBy(() -> HttpMethod.from(input));
     }
 }
