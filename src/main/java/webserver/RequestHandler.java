@@ -46,38 +46,42 @@ public class RequestHandler implements Runnable {
         HttpMethod method = requestLine.getMethod();
         byte[] body = new byte[0];
 
-        if (path.equals("/") || path.startsWith("/index.html")) {
+        if (method.isGet() && ("/".equals(path) || "/index.html".equals(path))) {
             body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
             response200Header(dos, body.length);
         }
 
-        if (path.startsWith("/user/form.html")) {
+        if (method.isGet() && "/user/form.html".equals(path)) {
             body = FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
             response200Header(dos, body.length);
         }
 
-        if (path.startsWith("/user/login.html")) {
+        if (method.isGet() && "/user/login.html".equals(path)) {
             body = FileIoUtils.loadFileFromClasspath("./templates/user/login.html");
             response200Header(dos, body.length);
         }
 
-        if (path.startsWith("/user/create")) {
-            Parameters parameters = new Parameters(requestBody);
-            String userId = parameters.getParameter("userId");
-            String password = parameters.getParameter("password");
-            String name = parameters.getParameter("name");
-            String email = parameters.getParameter("email");
-
-            User user = new User(userId, password, name, email);
-            DataBase.addUser(user);
-            response302Header(dos, "/index.html");
+        if (method.isPost() && "/user/create".equals(path)) {
+            createUser(requestBody, dos);
         }
 
-        if (method.isPost() && path.startsWith("/user/login")) {
+        if (method.isPost() && "/user/login".equals(path)) {
             body = login(requestBody, dos);
         }
 
         responseBody(dos, body);
+    }
+
+    private void createUser(String requestBody, DataOutputStream dos) {
+        Parameters parameters = new Parameters(requestBody);
+        String userId = parameters.getParameter("userId");
+        String password = parameters.getParameter("password");
+        String name = parameters.getParameter("name");
+        String email = parameters.getParameter("email");
+
+        User user = new User(userId, password, name, email);
+        DataBase.addUser(user);
+        response302Header(dos);
     }
 
     private byte[] login(String requestBody, DataOutputStream dos) throws IOException, URISyntaxException {
@@ -87,7 +91,7 @@ public class RequestHandler implements Runnable {
 
         User user = DataBase.findUserById(userId);
         if (user != null && password.equals(user.getPassword())) {
-            response302HeaderWithLoginSuccessCookie(dos, "/index.html");
+            response302HeaderWithLoginSuccessCookie(dos);
             return FileIoUtils.loadFileFromClasspath("./templates/index.html");
         }
 
@@ -119,21 +123,21 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void response302Header(DataOutputStream dos, String redirectUrl) {
+    private void response302Header(DataOutputStream dos) {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes(String.format("Location: %s%n", redirectUrl));
+            dos.writeBytes("Location: /index.html \r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response302HeaderWithLoginSuccessCookie(DataOutputStream dos, String redirectUrl) {
+    private void response302HeaderWithLoginSuccessCookie(DataOutputStream dos) {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes(String.format("Set-Cookie: logined=true; Path=/%n"));
-            dos.writeBytes(String.format("Location: %s%n", redirectUrl));
+            dos.writeBytes("Set-Cookie: logined=true; Path=/\r\n");
+            dos.writeBytes("Location: /index.html\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
