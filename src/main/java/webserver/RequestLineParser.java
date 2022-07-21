@@ -9,7 +9,7 @@ public class RequestLineParser {
     public static RequestLine parseRequestLine(String startLine){
         String[] httpElement = startLine.split(REQUEST_LINE_DELIMITER);
 
-        HttpMethod httpMethod = HttpMethod.valueOf(httpElement[RequestLine.METHOD_INDEX]);
+        HttpMethod httpMethod = HttpMethod.from(httpElement[RequestLine.METHOD_INDEX]);
         Path path = new Path(httpElement[RequestLine.PATH_INDEX]);
         ProtocolVersion protocol = parseProtocolVersion(httpElement[RequestLine.PROTOCOL_INDEX]);
 
@@ -18,8 +18,6 @@ public class RequestLineParser {
 
     private static ProtocolVersion parseProtocolVersion(final String protocolVersion){
         String[] splitProtocolVersion = protocolVersion.split(PROTOCOL_DELIMITER);
-
-        System.out.println(splitProtocolVersion[ProtocolVersion.VERSION_INDEX]);
 
         return new ProtocolVersion(
                 Protocol.valueOf(splitProtocolVersion[ProtocolVersion.PROTOCOL_INDEX]),
