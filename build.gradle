@@ -16,7 +16,8 @@ dependencies {
 	implementation 'com.google.guava:guava:31.1-jre'
 	implementation 'com.github.jknack:handlebars:4.3.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.projectlombok:lombok:1.18.18'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
