@@ -8,7 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ProtocolParserTest {
-
     private final ProtocolParser protocolParser = new ProtocolParser();
 
     @DisplayName("입력 메시지가 [타입]/[버전]/[기타]와 같이 '/'가 정확히 1개가 포함되지 않은 경우 예외발생")
