@@ -1,4 +1,4 @@
-package webserver;
+package webserver.request;
 
 import static exception.ExceptionStrings.INVALID_REQUEST_LINE;
 import static exception.ExceptionStrings.INVALID_REQUEST_PATH;

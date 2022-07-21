@@ -1,4 +1,4 @@
-package webserver;
+package webserver.request;
 
 import webserver.enums.HttpMethod;
 import webserver.enums.RequestProtocol;
