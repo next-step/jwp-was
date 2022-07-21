@@ -9,4 +9,8 @@
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
 
 ## 요구사항
-### 1. GET 요청
+### STEP 1
+- [X] GET 요청 파싱하기
+- [X] POST 요청 파싱하기
+- [X] QueryString 파싱하기
+- [X] HttpMethod 에 enum 적용하기
