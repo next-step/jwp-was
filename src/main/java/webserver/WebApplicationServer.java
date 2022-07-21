@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
-    private static final int DEFAULT_PORT = 8080;
+    private static final int DEFAULT_PORT = 8888;
 
     public static void main(String args[]) throws Exception {
         int port = 0;
