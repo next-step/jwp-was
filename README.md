@@ -34,3 +34,4 @@
 - [X] 일급 콜렉션을 적용한다.
 - [X] System.out.println 대신 logging 사용하기
 - [X] 테스트 코드에서 given, when, then을 추가하는 것보단 빈 공백 라인으로 가독성 향상시키기.
+- [X] else 예약어 사용 금지
