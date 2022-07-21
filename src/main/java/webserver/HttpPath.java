@@ -10,12 +10,14 @@ public class HttpPath {
 
     private final List<String> pathComponents;
     private final String fullPath;
+    private final HttpQueryStrings httpQueryStrings;
 
     public HttpPath(String rawHttpPath) {
         List<String> pathComponents = toPathComponents(rawHttpPath);
         validateHttpPathSchemas(pathComponents);
         this.pathComponents = pathComponents;
         this.fullPath = rawHttpPath;
+        this.httpQueryStrings = new HttpQueryStrings(rawHttpPath);
     }
 
     private List<String> toPathComponents(String rawHttpPath) {
@@ -26,6 +28,10 @@ public class HttpPath {
 
     public String getFullPath() {
         return fullPath;
+    }
+
+    public HttpQueryStrings getHttpQueryStrings() {
+        return httpQueryStrings;
     }
 
     private void validateHttpPathSchemas(List<String> pathComponents) {

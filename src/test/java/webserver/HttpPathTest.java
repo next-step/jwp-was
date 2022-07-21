@@ -19,4 +19,13 @@ class HttpPathTest {
 
         assertThat(httpPath.getFullPath()).isEqualTo("/users/1/2/3/4");
     }
+
+    @Test
+    void getFullPathWithQueryStrings() {
+        HttpPath httpPath = new HttpPath("/users/1/2/3/4?queryName=queryValue&queryName2=queryValue2");
+
+        assertThat(httpPath.getHttpQueryStrings().get(0)).isEqualTo(new HttpQueryString("queryName=queryValue"));
+        assertThat(httpPath.getHttpQueryStrings().get(1)).isEqualTo(new HttpQueryString("queryName2=queryValue2"));
+        assertThat(httpPath.getHttpQueryStrings().getFullQueryString()).isEqualTo("?queryName=queryValue&queryName2=queryValue2");
+    }
 }

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class HttpQueryStrings implements Iterable<HttpQueryString> {
     public static final String PRIMARY_QUERY_STRING_SYMBOL = "\\?";
+    public static final String PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE = PRIMARY_QUERY_STRING_SYMBOL.replace("\\", "");
     public static final String SECONDARY_QUERY_STRING_SYMBOL = "&";
     public static final int QUERY_STRING_SCHEMA_START_INDEX = 1;
     public static final int QUERY_STRING_SCHEMA_REQUIRED_SIZE = 2;
@@ -40,11 +41,15 @@ public class HttpQueryStrings implements Iterable<HttpQueryString> {
             return "";
         }
 
-        return fullQueryString;
+        return PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE + fullQueryString.split(PRIMARY_QUERY_STRING_SYMBOL)[QUERY_STRING_SCHEMA_START_INDEX];
     }
 
     private boolean isEmptyQueryString(String fullQueryString) {
-        return fullQueryString.isEmpty() || PRIMARY_QUERY_STRING_SYMBOL.replace("\\", "").equals(fullQueryString);
+        return fullQueryString.isEmpty() || hasNotQueryStringSymbol(fullQueryString) || PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE.equals(fullQueryString);
+    }
+
+    private boolean hasNotQueryStringSymbol(String fullQueryString) {
+        return !fullQueryString.contains(PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE) && !fullQueryString.contains(SECONDARY_QUERY_STRING_SYMBOL);
     }
 
     private void validateFullQueryString(String fullQueryString, String[] firstQueryStringSchemas) {
