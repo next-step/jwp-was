@@ -18,6 +18,16 @@
   - [ ] GET RequestLine 파싱
     - "GET /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다.  
       method는 GET, path는 /users, protocol은 HTTP, version은 1.1
+      - [X] HttpMethod
+        - 문자열을 받아 HttpMethod를 반환한다. 
+        - 잘못된 문자열의 경우 Exception이 발생한다.
+      - [ ] HttpPath
+        - 문자열을 받아 HttpPath를 반환한다.
+        - "/path" 형식이 아닌경우 Exception이 발생한다. 
+      - [ ] HttpVersion
+        - 문자열을 받아 HttpVersion을 반환한다.
+        - HttpVersion은 Protocol과 Version으로 이루어진다.
+        - "HTTP/1.1" 형식이 아닌 경우 Exception이 발생한다.
   - [ ] POST RequestLine 파싱
   - [ ] Querystring RequestLine 파싱
   - [ ] GET RequestLine 파싱
