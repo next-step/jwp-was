@@ -6,15 +6,15 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import utils.FileIoUtils;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutorService;
@@ -53,6 +53,7 @@ class HttpRequestTest {
     void request_resttemplate() {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL, String.class);
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
@@ -61,9 +62,10 @@ class HttpRequestTest {
     void request_index() throws IOException, URISyntaxException {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL + "/index.html", String.class);
-        byte[] body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
+        byte[] expectedBody = FileIoUtils.loadFileFromClasspath("./templates/index.html");
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(new String(body));
+        assertThat(response.getBody()).isEqualTo(new String(expectedBody));
     }
 
     @DisplayName("GET /user/form.html 요청 시, 회원가입 페이지 HTML 파일을 읽어 클라이언트에 응답한다.")
@@ -71,9 +73,10 @@ class HttpRequestTest {
     void request_form() throws IOException, URISyntaxException {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL + "/user/form.html", String.class);
-        byte[] body = FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
+        byte[] expectedBody = FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(new String(body));
+        assertThat(response.getBody()).isEqualTo(new String(expectedBody));
     }
 
     @DisplayName("GET /user/login.html 요청 시, 로그인 페이지 HTML 파일을 읽어 클라이언트에 응답한다.")
@@ -81,9 +84,10 @@ class HttpRequestTest {
     void request_login() throws IOException, URISyntaxException {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL + "/user/login.html", String.class);
-        byte[] body = FileIoUtils.loadFileFromClasspath("./templates/user/login.html");
+        byte[] expectedBody = FileIoUtils.loadFileFromClasspath("./templates/user/login.html");
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(new String(body));
+        assertThat(response.getBody()).isEqualTo(new String(expectedBody));
     }
 
     @DisplayName("로그인 성공 시, 로그인 성공 쿠키와 함께 index.html 페이지로 리다이렉트한다.")
@@ -114,6 +118,21 @@ class HttpRequestTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getHeaders().get("Set-Cookie")).contains("logined=false");
+        assertThat(response.getBody()).isEqualTo(expectedBody);
+    }
+
+    @DisplayName("로그인 상태인 경우, GET /user/list 요청 시 사용자 목록을 출력한다.")
+    @Test
+    void request_user_list_with_logged_in() throws IOException, URISyntaxException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cookie", "logined=true; Path=/");
+        HttpEntity<Object> entity = new HttpEntity<>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(BASE_URL + "/user/list", HttpMethod.GET, entity, String.class);
+        String expectedBody = new String(FileIoUtils.loadFileFromClasspath("./templates/user/list.html"));
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expectedBody);
     }
 }

@@ -34,16 +34,17 @@ public class RequestHandler implements Runnable {
             String requestBody = IOUtils.readData(reader, headers.getContentLength());
             logger.debug("request body = {}", requestBody);
             DataOutputStream dos = new DataOutputStream(out);
-            response(requestLine, requestBody, dos);
+            response(requestLine, headers, requestBody, dos);
 
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response(RequestLine requestLine, String requestBody, DataOutputStream dos) throws IOException, URISyntaxException {
+    private void response(RequestLine requestLine, HttpHeaders headers, String requestBody, DataOutputStream dos) throws IOException, URISyntaxException {
         String path = requestLine.getRequestPath();
         HttpMethod method = requestLine.getMethod();
+        String cookie = headers.get("Cookie");
         byte[] body = new byte[0];
 
         if (method.isGet() && ("/".equals(path) || "/index.html".equals(path))) {
@@ -56,6 +57,12 @@ public class RequestHandler implements Runnable {
 
         if (method.isGet() && "/user/login.html".equals(path)) {
             body = response200WithView(dos, "user/login");
+        }
+
+        if (method.isGet() && "/user/list".equals(path)) {
+            if (cookie.contains("logined=true")) {
+                body = response200WithView(dos, "user/list");
+            }
         }
 
         if (method.isPost() && "/user/create".equals(path)) {
