@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
 public class RequestController {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestController.class);
-
+    private final static String INDEX_URl = "http://localhost:8080/index.html";
     private final Request request;
     private final RequestService requestService;
 
@@ -32,18 +32,17 @@ public class RequestController {
         logger.info("request path : {} ",request.getRequestPath());
         if (request.requestPathCheck("/user/create")) {
             requestService.saveMember();
+            response302Header(dos);
         }
-        Cookie cookie = null;
+
         if (request.requestPathCheck("/user/login")) {
-            cookie = requestService.checkIdAndPassword(request.convertUserOfQueryParam());
+            Cookie cookie = requestService.checkIdAndPassword(request.convertUserOfQueryParam());
+            response302HeaderWithCookie(dos, cookie);
         }
 
         if (FileIoUtils.isLastEndWithHtml(request.getRequestPath())) {
             body = FileIoUtils.loadFileFromClasspath(request.getRequestPath());
             response200Header(dos, body.length);
-        } else {
-//            response302Header(dos);
-            response302HeaderWithCookie(dos, cookie);
         }
         responseBody(dos, body);
     }
@@ -63,7 +62,7 @@ public class RequestController {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Location: http://localhost:8080/index.html" + "\r\n");
+            dos.writeBytes("Location: " + INDEX_URl + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -74,7 +73,7 @@ public class RequestController {
         try{
             dos.writeBytes("HTTP/1.1 302 OK \r\n");
             dos.writeBytes("Set-Cookie:"+ cookie +" \r\n");
-            dos.writeBytes("Location : http://localhost:8080/index.html" +"\r\n");
+            dos.writeBytes("Location: " + INDEX_URl + "\r\n");
             dos.writeBytes("\r\n");
         }
         catch (Exception e){
