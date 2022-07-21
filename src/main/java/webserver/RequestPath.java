@@ -53,6 +53,9 @@ public class RequestPath {
 	}
 
 	public String getParameter(String name) {
+		if (parameters == null) {
+			return null;
+		}
 		return parameters.getParameter(name);
 	}
 }
