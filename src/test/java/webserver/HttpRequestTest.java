@@ -41,4 +41,14 @@ class HttpRequestTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(new String(body));
     }
+
+    @DisplayName("GET /user/login.html 요청 시, 로그인 페이지 HTML 파일을 읽어 클라이언트에 응답한다.")
+    @Test
+    void request_login() throws IOException, URISyntaxException {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/user/login.html", String.class);
+        byte[] body = FileIoUtils.loadFileFromClasspath("./templates/user/login.html");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(new String(body));
+    }
 }

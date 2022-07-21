@@ -1,22 +1,16 @@
 package webserver;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import db.DataBase;
+import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
+import utils.IOUtils;
+
+import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import db.DataBase;
-import model.User;
-import utils.FileIoUtils;
-import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -50,13 +44,18 @@ public class RequestHandler implements Runnable {
         String path = requestLine.getRequestPath();
         byte[] body = new byte[0];
 
-        if (path.startsWith("/index.html")) {
+        if (path.equals("/") || path.startsWith("/index.html")) {
             body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
             response200Header(dos, body.length);
         }
 
         if (path.startsWith("/user/form.html")) {
             body = FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
+            response200Header(dos, body.length);
+        }
+
+        if (path.startsWith("/user/login.html")) {
+            body = FileIoUtils.loadFileFromClasspath("./templates/user/login.html");
             response200Header(dos, body.length);
         }
 
