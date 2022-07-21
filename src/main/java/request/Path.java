@@ -22,7 +22,9 @@ public class Path {
         String[] query = request.split(QUERY_DELIMITER);
         this.name = query[NAME_INDEX];
 
-        if (query.length > 1) this.conditions = parseConditions(query[QUERY_INDEX]);
+        if (query.length > 1) {
+            this.conditions = parseConditions(query[QUERY_INDEX]);
+        }
     }
 
     private Map<String, String> parseConditions(String query) {
