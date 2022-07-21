@@ -1,5 +1,6 @@
 ## 요구사항 정리
 
+## STEP 1.
 ### 요구사항 1 - GET 요청
 - HTTP GET 요청에 대한 RequestLine을 파싱
 - 파싱하는 로직 구현을 TDD로 구현
@@ -25,3 +26,9 @@
 
 ### 요구사항 4 - enum 적용
 - HTTP method인 GET, POST를 enum 으로 구현 
+
+## STEP 2.
+### 요구사항 1
+- http://localhost:8080/index.html 접속, webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답
+- utils.FileIoUtils의 loadFileFromClasspath() 메소드를 이용
+
