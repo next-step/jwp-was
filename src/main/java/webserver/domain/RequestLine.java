@@ -10,14 +10,11 @@ import java.util.stream.Collectors;
 
 public class RequestLine {
     public static final String DELIMITER = " ";
-    public static final String PROTOCOL_SPLIT_DELIMITER = "/";
     public static final String QUERYSTRING_DELIMITER = "\\?";
     public static final int PATH_AND_QUERYSTRING_POINT = 1;
     public static final int PROTOCOL_AND_VERSION_POINT = 2;
     public static final int METHOD_POINT = 0;
     public static final int PATH_POINT = 0;
-    public static final int PROTOCOL_POINT = 0;
-    public static final int VERSION_POINT = 1;
     public static final int QUERYSTRING_POINT = 1;
     public static final String QUERYSTRING_PARAM_DELIMITER = "&";
     public static final String QUERYSTRING_KEY_VALUE_DELIMITER = "=";
@@ -25,18 +22,16 @@ public class RequestLine {
     public static final String DEFAULT_QUERY_VALUE = "";
 
     private HttpMethod method;
+    private Protocol protocol;
     private String path;
-    private String protocol;
-    private String version;
     private Map<String, String> parameterMap;
 
     public RequestLine(){}
 
-    public RequestLine(HttpMethod method, String path, Map<String, String> parameterMap, String protocol, String version) {
+    public RequestLine(HttpMethod method, String path, Map<String, String> parameterMap, Protocol protocol) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
-        this.version = version;
         this.parameterMap = parameterMap;
     }
 
@@ -44,13 +39,12 @@ public class RequestLine {
         String[] attributes = line.split(DELIMITER);
         String[] pathAndQueryString = attributes[PATH_AND_QUERYSTRING_POINT].split(QUERYSTRING_DELIMITER);
         Map<String, String> parameterMap = getParameterMap(pathAndQueryString);
-        String[] protocolAndVersion = attributes[PROTOCOL_AND_VERSION_POINT].split(PROTOCOL_SPLIT_DELIMITER);
+        Protocol protocol = Protocol.newInstance(attributes[PROTOCOL_AND_VERSION_POINT]);
 
         return new RequestLine(HttpMethod.valueOf(attributes[METHOD_POINT]),
                 pathAndQueryString[PATH_POINT],
                 parameterMap,
-                protocolAndVersion[PROTOCOL_POINT],
-                protocolAndVersion[VERSION_POINT]);
+                protocol);
     }
 
     private static Map<String, String> getParameterMap(String[] pathAndQueryString) {
@@ -84,12 +78,8 @@ public class RequestLine {
         return path;
     }
 
-    public String getProtocol() {
+    public Protocol getProtocol() {
         return protocol;
-    }
-
-    public String getVersion() {
-        return version;
     }
 
     public Map<String, String> getParameterMap() {
