@@ -1,9 +1,12 @@
 package webserver;
 
+import static exception.ExceptionStrings.INVALID_REQUEST_LINE;
+import static exception.ExceptionStrings.INVALID_REQUEST_PATH;
+
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import webserver.enums.HttpMethod;
 import webserver.enums.RequestProtocol;
 
@@ -11,6 +14,9 @@ import webserver.enums.RequestProtocol;
  * HTTP Request 의 첫번째 라인 (== Start Line)
  */
 public final class RequestLine {
+
+    private static final int REQUEST_LINE_COMPONENT_COUNT = 3;
+    private static final String REQUEST_LINE_SPLIT_REGEX = " ";
 
     private HttpMethod requestMethod;
     private String path;
@@ -27,23 +33,25 @@ public final class RequestLine {
     public static RequestLine of(String startLine) {
         validate(startLine);
 
-        String[] strings = startLine.split(" ");
+        String[] strings = startLine.split(REQUEST_LINE_SPLIT_REGEX);
 
         return RequestLine.of(HttpMethod.valueOf(strings[0]), strings[1], RequestProtocol.of(strings[2]));
     }
 
-    private static void validate(String line) {
-        if (line == null || line.isEmpty() || line.isBlank()) {
-            throw new IllegalArgumentException("Invalid requestLine string");
-        }
-
-        if (line.split(" ").length < 3) {
-            throw new IllegalArgumentException("Invalid requestLine string");
-        }
-    }
-
     public static RequestLine of(HttpMethod method, String path, RequestProtocol protocol) {
         return new RequestLine(method, PathAndQueryStrings.of(path), protocol);
+    }
+
+    private static void validate(String line) {
+        Objects.requireNonNull(line, INVALID_REQUEST_LINE);
+
+        if (line.isEmpty() || line.isBlank()) {
+            throw new IllegalArgumentException(INVALID_REQUEST_LINE);
+        }
+
+        if (line.split(REQUEST_LINE_SPLIT_REGEX).length < REQUEST_LINE_COMPONENT_COUNT) {
+            throw new IllegalArgumentException(INVALID_REQUEST_LINE);
+        }
     }
 
     @Override
@@ -75,17 +83,22 @@ public final class RequestLine {
         return protocol;
     }
 
-    public Optional<Map<String, String>> getQueryStringsMap() {
-        return Optional.of(queryStringsMap);
+    public Map<String, String> getQueryStringsMap() {
+        return queryStringsMap;
     }
 
     static final class PathAndQueryStrings {
+
+        private static final int PATH_COMPONENT_COUNT = 2;
+        private static final String PATH_SPLIT_REGEX = "\\?";
+        private static final String PATH_QUERY_SPLIT_REGEX = "&";
+        private static final String QUERY_STRING_SPLIT_REGEX = "=";
 
         public String path;
         public Map<String, String> queryStringsMap;
 
         public PathAndQueryStrings(String path) {
-            this.path = path;
+            this(path, Collections.emptyMap());
         }
 
         public PathAndQueryStrings(String path, Map<String, String> queryStringsMap) {
@@ -94,18 +107,28 @@ public final class RequestLine {
         }
 
         public static PathAndQueryStrings of(String path) {
-            String[] pathStrings = path.split("\\?");
-            if (pathStrings.length < 2) {
+            PathAndQueryStrings.validate(path);
+
+            String[] pathStrings = path.split(PATH_SPLIT_REGEX);
+            if (pathStrings.length < PATH_COMPONENT_COUNT) {
                 return new PathAndQueryStrings(pathStrings[0]);
             }
 
-            return new PathAndQueryStrings(pathStrings[0], parseQueryStrings(pathStrings[1].split("&")));
+            return new PathAndQueryStrings(pathStrings[0], parseQueryStrings(pathStrings[1].split(PATH_QUERY_SPLIT_REGEX)));
+        }
+
+        private static void validate(String path) {
+            Objects.requireNonNull(path, INVALID_REQUEST_PATH);
+
+            if (path.isEmpty() || path.isBlank()) {
+                throw new IllegalArgumentException(INVALID_REQUEST_PATH);
+            }
         }
 
         private static Map<String, String> parseQueryStrings(String[] queryStrings) {
             Map<String, String> queryStringsMap = new HashMap<>();
             for (int i = 0; i < queryStrings.length; ++i) {
-                String[] queryString = queryStrings[i].split("=");
+                String[] queryString = queryStrings[i].split(QUERY_STRING_SPLIT_REGEX);
                 queryStringsMap.put(queryString[0], queryString[1]);
             }
 
