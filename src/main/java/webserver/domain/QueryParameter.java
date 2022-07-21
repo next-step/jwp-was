@@ -16,7 +16,7 @@ public class QueryParameter {
         this.parameters = parameters;
     }
 
-    public static QueryParameter from(final String[] splitUrl) {
+    public static QueryParameter parseFrom(final String[] splitUrl) {
         if (splitUrl.length == NO_QUERY_PARAMETER) {
             return new QueryParameter(Collections.EMPTY_MAP);
         }

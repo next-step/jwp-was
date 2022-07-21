@@ -18,7 +18,7 @@ public class Url {
 
         return new Url(
                 splitUrl[Url.PATH_INDEX],
-                QueryParameter.from(splitUrl)
+                QueryParameter.parseFrom(splitUrl)
         );
     }
 

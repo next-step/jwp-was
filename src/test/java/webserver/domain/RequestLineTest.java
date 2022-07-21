@@ -13,7 +13,7 @@ public class RequestLineTest {
     void parseGetRequest(){
         String input = "GET /users HTTP/1.1";
 
-        RequestLine requestLine = RequestLine.from(input);
+        RequestLine requestLine = RequestLine.parseFrom(input);
         HttpMethod httpMethod = requestLine.getMethod();
         Url url = requestLine.getUrl();
         ProtocolVersion protocolVersion = requestLine.getProtocolVersion();
@@ -31,7 +31,7 @@ public class RequestLineTest {
     void parsePostRequest(){
         String input = "POST /users HTTP/1.1";
 
-        RequestLine requestLine = RequestLine.from(input);
+        RequestLine requestLine = RequestLine.parseFrom(input);
         HttpMethod httpMethod = requestLine.getMethod();
         Url url = requestLine.getUrl();
         ProtocolVersion protocolVersion = requestLine.getProtocolVersion();

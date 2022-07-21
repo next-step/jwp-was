@@ -14,7 +14,7 @@ public class ProtocolVersion {
         this.version = version;
     }
 
-    public static ProtocolVersion from(final String protocolVersion){
+    public static ProtocolVersion parseFrom(final String protocolVersion){
         String[] splitProtocolVersion = protocolVersion.split(PROTOCOL_DELIMITER);
 
         return new ProtocolVersion(

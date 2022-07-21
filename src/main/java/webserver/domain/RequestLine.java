@@ -17,12 +17,12 @@ public class RequestLine {
         this.protocolVersion = protocolVersion;
     }
 
-    public static RequestLine from(final String startLine){
+    public static RequestLine parseFrom(final String startLine){
         String[] httpElement = startLine.split(REQUEST_LINE_DELIMITER);
 
         HttpMethod httpMethod = HttpMethod.from(httpElement[RequestLine.METHOD_INDEX]);
         Url url = Url.from(httpElement[RequestLine.URL_INDEX]);
-        ProtocolVersion protocol = ProtocolVersion.from(httpElement[RequestLine.PROTOCOL_INDEX]);
+        ProtocolVersion protocol = ProtocolVersion.parseFrom(httpElement[RequestLine.PROTOCOL_INDEX]);
 
         return new RequestLine(httpMethod, url, protocol);
     }

@@ -36,7 +36,7 @@ public class RequestHandler implements Runnable {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             String line = br.readLine();
-            RequestLine.from(line);
+            RequestLine.parseFrom(line);
 
             while (line != null) {
                 System.out.println(line);
