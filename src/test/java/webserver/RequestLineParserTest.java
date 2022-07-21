@@ -39,5 +39,6 @@ class RequestLineParserTest {
         assertThat(parser.getPath()).isEqualTo("/user/create");
         assertThat(parser.getProtocol()).isEqualTo("HTTP");
         assertThat(parser.getVersion()).isEqualTo(1.1);
+        assertThat(parser.getParams().size()).isEqualTo(2);
     }
 }
