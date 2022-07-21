@@ -8,7 +8,6 @@ public class ProtocolVersion {
     private final Protocol protocol;
     private final HttpVersion version;
 
-
     public ProtocolVersion(Protocol protocol, HttpVersion version) {
         this.protocol = protocol;
         this.version = version;
