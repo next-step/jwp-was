@@ -20,4 +20,8 @@ public enum HttpMethod {
 			.findFirst()
 			.orElseThrow(() -> new IllegalHttpMethodException(value));
 	}
+
+	public boolean isPost() {
+		return this == POST;
+	}
 }

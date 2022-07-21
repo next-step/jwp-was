@@ -43,6 +43,7 @@ public class RequestHandler implements Runnable {
 
     private void response(RequestLine requestLine, String requestBody, DataOutputStream dos) throws IOException, URISyntaxException {
         String path = requestLine.getRequestPath();
+        HttpMethod method = requestLine.getMethod();
         byte[] body = new byte[0];
 
         if (path.equals("/") || path.startsWith("/index.html")) {
@@ -69,7 +70,22 @@ public class RequestHandler implements Runnable {
 
             User user = new User(userId, password, name, email);
             DataBase.addUser(user);
-            response302Header(dos, "http://localhost:8080/index.html");
+            response302Header(dos, "/index.html");
+        }
+
+        if (method.isPost() && path.startsWith("/user/login")) {
+            Parameters parameters = new Parameters(requestBody);
+            String userId = parameters.getParameter("userId");
+            String password = parameters.getParameter("password");
+
+            User user = DataBase.findUserById(userId);
+            if (user != null && password.equals(user.getPassword())) {
+                body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
+                response302HeaderWithLoginSuccessCookie(dos, "/index.html");
+            } else {
+                body = FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html");
+                response200Header(dos, body.length);
+            }
         }
 
         responseBody(dos, body);
@@ -89,6 +105,17 @@ public class RequestHandler implements Runnable {
     private void response302Header(DataOutputStream dos, String redirectUrl) {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes(String.format("Location: %s%n", redirectUrl));
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302HeaderWithLoginSuccessCookie(DataOutputStream dos, String redirectUrl) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes(String.format("Set-Cookie: logined=true; Path=/%n"));
             dos.writeBytes(String.format("Location: %s%n", redirectUrl));
             dos.writeBytes("\r\n");
         } catch (IOException e) {
