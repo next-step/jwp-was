@@ -38,26 +38,26 @@ public class RequestHandler implements Runnable {
             HttpHeaders headers = HttpHeaders.from(reader);
 
             String requestBody = IOUtils.readData(reader, headers.getContentLength());
-            byte[] body = getBody(requestLine, requestBody);
-
             DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            response(requestLine, requestBody, dos);
 
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private byte[] getBody(RequestLine requestLine, String requestBody) throws IOException, URISyntaxException {
+    private void response(RequestLine requestLine, String requestBody, DataOutputStream dos) throws IOException, URISyntaxException {
         String path = requestLine.getRequestPath();
+        byte[] body = new byte[0];
 
         if (path.startsWith("/index.html")) {
-            return FileIoUtils.loadFileFromClasspath("./templates/index.html");
+            body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
+            response200Header(dos, body.length);
         }
 
         if (path.startsWith("/user/form.html")) {
-            return FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
+            body = FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
+            response200Header(dos, body.length);
         }
 
         if (path.startsWith("/user/create")) {
@@ -69,9 +69,10 @@ public class RequestHandler implements Runnable {
 
             User user = new User(userId, password, name, email);
             DataBase.addUser(user);
+            response302Header(dos, "http://localhost:8080/index.html");
         }
 
-        return new byte[0];
+        responseBody(dos, body);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
@@ -79,6 +80,16 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(DataOutputStream dos, String redirectUrl) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes(String.format("Location: %s%n", redirectUrl));
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
