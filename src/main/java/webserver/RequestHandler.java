@@ -1,5 +1,9 @@
 package webserver;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
@@ -10,7 +14,10 @@ import utils.IOUtils;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
+import java.net.URLDecoder;
+import java.util.Collection;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -27,11 +34,11 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream();
              OutputStream out = connection.getOutputStream()) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            RequestLine requestLine = new RequestLine(reader.readLine());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            RequestLine requestLine = new RequestLine(URLDecoder.decode(reader.readLine(), UTF_8));
             HttpHeaders headers = HttpHeaders.from(reader);
 
-            String requestBody = IOUtils.readData(reader, headers.getContentLength());
+            String requestBody = URLDecoder.decode(IOUtils.readData(reader, headers.getContentLength()), UTF_8);
             logger.debug("request body = {}", requestBody);
             DataOutputStream dos = new DataOutputStream(out);
             response(requestLine, headers, requestBody, dos);
@@ -76,7 +83,18 @@ public class RequestHandler implements Runnable {
 
     private byte[] showUsers(DataOutputStream dos, String cookie) throws IOException, URISyntaxException {
         if (cookie != null && cookie.contains("logined=true")) {
-            return response200WithView(dos, "user/list");
+            TemplateLoader loader = new ClassPathTemplateLoader();
+            loader.setPrefix("/templates");
+            loader.setSuffix(".html");
+            Handlebars handlebars = new Handlebars(loader);
+            Template template = handlebars.compile("user/list");
+
+            Collection<User> users = DataBase.findAll();
+            String userListPage = template.apply(users);
+
+            byte[] body = userListPage.getBytes(UTF_8);
+            response200Header(dos, body.length);
+            return body;
         }
         return response200WithView(dos, "user/login");
     }
@@ -97,6 +115,11 @@ public class RequestHandler implements Runnable {
         String password = parameters.getParameter("password");
         String name = parameters.getParameter("name");
         String email = parameters.getParameter("email");
+
+        logger.debug("userId = {}", userId);
+        logger.debug("password = {}", password);
+        logger.debug("name = {}", name);
+        logger.debug("email = {}", email);
 
         User user = new User(userId, password, name, email);
         DataBase.addUser(user);

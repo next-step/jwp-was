@@ -29,6 +29,8 @@ class HttpRequestTest {
     private static final String VALID_PASSWORD = "pass";
     private static final String INVALID_USER_ID = "user11";
     private static final String INVALID_PASSWORD = "pass11";
+    private static final String USER_NAME = "사용자";
+    private static final String USER_EMAIL = "user@example.com";
     private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 
     @BeforeAll
@@ -41,7 +43,7 @@ class HttpRequestTest {
             }
         });
         
-        DataBase.addUser(new User(VALID_USER_ID, VALID_PASSWORD, "유저", "user@email.com"));
+        DataBase.addUser(new User(VALID_USER_ID, VALID_PASSWORD, USER_NAME, USER_EMAIL));
     }
 
     @AfterAll
@@ -123,17 +125,16 @@ class HttpRequestTest {
 
     @DisplayName("로그인 상태인 경우, GET /user/list 요청 시 사용자 목록을 출력한다.")
     @Test
-    void request_user_list_with_logged_in() throws IOException, URISyntaxException {
+    void request_user_list_with_logged_in() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cookie", "logined=true; Path=/");
         HttpEntity<Object> entity = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(BASE_URL + "/user/list", HttpMethod.GET, entity, String.class);
-        String expectedBody = new String(FileIoUtils.loadFileFromClasspath("./templates/user/list.html"));
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(expectedBody);
+        assertThat(response.getBody()).contains(VALID_USER_ID, USER_NAME, USER_EMAIL);
     }
 
     @DisplayName("비로그인 상태인 경우, GET /user/list 요청 시 로그인 페이지로 이동한다.")
