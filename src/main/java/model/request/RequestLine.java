@@ -2,6 +2,8 @@ package model.request;
 
 import webserver.http.*;
 
+import java.util.Map;
+
 public class RequestLine {
 
     private static final String DELIMITER = " ";
@@ -20,11 +22,11 @@ public class RequestLine {
     }
 
     public static RequestLine parse(String request) {
-        String[] requestElements = request.split(DELIMITER);
+        final String[] requestElements = request.split(DELIMITER);
 
-        Method method = Method.from(requestElements[INDEX_METHOD]);
-        Path path = new Path(requestElements[INDEX_PATH]);
-        Protocol protocol = new Protocol(requestElements[INDEX_PROTOCOL]);
+        final Method method = Method.from(requestElements[INDEX_METHOD]);
+        final Path path = Path.from(requestElements[INDEX_PATH]);
+        final Protocol protocol = new Protocol(requestElements[INDEX_PROTOCOL]);
 
         return new RequestLine(method, path, protocol);
     }
@@ -35,6 +37,10 @@ public class RequestLine {
 
     public String getPathValue() {
         return path.getValue();
+    }
+
+    public Map<String, String> getQueryString() {
+        return path.getQueryStringMap();
     }
 
     public Type getProtocolType() {
