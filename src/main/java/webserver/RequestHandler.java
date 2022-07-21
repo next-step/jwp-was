@@ -5,6 +5,7 @@ import java.net.Socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.domain.RequestLine;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -35,7 +36,7 @@ public class RequestHandler implements Runnable {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             String line = br.readLine();
-            RequestParser.parseRequestLine(line);
+            RequestLine.from(line);
 
             while (line != null) {
                 System.out.println(line);
