@@ -24,5 +24,5 @@
 - [x] 로그인에 실패하면 `/user/login_failed.html` 로 이동한다.
 - [x] 로그인 성공 시, Cookie를 활용하여 로그인 상태를 유지한다.
 - [x] `http://localhost:8080/user/list` 요청 시, 사용자가 로그인 상태인 경우 사용자 목록을 출력한다.
-- [ ] `http://localhost:8080/user/list` 요청 시, 사용자가 비로그인 상태인 경우 로그인 페이지로 이동한다.
+- [x] `http://localhost:8080/user/list` 요청 시, 사용자가 비로그인 상태인 경우 로그인 페이지로 이동한다.
 - [ ] Stylesheet 파일을 지원한다.

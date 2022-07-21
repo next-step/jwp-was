@@ -60,9 +60,7 @@ public class RequestHandler implements Runnable {
         }
 
         if (method.isGet() && "/user/list".equals(path)) {
-            if (cookie.contains("logined=true")) {
-                body = response200WithView(dos, "user/list");
-            }
+            body = showUsers(dos, cookie);
         }
 
         if (method.isPost() && "/user/create".equals(path)) {
@@ -74,6 +72,13 @@ public class RequestHandler implements Runnable {
         }
 
         responseBody(dos, body);
+    }
+
+    private byte[] showUsers(DataOutputStream dos, String cookie) throws IOException, URISyntaxException {
+        if (cookie != null && cookie.contains("logined=true")) {
+            return response200WithView(dos, "user/list");
+        }
+        return response200WithView(dos, "user/login");
     }
 
     private byte[] response200WithView(DataOutputStream dos, String viewName) throws IOException, URISyntaxException {

@@ -135,4 +135,16 @@ class HttpRequestTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expectedBody);
     }
+
+    @DisplayName("비로그인 상태인 경우, GET /user/list 요청 시 로그인 페이지로 이동한다.")
+    @Test
+    void request_user_list_without_logged_in() throws IOException, URISyntaxException {
+        HttpEntity<Object> entity = new HttpEntity<>(null);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(BASE_URL + "/user/list", HttpMethod.GET, entity, String.class);
+        String expectedBody = new String(FileIoUtils.loadFileFromClasspath("./templates/user/login.html"));
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(expectedBody);
+    }
 }
