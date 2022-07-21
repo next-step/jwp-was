@@ -1,12 +1,13 @@
 package webserver;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class HttpMethod {
+public class HttpPath {
     private static final String INVALID_HTTP_REQUEST = "잘못된 HTTP 요청 ";
     private static final int METHOD_INDEX = 0;
     private static final int PATH_INDEX = 1;
@@ -20,12 +21,7 @@ public class HttpMethod {
     private String method;
     private Map<String, String> params = new HashMap<>();
 
-    public HttpMethod(String path, String method) {
-        this.path = path;
-        this.method = method;
-    }
-
-    public HttpMethod(String[] item) {
+    public HttpPath(String[] item) {
         if (item.length != REQUEST_LINE_SIZE) {
             throw new IllegalArgumentException(INVALID_HTTP_REQUEST);
         }
@@ -34,10 +30,6 @@ public class HttpMethod {
     }
 
     private void parseParameter(String path) {
-        if (method.equals("POST")) {
-            this.path = path;
-            return;
-        }
         int paramIndex = path.indexOf(QUERY_STRING_DELIMITER);
         if (paramIndex == NOT_FOUND) {
             this.path = path;
@@ -56,18 +48,18 @@ public class HttpMethod {
     }
 
     public Map<String, String> getParams() {
-        return params;
+        return Collections.unmodifiableMap(params);
     }
 
     private Map<String, String> parseQueryString(String queryString) {
-        return parseValues(queryString, PARAM_DELIMITER);
+        return parseParams(queryString, PARAM_DELIMITER);
     }
 
-    private Map<String, String> parseValues(String values, String separator) {
+    private Map<String, String> parseParams(String values, String delimiter) {
         if (values.isEmpty()) {
             return new HashMap<>();
         }
-        String[] tokens = values.split(separator);
+        String[] tokens = values.split(delimiter);
         return Arrays.stream(tokens)
                 .map(it -> Param.of(it, KEY_VALUE_DELIMITER))
                 .filter(Objects::nonNull)
