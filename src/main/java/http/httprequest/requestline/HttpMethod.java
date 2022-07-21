@@ -1,4 +1,4 @@
-package utils.http;
+package http.httprequest.requestline;
 
 public enum HttpMethod {
     GET,
