@@ -1,8 +1,8 @@
 package webserver;
 
-import exception.IllegalHttpVersionException;
+import exception.IllegalHttpProtocolException;
 
-public class HttpVersion {
+public class HttpProtocol {
 
 	private static final String DELIMITER = "/";
 	private static final int VALID_NUMBER_OF_TOKENS = 2;
@@ -12,7 +12,7 @@ public class HttpVersion {
 	private final String protocol;
 	private final String version;
 
-	public HttpVersion(String token) {
+	public HttpProtocol(String token) {
 		String[] tokens = token.split(DELIMITER);
 		validate(tokens);
 		this.protocol = tokens[INDEX_OF_PROTOCOL];
@@ -21,7 +21,7 @@ public class HttpVersion {
 
 	private void validate(String[] tokens) {
 		if (tokens.length != VALID_NUMBER_OF_TOKENS) {
-			throw new IllegalHttpVersionException(tokens);
+			throw new IllegalHttpProtocolException(tokens);
 		}
 	}
 

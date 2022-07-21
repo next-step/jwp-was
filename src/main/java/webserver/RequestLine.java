@@ -11,18 +11,18 @@ public class RequestLine {
 	private static final int VALID_NUMBER_OF_TOKENS = 3;
 	private static final int INDEX_OF_METHOD = 0;
 	private static final int INDEX_OF_PATH = 1;
-	private static final int INDEX_OF_HTTP_VERSION = 2;
+	private static final int INDEX_OF_HTTP_PROTOCOL = 2;
 
 	private final HttpMethod method;
 	private final RequestPath requestPath;
-	private final HttpVersion httpVersion;
+	private final HttpProtocol httpProtocol;
 
 	public RequestLine(String value) {
 		String[] tokens = value.split(DELIMITER);
 		validate(tokens);
 		this.method = HttpMethod.from(tokens[INDEX_OF_METHOD]);
 		this.requestPath = RequestPath.from(tokens[INDEX_OF_PATH]);
-		this.httpVersion = new HttpVersion(tokens[INDEX_OF_HTTP_VERSION]);
+		this.httpProtocol = new HttpProtocol(tokens[INDEX_OF_HTTP_PROTOCOL]);
 		logger.debug("request line = {}", value);
 	}
 
@@ -41,11 +41,11 @@ public class RequestLine {
 	}
 
 	public String getProtocol() {
-		return httpVersion.getProtocol();
+		return httpProtocol.getProtocol();
 	}
 
 	public String getVersion() {
-		return httpVersion.getVersion();
+		return httpProtocol.getVersion();
 	}
 
 	public String getQueryString() {

@@ -1,16 +1,16 @@
 package webserver;
 
-import static org.assertj.core.api.Assertions.*;
-
+import exception.IllegalHttpMethodException;
+import exception.IllegalHttpProtocolException;
+import exception.IllegalRequestLineException;
+import exception.IllegalRequestPathException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import exception.IllegalHttpMethodException;
-import exception.IllegalHttpVersionException;
-import exception.IllegalRequestLineException;
-import exception.IllegalRequestPathException;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class RequestLineTest {
 
@@ -68,11 +68,11 @@ class RequestLineTest {
 			.isInstanceOf(IllegalRequestPathException.class);
 	}
 
-	@DisplayName("HTTP 버전이 유효하지 않으면 IllegalHttpVersionException 예외가 발생한다.")
+	@DisplayName("HTTP 프로토콜이 유효하지 않으면 IllegalHttpProtocolException 예외가 발생한다.")
 	@Test
-	void illegalHttpVersion() {
+	void illegalHttpProtocol() {
 		assertThatThrownBy(() -> new RequestLine("GET /users HTTP1.1"))
-			.isInstanceOf(IllegalHttpVersionException.class);
+			.isInstanceOf(IllegalHttpProtocolException.class);
 	}
 
 	@DisplayName("HTTP 메서드가 유효하지 않으면 IllegalHttpMethodException 예외가 발생한다.")
