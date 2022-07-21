@@ -74,21 +74,26 @@ public class RequestHandler implements Runnable {
         }
 
         if (method.isPost() && path.startsWith("/user/login")) {
-            Parameters parameters = new Parameters(requestBody);
-            String userId = parameters.getParameter("userId");
-            String password = parameters.getParameter("password");
-
-            User user = DataBase.findUserById(userId);
-            if (user != null && password.equals(user.getPassword())) {
-                body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
-                response302HeaderWithLoginSuccessCookie(dos, "/index.html");
-            } else {
-                body = FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html");
-                response200Header(dos, body.length);
-            }
+            body = login(requestBody, dos);
         }
 
         responseBody(dos, body);
+    }
+
+    private byte[] login(String requestBody, DataOutputStream dos) throws IOException, URISyntaxException {
+        Parameters parameters = new Parameters(requestBody);
+        String userId = parameters.getParameter("userId");
+        String password = parameters.getParameter("password");
+
+        User user = DataBase.findUserById(userId);
+        if (user != null && password.equals(user.getPassword())) {
+            response302HeaderWithLoginSuccessCookie(dos, "/index.html");
+            return FileIoUtils.loadFileFromClasspath("./templates/index.html");
+        }
+
+        byte[] body = FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html");
+        response200HeaderWithLoginFailedCookie(dos, body.length);
+        return body;
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
@@ -96,6 +101,18 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response200HeaderWithLoginFailedCookie(DataOutputStream dos, int lengthOfBodyContent) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("Set-Cookie: logined=false\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());

@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import utils.FileIoUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutorService;
@@ -23,11 +24,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class HttpRequestTest {
 
+    private static final String BASE_URL = "http://localhost:8080";
     private static final String VALID_USER_ID = "user";
     private static final String VALID_PASSWORD = "pass";
     private static final String INVALID_USER_ID = "user11";
     private static final String INVALID_PASSWORD = "pass11";
-
     private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 
     @BeforeAll
@@ -51,7 +52,7 @@ class HttpRequestTest {
     @Test
     void request_resttemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
@@ -59,7 +60,7 @@ class HttpRequestTest {
     @Test
     void request_index() throws IOException, URISyntaxException {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/index.html", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL + "/index.html", String.class);
         byte[] body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(new String(body));
@@ -69,7 +70,7 @@ class HttpRequestTest {
     @Test
     void request_form() throws IOException, URISyntaxException {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/user/form.html", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL + "/user/form.html", String.class);
         byte[] body = FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(new String(body));
@@ -79,7 +80,7 @@ class HttpRequestTest {
     @Test
     void request_login() throws IOException, URISyntaxException {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/user/login.html", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL + "/user/login.html", String.class);
         byte[] body = FileIoUtils.loadFileFromClasspath("./templates/user/login.html");
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(new String(body));
@@ -93,10 +94,26 @@ class HttpRequestTest {
         requestBody.add("password", VALID_PASSWORD);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/user/login", requestBody, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(BASE_URL + "/user/login", requestBody, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         assertThat(response.getHeaders().getLocation()).isEqualTo(URI.create("/index.html"));
         assertThat(response.getHeaders().get("Set-Cookie")).contains("logined=true; Path=/");
+    }
+
+    @DisplayName("로그인 실패 시, 로그인 실패 쿠키와 함께 login_failed.html 페이지로 이동한다.")
+    @Test
+    void request_login_failure() throws IOException, URISyntaxException {
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("userId", INVALID_USER_ID);
+        requestBody.add("password", INVALID_PASSWORD);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.postForEntity(BASE_URL + "/user/login", requestBody, String.class);
+        String expectedBody = new String(FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html"));
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getHeaders().get("Set-Cookie")).contains("logined=false");
+        assertThat(response.getBody()).isEqualTo(expectedBody);
     }
 }
