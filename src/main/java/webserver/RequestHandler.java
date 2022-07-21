@@ -1,19 +1,13 @@
 package webserver;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import utils.IOUtils;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.Collection;
 
@@ -43,35 +37,40 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
             response(requestLine, headers, requestBody, dos);
 
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response(RequestLine requestLine, HttpHeaders headers, String requestBody, DataOutputStream dos) throws IOException, URISyntaxException {
+    private void response(RequestLine requestLine, HttpHeaders headers, String requestBody, DataOutputStream dos) {
         String path = requestLine.getRequestPath();
         HttpMethod method = requestLine.getMethod();
         String cookie = headers.get("Cookie");
         byte[] body = new byte[0];
 
         if (method.isGet() && ("/".equals(path) || "/index.html".equals(path))) {
-            body = response200WithView(dos, "index");
+            body = responseView( "index");
+            response200Header(dos, body.length);
         }
 
         if (method.isGet() && "/user/form.html".equals(path)) {
-            body = response200WithView(dos,"user/form");
+            body = responseView("user/form");
+            response200Header(dos, body.length);
         }
 
         if (method.isGet() && "/user/login.html".equals(path)) {
-            body = response200WithView(dos, "user/login");
+            body = responseView( "user/login");
+            response200Header(dos, body.length);
         }
 
         if (method.isGet() && "/user/list".equals(path)) {
-            body = showUsers(dos, cookie);
+            body = showUsers(cookie);
+            response200Header(dos, body.length);
         }
 
         if (method.isPost() && "/user/create".equals(path)) {
-            createUser(requestBody, dos);
+            body = createUser(requestBody);
+            response302Header(dos);
         }
 
         if (method.isPost() && "/user/login".equals(path)) {
@@ -81,52 +80,36 @@ public class RequestHandler implements Runnable {
         responseBody(dos, body);
     }
 
-    private byte[] showUsers(DataOutputStream dos, String cookie) throws IOException, URISyntaxException {
+    private byte[] responseView(String viewName, Object model) {
+        String view = HandlebarsUtils.getView(viewName, model);
+        return view.getBytes(UTF_8);
+    }
+
+    private byte[] responseView(String viewName) {
+        return responseView(viewName, null);
+    }
+
+    private byte[] showUsers(String cookie) {
         if (cookie != null && cookie.contains("logined=true")) {
-            TemplateLoader loader = new ClassPathTemplateLoader();
-            loader.setPrefix("/templates");
-            loader.setSuffix(".html");
-            Handlebars handlebars = new Handlebars(loader);
-            Template template = handlebars.compile("user/list");
-
             Collection<User> users = DataBase.findAll();
-            String userListPage = template.apply(users);
-
-            byte[] body = userListPage.getBytes(UTF_8);
-            response200Header(dos, body.length);
-            return body;
+            return responseView("user/list", users);
         }
-        return response200WithView(dos, "user/login");
+        return responseView( "user/login");
     }
 
-    private byte[] response200WithView(DataOutputStream dos, String viewName) throws IOException, URISyntaxException {
-        byte[] body = FileIoUtils.loadFileFromClasspath(viewResolver(viewName));
-        response200Header(dos, body.length);
-        return body;
-    }
-
-    private String viewResolver(String viewName) {
-        return String.format("./templates/%s.html", viewName);
-    }
-
-    private void createUser(String requestBody, DataOutputStream dos) {
+    private byte[] createUser(String requestBody) {
         Parameters parameters = new Parameters(requestBody);
         String userId = parameters.getParameter("userId");
         String password = parameters.getParameter("password");
         String name = parameters.getParameter("name");
         String email = parameters.getParameter("email");
 
-        logger.debug("userId = {}", userId);
-        logger.debug("password = {}", password);
-        logger.debug("name = {}", name);
-        logger.debug("email = {}", email);
-
         User user = new User(userId, password, name, email);
         DataBase.addUser(user);
-        response302Header(dos);
+        return responseView("index");
     }
 
-    private byte[] login(String requestBody, DataOutputStream dos) throws IOException, URISyntaxException {
+    private byte[] login(String requestBody, DataOutputStream dos) {
         Parameters parameters = new Parameters(requestBody);
         String userId = parameters.getParameter("userId");
         String password = parameters.getParameter("password");
@@ -134,10 +117,10 @@ public class RequestHandler implements Runnable {
         User user = DataBase.findUserById(userId);
         if (user != null && password.equals(user.getPassword())) {
             response302HeaderWithLoginSuccessCookie(dos);
-            return FileIoUtils.loadFileFromClasspath(viewResolver("index"));
+            return responseView("index");
         }
 
-        byte[] body = FileIoUtils.loadFileFromClasspath(viewResolver("user/login_failed"));
+        byte[] body = responseView("user/login_failed");
         response200HeaderWithLoginFailedCookie(dos, body.length);
         return body;
     }
