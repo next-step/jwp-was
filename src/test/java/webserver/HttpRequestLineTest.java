@@ -26,4 +26,22 @@ class HttpRequestLineTest {
 				() -> assertThat(httpRequestLine.getVersion().getVersion()).isEqualTo("1.1")
 		);
 	}
+
+	/**
+	 * POST /users HTTP/1.1
+	 */
+	@DisplayName("POST 요청 파싱")
+	@Test
+	void parse_post() {
+		final String requestLine = "POST /users HTTP/1.1";
+
+		HttpRequestLine httpRequestLine = new HttpRequestLine(requestLine);
+
+		assertAll(
+				() -> assertThat(httpRequestLine.getHttpMethod()).isEqualTo(HttpMethod.POST),
+				() -> assertThat(httpRequestLine.getPath().getPath()).isEqualTo("/users"),
+				() -> assertThat(httpRequestLine.getProtocol().getProtocol()).isEqualTo("HTTP"),
+				() -> assertThat(httpRequestLine.getVersion().getVersion()).isEqualTo("1.1")
+		);
+	}
 }
