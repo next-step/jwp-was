@@ -18,4 +18,15 @@ class RequestLineParserTest {
         assertThat(parser.getVersion()).isEqualTo(1.1);
 
     }
+
+    @DisplayName("POST 요청을 받고 파싱된 값을 리턴한다.")
+    @Test
+    void post_request() {
+        RequestLineParser parser = new RequestLineParser("POST /users HTTP/1.1");
+
+        assertThat(parser.getMethod()).isEqualTo("POST");
+        assertThat(parser.getPath()).isEqualTo("/users");
+        assertThat(parser.getProtocol()).isEqualTo("HTTP");
+        assertThat(parser.getVersion()).isEqualTo(1.1);
+    }
 }
