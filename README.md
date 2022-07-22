@@ -22,6 +22,11 @@
 #### 기능 요구사항 2. 
 - [x] “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다.
   - [x] query string을 추출 하는 기능이 구현 되어 있으니, model.User 클래스에 저장한다.
+#### 리팩토링
+- [ ] 패키지 구조를 변경하여 한 눈에 구조가 들어오도록 한다.
+  - [ ] http 패키지를 만들어 그 안에 필요한 패키지를 생성
+  - [ ] header 패키지를 만들고 Header 클래스에 필요한 객체들을 생성한다.
+  - [ ] header 패키지가 사용 되도록 리팩토링 한다.
 #### 기능 요구사항 3.
 - [ ] http://localhost:8080/user/form.html 파일의 form 태그 method를 get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.
   - [ ] Post 메서드 일 때 requestBody를 읽도록 조건을 추가한다.
