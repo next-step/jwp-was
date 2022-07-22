@@ -15,10 +15,14 @@ class GetIndexHtmlResponseTest {
     @DisplayName("Get /index.html 응답")
     @Test
     void response() throws IOException, URISyntaxException {
+        // given
         GetIndexHtmlResponse getIndexHtmlResponse = new GetIndexHtmlResponse();
-        byte[] actual = getIndexHtmlResponse.response();
         byte[] expect = FileIoUtils.loadFileFromClasspath("./templates/index.html");
 
+        // when
+        byte[] actual = getIndexHtmlResponse.response();
+
+        // then
         assertThat(actual).hasSameSizeAs(expect);
     }
 }

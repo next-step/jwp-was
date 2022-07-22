@@ -10,10 +10,12 @@ import org.slf4j.LoggerFactory;
 
 import webserver.domain.RequestLine;
 import webserver.response.GetIndexHtmlResponse;
+import webserver.response.GetUserFormHtmlResponse;
 
 public class ResponseHandler {
     private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
     public static final String GET_INDEX_HTML = "/index.html";
+    public static final String GET_USER_FORM_HTML = "/user/form.html";
     private final Socket connection;
 
     public ResponseHandler(Socket connection) {
@@ -31,6 +33,18 @@ public class ResponseHandler {
                 responseBody(dos, body);
                 return;
             }
+
+            if (requestLine.index().equals(GET_USER_FORM_HTML)) {
+                GetUserFormHtmlResponse response = new GetUserFormHtmlResponse();
+                response.response(requestLine);
+                response200Header(dos, 0);
+                responseBody(dos, new byte[0]);
+                return;
+            }
+
+            byte[] body = "Hello World".getBytes();
+            response200Header(dos, body.length);
+            responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

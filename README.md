@@ -20,8 +20,8 @@
   - [x] http header 전체를 출력한다.
   - [x] 1단계에서 얻은 Path로 src/main/resources 디렉토리에서 읽어 전달
 #### 기능 요구사항 2. 
-- [ ] “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다.
-  - [ ] query string을 추출 하는 기능이 구현 되어 있으니, model.User 클래스에 저장한다.
+- [x] “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다.
+  - [x] query string을 추출 하는 기능이 구현 되어 있으니, model.User 클래스에 저장한다.
 #### 기능 요구사항 3.
 - [ ] http://localhost:8080/user/form.html 파일의 form 태그 method를 get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.
   - [ ] Post 메서드 일 때 requestBody를 읽도록 조건을 추가한다.
