@@ -12,7 +12,7 @@ class ProtocolTest {
     void from() {
         Protocol protocol = Protocol.from("HTTP/1.1");
         assertThat(protocol).isNotNull();
-        assertThat(protocol.getVersion()).isEqualTo("1.1");
+        assertThat(protocol).isEqualTo(Protocol.of("HTTP", "1.1"));
     }
 
     @DisplayName("잘못된 입력값으로 Protocol 객체 생성하는 테스트")

@@ -10,6 +10,16 @@
 
 ## 1단계 - TDD 실습
 ### 요구사항 공통부
+* 도메인 구조
+  * HttpRequest
+    * RequestLine
+      * HttpMethod
+      * Path
+        * QueryString
+      * Protocol
+        * Version
+    * HttpHeaders
+    * HttpBody
 * HTTP 요청의 첫번째 라인을 의미하는 RequestLine을 구현해야 한다. 
 * 각 요청을 파싱하여 보여주기 위한 ResultView를 구현해야 한다.
 

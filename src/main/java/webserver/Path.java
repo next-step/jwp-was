@@ -6,16 +6,18 @@ import java.util.regex.Pattern;
 public class Path {
     private static final int VALID_NUMBER_OF_PROPERTIES = 2;
     private static final String PATH_AND_DATA_DELIMITER = "?";
-    private String path;
-    private String data;
+    private static final String START_CHARACTER_OF_PATH = "/";
 
-    private Path(String path) {
-        this.path = path;
-    }
+    private final String path;
+    private final String data;
 
     private Path(String path, String data) {
-        this(path);
+        this.path = path;
         this.data = data;
+    }
+
+    private Path(String path) {
+        this(path, null);
     }
 
     public static Path from(String path) {
@@ -33,7 +35,7 @@ public class Path {
     }
 
     private static void validate(String path) {
-        if (!path.startsWith("/")) {
+        if (!path.startsWith(START_CHARACTER_OF_PATH)) {
             throw new IllegalArgumentException("잘못된 형식의 path입니다.");
         }
     }

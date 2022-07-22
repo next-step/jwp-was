@@ -7,10 +7,10 @@ public class RequestLine {
     private static final String PROPERTIES_DELIMITER = " ";
 
     private HttpMethod method;
-    private String path;
+    private Path path;
     private Protocol protocol;
 
-    private RequestLine(HttpMethod method, String path, Protocol protocol) {
+    private RequestLine(HttpMethod method, Path path, Protocol protocol) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
@@ -19,7 +19,7 @@ public class RequestLine {
     public static RequestLine from(String httpRequest) {
         String[] properties = httpRequest.split(PROPERTIES_DELIMITER);
         validate(properties);
-        return new RequestLine(HttpMethod.from(properties[0]), properties[1], Protocol.from(properties[2]));
+        return new RequestLine(HttpMethod.from(properties[0]), Path.from(properties[1]), Protocol.from(properties[2]));
     }
 
     private static void validate(String[] properties) {
@@ -53,8 +53,8 @@ public class RequestLine {
     public String toString() {
         return "RequestLine{" +
                 "method=" + method +
-                ", path='" + path + '\'' +
-                ", protocol='" + protocol + '\'' +
+                ", path=" + path +
+                ", protocol=" + protocol +
                 '}';
     }
 }
