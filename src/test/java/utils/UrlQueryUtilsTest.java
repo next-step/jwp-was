@@ -19,7 +19,7 @@ class UrlQueryUtilsTest {
     @DisplayName("생성 불가")
     void instance_thrownAssertionError() {
         assertThatExceptionOfType(AssertionError.class)
-                .isThrownBy(() -> ReflectionUtils.newInstance(UrlQueryUtilsTest.class));
+                .isThrownBy(() -> ReflectionUtils.newInstance(UrlQueryUtils.class));
     }
 
     @Test
