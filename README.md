@@ -7,3 +7,24 @@
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+
+### 기능 요구사항
+- [X] GET 요청
+  - [X] HTTP GET 요청에 대한 RequestLine을 파싱한다
+  - [X]  "GET /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다.
+      - method는 GET
+      - path는 /users
+      - protocol은 HTTP
+      - version은 1.1
+- [X] POST 요청
+  - [X] HTTP POST 요청에 대한 RequestLine을 파싱한다.
+  - [X] "POST /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다.
+    - method는 POST
+    - path는 /users
+    - protocol은 HTTP
+    - version은 1.1
+- [X] Query String 파싱
+  - [X] HTTP 요청(request)의 Query String으로 전달되는 데이터를 파싱한다.
+  - [X] 클라이언트에서 서버로 전달되는 데이터의 구조는 name1=value1&name2=value2와 같은 구조로 전달된다.
+- [X] enum 적용(선택)
+  - [X] HTTP method인 GET, POST를 enum으로 구현한다.
