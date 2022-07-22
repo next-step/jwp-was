@@ -10,10 +10,11 @@ public class HttpRequestLine {
     private final HttpVersion version;
 
     public HttpRequestLine(final String requestLine) {
-        this.httpMethod = HttpMethod.resolve(requestLine.split(" ")[0]);
-        this.path = new RequestPath(requestLine);
-        this.protocol = new Protocol(requestLine);
-        this.version = new HttpVersion(requestLine);
+        final String[] split = requestLine.split(" ");
+        this.httpMethod = HttpMethod.resolve(split[0]);
+        this.path = new RequestPath(split[1]);
+        this.protocol = new Protocol(split[2].split("/")[0]);
+        this.version = new HttpVersion(split[2].split("/")[1]);
     }
 
     public HttpMethod getHttpMethod() {

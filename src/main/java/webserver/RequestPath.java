@@ -8,9 +8,7 @@ public class RequestPath {
 	private final String path;
 	private final String query;
 
-	public RequestPath(final String requestLine) {
-		final String path = requestLine.split(" ")[1];
-
+	public RequestPath(final String path) {
 		if (path.contains("?")) {
 			final String[] split = path.split("\\?");
 			this.path = split[0];

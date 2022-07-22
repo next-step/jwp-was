@@ -6,8 +6,8 @@ public class HttpVersion {
 
 	private final String version;
 
-	public HttpVersion(final String requestLine) {
-		this.version = requestLine.split(" ")[2].split("/")[1];
+	public HttpVersion(final String version) {
+		this.version = version;
 	}
 
 	public String getVersion() {

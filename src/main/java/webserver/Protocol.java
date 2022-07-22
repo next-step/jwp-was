@@ -6,8 +6,8 @@ public class Protocol {
 
 	private final String protocol;
 
-	public Protocol(final String requestLine) {
-		this.protocol = requestLine.split(" ")[2].split("/")[0];
+	public Protocol(final String protocol) {
+		this.protocol = protocol;
 	}
 
 	public String getProtocol() {
