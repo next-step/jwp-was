@@ -19,7 +19,7 @@ public class URIParser {
 
     public URI parse(String message) {
         if (!message.contains(QUERY_PARAMETER_DELIMITER)) {
-            return new URI(message, new QueryParameters(new HashMap<>()));
+            return new URI(message);
         }
 
         KeyValuePair pathQueryParamPair = keyValuePairParser.parse(message, QUERY_PARAMETER_DELIMITER);
