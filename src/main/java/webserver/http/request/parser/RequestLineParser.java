@@ -3,7 +3,7 @@ package webserver.http.request.parser;
 import webserver.http.request.RequestLine;
 
 public class RequestLineParser {
-    private static final String REQUEST_LINE_DELIMITER = " ";
+    private static final String REQUEST_LINE_DELIMITER_REGEX = " ";
 
     private static final int REQUEST_LINE_SPLIT_SIZE = 3;
 
@@ -18,7 +18,7 @@ public class RequestLineParser {
     }
 
     public RequestLine parse(String message) {
-        String[] splitMessage = message.split(REQUEST_LINE_DELIMITER);
+        String[] splitMessage = message.split(REQUEST_LINE_DELIMITER_REGEX);
         if (splitMessage.length != REQUEST_LINE_SPLIT_SIZE) {
             throw new RuntimeException(String.format("'[Method] [URI] [Protocol]' 형식의 requestLine 메시지가 아닙니다. {message=%s}", message));
         }

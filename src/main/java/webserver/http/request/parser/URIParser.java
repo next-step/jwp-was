@@ -1,10 +1,7 @@
 package webserver.http.request.parser;
 
 import webserver.http.request.KeyValuePair;
-import webserver.http.request.QueryParameters;
 import webserver.http.request.URI;
-
-import java.util.HashMap;
 
 public class URIParser {
     private static final String QUERY_PARAMETER_DELIMITER = "?";
