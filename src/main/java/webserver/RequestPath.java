@@ -1,29 +1,46 @@
 package webserver;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
-import org.apache.logging.log4j.util.Strings;
 
 public class RequestPath {
 
+	private static final String PATH_DELIMITER = "\\?";
+	private static final String QUERY_DELIMITER = "&";
+	private static final String KEY_VALUE_DELIMITER = "=";
+
 	private final String path;
-	private final String query;
+	private Map<String, String> query = new HashMap<>();
 
 	public RequestPath(final String path) {
-		if (path.contains("?")) {
-			final String[] split = path.split("\\?");
-			this.path = split[0];
-			this.query = split[1];
-			return;
+		final String[] split = path.split(PATH_DELIMITER);
+		
+		this.path = split[0];
+		
+		if (split.length > 1) {
+			this.query = setQuery(split[1]);
 		}
-		this.path = path;
-		this.query = Strings.EMPTY;
+	}
+
+	private Map<String, String> setQuery(final String queryValue) {
+		final String[] splitQuery = queryValue.split(QUERY_DELIMITER);
+
+		final Map<String, String> queries = new HashMap<>();
+
+		for (String query : splitQuery) {
+			final String[] value = query.split(KEY_VALUE_DELIMITER);
+			queries.put(value[0], value[1]);
+		}
+		
+		return queries;
 	}
 
 	public String getPath() {
 		return path;
 	}
 
-	public String getQuery() {
+	public Map<String, String> getQuery() {
 		return query;
 	}
 

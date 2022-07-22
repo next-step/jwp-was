@@ -3,6 +3,7 @@ package webserver;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.HashMap;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
@@ -58,7 +59,13 @@ class HttpRequestLineTest {
 		assertAll(
 				() -> assertThat(httpRequestLine.getHttpMethod()).isEqualTo(HttpMethod.GET),
 				() -> assertThat(httpRequestLine.getPath().getPath()).isEqualTo("/users"),
-				() -> assertThat(httpRequestLine.getPath().getQuery()).isEqualTo("userId=javajigi&password=password&name=JaeSung"),
+				() -> assertThat(httpRequestLine.getPath().getQuery()).isEqualTo(new HashMap<String, String>() {
+					{
+						put("userId", "javajigi");
+						put("password", "password");
+						put("name", "JaeSung");
+					}
+				}),
 				() -> assertThat(httpRequestLine.getProtocol().getProtocol()).isEqualTo("HTTP"),
 				() -> assertThat(httpRequestLine.getVersion().getVersion()).isEqualTo("1.1")
 		);
