@@ -39,18 +39,18 @@ class KeyValuePairParserTest {
                 .hasMessage("메시지에 key가 반드시 존재해야 합니다.");
     }
 
-    @DisplayName("메시지에 구분자가 1개가 아닌 경우, 예외발생")
+    @DisplayName("메시지에 구분자가 1개보다 많은 경우, 예외발생")
     @ParameterizedTest
-    @ValueSource(strings = {"key,value", "key=value=", "key==value", "key=="})
+    @ValueSource(strings = {"key=value=", "key==value", "key=="})
     void parse_contains_multiple_delimiter_fail(String message) {
         String delimiter = "=";
 
         assertThatThrownBy(() -> keyValuePairParser.parse(message, delimiter))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessage("구분자는 반드시 한개만 포함되어 있어야 합니다.");
+                .hasMessage("한개보다 많은 구분자가 포함될수 없습니다.");
     }
 
-    @DisplayName("메시지에 value가 포함되지 않은 경우, value가 빈 문자열인 KeyValuePair 객체 생성")
+    @DisplayName("입력받은 메시지를 구분자를 기준으로 key, value를 갖는 KeyValuePair 객체 생성")
     @ParameterizedTest
     @MethodSource("provideForParse")
     void parse_contains_multiple_delimiter(String message, KeyValuePair expected) {
@@ -64,7 +64,8 @@ class KeyValuePairParserTest {
     private static Stream<Arguments> provideForParse() {
         return Stream.of(
                 arguments("key=", new KeyValuePair("key", "")),
-                arguments("key=value", new KeyValuePair("key", "value"))
+                arguments("key=value", new KeyValuePair("key", "value")),
+                arguments("key,value", new KeyValuePair("key,value", ""))
         );
     }
 }

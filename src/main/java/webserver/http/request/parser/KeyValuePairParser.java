@@ -6,6 +6,7 @@ public class KeyValuePairParser {
     private static final int SPLIT_SIZE = 2;
 
     private static final String REPLACEMENT_DELIMITER_REGEX = " ";
+    private static final String EMPTY_VALUE = "";
 
     public KeyValuePair parse(String message, String delimiter) {
         if (delimiter.length() != 1) {
@@ -22,17 +23,21 @@ public class KeyValuePairParser {
                 delimiterCount++;
             }
         }
-        if (delimiterCount != 1) {
-            throw new RuntimeException("구분자는 반드시 한개만 포함되어 있어야 합니다.");
+        if (delimiterCount >= SPLIT_SIZE) {
+            throw new RuntimeException("한개보다 많은 구분자가 포함될수 없습니다.");
         }
 
         String[] splitMessage = message.replace(delimiter, REPLACEMENT_DELIMITER_REGEX).split(REPLACEMENT_DELIMITER_REGEX);
         String key = splitMessage[0];
-        if (splitMessage.length < SPLIT_SIZE) {
-            return new KeyValuePair(key, "");
+        if (isEmptyValue(splitMessage)) {
+            return new KeyValuePair(key, EMPTY_VALUE);
         }
         String value = splitMessage[1];
 
         return new KeyValuePair(key, value);
+    }
+
+    private boolean isEmptyValue(String[] splitMessage) {
+        return splitMessage.length < SPLIT_SIZE;
     }
 }
