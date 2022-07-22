@@ -9,4 +9,11 @@ public class QueryParameters {
     public QueryParameters(Map<String, List<String>> keyValues) {
         this.keyValues = keyValues;
     }
+
+    @Override
+    public String toString() {
+        return "QueryParameters{" +
+                "keyValues=" + keyValues +
+                '}';
+    }
 }

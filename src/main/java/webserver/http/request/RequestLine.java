@@ -22,4 +22,13 @@ public class RequestLine {
     public Protocol getProtocol() {
         return protocol;
     }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method=" + method +
+                ", uri=" + uri +
+                ", protocol=" + protocol +
+                '}';
+    }
 }

@@ -16,4 +16,12 @@ public class Protocol {
     public String getVersion() {
         return version;
     }
+
+    @Override
+    public String toString() {
+        return "Protocol{" +
+                "type='" + type + '\'' +
+                ", version='" + version + '\'' +
+                '}';
+    }
 }

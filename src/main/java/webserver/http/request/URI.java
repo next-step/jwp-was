@@ -18,4 +18,12 @@ public class URI {
     public String getPath() {
         return path;
     }
+
+    @Override
+    public String toString() {
+        return "URI{" +
+                "path='" + path + '\'' +
+                ", queryParameters=" + queryParameters +
+                '}';
+    }
 }
