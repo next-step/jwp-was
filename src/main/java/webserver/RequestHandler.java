@@ -1,5 +1,6 @@
 package webserver;
 
+import db.DataBase;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,6 +11,8 @@ import java.net.Socket;
 
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -31,9 +34,16 @@ public class RequestHandler implements Runnable {
         try (InputStream inputStream = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = parseRequest(inputStream);
 
+            Map<String, String> queryStrings = httpRequest.getQueryStringsMap();
+            User user = new User(queryStrings.get("userId"), queryStrings.get("password"), queryStrings.get("name"), queryStrings.get("email"));
+            DataBase.addUser(user);
+
             DataOutputStream dos = new DataOutputStream(out);
 
-            byte[] body = FileIoUtils.loadFileFromClasspath(PATH_TEMPLATES + httpRequest.getPath());
+            byte[] body = new byte[0];
+            if (SupportTemplates.pathMap.contains(httpRequest.getPath())) {
+                body = FileIoUtils.loadFileFromClasspath(PATH_TEMPLATES + httpRequest.getPath());
+            }
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
