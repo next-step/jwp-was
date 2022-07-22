@@ -1,6 +1,8 @@
 package webserver.domain;
 
 import lombok.Getter;
+import org.springframework.util.StringUtils;
+import webserver.exception.StringEmptyException;
 
 import java.util.Objects;
 
@@ -16,7 +18,13 @@ public class Method {
     }
 
     public static Method parse(String method) {
+        validate(method);
         return new Method(HttpMethod.valueOf(method));
+    }
+
+    private static void validate(String method) {
+        if (!StringUtils.hasText(method))
+            throw new StringEmptyException("method is empty");
     }
 
     @Override

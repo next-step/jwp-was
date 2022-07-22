@@ -1,9 +1,9 @@
 package webserver;
 
-import lombok.Getter;
 import webserver.domain.Method;
 import webserver.domain.Path;
 import webserver.domain.ProtocolInfo;
+import webserver.exception.StringEmptyException;
 
 public class RequestLine {
 
@@ -27,7 +27,7 @@ public class RequestLine {
 
     private static void validateRequestline(String requestLine) {
         if(requestLine.isBlank()) {
-            throw new RuntimeException("Exist Not requestLine");
+            throw new StringEmptyException("requestLine is empty");
         }
     }
 

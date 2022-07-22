@@ -3,6 +3,7 @@ package webserver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.exception.StringEmptyException;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -11,7 +12,7 @@ public class RequestLineTest {
     @Test
     @DisplayName("requestLine이 빈 값이면 예외를 던진다.")
     public void validTest() {
-        Assertions.assertThrows(Exception.class, () -> {
+        Assertions.assertThrows(StringEmptyException.class, () -> {
             RequestLine.from("");
         });
     }

@@ -1,6 +1,8 @@
 package webserver.domain;
 
 import lombok.Getter;
+import org.springframework.util.StringUtils;
+import webserver.exception.StringEmptyException;
 
 import java.util.Objects;
 
@@ -23,9 +25,16 @@ public class ProtocolInfo {
     }
 
     public static ProtocolInfo parse(String protocol) {
+        validate(protocol);
+
         String[] protocolInfo = protocol.split(PROTOCOL_DELIMITER);
 
         return new ProtocolInfo(protocolInfo[PROTOCOL_NAME_IDX], protocolInfo[PROTOCOL_VERSION_IDX]);
+    }
+
+    private static void validate(String protocol) {
+        if (!StringUtils.hasText(protocol))
+            throw new StringEmptyException("protocol is empty");
     }
 
     @Override

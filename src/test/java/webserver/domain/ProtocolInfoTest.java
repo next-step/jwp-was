@@ -3,8 +3,19 @@ package webserver.domain;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.exception.StringEmptyException;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ProtocolInfoTest {
+
+    @Test
+    @DisplayName("ProtocolInfo 가 빈 값이면 예외를 던진다.")
+    public void validTest() {
+        assertThrows(StringEmptyException.class, () -> {
+            ProtocolInfo.parse("");
+        });
+    }
 
     @Test
     @DisplayName("requestLine에서 Protocol를 정상적으로 파싱했는지 확인하는 테스트")
