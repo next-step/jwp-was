@@ -63,10 +63,6 @@ public class RequestLine {
 		return this.protocol;
 	}
 
-	public String getVersion() {
-		return this.protocol.getVersion();
-	}
-
 	public RequestPathQueryString getRequestPathQueryString() {
 		return this.path.getQueryString();
 	}
