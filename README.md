@@ -16,9 +16,9 @@
 
 ### 2단계
 #### 기능 요구사항 1. 
-- [ ] http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
-  - [ ] http header 전체를 출력한다.
-  - [ ] 1단계에서 얻은 Path로 src/main/resources 디렉토리에서 읽어 전달
+- [x] http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
+  - [x] http header 전체를 출력한다.
+  - [x] 1단계에서 얻은 Path로 src/main/resources 디렉토리에서 읽어 전달
 #### 기능 요구사항 2. 
 - [ ] “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다.
   - [ ] query string을 추출 하는 기능이 구현 되어 있으니, model.User 클래스에 저장한다.

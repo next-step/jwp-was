@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
@@ -25,12 +24,12 @@ public class RequestHandler implements Runnable {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
-        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+        try (InputStream in = connection.getInputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             String line = br.readLine();
             RequestLine requestLine = RequestLine.create(line);
-            while (!"".equals(line)) {
-                System.out.println(line);
+            while (isEnd(line)) {
+                printlnLine(line);
                 line = br.readLine();
             }
             ResponseHandler responseHandler = new ResponseHandler(connection);
@@ -38,5 +37,13 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private void printlnLine(String line) {
+        System.out.println(line);
+    }
+
+    private boolean isEnd(String line) {
+        return !"".equals(line);
     }
 }
