@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import exception.InvalidRequestException;
@@ -9,14 +9,15 @@ public class Version {
     private final String version;
 
     public Version(String version) {
-        if (StringUtils.isEmpty(version)) {
-            throw new InvalidRequestException("version");
-        }
+        validateVersion(version);
+
         this.version = version;
     }
 
-    public String getVersion() {
-        return version;
+    private void validateVersion(String version) {
+        if (StringUtils.isEmpty(version) || !StringUtils.contains(version, ".")) {
+            throw new InvalidRequestException("version");
+        }
     }
 
     @Override
@@ -30,12 +31,5 @@ public class Version {
     @Override
     public int hashCode() {
         return Objects.hash(version);
-    }
-
-    @Override
-    public String toString() {
-        return "Version{" +
-                "version='" + version + '\'' +
-                '}';
     }
 }

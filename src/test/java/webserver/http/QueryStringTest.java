@@ -1,6 +1,7 @@
-package webserver;
+package webserver.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -23,6 +24,12 @@ class QueryStringTest {
         assertThat(Stream.of(StringUtils.split(queryString, "&"))
                 .map(keyValue -> StringUtils.split(keyValue, "="))
                 .collect(Collectors.toMap(s -> s[0], s -> s[1]))).isEqualTo(queryParameter);
+    }
+
+    @DisplayName("정상적인 QueryString 이 들어왔을 때")
+    @Test
+    void getQueryString() {
+        assertThat(new QueryString("userId=javajigi&password=password&name=JaeSung")).isEqualTo(new QueryString("userId", "javajigi", "password", "password", "name", "JaeSung"));
     }
 
 }
