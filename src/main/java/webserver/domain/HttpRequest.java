@@ -2,6 +2,7 @@ package webserver.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.http.HttpMethod;
 
 public class HttpRequest {
     public static final int REQUEST_LINE_POINT = 0;
@@ -22,9 +23,17 @@ public class HttpRequest {
     public static HttpRequest newInstance(String line) {
         String[] attributes = line.split(System.lineSeparator());
 
-        return new HttpRequest(RequestLine.from(attributes[REQUEST_LINE_POINT]),
+        RequestLine requestLine = RequestLine.from(attributes[REQUEST_LINE_POINT]);
+
+        if (HttpMethod.POST.equals(requestLine.getMethod())) {
+            return new HttpRequest(requestLine,
+                    HttpHeaders.newInstance(attributes, HEADER_START_POINT, attributes.length),
+                    new RequestBody(attributes[attributes.length - 1]));
+        }
+
+        return new HttpRequest(requestLine,
                 HttpHeaders.newInstance(attributes, HEADER_START_POINT, attributes.length - 1),
-                new RequestBody(attributes[attributes.length - 1]));
+                null);
     }
 
     public RequestLine getRequestLine() {
