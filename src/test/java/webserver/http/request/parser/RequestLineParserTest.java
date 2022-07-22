@@ -9,13 +9,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import webserver.http.request.Method;
 import webserver.http.request.Protocol;
 import webserver.http.request.RequestLine;
-import webserver.http.request.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static webserver.http.request.parser.fixture.URIFixture.fixtureWithQueryParameters;
 
 @ExtendWith(MockitoExtension.class)
 class RequestLineParserTest {
@@ -44,7 +44,7 @@ class RequestLineParserTest {
     void parse() {
         String requestLineMessage = "GET /uri?name=jordy HTTP/1.1";
         when(methodParser.parse(any())).thenReturn(Method.GET);
-        when(uriParser.parse(any())).thenReturn(new URI("/uri?name=jordy"));
+        when(uriParser.parse(any())).thenReturn(fixtureWithQueryParameters("/uri", "name", "jordy"));
         when(protocolParser.parse(any())).thenReturn(new Protocol("HTTP", "1.1"));
 
         RequestLine actual = requestLineParser.parse(requestLineMessage);
@@ -52,7 +52,7 @@ class RequestLineParserTest {
         assertThat(actual).usingRecursiveComparison()
                         .isEqualTo(new RequestLine(
                                 Method.GET,
-                                new URI("/uri?name=jordy"),
+                                fixtureWithQueryParameters("/uri", "name", "jordy"),
                                 new Protocol("HTTP", "1.1")
                         ));
         verify(methodParser).parse("GET");
