@@ -17,6 +17,7 @@ dependencies {
 	implementation 'com.github.jknack:handlebars:4.3.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.1'
 }
 
 test {
