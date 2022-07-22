@@ -13,7 +13,7 @@ public enum Version {
 
     public static Version from(String version) {
         return Stream.of(values())
-                .filter(v-> v.value.equals(version))
+                .filter(v -> v.value.equals(version))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }

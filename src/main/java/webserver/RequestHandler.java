@@ -1,5 +1,10 @@
 package webserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.IOUtils;
+import webserver.domain.HttpRequest;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,15 +14,10 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utils.IOUtils;
-import webserver.domain.HttpRequest;
-
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private Socket connection;
+    private final Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -31,7 +31,8 @@ public class RequestHandler implements Runnable {
              BufferedReader br = new BufferedReader(new InputStreamReader(in));
              OutputStream out = connection.getOutputStream()) {
 
-            HttpRequest httpRequest = HttpRequest.newInstance(IOUtils.readData(br));
+            String line = IOUtils.readData(br);
+            HttpRequest httpRequest = HttpRequest.newInstance(line);
 
             DataOutputStream dos = new DataOutputStream(out);
             String responseData = IOUtils.writeData(httpRequest);

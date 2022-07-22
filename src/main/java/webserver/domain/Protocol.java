@@ -1,5 +1,8 @@
 package webserver.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class Protocol {
@@ -9,10 +12,10 @@ public class Protocol {
     public static final String INVALID_PROTOCOL_INFO = "유효하지 않은 프로토콜 정보입니다. value: ";
 
     private final String value;
-
     private final Version version;
 
-    public Protocol(String value, Version version) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public Protocol(@JsonProperty("protocol") String value, @JsonProperty("version") Version version) {
         this.value = value;
         this.version = version;
     }
@@ -31,6 +34,13 @@ public class Protocol {
         return values.length == 2;
     }
 
+    public String getValue() {
+        return value;
+    }
+
+    public Version getVersion() {
+        return version;
+    }
 
     @Override
     public boolean equals(Object o) {

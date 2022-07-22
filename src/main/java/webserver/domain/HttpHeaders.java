@@ -12,8 +12,6 @@ public class HttpHeaders {
 
     private final Map<String, String> headers = new HashMap<>();
 
-    public HttpHeaders(){}
-
     public static HttpHeaders newInstance(String[] attributes, int start, int limit) {
         HttpHeaders httpHeaders = new HttpHeaders();
 

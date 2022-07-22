@@ -1,15 +1,19 @@
 package webserver.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class HttpRequest {
     public static final int REQUEST_LINE_POINT = 0;
     public static final int HEADER_START_POINT = 1;
-    private RequestLine requestLine;
-    private HttpHeaders headers;
-    private RequestBody requestBody;
+    private final RequestLine requestLine;
+    private final HttpHeaders headers;
+    private final RequestBody requestBody;
 
-    public HttpRequest(){}
-
-    public HttpRequest(RequestLine requestLine, HttpHeaders headers, RequestBody requestBody) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public HttpRequest(@JsonProperty("requestLine") RequestLine requestLine,
+                       @JsonProperty("headers") HttpHeaders headers,
+                       @JsonProperty("requestBody") RequestBody requestBody) {
         this.requestLine = requestLine;
         this.headers = headers;
         this.requestBody = requestBody;

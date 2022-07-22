@@ -6,10 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import webserver.domain.HttpRequest;
-import webserver.domain.Protocol;
-import webserver.domain.RequestLine;
-import webserver.domain.Version;
+import webserver.domain.*;
 
 import java.util.Objects;
 
@@ -37,20 +34,20 @@ class HttpRequestTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(requestLine.getPath()).isEqualTo(USERS_PATH);
+        assertThat(requestLine.getPath()).isEqualTo(new Path(USERS_PATH, Parameters.emptyInstance()));
         assertThat(requestLine.getProtocol()).isEqualTo(new Protocol(HTTP_PROTOCOL, TEST_VERSION));
     }
 
     @DisplayName("HTTP POST 요청에 대한 파싱 결과를 확인할 수 있다.")
     @Test
     void postRequestLine() {
-        ResponseEntity<HttpRequest> response = restTemplate.postForEntity("http://localhost:8080/users", null, HttpRequest.class);
+        ResponseEntity<HttpRequest> response = restTemplate.postForEntity("http://localhost:8080/users", new RequestBody("body"), HttpRequest.class);
         HttpRequest httpRequest = response.getBody();
         RequestLine requestLine = Objects.requireNonNull(httpRequest).getRequestLine();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
-        assertThat(requestLine.getPath()).isEqualTo(USERS_PATH);
+        assertThat(requestLine.getPath()).isEqualTo(new Path(USERS_PATH, Parameters.emptyInstance()));
         assertThat(requestLine.getProtocol()).isEqualTo(new Protocol(HTTP_PROTOCOL, TEST_VERSION));
 
     }
@@ -63,13 +60,15 @@ class HttpRequestTest {
 
         HttpRequest httpRequest = response.getBody();
         RequestLine requestLine = Objects.requireNonNull(httpRequest).getRequestLine();
+        Parameters parameters = requestLine.getParameters();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(requestLine.getPath()).isEqualTo(USERS_PATH);
+        assertThat(requestLine.getPath())
+                .isEqualTo(new Path(USERS_PATH, Parameters.from("userId=catsbi&password=password&name=hansol")));
         assertThat(requestLine.getProtocol()).isEqualTo(new Protocol(HTTP_PROTOCOL, TEST_VERSION));
-        assertThat(requestLine.getParameterMap()).containsEntry("userId", "catsbi")
-                .containsEntry("password", "password")
-                .containsEntry("name", "hansol");
+        assertThat(parameters.get("userId")).isEqualTo("catsbi");
+        assertThat(parameters.get("password")).isEqualTo("password");
+        assertThat(parameters.get("name")).isEqualTo("hansol");
     }
 }

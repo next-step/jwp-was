@@ -1,11 +1,13 @@
 package webserver.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class RequestBody {
-    private String value;
+    private final String value;
 
-    public RequestBody(){}
-
-    public RequestBody(String value) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public RequestBody(@JsonProperty("requestBody") String value) {
         this.value = value;
     }
 
