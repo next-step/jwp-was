@@ -1,5 +1,6 @@
 package webserver.request;
 
+import java.util.Map;
 import webserver.enums.HttpMethod;
 import webserver.enums.RequestProtocol;
 
@@ -27,4 +28,7 @@ public class HttpRequest {
         return requestLine.getProtocol();
     }
 
+    public Map<String, String> getQueryStringsMap() {
+        return requestLine.getQueryStringsMap();
+    }
 }
