@@ -8,6 +8,7 @@ public class HttpProtocolSchema {
     private final static int PROTOCOL_AND_VERSION_SCHEMA_SIZE = 2;
     private final static int PROTOCOL_SCHEMA_INDEX = 0;
     private final static int VERSION_SCHEMA_INDEX = 1;
+
     private final String protocol;
     private final HttpVersion version;
 

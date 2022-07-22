@@ -26,10 +26,6 @@ public class HttpQueryString {
     }
 
     private void validateQueryStringSchemas(String queryString, String[] queryStringSchemas) {
-        /**
-         * 오직 queryString의 name만 존재하는 경우(value 없이) 유효한 queryString으로 간주한다.
-         * ex) queryName=
-         */
         if (isEmptyValueQueryString(queryString, queryStringSchemas)) {
             return;
         }
