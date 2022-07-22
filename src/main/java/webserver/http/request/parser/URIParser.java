@@ -15,10 +15,6 @@ public class URIParser {
     }
 
     public URI parse(String message) {
-        if (!message.contains(QUERY_PARAMETER_DELIMITER)) {
-            return new URI(message);
-        }
-
         KeyValuePair pathQueryParamPair = keyValuePairParser.parse(message, QUERY_PARAMETER_DELIMITER);
         String path = pathQueryParamPair.getKey();
         String queryParameters = pathQueryParamPair.getValue();

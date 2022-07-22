@@ -2,10 +2,7 @@ package webserver.http.request.parser;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.request.QueryParameters;
 import webserver.http.request.URI;
-
-import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static webserver.http.request.parser.fixture.URIFixture.fixtureWithQueryParameters;
