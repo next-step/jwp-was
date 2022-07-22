@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class RequestHeader {
+public final class RequestHeader {
 
     private static final String DELIMITER = ":";
     private static final String DEFAULT_CONTENT_LENGTH = "0";

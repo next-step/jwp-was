@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class ResponseHeader {
+public final class ResponseHeader {
 
     private final Map<String, String> headers;
 

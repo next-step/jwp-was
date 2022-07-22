@@ -3,7 +3,7 @@ package webserver.exception;
 import webserver.response.HttpStatusCode;
 import webserver.response.ResponseHeader;
 
-public class ApiException extends RuntimeException {
+public final class ApiException extends RuntimeException {
 
     private final HttpStatusCode code;
     private final ResponseHeader header;
