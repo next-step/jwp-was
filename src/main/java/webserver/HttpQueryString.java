@@ -7,7 +7,7 @@ public class HttpQueryString {
     public static final int QUERY_STRING_SCHEMA_SIZE = 2;
     public static final int QUERY_STRING_SCHEMA_NAME_INDEX = 0;
     public static final int QUERY_STRING_SCHEMA_VALUE_INDEX = 1;
-    private static final HttpQueryString EMPTY = new HttpQueryString();
+    public static final HttpQueryString EMPTY = new HttpQueryString();
 
     private final String name;
     private final String value;

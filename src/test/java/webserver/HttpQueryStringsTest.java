@@ -36,7 +36,7 @@ public class HttpQueryStringsTest {
     @ValueSource(strings = {"?", ""})
     void create_has_not_query_string(String fullQueryString) {
         HttpQueryStrings httpQueryStrings = new HttpQueryStrings(fullQueryString);
-        assertThat(httpQueryStrings.get(0)).isEqualTo(null);
+        assertThat(httpQueryStrings.get(0)).isEqualTo(HttpQueryString.EMPTY);
         assertThat(httpQueryStrings.getFullQueryString()).isEqualTo("");
     }
 

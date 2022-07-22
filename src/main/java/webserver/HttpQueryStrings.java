@@ -2,11 +2,10 @@ package webserver;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HttpQueryStrings implements Iterable<HttpQueryString> {
+public class HttpQueryStrings {
     public static final String PRIMARY_QUERY_STRING_SYMBOL = "\\?";
     public static final String PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE = PRIMARY_QUERY_STRING_SYMBOL.replace("\\", "");
     public static final String SECONDARY_QUERY_STRING_SYMBOL = "&";
@@ -46,7 +45,7 @@ public class HttpQueryStrings implements Iterable<HttpQueryString> {
     }
 
     private boolean isEmptyQueryString(String fullQueryString) {
-        return fullQueryString.isEmpty() || hasNotQueryStringSymbol(fullQueryString) || PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE.equals(fullQueryString);
+        return fullQueryString == null || fullQueryString.isEmpty() || hasNotQueryStringSymbol(fullQueryString) || PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE.equals(fullQueryString);
     }
 
     private boolean hasNotQueryStringSymbol(String fullQueryString) {
@@ -61,7 +60,7 @@ public class HttpQueryStrings implements Iterable<HttpQueryString> {
 
     public HttpQueryString get(int index) {
         if (index > httpQueryStrings.size() - 1) {
-            return null;
+            return HttpQueryString.EMPTY;
         }
 
         return httpQueryStrings.get(index);
@@ -69,10 +68,5 @@ public class HttpQueryStrings implements Iterable<HttpQueryString> {
 
     public String getFullQueryString() {
         return fullQueryString;
-    }
-
-    @Override
-    public Iterator<HttpQueryString> iterator() {
-        return httpQueryStrings.iterator();
     }
 }
