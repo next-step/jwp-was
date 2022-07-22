@@ -11,18 +11,6 @@ public class RequestLine {
         this.protocol = protocol;
     }
 
-    public Method getMethod() {
-        return method;
-    }
-
-    public URI getUri() {
-        return uri;
-    }
-
-    public Protocol getProtocol() {
-        return protocol;
-    }
-
     @Override
     public String toString() {
         return "RequestLine{" +

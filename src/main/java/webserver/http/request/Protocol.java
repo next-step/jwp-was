@@ -9,14 +9,6 @@ public class Protocol {
         this.version = version;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
     @Override
     public String toString() {
         return "Protocol{" +
