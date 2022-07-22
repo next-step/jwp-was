@@ -6,9 +6,9 @@ import java.net.URISyntaxException;
 import utils.FileIoUtils;
 
 public class GetIndexHtmlResponse{
-    public byte[] response() {
+    public byte[] response(String index) {
         try {
-            return FileIoUtils.loadFileFromClasspath("./templates/index.html");
+            return FileIoUtils.loadFileFromClasspath("./templates" + index);
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }

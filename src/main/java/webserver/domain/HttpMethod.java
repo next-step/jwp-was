@@ -20,4 +20,12 @@ public enum HttpMethod {
                 .findAny()
                 .orElseThrow(() -> new InvalidHttpMethodException("유효하지 않은 HttpMethod 입니다."));
     }
+
+    public static boolean isGet(String httpMethod) {
+        return GET.name().equals(httpMethod);
+    }
+
+    public static boolean isPost(String httpMethod) {
+        return POST.name().equals(httpMethod);
+    }
 }

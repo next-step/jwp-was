@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import webserver.domain.HttpMethod;
 import webserver.domain.RequestLine;
 
 public class RequestHandler implements Runnable {
@@ -32,8 +33,12 @@ public class RequestHandler implements Runnable {
                 printlnLine(line);
                 line = br.readLine();
             }
-            ResponseHandler responseHandler = new ResponseHandler(connection);
-            responseHandler.run(requestLine);
+
+            if (isGet(requestLine)) {
+                ResponseGetHandler responseGetHandler = new ResponseGetHandler(connection);
+                responseGetHandler.run(requestLine);
+                return;
+            }
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -45,5 +50,13 @@ public class RequestHandler implements Runnable {
 
     private boolean isEnd(String line) {
         return !"".equals(line);
+    }
+
+    private boolean isGet(RequestLine requestLine) {
+        return HttpMethod.isGet(requestLine.httpMethod());
+    }
+
+    private boolean isPost(RequestLine requestLine) {
+        return HttpMethod.isPost(requestLine.httpMethod());
     }
 }

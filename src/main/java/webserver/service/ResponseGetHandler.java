@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,13 +13,19 @@ import webserver.domain.RequestLine;
 import webserver.response.GetIndexHtmlResponse;
 import webserver.response.GetUserFormHtmlResponse;
 
-public class ResponseHandler {
-    private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
+public class ResponseGetHandler {
+    private static final Logger logger = LoggerFactory.getLogger(ResponseGetHandler.class);
     public static final String GET_INDEX_HTML = "/index.html";
     public static final String GET_USER_FORM_HTML = "/user/form.html";
+    public static final String USER_CREATE = "/user/create";
+    private static final Set<String> AVAILABLE_INDEX = Set.of(
+            GET_INDEX_HTML,
+            GET_USER_FORM_HTML
+    ) ;
+
     private final Socket connection;
 
-    public ResponseHandler(Socket connection) {
+    public ResponseGetHandler(Socket connection) {
         this.connection = connection;
     }
 
@@ -26,19 +33,20 @@ public class ResponseHandler {
         try (OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
 
-            if (requestLine.index().equals(GET_INDEX_HTML)) {
+            if (isAvailableRequest(requestLine.index())) {
                 GetIndexHtmlResponse response = new GetIndexHtmlResponse();
-                byte[] body = response.response();
+                byte[] body = response.response(requestLine.index());
                 response200Header(dos, body.length);
                 responseBody(dos, body);
                 return;
             }
 
-            if (requestLine.index().equals(GET_USER_FORM_HTML)) {
+            if (requestLine.index().equals(USER_CREATE)) {
                 GetUserFormHtmlResponse response = new GetUserFormHtmlResponse();
                 response.response(requestLine);
-                response200Header(dos, 0);
-                responseBody(dos, new byte[0]);
+                byte[] body = "OK".getBytes();
+                response200Header(dos, body.length);
+                responseBody(dos, body);
                 return;
             }
 
@@ -68,5 +76,9 @@ public class ResponseHandler {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private boolean isAvailableRequest(String index) {
+        return AVAILABLE_INDEX.contains(index);
     }
 }
