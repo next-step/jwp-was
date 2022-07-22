@@ -32,7 +32,8 @@ public class HttpQueryStrings implements Iterable<HttpQueryString> {
         String[] fullQueryStringSchemas = firstQueryStringSchemas[QUERY_STRING_SCHEMA_START_INDEX].split(SECONDARY_QUERY_STRING_SYMBOL);
 
         return Arrays.stream(fullQueryStringSchemas)
-                .map(HttpQueryString::new)
+                .map(HttpQueryString::from)
+                .filter(HttpQueryString::isNotEmpty)
                 .collect(Collectors.toList());
     }
 

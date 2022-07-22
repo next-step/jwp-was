@@ -7,10 +7,18 @@ public class HttpQueryString {
     public static final int QUERY_STRING_SCHEMA_SIZE = 2;
     public static final int QUERY_STRING_SCHEMA_NAME_INDEX = 0;
     public static final int QUERY_STRING_SCHEMA_VALUE_INDEX = 1;
+    private static final HttpQueryString EMPTY = new HttpQueryString();
+
     private final String name;
     private final String value;
 
-    public HttpQueryString(String queryString) {
+
+    private HttpQueryString() {
+        this.name = "";
+        this.value = "";
+    }
+
+    private HttpQueryString(String queryString) {
         String[] queryStringSchemas = queryString.split(QUERY_STRING_DELIMITER);
         validateQueryStringSchemas(queryString, queryStringSchemas);
         this.name = queryStringSchemas[QUERY_STRING_SCHEMA_NAME_INDEX];
@@ -56,6 +64,14 @@ public class HttpQueryString {
         return value;
     }
 
+    public static HttpQueryString from(String queryString) {
+        if (queryString == null || queryString.isEmpty()) {
+            return EMPTY;
+        }
+
+        return new HttpQueryString(queryString);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,5 +88,9 @@ public class HttpQueryString {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (value != null ? value.hashCode() : 0);
         return result;
+    }
+
+    public boolean isNotEmpty() {
+        return !this.equals(EMPTY);
     }
 }

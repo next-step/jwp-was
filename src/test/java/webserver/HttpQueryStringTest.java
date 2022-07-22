@@ -11,7 +11,7 @@ public class HttpQueryStringTest {
 
     @Test
     void create() {
-        HttpQueryString httpQueryString = new HttpQueryString("queryName=queryValue");
+        HttpQueryString httpQueryString = HttpQueryString.from("queryName=queryValue");
 
         assertThat(httpQueryString.getName()).isEqualTo("queryName");
         assertThat(httpQueryString.getValue()).isEqualTo("queryValue");
@@ -19,15 +19,24 @@ public class HttpQueryStringTest {
 
     @Test
     void create_only_queryName() {
-        HttpQueryString httpQueryString = new HttpQueryString("queryName=");
+        HttpQueryString httpQueryString = HttpQueryString.from("queryName=");
 
         assertThat(httpQueryString.getName()).isEqualTo("queryName");
         assertThat(httpQueryString.getValue()).isEmpty();
     }
 
+    @Test
+    void isNotEmpty() {
+        HttpQueryString httpQueryString = HttpQueryString.from("");
+        HttpQueryString httpQueryString2 = HttpQueryString.from(null);
+
+        assertThat(httpQueryString.isNotEmpty()).isFalse();
+        assertThat(httpQueryString2.isNotEmpty()).isFalse();
+    }
+
     @ParameterizedTest
-    @ValueSource(strings = {"queryName=queryValue=1", "queryValue", "", " "})
+    @ValueSource(strings = {"queryName=queryValue=1", "queryValue", " "})
     void create_exception(String queryString) {
-        assertThrows(IllegalArgumentException.class, () -> new HttpQueryString(queryString));
+        assertThrows(IllegalArgumentException.class, () -> HttpQueryString.from(queryString));
     }
 }
