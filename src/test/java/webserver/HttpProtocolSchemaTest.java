@@ -15,10 +15,10 @@ public class HttpProtocolSchemaTest {
         HttpProtocolSchema httpProtocolSchemaOne = new HttpProtocolSchema("HTTP/1.0");
         HttpProtocolSchema httpProtocolSchemaOnePointOne = new HttpProtocolSchema("HTTP/1.1");
 
-        assertThat(httpProtocolSchemaOne.getProtocol()).isEqualTo(HttpProtocol.HTTP);
+        assertThat(httpProtocolSchemaOne.getProtocol()).isEqualTo("HTTP");
         assertThat(httpProtocolSchemaOne.getVersion()).isEqualTo(HttpVersion.ONE);
 
-        assertThat(httpProtocolSchemaOnePointOne.getProtocol()).isEqualTo(HttpProtocol.HTTP);
+        assertThat(httpProtocolSchemaOnePointOne.getProtocol()).isEqualTo("HTTP");
         assertThat(httpProtocolSchemaOnePointOne.getVersion()).isEqualTo(HttpVersion.ONE_POINT_ONE);
     }
 
