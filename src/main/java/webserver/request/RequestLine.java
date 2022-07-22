@@ -3,6 +3,7 @@ package webserver.request;
 import utils.Assert;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public final class RequestLine {
@@ -61,24 +62,36 @@ public final class RequestLine {
         return !REQUEST_URI_PATTERN.matcher(string).find();
     }
 
-    public HttpMethod method() {
+    HttpMethod method() {
         return method;
     }
 
-    public Path path() {
+    Path path() {
         return path;
     }
 
-    public String protocolName() {
+    String protocolName() {
         return protocol.name();
     }
 
-    public String protocolVersion() {
+    String protocolVersion() {
         return protocol.version();
     }
 
-    public QueryString query() {
+    QueryString query() {
         return query;
+    }
+
+    Optional<String> queryValue(String parameter) {
+        return query.value(parameter);
+    }
+
+    boolean matchPath(Path path) {
+        return this.path.equals(path);
+    }
+
+    boolean matchMethod(HttpMethod method) {
+        return this.method == method;
     }
 
     @Override

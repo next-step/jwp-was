@@ -1,63 +1,38 @@
 package webserver.request;
 
+import utils.UrlQueryUtils;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class QueryString {
+class QueryString {
 
-    private static final String PROPERTY_DELIMITER = "&";
-    private static final String KEY_VALUE_DELIMITER = "=";
+    private final Map<String, String> parameters;
 
-    private final Map<String, String> properties;
-
-    private QueryString(Map<String, String> properties) {
-        this.properties = Collections.unmodifiableMap(properties);
+    private QueryString(Map<String, String> parameters) {
+        this.parameters = Collections.unmodifiableMap(parameters);
     }
 
-    public static QueryString from(Map<String, String> properties) {
-        if (properties == null) {
-            return empty();
-        }
-        return new QueryString(properties);
+    static QueryString from(String string) {
+        return new QueryString(UrlQueryUtils.toMap(string));
     }
 
-    public static QueryString from(String string) {
-        if (string == null || string.isBlank()) {
-            return empty();
-        }
-        return from(parse(string));
+    static QueryString empty() {
+        return new QueryString(Collections.emptyMap());
     }
 
-    public static QueryString empty() {
-        return from(Collections.emptyMap());
-    }
-
-    private static Map<String, String> parse(String string) {
-        return Stream.of(string.split(PROPERTY_DELIMITER))
-                .filter(keyValue -> keyValue.contains(KEY_VALUE_DELIMITER))
-                .map(QueryString::parseToOptionalEntry)
-                .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    private static Map.Entry<String, String> parseToOptionalEntry(String keyValue) {
-        String[] splitKeyValue = keyValue.split(KEY_VALUE_DELIMITER);
-        return Map.entry(splitKeyValue[0], splitKeyValue[1]);
-    }
-
-    public Optional<String> value(String property) {
-        if (properties.containsKey(property)) {
-            return Optional.ofNullable(properties.get(property));
+    Optional<String> value(String property) {
+        if (parameters.containsKey(property)) {
+            return Optional.ofNullable(parameters.get(property));
         }
         return Optional.empty();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(properties);
+        return Objects.hash(parameters);
     }
 
     @Override
@@ -69,13 +44,13 @@ public class QueryString {
             return false;
         }
         QueryString that = (QueryString) o;
-        return Objects.equals(properties, that.properties);
+        return Objects.equals(parameters, that.parameters);
     }
 
     @Override
     public String toString() {
         return "QueryString{" +
-                "propertyValueMap=" + properties +
+                "parameters=" + parameters +
                 '}';
     }
 }
