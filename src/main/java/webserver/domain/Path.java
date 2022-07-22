@@ -7,7 +7,6 @@ import java.util.Objects;
 @Getter
 public class Path {
 
-    private static final String BLANK = " ";
     private static final int PATH_PLACE_IDX = 1;
 
     private String path;
@@ -22,21 +21,12 @@ public class Path {
         this.queryString = queryString;
     }
 
-    public static Path parse(String requestLine) {
-        String[] values = requestLine.split(BLANK);
-
-        Path path = getQueryString(values);
-        if (path != null) return path;
-
-        return new Path(values[PATH_PLACE_IDX]);
-    }
-
-    private static Path getQueryString(String[] values) {
-        String[] paths = values[PATH_PLACE_IDX].split("\\?");
+    public static Path parse(String pathInfo) {
+        String[] paths = pathInfo.split("\\?");
         if(paths.length >= 2) {
             return new Path(paths[0], paths[1]);
         }
-        return null;
+        return new Path(paths[0]);
     }
 
     @Override

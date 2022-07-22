@@ -9,11 +9,12 @@ public class PathTest {
     @Test
     @DisplayName("requestLine에서 Path를 정상적으로 파싱했는지 확인하는 테스트")
     void methodTest() {
-        Assertions.assertThat(Path.parse("GET /users HTTP/1.1")).isEqualTo(new Path("/users"));
+        Assertions.assertThat(Path.parse("/users")).isEqualTo(new Path("/users"));
     }
 
     @Test
+    @DisplayName("querystring을 정상적으로 파싱했는지 테스트")
     void queryStringTest() {
-        Assertions.assertThat(Path.parse("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1")).isEqualTo(new Path("/users", "userId=javajigi&password=password&name=JaeSung"));
+        Assertions.assertThat(Path.parse("/users?userId=javajigi&password=password&name=JaeSung")).isEqualTo(new Path("/users", "userId=javajigi&password=password&name=JaeSung"));
     }
 }

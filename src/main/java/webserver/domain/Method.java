@@ -7,19 +7,16 @@ import java.util.Objects;
 @Getter
 public class Method {
 
-    private static final String BLANK = " ";
-
     private static final int METHOD_PLACE_IDX = 0;
 
-    private String method;
+    private HttpMethod method;
 
-    public Method(String method) {
+    public Method(HttpMethod method) {
         this.method = method;
     }
 
-    public static Method parse(String requestLine) {
-        String[] values = requestLine.split(BLANK);
-        return new Method(values[METHOD_PLACE_IDX]);
+    public static Method parse(String method) {
+        return new Method(HttpMethod.valueOf(method));
     }
 
     @Override

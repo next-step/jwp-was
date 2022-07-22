@@ -1,23 +1,28 @@
 package webserver;
 
+import lombok.Getter;
 import webserver.domain.Method;
 import webserver.domain.Path;
 import webserver.domain.ProtocolInfo;
 
 public class RequestLine {
 
+    private static final String REQUEST_DELIMITER = " ";
+
     private Method method;
     private Path path;
     private ProtocolInfo protocolInfo;
 
-    private RequestLine(String requestLine) {
-        parse(requestLine);
+    private RequestLine(String[] values) {
+        parse(values);
     }
 
     public static RequestLine from(String requestLine) {
         validateRequestline(requestLine);
 
-        return new RequestLine(requestLine);
+        String[] values = requestLine.split(REQUEST_DELIMITER);
+
+        return new RequestLine(values);
     }
 
     private static void validateRequestline(String requestLine) {
@@ -26,14 +31,14 @@ public class RequestLine {
         }
     }
 
-    private void parse(String requestLine) {
-        method = Method.parse(requestLine);
-        path = Path.parse(requestLine);
-        protocolInfo = ProtocolInfo.parse(requestLine);
+    private void parse(String[] values) {
+        method = Method.parse(values[0]);
+        path = Path.parse(values[1]);
+        protocolInfo = ProtocolInfo.parse(values[2]);
     }
 
     public String getMethod() {
-        return method.getMethod();
+        return String.valueOf(method.getMethod());
     }
 
     public String getPath() {

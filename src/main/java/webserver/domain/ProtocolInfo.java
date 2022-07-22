@@ -7,8 +7,7 @@ import java.util.Objects;
 @Getter
 public class ProtocolInfo {
 
-    private static final String BLANK = " ";
-    private static final String SLASH = "/";
+    private static final String PROTOCOL_DELIMITER = "/";
 
     private static final int PROTOCOL_NAME_IDX = 0;
     private static final int PROTOCOL_VERSION_IDX = 1;
@@ -23,9 +22,8 @@ public class ProtocolInfo {
         this.version = version;
     }
 
-    public static ProtocolInfo parse(String requestLine) {
-        String[] values = requestLine.split(BLANK);
-        String[] protocolInfo = values[PROTOCOL_INFO_PLACE_IDX].split(SLASH);
+    public static ProtocolInfo parse(String protocol) {
+        String[] protocolInfo = protocol.split(PROTOCOL_DELIMITER);
 
         return new ProtocolInfo(protocolInfo[PROTOCOL_NAME_IDX], protocolInfo[PROTOCOL_VERSION_IDX]);
     }

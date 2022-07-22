@@ -9,8 +9,6 @@ class ProtocolInfoTest {
     @Test
     @DisplayName("requestLine에서 Protocol를 정상적으로 파싱했는지 확인하는 테스트")
     void methodTest() {
-        Assertions.assertThat(ProtocolInfo.parse("GET /users HTTP/1.1")).isEqualTo(new ProtocolInfo("HTTP", "1.1"));
+        Assertions.assertThat(ProtocolInfo.parse("HTTP/1.1")).isEqualTo(new ProtocolInfo("HTTP", "1.1"));
     }
-
-
 }
