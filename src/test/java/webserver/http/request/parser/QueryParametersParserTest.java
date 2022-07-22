@@ -43,7 +43,8 @@ class QueryParametersParserTest {
                 arguments("", new QueryParameters(new HashMap<>())),
                 arguments("key1=value1&key2=value2", new QueryParameters(keyValuesWithSingleValue)),
                 arguments("key1=value1&key2=value2&key1=value3", new QueryParameters(keyValuesWithMultipleValue)),
-                arguments("key1=&key2=value2", new QueryParameters(keyValuesWithEmptyValue))
+                arguments("key1=&key2=value2", new QueryParameters(keyValuesWithEmptyValue)),
+                arguments("key1=&key2=value2&&&", new QueryParameters(keyValuesWithEmptyValue))
         );
     }
 }

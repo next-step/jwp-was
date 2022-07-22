@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class QueryParametersParser {
 
-    private static final String KEY_VALUE_DELIMITER = "&";
+    private static final String KEY_VALUE_DELIMITER_REGEX = "&";
 
     private static final String KEY_VALUE_PAIR_DELIMITER = "=";
 
@@ -27,7 +27,7 @@ public class QueryParametersParser {
             return new QueryParameters(new HashMap<>());
         }
 
-        Map<String, List<String>> keyValues = Arrays.stream(message.split(KEY_VALUE_DELIMITER))
+        Map<String, List<String>> keyValues = Arrays.stream(message.split(KEY_VALUE_DELIMITER_REGEX))
                 .map(keyValue -> keyValuePairParser.parse(keyValue, KEY_VALUE_PAIR_DELIMITER))
                 .collect(Collectors.toMap(KeyValuePair::getKey,
                         pair -> {
