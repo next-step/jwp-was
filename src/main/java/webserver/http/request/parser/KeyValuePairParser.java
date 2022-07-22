@@ -5,6 +5,8 @@ import webserver.http.request.KeyValuePair;
 public class KeyValuePairParser {
     private static final int SPLIT_SIZE = 2;
 
+    private static final String REPLACEMENT_DELIMITER_REGEX = " ";
+
     public KeyValuePair parse(String message, String delimiter) {
         if (delimiter.length() != 1) {
             throw new RuntimeException("구분자 length는 1이어야 합니다.");
@@ -24,7 +26,7 @@ public class KeyValuePairParser {
             throw new RuntimeException("구분자는 반드시 한개만 포함되어 있어야 합니다.");
         }
 
-        String[] splitMessage = message.split(delimiter);
+        String[] splitMessage = message.replace(delimiter, REPLACEMENT_DELIMITER_REGEX).split(REPLACEMENT_DELIMITER_REGEX);
         String key = splitMessage[0];
         if (splitMessage.length < SPLIT_SIZE) {
             return new KeyValuePair(key, "");
