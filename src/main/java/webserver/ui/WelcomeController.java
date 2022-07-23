@@ -11,9 +11,4 @@ public class WelcomeController implements Controller {
     public Response index(HttpRequest httpRequest) {
         return new Response("index.html");
     }
-
-    @Override
-    public Response execute(HttpRequest httpRequest) {
-        return null;
-    }
 }

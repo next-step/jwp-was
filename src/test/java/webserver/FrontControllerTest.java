@@ -4,8 +4,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import utils.FileIoUtils;
 import webserver.domain.HttpRequest;
+import webserver.domain.Response;
 import webserver.ui.FrontController;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,13 +43,18 @@ class FrontControllerTest {
         assertThat(frontController.support(httpRequest.getRequestLine())).isFalse();
     }
 
-    /*
-    @DisplayName("전달받은 path가 유효한 경우")
+    @DisplayName("요청 request path가 유효한 html요청일경우 해당 html 파일을 찾아 반환한다.")
     @ParameterizedTest
-    @ValueSource(strings = {"/index.html"})
-    void supportWithInValidPath(String path) {
-        assertThat(frontController.support(path)).isFalse();
-    }*/
+    @ValueSource(strings = {"GET /index.html http/1.1"})
+    void executeWithInValidPath(String requestLine) throws IOException, URISyntaxException {
+        byte[] bytes = FileIoUtils.loadFileFromClasspath("./templates/index.html");
+        String expectedBody = new String(bytes);
+        HttpRequest httpRequest = HttpRequest.newInstance(requestLine);
+
+        Response response = frontController.execute(httpRequest);
+
+        assertThat(response.getBody()).isEqualTo(expectedBody);
+    }
 
 
 }

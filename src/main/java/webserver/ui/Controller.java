@@ -1,15 +1,24 @@
 package webserver.ui;
 
-import webserver.domain.HttpRequest;
 import webserver.domain.Path;
 import webserver.domain.RequestLine;
 import webserver.domain.RequestMapping;
-import webserver.domain.Response;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Objects;
 
 public interface Controller {
-    Response execute(HttpRequest httpRequest);
+
+    default Method getExecutableMethod(RequestLine requestLine) throws NoSuchMethodException {
+        return Arrays.stream(this.getClass().getDeclaredMethods())
+                .filter(method-> {
+                    RequestMapping annotation = method.getDeclaredAnnotation(RequestMapping.class);
+                    return Objects.nonNull(annotation)
+                            && supportMethod(method.getDeclaredAnnotation(RequestMapping.class), requestLine);
+                }).findFirst()
+                .orElseThrow(NoSuchMethodException::new);
+    }
 
     default boolean support(RequestLine requestLine){
         return Arrays.stream(this.getClass().getDeclaredMethods())

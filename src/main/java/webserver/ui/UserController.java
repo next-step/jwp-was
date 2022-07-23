@@ -12,10 +12,4 @@ public class UserController implements Controller {
     public Response getUsers(HttpRequest httpRequest) {
         return null;
     }
-
-
-    @Override
-    public Response execute(HttpRequest httpRequest) {
-        return null;
-    }
 }
