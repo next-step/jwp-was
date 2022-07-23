@@ -1,6 +1,7 @@
-package webserver;
+package webserver.http;
 
 import exception.IllegalRequestLineException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

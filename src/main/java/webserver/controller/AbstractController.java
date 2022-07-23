@@ -3,9 +3,9 @@ package webserver.controller;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import webserver.HttpMethod;
-import webserver.HttpRequest;
-import webserver.HttpResponse;
+import webserver.http.HttpMethod;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 public abstract class AbstractController implements Controller {
 

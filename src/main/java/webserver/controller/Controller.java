@@ -3,8 +3,8 @@ package webserver.controller;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import webserver.HttpRequest;
-import webserver.HttpResponse;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 public interface Controller {
 

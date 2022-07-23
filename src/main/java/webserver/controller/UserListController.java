@@ -6,8 +6,8 @@ import java.util.Collection;
 
 import db.DataBase;
 import model.User;
-import webserver.HttpRequest;
-import webserver.HttpResponse;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 public class UserListController extends AbstractController {
 
@@ -20,10 +20,5 @@ public class UserListController extends AbstractController {
             return;
         }
         response.sendRedirect("/user/login.html");
-    }
-
-    @Override
-    protected void doPost(HttpRequest request, HttpResponse response) {
-
     }
 }

@@ -1,9 +1,12 @@
-package webserver;
+package webserver.http;
 
 import exception.IllegalHttpMethodException;
 import exception.IllegalProtocolException;
 import exception.IllegalRequestLineException;
 import exception.IllegalRequestPathException;
+import webserver.http.HttpMethod;
+import webserver.http.RequestLine;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
