@@ -1,4 +1,4 @@
-package request;
+package webserver.request;
 
 import exception.NotExistHttpMethodException;
 import model.User;

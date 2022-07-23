@@ -1,6 +1,5 @@
-package request;
+package webserver.request;
 
-import db.DataBase;
 import model.User;
 import utils.IOUtils;
 import utils.RequestUtils;
