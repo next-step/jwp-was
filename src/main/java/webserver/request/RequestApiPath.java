@@ -1,7 +1,7 @@
-package request;
+package webserver.request;
 
-import controller.RequestController;
-import response.Response;
+import webserver.controller.RequestController;
+import webserver.response.Response;
 
 import java.util.Arrays;
 import java.util.function.BiFunction;

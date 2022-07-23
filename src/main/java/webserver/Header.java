@@ -1,11 +1,10 @@
-package request;
+package webserver;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.request.Cookie;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,38 +12,36 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class RequestHeader {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHeader.class);
+public class Header {
+    private static final Logger logger = LoggerFactory.getLogger(Header.class);
 
     private Map<String, String> headerMap;
 
-    public RequestHeader() {
+    public Header() {
         headerMap = Maps.newHashMap();
     }
 
-    public RequestHeader(Map<String, String> headerMap) {
+    public Header(Map<String, String> headerMap) {
         this.headerMap = headerMap;
     }
 
-    public static RequestHeader parsing(BufferedReader br) throws IOException {
+    public static Header parsing(BufferedReader br) throws IOException {
         Map<String, String> headerMap = new HashMap<>();
         try {
             br.readLine();
             String line = br.readLine();
             while (!line.equals("")) {
-                String[] headerArr = line.split(":");
-                headerMap.put(headerArr[0], headerArr[1].trim());
+                String[] headerArr = line.split(": ");
+                headerMap.put(headerArr[0], headerArr[1]);
                 line = br.readLine();
             }
-            logger.debug("requestHeader : {}", headerMap);
-            return new RequestHeader(headerMap);
+            logger.debug("Header : {}", headerMap);
+            return new Header(headerMap);
         } catch (IOException e) {
             logger.error(e.getMessage());
             throw e;
         }
     }
-
 
     public String get(String key) {
         return this.headerMap.get(key);

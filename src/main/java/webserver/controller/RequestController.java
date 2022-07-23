@@ -1,12 +1,12 @@
-package controller;
+package webserver.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import request.Cookie;
-import request.Model;
-import request.Request;
-import response.Response;
-import service.RequestService;
+import webserver.request.Cookie;
+import webserver.request.Model;
+import webserver.request.Request;
+import webserver.response.Response;
+import webserver.service.RequestService;
 
 public class RequestController {
 
@@ -19,7 +19,7 @@ public class RequestController {
         Model model = new Model();
         RequestService requestService = new RequestService(request);
 
-        if (!request.getCookie(Cookie.IS_LOGINED)) {
+        if (!request.getCookie(Cookie.LOGINED_KEY)) {
             return REDIRECT + INDEX_URl;
         }
         model.set("users", requestService.findAllUser());
@@ -37,7 +37,7 @@ public class RequestController {
         RequestService requestService = new RequestService(request);
         Cookie cookie = requestService.checkIdAndPassword(request.convertUserOfQueryParam());
         response.setCookie(cookie);
-        if (!Boolean.parseBoolean(cookie.getCookie(Cookie.IS_LOGINED))) {
+        if (!Boolean.parseBoolean(cookie.getCookie(Cookie.LOGINED_KEY))) {
             return REDIRECT + LOGIN_FAIL_URl;
         }
         return REDIRECT + INDEX_URl;

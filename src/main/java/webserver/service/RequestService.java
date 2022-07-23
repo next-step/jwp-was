@@ -1,12 +1,12 @@
-package service;
+package webserver.service;
 
 import db.DataBase;
 import exception.BadRequestException;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import request.Cookie;
-import request.Request;
+import webserver.request.Cookie;
+import webserver.request.Request;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class RequestService {
     private static final Logger logger = LoggerFactory.getLogger(RequestService.class);
     private static final String ALREADY_EXIST_USER = "이미 존재하는 회원입니다.";
+
     private static final String COOKIE_LOGINED_SUCCESS_VALUE = "true";
     private static final String COOKIE_LOGINED_FAIL_VALUE = "false";
 
@@ -43,17 +44,17 @@ public class RequestService {
     }
 
     public Cookie checkIdAndPassword(User requestUser) {
-        logger.debug("request user : {}", requestUser);
+        logger.debug("webserver.request user : {}", requestUser);
         User savedUser = findByUserId(requestUser.getUserId());
         Cookie cookie = new Cookie();
         if (Objects.isNull(savedUser) ||
                 !savedUser.getPassword().equals(requestUser.getPassword())) {
             logger.debug("cookie 로그인 실패");
-            return cookie.setCookie(Cookie.IS_LOGINED, COOKIE_LOGINED_FAIL_VALUE);
+            return cookie.setCookie(Cookie.LOGINED_KEY, COOKIE_LOGINED_FAIL_VALUE);
         }
 
         logger.debug("cookie 로그인 성공");
-        return cookie.setCookie(Cookie.IS_LOGINED, COOKIE_LOGINED_SUCCESS_VALUE);
+        return cookie.setCookie(Cookie.LOGINED_KEY, COOKIE_LOGINED_SUCCESS_VALUE);
     }
 
     public List<User> findAllUser() {

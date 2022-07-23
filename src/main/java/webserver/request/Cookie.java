@@ -1,4 +1,4 @@
-package request;
+package webserver.request;
 
 import com.google.common.collect.Maps;
 
@@ -9,7 +9,7 @@ import java.util.Set;
 public class Cookie {
 
     private Map<String, String> cookies = Maps.newHashMap();
-    public static final String IS_LOGINED = "isLogined";
+    public static final String LOGINED_KEY = "logined";
     private static final String EQUALS = "=";
     private static final String SEMICOLON = "; ";
 
@@ -29,7 +29,6 @@ public class Cookie {
         }
         return cookies;
     }
-
 
     /**
      * 로그인 성공 시 쿠키 저장
