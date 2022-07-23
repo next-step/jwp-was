@@ -1,4 +1,4 @@
-package domain;
+package webserver.http.request;
 
 public class HttpPath {
 	private static final String PATH_PARAM_DELIMITER = "\\?";

@@ -1,4 +1,4 @@
-package domain;
+package webserver.http.request;
 
 import java.util.HashMap;
 import java.util.List;

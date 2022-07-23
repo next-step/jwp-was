@@ -1,10 +1,12 @@
-package domain;
+package webserver.http.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import webserver.http.HttpMethod;
 
 public class HttpRequestLineTest {
 

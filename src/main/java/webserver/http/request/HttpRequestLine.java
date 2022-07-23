@@ -1,4 +1,6 @@
-package domain;
+package webserver.http.request;
+
+import webserver.http.HttpMethod;
 
 public class HttpRequestLine {
 	private static final String MESSAGE_INVALID_REQUEST_LINE = "유효하지 않은 Request Line 입니다.";

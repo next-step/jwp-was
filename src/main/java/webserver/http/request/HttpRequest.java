@@ -1,6 +1,8 @@
-package domain;
+package webserver.http.request;
 
 import java.util.List;
+
+import webserver.http.HttpMethod;
 
 public class HttpRequest {
 	private HttpRequestLine httpRequestLine;
