@@ -1,7 +1,7 @@
 package webserver;
 
 import exception.IllegalHttpMethodException;
-import exception.IllegalHttpProtocolException;
+import exception.IllegalProtocolException;
 import exception.IllegalRequestLineException;
 import exception.IllegalRequestPathException;
 import org.junit.jupiter.api.DisplayName;
@@ -72,7 +72,7 @@ class RequestLineTest {
 	@Test
 	void illegalHttpProtocol() {
 		assertThatThrownBy(() -> new RequestLine("GET /users HTTP1.1"))
-			.isInstanceOf(IllegalHttpProtocolException.class);
+			.isInstanceOf(IllegalProtocolException.class);
 	}
 
 	@DisplayName("HTTP 메서드가 유효하지 않으면 IllegalHttpMethodException 예외가 발생한다.")

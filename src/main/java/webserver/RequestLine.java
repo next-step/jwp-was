@@ -15,14 +15,14 @@ public class RequestLine {
 
 	private final HttpMethod method;
 	private final RequestPath requestPath;
-	private final HttpProtocol httpProtocol;
+	private final Protocol protocol;
 
 	public RequestLine(String value) {
 		String[] tokens = value.split(DELIMITER);
 		validate(tokens);
 		this.method = HttpMethod.from(tokens[INDEX_OF_METHOD]);
 		this.requestPath = RequestPath.from(tokens[INDEX_OF_PATH]);
-		this.httpProtocol = new HttpProtocol(tokens[INDEX_OF_HTTP_PROTOCOL]);
+		this.protocol = new Protocol(tokens[INDEX_OF_HTTP_PROTOCOL]);
 		logger.debug("request line = {}", value);
 	}
 
@@ -41,11 +41,11 @@ public class RequestLine {
 	}
 
 	public String getProtocol() {
-		return httpProtocol.getProtocol();
+		return protocol.getProtocol();
 	}
 
 	public String getVersion() {
-		return httpProtocol.getVersion();
+		return protocol.getVersion();
 	}
 
 	public String getQueryString() {
