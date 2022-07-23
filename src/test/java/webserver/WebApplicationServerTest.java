@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HttpRequestTest {
+class WebApplicationServerTest {
 
     private static final String BASE_URL = "http://localhost:8080";
     private static final String VALID_USER_ID = "user";
@@ -42,7 +42,7 @@ class HttpRequestTest {
                 throw new RuntimeException(e);
             }
         });
-        
+
         DataBase.addUser(new User(VALID_USER_ID, VALID_PASSWORD, USER_NAME, USER_EMAIL));
     }
 
