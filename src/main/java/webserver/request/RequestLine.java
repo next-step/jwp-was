@@ -1,6 +1,6 @@
 package webserver.request;
 
-import org.springframework.util.StringUtils;
+import java.util.Objects;
 
 public class RequestLine {
 
@@ -20,36 +20,37 @@ public class RequestLine {
     }
 
     public static RequestLine parse(final String requestLine) {
-        if (!StringUtils.hasText(requestLine)) {
-            throw new IllegalArgumentException("빈 문자열은 파싱할 수 없습니다.");
-        }
+        validate(requestLine);
 
         final String[] tokens = requestLine.split(DELIMITER);
-        final HttpMethod method = HttpMethod.of(tokens[INDEX_OF_METHOD]);
-        final Path path = Path.from(tokens[INDEX_OF_PATH]);
-        final Protocol protocol = Protocol.parse(tokens[INDEX_OF_PROTOCOL]);
 
-        return new RequestLine(method, path, protocol);
+        return of(tokens[INDEX_OF_METHOD], tokens[INDEX_OF_PATH], tokens[INDEX_OF_PROTOCOL]);
     }
 
-    public HttpMethod getMethod() {
-        return method;
+    private static void validate(final String requestLine) {
+        if (requestLine == null || requestLine.isBlank()) {
+            throw new IllegalArgumentException("빈 문자열은 파싱할 수 없습니다.");
+        }
     }
 
-    public String getPath() {
-        return path.getLocation();
+    public static RequestLine of(final String httpMethod, final String path, final String protocol) {
+        return new RequestLine(HttpMethod.of(httpMethod), Path.parse(path), Protocol.parse(protocol));
     }
 
-    public String getProtocol() {
-        return protocol.getType();
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final RequestLine that = (RequestLine) o;
+        return method == that.method && Objects.equals(path, that.path) && Objects.equals(protocol, that.protocol);
     }
 
-    public String getVersion() {
-        return protocol.getVersion();
+    @Override
+    public int hashCode() {
+        return Objects.hash(method, path, protocol);
     }
-
-    public String getQueryString() {
-        return path.getQueryString();
-    }
-
 }

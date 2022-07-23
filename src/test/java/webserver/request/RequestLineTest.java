@@ -2,11 +2,12 @@ package webserver.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -16,55 +17,33 @@ class RequestLineTest {
     @ParameterizedTest(name = "#{index}: [{arguments}]")
     @NullAndEmptySource
     @ValueSource(strings = " ")
-    void empty_strings_cannot_be_parsed(String requestLine) {
+    void empty_strings_cannot_be_parsed(final String requestLine) {
         assertThatThrownBy(() -> RequestLine.parse(requestLine))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("빈 문자열은 파싱할 수 없습니다.");
     }
 
-    @DisplayName("GET 요청 파싱")
-    @Test
-    void parsing_a_get_request() {
-        final String requestLine = "GET /users HTTP/1.1";
-
-        final RequestLine parse = RequestLine.parse(requestLine);
-
-        assertAll(
-            () -> assertThat(parse.getMethod()).isSameAs(HttpMethod.GET),
-            () -> assertThat(parse.getPath()).isEqualTo("/users"),
-            () -> assertThat(parse.getProtocol()).isEqualTo("HTTP"),
-            () -> assertThat(parse.getVersion()).isEqualTo("1.1")
-        );
+    @DisplayName("HTTP 요청 시 RequestLine 객체를 생성한다")
+    @ParameterizedTest
+    @MethodSource
+    void create_request_line(final RequestLine actual, final RequestLine expected) {
+        assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("QueryString을 포함한 GET 요청 파싱")
-    @Test
-    void parsing_a_get_request_with_query_string() {
-        final String requestLine = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
-
-        final RequestLine parse = RequestLine.parse(requestLine);
-
-        assertAll(
-            () -> assertThat(parse.getMethod()).isSameAs(HttpMethod.GET),
-            () -> assertThat(parse.getPath()).isEqualTo("/users"),
-            () -> assertThat(parse.getProtocol()).isEqualTo("HTTP"),
-            () -> assertThat(parse.getVersion()).isEqualTo("1.1"),
-            () -> assertThat(parse.getQueryString()).isEqualTo("userId=javajigi&password=password&name=JaeSung")
-        );
-    }
-
-    @DisplayName("POST 요청 파싱")
-    @Test
-    void parsing_a_post_request() {
-        final String requestLine = "POST /users HTTP/1.1";
-
-        final RequestLine parse = RequestLine.parse(requestLine);
-
-        assertAll(
-            () -> assertThat(parse.getMethod()).isSameAs(HttpMethod.POST),
-            () -> assertThat(parse.getPath()).isEqualTo("/users"),
-            () -> assertThat(parse.getProtocol()).isEqualTo("HTTP"),
-            () -> assertThat(parse.getVersion()).isEqualTo("1.1")
+    private static Stream<Arguments> create_request_line() {
+        return Stream.of(
+            Arguments.of(
+                RequestLine.parse("GET /users HTTP/1.1"),
+                RequestLine.of("GET", "/users", "HTTP/1.1")
+            ),
+            Arguments.of(
+                RequestLine.parse("GET /users?userId=testarce HTTP/1.1"),
+                RequestLine.of("GET", "/users?userId=testarce", "HTTP/1.1")
+            ),
+            Arguments.of(
+                RequestLine.parse("POST /users HTTP/1.1"),
+                RequestLine.of("POST", "/users", "HTTP/1.1")
+            )
         );
     }
 
