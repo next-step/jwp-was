@@ -51,6 +51,10 @@ public class Path {
         return tokens.length == VALID_LENGTH_OF_QUERY_STRING_TOKENS;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

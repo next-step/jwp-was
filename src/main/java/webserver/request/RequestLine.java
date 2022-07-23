@@ -37,6 +37,10 @@ public class RequestLine {
         return new RequestLine(HttpMethod.of(httpMethod), Path.parse(path), Protocol.parse(protocol));
     }
 
+    public String getLocation() {
+        return path.getLocation();
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
