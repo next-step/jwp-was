@@ -13,16 +13,28 @@ public class Request {
 
     private final Headers headers;
 
+    private final RequestBody requestBody;
+
     Request(RequestLine requestLine, Headers headers) {
+        this(requestLine, headers, null);
+    }
+
+    Request(RequestLine requestLine, Headers headers, RequestBody requestBody) {
         this.requestLine = requireNonNull(requestLine, "");
         this.headers = requireNonNull(headers, "");
+        this.requestBody = requestBody;
     }
 
     public static Request parseOf(List<String> requestLines) {
         return new Request(
                 RequestLine.parseOf(requestLines.get(REQUEST_LINE_IDX)),
-                Headers.parseOf(requestLines.subList(REQUEST_HEADER_IDX, requestLines.size()))
+                Headers.parseOf(requestLines.subList(REQUEST_HEADER_IDX, requestLines.size() - 1)),
+                new RequestBody(requestLines.get(requestLines.size() - 1))
         );
+    }
+
+    RequestLine getRequestLine() {
+        return requestLine;
     }
 
     public String getPath() {
@@ -33,12 +45,16 @@ public class Request {
         return headers;
     }
 
-    RequestLine getRequestLine() {
-        return requestLine;
-    }
-
     public RequestParameters getParameters() {
         return requestLine.getPath().parseQueryString();
+    }
+
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
+    }
+
+    public RequestBody getRequestBody() {
+        return requestBody;
     }
 
     @Override

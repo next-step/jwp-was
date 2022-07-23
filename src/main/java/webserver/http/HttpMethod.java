@@ -1,5 +1,9 @@
 package webserver.http;
 
-enum HttpMethod {
-    GET, POST
+public enum HttpMethod {
+    GET, POST;
+
+    public boolean isPost() {
+        return this == POST;
+    }
 }

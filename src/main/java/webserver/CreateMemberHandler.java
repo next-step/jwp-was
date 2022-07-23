@@ -4,21 +4,25 @@ import db.DataBase;
 import model.User;
 import webserver.http.*;
 
+import java.util.Map;
+
 public class CreateMemberHandler implements Handler {
 
     @Override
     public boolean isSupport(Request request) {
-        return request.getPath().equals("/create");
+        return request.getPath().equals("/user/create") && request.getMethod().isPost();
     }
 
     @Override
     public Response handle(Request request) {
-        RequestParameters parameters = request.getParameters();
+        UrlEncodedBodyParser urlEncodedBodyParser = new UrlEncodedBodyParser();
 
-        String userId = parameters.getValue("userId");
-        String password = parameters.getValue("password");
-        String name = parameters.getValue("name");
-        String email = parameters.getValue("email");
+        Map<String, String> body = urlEncodedBodyParser.parseBody(request.getRequestBody());
+
+        String userId = body.get("userId");
+        String password = body.get("password");
+        String name = body.get("name");
+        String email = body.get("email");
 
         DataBase.addUser(new User(userId, password, name, email));
 
