@@ -19,3 +19,6 @@
   - [x] http method enum 적용
   - [x] Path 클래스로 분리
   - [x] Protocol 클래스로 분리
+
+# 1단계 피드백
+- [ ] 테스트에서 getter 비교보다는 객체를 비교
