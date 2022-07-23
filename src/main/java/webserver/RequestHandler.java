@@ -17,6 +17,7 @@ import model.User;
 import webserver.controller.Controller;
 import webserver.controller.IndexController;
 import webserver.controller.UserFormController;
+import webserver.controller.UserLoginFormController;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -33,6 +34,7 @@ public class RequestHandler implements Runnable {
         requestMapping.put("/", new IndexController());
         requestMapping.put("/index.html", new IndexController());
         requestMapping.put("/user/form.html", new UserFormController());
+        requestMapping.put("/user/login.html", new UserLoginFormController());
     }
 
     public void run() {
@@ -61,11 +63,6 @@ public class RequestHandler implements Runnable {
         Controller controller = requestMapping.get(path);
         if (controller != null) {
             controller.handle(request, response);
-            return;
-        }
-
-        if (method.isGet() && "/user/login.html".equals(path)) {
-            response.forward("user/login");
             return;
         }
 
