@@ -51,18 +51,16 @@ public class RequestHandler implements Runnable {
 
     private List<String> readRequest(InputStream in) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        List<String> requestLines = new ArrayList<>();
 
-        List<String> collect = new ArrayList<>();
         String line = br.readLine();
-        collect.add(line);
+        requestLines.add(line);
 
-        while (!"".equals(line)) {
-            if (line == null) {
-                break;
-            }
+        while (line != null && !"".equals(line)) {
             line = br.readLine();
-            collect.add(line);
+            requestLines.add(line);
         }
-        return collect;
+
+        return requestLines;
     }
 }
