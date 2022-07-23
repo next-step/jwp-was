@@ -58,7 +58,7 @@ Host: localhost:8080
 Connection: keep-alive
 Accept: */*
 ```
-- [ ] Request Parameter 추출하기
+- [X] Request Parameter 추출하기
   - Header의 첫 번째 라인에서 요청 URL을 추출한다.
   - 요청 URL에서 접근 경로와 이름=값을 추출해 User 클래스에 담는다.
 ### 기능 요구사항 3
