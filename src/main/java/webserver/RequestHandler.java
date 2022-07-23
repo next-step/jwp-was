@@ -5,12 +5,10 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import utils.IOUtils;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.stream.Stream;
 
@@ -31,12 +29,13 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream();
              OutputStream out = connection.getOutputStream()) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            RequestLine requestLine = new RequestLine(URLDecoder.decode(reader.readLine(), UTF_8));
-            HttpHeaders headers = HttpHeaders.from(reader);
 
-            String requestBody = URLDecoder.decode(IOUtils.readData(reader, headers.getContentLength()), UTF_8);
+            HttpRequest request = new HttpRequest(in);
+            RequestLine requestLine = request.getRequestLine();
+            HttpHeaders headers = request.getHeaders();
+            String requestBody = request.getRequestBody();
             logger.debug("request body = {}", requestBody);
+
             DataOutputStream dos = new DataOutputStream(out);
             response(requestLine, headers, requestBody, dos);
 
@@ -46,7 +45,7 @@ public class RequestHandler implements Runnable {
     }
 
     private void response(RequestLine requestLine, HttpHeaders headers, String requestBody, DataOutputStream dos) throws IOException, URISyntaxException {
-        String path = requestLine.getRequestPath();
+        String path = requestLine.getPath();
         HttpMethod method = requestLine.getMethod();
         String cookie = headers.getCookie();
         String contentType = headers.getAccept();

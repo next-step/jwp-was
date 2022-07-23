@@ -36,7 +36,7 @@ public class RequestLine {
 		return method;
 	}
 
-	public String getRequestPath() {
+	public String getPath() {
 		return requestPath.getPath();
 	}
 
