@@ -2,7 +2,7 @@ package webserver.http;
 
 import java.util.Objects;
 
-public class RequestLine {
+class RequestLine {
 
     private static final int REQUEST_LINE_LENGTH = 3;
 
@@ -16,13 +16,13 @@ public class RequestLine {
 
     private final HttpMethod method;
 
-    private final RequestPath requestPath;
+    private final RequestURI requestUri;
 
     private final ProtocolVersion protocol;
 
-    private RequestLine(HttpMethod method, RequestPath requestPath, ProtocolVersion protocol) {
+    private RequestLine(HttpMethod method, RequestURI requestUri, ProtocolVersion protocol) {
         this.method = method;
-        this.requestPath = requestPath;
+        this.requestUri = requestUri;
         this.protocol = protocol;
     }
 
@@ -35,7 +35,7 @@ public class RequestLine {
 
         return new RequestLine(
                 HttpMethod.valueOf(requestLineValues[METHOD_IDX]),
-                new RequestPath(requestLineValues[PATH_IDX]),
+                new RequestURI(requestLineValues[PATH_IDX]),
                 ProtocolVersion.parseOf(requestLineValues[PROTOCOL_IDX]));
     }
 
@@ -47,8 +47,8 @@ public class RequestLine {
         return protocol;
     }
 
-    RequestPath getPath() {
-        return requestPath;
+    RequestURI getPath() {
+        return requestUri;
     }
 
     @Override
@@ -56,11 +56,11 @@ public class RequestLine {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RequestLine that = (RequestLine) o;
-        return method == that.method && Objects.equals(requestPath, that.requestPath) && Objects.equals(protocol, that.protocol);
+        return method == that.method && Objects.equals(requestUri, that.requestUri) && Objects.equals(protocol, that.protocol);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(method, requestPath, protocol);
+        return Objects.hash(method, requestUri, protocol);
     }
 }

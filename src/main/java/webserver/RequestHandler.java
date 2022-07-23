@@ -2,10 +2,14 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.Controller;
+import webserver.http.Request;
+import webserver.http.Response;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -20,40 +24,45 @@ public class RequestHandler implements Runnable {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
-        try (InputStream in = connection.getInputStream();
-             OutputStream out = connection.getOutputStream()) {
-            // 파싱
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            String collect = br.lines().collect(Collectors.joining("\n"));
-            //
-            logger.info("{}", collect);
-            // 응답
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+            Request request = Request.parseOf(readRequest(in));
+
+            Controller controller = new Controller();
+
+            Response response = controller.service(request);
+
+            writeResponse(out, response);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+    private void writeResponse(OutputStream out, Response response) throws IOException {
+        DataOutputStream dos = new DataOutputStream(out);
+
+        for (String message : response.getMessages()) {
+            dos.writeBytes(message + "\r\n");
         }
+
+        dos.writeBytes("\r\n");
+        dos.write(response.getBody(), 0, response.getBody().length);
+        dos.flush();
     }
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+    private List<String> readRequest(InputStream in) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+        List<String> collect = new ArrayList<>();
+        String line = br.readLine();
+        collect.add(line);
+
+        while (!"".equals(line)) {
+            if (line == null) {
+                break;
+            }
+            line = br.readLine();
+            collect.add(line);
         }
+        return collect;
     }
 }

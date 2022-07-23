@@ -4,10 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import webserver.http.HttpMethod;
-import webserver.http.ProtocolVersion;
-import webserver.http.RequestLine;
-import webserver.http.RequestPath;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -27,7 +23,7 @@ class RequestLineTest {
         // then
         assertThat(requestLine.getMethod()).isEqualTo(method);
         assertThat(requestLine.getProtocolVersion()).isEqualTo(new ProtocolVersion(protocolVersion));
-        assertThat(requestLine.getPath()).isEqualTo(new RequestPath(path));
+        assertThat(requestLine.getPath()).isEqualTo(new RequestURI(path));
     }
 
     @DisplayName("Http Request Line 형식에 맞지 않으면 RequestLine 을 파싱할 수 없다.")

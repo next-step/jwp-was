@@ -1,5 +1,5 @@
 package webserver.http;
 
-public enum HttpMethod {
+enum HttpMethod {
     GET, POST
 }

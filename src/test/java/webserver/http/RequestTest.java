@@ -19,7 +19,8 @@ class RequestTest {
                 "GET /index.html HTTP/1.1",
                 "Host: localhost:8080",
                 "Connection: keep-alive",
-                "Accept: */*"
+                "Accept: */*",
+                ""
         );
 
         // when

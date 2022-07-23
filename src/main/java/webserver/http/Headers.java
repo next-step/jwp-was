@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Headers {
+class Headers {
     private static final String HEADER_DELIMITER = ": ";
 
     private static final int NAME_IDX = 0;
@@ -21,14 +21,26 @@ public class Headers {
 
     static Headers parseOf(List<String> headerLines) {
         Map<String, String> headers = headerLines.stream()
+                .filter((headerLine) -> !headerLine.isEmpty())
                 .map(headerLine -> headerLine.split(HEADER_DELIMITER))
                 .collect(Collectors.toMap(entry -> entry[NAME_IDX], entry -> entry[FIELD_IDX]));
 
         return new Headers(headers);
     }
 
+    static Headers of(Map<String, String> headers) {
+        return new Headers(headers);
+    }
+
     String getValue(String name) {
         return headers.get(name);
+    }
+
+    List<String> getMessages() {
+        return headers.entrySet()
+                .stream()
+                .map(entry -> entry.getKey() + HEADER_DELIMITER + entry.getValue())
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override

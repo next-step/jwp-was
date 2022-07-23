@@ -18,17 +18,20 @@ public class Request {
         this.headers = requireNonNull(headers, "");
     }
 
-    static Request parseOf(List<String> requestLines) {
+    public static Request parseOf(List<String> requestLines) {
         return new Request(
                 RequestLine.parseOf(requestLines.get(REQUEST_LINE_IDX)),
                 Headers.parseOf(requestLines.subList(REQUEST_HEADER_IDX, requestLines.size()))
         );
     }
 
+    String getPath() {
+        return requestLine.getPath().getPath();
+    }
+
     Headers getHeaders() {
         return headers;
     }
-
 
     RequestLine getRequestLine() {
         return requestLine;

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class QueryString {
+class QueryString {
 
     private static final String ENTRY_DELIMITER = "&";
 
