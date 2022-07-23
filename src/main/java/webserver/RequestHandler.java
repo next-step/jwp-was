@@ -6,20 +6,31 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import db.DataBase;
 import model.User;
+import webserver.controller.Controller;
+import webserver.controller.IndexController;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private final Socket connection;
+    private final Map<String, Controller> requestMapping = new HashMap<>();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
+        initRequestMapping();
+    }
+
+    private void initRequestMapping() {
+        requestMapping.put("/", new IndexController());
+        requestMapping.put("/index.html", new IndexController());
     }
 
     public void run() {
@@ -45,8 +56,9 @@ public class RequestHandler implements Runnable {
         String requestBody = request.getRequestBody();
         HttpHeaders headers = request.getHeaders();
 
-        if (method.isGet() && ("/".equals(path) || "/index.html".equals(path))) {
-            response.forward("index");
+        Controller controller = requestMapping.get(path);
+        if (controller != null) {
+            controller.handle(request, response);
             return;
         }
 
