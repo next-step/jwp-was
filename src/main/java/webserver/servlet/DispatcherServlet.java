@@ -3,6 +3,7 @@ package webserver.servlet;
 import java.util.HashMap;
 import java.util.Map;
 
+import webserver.controller.UserRegisterController;
 import webserver.controller.StaticController;
 import webserver.http.request.HttpRequest;
 import webserver.controller.Controller;
@@ -17,15 +18,14 @@ public class DispatcherServlet implements Servlet {
 		controllerMap.put("/", new IndexController());
 		controllerMap.put("/favicon.ico", new IndexController());
 		controllerMap.put("/index.html", new IndexController());
+		controllerMap.put("/user/form.html", new UserRegisterController());
+		controllerMap.put("/user/create", new UserRegisterController());
 	}
 
 	@Override
 	public HttpResponse service(HttpRequest httpRequest) {
 		// Path 정보 추출
-		String uri = httpRequest.getPath();
-		String path = uri.substring(uri.lastIndexOf("/"));
-
-		Controller controller = controllerMap.getOrDefault(path, new StaticController());
+		Controller controller = controllerMap.getOrDefault(httpRequest.getPath(), new StaticController());
 
 		return controller.process(httpRequest);
 	}

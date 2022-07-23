@@ -1,13 +1,17 @@
 package webserver.http.response;
 
 public class HttpResponseBody {
-	private final Resource resource;
+	private final String body;
+
+	public HttpResponseBody(String body) {
+		this.body = body;
+	}
 
 	public HttpResponseBody(Resource resource) {
-		this.resource = resource;
+		this(new String(resource.getResource()));
 	}
 
 	public String getBody() {
-		return new String(resource.getResource());
+		return body;
 	}
 }

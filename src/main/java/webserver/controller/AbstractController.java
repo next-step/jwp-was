@@ -8,7 +8,7 @@ import webserver.http.response.Resource;
 
 public abstract class AbstractController implements Controller {
 
-	private static final String RESOURCE_PATH = "./static";
+	private static final String RESOURCE_PATH = "./templates";
 
 	@Override
 	public HttpResponse process(HttpRequest httpRequest) {
@@ -34,4 +34,12 @@ public abstract class AbstractController implements Controller {
 	}
 
 	abstract HttpResponse doPost(HttpRequest httpRequest);
+
+	protected HttpResponse doRedirect(HttpRequest httpRequest, String location) {
+		return new HttpResponse.Builder()
+				.statusLine(httpRequest.getProtocol(), HttpStatus.FOUND)
+				.location(location)
+				.emptyBody()
+				.build();
+	}
 }

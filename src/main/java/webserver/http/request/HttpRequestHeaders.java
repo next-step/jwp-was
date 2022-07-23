@@ -21,4 +21,8 @@ public class HttpRequestHeaders {
 		}
 		return new HttpRequestHeaders();
 	}
+
+	public Map<String , String> getHeaders() {
+		return headers;
+	}
 }

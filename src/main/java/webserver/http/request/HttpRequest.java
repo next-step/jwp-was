@@ -1,6 +1,7 @@
 package webserver.http.request;
 
 import java.util.List;
+import java.util.Map;
 
 import webserver.http.HttpMethod;
 
@@ -23,5 +24,13 @@ public class HttpRequest {
 
 	public HttpProtocol getProtocol() {
 		return httpRequestLine.getProtocol();
+	}
+
+	public QueryParameter getParameter() {
+		return httpRequestLine.getParameters();
+	}
+
+	public Map<String, String> getHttpRequestHeaders() {
+		return httpRequestHeaders.getHeaders();
 	}
 }

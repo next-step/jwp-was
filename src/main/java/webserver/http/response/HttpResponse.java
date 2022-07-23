@@ -27,6 +27,11 @@ public class HttpResponse {
 			return this;
 		}
 
+		public Builder emptyBody() {
+			httpResponseBody = new HttpResponseBody("");
+			return this;
+		}
+
 		public Builder contentType(ContentType contentType) {
 			httpResponseHeaders.putContentType(contentType);
 			return this;
@@ -37,6 +42,10 @@ public class HttpResponse {
 			return this;
 		}
 
+		public Builder location(String location) {
+			httpResponseHeaders.putLocation(location);
+			return this;
+		}
 		public HttpResponse build() {
 			return new HttpResponse(this);
 		}

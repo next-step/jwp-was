@@ -8,6 +8,7 @@ import webserver.http.ContentType;
 public class HttpResponseHeaders {
 	private static final String CONTENT_TYPE = "Content-Type";
 	private static final String CONTENT_LENGTH = "Content-Length";
+	public static final String LOCATION = "Location";
 	private static final String NEW_LINE = "\r\n";
 	private static final String HEADER_DELIMITER = ": ";
 
@@ -31,5 +32,9 @@ public class HttpResponseHeaders {
 		}
 
 		return stringBuilder.toString();
+	}
+
+	public void putLocation(String location) {
+		headers.put(LOCATION, location);
 	}
 }
