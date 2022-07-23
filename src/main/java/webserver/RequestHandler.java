@@ -3,6 +3,7 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 
+import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,15 +35,15 @@ public class RequestHandler implements Runnable {
 
     private void showRequest(InputStream is) {
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
             String line = br.readLine();
 
-
-            while (line != null) {
-                System.out.println(line);
-
+            StringBuilder stringBuilder = new StringBuilder();
+            do{
+                stringBuilder.append(line + "\n");
                 line = br.readLine();
-            }
+            } while(line != null);
+            System.out.println(stringBuilder);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

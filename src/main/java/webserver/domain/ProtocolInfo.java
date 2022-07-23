@@ -9,7 +9,7 @@ import java.util.Objects;
 @Getter
 public class ProtocolInfo {
 
-    private static final String PROTOCOL_DELIMITER = "/";
+    private static final String DELIMITER = "/";
 
     private static final int PROTOCOL_NAME_IDX = 0;
     private static final int PROTOCOL_VERSION_IDX = 1;
@@ -27,7 +27,7 @@ public class ProtocolInfo {
     public static ProtocolInfo parse(String protocol) {
         validate(protocol);
 
-        String[] protocolInfo = protocol.split(PROTOCOL_DELIMITER);
+        String[] protocolInfo = protocol.split(DELIMITER);
 
         return new ProtocolInfo(protocolInfo[PROTOCOL_NAME_IDX], protocolInfo[PROTOCOL_VERSION_IDX]);
     }

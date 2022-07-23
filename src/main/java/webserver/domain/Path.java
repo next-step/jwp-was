@@ -10,6 +10,7 @@ import java.util.Objects;
 public class Path {
 
     private static final int PATH_PLACE_IDX = 1;
+    private static final String DELIMITER = "\\?";
 
     private String path;
     private String queryString;
@@ -26,7 +27,7 @@ public class Path {
     public static Path parse(String pathInfo) {
         validate(pathInfo);
 
-        String[] paths = pathInfo.split("\\?");
+        String[] paths = pathInfo.split(DELIMITER);
         if(paths.length >= 2) {
             return new Path(paths[0], paths[1]);
         }

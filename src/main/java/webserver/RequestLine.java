@@ -1,15 +1,15 @@
 package webserver;
 
-import webserver.domain.Method;
+import webserver.domain.HttpMethod;
 import webserver.domain.Path;
 import webserver.domain.ProtocolInfo;
 import webserver.exception.StringEmptyException;
 
 public class RequestLine {
 
-    private static final String REQUEST_DELIMITER = " ";
+    private static final String DELIMITER = " ";
 
-    private Method method;
+    private HttpMethod method;
     private Path path;
     private ProtocolInfo protocolInfo;
 
@@ -20,7 +20,7 @@ public class RequestLine {
     public static RequestLine from(String requestLine) {
         validateRequestline(requestLine);
 
-        String[] values = requestLine.split(REQUEST_DELIMITER);
+        String[] values = requestLine.split(DELIMITER);
 
         return new RequestLine(values);
     }
@@ -32,13 +32,13 @@ public class RequestLine {
     }
 
     private void parse(String[] values) {
-        method = Method.parse(values[0]);
+        method = HttpMethod.valueOf(values[0]);
         path = Path.parse(values[1]);
         protocolInfo = ProtocolInfo.parse(values[2]);
     }
 
     public String getMethod() {
-        return String.valueOf(method.getMethod());
+        return String.valueOf(method);
     }
 
     public String getPath() {
