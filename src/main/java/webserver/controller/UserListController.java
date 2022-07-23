@@ -23,7 +23,7 @@ public class UserListController extends AbstractController {
     }
 
     @Override
-    protected void doPost(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+    protected void doPost(HttpRequest request, HttpResponse response) {
 
     }
 }

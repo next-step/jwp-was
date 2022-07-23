@@ -17,7 +17,7 @@ public class UserCreateController extends AbstractController {
     }
 
     @Override
-    protected void doPost(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+    protected void doPost(HttpRequest request, HttpResponse response) {
         String requestBody = request.getRequestBody();
         createUser(requestBody);
         response.sendRedirect("/index.html");

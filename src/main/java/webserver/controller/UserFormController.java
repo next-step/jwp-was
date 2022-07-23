@@ -14,7 +14,7 @@ public class UserFormController extends AbstractController {
     }
 
     @Override
-    protected void doPost(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+    protected void doPost(HttpRequest request, HttpResponse response) {
 
     }
 }
