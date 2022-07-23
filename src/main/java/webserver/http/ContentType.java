@@ -6,6 +6,9 @@ public enum ContentType {
 	JS(".js", "text/javascript"),
 	CSS(".css", "text/css"),
 	SVG(".svg", "image/svg+xml"),
+	WOFF(".woff", "application/x-font-woff"),
+	TFF(".ttf", "application/octet-stream"),
+	ICO(".ico", "image/x-icon"),
 	HTML(".html", "text/html;charset=utf-8");
 
 	private static final String NOT_SUPPORTED_CONTENT_TYPE = "지원하지 않는 Content Type 입니다.";

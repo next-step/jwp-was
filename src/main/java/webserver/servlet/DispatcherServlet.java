@@ -3,6 +3,7 @@ package webserver.servlet;
 import java.util.HashMap;
 import java.util.Map;
 
+import webserver.controller.StaticController;
 import webserver.http.request.HttpRequest;
 import webserver.controller.Controller;
 import webserver.controller.IndexController;
@@ -14,6 +15,7 @@ public class DispatcherServlet implements Servlet {
 
 	public DispatcherServlet() {
 		controllerMap.put("/", new IndexController());
+		controllerMap.put("/favicon.ico", new IndexController());
 		controllerMap.put("/index.html", new IndexController());
 	}
 
@@ -23,7 +25,7 @@ public class DispatcherServlet implements Servlet {
 		String uri = httpRequest.getPath();
 		String path = uri.substring(uri.lastIndexOf("/"));
 
-		Controller controller = controllerMap.get(path);
+		Controller controller = controllerMap.getOrDefault(path, new StaticController());
 
 		return controller.process(httpRequest);
 	}
