@@ -1,11 +1,8 @@
 package webserver;
 
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Parameters {
 
@@ -15,18 +12,18 @@ public class Parameters {
     private static final int INDEX_ONE = 1;
 
     private final String queryString;
-    private final MultiValueMap<String, String> parameters;
+    private final Map<String, String> parameters;
 
     public Parameters(String queryString) {
         this.queryString = queryString;
         this.parameters = parseQueryString(queryString);
     }
 
-    private MultiValueMap<String, String> parseQueryString(String queryString) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    private Map<String, String> parseQueryString(String queryString) {
+        Map<String, String> params = new HashMap<>();
         Arrays.stream(queryString.split(AMPERSAND)).forEach(parameter -> {
             String[] nameValuePair = parameter.split(EQUAL_SIGN);
-            params.put(nameValuePair[INDEX_ZERO], Collections.singletonList(nameValuePair[INDEX_ONE]));
+            params.put(nameValuePair[INDEX_ZERO], nameValuePair[INDEX_ONE]);
         });
         return params;
     }
@@ -36,10 +33,6 @@ public class Parameters {
     }
 
     public String getParameter(String name) {
-        List<String> values = this.parameters.get(name);
-        if (values.isEmpty()) {
-            return null;
-        }
-        return values.get(INDEX_ZERO);
+        return parameters.get(name);
     }
 }
