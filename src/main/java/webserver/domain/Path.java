@@ -7,12 +7,12 @@ import java.util.Objects;
 
 public class Path {
     public static final String DELIMITER = "\\?";
-    private final String path;
+    private final String pathStr;
     private final Parameters parameters;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public Path(@JsonProperty("path") String path, @JsonProperty("parameters") Parameters parameters) {
-        this.path = path;
+        this.pathStr = path;
         this.parameters = parameters;
     }
 
@@ -26,8 +26,8 @@ public class Path {
         return new Path(values[0], Parameters.from(values[1]));
     }
 
-    public String getPath() {
-        return path;
+    public String getPathStr() {
+        return pathStr;
     }
 
     public Parameters getParameters() {
@@ -43,11 +43,15 @@ public class Path {
             return false;
         }
         Path path1 = (Path) o;
-        return Objects.equals(path, path1.path) && Objects.equals(parameters, path1.parameters);
+        return Objects.equals(pathStr, path1.pathStr) && Objects.equals(parameters, path1.parameters);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(path, parameters);
+        return Objects.hash(pathStr, parameters);
+    }
+
+    public boolean containsPath(Path path) {
+        return this.pathStr.startsWith(path.pathStr);
     }
 }
