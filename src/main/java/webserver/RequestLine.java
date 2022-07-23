@@ -2,7 +2,7 @@ package webserver;
 
 import java.util.Map;
 
-public class RequestLineParser {
+public class RequestLine {
     private static final String INVALID_HTTP_REQUEST = "잘못된 HTTP 요청 ";
     private static final String DELIMITER = " ";
     public static final int PROTOCOL_INFORMATION_SIZE = 2;
@@ -10,7 +10,7 @@ public class RequestLineParser {
     private HttpPath httpPath;
     private Protocol protocol;
 
-    public RequestLineParser(String line) {
+    public RequestLine(String line) {
         if (line == null) {
             throw new IllegalArgumentException(INVALID_HTTP_REQUEST + line);
         }

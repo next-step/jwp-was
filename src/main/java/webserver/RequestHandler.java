@@ -43,7 +43,7 @@ public class RequestHandler implements Runnable {
                 return;
             }
             String line = br.readLine();
-            new RequestLineParser(line);
+            new RequestLine(line);
             while (line != null) {
                 line = br.readLine();
             }
