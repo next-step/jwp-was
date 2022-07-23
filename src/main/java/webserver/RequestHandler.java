@@ -35,6 +35,7 @@ public class RequestHandler implements Runnable {
         requestMapping.put("/index.html", new IndexController());
         requestMapping.put("/user/form.html", new UserFormController());
         requestMapping.put("/user/login.html", new UserLoginController());
+        requestMapping.put("/user/login", new UserLoginController());
         requestMapping.put("/user/list", new UserListController());
     }
 
@@ -73,17 +74,6 @@ public class RequestHandler implements Runnable {
             return;
         }
 
-        if (method.isPost() && "/user/login".equals(path)) {
-            if (isLoggedIn(requestBody)) {
-                response.addHeader("Set-Cookie", "logined=true; Path=/");
-                response.sendRedirect("/index.html");
-                return;
-            }
-            response.addHeader("Set-Cookie", "logined=false");
-            response.sendRedirect("/user/login_failed.html");
-            return;
-        }
-
         response.addHeader("Content-Type", headers.getAccept());
         response.forward(path);
     }
@@ -97,14 +87,5 @@ public class RequestHandler implements Runnable {
 
         User user = new User(userId, password, name, email);
         DataBase.addUser(user);
-    }
-
-    private boolean isLoggedIn(String requestBody) {
-        Parameters parameters = new Parameters(requestBody);
-        String userId = parameters.getParameter("userId");
-        String password = parameters.getParameter("password");
-
-        User user = DataBase.findUserById(userId);
-        return user != null && password.equals(user.getPassword());
     }
 }
