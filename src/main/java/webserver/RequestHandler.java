@@ -16,6 +16,7 @@ import db.DataBase;
 import model.User;
 import webserver.controller.Controller;
 import webserver.controller.IndexController;
+import webserver.controller.UserFormController;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -31,6 +32,7 @@ public class RequestHandler implements Runnable {
     private void initRequestMapping() {
         requestMapping.put("/", new IndexController());
         requestMapping.put("/index.html", new IndexController());
+        requestMapping.put("/user/form.html", new UserFormController());
     }
 
     public void run() {
@@ -59,11 +61,6 @@ public class RequestHandler implements Runnable {
         Controller controller = requestMapping.get(path);
         if (controller != null) {
             controller.handle(request, response);
-            return;
-        }
-
-        if (method.isGet() && "/user/form.html".equals(path)) {
-            response.forward("user/form");
             return;
         }
 
