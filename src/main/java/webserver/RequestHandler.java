@@ -1,5 +1,6 @@
 package webserver;
 
+import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.RequestLine;
@@ -30,13 +31,14 @@ public class RequestHandler implements Runnable {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream())); OutputStream out = connection.getOutputStream()) {
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), Charsets.UTF_8));
+             DataOutputStream dos = new DataOutputStream(connection.getOutputStream())
+        ) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             String requestLineMessage = bufferedReader.readLine();
             RequestLineParser requestLineParser = new RequestLineParser(new MethodParser(), new URIParser(new KeyValuePairParser(), new QueryParametersParser(new KeyValuePairParser())), new ProtocolParser());
             RequestLine requestLine = requestLineParser.parse(requestLineMessage);
             logger.info("[requestLine] = {}", requestLine);
-            DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
             responseBody(dos, body);
