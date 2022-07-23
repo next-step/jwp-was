@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import webserver.controller.Controller;
 import webserver.controller.IndexController;
-import webserver.controller.StaticResourceController;
 import webserver.controller.UserCreateController;
 import webserver.controller.UserListController;
 import webserver.controller.UserLoginController;
@@ -57,7 +56,13 @@ public class RequestHandler implements Runnable {
 
     private void handle(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
         String requestURI = request.getRequestURI();
-        Controller controller = requestMapping.getOrDefault(requestURI, new StaticResourceController());
+        Controller controller = requestMapping.get(requestURI);
+
+        if (controller == null) {
+            response.forward(requestURI);
+            return;
+        }
+
         controller.handle(request, response);
     }
 }
