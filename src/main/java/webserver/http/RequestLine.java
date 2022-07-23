@@ -1,5 +1,7 @@
 package webserver.http;
 
+import java.util.Objects;
+
 public class RequestLine {
 
     private static final int REQUEST_LINE_LENGTH = 3;
@@ -47,5 +49,18 @@ public class RequestLine {
 
     RequestPath getPath() {
         return requestPath;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestLine that = (RequestLine) o;
+        return method == that.method && Objects.equals(requestPath, that.requestPath) && Objects.equals(protocol, that.protocol);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(method, requestPath, protocol);
     }
 }
