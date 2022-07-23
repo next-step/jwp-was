@@ -1,4 +1,4 @@
-package request;
+package webserver.request;
 
 import com.google.common.collect.Maps;
 import java.util.Map;

@@ -4,13 +4,12 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import request.Model;
-import response.Response;
+import webserver.response.Response;
 
 import java.io.IOException;
 
 public class ViewResolver {
-    private static final String PREFIX = "/template";
+    private static final String PREFIX = "/templates";
     private static final String SUFFIX = ".html";
     private String path;
 
@@ -27,9 +26,13 @@ public class ViewResolver {
         loader.setPrefix(PREFIX);
         loader.setSuffix(SUFFIX);
         Handlebars handlebars = new Handlebars(loader);
+        Template template = handlebars.compile(path);
 
-        Template template;
-        template = handlebars.compile(path);
-        return template.apply(response.getModelMap());
+        if (path.startsWith("/error")) {
+            return template.text();
+        }
+        String apply = template.apply(response.getModelMap());
+
+        return apply;
     }
 }

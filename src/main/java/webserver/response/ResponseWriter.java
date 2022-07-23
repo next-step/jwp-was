@@ -1,9 +1,10 @@
-package response;
+package webserver.response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import request.Cookie;
+import webserver.Header;
+import webserver.request.Cookie;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -18,6 +19,9 @@ public enum ResponseWriter {
         responseBody(dos, response);
     }),
     REDIRECT(HttpStatus.FOUND, ResponseWriter::response302Header);
+
+    private static final String HEADER_CONTENT_TYPE_KEY = "Content-Type";
+    private static final String CONTENT_TYPE_HTML_TEXT = "text/html";
 
     HttpStatus status;
     BiConsumer<DataOutputStream, Response> responseBiConsumer;
@@ -45,13 +49,21 @@ public enum ResponseWriter {
     public static void response200Header(DataOutputStream dos, Response response) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            contentTypeLine(dos, response);
             cookieLine(dos, response);
             dos.writeBytes("Content-Length: " + response.getBodyLength() + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    public static void contentTypeLine(DataOutputStream dos, Response response) throws IOException {
+        Header header = response.getHeader();
+        String contentType = Optional.ofNullable(header.get(HEADER_CONTENT_TYPE_KEY))
+                .orElse(CONTENT_TYPE_HTML_TEXT);
+
+        dos.writeBytes("Content-Type: " + contentType + ";charset=utf-8\r\n");
     }
 
     public static void cookieLine(DataOutputStream dos, Response response) {
@@ -86,6 +98,6 @@ public enum ResponseWriter {
     }
 
     public void write(Response response, DataOutputStream dos) {
-           this.responseBiConsumer.accept(dos, response);
+       this.responseBiConsumer.accept(dos, response);
     }
 }

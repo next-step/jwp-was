@@ -1,26 +1,32 @@
-package response;
+package webserver.response;
 
 import org.springframework.http.HttpStatus;
-import request.Cookie;
-import request.Model;
+import webserver.Header;
+import webserver.request.Cookie;
+import webserver.request.Model;
 
 import java.io.DataOutputStream;
-import java.util.Objects;
+import java.util.Map;
 
 public class Response {
     private HttpStatus httpStatus;
     private byte[] body;
     private Cookie cookie;
+    private Header header;
     private String locationPath;
     private Model model;
 
     public Response(HttpStatus httpStatus, byte[] body) {
         this.httpStatus = httpStatus;
+        this.header = new Header();
         this.body = body;
+        this.model = new Model();
     }
 
     public Response() {
         cookie = new Cookie();
+        header = new Header();
+        this.model = new Model();
     }
 
     public void sendStatus(DataOutputStream dos) {
@@ -60,11 +66,15 @@ public class Response {
         this.model = model;
     }
 
-    public Model getModelMap() {
-        return model;
+    public Map<String, Object> getModelMap() {
+        return model.getModelMap();
     }
 
-    public void addBody(String body) {
-        this.body = body.getBytes();
+    public void addBody(byte[] body) {
+        this.body = body;
+    }
+
+    public Header getHeader() {
+        return header;
     }
 }
