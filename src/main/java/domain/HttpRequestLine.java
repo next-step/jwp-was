@@ -13,7 +13,7 @@ public class HttpRequestLine {
 	private HttpProtocol httpProtocol;
 
 	public HttpRequestLine(String method, String path, String protocol) {
-		this.httpMethod = HttpMethod.valueOf(method);
+		this.httpMethod = HttpMethod.of(method);
 		this.httpPath = HttpPath.of(path);
 		this.httpProtocol = HttpProtocol.of(protocol);
 	}
@@ -26,20 +26,16 @@ public class HttpRequestLine {
 		return new HttpRequestLine(splitLine[INDEX_METHOD], splitLine[INDEX_PATH], splitLine[INDEX_PROTOCOL_VERSION]);
 	}
 
-	public String getMethod() {
-		return httpMethod.name();
+	public HttpMethod getMethod() {
+		return httpMethod;
 	}
 
 	public String getPath() {
 		return httpPath.getPath();
 	}
 
-	public String getProtocol() {
-		return httpProtocol.getProtocol();
-	}
-
-	public String getVersion() {
-		return httpProtocol.getVersion();
+	public HttpProtocol getProtocol() {
+		return httpProtocol;
 	}
 
 	public QueryParameter getParameters() {

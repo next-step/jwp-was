@@ -1,19 +1,24 @@
 package domain;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HttpRequestHeaders {
-	private List<String> headers;
+	private static final String HEADER_DELIMITER = ":";
+	private static final int INDEX_KEY = 0;
+	private static final int INDEX_VALUE = 1;
 
-	private HttpRequestHeaders(List<String> headers) {
-		this.headers = headers;
+	private static final Map<String , String> headers = new HashMap<>();
+
+	private HttpRequestHeaders() {
 	}
 
 	public static HttpRequestHeaders of(List<String> lines) {
-		return new HttpRequestHeaders(lines);
-	}
-
-	public List<String> getHeaders() {
-		return headers;
+		for (String line : lines) {
+			String[] tokens = line.split(HEADER_DELIMITER);
+			headers.put(tokens[INDEX_KEY].trim(), tokens[INDEX_VALUE].trim());
+		}
+		return new HttpRequestHeaders();
 	}
 }
