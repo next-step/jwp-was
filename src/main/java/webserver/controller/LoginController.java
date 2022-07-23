@@ -1,20 +1,12 @@
 package webserver.controller;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import db.DataBase;
 import model.User;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.Parameters;
 
-public class UserLoginController extends AbstractController {
-
-    @Override
-    protected void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-        response.forward("user/login");
-    }
+public class LoginController extends AbstractController {
 
     @Override
     protected void doPost(HttpRequest request, HttpResponse response) {

@@ -44,7 +44,7 @@ public class HttpResponse {
     private byte[] getBody(String path, Object model) throws IOException, URISyntaxException {
         if (isStaticResourcePath(path)) {
             addHeader("Content-Type", getContentType(path));
-            return FileIoUtils.loadFileFromClasspath("./static/" + path);
+            return FileIoUtils.loadFileFromClasspath(getResourcePath(path));
         }
 
         addHeader("Content-Type", ContentType.TEXT_HTML.getValue());
@@ -59,6 +59,13 @@ public class HttpResponse {
 
     private String getContentType(String path) {
         return ContentType.from(path).getValue();
+    }
+
+    private String getResourcePath(String path) {
+        if (path.endsWith(".html")) {
+            return "./templates/" + path;
+        }
+        return "./static/" + path;
     }
 
     public void sendRedirect(String url) {

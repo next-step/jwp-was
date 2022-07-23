@@ -12,10 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import webserver.controller.Controller;
-import webserver.controller.IndexController;
+import webserver.controller.LoginController;
 import webserver.controller.UserCreateController;
 import webserver.controller.UserListController;
-import webserver.controller.UserLoginController;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
@@ -31,12 +30,8 @@ public class RequestHandler implements Runnable {
     }
 
     private void initRequestMapping() {
-        requestMapping.put("/", new IndexController());
-        requestMapping.put("/index.html", new IndexController());
-        requestMapping.put("/user/form.html", new UserCreateController());
         requestMapping.put("/user/create", new UserCreateController());
-        requestMapping.put("/user/login.html", new UserLoginController());
-        requestMapping.put("/user/login", new UserLoginController());
+        requestMapping.put("/user/login", new LoginController());
         requestMapping.put("/user/list", new UserListController());
     }
 
@@ -57,14 +52,21 @@ public class RequestHandler implements Runnable {
     }
 
     private void handle(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-        String requestURI = request.getRequestURI();
-        Controller controller = requestMapping.get(requestURI);
+        String path = getPath(request.getRequestURI());
+        Controller controller = requestMapping.get(path);
 
         if (controller == null) {
-            response.forward(requestURI);
+            response.forward(path);
             return;
         }
 
         controller.handle(request, response);
+    }
+
+    private String getPath(String requestURI) {
+        if (requestURI.equals("/")) {
+            return "/index.html";
+        }
+        return requestURI;
     }
 }
