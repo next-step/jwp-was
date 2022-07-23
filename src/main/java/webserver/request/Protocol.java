@@ -5,7 +5,7 @@ import utils.Assert;
 
 import java.util.Objects;
 
-public final class Protocol {
+final class Protocol {
 
     private static final String NAME_VERSION_DELIMITER = "/";
 
@@ -19,11 +19,11 @@ public final class Protocol {
         this.version = version;
     }
 
-    public static Protocol of(String name, String version) {
+    static Protocol of(String name, String version) {
         return new Protocol(name, version);
     }
 
-    public static Protocol from(String string) {
+    static Protocol from(String string) {
         if (string == null || string.isBlank() || !string.contains(NAME_VERSION_DELIMITER)) {
             throw new IllegalArgumentException(String.format("'protocol'(%s) must not be null and have version", string));
         }
@@ -35,11 +35,11 @@ public final class Protocol {
         return new Protocol(splitString[0], splitString[1]);
     }
 
-    public String name() {
+    String name() {
         return name;
     }
 
-    public String version() {
+    String version() {
         return version;
     }
 

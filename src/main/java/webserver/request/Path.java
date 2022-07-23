@@ -46,8 +46,6 @@ public final class Path {
 
     @Override
     public String toString() {
-        return "Path{" +
-                "urlPath='" + urlPath + '\'' +
-                '}';
+        return urlPath;
     }
 }

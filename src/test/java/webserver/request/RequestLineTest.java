@@ -6,8 +6,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -73,9 +71,7 @@ class RequestLineTest {
                 () -> assertThat(request.path()).isEqualTo(Path.from("/users")),
                 () -> assertThat(request.protocolName()).isEqualTo("HTTP"),
                 () -> assertThat(request.protocolVersion()).isEqualTo("1.1"),
-                () -> assertThat(request.query()).isEqualTo(QueryString.from(
-                        Map.of("userId", "javajigi", "password", "password", "name", "JaeSung")
-                ))
+                () -> assertThat(request.query()).isEqualTo(QueryString.from("userId=javajigi&password=password&name=JaeSung"))
         );
     }
 }

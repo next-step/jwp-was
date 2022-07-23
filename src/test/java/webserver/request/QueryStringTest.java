@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
-import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,18 +19,8 @@ class QueryStringTest {
     void instance() {
         assertAll(
                 () -> assertThatNoException().isThrownBy(() -> QueryString.from("userId=javajigi&password=password&name=JaeSung")),
-                () -> assertThatNoException().isThrownBy(() -> QueryString.from((Map<String, String>) null)),
                 () -> assertThatNoException().isThrownBy(() -> QueryString.from(""))
         );
-    }
-
-    @Test
-    @DisplayName("문자열로 제공하면 속성 구분")
-    void instance_string_parseProperty() {
-        //given
-        QueryString queryString = QueryString.from("userId=javajigi&password=password");
-        //when, then
-        assertThat(queryString).isEqualTo(QueryString.from(Map.of("userId", "javajigi", "password", "password")));
     }
 
     @ParameterizedTest
@@ -45,7 +34,7 @@ class QueryStringTest {
     @DisplayName("속성 값 조회")
     void value() {
         //given
-        QueryString query = QueryString.from(Map.of("userId", "javajigi"));
+        QueryString query = QueryString.from("userId=javajigi");
         //when, then
         assertThat(query.value("userId")).isEqualTo(Optional.of("javajigi"));
     }
