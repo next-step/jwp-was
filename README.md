@@ -45,7 +45,7 @@ Host: localhost:8080
 Connection: keep-alive
 Accept: */*
 ```
-- [ ] HTTP Request Header 출력하기
+- [X] HTTP Request Header 출력하기
   - BufferdReader 사용
 - [ ] Request Line에서 Path 분리하기
   - 별도의 Util 클래스를 만들고 단위 테스트 만들어 진행
