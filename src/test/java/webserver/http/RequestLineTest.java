@@ -1,9 +1,13 @@
-package webserver;
+package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import webserver.http.HttpMethod;
+import webserver.http.ProtocolVersion;
+import webserver.http.RequestLine;
+import webserver.http.RequestPath;
 
 import static org.assertj.core.api.Assertions.*;
 
