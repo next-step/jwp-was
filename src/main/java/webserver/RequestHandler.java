@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import webserver.controller.Controller;
 import webserver.controller.IndexController;
+import webserver.controller.StaticResourceController;
 import webserver.controller.UserCreateController;
 import webserver.controller.UserListController;
 import webserver.controller.UserLoginController;
@@ -55,17 +56,8 @@ public class RequestHandler implements Runnable {
     }
 
     private void handle(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-        RequestLine requestLine = request.getRequestLine();
-        String path = requestLine.getPath();
-        HttpHeaders headers = request.getHeaders();
-
-        Controller controller = requestMapping.get(path);
-        if (controller != null) {
-            controller.handle(request, response);
-            return;
-        }
-
-        response.addHeader("Content-Type", headers.getAccept());
-        response.forward(path);
+        String requestURI = request.getRequestURI();
+        Controller controller = requestMapping.getOrDefault(requestURI, new StaticResourceController());
+        controller.handle(request, response);
     }
 }

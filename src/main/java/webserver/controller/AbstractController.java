@@ -19,7 +19,7 @@ public abstract class AbstractController implements Controller {
         doPost(request, response);
     }
 
-    protected abstract void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException;
+    protected void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {}
 
-    protected abstract void doPost(HttpRequest request, HttpResponse response);
+    protected void doPost(HttpRequest request, HttpResponse response) {}
 }

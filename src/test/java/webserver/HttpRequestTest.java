@@ -19,7 +19,7 @@ class HttpRequestTest {
 
         assertAll(
             () -> assertThat(request.getMethod()).isEqualTo(HttpMethod.GET),
-            () -> assertThat(request.getPath()).isEqualTo("/users"),
+            () -> assertThat(request.getRequestURI()).isEqualTo("/users"),
             () -> assertThat(request.getHeader("Accept")).isEqualTo("text/html"),
             () -> assertThat(request.getHeader("Connection")).isEqualTo("keep-alive"),
             () -> assertThat(request.getParameter("userId")).isEqualTo("javajigi")

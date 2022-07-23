@@ -32,10 +32,6 @@ public class HttpRequest {
         }
     }
 
-    public RequestLine getRequestLine() {
-        return requestLine;
-    }
-
     public HttpHeaders getHeaders() {
         return headers;
     }
@@ -48,7 +44,7 @@ public class HttpRequest {
         return requestLine.getMethod();
     }
 
-    public String getPath() {
+    public String getRequestURI() {
         return requestLine.getPath();
     }
 

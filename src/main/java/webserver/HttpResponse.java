@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +18,8 @@ public class HttpResponse {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
-    private DataOutputStream out;
-    private Map<String, String> headers = new HashMap<>();
+    private final DataOutputStream out;
+    private final Map<String, String> headers = new HashMap<>();
 
     public HttpResponse(OutputStream out) {
         this.out = new DataOutputStream(out);
@@ -29,29 +29,35 @@ public class HttpResponse {
         headers.put(name, value);
     }
 
+    public void forward(String path) throws IOException, URISyntaxException {
+        forward(path, null);
+    }
+
     public void forward(String path, Object model) throws IOException, URISyntaxException {
-        byte[] body;
-
-        if (isStaticResourcePath(path)) {
-            body = FileIoUtils.loadFileFromClasspath("./static/" + path);
-        } else {
-            String view = HandlebarsUtils.getView(path, model);
-            body = view.getBytes(StandardCharsets.UTF_8);
-            addHeader("Content-Type", "text/html;charset=utf-8");
-        }
-
+        byte[] body = getBody(path, model);
         addHeader("Content-Length", String.valueOf(body.length));
         response200Header();
         responseBody(body);
     }
 
-    private boolean isStaticResourcePath(String path) {
-        return Stream.of(".js", ".css", ".woff", ".ttf", ".ico")
-            .anyMatch(path::endsWith);
+    private byte[] getBody(String path, Object model) throws IOException, URISyntaxException {
+        if (isStaticResourcePath(path)) {
+            addHeader("Content-Type", getContentType(path));
+            return FileIoUtils.loadFileFromClasspath("./static/" + path);
+        }
+
+        addHeader("Content-Type", ContentType.TEXT_HTML.getValue());
+        String view = HandlebarsUtils.getView(path, model);
+        return view.getBytes(StandardCharsets.UTF_8);
     }
 
-    public void forward(String path) throws IOException, URISyntaxException {
-        forward(path, null);
+    private boolean isStaticResourcePath(String path) {
+        return Arrays.stream(ContentType.values())
+            .anyMatch(type -> path.endsWith(type.getExtension()));
+    }
+
+    private String getContentType(String path) {
+        return ContentType.from(path).getValue();
     }
 
     public void sendRedirect(String url) {
@@ -75,14 +81,10 @@ public class HttpResponse {
         }
     }
 
-    private void processHeaders() {
-        headers.forEach((key, value) -> {
-            try {
-                out.writeBytes(String.format("%s: %s%n", key, value));
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-            }
-        });
+    private void processHeaders() throws IOException {
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            out.writeBytes(String.format("%s: %s%n", entry.getKey(), entry.getValue()));
+        }
     }
 
     private void responseBody(byte[] body) {
