@@ -3,17 +3,18 @@ package webserver.controller;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import webserver.HttpMethod;
 import webserver.HttpRequest;
 import webserver.HttpResponse;
 
-public class IndexController implements Controller {
+public class IndexController extends AbstractController {
 
     @Override
-    public void handle(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-        HttpMethod method = request.getMethod();
-        if (method.isGet()) {
-            response.forward("index");
-        }
+    public void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+        response.forward("index");
+    }
+
+    @Override
+    public void doPost(HttpRequest request, HttpResponse response) {
+
     }
 }

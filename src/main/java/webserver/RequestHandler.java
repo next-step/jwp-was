@@ -17,7 +17,7 @@ import webserver.controller.Controller;
 import webserver.controller.IndexController;
 import webserver.controller.UserFormController;
 import webserver.controller.UserListController;
-import webserver.controller.UserLoginFormController;
+import webserver.controller.UserLoginController;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -34,7 +34,7 @@ public class RequestHandler implements Runnable {
         requestMapping.put("/", new IndexController());
         requestMapping.put("/index.html", new IndexController());
         requestMapping.put("/user/form.html", new UserFormController());
-        requestMapping.put("/user/login.html", new UserLoginFormController());
+        requestMapping.put("/user/login.html", new UserLoginController());
         requestMapping.put("/user/list", new UserListController());
     }
 
