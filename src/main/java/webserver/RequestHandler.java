@@ -11,10 +11,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import db.DataBase;
-import model.User;
 import webserver.controller.Controller;
 import webserver.controller.IndexController;
+import webserver.controller.UserCreateController;
 import webserver.controller.UserFormController;
 import webserver.controller.UserListController;
 import webserver.controller.UserLoginController;
@@ -34,6 +33,7 @@ public class RequestHandler implements Runnable {
         requestMapping.put("/", new IndexController());
         requestMapping.put("/index.html", new IndexController());
         requestMapping.put("/user/form.html", new UserFormController());
+        requestMapping.put("/user/create", new UserCreateController());
         requestMapping.put("/user/login.html", new UserLoginController());
         requestMapping.put("/user/login", new UserLoginController());
         requestMapping.put("/user/list", new UserListController());
@@ -58,8 +58,6 @@ public class RequestHandler implements Runnable {
     private void handle(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
         RequestLine requestLine = request.getRequestLine();
         String path = requestLine.getPath();
-        HttpMethod method = requestLine.getMethod();
-        String requestBody = request.getRequestBody();
         HttpHeaders headers = request.getHeaders();
 
         Controller controller = requestMapping.get(path);
@@ -68,24 +66,7 @@ public class RequestHandler implements Runnable {
             return;
         }
 
-        if (method.isPost() && "/user/create".equals(path)) {
-            createUser(requestBody);
-            response.sendRedirect("/index.html");
-            return;
-        }
-
         response.addHeader("Content-Type", headers.getAccept());
         response.forward(path);
-    }
-
-    private void createUser(String requestBody) {
-        Parameters parameters = new Parameters(requestBody);
-        String userId = parameters.getParameter("userId");
-        String password = parameters.getParameter("password");
-        String name = parameters.getParameter("name");
-        String email = parameters.getParameter("email");
-
-        User user = new User(userId, password, name, email);
-        DataBase.addUser(user);
     }
 }
