@@ -2,9 +2,8 @@ package utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import request.Request;
-import request.RequestHeader;
-import request.RequestLine;
+import webserver.request.Request;
+import webserver.request.RequestLine;
 
 import java.io.BufferedReader;
 import java.io.IOException;

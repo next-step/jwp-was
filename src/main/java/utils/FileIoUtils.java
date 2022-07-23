@@ -36,9 +36,4 @@ public class FileIoUtils {
 
         return path.endsWith(".html");
     }
-
-    public static byte[] redirect() throws URISyntaxException, IOException {
-        Path path = Paths.get(Objects.requireNonNull(FileIoUtils.class.getClassLoader().getResource(changePath("/index.html"))).toURI());
-        return Files.readAllBytes(path);
-    }
 }
