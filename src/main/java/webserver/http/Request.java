@@ -25,15 +25,24 @@ public class Request {
         );
     }
 
-    String getPath() {
+    public String getPath() {
         return requestLine.getPath().getPath();
     }
 
-    Headers getHeaders() {
+    public Headers getHeaders() {
         return headers;
     }
 
     RequestLine getRequestLine() {
         return requestLine;
+    }
+
+    public RequestParameters getParameters() {
+        return requestLine.getPath().parseQueryString();
+    }
+
+    @Override
+    public String toString() {
+        return requestLine.toString() + " " + headers.toString();
     }
 }

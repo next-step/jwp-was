@@ -12,6 +12,9 @@ public class Response {
 
     private byte[] body;
 
+    public Response() {
+    }
+
     public Response(StatusLine statusLine, Headers headers, byte[] body) {
         this.statusLine = statusLine;
         this.headers = headers;
@@ -27,5 +30,9 @@ public class Response {
 
     public byte[] getBody() {
         return body;
+    }
+
+    public boolean hasBody() {
+        return body != null;
     }
 }

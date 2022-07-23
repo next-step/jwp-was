@@ -6,7 +6,7 @@ public class StatusLine {
 
     private final Status status;
 
-    StatusLine(ProtocolVersion protocolVersion, Status status) {
+    public StatusLine(ProtocolVersion protocolVersion, Status status) {
         this.protocolVersion = protocolVersion;
         this.status = status;
     }

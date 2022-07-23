@@ -18,8 +18,8 @@ class RequestURI {
         validatePath(path);
         this.path = path;
     }
-    QueryString parseQueryString() {
-        return QueryString.parseOf(getQueryString());
+    RequestParameters parseQueryString() {
+        return RequestParameters.parseOf(getQueryString());
     }
 
     String getPath() {
@@ -54,5 +54,10 @@ class RequestURI {
     @Override
     public int hashCode() {
         return Objects.hash(path);
+    }
+
+    @Override
+    public String toString() {
+        return path;
     }
 }

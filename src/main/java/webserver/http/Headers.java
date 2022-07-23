@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-class Headers {
+public class Headers {
     private static final String HEADER_DELIMITER = ": ";
 
     private static final int NAME_IDX = 0;
@@ -28,11 +28,11 @@ class Headers {
         return new Headers(headers);
     }
 
-    static Headers of(Map<String, String> headers) {
+    public static Headers of(Map<String, String> headers) {
         return new Headers(headers);
     }
 
-    String getValue(String name) {
+    public String getValue(String name) {
         return headers.get(name);
     }
 
@@ -54,5 +54,10 @@ class Headers {
     @Override
     public int hashCode() {
         return Objects.hash(headers);
+    }
+
+    @Override
+    public String toString() {
+        return headers.toString();
     }
 }

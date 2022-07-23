@@ -63,4 +63,9 @@ class RequestLine {
     public int hashCode() {
         return Objects.hash(method, requestUri, protocol);
     }
+
+    @Override
+    public String toString() {
+        return method.toString() + REQUEST_LINE_DELIMITER + requestUri.toString() + REQUEST_LINE_DELIMITER + protocol.toString();
+    }
 }

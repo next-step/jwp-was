@@ -23,12 +23,12 @@ class RequestURITest {
         RequestURI requestUri = new RequestURI("/users?userId=javajigi&password=password");
 
         // when
-        QueryString queryString = requestUri.parseQueryString();
+        RequestParameters requestParameters = requestUri.parseQueryString();
 
         // then
-        assertThat(queryString.getValue("userId")).isEqualTo("javajigi");
-        assertThat(queryString.getValue("password")).isEqualTo("password");
-        assertThat(queryString.getValue("password2")).isNull();
+        assertThat(requestParameters.getValue("userId")).isEqualTo("javajigi");
+        assertThat(requestParameters.getValue("password")).isEqualTo("password");
+        assertThat(requestParameters.getValue("password2")).isNull();
     }
 
 }

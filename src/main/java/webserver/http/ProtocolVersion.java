@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class ProtocolVersion {
+public class ProtocolVersion {
 
     private static final Pattern PROTOCOL_VERSION_PATTERN = Pattern.compile("^\\d\\.\\d$");
 
@@ -18,7 +18,7 @@ class ProtocolVersion {
 
     private static final int VERSION_IDX = 1;
 
-    static final ProtocolVersion HTTP11 = ProtocolVersion.parseOf("HTTP/1.1");
+    public static final ProtocolVersion HTTP11 = ProtocolVersion.parseOf("HTTP/1.1");
 
     private final String version;
 
@@ -59,5 +59,10 @@ class ProtocolVersion {
     @Override
     public int hashCode() {
         return Objects.hash(version);
+    }
+
+    @Override
+    public String toString() {
+        return getMessage();
     }
 }

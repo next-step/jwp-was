@@ -1,6 +1,6 @@
 package webserver.http;
 
-enum Status {
+public enum Status {
 
     OK("200", "OK");
 
