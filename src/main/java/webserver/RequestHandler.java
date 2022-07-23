@@ -1,20 +1,17 @@
 package webserver;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import db.DataBase;
 import model.User;
-import utils.FileIoUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -34,31 +31,19 @@ public class RequestHandler implements Runnable {
 
             HttpRequest request = new HttpRequest(in);
             HttpResponse response = new HttpResponse(out);
-            handle(request, response, new DataOutputStream(out));
+            handle(request, response);
 
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void handle(HttpRequest request, HttpResponse response, DataOutputStream dos) throws IOException, URISyntaxException {
+    private void handle(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
         RequestLine requestLine = request.getRequestLine();
         String path = requestLine.getPath();
         HttpMethod method = requestLine.getMethod();
         String requestBody = request.getRequestBody();
         HttpHeaders headers = request.getHeaders();
-        String contentType = headers.getAccept();
-        byte[] body;
-
-        boolean isStaticResourcePath = Stream.of(".js", ".css", ".woff", ".ttf", ".ico")
-            .anyMatch(path::endsWith);
-
-        if (isStaticResourcePath) {
-            body = FileIoUtils.loadFileFromClasspath("./static/" + path);
-            response200Header(dos, body.length, contentType);
-            responseBody(dos, body);
-            return;
-        }
 
         if (method.isGet() && ("/".equals(path) || "/index.html".equals(path))) {
             response.forward("index");
@@ -100,7 +85,11 @@ public class RequestHandler implements Runnable {
             }
             response.addHeader("Set-Cookie", "logined=false");
             response.sendRedirect("/user/login_failed.html");
+            return;
         }
+
+        response.addHeader("Content-Type", headers.getAccept());
+        response.forward(path);
     }
 
     private void createUser(String requestBody) {
@@ -121,25 +110,5 @@ public class RequestHandler implements Runnable {
 
         User user = DataBase.findUserById(userId);
         return user != null && password.equals(user.getPassword());
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent, String contentType) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: " + contentType + "; charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
     }
 }

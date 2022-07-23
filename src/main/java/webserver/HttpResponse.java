@@ -3,12 +3,16 @@ package webserver;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import utils.FileIoUtils;
 
 public class HttpResponse {
 
@@ -25,19 +29,29 @@ public class HttpResponse {
         headers.put(name, value);
     }
 
-    public void forward(String viewName, Object model) {
-        String view = HandlebarsUtils.getView(viewName, model);
-        byte[] body = view.getBytes(StandardCharsets.UTF_8);
+    public void forward(String path, Object model) throws IOException, URISyntaxException {
+        byte[] body;
+
+        if (isStaticResourcePath(path)) {
+            body = FileIoUtils.loadFileFromClasspath("./static/" + path);
+        } else {
+            String view = HandlebarsUtils.getView(path, model);
+            body = view.getBytes(StandardCharsets.UTF_8);
+            addHeader("Content-Type", "text/html;charset=utf-8");
+        }
 
         addHeader("Content-Length", String.valueOf(body.length));
-        addHeader("Content-Type", "text/html;charset=utf-8");
-
         response200Header();
         responseBody(body);
     }
 
-    public void forward(String viewName) {
-        forward(viewName, null);
+    private boolean isStaticResourcePath(String path) {
+        return Stream.of(".js", ".css", ".woff", ".ttf", ".ico")
+            .anyMatch(path::endsWith);
+    }
+
+    public void forward(String path) throws IOException, URISyntaxException {
+        forward(path, null);
     }
 
     public void sendRedirect(String url) {
