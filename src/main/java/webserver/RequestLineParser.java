@@ -34,10 +34,8 @@ public class RequestLineParser {
 
     public HttpMethod stringToHttpMethod(String method) {
         if (Objects.equals(method, "POST")) {
-            log.info("POST요청입니다.");
             return HttpMethod.POST;
         } else if (Objects.equals(method, "GET")) {
-            log.info("GET요청입니다.");
             return HttpMethod.GET;
         } else {
             throw new NotHttpMethodConstantException();

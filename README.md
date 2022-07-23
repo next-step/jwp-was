@@ -47,9 +47,9 @@ Accept: */*
 ```
 - [X] HTTP Request Header 출력하기
   - BufferdReader 사용
-- [ ] Request Line에서 Path 분리하기
+- [X] Request Line에서 Path 분리하기
   - 별도의 Util 클래스를 만들고 단위 테스트 만들어 진행
-- [ ] Path에 해당하는 파일 읽어 응답하기
+- [X] Path에 해당하는 파일 읽어 응답하기
 ### 기능 요구사항 2
 “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다.
 ```text
