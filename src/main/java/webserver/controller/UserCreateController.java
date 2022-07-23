@@ -13,7 +13,7 @@ public class UserCreateController extends AbstractController {
 
     @Override
     protected void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-
+        response.forward("user/form");
     }
 
     @Override

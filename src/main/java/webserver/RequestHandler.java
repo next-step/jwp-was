@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import webserver.controller.Controller;
 import webserver.controller.IndexController;
 import webserver.controller.UserCreateController;
-import webserver.controller.UserFormController;
 import webserver.controller.UserListController;
 import webserver.controller.UserLoginController;
 
@@ -32,7 +31,7 @@ public class RequestHandler implements Runnable {
     private void initRequestMapping() {
         requestMapping.put("/", new IndexController());
         requestMapping.put("/index.html", new IndexController());
-        requestMapping.put("/user/form.html", new UserFormController());
+        requestMapping.put("/user/form.html", new UserCreateController());
         requestMapping.put("/user/create", new UserCreateController());
         requestMapping.put("/user/login.html", new UserLoginController());
         requestMapping.put("/user/login", new UserLoginController());
