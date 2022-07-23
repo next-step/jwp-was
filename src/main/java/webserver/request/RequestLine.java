@@ -1,6 +1,5 @@
 package request;
 
-import db.DataBase;
 import exception.NotExistHttpMethodException;
 import model.User;
 import org.slf4j.Logger;
@@ -10,14 +9,12 @@ import utils.RequestUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RequestLine {
     private static final Logger logger = LoggerFactory.getLogger(RequestLine.class);
     private static final String NOT_EXIST_HTTP_METHOD = "존재하지 않는 HTTP METHOD 입니다.";
 
-    private String path;
+    private String uri;
     private HttpMethod method;
     private String protocol;
     private String version;
@@ -48,15 +45,15 @@ public class RequestLine {
 
     public String getQueryParam() {
 
-        if (path.contains("?")) {
-            int firstIndex = path.indexOf("?") + 1;
-            return path.substring(firstIndex);
+        if (uri.contains("?")) {
+            int firstIndex = uri.indexOf("?") + 1;
+            return uri.substring(firstIndex);
         }
         return "";
     }
 
     public User queryStringToUser() {
-        String[] queryStringArr = this.path.split("\\?");
+        String[] queryStringArr = this.uri.split("\\?");
         String queryString = queryStringArr[1];
         logger.debug("queryParam {}", queryString);
         User user = RequestUtils.convertToUser(queryString);
@@ -65,14 +62,18 @@ public class RequestLine {
 
     private RequestLine setting(HttpMethod method, String path, String protocol, String version) {
         this.method = method;
-        this.path = path;
+        this.uri = path;
         this.protocol = protocol;
         this.version = version;
         return this;
     }
 
-    public String getPath() {
-        return path;
+    public String getUri() {
+        return uri;
+    }
+
+    public String getPathExcludeQueryParam() {
+        return uri.split("\\?")[0];
     }
 
     public HttpMethod getMethod() {
@@ -85,5 +86,15 @@ public class RequestLine {
 
     public String getVersion() {
         return version;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "path='" + uri + '\'' +
+                ", method=" + method +
+                ", protocol='" + protocol + '\'' +
+                ", version='" + version + '\'' +
+                '}';
     }
 }

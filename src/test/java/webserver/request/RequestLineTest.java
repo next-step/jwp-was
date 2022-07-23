@@ -1,11 +1,10 @@
-package request;
+package webserver.request;
 
 import exception.NotExistHttpMethodException;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import request.RequestLine;
 import utils.HttpMethod;
 
 import java.io.BufferedReader;
@@ -27,7 +26,7 @@ class RequestLineTest {
     @DisplayName("요청 정보에 따른 파싱 (get)")
     void parsing_get() {
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(requestLine.getPath()).isEqualTo("/users?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net");
+        assertThat(requestLine.getUri()).isEqualTo("/users?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net");
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }
@@ -46,7 +45,7 @@ class RequestLineTest {
         BufferedReader br = HelpData.postHelpData();
         RequestLine parsing = requestLine.parsing(br);
         assertThat(parsing.getMethod()).isEqualTo(HttpMethod.POST);
-        assertThat(parsing.getPath()).isEqualTo("/users");
+        assertThat(parsing.getUri()).isEqualTo("/users");
         assertThat(parsing.getProtocol()).isEqualTo("HTTP");
         assertThat(parsing.getVersion()).isEqualTo("1.1");
     }

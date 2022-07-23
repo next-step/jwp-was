@@ -1,6 +1,8 @@
 package request;
 
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import utils.HttpMethod;
 
@@ -8,19 +10,23 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public class Request {
+
+    private static final Logger logger = LoggerFactory.getLogger(Request.class);
     private RequestLine requestLine;
     private RequestHeader requestHeader;
     private RequestBody requestBody;
+    private Cookie cookie;
 
     public Request(RequestLine requestLine, RequestHeader requestHeader, RequestBody requestBody) {
         this.requestLine = requestLine;
         this.requestHeader = requestHeader;
         this.requestBody = requestBody;
+        this.cookie = requestHeader.parseCookie();
     }
 
     public static Request parsing(BufferedReader br) throws IOException {
         RequestLine requestLine = RequestLine.getInstance().parsing(br);
-        RequestHeader requestHeader = RequestHeader.getInstance().parsing(br);
+        RequestHeader requestHeader = RequestHeader.parsing(br);
         RequestBody requestBody = RequestBody.getInstance().parsing(br, requestHeader.getContentLength());
 
         return new Request(requestLine, requestHeader, requestBody);
@@ -35,15 +41,23 @@ public class Request {
     }
 
     public boolean requestPathCheck(String path) {
-        return getRequestPath().startsWith(path) && !FileIoUtils.isLastEndWithHtml(getRequestPath());
+        return getRequestUri().startsWith(path);
+    }
+
+    public boolean requestPathCheckAndEndWithHtml(String path) {
+        return getRequestUri().startsWith(path) && !FileIoUtils.isLastEndWithHtml(getRequestUri());
     }
 
     public boolean isPostMethod() {
         return HttpMethod.POST.equals(getMethod());
     }
 
+    public String getRequestUri() {
+        return requestLine.getUri();
+    }
+
     public String getRequestPath() {
-        return requestLine.getPath();
+        return requestLine.getPathExcludeQueryParam();
     }
 
     public HttpMethod getMethod() {
@@ -54,11 +68,11 @@ public class Request {
         return requestLine;
     }
 
-    public RequestHeader getRequestHeader() {
-        return requestHeader;
-    }
-
     public RequestBody getRequestBody() {
         return requestBody;
+    }
+
+    public boolean getCookie(String isLogined) {
+        return Boolean.parseBoolean(cookie.getCookie(isLogined));
     }
 }
