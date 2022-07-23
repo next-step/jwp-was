@@ -1,8 +1,8 @@
-package webserver.response;
+package webserver.response.get;
 
 import db.DataBase;
 import model.User;
-import webserver.domain.RequestLine;
+import webserver.header.request.requestline.RequestLine;
 
 public class GetUserFormHtmlResponse {
     public void response(RequestLine requestLine) {

@@ -1,4 +1,4 @@
-package webserver.response;
+package webserver.response.get;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

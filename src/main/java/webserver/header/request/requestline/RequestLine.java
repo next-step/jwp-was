@@ -1,6 +1,8 @@
-package webserver.domain;
+package webserver.header.request.requestline;
 
 import java.util.Map;
+
+import webserver.method.HttpMethod;
 
 public class RequestLine {
     private static final String REQUEST_DELIMITER = " ";

@@ -1,4 +1,4 @@
-package webserver.response;
+package webserver.header.request.response;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,7 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import db.DataBase;
-import webserver.domain.RequestLine;
+import webserver.header.request.requestline.RequestLine;
+import webserver.response.get.GetUserFormHtmlResponse;
 
 class GetUserFormHtmlResponseTest {
 

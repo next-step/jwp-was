@@ -1,4 +1,4 @@
-package webserver.domain;
+package webserver.header.request.requestline;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -6,7 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import webserver.exception.InvalidHttpMethodException;
+import webserver.method.HttpMethod;
+import webserver.method.exception.InvalidHttpMethodException;
 
 class HttpMethodTest {
 

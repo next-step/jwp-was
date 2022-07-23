@@ -1,8 +1,8 @@
-package webserver.domain;
+package webserver.header.request.requestline;
 
 import java.util.Arrays;
 
-import webserver.exception.InvalidProtocolException;
+import webserver.header.exception.InvalidProtocolException;
 
 public enum Protocol {
     HTTP("HTTP");

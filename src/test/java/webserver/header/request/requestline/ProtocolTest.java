@@ -1,11 +1,11 @@
-package webserver.domain;
+package webserver.header.request.requestline;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import webserver.exception.InvalidProtocolException;
+import webserver.header.exception.InvalidProtocolException;
 
 class ProtocolTest {
 

@@ -1,8 +1,8 @@
-package webserver.domain;
+package webserver.header.request.requestline;
 
 import java.util.Map;
 
-import webserver.exception.InvalidPathException;
+import webserver.header.exception.InvalidPathException;
 
 public class Path {
     public static final String PARAM_DELIMITER = "\\?";

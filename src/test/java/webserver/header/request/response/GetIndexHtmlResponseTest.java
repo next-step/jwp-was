@@ -1,4 +1,4 @@
-package webserver.response;
+package webserver.header.request.response;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import utils.FileIoUtils;
+import webserver.response.get.GetIndexHtmlResponse;
 
 class GetIndexHtmlResponseTest {
 

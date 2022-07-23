@@ -1,11 +1,11 @@
-package webserver.domain;
+package webserver.header.request.requestline;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import webserver.exception.InvalidRequestParamsException;
+import webserver.header.exception.InvalidRequestParamsException;
 
 public class RequestParams {
     public static final String PARAM_DELIMITER = "&";

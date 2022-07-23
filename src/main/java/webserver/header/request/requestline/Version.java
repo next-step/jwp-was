@@ -1,6 +1,6 @@
-package webserver.domain;
+package webserver.header.request.requestline;
 
-import webserver.exception.InvalidVersionException;
+import webserver.header.exception.InvalidVersionException;
 
 public class Version {
     public static final String VERSION_DELIMITER = "\\.";

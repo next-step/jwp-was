@@ -1,6 +1,6 @@
-package webserver.domain;
+package webserver.header.request.requestline;
 
-import webserver.exception.InvalidUriException;
+import webserver.header.exception.InvalidUriException;
 
 public class Index {
     private final String contents;

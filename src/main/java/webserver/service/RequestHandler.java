@@ -10,8 +10,10 @@ import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import webserver.domain.HttpMethod;
-import webserver.domain.RequestLine;
+import utils.IOUtils;
+import webserver.header.request.RequestHeader;
+import webserver.header.request.requestline.RequestLine;
+import webserver.method.HttpMethod;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -28,16 +30,27 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             String line = br.readLine();
-            RequestLine requestLine = RequestLine.create(line);
+
+            StringBuilder requestContents = new StringBuilder(line);
+
             while (isEnd(line)) {
-                printlnLine(line);
+                requestContents.append("\n");
                 line = br.readLine();
+                requestContents.append(line);
             }
+
+            RequestHeader header = RequestHeader.create(requestContents.toString());
+            RequestLine requestLine = header.requestLine();
 
             if (isGet(requestLine)) {
                 ResponseGetHandler responseGetHandler = new ResponseGetHandler(connection);
                 responseGetHandler.run(requestLine);
                 return;
+            }
+
+            if (isPost(requestLine)) {
+                String s = IOUtils.readData(br, header.contentLength());
+                System.out.println(s);
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
