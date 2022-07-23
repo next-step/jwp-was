@@ -23,3 +23,12 @@
 # 1단계 피드백
 - [x] 테스트에서 getter 비교보다는 객체를 비교
 
+# 🚀 2단계 - HTTP 웹 서버 구현
+
+> 요구사항1 - http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
+
+### 기능 목록
+- [ ] InputStream(사용자의 요청)을 읽어 RequestLine을 생성한다
+  - [ ] InputStream을 BufferedReader로 변환
+  - [ ] BufferedReader로 HTTP 요청 메시지를 RequestLine으로 파싱한다
+- [ ] Path에 해당하는 파일을 읽어 응답한다.
