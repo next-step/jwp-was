@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +16,7 @@ import model.User;
 import webserver.controller.Controller;
 import webserver.controller.IndexController;
 import webserver.controller.UserFormController;
+import webserver.controller.UserListController;
 import webserver.controller.UserLoginFormController;
 
 public class RequestHandler implements Runnable {
@@ -35,6 +35,7 @@ public class RequestHandler implements Runnable {
         requestMapping.put("/index.html", new IndexController());
         requestMapping.put("/user/form.html", new UserFormController());
         requestMapping.put("/user/login.html", new UserLoginFormController());
+        requestMapping.put("/user/list", new UserListController());
     }
 
     public void run() {
@@ -63,17 +64,6 @@ public class RequestHandler implements Runnable {
         Controller controller = requestMapping.get(path);
         if (controller != null) {
             controller.handle(request, response);
-            return;
-        }
-
-        if (method.isGet() && "/user/list".equals(path)) {
-            String cookie = headers.getCookie();
-            if (cookie != null && cookie.contains("logined=true")) {
-                Collection<User> users = DataBase.findAll();
-                response.forward("user/list", users);
-                return;
-            }
-            response.sendRedirect("/user/login.html");
             return;
         }
 
