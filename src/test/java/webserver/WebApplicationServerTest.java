@@ -1,18 +1,6 @@
 package webserver;
 
-import db.DataBase;
-import model.User;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import utils.FileIoUtils;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,7 +8,22 @@ import java.net.URISyntaxException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import db.DataBase;
+import model.User;
+import utils.FileIoUtils;
 
 class WebApplicationServerTest {
 
@@ -107,20 +110,19 @@ class WebApplicationServerTest {
         assertThat(response.getHeaders().get("Set-Cookie")).contains("logined=true; Path=/");
     }
 
-    @DisplayName("로그인 실패 시, 로그인 실패 쿠키와 함께 login_failed.html 페이지로 이동한다.")
+    @DisplayName("로그인 실패 시, 로그인 실패 쿠키와 함께 login_failed.html 페이지로 리다이렉트한다.")
     @Test
-    void request_login_failure() throws IOException, URISyntaxException {
+    void request_login_failure() {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("userId", INVALID_USER_ID);
         requestBody.add("password", INVALID_PASSWORD);
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.postForEntity(BASE_URL + "/user/login", requestBody, String.class);
-        String expectedBody = new String(FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html"));
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        assertThat(response.getHeaders().getLocation()).isEqualTo(URI.create("/user/login_failed.html"));
         assertThat(response.getHeaders().get("Set-Cookie")).contains("logined=false");
-        assertThat(response.getBody()).isEqualTo(expectedBody);
     }
 
     @DisplayName("로그인 상태인 경우, GET /user/list 요청 시 사용자 목록을 출력한다.")

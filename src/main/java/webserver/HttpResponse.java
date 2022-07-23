@@ -21,12 +21,16 @@ public class HttpResponse {
         this.out = new DataOutputStream(out);
     }
 
+    public void addHeader(String name, String value) {
+        headers.put(name, value);
+    }
+
     public void forward(String viewName, Object model) {
         String view = HandlebarsUtils.getView(viewName, model);
         byte[] body = view.getBytes(StandardCharsets.UTF_8);
 
-        headers.put("Content-Length", String.valueOf(body.length));
-        headers.put("Content-Type", "text/html;charset=utf-8");
+        addHeader("Content-Length", String.valueOf(body.length));
+        addHeader("Content-Type", "text/html;charset=utf-8");
 
         response200Header();
         responseBody(body);
@@ -34,6 +38,17 @@ public class HttpResponse {
 
     public void forward(String viewName) {
         forward(viewName, null);
+    }
+
+    public void sendRedirect(String url) {
+        try {
+            out.writeBytes("HTTP/1.1 302 Found \r\n");
+            processHeaders();
+            out.writeBytes(String.format("Location: %s%n", url));
+            out.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 
     private void response200Header() {
