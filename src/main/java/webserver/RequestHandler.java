@@ -10,8 +10,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-import domain.HttpRequest;
-import domain.RequestLineParser;
+import domain.RequestLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
@@ -45,8 +44,8 @@ public class RequestHandler implements Runnable {
     private void printRequestLine(InputStream in) throws IOException {
         final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         final String request = IOUtils.readData(br, 1024);
-        final HttpRequest httpRequest = new RequestLineParser().parse(getRequestLine(request));
-        logger.debug(httpRequest.toString());
+        final RequestLine requestLine = new RequestLine(getRequestLine(request));
+        logger.debug(requestLine.toString());
     }
 
     private String getRequestLine(String request) {

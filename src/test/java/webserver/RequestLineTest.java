@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HttpRequestTest {
+public class RequestLineTest {
     @Test
     void request_resttemplate() {
         RestTemplate restTemplate = new RestTemplate();
