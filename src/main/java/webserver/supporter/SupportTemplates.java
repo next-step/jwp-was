@@ -1,4 +1,4 @@
-package webserver;
+package webserver.supporter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +18,10 @@ public final class SupportTemplates {
         pathMap.add("/user/login-failed.html");
         pathMap.add("/user/profile.html");
         pathMap.add("/index.html");
+    }
+
+    public static boolean isSupported(String path) {
+        return pathMap.contains(path);
     }
 
 }

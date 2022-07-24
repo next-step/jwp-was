@@ -1,5 +1,9 @@
 package webserver;
 
+import static webserver.response.HttpStatusResponse.responseBodRequest400;
+import static webserver.response.HttpStatusResponse.responseNotFound404;
+import static webserver.response.HttpStatusResponse.responseOk200;
+
 import db.DataBase;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -17,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.request.HttpRequest;
+import webserver.supporter.SupportApis;
+import webserver.supporter.SupportTemplates;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -32,22 +38,37 @@ public class RequestHandler implements Runnable {
         logger.debug("Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
         try (InputStream inputStream = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            HttpRequest httpRequest = parseRequest(inputStream);
-
-            Map<String, String> queryStrings = httpRequest.getQueryStringsMap();
-            User user = new User(queryStrings.get("userId"), queryStrings.get("password"), queryStrings.get("name"), queryStrings.get("email"));
-            DataBase.addUser(user);
-
             DataOutputStream dos = new DataOutputStream(out);
 
-            byte[] body = new byte[0];
-            if (SupportTemplates.pathMap.contains(httpRequest.getPath())) {
-                body = FileIoUtils.loadFileFromClasspath(PATH_TEMPLATES + httpRequest.getPath());
+            HttpRequest httpRequest = parseRequest(inputStream);
+
+            if (SupportApis.isSupported(httpRequest.getPath())) {
+                if (httpRequest.getPath().equals("/user/create")) {
+                    Map<String, String> queryStrings = httpRequest.getQueryStringsMap();
+                    User user = new User(queryStrings.get("userId"), queryStrings.get("password"), queryStrings.get("name"), queryStrings.get("email"));
+                    DataBase.addUser(user);
+
+                    responseOk200(dos, user.toString().getBytes(StandardCharsets.UTF_8));
+                }
+                return;
             }
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+
+            byte[] body;
+            if (SupportTemplates.isSupported(httpRequest.getPath())) {
+                body = FileIoUtils.loadFileFromClasspath(PATH_TEMPLATES + httpRequest.getPath());
+                responseOk200(dos, body);
+                return;
+            }
+
+            responseNotFound404(dos);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
+        } catch (RuntimeException e) {  // 예상되는 예외의 최상위 클래스로 할 것 정의해야함
+            try (OutputStream out = connection.getOutputStream()) {
+                responseBodRequest400(new DataOutputStream(out));
+            } catch (Exception ex) {
+                logger.error(ex.getMessage());
+            }
         }
     }
 
@@ -71,23 +92,5 @@ public class RequestHandler implements Runnable {
         throw new IllegalStateException();
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
 }

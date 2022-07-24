@@ -1,5 +1,6 @@
 package webserver.request;
 
+import static exception.ExceptionStrings.INVALID_QUERY_STRING;
 import static exception.ExceptionStrings.INVALID_REQUEST_LINE;
 import static exception.ExceptionStrings.INVALID_REQUEST_PATH;
 
@@ -127,12 +128,19 @@ public final class RequestLine {
 
         private static Map<String, String> parseQueryStrings(String[] queryStrings) {
             Map<String, String> queryStringsMap = new HashMap<>();
-            for (int i = 0; i < queryStrings.length; ++i) {
-                String[] queryString = queryStrings[i].split(QUERY_STRING_SPLIT_REGEX);
+            for (String string : queryStrings) {
+                String[] queryString = string.split(QUERY_STRING_SPLIT_REGEX);
+                validate(queryString);
                 queryStringsMap.put(queryString[0], queryString[1]);
             }
 
             return queryStringsMap;
+        }
+
+        private static void validate(String[] queryString) {
+            if (queryString.length < 2) {
+                throw new IllegalArgumentException(INVALID_QUERY_STRING);
+            }
         }
     }
 
