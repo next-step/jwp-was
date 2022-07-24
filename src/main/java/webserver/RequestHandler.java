@@ -42,7 +42,7 @@ public class RequestHandler implements Runnable {
             OutputStream out = connection.getOutputStream();
             var bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
         ) {
-            var httpRequest = getRequestLine(bufferedReader);
+            var httpRequest = parseHttpRequest(bufferedReader);
 
             if (httpRequest.isStaticFile()) {
                 responseStaticFile(new DataOutputStream(out), httpRequest.getUrl());
@@ -59,7 +59,7 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private HttpRequest getRequestLine(BufferedReader bufferedReader) throws IOException {
+    private HttpRequest parseHttpRequest(BufferedReader bufferedReader) throws IOException {
         String line = IOUtils.readSingleLine(bufferedReader);
         var requestLine = new RequestLine(line);
         var headers = new Headers(IOUtils.readLines(bufferedReader));
