@@ -1,11 +1,13 @@
-package webserver.request.domain;
+package webserver.request.domain.request;
 
 import org.springframework.util.StringUtils;
 import webserver.exception.StringEmptyException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class RequestHeader {
 
@@ -14,19 +16,15 @@ public class RequestHeader {
 
     private Map<String, String> headerMap = new HashMap<>();
 
-    public RequestHeader(String[] headerMap) {
-        validate(headerMap);
+    public RequestHeader() {};
 
-        this.headerMap.put(headerMap[0], headerMap[1]);
-    }
+    public RequestHeader(List<String> list) {
+        list.stream()
+                .map(li -> li.split(": "))
+                .forEach(arr -> headerMap.put(arr[0], arr[1]));
+    };
 
-    public static RequestHeader create(String header) {
-        String[] headerMap = header.split(DELIMITER);
-
-        return new RequestHeader(headerMap);
-    }
-
-    private static void validate(String[] header) {
+    private void validate(String[] header) {
         if(header.length != MIN_HEADER_LENGTH) {
             throw new StringEmptyException("header 속성을 확인해주세요.");
         }
@@ -34,6 +32,14 @@ public class RequestHeader {
         if (!StringUtils.hasText(header[0]) || !StringUtils.hasText(header[1])) {
             throw new StringEmptyException("header 속성을 확인해주세요.");
         }
+    }
+
+    public void addHeaderProperty(String header) {
+        String[] headerMap = header.split(DELIMITER);
+
+        validate(headerMap);
+
+        this.headerMap.put(headerMap[0], headerMap[1]);
     }
 
     @Override

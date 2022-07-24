@@ -1,4 +1,4 @@
-package webserver.request.domain;
+package webserver.request.domain.request;
 
 import webserver.exception.StringEmptyException;
 
@@ -6,7 +6,7 @@ public class RequestLine {
 
     private static final String DELIMITER = " ";
 
-    private HttpMethod method;
+    private Method method;
     private Path path;
     private ProtocolInfo protocolInfo;
 
@@ -14,7 +14,7 @@ public class RequestLine {
         parse(values);
     }
 
-    public static RequestLine from(String requestLine) {
+    public static RequestLine create(String requestLine) {
         validateRequestline(requestLine);
 
         String[] values = requestLine.split(DELIMITER);
@@ -29,7 +29,7 @@ public class RequestLine {
     }
 
     private void parse(String[] values) {
-        method = HttpMethod.valueOf(values[0]);
+        method = Method.valueOf(values[0]);
         path = Path.parse(values[1]);
         protocolInfo = ProtocolInfo.parse(values[2]);
     }

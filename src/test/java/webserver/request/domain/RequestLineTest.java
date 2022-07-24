@@ -1,10 +1,10 @@
-package webserver;
+package webserver.request.domain;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.exception.StringEmptyException;
-import webserver.request.domain.RequestLine;
+import webserver.request.domain.request.RequestLine;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -14,14 +14,14 @@ public class RequestLineTest {
     @DisplayName("requestLine이 빈 값이면 예외를 던진다.")
     public void validTest() {
         Assertions.assertThrows(StringEmptyException.class, () -> {
-            RequestLine.from("");
+            RequestLine.create("");
         });
     }
 
     @Test
     @DisplayName("GET 요청을 받았을때 정상적으로 파싱되었는지 테스트")
     void requestLineGetTest() {
-        RequestLine requestLine = RequestLine.from("GET /users HTTP/1.1");
+        RequestLine requestLine = RequestLine.create("GET /users HTTP/1.1");
 
         assertAll(
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.getMethod()).isEqualTo("GET"),
@@ -34,7 +34,7 @@ public class RequestLineTest {
     @Test
     @DisplayName("POST 요청을 받았을때 정상적으로 파싱되었는지 테스트")
     void requestLinePOSTTest() {
-        RequestLine requestLine = RequestLine.from("POST /users HTTP/1.1");
+        RequestLine requestLine = RequestLine.create("POST /users HTTP/1.1");
 
         assertAll(
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.getMethod()).isEqualTo("POST"),
@@ -47,7 +47,7 @@ public class RequestLineTest {
     @Test
     @DisplayName("GET요청 + Query String 이 정상적으로 파싱되었는지 테스트")
     void requestLineGetWithQueryStringTest() {
-        RequestLine requestLine = RequestLine.from("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
+        RequestLine requestLine = RequestLine.create("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
 
         assertAll(
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.getMethod()).isEqualTo("GET"),

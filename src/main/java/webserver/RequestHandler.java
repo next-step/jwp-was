@@ -6,7 +6,7 @@ import java.net.Socket;
 import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.domain.RequestLine;
+import webserver.request.domain.request.RequestLine;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -46,7 +46,7 @@ public class RequestHandler implements Runnable {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
             String line = br.readLine();
-            RequestLine requestLine = RequestLine.from(line);
+            RequestLine requestLine = RequestLine.create(line);
             logger.debug(requestLine.toString());
 
             StringBuilder stringBuilder = new StringBuilder();
