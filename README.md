@@ -71,3 +71,19 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 - 회원가입을 하는 경우 
 - [x] 응답 헤더의 status code를 302로 설정한다.
 - [x] 응답 헤더의 Location을 /index.html로 설정한다.
+
+---
+
+### 요구사항5
+> “로그인” 메뉴를 클릭하면 http://localhost:8080/user/login.html 으로 이동해 로그인할 수 있다. 로그인이 성공하면 index.html로 이동하고, 로그인이 실패하면 /user/login_failed.html로 이동해야 한다.  
+앞에서 회원가입한 사용자로 로그인할 수 있어야 한다. 로그인이 성공하면 cookie를 활용해 로그인 상태를 유지할 수 있어야 한다. 로그인이 성공할 경우 요청 header의 Cookie header 값이 logined=true, 로그인이 실패하면 Cookie header 값이 logined=false로 전달되어야 한다.
+
+### 기능 목록
+- [ ] 회원가입 시 메모리 DB에 회원정보 저장
+- [ ] 로그인 시 메모리 DB와 ID/PW 비교
+- [ ] 로그인 성공
+  - [ ] Cookie 생성 (logined=true)
+  - [ ] index.html 이동
+- [ ] 로그인 실패 
+  - [ ] Cookie 생성 (logined=false)
+  - [ ] /user/login_failed.html 이동 
