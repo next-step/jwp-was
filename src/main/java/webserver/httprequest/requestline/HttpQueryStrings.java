@@ -1,12 +1,13 @@
-package webserver;
+package webserver.httprequest.requestline;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static webserver.httprequest.requestline.HttpPath.PRIMARY_QUERY_STRING_SYMBOL;
+
 public class HttpQueryStrings {
-    public static final String PRIMARY_QUERY_STRING_SYMBOL = "\\?";
     public static final String PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE = PRIMARY_QUERY_STRING_SYMBOL.replace("\\", "");
     public static final String SECONDARY_QUERY_STRING_SYMBOL = "&";
     public static final int QUERY_STRING_SCHEMA_START_INDEX = 1;
@@ -25,10 +26,7 @@ public class HttpQueryStrings {
             return Collections.emptyList();
         }
 
-        String[] firstQueryStringSchemas = fullQueryString.split(PRIMARY_QUERY_STRING_SYMBOL);
-        validateFullQueryString(fullQueryString, firstQueryStringSchemas);
-
-        String[] fullQueryStringSchemas = firstQueryStringSchemas[QUERY_STRING_SCHEMA_START_INDEX].split(SECONDARY_QUERY_STRING_SYMBOL);
+        String[] fullQueryStringSchemas = fullQueryString.split(SECONDARY_QUERY_STRING_SYMBOL);
 
         return Arrays.stream(fullQueryStringSchemas)
                 .map(HttpQueryString::from)
@@ -41,21 +39,11 @@ public class HttpQueryStrings {
             return "";
         }
 
-        return PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE + fullQueryString.split(PRIMARY_QUERY_STRING_SYMBOL)[QUERY_STRING_SCHEMA_START_INDEX];
+        return PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE + fullQueryString;
     }
 
     private boolean isEmptyQueryString(String fullQueryString) {
-        return fullQueryString == null || fullQueryString.isEmpty() || hasNotQueryStringSymbol(fullQueryString) || PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE.equals(fullQueryString);
-    }
-
-    private boolean hasNotQueryStringSymbol(String fullQueryString) {
-        return !fullQueryString.contains(PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE) && !fullQueryString.contains(SECONDARY_QUERY_STRING_SYMBOL);
-    }
-
-    private void validateFullQueryString(String fullQueryString, String[] firstQueryStringSchemas) {
-        if (firstQueryStringSchemas.length != QUERY_STRING_SCHEMA_REQUIRED_SIZE) {
-            throw new IllegalArgumentException(String.format("잘못된 queryString 입니다. queryString: [%s]", fullQueryString));
-        }
+        return fullQueryString == null || fullQueryString.isEmpty();
     }
 
     public HttpQueryString get(int index) {

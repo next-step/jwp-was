@@ -1,4 +1,4 @@
-package webserver;
+package webserver.httprequest.requestline;
 
 import java.util.Objects;
 

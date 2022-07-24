@@ -1,21 +1,16 @@
-package webserver;
+package webserver.httprequest.requestline;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static webserver.HttpQueryStrings.PRIMARY_QUERY_STRING_SYMBOL;
-
 public class HttpPathComponentsBuilder {
     private static final String HTTP_PATH_SCHEMA_DELIMITER = "/";
 
-    public static List<String> validateAndBuild(String rawHttpPath) {
-        String[] httpPathSchemas = rawHttpPath.split(PRIMARY_QUERY_STRING_SYMBOL);
-        String httpFullPath = httpPathSchemas[0];
+    public static List<String> validateAndBuild(String fullPath) {
+        List<String> httpPathComponents = toPathComponents(fullPath);
 
-        List<String> httpPathComponents = toPathComponents(httpFullPath);
-
-        validateHttpPathSchemas(toPathComponents(httpFullPath));
+        validateHttpPathSchemas(toPathComponents(fullPath));
 
         return httpPathComponents;
     }

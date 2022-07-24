@@ -1,6 +1,6 @@
-package webserver;
+package webserver.httprequest.requestline;
 
-public class HttpRequestLine implements HttpRequestMessage {
+public class HttpRequestLine {
     private static final String REQUEST_LINE_SCHEMA_DELIMITER = " ";
     private static final int REQUEST_LINE_SCHEMA_SIZE = 3;
     private static final int METHOD_SCHEMA__INDEX = 0;

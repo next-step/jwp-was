@@ -1,4 +1,4 @@
-package webserver;
+package webserver.httprequest.requestline;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ public class HttpPathComponentsBuilderTest {
 
     @Test
     void create_and_toPathComponents() {
-        List<String> httpPathComponents = HttpPathComponentsBuilder.validateAndBuild("/users/hello/world?1234");
+        List<String> httpPathComponents = HttpPathComponentsBuilder.validateAndBuild("/users/hello/world");
         assertThat(httpPathComponents).isEqualTo(Arrays.asList("users", "hello", "world"));
     }
 }

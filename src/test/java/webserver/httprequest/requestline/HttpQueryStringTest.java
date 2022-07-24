@@ -1,11 +1,10 @@
-package webserver;
+package webserver.httprequest.requestline;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class HttpQueryStringTest {
 
@@ -21,8 +20,7 @@ public class HttpQueryStringTest {
     void create_only_queryName() {
         HttpQueryString httpQueryString = HttpQueryString.from("queryName=");
 
-        assertThat(httpQueryString.getName()).isEqualTo("queryName");
-        assertThat(httpQueryString.getValue()).isEmpty();
+        assertThat(httpQueryString).isEqualTo(HttpQueryString.EMPTY);
     }
 
     @Test
@@ -37,6 +35,6 @@ public class HttpQueryStringTest {
     @ParameterizedTest
     @ValueSource(strings = {"queryName=queryValue=1", "queryValue", " "})
     void create_exception(String queryString) {
-        assertThrows(IllegalArgumentException.class, () -> HttpQueryString.from(queryString));
+        assertThat(HttpQueryString.from(queryString)).isEqualTo(HttpQueryString.EMPTY);
     }
 }
