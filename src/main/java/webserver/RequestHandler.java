@@ -1,5 +1,10 @@
 package webserver;
 
+import domain.HttpRequest;
+import domain.RequestLine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,17 +13,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
-import domain.RequestLine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utils.IOUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final String REQUEST_LINE_DELIMITER = "\r\n";
-    private static final String VALIDATION_MESSAGE = "잘못된 요청입니다.";
 
     private final Socket connection;
 
@@ -31,7 +30,10 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            printRequestLine(in);
+            final HttpRequest httpRequest = convertToHttpRequest(in);
+            final RequestLine requestLine = httpRequest.getRequestLine();
+            logger.debug(requestLine.toString());
+
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
@@ -41,17 +43,14 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void printRequestLine(InputStream in) throws IOException {
+    private HttpRequest convertToHttpRequest(InputStream in) throws IOException {
         final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-        final String request = IOUtils.readData(br, 1024);
-        final RequestLine requestLine = new RequestLine(getRequestLine(request));
-        logger.debug(requestLine.toString());
-    }
-
-    private String getRequestLine(String request) {
-        return Arrays.stream(request.split(REQUEST_LINE_DELIMITER))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(VALIDATION_MESSAGE));
+        final List<String> lines = new ArrayList<>();
+        String line;
+        while (!"".equals(line = br.readLine())) {
+            lines.add(line);
+        }
+        return new HttpRequest(lines);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
