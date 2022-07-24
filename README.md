@@ -10,12 +10,12 @@
 
 
 # 기능 목록
-- RequestLine 파싱 
+- RequestLine 파싱
   - [x] 문자열이 비어 있으면 파싱할 수 없다.
   - [x] GET 요청
     - [x] method, path, protocol, version
   - [x] POST 요청
-  - [x] Query String 파싱 
+  - [x] Query String 파싱
   - [x] http method enum 적용
   - [x] Path 클래스로 분리
   - [x] Protocol 클래스로 분리
@@ -25,7 +25,8 @@
 
 # 🚀 2단계 - HTTP 웹 서버 구현
 
-> 요구사항1 - http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
+### 요구사항1
+> http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
 
 ### 기능 목록
 - [x] InputStream(사용자의 요청)을 읽어 RequestLine을 생성한다
@@ -33,7 +34,10 @@
   - [x] BufferedReader로 HTTP 요청 메시지를 RequestLine으로 파싱한다
 - [x] Path(Location)에 해당하는 파일을 읽어 응답한다.
 
-> 요구사항2 - “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다. 회원가입한다.  
+---
+
+### 요구사항2
+> “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다. 회원가입한다.  
 회원가입을 하면 다음과 같은 형태로 사용자가 입력한 값이 서버에 전달된다.  
 HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.User 클래스에 저장한다.
 
@@ -42,4 +46,18 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
   - [x] QueryString 문자열을 Map<String, String> 타입으로 변환한다.
   - [x] User 클래스의 생성자를 활용하여 객체를 생성한다
     - [x] User를 생성하는 UserBinder 클래스 생성
-    - [x] HttpMethod가 `GET`, Path의 Location이 `/user/create` 인 경우 
+    - [x] HttpMethod가 `GET`, Path의 Location이 `/user/create` 인 경우
+
+---
+
+### 요구사항3
+> http://localhost:8080/user/form.html 파일의 form 태그 method를 get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.
+
+### 기능 목록
+- [ ] user/form.html의 form 태그 method를 get에서 post로 수정
+- [ ] HTTP Request Header 파싱
+  - [ ] HTTP Header 파싱 (Body를 파싱하기 위해 ContentLength를 사용)
+  - [ ] HTTP Body 파싱 
+    - [ ] Body와 Header는 공백 라인으로 구분한다.
+    - [ ] IOUtils#readData() 메서드를 활용해 문자열로 변환한다
+- [ ] HTTP Body를 이용해 User 객체를 생성한다.
