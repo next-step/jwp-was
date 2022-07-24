@@ -33,8 +33,8 @@ public class RequestLine {
         return QueryParams.of(pathWithParameters[1]);
     }
 
-    public String getMethod() {
-        return httpMethod.name();
+    public HttpMethod getMethod() {
+        return httpMethod;
     }
 
     public String getUrl() {

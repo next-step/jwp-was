@@ -17,7 +17,7 @@ class RequestLineTest {
 
         var requestLine = new RequestLine(line);
 
-        assertAll(() -> assertThat(requestLine.getMethod()).isEqualTo("GET"),
+        assertAll(() -> assertThat(requestLine.getMethod().name()).isEqualTo("GET"),
             () -> assertThat(requestLine.getUrl()).isEqualTo("/users"),
             () -> assertThat(requestLine.getProtocol()).isEqualTo("HTTP"),
             () -> assertThat(requestLine.getVersion()).isEqualTo("1.1"));
@@ -30,7 +30,7 @@ class RequestLineTest {
 
         var requestLine = new RequestLine(line);
 
-        assertAll(() -> assertThat(requestLine.getMethod()).isEqualTo("POST"),
+        assertAll(() -> assertThat(requestLine.getMethod().name()).isEqualTo("POST"),
             () -> assertThat(requestLine.getUrl()).isEqualTo("/users"),
             () -> assertThat(requestLine.getProtocol()).isEqualTo("HTTP"),
             () -> assertThat(requestLine.getVersion()).isEqualTo("1.1"));
