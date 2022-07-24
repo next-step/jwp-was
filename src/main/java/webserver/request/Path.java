@@ -55,6 +55,10 @@ public class Path {
         return location;
     }
 
+    public QueryParameters getQueryString() {
+        return queryString;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

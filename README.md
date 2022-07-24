@@ -40,5 +40,6 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 ### 기능 목록
 - [ ] QueryString을 User클래스에 바인딩한다.
   - [x] QueryString 문자열을 Map<String, String> 타입으로 변환한다.
-  - [ ] User 클래스의 생성자를 활용하여 객체를 생성한다
+  - [x] User 클래스의 생성자를 활용하여 객체를 생성한다
+    - [x] User를 생성하는 UserBinder 클래스 생성
     - [ ] HttpMethod가 `GET`, Path의 Location이 `/user/create` 인 경우 

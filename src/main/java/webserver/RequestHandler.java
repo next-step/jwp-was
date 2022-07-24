@@ -8,10 +8,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.request.RequestLine;
+import webserver.request.UserBinder;
 
 public class RequestHandler implements Runnable {
 
@@ -33,6 +35,8 @@ public class RequestHandler implements Runnable {
 
             final RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
             final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + requestLine.getLocation());
+
+            User user = UserBinder.from(requestLine.getQueryParameters());
 
             response200Header(dos, body.length);
             responseBody(dos, body);

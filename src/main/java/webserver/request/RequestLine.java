@@ -41,6 +41,10 @@ public class RequestLine {
         return path.getLocation();
     }
 
+    public QueryParameters getQueryParameters() {
+        return path.getQueryString();
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
