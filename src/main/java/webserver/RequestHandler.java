@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import utils.IOUtils;
+import webserver.request.ContentType;
 import webserver.request.RequestBody;
 import webserver.request.RequestHeaders;
 import webserver.request.RequestLine;
@@ -65,13 +66,24 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
-            final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + requestLine.getLocation());
+            String fileExtension = FileIoUtils.getFileExtension(requestLine.getLocation());
+            final String contentType = ContentType.of(fileExtension).getContentType();
+            String filePath = getFilePath(fileExtension);
 
-            response200Header(dos, body.length);
+            final byte[] body = FileIoUtils.loadFileFromClasspath(filePath + requestLine.getLocation());
+
+            response200Header(dos, body.length, contentType);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private String getFilePath(final String fileExtension) {
+        if (fileExtension.endsWith("html") || fileExtension.endsWith("ico")) {
+            return "templates";
+        }
+        return "static";
     }
 
     private void userList(final RequestHeaders requestHeaders, final DataOutputStream dos) throws IOException {
@@ -97,7 +109,7 @@ public class RequestHandler implements Runnable {
         String profilePage = template.apply(param);
         final byte[] body = profilePage.getBytes();
 
-        response200Header(dos, body.length);
+        response200Header(dos, body.length, "text/html");
         responseBody(dos, body);
 
     }
@@ -165,10 +177,10 @@ public class RequestHandler implements Runnable {
         return requestLine.isPost() && requestLine.getLocation().equals("/user/create");
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dos, int lengthOfBodyContent, final String contentType) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Type: " + contentType + ";charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {

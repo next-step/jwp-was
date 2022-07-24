@@ -110,5 +110,5 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 > Stylesheet 파일을 지원하도록 구현하도록 한다.
 
 ### 기능 목록
-- [ ] Location의 확장자를 활용해 응답 헤더에 Content-Type을 지정한다.
+- [x] Location의 확장자를 활용해 응답 헤더에 Content-Type을 지정한다.
 - [x] ContentType은 enum으로 정의한다.

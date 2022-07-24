@@ -7,7 +7,8 @@ public enum ContentType {
     CSS("css", "text/css"),
     JAVASCRIPT("js", "application/javascript"),
     HTML("html", "text/html"),
-    TEXT("", "text/plain");
+    TEXT("", "text/plain"),
+    WOFF("woff", "application/font-woff");
 
     private final String fileExtension;
     private final String contentType;
