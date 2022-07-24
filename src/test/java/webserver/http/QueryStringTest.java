@@ -1,9 +1,10 @@
-package webserver;
+package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
+import webserver.http.QueryString;
 
 import java.util.Map;
 
