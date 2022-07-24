@@ -70,8 +70,7 @@ public class RequestHandler implements Runnable {
 
             final byte[] body = FileIoUtils.loadFileFromClasspath(filePath + requestLine.getLocation());
 
-            response200Header(dos, body.length, contentType);
-            responseBody(dos, body);
+            responseOk(dos, body, contentType);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
@@ -85,10 +84,7 @@ public class RequestHandler implements Runnable {
     }
 
     private void userList(final RequestHeaders requestHeaders, final DataOutputStream dos) throws IOException {
-        final boolean login = Optional.ofNullable(requestHeaders.get("Cookie"))
-            .map(logined -> logined.equals("logined=true"))
-            .orElse(false);
-        if (!login) {
+        if (!isLogined(requestHeaders)) {
             response302Header(dos, "/user/login.html");
             return;
         }
@@ -99,9 +95,18 @@ public class RequestHandler implements Runnable {
         final String load = HandleBarTemplateLoader.load("user/list", params);
         final byte[] body = load.getBytes(StandardCharsets.UTF_8);
 
-        response200Header(dos, body.length, "text/html");
-        responseBody(dos, body);
+        responseOk(dos, body, ContentType.HTML.getContentType());
+    }
 
+    private void responseOk(final DataOutputStream dos, final byte[] body, final String contentType) {
+        response200Header(dos, body.length, contentType);
+        responseBody(dos, body);
+    }
+
+    private boolean isLogined(final RequestHeaders requestHeaders) {
+        return Optional.ofNullable(requestHeaders.get("Cookie"))
+            .map(logined -> logined.equals("logined=true"))
+            .orElse(false);
     }
 
     private boolean requestForUserList(final RequestLine requestLine) {
