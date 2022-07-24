@@ -1,4 +1,4 @@
-package webserver.persist;
+package webserver.persistence;
 
 import java.util.Map;
 import java.util.Optional;

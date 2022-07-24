@@ -1,4 +1,4 @@
-package webserver.persist;
+package webserver.persistence;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;

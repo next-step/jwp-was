@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import webserver.controller.Controller;
 import webserver.controller.LoginController;
 import webserver.controller.UserCreateController;
-import webserver.persist.Users;
+import webserver.persistence.Users;
 
 public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);

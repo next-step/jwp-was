@@ -8,7 +8,7 @@ import java.util.Map;
 import http.HttpStatus;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import webserver.persist.Users;
+import webserver.persistence.Users;
 
 public class LoginController implements Controller {
 
