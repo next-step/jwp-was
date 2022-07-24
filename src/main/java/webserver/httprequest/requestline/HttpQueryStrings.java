@@ -10,8 +10,6 @@ import static webserver.httprequest.requestline.HttpPath.PRIMARY_QUERY_STRING_SY
 public class HttpQueryStrings {
     public static final String PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE = PRIMARY_QUERY_STRING_SYMBOL.replace("\\", "");
     public static final String SECONDARY_QUERY_STRING_SYMBOL = "&";
-    public static final int QUERY_STRING_SCHEMA_START_INDEX = 1;
-    public static final int QUERY_STRING_SCHEMA_REQUIRED_SIZE = 2;
 
     private final List<HttpQueryString> httpQueryStrings;
     private final String fullQueryString;
