@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.HttpParser;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -14,26 +15,31 @@ public class HttpMessage {
 
     private final String BODY_SEPARATOR = "";
 
-    private RequestLine requestLine;
+    private final RequestLine requestLine;
 
     private RequestHeaders requestHeaders;
 
     private String body;
 
     public HttpMessage(List<String> httpMessageData) {
+        if (!(httpMessageData instanceof ArrayList)) {
+            httpMessageData = new ArrayList<>(httpMessageData);
+        }
 
         if (this.isWrongFormat(httpMessageData)) {
             throw new IllegalArgumentException();
         }
-
-        this.requestLine = HttpParser.parseRequestLine(httpMessageData.remove(0));
+        String requestLine = httpMessageData.get(0);
+        this.requestLine = HttpParser.parseRequestLine(requestLine);
 
         if (httpMessageData.size() == 1) {
             return;
         }
 
+        httpMessageData.remove(requestLine);
+
         if (!httpMessageData.contains(BODY_SEPARATOR)) {
-            this.requestHeaders = new RequestHeaders(this.getRequestHeaders(httpMessageData, httpMessageData.size() + 1));
+            this.requestHeaders = new RequestHeaders(this.getRequestHeaders(httpMessageData, httpMessageData.size()));
             return;
         }
 
