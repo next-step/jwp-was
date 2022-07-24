@@ -54,6 +54,11 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
+            if (requestForUserList(requestLine)) {
+                userList(requestHeaders, dos);
+                return;
+            }
+
             final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + requestLine.getLocation());
 
             response200Header(dos, body.length);
@@ -61,6 +66,19 @@ public class RequestHandler implements Runnable {
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private void userList(final RequestHeaders requestHeaders, final DataOutputStream dos) throws IOException {
+        final boolean login = Optional.ofNullable(requestHeaders.get("Cookie"))
+            .map(logined -> logined.equals("logined=true"))
+            .orElse(false);
+        if (!login) {
+            response302Header(dos, "/user/login.html");
+        }
+    }
+
+    private boolean requestForUserList(final RequestLine requestLine) {
+        return requestLine.isGet() && requestLine.getLocation().equals("/user/list");
     }
 
     private void addAllRequestHeaders(final BufferedReader bufferedReader, final RequestHeaders requestHeaders) throws IOException {
@@ -115,7 +133,7 @@ public class RequestHandler implements Runnable {
         logger.debug("user = {}", user);
 
         DataBase.addUser(user);
-        response302Header(dos);
+        response302Header(dos, "/index.html");
     }
 
     private boolean requestForCreateUser(final RequestLine requestLine) {
@@ -133,10 +151,10 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void response302Header(DataOutputStream dos) {
+    private void response302Header(DataOutputStream dos, final String location) {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: /index.html\r\n");
+            dos.writeBytes("Location: " + location + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -147,7 +165,7 @@ public class RequestHandler implements Runnable {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
             for (final String header : responseHeaders.getHeaders().keySet()) {
-                dos.writeBytes(header +": "+responseHeaders.get(header)+"\r\n");
+                dos.writeBytes(header + ": " + responseHeaders.get(header) + "\r\n");
             }
             dos.writeBytes("\r\n");
         } catch (IOException e) {

@@ -38,6 +38,10 @@ public class RequestLine {
         return new RequestLine(HttpMethod.of(httpMethod), Path.parse(path), Protocol.parse(protocol));
     }
 
+    public boolean isGet() {
+        return httpMethod.isGet();
+    }
+
     public boolean isPost() {
         return httpMethod.isPost();
     }

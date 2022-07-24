@@ -97,9 +97,9 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 동적으로 html을 생성하기 위해 handlebars.java template engine을 활용한다.
 
 ### 기능 목록
-- [ ] 요청 헤더에서 Cookie 값을 읽어서 로그인 상태인지 확인한다.
+- [x] 요청 헤더에서 Cookie 값을 읽어서 로그인 상태인지 확인한다.
 - [ ] 로그인 상태
   - [ ] 사용자 목록을 출력한다
-  - [ ] handlebars template engine을 활용한 html 생성
-- [ ] 로그인 하지 않은 상태
-  - [ ] 로그인 페이지로 이동
+  - [x] handlebars template engine을 활용한 html 생성
+- [x] 로그인 하지 않은 상태
+  - [x] 로그인 페이지로 이동
