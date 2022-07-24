@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.exception.StringEmptyException;
+import webserver.request.domain.RequestLine;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 

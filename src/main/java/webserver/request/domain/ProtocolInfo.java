@@ -1,4 +1,4 @@
-package webserver.domain;
+package webserver.request.domain;
 
 import lombok.Getter;
 import org.springframework.util.StringUtils;

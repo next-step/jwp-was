@@ -1,8 +1,5 @@
-package webserver;
+package webserver.request.domain;
 
-import webserver.domain.HttpMethod;
-import webserver.domain.Path;
-import webserver.domain.ProtocolInfo;
 import webserver.exception.StringEmptyException;
 
 public class RequestLine {
@@ -55,5 +52,15 @@ public class RequestLine {
 
     public String getProtocolVersion() {
         return protocolInfo.getVersion();
+    }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method=" + method.toString() +
+                ", path=" + path.getQueryString() +
+                ", protocol=" + protocolInfo.getProtocol() +
+                ", version=" + protocolInfo.getVersion() +
+                '}';
     }
 }

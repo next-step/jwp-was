@@ -1,4 +1,4 @@
-package webserver.domain;
+package webserver.request.domain;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
