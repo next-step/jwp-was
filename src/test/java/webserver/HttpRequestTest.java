@@ -40,6 +40,20 @@ class HttpRequestTest {
         );
     }
 
+    @DisplayName("로그인 성공")
+    @Test
+    void login_success() {
+        회원가입_요청("administrator", "password");
+
+        ResponseEntity<String> response = 로그인_요청("administrator", "password");
+
+        assertAll(
+            () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND),
+            () -> assertThat(response.getHeaders().get("Location")).containsExactly("/index.html"),
+            () -> assertThat(response.getHeaders().get("Set-Cookie")).containsExactly("logined=true; Path=/")
+        );
+    }
+
     private ResponseEntity<String> 로그인_요청(final String userId, final String password) {
         final String loginParams = String.format("userId=%s&password=%s", userId, password);
 

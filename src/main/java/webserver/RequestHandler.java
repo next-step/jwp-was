@@ -92,12 +92,16 @@ public class RequestHandler implements Runnable {
         final boolean loginSuccess = login(user);
         logger.debug("loginSuccess = {}", loginSuccess);
 
-        if (!loginSuccess) {
-            final ResponseHeaders responseHeaders = new ResponseHeaders();
-            responseHeaders.add("Location", "/user/login_failed.html");
-            responseHeaders.add("Set-Cookie", "logined=false; Path=/");
+        final ResponseHeaders responseHeaders = new ResponseHeaders();
+        if (loginSuccess) {
+            responseHeaders.add("Location", "/index.html");
+            responseHeaders.add("Set-Cookie", "logined=true; Path=/");
             response302Header(dos, responseHeaders);
+            return;
         }
+        responseHeaders.add("Location", "/user/login_failed.html");
+        responseHeaders.add("Set-Cookie", "logined=false; Path=/");
+        response302Header(dos, responseHeaders);
     }
 
     private boolean login(final User user) {

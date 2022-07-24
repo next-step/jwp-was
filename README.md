@@ -82,9 +82,9 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 - [x] 회원가입 시 메모리 DB에 회원정보 저장
 - [x] 로그인 시 메모리 DB와 ID/PW 비교
   - [x] HttpMethod가 `POST`, Path의 Location이 `/user/login`
-- [ ] 로그인 성공
-  - [ ] Cookie 생성 (logined=true)
-  - [ ] index.html 이동
+- [x] 로그인 성공
+  - [x] Cookie 생성 (logined=true)
+  - [x] index.html 이동
 - [x] 로그인 실패 
   - [x] Cookie 생성 (logined=false)
   - [x] /user/login_failed.html 이동 
