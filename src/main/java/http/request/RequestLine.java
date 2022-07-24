@@ -10,7 +10,7 @@ public class RequestLine {
     private static final int ONLY_PATH = 1;
 
     private final HttpMethod httpMethod;
-    private final String path;
+    private final String url;
     private final Protocol protocol;
     private final QueryParams queryParams;
 
@@ -22,7 +22,7 @@ public class RequestLine {
 
         var pathWithParameters = specs[1]
             .split(QUERY_PARAMETER_DELIMITER);
-        this.path = pathWithParameters[0];
+        this.url = pathWithParameters[0];
         this.queryParams = parseParameters(pathWithParameters);
     }
 
@@ -37,8 +37,8 @@ public class RequestLine {
         return httpMethod.name();
     }
 
-    public String getPath() {
-        return path;
+    public String getUrl() {
+        return url;
     }
 
     public String getProtocol() {
@@ -52,5 +52,11 @@ public class RequestLine {
 
     public Map<String, String> getQueryParams() {
         return queryParams.get();
+    }
+
+    public boolean isStaticFile() {
+        return url.endsWith(".html")
+            || url.endsWith(".css")
+            || url.endsWith(".js");
     }
 }

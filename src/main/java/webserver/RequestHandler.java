@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.URISyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import http.request.RequestLine;
+import utils.FileIoUtils;
 import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
@@ -29,11 +31,30 @@ public class RequestHandler implements Runnable {
             var lines = IOUtils.readData(inputStream);
             var requestLine = new RequestLine(lines.get(0));
 
+            if (requestLine.isStaticFile()) {
+                responseStaticFile(new DataOutputStream(out), requestLine.getUrl());
+                return;
+            }
+
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void responseStaticFile(DataOutputStream dos, String path) {
+        try {
+            var bytes = FileIoUtils.loadFileFromClasspath(path);
+
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + bytes.length + "\r\n");
+            dos.writeBytes("\r\n");
+            dos.write(bytes);
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
