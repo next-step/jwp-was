@@ -1,8 +1,10 @@
 package webserver.http;
 
+import webserver.http.enums.HTTPMethod;
+
 public class RequestTestConstant {
-    static final String GET_METHOD = "GET";
-    static final String POST_METHOD = "POST";
+    static final HTTPMethod GET_METHOD = HTTPMethod.GET;
+    static final HTTPMethod POST_METHOD = HTTPMethod.POST;
     static final String PATH = "/users";
     static final String PROTOCOL = "HTTP";
     static final String VERSION = "1.1";

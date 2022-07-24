@@ -1,4 +1,6 @@
-package webserver.http;
+package webserver.http.domain;
+
+import webserver.http.enums.HTTPMethod;
 
 import java.util.Map;
 import java.util.Objects;
@@ -6,12 +8,12 @@ import java.util.Objects;
 public class RequestLine {
 
     public static final String REQUEST_SPLIT_SYMBOL = " ";
-    private final String method;
+    private final HTTPMethod method;
     private final Path path;
 
     private final Protocol protocol;
 
-    public RequestLine(String method, String path, Protocol protocol) {
+    public RequestLine(HTTPMethod method, String path, Protocol protocol) {
         this.method = method;
         this.path = Path.create(path);
         this.protocol = protocol;
@@ -19,12 +21,12 @@ public class RequestLine {
 
     public RequestLine(String request) {
         String[] splitRequest = request.split(REQUEST_SPLIT_SYMBOL);
-        this.method = splitRequest[0];
+        this.method = HTTPMethod.httpMethod(splitRequest[0]);
         this.path = Path.create(splitRequest[1]);
         this.protocol = new Protocol(splitRequest[2]);
     }
 
-    public String method() {
+    public HTTPMethod method() {
         return method;
     }
 

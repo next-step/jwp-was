@@ -2,6 +2,7 @@ package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.domain.Protocol;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static webserver.http.RequestTestConstant.*;

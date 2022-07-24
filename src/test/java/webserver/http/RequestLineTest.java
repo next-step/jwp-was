@@ -3,6 +3,8 @@ package webserver.http;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.domain.Protocol;
+import webserver.http.domain.RequestLine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static webserver.http.RequestTestConstant.*;

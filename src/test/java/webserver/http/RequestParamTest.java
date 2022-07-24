@@ -2,6 +2,7 @@ package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.domain.RequestParams;
 
 import java.util.Map;
 
