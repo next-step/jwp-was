@@ -115,7 +115,7 @@ public class RequestHandler implements Runnable {
     }
 
     private boolean requestForUserList(final RequestLine requestLine) {
-        return requestLine.isGet() && requestLine.getLocation().equals("/user/list");
+        return requestLine.isGet() && requestLine.getLocation().equals("/user/list.html");
     }
 
     private void addAllRequestHeaders(final BufferedReader bufferedReader, final RequestHeaders requestHeaders) throws IOException {

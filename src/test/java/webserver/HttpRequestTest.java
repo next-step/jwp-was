@@ -85,12 +85,12 @@ class HttpRequestTest {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cookie", "logined=true");
 
-        return restTemplate.exchange("http://localhost:8080/user/list", HttpMethod.GET, new HttpEntity<>(headers),
+        return restTemplate.exchange("http://localhost:8080/user/list.html", HttpMethod.GET, new HttpEntity<>(headers),
             String.class);
     }
 
     private ResponseEntity<String> 사용자_목록_조회() {
-        return restTemplate.getForEntity("http://localhost:8080/user/list", String.class);
+        return restTemplate.getForEntity("http://localhost:8080/user/list.html", String.class);
     }
 
     private ResponseEntity<String> 로그인_요청(final String userId, final String password) {
