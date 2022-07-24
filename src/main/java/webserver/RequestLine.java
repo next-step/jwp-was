@@ -13,12 +13,13 @@ public class RequestLine {
     private static final int REQUEST_PARSING_ELEMENT_NUMBER = 3;
     private static final int PROTOCOL_AND_VERSION_PARSING_ELEMENT_NUMBER = 2;
 
+
     private String method;
-    private String path;
+    private Path path;
     private String protocol;
     private String version;
 
-    RequestLine(String method, String path, String protocol, String version) {
+    RequestLine(String method, Path path, String protocol, String version) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
@@ -31,9 +32,8 @@ public class RequestLine {
         validateElementsLength(elements.length);
 
         String method = elements[METHOD_INDEX];
-        String path = elements[PATH_INDEX];
+        Path path = Path.parse(elements[PATH_INDEX]);
         validateMethod(method);
-        validatePath(path);
 
         String[] protocolAndVersion = elements[PROTOCOL_AND_VERSION_INDEX].split(SLASH_DELIMITER);
         validateProtocolAndVersionLength(protocolAndVersion.length);
@@ -70,11 +70,7 @@ public class RequestLine {
         }
     }
 
-    private static void validatePath(String path) {
-        if (!path.startsWith("/")) {
-            throw new IllegalArgumentException(String.format("요청된 HTTP RequestLine 의 path 는 '/'로 시작해야 합니다. 현재 입력된 path : %s", path));
-        }
-    }
+
 
     private static void validateProtocol(String protocol) {
         if (!protocol.equals("HTTP")) {

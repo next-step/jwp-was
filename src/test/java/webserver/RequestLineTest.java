@@ -5,14 +5,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class RequestLineTest {
     @Test
     @DisplayName("RequestLine 객체를 생성한다.")
     void create_RequestLine() {
-        RequestLine requestLine = new RequestLine("GET", "/users", "HTTP", "1.1");
+        RequestLine requestLine = new RequestLine("GET", new Path("/users", null), "HTTP", "1.1");
         assertThat(requestLine).isNotNull().isInstanceOf(RequestLine.class);
     }
 
@@ -33,12 +35,6 @@ class RequestLineTest {
     @DisplayName("HTTP 요청 method 가 GET, POST 가 아닐 경우 예외가 발생한다.")
     void throw_exception_request_method_not_GET_or_POST() {
         assertThatThrownBy(() -> RequestLine.parse("GETS /users HTTP/1.1")).isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    @DisplayName("HTTP 요청 path 가 '/' 로 시작하지 않을 경우 예외가 발생한다.")
-    void throw_exception_request_path_not_start_slash() {
-        assertThatThrownBy(() -> RequestLine.parse("GET users HTTP/1.1")).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -64,7 +60,7 @@ class RequestLineTest {
     void parse_GET_RequestLine() {
         String request = "GET /users HTTP/1.1";
         RequestLine requestLine = RequestLine.parse(request);
-        assertThat(requestLine).isEqualTo(new RequestLine("GET", "/users", "HTTP", "1.1"));
+        assertThat(requestLine).isEqualTo(new RequestLine("GET", new Path("/users", null), "HTTP", "1.1"));
     }
 
     @Test
@@ -72,6 +68,15 @@ class RequestLineTest {
     void parse_POST_RequestLine() {
         String request = "POST /users HTTP/1.1";
         RequestLine requestLine = RequestLine.parse(request);
-        assertThat(requestLine).isEqualTo(new RequestLine("POST", "/users", "HTTP", "1.1"));
+        assertThat(requestLine).isEqualTo(new RequestLine("POST", new Path("/users", null), "HTTP", "1.1"));
+    }
+
+    @Test
+    @DisplayName("Query String 이 포함된 요청에 대한 RequestLine 을 파싱한다.")
+    void parse_Query_String_RequestLine() {
+        String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+        RequestLine requestLine = RequestLine.parse(request);
+        Map<String, String> queryStrings = Map.of("userId", "javajigi", "password", "password", "name", "JaeSung");
+        assertThat(requestLine).isEqualTo(new RequestLine("GET", new Path("/users", new QueryString(queryStrings)), "HTTP", "1.1"));
     }
 }
