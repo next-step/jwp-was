@@ -55,9 +55,9 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 
 ### 기능 목록
 - [x] user/form.html의 form 태그 method를 get에서 post로 수정
-- [ ] HTTP Request Header 파싱
+- [x] HTTP Request Body 파싱
   - [x] HTTP Header 파싱 (Body를 파싱하기 위해 ContentLength를 사용)
-  - [ ] HTTP Body 파싱 
-    - [ ] Body와 Header는 공백 라인으로 구분한다.
-    - [ ] IOUtils#readData() 메서드를 활용해 문자열로 변환한다
+  - [x] HTTP Body 파싱 
 - [ ] HTTP Body를 이용해 User 객체를 생성한다.
+  - [ ] User 객체를 생성하는 HttpMethod를 POST로 변경한다.
+  - [ ] IOUtils#readData() 메서드를 활용해 문자열로 변환한다.
