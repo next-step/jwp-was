@@ -1,13 +1,16 @@
 package webserver;
 
+import model.HttpMessage;
 import model.RequestLine;
+import model.UrlPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import utils.HttpParser;
+import utils.FileIoUtils;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +24,7 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
+        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
@@ -36,20 +38,33 @@ public class RequestHandler implements Runnable {
                 httpMessageData.add(line);
             }
 
+            HttpMessage httpMessage = new HttpMessage(httpMessageData);
+            RequestLine requestLine = httpMessage.getRequestLine();
+            byte[] body = null;
+            if (requestLine.getUrlPath().hasExtension()) {
+                UrlPath urlPath = requestLine.getUrlPath();
+                body = FileIoUtils.loadFileFromClasspath(urlPath.getPath());
+            }
+
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
             responseBody(dos, body);
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dos, Integer lengthOfBodyContent) {
+
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            if (lengthOfBodyContent == null) {
+                dos.writeBytes("\r\n");
+                return;
+            }
+
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
