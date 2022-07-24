@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +14,17 @@ import org.slf4j.LoggerFactory;
 import http.request.RequestLine;
 import utils.FileIoUtils;
 import utils.IOUtils;
+import webserver.controller.Controller;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private final Map<String, Controller> controllers;
 
-    public RequestHandler(Socket connectionSocket) {
-        this.connection = connectionSocket;
+    public RequestHandler(Socket connection, Map<String, Controller> controllers) {
+        this.connection = connection;
+        this.controllers = controllers;
     }
 
     public void run() {
@@ -35,6 +39,9 @@ public class RequestHandler implements Runnable {
                 responseStaticFile(new DataOutputStream(out), requestLine.getUrl());
                 return;
             }
+
+            var controller = controllers.get(requestLine.getUrl());
+            controller.run(requestLine);
 
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
