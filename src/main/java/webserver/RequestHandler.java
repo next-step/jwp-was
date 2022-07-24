@@ -29,13 +29,12 @@ public class RequestHandler implements Runnable {
             InputStreamReader inputStreamReader = new InputStreamReader(in);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             boolean end = false;
-            List<String> requestMessageHeader = new ArrayList<>();
+            List<String> httpMessageData = new ArrayList<>();
             while (!end) {
                 String line = bufferedReader.readLine();
                 end = (!StringUtils.hasText(line));
-                requestMessageHeader.add(line);
+                httpMessageData.add(line);
             }
-            RequestLine requestLine = HttpParser.parseRequestLine(requestMessageHeader.get(0));
 
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             DataOutputStream dos = new DataOutputStream(out);
