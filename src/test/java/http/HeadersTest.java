@@ -7,6 +7,8 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import http.request.Headers;
+
 class HeadersTest {
 
     @DisplayName("RequestBody가 있는지 확인할 수 있다.")

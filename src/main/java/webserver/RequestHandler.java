@@ -13,7 +13,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import http.Headers;
+import http.request.Headers;
 import http.request.HttpRequest;
 import http.request.RequestLine;
 import utils.FileIoUtils;

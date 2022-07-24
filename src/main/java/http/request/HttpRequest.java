@@ -1,7 +1,5 @@
 package http.request;
 
-import http.Headers;
-
 public class HttpRequest {
 
     private final RequestLine requestLine;

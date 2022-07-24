@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import http.Headers;
-
 class HttpRequestTest {
 
     @Test
