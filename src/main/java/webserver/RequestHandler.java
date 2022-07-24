@@ -34,15 +34,23 @@ public class RequestHandler implements Runnable {
             final DataOutputStream dos = new DataOutputStream(out);
 
             final RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
-            final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + requestLine.getLocation());
 
-            User user = UserBinder.from(requestLine.getQueryParameters());
+            if (requestForCreateUser(requestLine)) {
+                User user = UserBinder.from(requestLine.getQueryParameters());
+                logger.debug("user = {}", user);
+            }
+
+            final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + requestLine.getLocation());
 
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private boolean requestForCreateUser(final RequestLine requestLine) {
+        return requestLine.isGet() && requestLine.getLocation().equals("/user/create");
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {

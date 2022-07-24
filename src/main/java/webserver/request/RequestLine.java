@@ -9,12 +9,12 @@ public class RequestLine {
     private static final int INDEX_OF_PROTOCOL = 2;
     private static final String DELIMITER = " ";
 
-    private final HttpMethod method;
+    private final HttpMethod httpMethod;
     private final Path path;
     private final Protocol protocol;
 
-    private RequestLine(final HttpMethod method, final Path path, final Protocol protocol) {
-        this.method = method;
+    private RequestLine(final HttpMethod httpMethod, final Path path, final Protocol protocol) {
+        this.httpMethod = httpMethod;
         this.path = path;
         this.protocol = protocol;
     }
@@ -37,6 +37,10 @@ public class RequestLine {
         return new RequestLine(HttpMethod.of(httpMethod), Path.parse(path), Protocol.parse(protocol));
     }
 
+    public boolean isGet() {
+        return httpMethod.isGet();
+    }
+
     public String getLocation() {
         return path.getLocation();
     }
@@ -54,11 +58,11 @@ public class RequestLine {
             return false;
         }
         final RequestLine that = (RequestLine) o;
-        return method == that.method && Objects.equals(path, that.path) && Objects.equals(protocol, that.protocol);
+        return httpMethod == that.httpMethod && Objects.equals(path, that.path) && Objects.equals(protocol, that.protocol);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(method, path, protocol);
+        return Objects.hash(httpMethod, path, protocol);
     }
 }
