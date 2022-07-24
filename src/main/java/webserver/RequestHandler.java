@@ -1,9 +1,5 @@
 package webserver;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -13,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -27,6 +24,7 @@ import webserver.request.RequestHeaders;
 import webserver.request.RequestLine;
 import webserver.request.UserBinder;
 import webserver.response.ResponseHeaders;
+import webserver.template.HandleBarTemplateLoader;
 
 public class RequestHandler implements Runnable {
 
@@ -95,19 +93,11 @@ public class RequestHandler implements Runnable {
             return;
         }
 
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".html");
-        Handlebars handlebars = new Handlebars(loader);
-        handlebars.registerHelper("inc", (context, options) -> (int) context + 1);
-
-        Template template = handlebars.compile("user/list");
-
         final Collection<User> users = DataBase.findAll();
-        final Map<String, Collection<User>> param = Map.of("users", users);
+        final Map<String, Collection<User>> params = Map.of("users", users);
 
-        String profilePage = template.apply(param);
-        final byte[] body = profilePage.getBytes();
+        final String load = HandleBarTemplateLoader.load("user/list", params);
+        final byte[] body = load.getBytes(StandardCharsets.UTF_8);
 
         response200Header(dos, body.length, "text/html");
         responseBody(dos, body);
