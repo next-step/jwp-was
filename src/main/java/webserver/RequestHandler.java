@@ -1,17 +1,19 @@
 package webserver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.net.URISyntaxException;
 
+import controller.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
+    private static final String ROOT_PATH = "/";
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -23,33 +25,31 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            HttpRequest request = new HttpRequest(in);
+            HttpResponse response = new HttpResponse(out);
+
+            String path = getDefaultPath(request.getPath());
+
+            Controller controller = RequestMapping.getController(path);
+
+            if (controller == null) {
+                response.forward(path);
+                return;
+            }
+            controller.service(request, response);
         } catch (IOException e) {
             logger.error(e.getMessage());
+        } catch (URISyntaxException e) {
+            logger.error(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+    private String getDefaultPath(String path) {
+        if (ROOT_PATH.equals(path)) {
+            return "/index.html";
         }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+        return path;
     }
 }
