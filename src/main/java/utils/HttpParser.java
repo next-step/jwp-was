@@ -32,6 +32,10 @@ public class HttpParser {
     private static UrlPath getPath(String[] requestLineData) {
         String path = requestLineData[1].split(PATH_SEPARATOR)[0];
         Map<String, String> queryParameters = getQueryParameters(requestLineData);
+        if (queryParameters.isEmpty()) {
+            return new UrlPath(path);
+        }
+
         return new UrlPath(path, new QueryParameter(queryParameters));
     }
 
@@ -44,13 +48,12 @@ public class HttpParser {
         String rawParameters = pathAndParameters.split(PATH_SEPARATOR)[1];
         String[] parameterKeyAndValues = rawParameters.split(QUERY_PARAMETER_SEPARATOR);
         Map<String, String> parameters = new HashMap<>();
-        Arrays.stream(parameterKeyAndValues)
-                .forEach(parameter -> {
-                    String[] keyAndValue = parameter.split(QUERY_PARAMETER_KEY_VALUE_SEPARATOR);
-                    String parameterKey = keyAndValue[0];
-                    String parameterValue = keyAndValue[1];
-                    parameters.put(parameterKey, parameterValue);
-                });
+        Arrays.stream(parameterKeyAndValues).forEach(parameter -> {
+            String[] keyAndValue = parameter.split(QUERY_PARAMETER_KEY_VALUE_SEPARATOR);
+            String parameterKey = keyAndValue[0];
+            String parameterValue = keyAndValue[1];
+            parameters.put(parameterKey, parameterValue);
+        });
 
         return parameters;
     }
