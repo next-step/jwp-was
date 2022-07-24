@@ -35,6 +35,10 @@ public class Path {
         return StringUtils.split(value, PATH_AND_QUERY_STRING_SPERATOR);
     }
 
+    public String getPath() {
+        return path;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -13,6 +13,12 @@ public class RequestLine {
     private final Path path;
     private final Protocol protocol;
 
+    public RequestLine(RequestLine requestLine) {
+        this.httpMethod = requestLine.httpMethod;
+        this.path = requestLine.path;
+        this.protocol = requestLine.protocol;
+    }
+
     public RequestLine(HttpMethod httpMethod, Path path, Protocol protocol) {
         this.httpMethod = httpMethod;
         this.path = path;
@@ -20,15 +26,20 @@ public class RequestLine {
     }
 
     public RequestLine(String requestValue) {
-        String[] values = requestValue.split(VALUE_SPERATOR);
+        this(makeRequestLine(requestValue));
+    }
 
-        this.httpMethod = HttpMethod.valueOf(values[0]);
-        this.path = new Path(values[1]);
-        this.protocol = new Protocol(values[2]);
+    private static RequestLine makeRequestLine(String requestValue) {
+        String[] values = requestValue.split(VALUE_SPERATOR);
+        return new RequestLine(HttpMethod.valueOf(values[0]), new Path(values[1]), new Protocol(values[2]));
     }
 
     public RequestLine(String method, String path, String protocol) {
         this(HttpMethod.valueOf(method), new Path(path), new Protocol(protocol));
+    }
+
+    public String getPathWithoutQueryString() {
+        return path.getPath();
     }
 
     @Override
