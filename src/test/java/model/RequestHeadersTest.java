@@ -25,7 +25,7 @@ class RequestHeadersTest {
 
     @DisplayName("requestHeaders 생성 검증")
     @Test
-    void createTest() {
+    void createRequestHeaderTest() {
         List<String> httpMessageData = List.of("Host: localhost:8080", "Connection: keep-alive", "Accept: */*");
         Map<String, String> headers = Map.of("Host", "localhost:8080", "Connection", "keep-alive", "Accept", "*/*");
 
