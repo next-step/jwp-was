@@ -18,8 +18,8 @@ public class UserCreateController implements Controller {
     private static final Logger logger = LoggerFactory.getLogger(UserCreateController.class);
 
     @Override
-    public HttpResponse run(HttpRequest httpRequest) {
-        var body = httpRequest.getBody();
+    public HttpResponse run(HttpRequest request) {
+        var body = request.getBody();
         var params = Arrays.stream(body.split("&"))
             .map(it -> it.split("="))
             .map(it -> Map.entry(it[0], it[1]))
