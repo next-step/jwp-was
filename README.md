@@ -69,5 +69,5 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 
 ### 기능 목록
 - 회원가입을 하는 경우 
-- [ ] 응답 헤더의 status code를 302로 설정한다.
-- [ ] 응답 헤더의 Location을 /index.html로 설정한다.
+- [x] 응답 헤더의 status code를 302로 설정한다.
+- [x] 응답 헤더의 Location을 /index.html로 설정한다.
