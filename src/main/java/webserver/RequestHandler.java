@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import http.request.Headers;
 import http.request.HttpRequest;
 import http.request.RequestLine;
+import http.response.HttpResponse;
 import utils.FileIoUtils;
 import utils.IOUtils;
 import webserver.controller.Controller;
@@ -47,12 +49,11 @@ public class RequestHandler implements Runnable {
                 return;
             }
             var controller = controllers.get(new Resource(httpRequest.getUrl(), httpRequest.getMethod()));
-            controller.run(httpRequest);
+            var response = controller.run(httpRequest);
 
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            writeHeader(dos, response);
+            writeBody(dos, response);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -89,20 +90,33 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void writeHeader(DataOutputStream dos, HttpResponse httpResponse) {
+        var protocol = httpResponse.getProtocol();
+        var httpStatus = httpResponse.getHttpStatus();
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes(String.format("%s/%s %d %s \r\n",
+                protocol.getProtocolType(),
+                protocol.getVersion(),
+                httpStatus.getStatusCode(),
+                httpStatus.getMessage())
+            );
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("Content-Length: " + httpResponse.getBody().length() + "\r\n");
+
+            for (Map.Entry<String, String> entry : httpResponse.getHeaders().entrySet()) {
+                dos.writeBytes(String.format("%s: %s\r\n", entry.getKey(), entry.getValue()));
+            }
+
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
+    private void writeBody(DataOutputStream dos, HttpResponse response) {
+        var body = response.getBody();
         try {
-            dos.write(body, 0, body.length);
+            dos.write(body.getBytes(StandardCharsets.UTF_8), 0, body.length());
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());

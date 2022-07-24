@@ -8,7 +8,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import http.HttpStatus;
 import http.request.HttpRequest;
+import http.response.HttpResponse;
 import model.User;
 
 public class UserCreateController implements Controller {
@@ -16,7 +18,7 @@ public class UserCreateController implements Controller {
     private static final Logger logger = LoggerFactory.getLogger(UserCreateController.class);
 
     @Override
-    public void run(HttpRequest httpRequest) {
+    public HttpResponse run(HttpRequest httpRequest) {
         var body = httpRequest.getBody();
         var params = Arrays.stream(body.split("&"))
             .map(it -> it.split("="))
@@ -25,5 +27,7 @@ public class UserCreateController implements Controller {
 
         var user = new User(params.get("userId"), params.get("password"), params.get("name"), params.get("email"));
         logger.debug("user {}", user);
+
+        return new HttpResponse(HttpStatus.FOUND, Map.of("Location", "/templates/index.html"));
     }
 }
