@@ -54,6 +54,27 @@ class HttpRequestTest {
         );
     }
 
+    @DisplayName("로그인 하지 않은 상태에서 사용자 목록 페이지 조회시 로그인화면으로 이동한다")
+    @Test
+    void not_logged_in_cannot_access_user_list() {
+        로그인_실패();
+
+        final ResponseEntity<String> response = 사용자_목록_조회();
+
+        assertAll(
+            () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND),
+            () -> assertThat(response.getHeaders().get("Location")).containsExactly("/login.html")
+        );
+    }
+
+    private ResponseEntity<String> 사용자_목록_조회() {
+        return restTemplate.getForEntity("http://localhost:8080/user/list", String.class);
+    }
+
+    private void 로그인_실패() {
+        로그인_요청("존재하지않는아이디", "pass");
+    }
+
     private ResponseEntity<String> 로그인_요청(final String userId, final String password) {
         final String loginParams = String.format("userId=%s&password=%s", userId, password);
 
