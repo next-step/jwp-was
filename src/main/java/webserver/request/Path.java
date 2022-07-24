@@ -11,9 +11,9 @@ public class Path {
     private static final int VALID_LENGTH_OF_QUERY_STRING_TOKENS = 2;
 
     private final String location;
-    private final String queryString;
+    private final QueryParameters queryString;
 
-    private Path(final String location, final String queryString) {
+    private Path(final String location, final QueryParameters queryString) {
         this.location = location;
         this.queryString = queryString;
     }
@@ -44,7 +44,7 @@ public class Path {
     }
 
     public static Path of(final String location, final String queryString) {
-        return new Path(location, queryString);
+        return new Path(location, new QueryParameters(queryString));
     }
 
     private static boolean hasQueryString(final String[] tokens) {
