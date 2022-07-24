@@ -20,7 +20,7 @@ class PathTest {
     @ParameterizedTest
     @NullAndEmptySource
     @DisplayName("path 요청 값이 null 또는 비어있을 경우 예외가 발생한다.")
-    void throw_exception_queryString_null(String pathString) {
+    void throw_exception_path_null_or_empty(String pathString) {
         assertThatThrownBy(() -> Path.parse(pathString)).isInstanceOf(IllegalArgumentException.class);
     }
 
