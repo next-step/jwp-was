@@ -11,13 +11,13 @@ public class Path {
     private String path;
     private QueryString queryString; // nullable
 
-    public Path(String path, QueryString queryString) {
+    Path(String path, QueryString queryString) {
         this.path = path;
         this.queryString = queryString;
     }
 
     public static Path parse(String pathString) {
-        validatePath(pathString);
+        validatePathString(pathString);
 
         if (pathString.contains(QUERY_DELIMITER)) {
             String[] pathElements = pathString.split(QUERY_REGEX_DELIMITER);
@@ -27,13 +27,13 @@ public class Path {
         return new Path(pathString, null);
     }
 
-    private static void validatePath(String pathString) {
+    private static void validatePathString(String pathString) {
         if (pathString == null || pathString.isEmpty()) {
-            throw new IllegalArgumentException("요청된 HTTP RequestLine 의 pathString 는 비어있거나 null 일 수 없습니다.");
+            throw new IllegalArgumentException("요청된 HTTP RequestLine 의 path 는 비어있거나 null 일 수 없습니다.");
         }
 
         if (!pathString.startsWith("/")) {
-            throw new IllegalArgumentException(String.format("요청된 HTTP RequestLine 의 pathString 는 '/'로 시작해야 합니다. 현재 입력된 path : %s", pathString));
+            throw new IllegalArgumentException(String.format("요청된 HTTP RequestLine 의 path 는 '/'로 시작해야 합니다. 현재 입력된 path : %s", pathString));
         }
     }
 

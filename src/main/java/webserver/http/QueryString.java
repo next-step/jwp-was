@@ -11,7 +11,7 @@ public class QueryString {
 
     private Map<String, String> queryStrings;
 
-    public QueryString(Map<String, String> queryStrings) {
+    QueryString(Map<String, String> queryStrings) {
         this.queryStrings = queryStrings;
     }
 

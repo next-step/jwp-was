@@ -56,7 +56,6 @@ GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1
         - Query String을 파싱하기 위해 key와 value를 가진 queryStrings Map 필드를 가진다.
             - path는 `?` 이전까지이고, 이후 `a=b&c=d` 형태라면 a와 c는 key, b와 d는 value가 되고, 각 Query String은 `&`로 구분된다.
             - queryStrings 필드는 비어있을 수 있다.
-
   - Protocol 객체
     - String Protocol 과 Version 객체를 필드로 가진다. 
     - protocol 은 항상 HTTP 이다. 그렇지 않으면 예외가 발생한다.
