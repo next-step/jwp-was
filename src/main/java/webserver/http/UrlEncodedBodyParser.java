@@ -6,9 +6,8 @@ import java.util.stream.Collectors;
 
 public class UrlEncodedBodyParser {
 
-    public Map<String, String> parseBody(RequestBody requestBody) {
-        return Arrays.stream(requestBody.getBody()
-                .split("&"))
+    public Map<String, String> parseBody(String body) {
+        return Arrays.stream(body.split("&"))
                 .map(bodyEntry -> bodyEntry.split("="))
                 .collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
     }

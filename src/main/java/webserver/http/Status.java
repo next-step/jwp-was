@@ -2,7 +2,9 @@ package webserver.http;
 
 public enum Status {
 
-    OK("200", "OK");
+    OK("200", "OK"),
+
+    FOUND("302", "FOUND");
 
     private final String code;
 

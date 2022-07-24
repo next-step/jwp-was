@@ -19,7 +19,7 @@ public class Headers {
         this.headers = Collections.unmodifiableMap(headers);
     }
 
-    static Headers parseOf(List<String> headerLines) {
+    public static Headers parseOf(List<String> headerLines) {
         Map<String, String> headers = headerLines.stream()
                 .filter((headerLine) -> !headerLine.isEmpty())
                 .map(headerLine -> headerLine.split(HEADER_DELIMITER))

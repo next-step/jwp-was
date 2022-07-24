@@ -7,7 +7,10 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.IOUtils;
+import webserver.http.Headers;
 import webserver.http.Request;
+import webserver.http.RequestLine;
 import webserver.http.Response;
 
 public class RequestHandler implements Runnable {
@@ -29,14 +32,13 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            Request request = Request.parseOf(readRequest(in));
+            Request request = readRequest(new BufferedReader(new InputStreamReader(in)));
+
             logger.debug("request:{} ", request);
 
-            Response response = new Response();
+            Response response = handlerRequest(request);
 
-            for (Handler handler : handlers) {
-                response = getResponse(request, response, handler);
-            }
+            logger.debug("response:{} ", response);
 
             writeResponse(out, response);
         } catch (IOException e) {
@@ -44,11 +46,12 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private Response getResponse(Request request, Response response, Handler handler) {
-        if (handler.isSupport(request)) {
-            response = handler.handle(request);
-        }
-        return response;
+    private Response handlerRequest(Request request) {
+        return handlers.stream()
+                .filter(handler -> handler.isSupport(request))
+                .findAny()
+                .orElseThrow()
+                .handle(request);
     }
 
     private void writeResponse(OutputStream out, Response response) throws IOException {
@@ -67,18 +70,38 @@ public class RequestHandler implements Runnable {
         dos.flush();
     }
 
-    private List<String> readRequest(InputStream in) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        List<String> requestLines = new ArrayList<>();
+    private Request readRequest(BufferedReader reader) throws IOException {
+        RequestLine requestLine = RequestLine.parseOf(reader.readLine());
 
-        String line = br.readLine();
-        requestLines.add(line);
+        Headers headers = getHeaders(reader);
+
+        String requestBody = getRequestBody(reader, headers);
+
+        return new Request(requestLine, headers, requestBody);
+    }
+
+    private Headers getHeaders(BufferedReader reader) throws IOException {
+        List<String> headerLines = new ArrayList<>();
+
+        String line = reader.readLine();
+        headerLines.add(line);
 
         while (line != null && !"".equals(line)) {
-            line = br.readLine();
-            requestLines.add(line);
+            line = reader.readLine();
+            headerLines.add(line);
         }
 
-        return requestLines;
+        return Headers.parseOf(headerLines);
     }
+
+    private String getRequestBody(BufferedReader reader, Headers headers) throws IOException {
+        String value = headers.getValue("Content-Length");
+
+        if (value != null) {
+            return IOUtils.readData(reader, Integer.parseInt(value));
+        }
+
+        return "";
+    }
+
 }

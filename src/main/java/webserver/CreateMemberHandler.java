@@ -26,7 +26,7 @@ public class CreateMemberHandler implements Handler {
 
         DataBase.addUser(new User(userId, password, name, email));
 
-        return null;
+        return new Response(new StatusLine(ProtocolVersion.HTTP11, Status.FOUND), Headers.of(Map.of("Location", "/index.html")));
     }
 
 }

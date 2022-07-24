@@ -18,7 +18,7 @@ class UrlEncodedBodyParserTest {
         UrlEncodedBodyParser parser = new UrlEncodedBodyParser();
 
         // when
-        Map<String, String> parseBody = parser.parseBody(new RequestBody("userId=javajigi&password=password&name=재성&email=javajigi@slipp.net"));
+        Map<String, String> parseBody = parser.parseBody("userId=javajigi&password=password&name=재성&email=javajigi@slipp.net");
 
         // then
         assertThat(parseBody.get("userId")).isEqualTo("javajigi");

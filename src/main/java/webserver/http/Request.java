@@ -1,40 +1,30 @@
 package webserver.http;
 
+import utils.IOUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
 public class Request {
-    private static final int REQUEST_LINE_IDX = 0;
-
-    private static final int REQUEST_HEADER_IDX = 1;
 
     private final RequestLine requestLine;
 
     private final Headers headers;
 
-    private final RequestBody requestBody;
+    private final String body;
 
-    Request(RequestLine requestLine, Headers headers) {
-        this(requestLine, headers, null);
-    }
-
-    Request(RequestLine requestLine, Headers headers, RequestBody requestBody) {
+    public Request(RequestLine requestLine, Headers headers, String body) {
         this.requestLine = requireNonNull(requestLine, "");
         this.headers = requireNonNull(headers, "");
-        this.requestBody = requestBody;
+        this.body = body;
     }
 
-    public static Request parseOf(List<String> requestLines) {
-        return new Request(
-                RequestLine.parseOf(requestLines.get(REQUEST_LINE_IDX)),
-                Headers.parseOf(requestLines.subList(REQUEST_HEADER_IDX, requestLines.size() - 1)),
-                new RequestBody(requestLines.get(requestLines.size() - 1))
-        );
-    }
-
-    RequestLine getRequestLine() {
-        return requestLine;
+    public Request(RequestLine requestLine, Headers headers) {
+        this(requestLine, headers, "");
     }
 
     public String getPath() {
@@ -45,20 +35,20 @@ public class Request {
         return headers;
     }
 
-    public RequestParameters getParameters() {
-        return requestLine.getPath().parseQueryString();
-    }
-
     public HttpMethod getMethod() {
         return requestLine.getMethod();
     }
 
-    public RequestBody getRequestBody() {
-        return requestBody;
+    public String getRequestBody() {
+        return body;
+    }
+
+    RequestLine getRequestLine() {
+        return requestLine;
     }
 
     @Override
     public String toString() {
-        return requestLine.toString() + " " + headers.toString();
+        return requestLine.toString() + " " + headers.toString() + " " + body;
     }
 }

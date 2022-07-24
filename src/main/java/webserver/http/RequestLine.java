@@ -2,7 +2,7 @@ package webserver.http;
 
 import java.util.Objects;
 
-class RequestLine {
+public class RequestLine {
 
     private static final int REQUEST_LINE_LENGTH = 3;
 
