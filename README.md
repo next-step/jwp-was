@@ -54,7 +54,7 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 > http://localhost:8080/user/form.html 파일의 form 태그 method를 get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.
 
 ### 기능 목록
-- [ ] user/form.html의 form 태그 method를 get에서 post로 수정
+- [x] user/form.html의 form 태그 method를 get에서 post로 수정
 - [ ] HTTP Request Header 파싱
   - [ ] HTTP Header 파싱 (Body를 파싱하기 위해 ContentLength를 사용)
   - [ ] HTTP Body 파싱 
