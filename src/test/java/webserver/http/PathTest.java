@@ -25,7 +25,7 @@ class PathTest {
 
     @Test
     @DisplayName("HTTP 요청 path 가 '/' 로 시작하지 않을 경우 예외가 발생한다.")
-    void throw_exception_request_path_not_start_slash() {
+    void throw_exception_path_not_start_slash() {
         assertThatThrownBy(() -> Path.parse("users")).isInstanceOf(IllegalArgumentException.class);
     }
 }
