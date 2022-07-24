@@ -2,6 +2,7 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.RequestLine;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
