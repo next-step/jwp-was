@@ -7,8 +7,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FileIoUtils {
+
+    private static final String RESOURCE_FOLDER_PATH_PREFIX = ".";
+
     public static byte[] loadFileFromClasspath(String filePath) throws IOException, URISyntaxException {
-        Path path = Paths.get(FileIoUtils.class.getClassLoader().getResource(filePath).toURI());
+        ClassLoader classLoader = FileIoUtils.class.getClassLoader();
+        Path path = Paths.get(classLoader.getResource(RESOURCE_FOLDER_PATH_PREFIX + filePath).toURI());
         return Files.readAllBytes(path);
     }
+
 }
