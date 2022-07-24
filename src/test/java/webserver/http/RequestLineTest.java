@@ -45,6 +45,15 @@ public class RequestLineTest {
     }
 
     @Test
+    @DisplayName("Parameter가 포함 된 RequestLine을 파싱하여 request params를 가져온다.")
+    void parsingRequestParameterLineAndGetQueryString() {
+        // when
+        RequestLine requestLine = new RequestLine(GET_REQUEST_QUERY_STRING);
+        // then
+        assertThat(requestLine.requestParams()).isNotEmpty();
+    }
+
+    @Test
     @DisplayName("GET RequestLine을 파싱한 결과 정상 확인")
     void parsingGetRequestLine() {
         // given

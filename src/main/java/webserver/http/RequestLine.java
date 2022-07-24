@@ -1,25 +1,26 @@
 package webserver.http;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class RequestLine {
 
     public static final String REQUEST_SPLIT_SYMBOL = " ";
     private final String method;
-    private final String path;
+    private final Path path;
 
     private final Protocol protocol;
 
     public RequestLine(String method, String path, Protocol protocol) {
         this.method = method;
-        this.path = path;
+        this.path = Path.create(path);
         this.protocol = protocol;
     }
 
     public RequestLine(String request) {
         String[] splitRequest = request.split(REQUEST_SPLIT_SYMBOL);
         this.method = splitRequest[0];
-        this.path = splitRequest[1];
+        this.path = Path.create(splitRequest[1]);
         this.protocol = new Protocol(splitRequest[2]);
     }
 
@@ -28,7 +29,7 @@ public class RequestLine {
     }
 
     public String path() {
-        return path;
+        return path.path();
     }
 
     public String protocol() {
@@ -37,6 +38,10 @@ public class RequestLine {
 
     public String version() {
         return protocol.version();
+    }
+
+    public Map<String, String> requestParams() {
+        return path.requestParams();
     }
 
     @Override
