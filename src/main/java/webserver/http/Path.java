@@ -1,6 +1,7 @@
 package webserver.http;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Path {
     private static final String QUERY_STRING_DELIMITER = "?";
@@ -29,4 +30,24 @@ public class Path {
         return new Path(path, params);
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Path)) {
+            return false;
+        }
+        Path path1 = (Path) o;
+        return Objects.equals(path, path1.path) && Objects.equals(params, path1.params);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path, params);
+    }
 }

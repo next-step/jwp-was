@@ -18,4 +18,12 @@ public class RequestLine {
     private String[] split(String requestLine) {
         return requestLine.split(" ");
     }
+
+    public HttpMethod getMethod() {
+        return method;
+    }
+
+    public Path getPath() {
+        return path;
+    }
 }
