@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http;
 
 import java.util.Arrays;
 
@@ -19,5 +19,13 @@ public enum HttpMethod {
 			.filter(method -> method.value.equalsIgnoreCase(value))
 			.findFirst()
 			.orElseThrow(() -> new IllegalHttpMethodException(value));
+	}
+
+	public boolean isGet() {
+		return this == GET;
+	}
+
+	public boolean isPost() {
+		return this == POST;
 	}
 }

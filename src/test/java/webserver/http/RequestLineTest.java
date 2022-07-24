@@ -1,16 +1,19 @@
-package webserver;
+package webserver.http;
 
-import static org.assertj.core.api.Assertions.*;
+import exception.IllegalHttpMethodException;
+import exception.IllegalProtocolException;
+import exception.IllegalRequestLineException;
+import exception.IllegalRequestPathException;
+import webserver.http.HttpMethod;
+import webserver.http.RequestLine;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import exception.IllegalHttpMethodException;
-import exception.IllegalHttpVersionException;
-import exception.IllegalRequestLineException;
-import exception.IllegalRequestPathException;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class RequestLineTest {
 
@@ -20,7 +23,7 @@ class RequestLineTest {
 		RequestLine requestLine = new RequestLine("GET /users HTTP/1.1");
 
 		assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
-		assertThat(requestLine.getRequestPath()).isEqualTo("/users");
+		assertThat(requestLine.getPath()).isEqualTo("/users");
 		assertThat(requestLine.getQueryString()).isNull();
 		assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
 		assertThat(requestLine.getVersion()).isEqualTo("1.1");
@@ -32,7 +35,7 @@ class RequestLineTest {
 		RequestLine requestLine = new RequestLine("POST /users HTTP/1.1");
 
 		assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
-		assertThat(requestLine.getRequestPath()).isEqualTo("/users");
+		assertThat(requestLine.getPath()).isEqualTo("/users");
 		assertThat(requestLine.getQueryString()).isNull();
 		assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
 		assertThat(requestLine.getVersion()).isEqualTo("1.1");
@@ -68,11 +71,11 @@ class RequestLineTest {
 			.isInstanceOf(IllegalRequestPathException.class);
 	}
 
-	@DisplayName("HTTP 버전이 유효하지 않으면 IllegalHttpVersionException 예외가 발생한다.")
+	@DisplayName("HTTP 프로토콜이 유효하지 않으면 IllegalHttpProtocolException 예외가 발생한다.")
 	@Test
-	void illegalHttpVersion() {
+	void illegalHttpProtocol() {
 		assertThatThrownBy(() -> new RequestLine("GET /users HTTP1.1"))
-			.isInstanceOf(IllegalHttpVersionException.class);
+			.isInstanceOf(IllegalProtocolException.class);
 	}
 
 	@DisplayName("HTTP 메서드가 유효하지 않으면 IllegalHttpMethodException 예외가 발생한다.")
