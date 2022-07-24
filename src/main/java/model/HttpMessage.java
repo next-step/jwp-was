@@ -83,6 +83,10 @@ public class HttpMessage {
             throw new IllegalArgumentException();
         }
 
+        if (httpMessageData.isEmpty()) {
+            return null;
+        }
+
         if (httpMessageData.size() != 1) {
             logger.error(this.toStringHttpMessageData(httpMessageData));
             throw new IllegalArgumentException();
