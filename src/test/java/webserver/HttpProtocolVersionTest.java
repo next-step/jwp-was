@@ -1,6 +1,7 @@
 package webserver;
 
 import org.junit.jupiter.api.Test;
+import webserver.http.HttpProtocolVersion;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

@@ -2,10 +2,9 @@ package webserver;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import java.util.Map;
+import webserver.http.HttpMethod;
+import webserver.http.RequestLine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -44,18 +43,16 @@ class RequestLineTest {
     @Test
     void QUERY_STRING_파싱_테스트() {
         String requestMessage = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
-
+        String[] splitRequestMessage = requestMessage.split(" ");
+        String[] splitPath = splitRequestMessage[1].split("\\?");
         RequestLine requestLine = new RequestLine(requestMessage);
 
-        Map<String, String> requestData = requestLine.getQueryParsingData();
         assertAll(
                 () -> assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET),
                 () -> assertThat(requestLine.getPath()).isEqualTo("/users"),
                 () -> assertThat(requestLine.getProtocol()).isEqualTo("HTTP"),
                 () -> assertThat(requestLine.getVersion()).isEqualTo("1.1"),
-                () -> assertThat(requestData.get("userId")).isEqualTo("javajigi"),
-                () -> assertThat(requestData.get("password")).isEqualTo("password"),
-                () -> assertThat(requestData.get("name")).isEqualTo("JaeSung")
+                () -> assertThat(requestLine.getQueryString()).isEqualTo(splitPath[1])
         );
     }
 
