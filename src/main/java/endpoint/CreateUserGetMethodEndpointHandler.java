@@ -2,14 +2,15 @@ package endpoint;
 
 import application.CreateUserCommand;
 import application.CreateUserService;
-import webserver.http.HttpRequestMessage;
+import webserver.http.request.HttpRequestMessage;
+import webserver.http.request.requestline.HttpMethod;
 import webserver.http.request.requestline.HttpQueryStrings;
 
-public class CreateUserHttpRequestEndpointHandler extends HttpRequestEndpointHandler {
-    private static final String ENDPOINT = "/user/create";
+public class CreateUserGetMethodEndpointHandler extends HttpRequestEndpointHandler {
+    private static final String ENDPOINT_PATH = "/user/create";
 
-    public CreateUserHttpRequestEndpointHandler() {
-        super(ENDPOINT);
+    public CreateUserGetMethodEndpointHandler() {
+        super(new Endpoint(HttpMethod.GET, ENDPOINT_PATH));
     }
 
     @Override

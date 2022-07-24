@@ -1,23 +1,23 @@
-package webserver.http.request.requestline;
+package webserver.http.request;
 
 import java.util.Objects;
 
-public class HttpQueryString {
+public class HttpRequestParam {
     public static final String QUERY_STRING_DELIMITER = "=";
     public static final int QUERY_STRING_SCHEMA_SIZE = 2;
     public static final int QUERY_STRING_SCHEMA_NAME_INDEX = 0;
     public static final int QUERY_STRING_SCHEMA_VALUE_INDEX = 1;
-    public static final HttpQueryString EMPTY = new HttpQueryString("", "");
+    public static final HttpRequestParam EMPTY = new HttpRequestParam("", "");
 
     private final String name;
     private final String value;
 
-    private HttpQueryString(String name, String value) {
+    private HttpRequestParam(String name, String value) {
         this.name = name;
         this.value = value;
     }
 
-    public static HttpQueryString from(String queryString) {
+    public static HttpRequestParam from(String queryString) {
         if (queryString == null || queryString.isEmpty()) {
             return EMPTY;
         }
@@ -30,7 +30,7 @@ public class HttpQueryString {
         String queryStringName = queryStringSchemas[QUERY_STRING_SCHEMA_NAME_INDEX];
         String queryStringValue = queryStringSchemas[QUERY_STRING_SCHEMA_VALUE_INDEX];
 
-        return new HttpQueryString(queryStringName, queryStringValue);
+        return new HttpRequestParam(queryStringName, queryStringValue);
     }
 
     public String getName() {
@@ -46,7 +46,7 @@ public class HttpQueryString {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        HttpQueryString that = (HttpQueryString) o;
+        HttpRequestParam that = (HttpRequestParam) o;
 
         if (!Objects.equals(name, that.name)) return false;
         return Objects.equals(value, that.value);

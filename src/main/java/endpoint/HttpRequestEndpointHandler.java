@@ -3,9 +3,9 @@ package endpoint;
 public abstract class HttpRequestEndpointHandler implements HttpRequestHandler {
     public static final HttpRequestEndpointHandler NONE = new NoneEndPointHandler();
 
-    protected String httpEndpointPath;
+    protected Endpoint endpoint;
 
-    public HttpRequestEndpointHandler(String httpEndpointPath) {
-        this.httpEndpointPath = httpEndpointPath;
+    public HttpRequestEndpointHandler(Endpoint endpoint) {
+        this.endpoint = endpoint;
     }
 }

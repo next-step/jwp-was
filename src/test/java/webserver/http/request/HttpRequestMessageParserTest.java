@@ -1,8 +1,7 @@
-package webserver.http;
+package webserver.http.request;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.Test;
-import webserver.http.request.HttpRequestMessageParser;
 import webserver.http.request.requestline.HttpMethod;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -9,6 +9,7 @@ public class HttpRequestHeaders {
     private static int HTTP_REQUEST_HEADER_SCHEMAS_MAXIMUM_SIZE = 2;
     private static int HTTP_REQUEST_HEADER_NAME_SCHEMA_INDEX = 0;
     private static int HTTP_REQUEST_HEADER_VALUE_SCHEMA_INDEX = 1;
+    private static String HTTP_CONTENT_LENGTH_HEADER_NAME = "Content-Length";
 
     private Map<String, String> headers;
 
@@ -32,5 +33,15 @@ public class HttpRequestHeaders {
 
     public String get(String headerName) {
         return headers.get(headerName);
+    }
+
+    public int contentLength() {
+        String contentLengthHeader = headers.get(HTTP_CONTENT_LENGTH_HEADER_NAME);
+
+        if (contentLengthHeader == null || contentLengthHeader.isEmpty()) {
+            return 0;
+        }
+
+        return Integer.parseInt(contentLengthHeader);
     }
 }

@@ -1,20 +1,18 @@
 package webserver;
 
+import endpoint.Endpoint;
 import endpoint.HttpRequestEndpointHandler;
 import endpoint.RequestEndpointRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import utils.IOUtils;
-import webserver.http.HttpRequestMessage;
-import webserver.http.request.HttpRequestMessageParser;
+import webserver.http.request.HttpRequestMessage;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -35,11 +33,12 @@ public class RequestHandler implements Runnable {
                 BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), UTF_8));
                 OutputStream out = connection.getOutputStream()
         ) {
-            List<String> httpRequestLines = IOUtils.readLines(br);
-            HttpRequestMessage httpRequestMessage = HttpRequestMessageParser.parse(httpRequestLines);
+            HttpRequestMessage httpRequestMessage = HttpLinesReader.readRequestMessage(br);
 
             String httpPath = httpRequestMessage.httpPath();
-            HttpRequestEndpointHandler httpRequestEndpointHandler = RequestEndpointRegistry.getEndpoint(httpPath);
+
+            Endpoint endpoint = new Endpoint(httpRequestMessage.httpMethod(), httpPath);
+            HttpRequestEndpointHandler httpRequestEndpointHandler = RequestEndpointRegistry.getEndpoint(endpoint);
             httpRequestEndpointHandler.handle(httpRequestMessage);
 
             DataOutputStream dos = new DataOutputStream(out);

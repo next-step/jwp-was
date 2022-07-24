@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RequestEndpointRegistry {
-    public static final Map<String, HttpRequestEndpointHandler> endpointMap = new LinkedHashMap<>();
+    public static final Map<Endpoint, HttpRequestEndpointHandler> endpointHandlerMap = new LinkedHashMap<>();
 
     static {
         initializeEndpointRegistry();
@@ -13,15 +13,16 @@ public class RequestEndpointRegistry {
 
     public static void initializeEndpointRegistry() {
         List<HttpRequestEndpointHandler> endpoints = List.of(
-                new CreateUserHttpRequestEndpointHandler()
+                new CreateUserGetMethodEndpointHandler(),
+                new CreateUserPostMethodEndpointHandler()
         );
 
-        for (HttpRequestEndpointHandler endpoint : endpoints) {
-            endpointMap.put(endpoint.httpEndpointPath, endpoint);
+        for (HttpRequestEndpointHandler endpointHandler : endpoints) {
+            endpointHandlerMap.put(endpointHandler.endpoint, endpointHandler);
         }
     }
 
-    public static HttpRequestEndpointHandler getEndpoint(String endPoint) {
-        return endpointMap.getOrDefault(endPoint, HttpRequestEndpointHandler.NONE);
+    public static HttpRequestEndpointHandler getEndpoint(Endpoint endpoint) {
+        return endpointHandlerMap.getOrDefault(endpoint, HttpRequestEndpointHandler.NONE);
     }
 }

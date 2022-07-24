@@ -12,5 +12,7 @@ public class CreateUserService {
         User user = createUserCommand.toUser();
 
         DataBase.addUser(user);
+
+        logger.info("USER 생성 완료!");
     }
 }

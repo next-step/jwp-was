@@ -1,6 +1,5 @@
 package webserver.http.request;
 
-import webserver.http.HttpRequestMessage;
 import webserver.http.request.header.HttpRequestHeaders;
 import webserver.http.request.requestline.HttpRequestLine;
 

@@ -1,5 +1,7 @@
 package webserver.http.request.requestline;
 
+import webserver.http.request.HttpRequestParam;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -9,7 +11,7 @@ public class HttpQueryStrings {
     public static final String PRIMARY_QUERY_STRING_SYMBOL_WITHOUT_ESCAPE = HttpPath.PRIMARY_QUERY_STRING_SYMBOL.replace("\\", "");
     public static final String SECONDARY_QUERY_STRING_SYMBOL = "&";
 
-    private final List<HttpQueryString> httpQueryStrings;
+    private final List<HttpRequestParam> httpQueryStrings;
     private final String fullQueryString;
 
     public HttpQueryStrings(String fullQueryString) {
@@ -17,7 +19,7 @@ public class HttpQueryStrings {
         this.fullQueryString = toFullQueryString(fullQueryString);
     }
 
-    private List<HttpQueryString> parseQueryString(String fullQueryString) {
+    private List<HttpRequestParam> parseQueryString(String fullQueryString) {
         if (isEmptyQueryString(fullQueryString)) {
             return Collections.emptyList();
         }
@@ -25,8 +27,8 @@ public class HttpQueryStrings {
         String[] fullQueryStringSchemas = fullQueryString.split(SECONDARY_QUERY_STRING_SYMBOL);
 
         return Arrays.stream(fullQueryStringSchemas)
-                .map(HttpQueryString::from)
-                .filter(HttpQueryString::isNotEmpty)
+                .map(HttpRequestParam::from)
+                .filter(HttpRequestParam::isNotEmpty)
                 .collect(Collectors.toList());
     }
 
@@ -42,9 +44,9 @@ public class HttpQueryStrings {
         return fullQueryString == null || fullQueryString.isEmpty();
     }
 
-    public HttpQueryString get(int index) {
+    public HttpRequestParam get(int index) {
         if (index > httpQueryStrings.size() - 1) {
-            return HttpQueryString.EMPTY;
+            return HttpRequestParam.EMPTY;
         }
 
         return httpQueryStrings.get(index);
@@ -53,7 +55,7 @@ public class HttpQueryStrings {
     public String getQueryValue(String queryName) {
         return httpQueryStrings.stream()
                 .filter(httpQueryString -> queryName.equals(httpQueryString.getName()))
-                .map(HttpQueryString::getValue)
+                .map(HttpRequestParam::getValue)
                 .findAny()
                 .orElse("");
     }
