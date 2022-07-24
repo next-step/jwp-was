@@ -1,5 +1,9 @@
 package webserver;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -9,6 +13,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import model.User;
 import org.slf4j.Logger;
@@ -74,7 +80,26 @@ public class RequestHandler implements Runnable {
             .orElse(false);
         if (!login) {
             response302Header(dos, "/user/login.html");
+            return;
         }
+
+        TemplateLoader loader = new ClassPathTemplateLoader();
+        loader.setPrefix("/templates");
+        loader.setSuffix(".html");
+        Handlebars handlebars = new Handlebars(loader);
+        handlebars.registerHelper("inc", (context, options) -> (int) context + 1);
+
+        Template template = handlebars.compile("user/list");
+
+        final Collection<User> users = DataBase.findAll();
+        final Map<String, Collection<User>> param = Map.of("users", users);
+
+        String profilePage = template.apply(param);
+        final byte[] body = profilePage.getBytes();
+
+        response200Header(dos, body.length);
+        responseBody(dos, body);
+
     }
 
     private boolean requestForUserList(final RequestLine requestLine) {

@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -63,6 +66,27 @@ class HttpRequestTest {
             () -> assertThat(response.getBody()).contains("<form name=\"question\" method=\"post\" action=\"/user/login\">")
                 .doesNotContain("아이디 또는 비밀번호가 틀립니다. 다시 로그인 해주세요")
         );
+    }
+
+    @DisplayName("로그인 상태에서 사용자 목록 페이지 조회시 사용자 목록을 조회한다.")
+    @Test
+    void logged_in_access_user_list() {
+        회원가입_요청("administrator", "password");
+
+        final ResponseEntity<String> response = 로그인_상태로_사용자_목록_조회();
+
+        assertAll(
+            () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK),
+            () -> assertThat(response.getBody()).contains("<td>administrator</td>")
+        );
+    }
+
+    private ResponseEntity<String> 로그인_상태로_사용자_목록_조회() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cookie", "logined=true");
+
+        return restTemplate.exchange("http://localhost:8080/user/list", HttpMethod.GET, new HttpEntity<>(headers),
+            String.class);
     }
 
     private ResponseEntity<String> 사용자_목록_조회() {
