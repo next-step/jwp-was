@@ -61,3 +61,13 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 - [x] HTTP Body를 이용해 User 객체를 생성한다.
   - [x] User 객체를 생성 조건의 HttpMethod를 POST로 변경한다.
   - [x] IOUtils#readData() 메서드를 활용해 문자열로 변환한다.
+
+---
+
+### 요구사항4
+> “회원가입”을 완료하면 /index.html 페이지로 이동하고 싶다. 현재는 URL이 /user/create 로 유지되는 상태로 읽어서 전달할 파일이 없다. 따라서 redirect 방식처럼 회원가입을 완료한 후 “index.html”로 이동해야 한다. 즉, 브라우저의 URL이 /index.html로 변경해야 한다.
+
+### 기능 목록
+- 회원가입을 하는 경우 
+- [ ] 응답 헤더의 status code를 302로 설정한다.
+- [ ] 응답 헤더의 Location을 /index.html로 설정한다.
