@@ -11,6 +11,8 @@ public class RequestBody {
 
     private static final String EMPTY_VALUE = "";
 
+    public static final RequestBody EMPTY_REQUEST_BODY = new RequestBody(EMPTY_VALUE);
+
     private final Map<String, String> parameters = new HashMap<>();
 
     public RequestBody(final String parameters) {

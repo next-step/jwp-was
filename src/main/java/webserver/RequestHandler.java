@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.Optional;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,20 +40,17 @@ public class RequestHandler implements Runnable {
 
             final RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
             final RequestHeaders requestHeaders = new RequestHeaders();
+            addAllRequestHeaders(bufferedReader, requestHeaders);
+            final RequestBody requestBody = getRequestBody(bufferedReader, requestHeaders);
 
-            String header = bufferedReader.readLine();
-            while (!header.isEmpty()) {
-                logger.debug("header : {}", header);
-                requestHeaders.add(header);
-                header = bufferedReader.readLine();
+            if (requestForCreateUser(requestLine)) {
+                createUser(requestBody, dos);
+                return;
             }
 
-            if (requestHeaders.hasRequestBody()) {
-                final String body = IOUtils.readData(bufferedReader, requestHeaders.getContentLength());
-                logger.debug("body : {}", body);
-
-                RequestBody requestBody = new RequestBody(body);
-                createUser(requestLine, requestBody, dos);
+            if (requestForLogin(requestLine)) {
+                login(requestBody, dos);
+                return;
             }
 
             final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + requestLine.getLocation());
@@ -64,14 +62,48 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void createUser(final RequestLine requestLine, final RequestBody requestBody, final DataOutputStream dos) {
-        if (requestForCreateUser(requestLine)) {
-            User user = UserBinder.from(requestBody.getParameters());
-            logger.debug("user = {}", user);
-
-            DataBase.addUser(user);
-            response302Header(dos);
+    private void addAllRequestHeaders(final BufferedReader bufferedReader, final RequestHeaders requestHeaders) throws IOException {
+        String header = bufferedReader.readLine();
+        while (!header.isEmpty()) {
+            logger.debug("header : {}", header);
+            requestHeaders.add(header);
+            header = bufferedReader.readLine();
         }
+    }
+
+    private RequestBody getRequestBody(final BufferedReader bufferedReader, final RequestHeaders requestHeaders) throws IOException {
+        if (requestHeaders.hasRequestBody()) {
+            final String body = IOUtils.readData(bufferedReader, requestHeaders.getContentLength());
+            logger.debug("body : {}", body);
+            return new RequestBody(body);
+        }
+        return RequestBody.EMPTY_REQUEST_BODY;
+    }
+
+    private boolean requestForLogin(final RequestLine requestLine) {
+        return requestLine.isPost() && requestLine.getLocation().equals("/user/login");
+    }
+
+    private void login(final RequestBody requestBody, final DataOutputStream dos) {
+        User user = UserBinder.from(requestBody.getParameters());
+        logger.debug("user = {}", user);
+
+        final boolean loginSuccess = login(user);
+        logger.debug("loginSuccess = {}", loginSuccess);
+    }
+
+    private boolean login(final User user) {
+        return Optional.ofNullable(DataBase.findUserById(user.getUserId()))
+            .map(it -> it.getPassword().equals(user.getPassword()))
+            .orElse(false);
+    }
+
+    private void createUser(final RequestBody requestBody, final DataOutputStream dos) {
+        User user = UserBinder.from(requestBody.getParameters());
+        logger.debug("user = {}", user);
+
+        DataBase.addUser(user);
+        response302Header(dos);
     }
 
     private boolean requestForCreateUser(final RequestLine requestLine) {
