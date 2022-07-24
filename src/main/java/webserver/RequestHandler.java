@@ -59,7 +59,7 @@ public class RequestHandler implements Runnable {
     }
 
     private boolean requestForCreateUser(final RequestLine requestLine) {
-        return requestLine.isGet() && requestLine.getLocation().equals("/user/create");
+        return requestLine.isPost() && requestLine.getLocation().equals("/user/create");
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
