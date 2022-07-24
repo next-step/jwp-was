@@ -11,4 +11,12 @@ public class FileIoUtils {
         Path path = Paths.get(FileIoUtils.class.getClassLoader().getResource(filePath).toURI());
         return Files.readAllBytes(path);
     }
+
+    public static String getFileExtension(final String location) {
+        final int lastIndexOf = location.lastIndexOf(".");
+        if (lastIndexOf == -1) {
+            return "";
+        }
+        return location.substring(lastIndexOf + 1);
+    }
 }
