@@ -32,6 +32,9 @@ public class LoginController implements Controller {
             .filter(it -> it.canLogin(params.get("password")))
             .isPresent();
 
-        return new HttpResponse(HttpStatus.OK, Map.of("Set-Cookie", String.format("logined=%s; Path=/", isLogined)));
+        if (isLogined) {
+            return new HttpResponse(HttpStatus.FOUND, Map.of("Set-Cookie", "logined=true; Path=/", "Location", "/templates/index.html"));
+        }
+        return new HttpResponse(HttpStatus.FOUND, Map.of("Set-Cookie", "logined=false; Path=/", "Location", "/templates/user/login_failed.html"));
     }
 }
