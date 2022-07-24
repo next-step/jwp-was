@@ -12,3 +12,9 @@
 - GET요청 파싱을 위한 RequestParser 클래스 생성 및 테스트코드 작성
 - POST요청 파싱을 위한 RequestParser 클래스 생성 및 테스트코드 작성
 - ENUM 적용
+
+## Step2
+### 기능 요구사항 1
+- RequestHeader 도메인 구현
+- Request 도메인 구현
+- path 값을 응답
