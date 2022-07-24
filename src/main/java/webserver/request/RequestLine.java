@@ -1,5 +1,6 @@
 package webserver.request;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class RequestLine {
@@ -37,16 +38,16 @@ public class RequestLine {
         return new RequestLine(HttpMethod.of(httpMethod), Path.parse(path), Protocol.parse(protocol));
     }
 
-    public boolean isGet() {
-        return httpMethod.isGet();
+    public boolean isPost() {
+        return httpMethod.isPost();
     }
 
     public String getLocation() {
         return path.getLocation();
     }
 
-    public QueryParameters getQueryParameters() {
-        return path.getQueryString();
+    public Map<String, String> getQueryParameters() {
+        return path.getQueryString().getParameters();
     }
 
     @Override
