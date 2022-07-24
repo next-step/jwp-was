@@ -85,6 +85,6 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 - [ ] 로그인 성공
   - [ ] Cookie 생성 (logined=true)
   - [ ] index.html 이동
-- [ ] 로그인 실패 
-  - [ ] Cookie 생성 (logined=false)
-  - [ ] /user/login_failed.html 이동 
+- [x] 로그인 실패 
+  - [x] Cookie 생성 (logined=false)
+  - [x] /user/login_failed.html 이동 

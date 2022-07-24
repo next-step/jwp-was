@@ -1,6 +1,7 @@
 package webserver;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,30 +33,21 @@ class HttpRequestTest {
 
         ResponseEntity<String> response = 로그인_요청("admin", "password");
 
-        org.junit.jupiter.api.Assertions.assertAll(
+        assertAll(
             () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND),
             () -> assertThat(response.getHeaders().get("Location")).containsExactly("/user/login_failed.html"),
             () -> assertThat(response.getHeaders().get("Set-Cookie")).containsExactly("logined=false; Path=/")
         );
-
     }
 
     private ResponseEntity<String> 로그인_요청(final String userId, final String password) {
-        Map<String, String> loginParams = Map.of(
-            "userId", userId,
-            "password", password
-        );
+        final String loginParams = String.format("userId=%s&password=%s", userId, password);
 
         return restTemplate.postForEntity("http://localhost:8080/user/login", loginParams, String.class);
     }
 
     private void 회원가입_요청(final String userId, final String password) {
-        Map<String, String> createUserParams = Map.of(
-            "userId", userId,
-            "password", password,
-            "name", "관리자",
-            "email", "admin@admin.com"
-        );
+        final String createUserParams = String.format("userId=%s&password=%s&name=관리자&email=admin@email.com", userId, password);
 
         restTemplate.postForEntity("http://localhost:8080/user/create", createUserParams, String.class);
     }
