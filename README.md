@@ -44,11 +44,21 @@ GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1
 - HTTP method인 GET, POST를 enum으로 구현한다.
 
 ## 기능 목록
-- RequestLine 객체 생성
-    - method, path, protocol, version을 필드로 가진다.
-    - method는 GET or POST 둘 중 하나이다. 이외의 값은 예외가 발생한다.
+- RequestLine 객체
+  - HttpMethod, Path, Protocol 객체를 필드로 가진다.
+  - HttpMethod 객체
+    - method는 GET/POST/PUT/DELETE/PATCH 중 하나이다. 이외의 값은 예외가 발생한다.
+  - Path 객체
+    - String path 와 QueryString 객체를 필드로 가진다. 
     - path는 항상 '/'로 시작한다. 그렇지 않으면 예외가 발생한다.
-    - protocol은 항상 HTTP 이다. 그렇지 않으면 예외가 발생한다.
-    - version은 숫자이다. 그렇지 않으면 예외가 발생한다.
-    - Query String을 파싱하기 위해 key와 value를 가진 queryString Map 필드를 가진다.
-        - path는 `?` 이전까지이고, 이후 `a=b&c=d` 형태라면 a와 c는 key, b와 d는 value가 되고, 각 Query String은 `&`로 구분된다. 
+    - QueryString 은 nullable 하다.
+      - QueryString 객체
+        - Query String을 파싱하기 위해 key와 value를 가진 queryStrings Map 필드를 가진다.
+            - path는 `?` 이전까지이고, 이후 `a=b&c=d` 형태라면 a와 c는 key, b와 d는 value가 되고, 각 Query String은 `&`로 구분된다.
+            - queryStrings 필드는 비어있을 수 있다.
+
+  - Protocol 객체
+    - String Protocol 과 Version 객체를 필드로 가진다. 
+    - protocol 은 항상 HTTP 이다. 그렇지 않으면 예외가 발생한다.
+    - version 은 1.0, 1.1, 2.0 중 하나이다. 이외의 값은 예외가 발생한다.
+              
