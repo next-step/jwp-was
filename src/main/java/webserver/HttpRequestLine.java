@@ -12,13 +12,21 @@ public class HttpRequestLine implements HttpRequestMessage {
     private HttpProtocolSchema httpProtocolSchema;
 
     public HttpRequestLine(String rawRequestLine) {
-        String[] requestLineSchemas = rawRequestLine.split(REQUEST_LINE_SCHEMA_DELIMITER);
+        String[] requestLineSchemas = toRequestLineSchemas(rawRequestLine);
 
         validateRequestLineSchemas(requestLineSchemas);
 
         this.httpMethod = HttpMethod.of(requestLineSchemas[METHOD_SCHEMA__INDEX]);
         this.httpPath = new HttpPath(requestLineSchemas[PATH_SCHEMA_INDEX]);
         this.httpProtocolSchema = new HttpProtocolSchema(requestLineSchemas[PROTOCOL_AND_VERSION_SCHEMA_INDEX]);
+    }
+
+    private String[] toRequestLineSchemas(String rawRequestLine) {
+        if (rawRequestLine == null || rawRequestLine.isEmpty()) {
+            return new String[]{};
+        }
+
+        return rawRequestLine.split(REQUEST_LINE_SCHEMA_DELIMITER);
     }
 
     private void validateRequestLineSchemas(String[] requestLineSchemas) {
