@@ -1,10 +1,13 @@
 package webserver;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import webserver.http.Header;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import static model.Constant.ROOT_PATH;
 
 public class Request {
     private RequestLine requestLine;
@@ -22,7 +25,11 @@ public class Request {
     }
 
     public String getRequestPath() {
-        return requestLine.getPathWithoutQueryString();
+        return StringUtils.equals(requestLine.getPathWithoutQueryString(), ROOT_PATH) ? getRedirectUrl() : requestLine.getPathWithoutQueryString();
+    }
+
+    private String getRedirectUrl() {
+        return "/index.html";
     }
 
     public Map<String, String> getHeader() {
