@@ -21,12 +21,4 @@ class UrlPathTest {
         UrlPath fileUrlPath2 = new UrlPath("/index.html");
         Assertions.assertThat(fileUrlPath2.hasExtension()).isTrue();
     }
-
-    @DisplayName("파일 이름 파싱 검증")
-    @Test
-    void getFileNameTest() {
-        UrlPath hasFileUrlPath = new UrlPath("/index.html");
-        String fileName = hasFileUrlPath.getFileName();
-        Assertions.assertThat(fileName).isEqualTo("index.html");
-    }
 }

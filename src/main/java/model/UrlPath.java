@@ -50,8 +50,4 @@ public class UrlPath {
                 .anyMatch(this.path::contains);
     }
 
-    public String getFileName() {
-        return this.path.replace(PATH_SEPARATOR, EMPTY);
-    }
-
 }
