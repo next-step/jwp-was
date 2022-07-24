@@ -1,8 +1,15 @@
 package model;
 
+import java.util.List;
 import java.util.Objects;
 
 public class UrlPath {
+
+    private static final List<String> FILE_EXTENSIONS = List.of(".html");
+
+    private static final String PATH_SEPARATOR = "/";
+
+    private static final String EMPTY = "";
 
     private final String path;
 
@@ -37,4 +44,14 @@ public class UrlPath {
     public int hashCode() {
         return Objects.hash(path, queryParameter);
     }
+
+    public boolean hasExtension() {
+        return FILE_EXTENSIONS.stream()
+                .anyMatch(this.path::contains);
+    }
+
+    public String getFileName() {
+        return this.path.replace(PATH_SEPARATOR, EMPTY);
+    }
+
 }
