@@ -3,15 +3,13 @@ package webserver.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.domain.HttpRequest;
+import webserver.domain.HttpResponse;
 import webserver.domain.HttpStatus;
 import webserver.domain.RequestLine;
-import webserver.domain.Response;
 import webserver.domain.ResponseBody;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,25 +26,24 @@ public class FrontController {
                 .anyMatch(controller -> controller.support(requestLine));
     }
 
-    public Response execute(HttpRequest httpRequest) {
+    public HttpResponse execute(HttpRequest httpRequest) {
         Controller controller = find(httpRequest.getRequestLine());
 
         try {
             Method method = controller.getExecutableMethod(httpRequest.getRequestLine());
-            Response response = (Response) method.invoke(controller, httpRequest);
+            HttpResponse httpResponse = (HttpResponse) method.invoke(controller, httpRequest);
 
             if (method.getDeclaredAnnotation(ResponseBody.class) != null) {
-                return response;
+                return httpResponse;
             }
 
-            return new Response(response.getHttpStatus(), response.getTemplate());
-        } catch (IllegalAccessException | InvocationTargetException
-                 |IOException | URISyntaxException e) {
+            return httpResponse;
+        } catch (IllegalAccessException | InvocationTargetException e) {
             logger.error(e.getMessage());
-            return new Response(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            return new HttpResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage());
         } catch (NoSuchMethodException e) {
             logger.error(e.getMessage());
-            return new Response(HttpStatus.NOT_FOUND, e.getMessage());
+            return new HttpResponse(HttpStatus.NOT_FOUND, null, e.getMessage());
         }
     }
 

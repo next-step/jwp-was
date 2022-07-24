@@ -1,4 +1,4 @@
-package webserver;
+package webserver.config;
 
 import webserver.application.UserService;
 import webserver.ui.Controller;
@@ -6,10 +6,10 @@ import webserver.ui.FrontController;
 import webserver.ui.UserController;
 import webserver.ui.WelcomeController;
 
-public class TestWebConfig {
+public class WebConfig {
     private final FrontController frontController;
 
-    public TestWebConfig() {
+    public WebConfig() {
         frontController = FrontController.newInstance();
 
         frontController.addController(welcomeController())

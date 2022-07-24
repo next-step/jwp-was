@@ -34,6 +34,15 @@ public class Path {
         return parameters;
     }
 
+    public boolean containsPath(Path path) {
+        return this.pathStr.startsWith(path.pathStr);
+    }
+
+    @Override
+    public String toString() {
+        return pathStr;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -49,9 +58,5 @@ public class Path {
     @Override
     public int hashCode() {
         return Objects.hash(pathStr, parameters);
-    }
-
-    public boolean containsPath(Path path) {
-        return this.pathStr.startsWith(path.pathStr);
     }
 }

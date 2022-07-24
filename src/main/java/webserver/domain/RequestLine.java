@@ -28,10 +28,11 @@ public class RequestLine {
 
         String[] attributes = line.split(DELIMITER);
 
+        HttpMethod httpMethod = HttpMethod.valueOf(attributes[METHOD_POINT]);
         Path path = Path.from(attributes[PATH_AND_QUERYSTRING_POINT]);
         Protocol protocol = Protocol.newInstance(attributes[PROTOCOL_AND_VERSION_POINT]);
 
-        return new RequestLine(HttpMethod.valueOf(attributes[METHOD_POINT]), path, protocol);
+        return new RequestLine(httpMethod, path, protocol);
     }
 
 
@@ -50,5 +51,9 @@ public class RequestLine {
 
     public Parameters getParameters() {
         return path.getParameters();
+    }
+
+    public String getPathStr() {
+        return path.getPathStr();
     }
 }

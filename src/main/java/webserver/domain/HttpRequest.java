@@ -2,7 +2,12 @@ package webserver.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.http.HttpMethod;
+import utils.IOUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+
+import static com.github.jknack.handlebars.internal.lang3.StringUtils.EMPTY;
 
 public class HttpRequest {
     public static final int REQUEST_LINE_POINT = 0;
@@ -20,20 +25,25 @@ public class HttpRequest {
         this.requestBody = requestBody;
     }
 
-    public static HttpRequest newInstance(String line) {
-        String[] attributes = line.split(System.lineSeparator());
+    public static HttpRequest newInstance(BufferedReader br) throws IOException {
+        String line = br.readLine();
+        RequestLine requestLine = RequestLine.from(line);
 
-        RequestLine requestLine = RequestLine.from(attributes[REQUEST_LINE_POINT]);
-
-        if (HttpMethod.POST.equals(requestLine.getMethod())) {
-            return new HttpRequest(requestLine,
-                    HttpHeaders.newInstance(attributes, HEADER_START_POINT, attributes.length),
-                    new RequestBody(attributes[attributes.length - 1]));
+        HttpHeaders httpHeaders = new HttpHeaders();
+        line = br.readLine();
+        while (!EMPTY.equals(line)) {
+            httpHeaders.add(line);
+            line = br.readLine();
         }
 
-        return new HttpRequest(requestLine,
-                HttpHeaders.newInstance(attributes, HEADER_START_POINT, attributes.length - 1),
-                null);
+        int contentLength = httpHeaders.getContentLength();
+        RequestBody requestBody = null;
+
+        if (contentLength > 0) {
+             requestBody = new RequestBody(IOUtils.readData(br, contentLength));
+        }
+
+        return new HttpRequest(requestLine, httpHeaders, requestBody);
     }
 
     public RequestLine getRequestLine() {
@@ -46,5 +56,9 @@ public class HttpRequest {
 
     public RequestBody getRequestBody() {
         return requestBody;
+    }
+
+    public Parameters getRequestParameters() {
+        return requestLine.getParameters();
     }
 }

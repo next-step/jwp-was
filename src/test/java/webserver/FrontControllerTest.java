@@ -6,10 +6,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import utils.FileIoUtils;
 import webserver.domain.HttpRequest;
-import webserver.domain.Response;
+import webserver.domain.HttpResponse;
 import webserver.ui.FrontController;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,8 +31,11 @@ class FrontControllerTest {
     @DisplayName("전달받은 requestLine이 유효한 경우 논리값 참을 반환한다.")
     @ParameterizedTest
     @ValueSource(strings = {"GET /index.html http/1.1"})
-    void supportWithValidPath(String requestLine) {
-        HttpRequest httpRequest = HttpRequest.newInstance(requestLine);
+    void supportWithValidPath(String requestLine) throws IOException {
+        InputStream is = new ByteArrayInputStream(requestLine.getBytes());
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+        HttpRequest httpRequest = HttpRequest.newInstance(br);
 
         assertThat(frontController.support(httpRequest.getRequestLine())).isTrue();
 
@@ -37,8 +44,10 @@ class FrontControllerTest {
     @DisplayName("전달받은 path가 유효하지 않은 경우 논리값 거짓을 반환한다.")
     @ParameterizedTest
     @ValueSource(strings = {"GET /invalidIndex.html http/1.1", "POST /index.html http/1.1"})
-    void supportWithInValidPath(String requestLine) {
-        HttpRequest httpRequest = HttpRequest.newInstance(requestLine);
+    void supportWithInValidPath(String requestLine) throws IOException {
+        InputStream is = new ByteArrayInputStream(requestLine.getBytes());
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        HttpRequest httpRequest = HttpRequest.newInstance(br);
 
         assertThat(frontController.support(httpRequest.getRequestLine())).isFalse();
     }
@@ -47,13 +56,16 @@ class FrontControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"GET /index.html http/1.1"})
     void executeWithInValidPath(String requestLine) throws IOException, URISyntaxException {
-        byte[] bytes = FileIoUtils.loadFileFromClasspath("./templates/index.html");
-        String expectedBody = new String(bytes);
-        HttpRequest httpRequest = HttpRequest.newInstance(requestLine);
+        byte[] expectedBody = FileIoUtils.loadFileFromClasspath("./templates/index.html");
 
-        Response response = frontController.execute(httpRequest);
+        InputStream is = new ByteArrayInputStream(requestLine.getBytes());
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        HttpRequest httpRequest = HttpRequest.newInstance(br);
 
-        assertThat(response.getBody()).isEqualTo(expectedBody);
+
+        HttpResponse httpResponse = frontController.execute(httpRequest);
+
+        assertThat(httpResponse.getBodyOrView()).isEqualTo(expectedBody);
     }
 
 

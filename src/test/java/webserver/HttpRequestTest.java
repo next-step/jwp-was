@@ -6,8 +6,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import webserver.domain.*;
+import utils.FileIoUtils;
+import webserver.domain.HttpRequest;
+import webserver.domain.Parameters;
+import webserver.domain.Path;
+import webserver.domain.Protocol;
+import webserver.domain.RequestBody;
+import webserver.domain.RequestLine;
+import webserver.domain.Version;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -70,5 +79,16 @@ class HttpRequestTest {
         assertThat(parameters.get("userId")).isEqualTo("catsbi");
         assertThat(parameters.get("password")).isEqualTo("password");
         assertThat(parameters.get("name")).isEqualTo("hansol");
+    }
+
+    @DisplayName("${host}/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.")
+    @Test
+    void requestIndexHtml() throws IOException, URISyntaxException {
+        byte[] body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
+        String expectedBody = new String(body);
+
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/index.html", String.class);
+
+        assertThat(response.getBody()).isEqualTo(expectedBody);
     }
 }
