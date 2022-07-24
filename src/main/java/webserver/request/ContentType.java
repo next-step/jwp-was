@@ -8,7 +8,8 @@ public enum ContentType {
     JAVASCRIPT("js", "application/javascript"),
     HTML("html", "text/html"),
     TEXT("", "text/plain"),
-    WOFF("woff", "application/font-woff");
+    WOFF("woff", "application/font-woff"),
+    PNG("png", "image/png");
 
     private final String fileExtension;
     private final String contentType;
