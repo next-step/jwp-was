@@ -20,10 +20,16 @@ public class IOUtils {
      * @return
      * @throws IOException
      */
-    public static String readData(BufferedReader br, int contentLength) throws IOException {
+    public static String readData(BufferedReader br, int contentLength) {
         char[] body = new char[contentLength];
-        br.read(body, 0, contentLength);
-        return String.copyValueOf(body);
+
+        try {
+            br.read(body, 0, contentLength);
+            return String.copyValueOf(body);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            throw new IllegalArgumentException("요청을 읽을 수 없습니다.", e);
+        }
     }
 
     public static List<String> readLines(BufferedReader bufferedReader) {

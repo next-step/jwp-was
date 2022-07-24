@@ -1,7 +1,7 @@
 package webserver.controller;
 
-import http.request.RequestLine;
+import http.request.HttpRequest;
 
 public interface Controller {
-    void run(RequestLine requestLine);
+    void run(HttpRequest requestLine);
 }

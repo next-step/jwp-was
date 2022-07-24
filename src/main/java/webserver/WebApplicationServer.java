@@ -1,5 +1,7 @@
 package webserver;
 
+import static http.request.HttpMethod.*;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
@@ -22,7 +24,7 @@ public class WebApplicationServer {
             port = Integer.parseInt(args[0]);
         }
 
-        Map<String, Controller> controllers = Map.of("/user/create", new UserCreateController());
+        Map<Resource, Controller> controllers = Map.of(new Resource("/user/create", POST), new UserCreateController());
 
         // 서버소켓을 생성한다. 웹서버는 기본적으로 8080번 포트를 사용한다.
         try (ServerSocket listenSocket = new ServerSocket(port)) {
