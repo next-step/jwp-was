@@ -13,13 +13,12 @@ public class RequestLine {
     private static final int REQUEST_PARSING_ELEMENT_NUMBER = 3;
     private static final int PROTOCOL_AND_VERSION_PARSING_ELEMENT_NUMBER = 2;
 
-
-    private String method;
+    private Method method;
     private Path path;
     private String protocol;
     private String version;
 
-    RequestLine(String method, Path path, String protocol, String version) {
+    RequestLine(Method method, Path path, String protocol, String version) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
@@ -31,9 +30,8 @@ public class RequestLine {
         String[] elements = requestLine.split(BLANK_DELIMITER);
         validateElementsLength(elements.length);
 
-        String method = elements[METHOD_INDEX];
+        Method method = Method.valueOf(elements[METHOD_INDEX]);
         Path path = Path.parse(elements[PATH_INDEX]);
-        validateMethod(method);
 
         String[] protocolAndVersion = elements[PROTOCOL_AND_VERSION_INDEX].split(SLASH_DELIMITER);
         validateProtocolAndVersionLength(protocolAndVersion.length);
@@ -64,14 +62,6 @@ public class RequestLine {
         }
     }
 
-    private static void validateMethod(String method) {
-        if (!List.of("GET", "POST").contains(method)) {
-            throw new IllegalArgumentException(String.format("요청된 HTTP RequestLine 의 method 는 GET 또는 POST 둘 중 하나여야 합니다. 현재 입력된 method : %s)", method));
-        }
-    }
-
-
-
     private static void validateProtocol(String protocol) {
         if (!protocol.equals("HTTP")) {
             throw new IllegalArgumentException(String.format("요청된 HTTP RequestLine 의 protocol 는 'HTTP' 여야 합니다. 현재 입력된 protocol : %s", protocol));
@@ -93,7 +83,7 @@ public class RequestLine {
 
         RequestLine that = (RequestLine) o;
 
-        if (!method.equals(that.method)) return false;
+        if (method != that.method) return false;
         if (!path.equals(that.path)) return false;
         if (!protocol.equals(that.protocol)) return false;
         return version.equals(that.version);

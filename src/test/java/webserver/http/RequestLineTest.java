@@ -4,9 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import webserver.http.Path;
-import webserver.http.QueryString;
-import webserver.http.RequestLine;
 
 import java.util.Map;
 
@@ -17,7 +14,7 @@ class RequestLineTest {
     @Test
     @DisplayName("RequestLine 객체를 생성한다.")
     void create_RequestLine() {
-        RequestLine requestLine = new RequestLine("GET", new Path("/users", null), "HTTP", "1.1");
+        RequestLine requestLine = new RequestLine(Method.GET, new Path("/users", null), "HTTP", "1.1");
         assertThat(requestLine).isNotNull().isInstanceOf(RequestLine.class);
     }
 
@@ -63,7 +60,7 @@ class RequestLineTest {
     void parse_GET_RequestLine() {
         String request = "GET /users HTTP/1.1";
         RequestLine requestLine = RequestLine.parse(request);
-        assertThat(requestLine).isEqualTo(new RequestLine("GET", new Path("/users", null), "HTTP", "1.1"));
+        assertThat(requestLine).isEqualTo(new RequestLine(Method.GET, new Path("/users", null), "HTTP", "1.1"));
     }
 
     @Test
@@ -71,7 +68,7 @@ class RequestLineTest {
     void parse_POST_RequestLine() {
         String request = "POST /users HTTP/1.1";
         RequestLine requestLine = RequestLine.parse(request);
-        assertThat(requestLine).isEqualTo(new RequestLine("POST", new Path("/users", null), "HTTP", "1.1"));
+        assertThat(requestLine).isEqualTo(new RequestLine(Method.POST, new Path("/users", null), "HTTP", "1.1"));
     }
 
     @Test
@@ -80,6 +77,6 @@ class RequestLineTest {
         String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
         RequestLine requestLine = RequestLine.parse(request);
         Map<String, String> queryStrings = Map.of("userId", "javajigi", "password", "password", "name", "JaeSung");
-        assertThat(requestLine).isEqualTo(new RequestLine("GET", new Path("/users", new QueryString(queryStrings)), "HTTP", "1.1"));
+        assertThat(requestLine).isEqualTo(new RequestLine(Method.GET, new Path("/users", new QueryString(queryStrings)), "HTTP", "1.1"));
     }
 }
