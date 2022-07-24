@@ -3,6 +3,8 @@ package model;
 import types.HttpMethod;
 import types.Protocol;
 
+import java.util.Objects;
+
 public class RequestLine {
     private final HttpMethod httpMethod;
     private final UrlPath urlPath;
@@ -26,4 +28,16 @@ public class RequestLine {
         return protocol;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestLine that = (RequestLine) o;
+        return httpMethod == that.httpMethod && urlPath.equals(that.urlPath) && protocol == that.protocol;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(httpMethod, urlPath, protocol);
+    }
 }
