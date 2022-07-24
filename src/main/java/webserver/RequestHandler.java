@@ -12,6 +12,7 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import webserver.request.RequestHeaders;
 import webserver.request.RequestLine;
 import webserver.request.UserBinder;
 
@@ -34,6 +35,14 @@ public class RequestHandler implements Runnable {
             final DataOutputStream dos = new DataOutputStream(out);
 
             final RequestLine requestLine = RequestLine.parse(bufferedReader.readLine());
+            final RequestHeaders requestHeaders = new RequestHeaders();
+
+            String header = bufferedReader.readLine();
+            while (!header.isEmpty()) {
+                logger.debug("header : {}", header);
+                requestHeaders.add(header);
+                header = bufferedReader.readLine();
+            }
 
             if (requestForCreateUser(requestLine)) {
                 User user = UserBinder.from(requestLine.getQueryParameters());
