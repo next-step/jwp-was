@@ -19,6 +19,11 @@ public class HttpProtocolSchema {
         this.version = HttpVersion.of(httpProtocolSchemas[VERSION_SCHEMA_INDEX]);
     }
 
+    private HttpProtocolSchema(String protocol, HttpVersion version) {
+        this.protocol = protocol;
+        this.version = version;
+    }
+
     private void validateHttpProtocolSchemas(String[] httpProtocolSchemas) {
         if (httpProtocolSchemas == null || httpProtocolSchemas.length != PROTOCOL_AND_VERSION_SCHEMA_SIZE || isNotHttpProtocol(httpProtocolSchemas)) {
             throw new IllegalArgumentException("잘못된 HTTP 프로토콜입니다.");
@@ -35,6 +40,14 @@ public class HttpProtocolSchema {
 
     public HttpVersion getVersion() {
         return version;
+    }
+
+    public static HttpProtocolSchema of(HttpVersion version) {
+        return new HttpProtocolSchema(PROTOCOL_NAME, version);
+    }
+
+    public String rawHttpProtocolSchema() {
+        return protocol + PROTOCOL_AND_VERSION_DELIMITER + version.get();
     }
 
     @Override

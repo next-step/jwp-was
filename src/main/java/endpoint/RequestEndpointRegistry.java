@@ -5,23 +5,23 @@ import java.util.List;
 import java.util.Map;
 
 public class RequestEndpointRegistry {
-    public static final Map<String, HttpRequestEndpoint> endpointMap = new LinkedHashMap<>();
+    public static final Map<String, HttpRequestEndpointHandler> endpointMap = new LinkedHashMap<>();
 
     static {
         initializeEndpointRegistry();
     }
 
     public static void initializeEndpointRegistry() {
-        List<HttpRequestEndpoint> endpoints = List.of(
-                new CreateUserHttpRequestHandle()
+        List<HttpRequestEndpointHandler> endpoints = List.of(
+                new CreateUserHttpRequestEndpointHandler()
         );
 
-        for (HttpRequestEndpoint endpoint : endpoints) {
+        for (HttpRequestEndpointHandler endpoint : endpoints) {
             endpointMap.put(endpoint.httpEndpointPath, endpoint);
         }
     }
 
-    public static HttpRequestEndpoint getEndpoint(String endPoint) {
-        return endpointMap.getOrDefault(endPoint, HttpRequestEndpoint.NONE);
+    public static HttpRequestEndpointHandler getEndpoint(String endPoint) {
+        return endpointMap.getOrDefault(endPoint, HttpRequestEndpointHandler.NONE);
     }
 }

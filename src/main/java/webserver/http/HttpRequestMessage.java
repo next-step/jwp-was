@@ -2,6 +2,7 @@ package webserver.http;
 
 import webserver.http.request.header.HttpRequestHeaders;
 import webserver.http.request.requestline.HttpMethod;
+import webserver.http.request.requestline.HttpQueryStrings;
 import webserver.http.request.requestline.HttpRequestLine;
 
 public class HttpRequestMessage {
@@ -23,5 +24,11 @@ public class HttpRequestMessage {
 
     public String getHeader(String headerName) {
         return httpRequestHeaders.get(headerName);
+    }
+
+    public HttpQueryStrings getHttpQueryStrings() {
+        assert httpRequestLine.getHttpPath() != null;
+
+        return httpRequestLine.getHttpPath().getHttpQueryStrings();
     }
 }

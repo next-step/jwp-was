@@ -1,5 +1,7 @@
 package webserver.http.request.requestline;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,9 @@ public class HttpPath {
             return new String[]{};
         }
 
-        return rawHttpPath.split(PRIMARY_QUERY_STRING_SYMBOL);
+        String urlDecodedRawHttpPath = URLDecoder.decode(rawHttpPath, StandardCharsets.UTF_8);
+
+        return urlDecodedRawHttpPath.split(PRIMARY_QUERY_STRING_SYMBOL);
     }
 
     private HttpQueryStrings toQueryStrings(String[] httpPathSchemas) {

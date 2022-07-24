@@ -27,4 +27,10 @@ public class HttpProtocolSchemaTest {
     void create_exception(String rawHttpProtocol) {
         assertThrows(IllegalArgumentException.class, () -> new HttpProtocolSchema(rawHttpProtocol));
     }
+
+    @Test
+    void rawHttpProtocolSchema() {
+        HttpProtocolSchema httpProtocolSchemaOne = new HttpProtocolSchema("HTTP/1.0");
+        assertThat(httpProtocolSchemaOne.rawHttpProtocolSchema()).isEqualTo("HTTP/1.0");
+    }
 }

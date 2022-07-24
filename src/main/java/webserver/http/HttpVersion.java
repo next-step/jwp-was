@@ -5,6 +5,11 @@ import java.util.Arrays;
 public enum HttpVersion {
     ONE("1.0"), ONE_POINT_ONE("1.1"),
     ;
+
+    public String get() {
+        return httpVersionValue;
+    }
+
     private final String httpVersionValue;
 
     HttpVersion(String httpVersionValue) {

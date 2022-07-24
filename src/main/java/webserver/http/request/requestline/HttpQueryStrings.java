@@ -50,6 +50,14 @@ public class HttpQueryStrings {
         return httpQueryStrings.get(index);
     }
 
+    public String getQueryValue(String queryName) {
+        return httpQueryStrings.stream()
+                .filter(httpQueryString -> queryName.equals(httpQueryString.getName()))
+                .map(HttpQueryString::getValue)
+                .findAny()
+                .orElse("");
+    }
+
     public String getFullQueryString() {
         return fullQueryString;
     }

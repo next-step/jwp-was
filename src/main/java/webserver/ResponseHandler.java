@@ -2,6 +2,10 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.HttpProtocolSchema;
+import webserver.http.HttpVersion;
+import webserver.http.response.HttpResponseStatusLine;
+import webserver.http.response.HttpStatus;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,6 +15,8 @@ public class ResponseHandler {
 
     public static void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
         try {
+            new HttpResponseStatusLine(HttpProtocolSchema.of(HttpVersion.ONE_POINT_ONE), HttpStatus.OK);
+
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");

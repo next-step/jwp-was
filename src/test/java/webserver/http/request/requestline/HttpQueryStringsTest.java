@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class HttpQueryStringsTest {
 
@@ -37,5 +38,16 @@ public class HttpQueryStringsTest {
         HttpQueryStrings httpQueryStrings = new HttpQueryStrings(fullQueryString);
         assertThat(httpQueryStrings.get(0)).isEqualTo(HttpQueryString.EMPTY);
         assertThat(httpQueryStrings.getFullQueryString()).isEqualTo("");
+    }
+
+    @Test
+    void getQueryValue() {
+        HttpQueryStrings httpQueryStrings = new HttpQueryStrings("queryValue=queryName&queryValue2=queryName2");
+
+        assertAll(
+                () -> assertThat(httpQueryStrings.getQueryValue("queryValue")).isEqualTo("queryName"),
+                () -> assertThat(httpQueryStrings.getQueryValue("queryValue2")).isEqualTo("queryName2"),
+                () -> assertThat(httpQueryStrings.getQueryValue("queryValue3")).isEqualTo("")
+        );
     }
 }
