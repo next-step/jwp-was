@@ -1,5 +1,6 @@
 package webserver;
 
+import db.DataBase;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -67,6 +68,8 @@ public class RequestHandler implements Runnable {
         if (requestForCreateUser(requestLine)) {
             User user = UserBinder.from(requestBody.getParameters());
             logger.debug("user = {}", user);
+
+            DataBase.addUser(user);
             response302Header(dos);
         }
     }

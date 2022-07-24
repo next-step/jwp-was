@@ -79,8 +79,9 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 앞에서 회원가입한 사용자로 로그인할 수 있어야 한다. 로그인이 성공하면 cookie를 활용해 로그인 상태를 유지할 수 있어야 한다. 로그인이 성공할 경우 요청 header의 Cookie header 값이 logined=true, 로그인이 실패하면 Cookie header 값이 logined=false로 전달되어야 한다.
 
 ### 기능 목록
-- [ ] 회원가입 시 메모리 DB에 회원정보 저장
+- [x] 회원가입 시 메모리 DB에 회원정보 저장
 - [ ] 로그인 시 메모리 DB와 ID/PW 비교
+  - [ ] HttpMethod가 `POST`, Path의 Location이 `/user/login`
 - [ ] 로그인 성공
   - [ ] Cookie 생성 (logined=true)
   - [ ] index.html 이동
