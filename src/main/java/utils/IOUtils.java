@@ -2,9 +2,6 @@ package utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,15 +26,14 @@ public class IOUtils {
         return String.copyValueOf(body);
     }
 
-    public static List<String> readData(InputStream inputStream) {
+    public static List<String> readLines(BufferedReader bufferedReader) {
         List<String> lines = new ArrayList<>();
 
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-            String line = br.readLine();
+            String line = bufferedReader.readLine();
             while (line != null && !line.isEmpty()) {
                 lines.add(line);
-                line = br.readLine();
+                line = bufferedReader.readLine();
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -45,5 +41,13 @@ public class IOUtils {
         }
 
         return lines;
+    }
+
+    public static String readSingleLine(BufferedReader bufferedReader) {
+        try {
+            return bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new IllegalArgumentException();
+        }
     }
 }
