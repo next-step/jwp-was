@@ -16,7 +16,9 @@ import webserver.header.request.requestline.RequestLine;
 import webserver.method.HttpMethod;
 
 public class RequestHandler implements Runnable {
+    private static final String NEXT_LINE = "\n";
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final String EMPTY = "";
     private final Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -34,7 +36,8 @@ public class RequestHandler implements Runnable {
             StringBuilder requestContents = new StringBuilder(line);
 
             while (isEnd(line)) {
-                requestContents.append("\n");
+                printlnLine(line);
+                requestContents.append(NEXT_LINE);
                 line = br.readLine();
                 requestContents.append(line);
             }
@@ -49,8 +52,9 @@ public class RequestHandler implements Runnable {
             }
 
             if (isPost(requestLine)) {
-                String s = IOUtils.readData(br, header.contentLength());
-                System.out.println(s);
+                ResponsePostHandler responsePostHandler = new ResponsePostHandler(connection);
+                String requestBody = IOUtils.readData(br, header.contentLength());
+                responsePostHandler.run(requestBody);
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -62,7 +66,7 @@ public class RequestHandler implements Runnable {
     }
 
     private boolean isEnd(String line) {
-        return !"".equals(line);
+        return !EMPTY.equals(line);
     }
 
     private boolean isGet(RequestLine requestLine) {

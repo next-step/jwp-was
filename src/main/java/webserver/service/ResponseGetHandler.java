@@ -9,9 +9,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import webserver.domain.RequestLine;
-import webserver.response.GetIndexHtmlResponse;
-import webserver.response.GetUserFormHtmlResponse;
+import webserver.header.request.requestline.RequestLine;
+import webserver.response.get.GetIndexHtmlResponse;
+import webserver.response.get.GetUserFormHtmlResponse;
 
 public class ResponseGetHandler {
     private static final Logger logger = LoggerFactory.getLogger(ResponseGetHandler.class);
