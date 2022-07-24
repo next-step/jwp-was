@@ -12,6 +12,8 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import utils.IOUtils;
+import webserver.request.RequestBody;
 import webserver.request.RequestHeaders;
 import webserver.request.RequestLine;
 import webserver.request.UserBinder;
@@ -44,9 +46,12 @@ public class RequestHandler implements Runnable {
                 header = bufferedReader.readLine();
             }
 
-            if (requestForCreateUser(requestLine)) {
-                User user = UserBinder.from(requestLine.getQueryParameters());
-                logger.debug("user = {}", user);
+            if (requestHeaders.hasRequestBody()) {
+                final String body = IOUtils.readData(bufferedReader, requestHeaders.getContentLength());
+                logger.debug("body : {}", body);
+
+                RequestBody requestBody = new RequestBody(body);
+                createUser(requestLine, requestBody);
             }
 
             final byte[] body = FileIoUtils.loadFileFromClasspath("templates" + requestLine.getLocation());
@@ -55,6 +60,13 @@ public class RequestHandler implements Runnable {
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
+        }
+    }
+
+    private void createUser(final RequestLine requestLine, final RequestBody requestBody) {
+        if (requestForCreateUser(requestLine)) {
+            User user = UserBinder.from(requestBody.getParameters());
+            logger.debug("user = {}", user);
         }
     }
 

@@ -51,6 +51,10 @@ public class RequestHeaders {
         return headers.get(key);
     }
 
+    public boolean hasRequestBody() {
+        return headers.containsKey("Content-Length") && getContentLength() > 0;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

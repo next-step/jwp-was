@@ -58,6 +58,6 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 - [x] HTTP Request Body 파싱
   - [x] HTTP Header 파싱 (Body를 파싱하기 위해 ContentLength를 사용)
   - [x] HTTP Body 파싱 
-- [ ] HTTP Body를 이용해 User 객체를 생성한다.
+- [x] HTTP Body를 이용해 User 객체를 생성한다.
   - [x] User 객체를 생성 조건의 HttpMethod를 POST로 변경한다.
-  - [ ] IOUtils#readData() 메서드를 활용해 문자열로 변환한다.
+  - [x] IOUtils#readData() 메서드를 활용해 문자열로 변환한다.
