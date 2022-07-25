@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class ParametersTest {
+class RequestBodyTest {
 
-    @DisplayName("Query String을 파싱한다.")
+    @DisplayName("HTTP POST 메서드로 전달된 Body를 파싱한다.")
     @Test
     void parse() {
         RequestBody requestBody = new RequestBody("userId=javajigi&password=1234&name=JaeSung");
