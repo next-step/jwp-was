@@ -20,8 +20,9 @@ public class UserCreateServlet implements Servlet {
         DataBase.addUser(user);
 
         httpResponse.protocol1_1();
-        httpResponse.statusOk();
+        httpResponse.statusFound();
         httpResponse.addHeader("Content-Type", "text/html;charset=utf-8");
+        httpResponse.addHeader("Location", "http://localhost:8080/index.html");
     }
 
 }

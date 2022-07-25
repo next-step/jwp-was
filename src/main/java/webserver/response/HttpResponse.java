@@ -26,6 +26,10 @@ public class HttpResponse {
         this.statusCode = StatusCode.OK;
     }
 
+    public void statusFound() {
+        this.statusCode = StatusCode.FOUND;
+    }
+
     public void statusBadRequest() {
         this.statusCode = StatusCode.BAD_REQUEST;
     }
@@ -54,4 +58,5 @@ public class HttpResponse {
     public StatusCode getStatus() {
         return this.statusCode;
     }
+
 }

@@ -33,7 +33,7 @@ class UserCreateServletTest {
 
         servlet.serve(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatus()).isEqualTo(StatusCode.OK);
+        assertThat(httpResponse.getStatus()).isEqualTo(StatusCode.FOUND);
         assertThat(DataBase.findUserById("javajigi")).isNotNull();
     }
 

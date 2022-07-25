@@ -2,6 +2,7 @@ package webserver.enums;
 
 public enum StatusCode {
     OK(200, "OK"),
+    FOUND(302, "Found"),
     BAD_REQUEST(400, "Bad Request"),
     NOT_FOUND(404, "Not Found");
 
