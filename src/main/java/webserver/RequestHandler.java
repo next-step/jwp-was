@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import webserver.http.request.HttpRequest;
-import utils.IOUtils;
+import webserver.http.request.HttpRequestParser;
 import webserver.http.response.HttpResponse;
 import webserver.servlet.DispatcherServlet;
 import webserver.servlet.Servlet;
@@ -34,7 +34,7 @@ public class RequestHandler implements Runnable {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             Servlet DispatcherServlet = new DispatcherServlet();
-            HttpRequest httpRequest = new HttpRequest(IOUtils.readData(br));
+            HttpRequest httpRequest = HttpRequestParser.parse(is);
             HttpResponse response = DispatcherServlet.service(httpRequest);
             out.write(response.getBytes());
             out.flush();

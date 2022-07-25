@@ -3,6 +3,7 @@ package webserver.http.request;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class QueryParameter {
@@ -30,5 +31,22 @@ public class QueryParameter {
 
 	public String getValue(String key) {
 		return parameter.get(key);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		QueryParameter that = (QueryParameter) o;
+		return Objects.equals(parameter, that.parameter);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(parameter);
 	}
 }

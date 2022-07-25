@@ -1,17 +1,18 @@
 package webserver.http.request;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 import webserver.http.HttpMethod;
 
 public class HttpRequest {
 	private HttpRequestLine httpRequestLine;
 	private HttpRequestHeaders httpRequestHeaders;
+	private HttpRequestBody httpRequestBody;
 
-	public HttpRequest(List<String> lines) {
-		httpRequestLine = HttpRequestLine.of(lines.get(0));
-		httpRequestHeaders = HttpRequestHeaders.of(lines.subList(1, lines.size()));
+	public HttpRequest(HttpRequestLine httpRequestLine, HttpRequestHeaders httpRequestHeaders, HttpRequestBody httpRequestBody) {
+		this.httpRequestLine = httpRequestLine;
+		this.httpRequestHeaders = httpRequestHeaders;
+		this.httpRequestBody = httpRequestBody;
 	}
 
 	public String getPath() {
@@ -26,11 +27,25 @@ public class HttpRequest {
 		return httpRequestLine.getProtocol();
 	}
 
-	public QueryParameter getParameter() {
-		return httpRequestLine.getParameters();
+	public HttpRequestBody getHttpBody() {
+		return httpRequestBody;
 	}
 
-	public Map<String, String> getHttpRequestHeaders() {
-		return httpRequestHeaders.getHeaders();
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		HttpRequest that = (HttpRequest) o;
+		return Objects.equals(httpRequestLine, that.httpRequestLine) && Objects.equals(httpRequestHeaders, that.httpRequestHeaders)
+			   && Objects.equals(httpRequestBody, that.httpRequestBody);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(httpRequestLine, httpRequestHeaders, httpRequestBody);
 	}
 }

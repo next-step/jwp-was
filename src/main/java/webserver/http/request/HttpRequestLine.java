@@ -1,5 +1,7 @@
 package webserver.http.request;
 
+import java.util.Objects;
+
 import webserver.http.HttpMethod;
 
 public class HttpRequestLine {
@@ -42,5 +44,23 @@ public class HttpRequestLine {
 
 	public QueryParameter getParameters() {
 		return httpPath.getParameter();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		HttpRequestLine that = (HttpRequestLine) o;
+		return httpMethod == that.httpMethod && Objects.equals(httpPath, that.httpPath) && Objects.equals(httpProtocol,
+																										  that.httpProtocol);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(httpMethod, httpPath, httpProtocol);
 	}
 }

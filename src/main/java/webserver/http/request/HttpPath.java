@@ -1,5 +1,7 @@
 package webserver.http.request;
 
+import java.util.Objects;
+
 public class HttpPath {
 	private static final String PATH_PARAM_DELIMITER = "\\?";
 	private static final String MESSAGE_INVALID_PATH_INFO = "유효하지 않은 PATH 정보 입니다.";
@@ -38,5 +40,22 @@ public class HttpPath {
 
 	public QueryParameter getParameter() {
 		return parameters;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		HttpPath httpPath = (HttpPath) o;
+		return Objects.equals(path, httpPath.path) && Objects.equals(parameters, httpPath.parameters);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(path, parameters);
 	}
 }
