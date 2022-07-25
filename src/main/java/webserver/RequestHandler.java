@@ -1,12 +1,16 @@
 package webserver;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import db.DataBase;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.HttpMethod;
 
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import static utils.IOUtils.readLines;
 
@@ -28,9 +32,17 @@ public class RequestHandler implements Runnable {
             String path = getPathFromRequest(request);
             logger.debug("requestPath : {}", path);
 
+            if (StringUtils.equals(request.getRequestPath(), "/user/create") && request.getHttpMethod() == HttpMethod.POST) {
+                Map<String, String> userMap = request.getRequestQueryString();
+
+                User user = new User(userMap.get("userId"), userMap.get("password"), userMap.get("name"), userMap.get("email"));
+                logger.debug("user : {}", user);
+
+                DataBase.addUser(user);
+            }
+
             Response response = new Response(out, path);
 
-            logger.debug("request : {}", request.getHeader());
             byte[] body = response.getBody(path);
 
             response200Header(response, body.length);

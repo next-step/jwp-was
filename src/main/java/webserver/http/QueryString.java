@@ -39,6 +39,10 @@ public class QueryString {
         this.queryString = map;
     }
 
+    public Map<String, String> getQueryString() {
+        return queryString;
+    }
+
     private Map<String, String> parse(String value) {
         return Stream.of(StringUtils.split(value, QUERY_STRING_SPERATOR))
                 .map(keyValue -> StringUtils.split(keyValue, KEY_VALUE_SPERATOR))

@@ -39,6 +39,10 @@ public class Path {
         return path;
     }
 
+    public QueryString getQueryString() {
+        return queryString;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

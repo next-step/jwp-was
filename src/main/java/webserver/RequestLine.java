@@ -4,6 +4,7 @@ import webserver.http.HttpMethod;
 import webserver.http.Path;
 import webserver.http.Protocol;
 
+import java.util.Map;
 import java.util.Objects;
 
 import static model.Constant.VALUE_SPERATOR;
@@ -40,6 +41,22 @@ public class RequestLine {
 
     public String getPathWithoutQueryString() {
         return path.getPath();
+    }
+
+    public Map<String, String> getQueryStringWithoutPathFromPath() {
+        return path.getQueryString().getQueryString();
+    }
+
+    public HttpMethod getHttpMethod() {
+        return httpMethod;
+    }
+
+    public Path getPath() {
+        return path;
+    }
+
+    public Protocol getProtocol() {
+        return protocol;
     }
 
     @Override
