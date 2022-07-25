@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 
 public class FileIoUtils {
 
-    private static final String RESOURCE_FOLDER_PATH_PREFIX = ".";
+    private static final String RESOURCE_FOLDER_PATH_PREFIX = "./templates";
 
     public static byte[] loadFileFromClasspath(String filePath) throws IOException, URISyntaxException {
         ClassLoader classLoader = FileIoUtils.class.getClassLoader();
