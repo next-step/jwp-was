@@ -1,5 +1,6 @@
 package webserver.controller;
 
+import java.util.Map;
 import java.util.Optional;
 
 import http.request.HttpRequest;
@@ -25,7 +26,7 @@ public class UserListController implements Controller {
         var response = users.findAll();
 
         String compile = TemplateEngine.getInstance()
-            .compile("/user/list", response);
+            .compile("/user/list", Map.of("users", response));
 
         return HttpResponse.ok(compile);
     }
