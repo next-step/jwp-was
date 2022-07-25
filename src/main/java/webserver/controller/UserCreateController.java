@@ -2,16 +2,12 @@ package webserver.controller;
 
 import db.DataBase;
 import model.User;
-import webserver.HttpHeaders;
 import webserver.exception.ApiException;
 import webserver.request.HttpMethod;
 import webserver.request.HttpRequest;
 import webserver.request.Path;
 import webserver.response.HttpResponse;
 import webserver.response.HttpStatusCode;
-import webserver.response.ResponseHeader;
-
-import java.util.Map;
 
 public class UserCreateController implements Controller {
 
@@ -30,10 +26,7 @@ public class UserCreateController implements Controller {
                 extractRequiredBody(request, "name"),
                 extractRequiredBody(request, "email")
         ));
-        return HttpResponse.of(
-                HttpStatusCode.FOUND,
-                ResponseHeader.from(Map.of(HttpHeaders.LOCATION, "/index.html"))
-        );
+        return HttpResponse.Builder.sendRedirect("/index.html").build();
     }
 
     private String extractRequiredBody(HttpRequest request, String property) {

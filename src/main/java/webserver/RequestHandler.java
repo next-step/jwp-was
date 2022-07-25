@@ -16,8 +16,6 @@ import webserver.exception.ApiException;
 import webserver.request.HttpRequest;
 import webserver.request.RequestBody;
 import webserver.response.HttpResponse;
-import webserver.response.HttpStatusCode;
-import webserver.response.ResponseHeader;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -78,16 +76,18 @@ public class RequestHandler implements Runnable {
                 .filter(controller -> controller.isMatch(request))
                 .findAny()
                 .map(controller -> executeSafety(controller, request))
-                .orElse(HttpResponse.NOT_FOUND);
+                .orElse(HttpResponse.Builder.notFound().build());
     }
 
     private HttpResponse executeSafety(Controller controller, HttpRequest request) {
         try {
             return controller.execute(request);
         } catch (ApiException e) {
-            return HttpResponse.of(e.getCode(), e.getHeader());
+            return HttpResponse.Builder.status(e.getCode())
+                    .addHeaders(e.getHeader())
+                    .build();
         } catch (Exception e) {
-            return HttpResponse.of(HttpStatusCode.INTERNAL_SERVER_ERROR, ResponseHeader.empty());
+            return HttpResponse.Builder.internalServerError().build();
         }
     }
 

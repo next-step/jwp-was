@@ -9,7 +9,6 @@ import webserver.request.HttpRequest;
 import webserver.request.Path;
 import webserver.response.HttpResponse;
 import webserver.response.HttpStatusCode;
-import webserver.response.ResponseHeader;
 
 import java.util.Map;
 
@@ -29,13 +28,9 @@ public class UserLoginController implements Controller {
 
     private HttpResponse login(HttpRequest request) {
         validateUser(request);
-        return HttpResponse.of(
-                HttpStatusCode.FOUND,
-                ResponseHeader.from(Map.of(
-                        HttpHeaders.LOCATION, "/index.html",
-                        HttpHeaders.SET_COOKIE, "logined=true; Path=/"
-                ))
-        );
+        return HttpResponse.Builder.sendRedirect("/index.html")
+                .addHeader(HttpHeaders.SET_COOKIE, "logined=true; Path=/")
+                .build();
     }
 
     private void validateUser(HttpRequest request) {
@@ -43,10 +38,7 @@ public class UserLoginController implements Controller {
         if (user == null || isNotMatchPassword(request, user)) {
             throw new ApiException(
                     HttpStatusCode.FOUND,
-                    ResponseHeader.from(Map.of(
-                            HttpHeaders.LOCATION, "/user/login_failed.html",
-                            HttpHeaders.SET_COOKIE, "logined=false; Path=/")
-                    )
+                    Map.of(HttpHeaders.LOCATION, "/user/login_failed.html", HttpHeaders.SET_COOKIE, "logined=false; Path=/")
             );
         }
     }

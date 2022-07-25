@@ -13,12 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class HttpResponseTest {
 
     @Test
-    @DisplayName("생성")
+    @DisplayName("빌더로 생성")
     void instance() {
         assertAll(
-                () -> assertThatNoException().isThrownBy(() -> HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty())),
-                () -> assertThatNoException().isThrownBy(() -> HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty(), new byte[0])),
-                () -> assertThatNoException().isThrownBy(() -> HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty(), "body"))
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.Builder.ok().build()),
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.Builder.notFound().build()),
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.Builder.internalServerError().build()),
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.Builder.ok("body").build()),
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.Builder.ok().contentType("text/html"))
         );
     }
 
@@ -28,7 +30,7 @@ class HttpResponseTest {
         //given
         String body = "body";
         //when, then
-        assertThat(HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty(), body).contentLength())
+        assertThat(HttpResponse.Builder.ok(body).build().contentLength())
                 .isEqualTo(body.getBytes(StandardCharsets.UTF_8).length);
     }
 }

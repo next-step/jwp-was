@@ -4,12 +4,11 @@ import utils.Assert;
 import webserver.HttpHeaders;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public final class HttpResponse {
-
-    public static final HttpResponse NOT_FOUND = of(HttpStatusCode.NOT_FOUND, ResponseHeader.empty());
 
     private final HttpStatusCode code;
     private final ResponseHeader header;
@@ -22,18 +21,6 @@ public final class HttpResponse {
         this.code = code;
         this.header = header.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(body.length));
         this.body = body;
-    }
-
-    public static HttpResponse of(HttpStatusCode code, ResponseHeader header) {
-        return new HttpResponse(code, header, new byte[0]);
-    }
-
-    public static HttpResponse of(HttpStatusCode code, ResponseHeader header, byte[] body) {
-        return new HttpResponse(code, header, body);
-    }
-
-    public static HttpResponse of(HttpStatusCode code, ResponseHeader header, String body) {
-        return new HttpResponse(code, header, body.getBytes(StandardCharsets.UTF_8));
     }
 
     public HttpStatusCode code() {
@@ -50,5 +37,76 @@ public final class HttpResponse {
 
     public Set<Map.Entry<String, String>> headerEntries() {
         return header.entries();
+    }
+
+    public static class Builder {
+
+        private final HttpStatusCode code;
+        private final Map<String, String> header = new HashMap<>();
+        private byte[] body = new byte[0];
+
+        private Builder(HttpStatusCode code) {
+            this.code = code;
+        }
+
+        public static Builder status(HttpStatusCode status) {
+            return new Builder(status);
+        }
+
+        public static Builder ok() {
+            return status(HttpStatusCode.OK);
+        }
+
+        public static Builder ok(String body) {
+            return status(HttpStatusCode.OK)
+                    .body(body);
+        }
+
+        public static Builder ok(byte[] body) {
+            return status(HttpStatusCode.OK)
+                    .body(body);
+        }
+
+        public static Builder sendRedirect(String path) {
+            return status(HttpStatusCode.FOUND)
+                    .addHeader(HttpHeaders.LOCATION, path);
+        }
+
+        public static Builder notFound() {
+            return status(HttpStatusCode.NOT_FOUND);
+        }
+
+        public static Builder internalServerError() {
+            return status(HttpStatusCode.INTERNAL_SERVER_ERROR);
+        }
+
+        public Builder body(byte[] body) {
+            this.body = body;
+            return this;
+        }
+
+        public Builder body(String body) {
+            this.body = body.getBytes(StandardCharsets.UTF_8);
+            return this;
+        }
+
+        public Builder addHeaders(Map<String, String> header) {
+            this.header.putAll(header);
+            return this;
+        }
+
+        public Builder addHeader(String key, String value) {
+            this.header.put(key, value);
+            return this;
+        }
+
+        public Builder contentType(String value) {
+            return addHeader(HttpHeaders.CONTENT_TYPE, value);
+        }
+
+        public HttpResponse build() {
+            header.put(HttpHeaders.CONTENT_LENGTH, String.valueOf(body.length));
+            return new HttpResponse(code, ResponseHeader.from(header), body);
+        }
     }
 }

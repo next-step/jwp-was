@@ -40,6 +40,11 @@ class HttpRequestTest {
         WAS.interrupt();
     }
 
+    @AfterEach
+    void tearDown() {
+        DataBase.deleteAll();
+    }
+
     @Test
     @DisplayName("/index.html 로 접속했을 때 index.html 파일을 읽어 클라이언트에 응답")
     void requestIndexHtml() {
@@ -114,10 +119,5 @@ class HttpRequestTest {
         ExtractableResponse<Response> response = StaticAcceptanceStep.requestStaticFile("./css/styles.css");
         //then
         StaticAcceptanceStep.succeedRetrieveFile(response, "text/css");
-    }
-
-    @AfterEach
-    void tearDown() {
-        DataBase.deleteAll();
     }
 }
