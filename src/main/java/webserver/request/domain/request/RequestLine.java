@@ -1,5 +1,6 @@
 package webserver.request.domain.request;
 
+import org.springframework.util.StringUtils;
 import webserver.exception.StringEmptyException;
 
 public class RequestLine {
@@ -11,10 +12,10 @@ public class RequestLine {
     private ProtocolInfo protocolInfo;
 
     private RequestLine(String[] values) {
-        parse(values);
+        init(values);
     }
 
-    public static RequestLine create(String requestLine) {
+    public static RequestLine parse(String requestLine) {
         validateRequestline(requestLine);
 
         String[] values = requestLine.split(DELIMITER);
@@ -28,7 +29,7 @@ public class RequestLine {
         }
     }
 
-    private void parse(String[] values) {
+    private void init(String[] values) {
         method = Method.valueOf(values[0]);
         path = Path.parse(values[1]);
         protocolInfo = ProtocolInfo.parse(values[2]);
@@ -38,19 +39,22 @@ public class RequestLine {
         return String.valueOf(method);
     }
 
-    public String getPath() {
-        return path.getPath();
+    public String parsePath() {
+        if (StringUtils.hasText(path.getPath())) {
+            return path.getPath();
+        }
+        return "";
     }
 
-    public String getQueryString() {
+    public String parseQueryString() {
         return path.getQueryString();
     }
 
-    public String getProtocolName() {
+    public String parseProtocol() {
         return protocolInfo.getProtocol();
     }
 
-    public String getProtocolVersion() {
+    public String parseProtocolVersion() {
         return protocolInfo.getVersion();
     }
 
@@ -58,7 +62,7 @@ public class RequestLine {
     public String toString() {
         return "RequestLine{" +
                 "method=" + method.toString() +
-                ", path=" + path.getQueryString() +
+                ", path=" + ((path.getQueryString() == null) ? "" : path.getQueryString()) +
                 ", protocol=" + protocolInfo.getProtocol() +
                 ", version=" + protocolInfo.getVersion() +
                 '}';
