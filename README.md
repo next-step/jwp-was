@@ -21,7 +21,7 @@
       - [X] HttpMethod
         - 문자열을 받아 HttpMethod를 반환한다. 
         - 잘못된 문자열의 경우 Exception이 발생한다.
-      - [ ] HttpPath
+      - [X] HttpPath
         - 문자열을 받아 HttpPath를 반환한다.
         - "/path" 형식이 아닌경우 Exception이 발생한다. 
       - [ ] HttpVersion
