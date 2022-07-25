@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import exception.UnSupportedHttpMethodException;
 import java.util.stream.Stream;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,6 +36,20 @@ class HttpMethodTest {
             Arguments.of("GET", HttpMethod.GET),
             Arguments.of("POST", HttpMethod.POST)
         );
+    }
+
+    @DisplayName("GET 요청인지 확인")
+    @Test
+    void is_get_method() {
+        Assertions.assertThat(HttpMethod.GET.isGet()).isTrue();
+        Assertions.assertThat(HttpMethod.POST.isGet()).isFalse();
+    }
+
+    @DisplayName("POST 요청인지 확인")
+    @Test
+    void is_post_method() {
+        Assertions.assertThat(HttpMethod.POST.isPost()).isTrue();
+        Assertions.assertThat(HttpMethod.GET.isPost()).isFalse();
     }
 
 }

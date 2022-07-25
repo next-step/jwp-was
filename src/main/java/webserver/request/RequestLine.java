@@ -1,6 +1,7 @@
 package webserver.request;
 
-import org.springframework.util.StringUtils;
+import java.util.Map;
+import java.util.Objects;
 
 public class RequestLine {
 
@@ -9,47 +10,64 @@ public class RequestLine {
     private static final int INDEX_OF_PROTOCOL = 2;
     private static final String DELIMITER = " ";
 
-    private final HttpMethod method;
+    private final HttpMethod httpMethod;
     private final Path path;
     private final Protocol protocol;
 
-    private RequestLine(final HttpMethod method, final Path path, final Protocol protocol) {
-        this.method = method;
+    private RequestLine(final HttpMethod httpMethod, final Path path, final Protocol protocol) {
+        this.httpMethod = httpMethod;
         this.path = path;
         this.protocol = protocol;
     }
 
     public static RequestLine parse(final String requestLine) {
-        if (!StringUtils.hasText(requestLine)) {
-            throw new IllegalArgumentException("빈 문자열은 파싱할 수 없습니다.");
-        }
+        validate(requestLine);
 
         final String[] tokens = requestLine.split(DELIMITER);
-        final HttpMethod method = HttpMethod.of(tokens[INDEX_OF_METHOD]);
-        final Path path = Path.from(tokens[INDEX_OF_PATH]);
-        final Protocol protocol = Protocol.parse(tokens[INDEX_OF_PROTOCOL]);
 
-        return new RequestLine(method, path, protocol);
+        return of(tokens[INDEX_OF_METHOD], tokens[INDEX_OF_PATH], tokens[INDEX_OF_PROTOCOL]);
     }
 
-    public HttpMethod getMethod() {
-        return method;
+    private static void validate(final String requestLine) {
+        if (requestLine == null || requestLine.isBlank()) {
+            throw new IllegalArgumentException("빈 문자열은 파싱할 수 없습니다.");
+        }
     }
 
-    public String getPath() {
+    public static RequestLine of(final String httpMethod, final String path, final String protocol) {
+        return new RequestLine(HttpMethod.of(httpMethod), Path.parse(path), Protocol.parse(protocol));
+    }
+
+    public boolean isGet() {
+        return httpMethod.isGet();
+    }
+
+    public boolean isPost() {
+        return httpMethod.isPost();
+    }
+
+    public String getLocation() {
         return path.getLocation();
     }
 
-    public String getProtocol() {
-        return protocol.getType();
+    public Map<String, String> getQueryParameters() {
+        return path.getQueryString().getParameters();
     }
 
-    public String getVersion() {
-        return protocol.getVersion();
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final RequestLine that = (RequestLine) o;
+        return httpMethod == that.httpMethod && Objects.equals(path, that.path) && Objects.equals(protocol, that.protocol);
     }
 
-    public String getQueryString() {
-        return path.getQueryString();
+    @Override
+    public int hashCode() {
+        return Objects.hash(httpMethod, path, protocol);
     }
-
 }
