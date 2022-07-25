@@ -21,7 +21,9 @@ public class HttpMessage {
 
     private String body;
 
-    public HttpMessage(List<String> httpMessageData) {
+    public HttpMessage(HttpMessageData data) {
+        List<String> httpMessageData = data.getHttpMessageData();
+
         if (!(httpMessageData instanceof ArrayList)) {
             httpMessageData = new ArrayList<>(httpMessageData);
         }

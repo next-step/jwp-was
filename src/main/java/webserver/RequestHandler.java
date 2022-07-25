@@ -1,6 +1,7 @@
 package webserver;
 
 import model.HttpMessage;
+import model.HttpMessageData;
 import model.RequestLine;
 import model.UrlPath;
 import org.slf4j.Logger;
@@ -31,14 +32,17 @@ public class RequestHandler implements Runnable {
             InputStreamReader inputStreamReader = new InputStreamReader(in);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             boolean end = false;
-            List<String> httpMessageData = new ArrayList<>();
+            List<String> data = new ArrayList<>();
             while (!end) {
                 String line = bufferedReader.readLine();
                 end = (!StringUtils.hasText(line));
-                httpMessageData.add(line);
+                data.add(line);
             }
 
-            HttpMessage httpMessage = new HttpMessage(httpMessageData);
+            HttpMessageData httpMessageData = new HttpMessageData(data);
+            logger.info("Request data >>>>>>" + httpMessageData.toStringHttpMessageData());
+
+            HttpMessage httpMessage = new HttpMessage(new HttpMessageData(httpMessageData.getHttpMessageData()));
             RequestLine requestLine = httpMessage.getRequestLine();
             byte[] body = null;
             if (requestLine.getUrlPath().hasExtension()) {
@@ -48,24 +52,24 @@ public class RequestHandler implements Runnable {
 
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, body.length);
+            response200Header(dos, body);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, Integer lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dos, byte[] body) {
 
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            if (lengthOfBodyContent == null) {
+            if (body == null) {
                 dos.writeBytes("\r\n");
                 return;
             }
 
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("Content-Length: " + body.length + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -74,6 +78,10 @@ public class RequestHandler implements Runnable {
 
     private void responseBody(DataOutputStream dos, byte[] body) {
         try {
+            if (body == null) {
+                dos.flush();
+                return;
+            }
             dos.write(body, 0, body.length);
             dos.flush();
         } catch (IOException e) {
