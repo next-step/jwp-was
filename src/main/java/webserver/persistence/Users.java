@@ -1,5 +1,7 @@
 package webserver.persistence;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,5 +20,9 @@ public class Users {
         var user = map.get(userId);
 
         return Optional.ofNullable(user);
+    }
+
+    public List<User> findAll() {
+        return new ArrayList<>(map.values());
     }
 }

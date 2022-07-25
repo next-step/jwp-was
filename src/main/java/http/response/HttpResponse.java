@@ -32,6 +32,14 @@ public class HttpResponse {
         this(Protocol.of("HTTP/1.1"), status, headers, "", Set.of(cookie));
     }
 
+    public static HttpResponse found(String location) {
+        return new HttpResponse(HttpStatus.FOUND, Map.of("Location", location));
+    }
+
+    public static HttpResponse ok(String body) {
+        return new HttpResponse(Protocol.of("HTTP/1.1"), HttpStatus.OK, Map.of(), body, Set.of());
+    }
+
     public Protocol getProtocol() {
         return protocol;
     }
