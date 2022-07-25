@@ -37,7 +37,7 @@ class RequestLineTest {
         Path path = requestLine.getPath();
 
         assertThat(path.getDepth()).isEqualTo(1);
-        assertThat(path.getPartByDepth(0).get()).isEqualTo("path");
+        assertThat(path.getSubPathByDepth(0).get()).isEqualTo("path");
     }
 
     @Test
