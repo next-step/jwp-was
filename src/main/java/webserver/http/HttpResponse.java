@@ -50,7 +50,7 @@ public class HttpResponse {
 
     public void response200Header(int contentLength) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("HTTP/1.1 " + getStatus(HttpStatus.OK) + " \r\n");
             processHeaders();
             dos.writeBytes("Content-Length: " + contentLength + "\r\n");
             dos.writeBytes("\r\n");
@@ -70,13 +70,17 @@ public class HttpResponse {
 
     public void sendRedirect(String location) {
         try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("HTTP/1.1 " + getStatus(HttpStatus.FOUND) + " \r\n");
             processHeaders();
             dos.writeBytes("Location: " + location + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private String getStatus(HttpStatus httpStatus) {
+        return httpStatus.getStatusCode() + " " + httpStatus.getStatusMessage();
     }
 
     public void processHeaders() {
