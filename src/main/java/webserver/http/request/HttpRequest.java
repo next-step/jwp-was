@@ -15,6 +15,11 @@ public class HttpRequest {
 		this.httpRequestBody = httpRequestBody;
 	}
 
+
+	public boolean isLogin() {
+		return httpRequestHeaders.isLogin();
+	}
+
 	public String getPath() {
 		return httpRequestLine.getPath();
 	}

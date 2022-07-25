@@ -10,6 +10,8 @@ public class HttpRequestHeaders {
 	protected static final int INDEX_KEY = 0;
 	protected static final int INDEX_VALUE = 1;
 	public static final String CONTENT_LENGTH = "Content-Length";
+	public static final String COOKIE = "Cookie";
+	public static final String LOGIN_TRUE = "logined=true";
 
 	private final Map<String, String> headers;
 
@@ -36,6 +38,10 @@ public class HttpRequestHeaders {
 
 	public int getContentLength() {
 		return Integer.parseInt(headers.get(CONTENT_LENGTH));
+	}
+
+	public boolean isLogin() {
+		return headers.get(COOKIE).contains(LOGIN_TRUE);
 	}
 
 	@Override

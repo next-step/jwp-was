@@ -42,4 +42,13 @@ public abstract class AbstractController implements Controller {
 				.emptyBody()
 				.build();
 	}
+
+	protected HttpResponse doRedirect(HttpRequest httpRequest, String location, String cookie) {
+		return new HttpResponse.Builder()
+				.statusLine(httpRequest.getProtocol(), HttpStatus.FOUND)
+				.location(location)
+				.cookie(cookie)
+				.emptyBody()
+				.build();
+	}
 }
