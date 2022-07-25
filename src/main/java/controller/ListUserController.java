@@ -12,11 +12,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ListUserController implements Controller {
+public class ListUserController extends AbstractController {
     @Override
-    public void service(HttpRequest request, HttpResponse response) throws IOException {
+    public void doGet(HttpRequest request, HttpResponse response) throws IOException {
         String cookie = request.getHeader("Cookie");
-
         String[] splitCookie = cookie.split("=");
         if (splitCookie.length == 2 && Boolean.parseBoolean(splitCookie[1])) {
             Collection<User> users = DataBase.findAll();
@@ -27,7 +26,6 @@ public class ListUserController implements Controller {
             response.forwardBody(HandlebarsUtils.template("user/list", userDtos));
             return;
         }
-
         response.sendRedirect("/user/login.html");
     }
 }

@@ -45,4 +45,8 @@ public class HttpRequest {
     public String getHeader(String key) {
         return requestHeader.getHeader(key);
     }
+
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
+    }
 }
