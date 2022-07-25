@@ -5,7 +5,7 @@ import model.User;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-public class LoginController extends AbstractController {
+public class LoginController extends PostController {
 
     @Override
     protected void doPost(HttpRequest request, HttpResponse response) {

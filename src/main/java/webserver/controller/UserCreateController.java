@@ -5,15 +5,7 @@ import model.User;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-public class UserCreateController extends AbstractController {
-
-    @Override
-    protected void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-        response.forward("user/form");
-    }
+public class UserCreateController extends PostController {
 
     @Override
     protected void doPost(HttpRequest request, HttpResponse response) {
