@@ -32,4 +32,8 @@ public enum ContentType {
 		return mime;
 	}
 
+	public String getExtension() {
+		return extension;
+	}
+
 }

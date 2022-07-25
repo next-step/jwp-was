@@ -7,14 +7,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import utils.IOUtils;
 
 public class HttpRequestParser {
-	private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequestParser.class);
-
 	private HttpRequestParser() {
 	}
 
@@ -25,7 +20,6 @@ public class HttpRequestParser {
 
 	public static HttpRequest parse(BufferedReader reader) throws IOException {
 		String line = reader.readLine();
-		LOGGER.debug(line);
 		HttpRequestLine requestLine = HttpRequestLine.of(line);
 		HttpRequestHeaders headers = parseHeaders(reader);
 		HttpRequestBody requestBody = parseBody(reader, headers);
@@ -42,7 +36,6 @@ public class HttpRequestParser {
 			}
 			line = reader.readLine();
 		}
-		LOGGER.debug(headers.toString());
 		return HttpRequestHeaders.of(headers);
 	}
 
@@ -51,7 +44,6 @@ public class HttpRequestParser {
 		if (headers.hasContentLength()) {
 			body = IOUtils.readData(reader, headers.getContentLength());
 		}
-		LOGGER.debug(body);
 		return HttpRequestBody.of(body);
 	}
 }

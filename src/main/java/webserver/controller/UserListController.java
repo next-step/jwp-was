@@ -53,9 +53,4 @@ public class UserListController extends AbstractController {
 			throw new IllegalArgumentException("페이지 생성에 실패하였습니다.");
 		}
 	}
-
-	@Override
-	HttpResponse doPost(HttpRequest httpRequest) {
-		return null;
-	}
 }

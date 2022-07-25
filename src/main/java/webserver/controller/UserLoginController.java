@@ -24,7 +24,7 @@ public class UserLoginController extends AbstractController {
 	}
 
 	@Override
-	HttpResponse doPost(HttpRequest httpRequest) {
+	protected HttpResponse doPost(HttpRequest httpRequest) {
 		try {
 			userService.login(httpRequest.getHttpBody());
 			return doRedirect(httpRequest, "/index.html", "logined=true; Path=/");
