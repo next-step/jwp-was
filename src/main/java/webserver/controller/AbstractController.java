@@ -8,7 +8,7 @@ import webserver.http.response.Resource;
 
 public abstract class AbstractController implements Controller {
 
-	private static final String RESOURCE_PATH = "./templates";
+	protected final String TEMPLATES_ROOT_PATH = "./templates";
 
 	@Override
 	public HttpResponse process(HttpRequest httpRequest) {
@@ -18,12 +18,12 @@ public abstract class AbstractController implements Controller {
 		return doPost(httpRequest);
 	}
 
-	protected String getResourcePath() {
-		return RESOURCE_PATH;
+	protected String getRootPath(String path) {
+		return TEMPLATES_ROOT_PATH + path;
 	}
 
 	protected HttpResponse doGet(HttpRequest httpRequest) {
-		Resource resource = Resource.of(getResourcePath() + httpRequest.getPath());
+		Resource resource = Resource.of(getRootPath(httpRequest.getPath()));
 
 		return new HttpResponse.Builder()
 				.statusLine(httpRequest.getProtocol(), HttpStatus.OK)
@@ -33,7 +33,9 @@ public abstract class AbstractController implements Controller {
 				.build();
 	}
 
-	abstract HttpResponse doPost(HttpRequest httpRequest);
+	protected HttpResponse doPost(HttpRequest httpRequest) {
+		return null;
+	}
 
 	protected HttpResponse doRedirect(HttpRequest httpRequest, String location) {
 		return new HttpResponse.Builder()
