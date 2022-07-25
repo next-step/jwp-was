@@ -6,7 +6,7 @@ import webserver.service.UserService;
 
 public class UserRegisterController extends AbstractController {
 
-	private UserService userService;
+	private final UserService userService;
 
 	public UserRegisterController() {
 		userService = new UserService();
@@ -14,7 +14,7 @@ public class UserRegisterController extends AbstractController {
 
 	@Override
 	HttpResponse doPost(HttpRequest httpRequest) {
-		userService.register(httpRequest.getParameter());
+		userService.register(httpRequest.getHttpBody());
 		return doRedirect(httpRequest, "/index.html");
 	}
 }
