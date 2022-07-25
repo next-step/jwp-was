@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import webserver.controller.Controller;
 import webserver.controller.LoginController;
 import webserver.controller.UserCreateController;
+import webserver.controller.UserListController;
 import webserver.persistence.Users;
 
 public class WebApplicationServer {
@@ -29,7 +30,8 @@ public class WebApplicationServer {
         var users = new Users();
         Map<Resource, Controller> controllers = Map.of(
             new Resource("/user/create", POST), new UserCreateController(users),
-            new Resource("/user/login", POST), new LoginController(users)
+            new Resource("/user/login", POST), new LoginController(users),
+            new Resource("/user/list", GET), new UserListController(users)
         );
 
         try (ServerSocket listenSocket = new ServerSocket(port)) {

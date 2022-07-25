@@ -11,8 +11,8 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 
 import model.User;
 
-public class HandlebarsTest {
-    private static final Logger log = LoggerFactory.getLogger(HandlebarsTest.class);
+public class TemplateEngineTest {
+    private static final Logger log = LoggerFactory.getLogger(TemplateEngineTest.class);
 
     @Test
     void name() throws Exception {

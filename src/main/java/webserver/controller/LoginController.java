@@ -4,7 +4,9 @@ import static java.util.stream.Collectors.*;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 
+import http.Cookie;
 import http.HttpStatus;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
@@ -32,9 +34,11 @@ public class LoginController implements Controller {
             .filter(it -> it.canLogin(params.get("password")))
             .isPresent();
 
+        var cookie = new Cookie("isLogined", String.valueOf(isLogined), Set.of("Path=/"));
+
         if (isLogined) {
-            return new HttpResponse(HttpStatus.FOUND, Map.of("Set-Cookie", "logined=true; Path=/", "Location", "/templates/index.html"));
+            return new HttpResponse(HttpStatus.FOUND, Map.of("Location", "/templates/index.html"), cookie);
         }
-        return new HttpResponse(HttpStatus.FOUND, Map.of("Set-Cookie", "logined=false; Path=/", "Location", "/templates/user/login_failed.html"));
+        return new HttpResponse(HttpStatus.FOUND, Map.of("Location", "/templates/user/login_failed.html"), cookie);
     }
 }

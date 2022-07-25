@@ -10,10 +10,13 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import http.Cookie;
 import http.request.Headers;
 import http.request.HttpRequest;
 import http.request.RequestLine;
@@ -105,6 +108,15 @@ public class RequestHandler implements Runnable {
 
             for (Map.Entry<String, String> entry : httpResponse.getHeaders().entrySet()) {
                 dos.writeBytes(String.format("%s: %s\r\n", entry.getKey(), entry.getValue()));
+            }
+
+            for (Cookie cookie : httpResponse.getCookies()) {
+                var prefix = String.format("Set-Cookie: %s=%s", cookie.getKey(), cookie.getValue());
+
+                var cookieResponse = Stream.concat(Stream.of(prefix), cookie.getOptions().stream())
+                    .collect(Collectors.joining("; "));
+
+                dos.writeBytes(cookieResponse + "\r\n");
             }
 
             dos.writeBytes("\r\n");
