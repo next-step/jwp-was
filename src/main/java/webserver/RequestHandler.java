@@ -49,7 +49,6 @@ public class RequestHandler implements Runnable {
             var httpRequest = parseHttpRequest(bufferedReader);
 
             if (httpRequest.isStaticFile()) {
-                System.out.println(httpRequest.getUrl());
                 responseStaticFile(new DataOutputStream(out), httpRequest.getUrl(), httpRequest.getFileExtension());
                 return;
             }
