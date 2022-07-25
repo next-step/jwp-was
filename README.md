@@ -7,3 +7,57 @@
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+
+# 기능 요구사항
+## RequestLine을 파싱한다.
+- RequestLine을 파싱해 원하는 값을 가져올 수 있는 API를 제공해야 한다.
+- RequestLine은 HTTP 요청의 첫번째 라인을 의미한다.
+
+## 요구사항 1 - GET 요청
+- HTTP GET 요청에 대한 RequestLine을 파싱한다.
+- 파싱하는 로직 구현을 TDD로 구현한다.
+- 예를 들어 "GET /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다.
+    - method는 GET
+    - path는 /users
+    - protocol은 HTTP
+    - version은 1.1
+
+## 요구사항 2 - POST 요청
+- HTTP POST 요청에 대한 RequestLine을 파싱한다.
+- 파싱하는 로직 구현을 TDD로 구현한다.
+- 예를 들어 "POST /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다.
+    - method는 POST
+    - path는 /users
+    - protocol은 HTTP
+    - version은 1.1
+
+## 요구사항 3 - Query String 파싱
+- HTTP 요청(request)의 Query String으로 전달되는 데이터를 파싱한다.
+- 클라이언트에서 서버로 전달되는 데이터의 구조는 `name1=value1&name2=value2`와 같은 구조로 전달된다.
+- 파싱하는 로직 구현을 TDD로 구현한다.
+- Query String 예 - GET 요청
+```http request
+GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1
+```
+
+## 요구사항 4 - enum 적용 (선택)
+- HTTP method인 GET, POST를 enum으로 구현한다.
+
+## 기능 목록
+- RequestLine 객체
+  - HttpMethod, Path, Protocol 객체를 필드로 가진다.
+  - HttpMethod 객체
+    - method는 GET/POST/PUT/DELETE/PATCH 중 하나이다. 이외의 값은 예외가 발생한다.
+  - Path 객체
+    - String path 와 QueryString 객체를 필드로 가진다. 
+    - path는 항상 '/'로 시작한다. 그렇지 않으면 예외가 발생한다.
+    - QueryString 은 nullable 하다.
+      - QueryString 객체
+        - Query String을 파싱하기 위해 key와 value를 가진 queryStrings Map 필드를 가진다.
+            - path는 `?` 이전까지이고, 이후 `a=b&c=d` 형태라면 a와 c는 key, b와 d는 value가 되고, 각 Query String은 `&`로 구분된다.
+            - queryStrings 필드는 비어있을 수 있다.
+  - Protocol 객체
+    - String Protocol 과 Version 객체를 필드로 가진다. 
+    - protocol 은 항상 HTTP 이다. 그렇지 않으면 예외가 발생한다.
+    - version 은 1.0, 1.1, 2.0 중 하나이다. 이외의 값은 예외가 발생한다.
+              
