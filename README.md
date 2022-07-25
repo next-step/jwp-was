@@ -15,7 +15,7 @@
 
 > http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
 
-- [ ] InputStream 을 문자열로 변환
+- [x] InputStream 을 문자열로 변환
 - [ ] 모든 Request Header 를 출력
 - [ ] RequestLine 에서 Path 분리하기
 - [ ] Path 에 해당하는 파일 읽어 응답하기
