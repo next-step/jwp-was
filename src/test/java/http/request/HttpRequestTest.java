@@ -34,4 +34,16 @@ class HttpRequestTest {
 
         assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
     }
+
+    @Test
+    void getCookie() {
+        var requestLine = new RequestLine("GET /users HTTP/1.1");
+        var headers = new Headers(List.of("Cookie: logined=true"));
+        var httpRequest = new HttpRequest(requestLine, headers, "");
+
+        var actual = httpRequest.getCookie("logined")
+            .get();
+
+        assertThat(actual).isEqualTo("true");
+    }
 }

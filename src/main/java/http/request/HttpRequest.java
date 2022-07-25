@@ -1,5 +1,7 @@
 package http.request;
 
+import java.util.Optional;
+
 public class HttpRequest {
 
     private final RequestLine requestLine;
@@ -26,5 +28,9 @@ public class HttpRequest {
 
     public String getBody() {
         return body;
+    }
+
+    public Optional<String> getCookie(String key) {
+        return headers.getCookie(key);
     }
 }
