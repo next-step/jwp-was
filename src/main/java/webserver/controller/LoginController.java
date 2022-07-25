@@ -37,8 +37,8 @@ public class LoginController implements Controller {
         var cookie = new Cookie("isLogined", String.valueOf(isLogined), Set.of("Path=/"));
 
         if (isLogined) {
-            return new HttpResponse(HttpStatus.FOUND, Map.of("Location", "/templates/index.html"), cookie);
+            return new HttpResponse(HttpStatus.FOUND, Map.of("Location", "/index.html"), cookie);
         }
-        return new HttpResponse(HttpStatus.FOUND, Map.of("Location", "/templates/user/login_failed.html"), cookie);
+        return new HttpResponse(HttpStatus.FOUND, Map.of("Location", "/user/login_failed.html"), cookie);
     }
 }

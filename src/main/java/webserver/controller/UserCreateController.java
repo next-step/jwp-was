@@ -8,7 +8,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import http.HttpStatus;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import model.User;
@@ -37,6 +36,6 @@ public class UserCreateController implements Controller {
 
         users.save(user.getUserId(), user);
 
-        return new HttpResponse(HttpStatus.FOUND, Map.of("Location", "/templates/index.html"));
+        return HttpResponse.found("/index.html");
     }
 }
