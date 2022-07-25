@@ -1,5 +1,6 @@
 package webserver.request.domain.request;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
 import webserver.exception.StringEmptyException;
@@ -13,13 +14,13 @@ public class Path {
     private static final String DELIMITER = "\\?";
 
     private String path;
-    private String queryString;
+    private QueryString queryString = null;
 
     public Path(String path) {
         this.path = path;
     }
 
-    public Path(String path, String queryString) {
+    public Path(String path, QueryString queryString) {
         this.path = path;
         this.queryString = queryString;
     }
@@ -29,7 +30,7 @@ public class Path {
 
         String[] paths = pathInfo.split(DELIMITER);
         if(paths.length >= 2) {
-            return new Path(paths[0], paths[1]);
+            return new Path(paths[0], new QueryString(paths[1]));
         }
         return new Path(paths[0]);
     }
@@ -39,16 +40,20 @@ public class Path {
             throw new StringEmptyException("pathinfo is empty");
     }
 
+    public String getQueryString() {
+        return this.queryString.getValue();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Path path1 = (Path) o;
-        return Objects.equals(getPath(), path1.getPath()) && Objects.equals(getQueryString(), path1.getQueryString());
+        return Objects.equals(getPath(), path1.getPath());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPath(), getQueryString());
+        return Objects.hash(getPath());
     }
 }

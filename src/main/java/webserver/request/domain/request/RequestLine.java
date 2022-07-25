@@ -35,7 +35,7 @@ public class RequestLine {
         protocolInfo = ProtocolInfo.parse(values[2]);
     }
 
-    public String getMethod() {
+    public String parseMethod() {
         return String.valueOf(method);
     }
 

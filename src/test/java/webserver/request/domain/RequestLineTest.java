@@ -24,7 +24,7 @@ public class RequestLineTest {
         RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
 
         assertAll(
-                () -> org.assertj.core.api.Assertions.assertThat(requestLine.getMethod()).isEqualTo("GET"),
+                () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseMethod()).isEqualTo("GET"),
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.parsePath()).isEqualTo("/users"),
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseProtocol()).isEqualTo("HTTP"),
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseProtocolVersion()).isEqualTo("1.1")
@@ -37,7 +37,7 @@ public class RequestLineTest {
         RequestLine requestLine = RequestLine.parse("POST /users HTTP/1.1");
 
         assertAll(
-                () -> org.assertj.core.api.Assertions.assertThat(requestLine.getMethod()).isEqualTo("POST"),
+                () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseMethod()).isEqualTo("POST"),
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.parsePath()).isEqualTo("/users"),
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseProtocol()).isEqualTo("HTTP"),
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseProtocolVersion()).isEqualTo("1.1")
@@ -50,7 +50,7 @@ public class RequestLineTest {
         RequestLine requestLine = RequestLine.parse("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
 
         assertAll(
-                () -> org.assertj.core.api.Assertions.assertThat(requestLine.getMethod()).isEqualTo("GET"),
+                () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseMethod()).isEqualTo("GET"),
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.parsePath()).isEqualTo("/users"),
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseQueryString()).isEqualTo("userId=javajigi&password=password&name=JaeSung"),
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseProtocol()).isEqualTo("HTTP"),

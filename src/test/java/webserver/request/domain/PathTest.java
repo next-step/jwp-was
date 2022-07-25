@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.exception.StringEmptyException;
 import webserver.request.domain.request.Path;
+import webserver.request.domain.request.QueryString;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -27,6 +28,6 @@ public class PathTest {
     @Test
     @DisplayName("querystring을 정상적으로 파싱했는지 테스트")
     void queryStringTest() {
-        Assertions.assertThat(Path.parse("/users?userId=javajigi&password=password&name=JaeSung")).isEqualTo(new Path("/users", "userId=javajigi&password=password&name=JaeSung"));
+        Assertions.assertThat(Path.parse("/users?userId=javajigi&password=password&name=JaeSung")).isEqualTo(new Path("/users", new QueryString("userId=javajigi&password=password&name=JaeSung")));
     }
 }
