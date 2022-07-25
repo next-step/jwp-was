@@ -2,10 +2,16 @@ package webserver.http.response;
 
 import java.nio.charset.StandardCharsets;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import webserver.http.ContentType;
 import webserver.http.request.HttpProtocol;
 
 public class HttpResponse {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(HttpResponse.class);
+
 	private static final String NEW_LINE = "\r\n";
 
 	private final HttpStatusLine httpStatusLine;
@@ -32,6 +38,11 @@ public class HttpResponse {
 			return this;
 		}
 
+		public Builder responseBody(String resource) {
+			httpResponseBody = new HttpResponseBody(resource);
+			return this;
+		}
+
 		public Builder contentType(ContentType contentType) {
 			httpResponseHeaders.putContentType(contentType);
 			return this;
@@ -46,12 +57,22 @@ public class HttpResponse {
 			httpResponseHeaders.putLocation(location);
 			return this;
 		}
+
+		public Builder cookie(String cookie) {
+			httpResponseHeaders.putCookie(cookie);
+			return this;
+		}
+
 		public HttpResponse build() {
 			return new HttpResponse(this);
 		}
+
 	}
 
 	public byte[] getBytes() {
+		LOGGER.debug("status line : " + httpStatusLine.getHttpStatusLine());
+		LOGGER.debug("header : " + httpResponseHeaders.getResponseHeaders());
+		LOGGER.debug("body : " + httpResponseBody.getBody());
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(httpStatusLine.getHttpStatusLine());
 		buffer.append(NEW_LINE);

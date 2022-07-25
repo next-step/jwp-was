@@ -9,6 +9,7 @@ public class HttpResponseHeaders {
 	private static final String CONTENT_TYPE = "Content-Type";
 	private static final String CONTENT_LENGTH = "Content-Length";
 	public static final String LOCATION = "Location";
+	public static final String COOKIE = "Set-Cookie";
 	private static final String NEW_LINE = "\r\n";
 	private static final String HEADER_DELIMITER = ": ";
 
@@ -36,5 +37,9 @@ public class HttpResponseHeaders {
 
 	public void putLocation(String location) {
 		headers.put(LOCATION, location);
+	}
+
+	public void putCookie(String cookie) {
+		headers.put(COOKIE, cookie);
 	}
 }
