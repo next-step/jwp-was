@@ -1,5 +1,7 @@
 package utils;
 
+import exception.NotExistHttpMethodException;
+
 import java.util.Arrays;
 
 public enum HttpMethod {
@@ -19,4 +21,3 @@ public enum HttpMethod {
                 .anyMatch(method -> requestMethod.equals(method.name));
     }
 }
-
