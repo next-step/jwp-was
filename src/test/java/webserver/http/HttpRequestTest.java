@@ -1,16 +1,13 @@
 package webserver.http;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import webserver.http.HttpMethod;
-import webserver.http.HttpRequest;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class HttpRequestTest {
 
@@ -30,10 +27,10 @@ class HttpRequestTest {
     }
 
     private String httpRequest() {
-        StringBuilder builder = new StringBuilder("GET /users?userId=javajigi HTTP/1.1\r\n");
-        builder.append("Accept: text/html\r\n");
-        builder.append("Connection: keep-alive\r\n");
+        String lineSeparator = System.lineSeparator();
+        StringBuilder builder = new StringBuilder("GET /users?userId=javajigi HTTP/1.1 " + lineSeparator);
+        builder.append("Accept: text/html").append(lineSeparator);
+        builder.append("Connection: keep-alive").append(lineSeparator);
         return builder.toString();
     }
-
 }

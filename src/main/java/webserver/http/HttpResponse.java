@@ -1,5 +1,10 @@
 package webserver.http;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
+import utils.HandlebarsUtils;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,15 +14,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import utils.FileIoUtils;
-import utils.HandlebarsUtils;
-
 public class HttpResponse {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
+    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     private final DataOutputStream out;
     private final Map<String, String> headers = new HashMap<>();
@@ -70,10 +70,10 @@ public class HttpResponse {
 
     public void sendRedirect(String url) {
         try {
-            out.writeBytes("HTTP/1.1 302 Found \r\n");
+            out.writeBytes("HTTP/1.1 302 Found " + LINE_SEPARATOR);
             processHeaders();
             out.writeBytes(String.format("Location: %s%n", url));
-            out.writeBytes("\r\n");
+            out.writeBytes(LINE_SEPARATOR);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -81,9 +81,9 @@ public class HttpResponse {
 
     private void response200Header() {
         try {
-            out.writeBytes("HTTP/1.1 200 OK \r\n");
+            out.writeBytes("HTTP/1.1 200 OK " + LINE_SEPARATOR);
             processHeaders();
-            out.writeBytes("\r\n");
+            out.writeBytes(LINE_SEPARATOR);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
