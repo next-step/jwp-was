@@ -34,6 +34,10 @@ public class Path {
         return path;
     }
 
+    public boolean endWith(String suffix) {
+        return path.endsWith(suffix);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
