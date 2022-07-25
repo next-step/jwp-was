@@ -10,12 +10,11 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-
     private Socket connection;
-
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
     }
@@ -29,19 +28,26 @@ public class RequestHandler implements Runnable {
             if (line == null) {
                 return;
             }
+            // Request Line
             RequestLineParser RLParser = new RequestLineParser(line);
             String path = RLParser.getUri().getPath();
+            // Request Header
+            int contentLength = 0;
+            while (!line.equals("")) {
+                line = br.readLine();
+                logger.debug("header: {}", line);
+                if (line.contains("Content-Length")){
+                    contentLength = getContentLength(line);
+                }
+            }
+
             if (path.startsWith("/user/create")) {
-                Map<String,String> params =
-                        RLParser.getUri().getQueryString().getQueryParameters();
-                User user = new User(params.get("userId"), params.get("password"),
-                        params.get("name"), params.get("email"));
+                String body = IOUtils.readData(br, contentLength);
+                QueryStringParser QSParser = new QueryStringParser(body);
+                Map<String, String> params = QSParser.getQueryParameters();
+                User user = new User(params.get("userId"), params.get("password"),params.get("name"),params.get("email"));
                 logger.debug("User : {}",user);
             }
-//            while (!line.equals("")) {
-//                line = br.readLine();
-//                logger.debug("header: {}",line);
-//            }
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + path);
             response200Header(dos, body.length);
@@ -49,6 +55,11 @@ public class RequestHandler implements Runnable {
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private int getContentLength(String line) {
+        String[] headerTokens = line.split(":");
+        return Integer.parseInt(headerTokens[1].trim());
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {

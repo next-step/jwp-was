@@ -73,7 +73,7 @@ Accept: */*
 
 userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net
 ```
-- [ ] Request Body의 값 추출하기
+- [X] Request Body의 값 추출하기
   - POST method로 데이터를 전달할 경우 전달하는 데이터는 HTTP Body에 담긴다.
   - HTTP Body는 HTTP header 이후 빈 공백을 가지는 한 줄(line) 다음부터 시작한다.
   - HTTP Body에 전달되는 데이터는 GET method의 이름=값과 같다.
