@@ -39,9 +39,11 @@ public class FrontController {
 
             return httpResponse;
         } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return new HttpResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage());
         } catch (NoSuchMethodException e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return new HttpResponse(HttpStatus.NOT_FOUND, null, e.getMessage());
         }

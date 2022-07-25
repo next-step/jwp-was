@@ -2,7 +2,7 @@ package model.dto;
 
 import model.User;
 import webserver.domain.EntitySupplier;
-import webserver.domain.Parameters;
+import webserver.domain.RequestBody;
 
 public class UserSaveRequest implements EntitySupplier<User> {
     private final String userId;
@@ -17,12 +17,12 @@ public class UserSaveRequest implements EntitySupplier<User> {
         this.email = email;
     }
 
-    public static UserSaveRequest from(Parameters parameters) {
+    public static UserSaveRequest from(RequestBody body) {
         return new UserSaveRequest(
-                parameters.get("userId"),
-                parameters.get("password"),
-                parameters.get("name"),
-                parameters.get("email")
+                body.getAttribute("userId"),
+                body.getAttribute("password"),
+                body.getAttribute("name"),
+                body.getAttribute("email")
         );
     }
 

@@ -17,6 +17,8 @@ public class HttpHeaders {
     public static final String ACCEPT = "Accept";
     public static final String ACCEPT_ALL = "*/*";
     public static final String CONTENT_LENGTH = "Content-Length";
+    public static final String SET_COOKIE = "Set-Cookie";
+    public static final String COOKIE = "Cookie";
 
     private final Map<String, String> headers = new HashMap<>();
 
@@ -90,12 +92,16 @@ public class HttpHeaders {
     @Override
     public String toString() {
         return headers.entrySet().stream()
-                .map(entry -> entry.getKey()+ ": "+ entry.getValue())
+                .map(entry -> entry.getKey()+ ": "+ entry.getValue()+"\r\n")
                 .collect(Collectors.joining());
     }
 
     public int getContentLength() {
         String contentLength = getAttributeOrDefault(CONTENT_LENGTH, "0");
         return Integer.parseInt(contentLength);
+    }
+
+    public Cookie getCookie() {
+        return Cookie.from(getAttribute(COOKIE));
     }
 }

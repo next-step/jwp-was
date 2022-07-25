@@ -1,6 +1,8 @@
 package webserver.domain;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Supplier;
 
 public class HttpResponse {
     private static final StringBuilder stringBuilder = new StringBuilder();
@@ -24,6 +26,28 @@ public class HttpResponse {
         HttpResponse httpResponse = new HttpResponse(HttpStatus.OK, new View(contentType.prefix(), templateName), null);
 
         httpResponse.addCommonResponseHeader();
+        httpResponse.addHeader(HttpHeaders.CONTENT_TYPE, contentType.getContentType());
+
+        return httpResponse;
+    }
+
+    public static HttpResponse templateResponse(String templateName, Object param) throws IOException {
+
+        String templateBody = TemplateEngineHelper.applyTemplate( templateName, param);
+        HttpResponse httpResponse = new HttpResponse(HttpStatus.OK,
+                new View(templateName, templateBody.getBytes()),
+                null);
+
+        httpResponse.addCommonResponseHeader();
+        httpResponse.addHeader(HttpHeaders.CONTENT_TYPE, ContentType.HTML.getContentType());
+
+        return httpResponse;
+    }
+
+
+    public static HttpResponse of(HttpStatus httpStatus, String viewName) {
+        ContentType contentType = ContentType.suffixOf(viewName);
+        HttpResponse httpResponse = new HttpResponse(httpStatus, new View(contentType.prefix(), viewName), null);
         httpResponse.addHeader(HttpHeaders.CONTENT_TYPE, contentType.getContentType());
 
         return httpResponse;
@@ -73,18 +97,27 @@ public class HttpResponse {
     }
 
     public String toStringHeader() {
-        String lineSeparator = System.lineSeparator();
+        String lineSeparator = "\r\n";
         stringBuilder.setLength(0);
-        stringBuilder.append(getHttpStatusMessage()).append(lineSeparator);
-        stringBuilder.append(headers.toString()).append(lineSeparator);
+        stringBuilder.append(getHttpStatusMessage())
+                .append(lineSeparator)
+                .append(headers.toString())
+                .append(lineSeparator);
 
         return stringBuilder.toString();
     }
 
     public byte[] getBodyOrView() {
+        if (body == null && view == null) {
+            return new byte[0];
+        }
         if (body != null) {
             return body.getBytes(StandardCharsets.UTF_8);
         }
         return view.getContent();
+    }
+
+    public void addCookie(Cookie cookie) {
+        addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 }

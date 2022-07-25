@@ -10,11 +10,15 @@ public class View {
     private final byte[] content;
 
     public View(String prefix, String viewName) {
-        this.viewName = viewName;
-        this.content = getViewContent(prefix, viewName);
+        this(viewName, getViewContent(prefix, viewName));
     }
 
-    private byte[] getViewContent(String prefix, String viewName) {
+    public View(String viewName, byte[] content) {
+        this.viewName = viewName;
+        this.content = content;
+    }
+
+    private static byte[] getViewContent(String prefix, String viewName) {
         try {
             return FileIoUtils.loadFileFromClasspath(prefix + viewName);
         } catch (IOException | URISyntaxException e) {

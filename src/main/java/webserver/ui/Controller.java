@@ -30,7 +30,7 @@ public interface Controller {
         boolean matchMethod = Arrays.stream(annotation.method())
                 .anyMatch(method -> method.equals(requestLine.getMethod()));
 
-        boolean matchPath = Path.from(annotation.value()).containsPath(requestLine.getPath());
+        boolean matchPath = new Path(annotation.value()).containsPath(requestLine.getPath());
 
         return matchPath && matchMethod;
     }

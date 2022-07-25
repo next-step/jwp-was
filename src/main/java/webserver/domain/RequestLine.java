@@ -3,8 +3,9 @@ package webserver.domain;
 import org.springframework.http.HttpMethod;
 
 public class RequestLine {
+    public static final String QUERY_DELIMITER = "\\?";
     public static final String DELIMITER = " ";
-    public static final int PATH_AND_QUERYSTRING_POINT = 1;
+    public static final int PATH_POINT = 1;
     public static final int PROTOCOL_AND_VERSION_POINT = 2;
     public static final int METHOD_POINT = 0;
 
@@ -29,7 +30,7 @@ public class RequestLine {
         String[] attributes = line.split(DELIMITER);
 
         HttpMethod httpMethod = HttpMethod.valueOf(attributes[METHOD_POINT]);
-        Path path = Path.from(attributes[PATH_AND_QUERYSTRING_POINT]);
+        Path path = new Path(attributes[PATH_POINT].split(QUERY_DELIMITER)[0]);
         Protocol protocol = Protocol.newInstance(attributes[PROTOCOL_AND_VERSION_POINT]);
 
         return new RequestLine(httpMethod, path, protocol);
@@ -46,11 +47,6 @@ public class RequestLine {
 
     public Protocol getProtocol() {
         return protocol;
-    }
-
-
-    public Parameters getParameters() {
-        return path.getParameters();
     }
 
     public String getPathStr() {

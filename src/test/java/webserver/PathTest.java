@@ -15,19 +15,8 @@ public class PathTest {
     @ParameterizedTest
     @ValueSource(strings = {"/users", "/account/v1/order"})
     void createPathWithoutQueryString(String path) {
-        Path actualPath = Path.from(path);
+        Path actualPath = new Path(path);
 
-        assertThat(actualPath).isEqualTo(new Path(path, Parameters.emptyInstance()));
-    }
-
-    @DisplayName("쿼리스트링이 있는 패스를 생성한다.")
-    @Test
-    void createPathWithQueryString() {
-        Path actualPath = Path.from("/users?userId=catsbi&password=password&name=hansol");
-        Parameters parameters = actualPath.getParameters();
-
-        assertThat(parameters.get("userId")).isEqualTo("catsbi");
-        assertThat(parameters.get("password")).isEqualTo("password");
-        assertThat(parameters.get("name")).isEqualTo("hansol");
+        assertThat(actualPath).isEqualTo(new Path(path));
     }
 }

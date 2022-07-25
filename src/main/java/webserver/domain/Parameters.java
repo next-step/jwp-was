@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -48,6 +49,10 @@ public class Parameters {
         return new Parameters(Collections.emptyMap());
     }
 
+    public static Parameters newInstance() {
+        return new Parameters(new HashMap<>());
+    }
+
     public Map<String, String> getParameters() {
         return Collections.unmodifiableMap(store);
     }
@@ -71,5 +76,13 @@ public class Parameters {
 
     public String get(String key) {
         return store.get(key);
+    }
+
+    public void addParameters(String line) {
+        store.putAll(getParameterMap(line));
+    }
+
+    public void addParameters(String key, String value) {
+        store.put(key, value);
     }
 }

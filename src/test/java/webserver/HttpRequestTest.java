@@ -43,7 +43,7 @@ class HttpRequestTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(requestLine.getPath()).isEqualTo(new Path(USERS_PATH, Parameters.emptyInstance()));
+        assertThat(requestLine.getPath()).isEqualTo(new Path(USERS_PATH));
         assertThat(requestLine.getProtocol()).isEqualTo(new Protocol(HTTP_PROTOCOL, TEST_VERSION));
     }
 
@@ -56,7 +56,7 @@ class HttpRequestTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
-        assertThat(requestLine.getPath()).isEqualTo(new Path(USERS_PATH, Parameters.emptyInstance()));
+        assertThat(requestLine.getPath()).isEqualTo(new Path(USERS_PATH));
         assertThat(requestLine.getProtocol()).isEqualTo(new Protocol(HTTP_PROTOCOL, TEST_VERSION));
 
     }
@@ -68,17 +68,16 @@ class HttpRequestTest {
                 HttpRequest.class);
 
         HttpRequest httpRequest = response.getBody();
+        RequestBody requestBody = Objects.requireNonNull(httpRequest).getRequestBody();
         RequestLine requestLine = Objects.requireNonNull(httpRequest).getRequestLine();
-        Parameters parameters = requestLine.getParameters();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(requestLine.getPath())
-                .isEqualTo(new Path(USERS_PATH, Parameters.from("userId=catsbi&password=password&name=hansol")));
+        assertThat(requestLine.getPath()).isEqualTo(new Path(USERS_PATH));
         assertThat(requestLine.getProtocol()).isEqualTo(new Protocol(HTTP_PROTOCOL, TEST_VERSION));
-        assertThat(parameters.get("userId")).isEqualTo("catsbi");
-        assertThat(parameters.get("password")).isEqualTo("password");
-        assertThat(parameters.get("name")).isEqualTo("hansol");
+        assertThat(requestBody.getAttribute("userId")).isEqualTo("catsbi");
+        assertThat(requestBody.getAttribute("password")).isEqualTo("password");
+        assertThat(requestBody.getAttribute("name")).isEqualTo("hansol");
     }
 
     @DisplayName("${host}/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.")

@@ -6,12 +6,16 @@ import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import static com.github.jknack.handlebars.internal.lang3.StringUtils.EMPTY;
 
 public class HttpRequest {
     public static final int REQUEST_LINE_POINT = 0;
     public static final int HEADER_START_POINT = 1;
+    public static final String QUERY_DELIMITER = "\\?";
+
     private final RequestLine requestLine;
     private final HttpHeaders headers;
     private final RequestBody requestBody;
@@ -26,8 +30,9 @@ public class HttpRequest {
     }
 
     public static HttpRequest newInstance(BufferedReader br) throws IOException {
-        String line = br.readLine();
+        String line = URLDecoder.decode(br.readLine(), StandardCharsets.UTF_8);
         RequestLine requestLine = RequestLine.from(line);
+        RequestBody requestBody = RequestBody.fromRequestLine(line);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         line = br.readLine();
@@ -37,10 +42,8 @@ public class HttpRequest {
         }
 
         int contentLength = httpHeaders.getContentLength();
-        RequestBody requestBody = null;
-
         if (contentLength > 0) {
-             requestBody = new RequestBody(IOUtils.readData(br, contentLength));
+             requestBody.addAttributes(IOUtils.readData(br, contentLength));
         }
 
         return new HttpRequest(requestLine, httpHeaders, requestBody);
@@ -58,7 +61,7 @@ public class HttpRequest {
         return requestBody;
     }
 
-    public Parameters getRequestParameters() {
-        return requestLine.getParameters();
+    public Cookie getCookie() {
+        return headers.getCookie();
     }
 }

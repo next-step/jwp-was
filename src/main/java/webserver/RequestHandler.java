@@ -2,11 +2,14 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.domain.ContentType;
+import webserver.domain.HttpHeaders;
 import webserver.domain.HttpRequest;
 import webserver.domain.HttpResponse;
 import webserver.domain.HttpStatus;
 import webserver.domain.Path;
 import webserver.domain.RequestLine;
+import webserver.domain.View;
 import webserver.ui.FrontController;
 
 import java.io.BufferedReader;
@@ -17,12 +20,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-
-    private static final String[] WHITE_LIST = {"/css", "/js", "/fonts", "/images"};
 
     private final Socket connection;
     private final FrontController frontController;
@@ -64,18 +64,22 @@ public class RequestHandler implements Runnable {
 
     private boolean isResourceRequest(RequestLine requestLine) {
         Path path = requestLine.getPath();
-        return Arrays.stream(WHITE_LIST)
-                .anyMatch(wPath -> path.containsPath(new Path(wPath, null)));
+
+        return ContentType.isResourceContent(path.getPathStr());
     }
 
     private HttpResponse resourceHandle(HttpRequest httpRequest) {
         RequestLine requestLine = httpRequest.getRequestLine();
+        Path path = requestLine.getPath();
+        ContentType contentType = ContentType.suffixOf(path.getPathStr());
 
-        return HttpResponse.templateResponse(requestLine.getPathStr());
+        HttpResponse httpResponse = new HttpResponse(HttpStatus.OK, new View(contentType.prefix(), path.getPathStr()), null);
+        httpResponse.addHeader(HttpHeaders.CONTENT_TYPE, contentType.getContentType());
+
+        return httpResponse;
     }
 
     private void responseHandle(DataOutputStream dos, HttpResponse httpResponse) {
-
         sendResponseHeader(dos, httpResponse);
 
         responseBody(dos, httpResponse);
