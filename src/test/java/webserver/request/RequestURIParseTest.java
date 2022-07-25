@@ -1,22 +1,20 @@
 package webserver.request;
 
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-import webserver.request.RequestURI;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RequestURIParseTest {
     @Test
-    @DisplayName("URI를 파싱하여 path와 queryString 정보를 얻을 수 있다.")
+    @DisplayName("URI를 파싱하여 path와 params 정보를 얻을 수 있다.")
     void parseTest() {
         String uri = "/users?name=TEST&password=password";
 
         RequestURI requestURI = new RequestURI(uri);
 
         assertEquals(requestURI.getPath(), "/users");
-        assertEquals(requestURI.getQueryString(), "name=TEST&password=password");
+        assertEquals(requestURI.getQueryString().getParams(), Map.of("name", "TEST", "password", "password"));
     }
 
     @Test

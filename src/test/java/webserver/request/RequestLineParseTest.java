@@ -1,5 +1,6 @@
 package webserver.request;
 
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import enums.HttpMethod;
@@ -44,7 +45,7 @@ public class RequestLineParseTest {
 
         assertThat(result.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(result.getPath()).isEqualTo("/users");
-        assertThat(result.getQueryString()).isEqualTo("name=name&password=password");
+        assertThat(result.getQueryString().getParams()).isEqualTo(Map.of("name", "name", "password", "password"));
         assertThat(result.getProtocol()).isEqualTo("HTTP");
         assertThat(result.getVersion()).isEqualTo("1.1");
     }
@@ -54,8 +55,6 @@ public class RequestLineParseTest {
     void testWrongRequest() {
         String request = "GET /users HTTP//1.2";
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            new RequestLine(request);
-        });
+        assertThrows(IllegalArgumentException.class, () -> new RequestLine(request));
     }
 }

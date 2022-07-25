@@ -6,9 +6,16 @@ public class Protocol {
     private final String name;
     private final String version;
 
+    public Protocol(String name, String version) {
+        this.name = name;
+        this.version = version;
+    }
+
     public Protocol(String protocol) {
-        this.name = protocol.split(DELIMITER)[0];
-        this.version = protocol.split(DELIMITER)[1];
+        String[] splitProtocol = protocol.split(DELIMITER);
+
+        this.name = splitProtocol[0];
+        this.version = splitProtocol[1];
     }
 
     public String getName() {

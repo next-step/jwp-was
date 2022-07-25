@@ -1,6 +1,7 @@
 package webserver.request;
 
 import enums.HttpMethod;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class RequestLine {
@@ -10,14 +11,22 @@ public class RequestLine {
     private final RequestURI uri;
     private final Protocol protocol;
 
+    public RequestLine(HttpMethod method, RequestURI uri, Protocol protocol) {
+        this.method = method;
+        this.uri = uri;
+        this.protocol = protocol;
+    }
+
     public RequestLine(String httpRequest) {
-        if (!PATTERN.matcher(httpRequest).matches()) throw new IllegalArgumentException();
+        if (!PATTERN.matcher(httpRequest).matches()) {
+            throw new IllegalArgumentException();
+        }
 
-        String[] values = httpRequest.split(" ");
+        String[] splitRequestLine = httpRequest.split(" ");
 
-        this.method = HttpMethod.valueOf(values[0]);
-        this.uri = new RequestURI(values[1]);
-        this.protocol = new Protocol(values[2]);
+        this.method = HttpMethod.valueOf(splitRequestLine[0]);
+        this.uri = new RequestURI(splitRequestLine[1]);
+        this.protocol = new Protocol(splitRequestLine[2]);
     }
 
     public HttpMethod getMethod() {
@@ -36,7 +45,7 @@ public class RequestLine {
         return uri.getPath();
     }
 
-    public String getQueryString() {
+    public QueryString getQueryString() {
         return uri.getQueryString();
     }
 }
