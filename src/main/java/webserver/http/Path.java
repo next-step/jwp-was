@@ -30,8 +30,16 @@ public class Path {
         return new Path(path, params);
     }
 
+    public boolean isSameUrlPath(String path) {
+        return this.path.equals(path);
+    }
+
     public String getPath() {
         return path;
+    }
+
+    public Params getParams() {
+        return params;
     }
 
     public boolean endWith(String suffix) {
