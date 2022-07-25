@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import http.Cookie;
+import http.request.ContentType;
 import http.request.Headers;
 import http.request.HttpRequest;
 import http.request.RequestLine;
@@ -48,7 +49,8 @@ public class RequestHandler implements Runnable {
             var httpRequest = parseHttpRequest(bufferedReader);
 
             if (httpRequest.isStaticFile()) {
-                responseStaticFile(new DataOutputStream(out), httpRequest.getUrl());
+                System.out.println(httpRequest.getUrl());
+                responseStaticFile(new DataOutputStream(out), httpRequest.getUrl(), httpRequest.getFileExtension());
                 return;
             }
             var controller = controllers.get(new Resource(httpRequest.getUrl(), httpRequest.getMethod()));
@@ -79,12 +81,13 @@ public class RequestHandler implements Runnable {
         return "";
     }
 
-    private void responseStaticFile(DataOutputStream dos, String path) {
+    private void responseStaticFile(DataOutputStream dos, String path, String fileExtension) {
         try {
             var bytes = FileIoUtils.loadFileFromClasspath(path);
+            var contentType = ContentType.of(fileExtension);
 
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Type: " + contentType.getMessage() + ";charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + bytes.length + "\r\n");
             dos.writeBytes("\r\n");
             dos.write(bytes);

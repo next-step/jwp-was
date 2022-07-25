@@ -33,4 +33,8 @@ public class HttpRequest {
     public Optional<String> getCookie(String key) {
         return headers.getCookie(key);
     }
+
+    public String getFileExtension() {
+        return requestLine.getFileExtension();
+    }
 }

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class HttpRequestTest {
@@ -45,5 +46,28 @@ class HttpRequestTest {
             .get();
 
         assertThat(actual).isEqualTo("true");
+    }
+
+    @Test
+    void getFileExtension() {
+        var requestLine = new RequestLine("GET /users/index.html HTTP/1.1");
+        var headers = new Headers(List.of());
+        var httpRequest = new HttpRequest(requestLine, headers, "");
+
+        var fileExtension = httpRequest.getFileExtension();
+
+        assertThat(fileExtension).isEqualTo("html");
+    }
+
+    @DisplayName("확장자를 찾을때, 정적파일이 아닌 경우 예외를 반환한다.")
+    @Test
+    void getFileExtensionError() {
+        var requestLine = new RequestLine("GET /users/index HTTP/1.1");
+        var headers = new Headers(List.of());
+        var httpRequest = new HttpRequest(requestLine, headers, "");
+
+        assertThatThrownBy(httpRequest::getFileExtension)
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageStartingWith("확장자를 찾을 수 없습니다.");
     }
 }

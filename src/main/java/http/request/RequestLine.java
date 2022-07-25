@@ -1,6 +1,7 @@
 package http.request;
 
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class RequestLine {
 
@@ -8,6 +9,7 @@ public class RequestLine {
     private static final String QUERY_PARAMETER_DELIMITER = "\\?";
 
     private static final int ONLY_PATH = 1;
+    private static final Pattern REGEX = Pattern.compile("([/.\\w]+)([.][\\w]+)([?][\\w./=]+)?");
 
     private final HttpMethod httpMethod;
     private final String url;
@@ -55,8 +57,18 @@ public class RequestLine {
     }
 
     public boolean isStaticFile() {
-        return url.endsWith(".html")
-            || url.endsWith(".css")
-            || url.endsWith(".js");
+        String lastPath = url.substring(url.lastIndexOf("/"));
+
+        return REGEX.matcher(lastPath)
+            .find();
+    }
+
+    public String getFileExtension() {
+        if (!isStaticFile()) {
+            throw new IllegalArgumentException("확장자를 찾을 수 없습니다. url=" + getUrl());
+        }
+
+        var splitedUrl = url.split("\\.");
+        return splitedUrl[splitedUrl.length - 1];
     }
 }
