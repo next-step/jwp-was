@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import webserver.enums.HttpMethod;
-import webserver.enums.RequestProtocol;
+import webserver.enums.Protocol;
 
 class HttpRequestTest {
 
@@ -18,7 +18,7 @@ class HttpRequestTest {
 
         assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(httpRequest.getPath()).isEqualTo("/users");
-        assertThat(httpRequest.getProtocol()).isEqualTo(RequestProtocol.HTTP_1_1);
+        assertThat(httpRequest.getProtocol()).isEqualTo(Protocol.HTTP_1_1);
     }
 
     @Disabled("로컬 8080 요청/응답 테스트 (서버 동작 후 테스팅 가능)")

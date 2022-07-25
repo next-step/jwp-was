@@ -1,19 +1,25 @@
 package webserver.supporter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import webserver.servlet.Servlet;
+import webserver.servlet.UserCreateServlet;
 
 public class SupportApis {
     private SupportApis() { }
 
-    static Set<String> apiMap;
+    static Map<String, Servlet> apiMap;
     static {
-        apiMap = new HashSet<>();
-        apiMap.add("/user/create");
+        apiMap = new HashMap<>();
+        apiMap.put("/user/create", new UserCreateServlet());
     }
 
     public static boolean isSupported(String path) {
-        return apiMap.contains(path);
+        return apiMap.containsKey(path);
+    }
+
+    public static Servlet getServlet(String path) {
+        return apiMap.get(path);
     }
 
 }

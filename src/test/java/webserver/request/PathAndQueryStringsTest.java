@@ -1,11 +1,11 @@
-package webserver;
+package webserver.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.entry;
 
 import org.junit.jupiter.api.Test;
-import webserver.RequestLine.PathAndQueryStrings;
+import webserver.request.RequestLine.PathAndQueryStrings;
 
 class PathAndQueryStringsTest {
 

@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import webserver.enums.HttpMethod;
-import webserver.enums.RequestProtocol;
+import webserver.enums.Protocol;
 
 /**
  * HTTP Request 의 첫번째 라인 (== Start Line)
@@ -21,10 +21,10 @@ public final class RequestLine {
 
     private HttpMethod requestMethod;
     private String path;
-    private RequestProtocol protocol;
+    private Protocol protocol;
     private Map<String, String> queryStringsMap;
 
-    private RequestLine(HttpMethod requestMethod, PathAndQueryStrings pathAndQueryStrings, RequestProtocol protocol) {
+    private RequestLine(HttpMethod requestMethod, PathAndQueryStrings pathAndQueryStrings, Protocol protocol) {
         this.requestMethod = requestMethod;
         this.path = pathAndQueryStrings.path;
         this.protocol = protocol;
@@ -36,10 +36,10 @@ public final class RequestLine {
 
         String[] strings = startLine.split(REQUEST_LINE_SPLIT_REGEX);
 
-        return RequestLine.of(HttpMethod.valueOf(strings[0]), strings[1], RequestProtocol.of(strings[2]));
+        return RequestLine.of(HttpMethod.valueOf(strings[0]), strings[1], Protocol.of(strings[2]));
     }
 
-    public static RequestLine of(HttpMethod method, String path, RequestProtocol protocol) {
+    public static RequestLine of(HttpMethod method, String path, Protocol protocol) {
         return new RequestLine(method, PathAndQueryStrings.of(path), protocol);
     }
 
@@ -80,7 +80,7 @@ public final class RequestLine {
         return path;
     }
 
-    public RequestProtocol getProtocol() {
+    public Protocol getProtocol() {
         return protocol;
     }
 

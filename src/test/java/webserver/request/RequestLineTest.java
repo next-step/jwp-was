@@ -8,10 +8,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import webserver.request.RequestLine;
 import webserver.request.RequestLine.PathAndQueryStrings;
 import webserver.enums.HttpMethod;
-import webserver.enums.RequestProtocol;
+import webserver.enums.Protocol;
 
 class RequestLineTest {
 
@@ -45,7 +44,7 @@ class RequestLineTest {
     void createGetTest() {
         RequestLine getRequest = RequestLine.of("GET /users HTTP/1.1");
 
-        assertThat(getRequest).isEqualTo(RequestLine.of(HttpMethod.GET, "/users", RequestProtocol.HTTP_1_1));
+        assertThat(getRequest).isEqualTo(RequestLine.of(HttpMethod.GET, "/users", Protocol.HTTP_1_1));
     }
 
     @DisplayName("RequestLine 파싱 테스트 중 POST 요청 테스트")
@@ -53,7 +52,7 @@ class RequestLineTest {
     void createPostTest() {
         RequestLine postRequest = RequestLine.of("POST /users HTTP/1.1");
 
-        assertThat(postRequest).isEqualTo(RequestLine.of(HttpMethod.POST, "/users", RequestProtocol.HTTP_1_1));
+        assertThat(postRequest).isEqualTo(RequestLine.of(HttpMethod.POST, "/users", Protocol.HTTP_1_1));
     }
 
     @DisplayName("RequestLine 파싱 테스트 중 Query String 포함한 테스트")
@@ -61,7 +60,7 @@ class RequestLineTest {
     void createGetWithQueryStringTest() {
         RequestLine getRequest = RequestLine.of("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
 
-        assertThat(getRequest).isEqualTo(RequestLine.of(HttpMethod.GET, "/users?userId=javajigi&password=password&name=JaeSung", RequestProtocol.HTTP_1_1));
+        assertThat(getRequest).isEqualTo(RequestLine.of(HttpMethod.GET, "/users?userId=javajigi&password=password&name=JaeSung", Protocol.HTTP_1_1));
     }
 
     @DisplayName("Path 파싱 시 QueryString 이 없는 경우 Path 만 나오고 QueryString 은 emptyMap 으로 나온다.")

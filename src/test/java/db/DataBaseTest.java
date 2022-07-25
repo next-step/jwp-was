@@ -1,6 +1,7 @@
 package db;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import model.User;
 import model.UserTest;
@@ -12,6 +13,17 @@ class DataBaseTest {
     @BeforeEach
     void setUp() {
         DataBase.deleteAll();
+    }
+
+    @Test
+    void addUserDuplicatedTest() {
+        assertThat(DataBase.findAll()).isEmpty();
+
+        DataBase.addUser(UserTest.TEST_USER);
+
+        assertThatThrownBy(
+            () -> DataBase.addUser(UserTest.TEST_USER)
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

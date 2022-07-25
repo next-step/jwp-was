@@ -2,7 +2,7 @@ package webserver.enums;
 
 import static exception.ExceptionStrings.INVALID_PROTOCOL_VERSION_STRING;
 
-public enum RequestProtocol {
+public enum Protocol {
     HTTP_1_1("HTTP", "1.1");
 
     private static final String PROTOCOL_DELIMITER = "/";
@@ -13,7 +13,7 @@ public enum RequestProtocol {
     private final String protocol;
     private final String version;
 
-    RequestProtocol(String protocol, String version) {
+    Protocol(String protocol, String version) {
         this.protocol = protocol;
         this.version = version;
     }
@@ -26,12 +26,12 @@ public enum RequestProtocol {
         return version;
     }
 
-    public static RequestProtocol of(String protocolString) {
+    public static Protocol of(String protocolString) {
         if (protocolString.split(PROTOCOL_DELIMITER).length < PROTOCOL_COMPONENT_COUNT) {
             throw new IllegalArgumentException(INVALID_PROTOCOL_VERSION_STRING);
         }
 
-        return RequestProtocol.valueOf(protocolString
+        return Protocol.valueOf(protocolString
             .replaceAll(PROTOCOL_DELIMITER, UNDER_BAR)
             .replaceAll(VERSION_DOT, UNDER_BAR)
         );

@@ -7,7 +7,7 @@ public final class SupportTemplates {
 
     private SupportTemplates() { }
 
-    static Set<String> pathMap;
+    private static Set<String> pathMap;
     static {
         pathMap = new HashSet<>();
         pathMap.add("/qna/form.html");

@@ -2,7 +2,7 @@ package webserver.request;
 
 import java.util.Map;
 import webserver.enums.HttpMethod;
-import webserver.enums.RequestProtocol;
+import webserver.enums.Protocol;
 
 public class HttpRequest {
 
@@ -24,7 +24,7 @@ public class HttpRequest {
         return requestLine.getPath();
     }
 
-    public RequestProtocol getProtocol() {
+    public Protocol getProtocol() {
         return requestLine.getProtocol();
     }
 

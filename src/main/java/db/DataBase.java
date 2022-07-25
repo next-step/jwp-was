@@ -1,5 +1,7 @@
 package db;
 
+import static exception.ExceptionStrings.DUPLICATED_USER_ID;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -13,6 +15,9 @@ public final class DataBase {
     private DataBase() { }
 
     public static void addUser(User user) {
+        if (users.containsKey(user.getUserId())) {
+            throw new IllegalArgumentException(DUPLICATED_USER_ID);
+        }
         users.put(user.getUserId(), user);
     }
 
