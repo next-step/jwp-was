@@ -8,11 +8,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import webserver.request.RequestLine.PathAndQueryStrings;
 import webserver.enums.HttpMethod;
 import webserver.enums.Protocol;
+import webserver.utils.PathAndQueryStrings;
+import webserver.utils.QueryStrings;
 
 class RequestLineTest {
+    public static final String TEST_GET_REQUEST_LINE = "GET /users HTTP/1.1";
+    public static final String TEST_POST_REQUEST_LINE = "POST /users HTTP/1.1";
 
     @DisplayName("null 들어오면 파싱 시 예외가 나온다.")
     @Test
@@ -42,7 +45,7 @@ class RequestLineTest {
     @DisplayName("RequestLine 파싱 테스트 중 GET 요청 테스트")
     @Test
     void createGetTest() {
-        RequestLine getRequest = RequestLine.of("GET /users HTTP/1.1");
+        RequestLine getRequest = RequestLine.of(TEST_GET_REQUEST_LINE);
 
         assertThat(getRequest).isEqualTo(RequestLine.of(HttpMethod.GET, "/users", Protocol.HTTP_1_1));
     }
@@ -50,7 +53,7 @@ class RequestLineTest {
     @DisplayName("RequestLine 파싱 테스트 중 POST 요청 테스트")
     @Test
     void createPostTest() {
-        RequestLine postRequest = RequestLine.of("POST /users HTTP/1.1");
+        RequestLine postRequest = RequestLine.of(TEST_POST_REQUEST_LINE);
 
         assertThat(postRequest).isEqualTo(RequestLine.of(HttpMethod.POST, "/users", Protocol.HTTP_1_1));
     }
@@ -69,8 +72,8 @@ class RequestLineTest {
         final String testPath = "/testPath";
         PathAndQueryStrings pathAndQueryStrings = PathAndQueryStrings.of(testPath);
 
-        assertThat(pathAndQueryStrings.path).isEqualTo(testPath);
-        assertThat(pathAndQueryStrings.queryStringsMap).isEmpty();
+        assertThat(pathAndQueryStrings.getPath()).isEqualTo(testPath);
+        assertThat(pathAndQueryStrings.getQueryStringsMap()).isEmpty();
     }
 
     @DisplayName("Path 파싱 시 QueryString 포함한 경우 Path, Map 둘 다 나온다.")
@@ -80,8 +83,8 @@ class RequestLineTest {
         final String testQueryStrings = "this=이것&that=저것";
         PathAndQueryStrings pathAndQueryStrings = PathAndQueryStrings.of(testPath + "?" + testQueryStrings);
 
-        assertThat(pathAndQueryStrings.path).isEqualTo(testPath);
-        assertThat(pathAndQueryStrings.queryStringsMap)
+        assertThat(pathAndQueryStrings.getPath()).isEqualTo(testPath);
+        assertThat(pathAndQueryStrings.getQueryStringsMap())
             .hasSize(2)
             .contains(entry("this", "이것"), entry("that", "저것"));
     }

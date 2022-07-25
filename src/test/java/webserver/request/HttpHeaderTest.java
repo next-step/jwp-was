@@ -26,8 +26,8 @@ class HttpHeaderTest {
     @DisplayName("헤더에 key-value 로 정상 저장되어 확인된다.")
     @Test
     void headerMapTest() {
-        httpHeader.putHeader("headerKey1", "headerKey1");
-        httpHeader.putHeader("headerKey3", "headerKey3");
+        httpHeader.putHeader("headerKey1", "headerValue1");
+        httpHeader.putHeader("headerKey3", "headerValue3");
 
         assertThat(httpHeader.getHeader("headerKey1")).isEqualTo("headerValue1");
         assertThat(httpHeader.getHeader("headerKey3")).isEqualTo("headerValue3");

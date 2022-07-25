@@ -1,11 +1,10 @@
-package webserver.request;
+package webserver.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.entry;
 
 import org.junit.jupiter.api.Test;
-import webserver.request.RequestLine.PathAndQueryStrings;
 
 class PathAndQueryStringsTest {
 
@@ -13,7 +12,7 @@ class PathAndQueryStringsTest {
     void createOnlySlashTest() {
         PathAndQueryStrings pathAndQueryStrings = PathAndQueryStrings.of("/");
 
-        assertThat(pathAndQueryStrings.path).isEqualTo("/");
+        assertThat(pathAndQueryStrings.getPath()).isEqualTo("/");
     }
 
     @Test
@@ -31,12 +30,12 @@ class PathAndQueryStringsTest {
     }
 
     @Test
-    void createPathAndQueryStringsTest() {
+    void createQueryStringsTest() {
         PathAndQueryStrings pathAndQueryStrings
             = PathAndQueryStrings.of("/user/create?userId=testId&password=testPw&name=testName&email=testEmail@email.com");
 
-        assertThat(pathAndQueryStrings.path).isEqualTo("/user/create");
-        assertThat(pathAndQueryStrings.queryStringsMap)
+        assertThat(pathAndQueryStrings.getPath()).isEqualTo("/user/create");
+        assertThat(pathAndQueryStrings.getQueryStringsMap())
             .hasSize(4)
             .contains(entry("userId", "testId"))
             .contains(entry("password", "testPw"))

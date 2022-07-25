@@ -51,4 +51,7 @@ public class HttpResponse {
         this.body = body;
     }
 
+    public StatusCode getStatus() {
+        return this.statusCode;
+    }
 }

@@ -1,7 +1,9 @@
 package webserver.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static webserver.request.RequestLineTest.TEST_GET_REQUEST_LINE;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -12,13 +14,41 @@ import webserver.enums.Protocol;
 
 class HttpRequestTest {
 
+    private HttpRequest httpRequest;
+
+    @BeforeEach
+    void setUp() {
+        httpRequest = new HttpRequest(TEST_GET_REQUEST_LINE);
+    }
+
+    @Test
+    void headerTest() {
+        httpRequest.addHeader("Host", "localhost:8080");
+        httpRequest.addHeader("Connection", "keep-alive");
+        httpRequest.addHeader("Content-Length", "95");
+        httpRequest.addHeader("Cache-Control", "max-age=0");
+        httpRequest.addHeader("Origin", "http://localhost:8080");
+        httpRequest.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpRequest.addHeader("Accept-Encoding", "gzip, deflate, br");
+        httpRequest.addHeader("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7");
+
+        assertThat(httpRequest.getHeader("Host")).isEqualTo("localhost:8080");
+        assertThat(httpRequest.getHeader("Connection")).isEqualTo("keep-alive");
+        assertThat(httpRequest.getHeader("Content-Length")).isEqualTo("95");
+        assertThat(httpRequest.getHeader("Cache-Control")).isEqualTo("max-age=0");
+        assertThat(httpRequest.getHeader("Origin")).isEqualTo("http://localhost:8080");
+        assertThat(httpRequest.getHeader("Content-Type")).isEqualTo("application/x-www-form-urlencoded");
+        assertThat(httpRequest.getHeader("Accept-Encoding")).isEqualTo("gzip, deflate, br");
+        assertThat(httpRequest.getHeader("Accept-Language")).isEqualTo("ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7");
+    }
+
     @Test
     void createTest() {
-        HttpRequest httpRequest = new HttpRequest("GET /users HTTP/1.1");
+        HttpRequest httpRequestTest = new HttpRequest(TEST_GET_REQUEST_LINE);
 
-        assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(httpRequest.getPath()).isEqualTo("/users");
-        assertThat(httpRequest.getProtocol()).isEqualTo(Protocol.HTTP_1_1);
+        assertThat(httpRequestTest.getMethod()).isEqualTo(HttpMethod.GET);
+        assertThat(httpRequestTest.getPath()).isEqualTo("/users");
+        assertThat(httpRequestTest.getProtocol()).isEqualTo(Protocol.HTTP_1_1);
     }
 
     @Disabled("로컬 8080 요청/응답 테스트 (서버 동작 후 테스팅 가능)")

@@ -1,5 +1,6 @@
 package webserver;
 
+import static utils.IOUtils.readData;
 import static webserver.response.HttpStatusResponse.responseBodRequest400;
 
 import java.io.BufferedReader;
@@ -11,7 +12,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.request.HttpHeader;
@@ -33,7 +34,8 @@ public class RequestHandler implements Runnable {
         try (InputStream inputStream = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
 
-            HttpRequest httpRequest = parseRequest(inputStream);
+            HttpRequest httpRequest = parseRequest(inputStream)
+                .orElseThrow(IllegalArgumentException::new);
             HttpResponse httpResponse = new HttpResponse();
 
             DispatcherServlet.INSTANCE.serve(httpRequest, httpResponse);
@@ -41,8 +43,10 @@ public class RequestHandler implements Runnable {
             writeResponse(dos, httpResponse);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
-        } catch (RuntimeException e) {  // 예상되는 예외의 최상위 클래스로 할 것 정의해야함
+        }
+        catch (Exception e) {  // 예상되는 예외의 최상위 클래스로 할 것 정의해야함
             logger.error(e.getMessage());
+            e.printStackTrace();
             try (OutputStream out = connection.getOutputStream()) {
                 responseBodRequest400(new DataOutputStream(out));
             } catch (Exception ex) {
@@ -84,24 +88,34 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private HttpRequest parseRequest(InputStream is) {
+    private Optional<HttpRequest> parseRequest(InputStream is) {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+
             String line;
             line = br.readLine();
+            if (line == null) {
+                return Optional.empty();
+            }
             logger.debug(line);
+
             HttpRequest httpRequest = new HttpRequest(line);
             while (!line.equals("")) {
                 line = br.readLine();
+                httpRequest.addHeader(line);
                 logger.debug(line);
             }
 
-            return httpRequest;
+            String body = readData(br, httpRequest.contentLength());
+            httpRequest.setBody(body);
+            logger.debug(body);
+
+            return Optional.of(httpRequest);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
 
-        throw new IllegalStateException();
+        return Optional.empty();
     }
 
 
