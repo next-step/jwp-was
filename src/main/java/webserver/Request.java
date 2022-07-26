@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static model.Constant.ROOT_FILE;
 import static model.Constant.ROOT_PATH;
 
 public class Request {
@@ -20,7 +21,6 @@ public class Request {
 
     public Request(List<String> requests) {
         this.requestLine = new RequestLine(requests.get(0));
-        logger.debug("Request : {}", requests.get(0));
         requests.remove(0);
         this.header = new Header(requests);
 
@@ -40,7 +40,7 @@ public class Request {
     }
 
     private String getRedirectUrl() {
-        return "/index.html";
+        return ROOT_FILE;
     }
 
     public Map<String, String> getHeader() {

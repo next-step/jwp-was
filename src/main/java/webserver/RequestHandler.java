@@ -5,13 +5,13 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.HttpMethod;
 
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import static model.Constant.ROOT_FILE;
 import static utils.IOUtils.readLines;
 
 public class RequestHandler implements Runnable {
@@ -32,17 +32,17 @@ public class RequestHandler implements Runnable {
             String path = getPathFromRequest(request);
             logger.debug("requestPath : {}", path);
 
-            if (StringUtils.equals(request.getRequestPath(), "/user/create") && request.getHttpMethod() == HttpMethod.POST) {
-                Map<String, String> userMap = request.getRequestQueryString();
+            if (StringUtils.equals(request.getRequestPath(), "/user/create")) {
+                Map<String, String> params = request.getRequestQueryString();
 
-                User user = new User(userMap.get("userId"), userMap.get("password"), userMap.get("name"), userMap.get("email"));
+                User user = new User(params.get("userId"), params.get("password"), params.get("name"), params.get("email"));
                 logger.debug("user : {}", user);
 
                 DataBase.addUser(user);
+                path = ROOT_FILE;
             }
 
             Response response = new Response(out, path);
-
             byte[] body = response.getBody(path);
 
             response200Header(response, body.length);
