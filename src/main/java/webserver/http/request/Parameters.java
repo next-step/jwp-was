@@ -10,14 +10,14 @@ public class Parameters {
         this.keyValues = keyValues;
     }
 
-    @Override
-    public String toString() {
-        return "QueryParameters{" +
-                "keyValues=" + keyValues +
-                '}';
-    }
-
     public void add(Parameters parameters) {
         keyValues.putAll(parameters.keyValues);
+    }
+
+    @Override
+    public String toString() {
+        return "Parameters{" +
+                "keyValues=" + keyValues +
+                '}';
     }
 }
