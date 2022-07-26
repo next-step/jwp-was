@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -65,8 +64,8 @@ class RequestBodyTest {
         final RequestBody requestBody = new RequestBody(parameters);
 
         assertAll(
-            () -> Assertions.assertThat(requestBody.get("userId")).isEqualTo("javajigi"),
-            () -> Assertions.assertThat(requestBody.get("password")).isEqualTo("password")
+            () -> assertThat(requestBody.get("userId")).isEqualTo("javajigi"),
+            () -> assertThat(requestBody.get("password")).isEqualTo("password")
         );
     }
 }

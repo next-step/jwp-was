@@ -3,7 +3,6 @@ package webserver.response;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -68,9 +67,9 @@ class ResponseHeadersTest {
         responseHeaders.add("Content-Type", "text/html; charset=UTF-8");
 
         org.junit.jupiter.api.Assertions.assertAll(
-            () -> Assertions.assertThat(responseHeaders.get("Connection")).isEqualTo("keep-alive"),
-            () -> Assertions.assertThat(responseHeaders.get("Content-Encoding")).isEqualTo("gzip"),
-            () -> Assertions.assertThat(responseHeaders.get("Content-Type")).isEqualTo("text/html; charset=UTF-8")
+            () -> assertThat(responseHeaders.get("Connection")).isEqualTo("keep-alive"),
+            () -> assertThat(responseHeaders.get("Content-Encoding")).isEqualTo("gzip"),
+            () -> assertThat(responseHeaders.get("Content-Type")).isEqualTo("text/html; charset=UTF-8")
         );
     }
 
@@ -79,7 +78,7 @@ class ResponseHeadersTest {
     void not_exist_header() {
         final ResponseHeaders responseHeaders = new ResponseHeaders();
 
-        Assertions.assertThat(responseHeaders.get("notExistHeader")).isNull();
+        assertThat(responseHeaders.get("notExistHeader")).isNull();
     }
 
 }

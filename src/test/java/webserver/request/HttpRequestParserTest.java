@@ -1,10 +1,11 @@
 package webserver.request;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +32,7 @@ class HttpRequestParserTest {
         final HttpRequest actual = HttpRequestParser.parse(bufferedReader);
 
         // then
-        Assertions.assertThat(actual).isEqualTo(new HttpRequest(requestLine, requestHeaders, requestBody));
+        assertThat(actual).isEqualTo(new HttpRequest(requestLine, requestHeaders, requestBody));
     }
 
     @DisplayName("HTTP POST 요청 정보를 읽어 HttpRequest 객체를 생성한다")
@@ -58,7 +59,7 @@ class HttpRequestParserTest {
         final HttpRequest actual = HttpRequestParser.parse(bufferedReader);
 
         // then
-        Assertions.assertThat(actual).isEqualTo(new HttpRequest(requestLine, requestHeaders, requestBody));
+        assertThat(actual).isEqualTo(new HttpRequest(requestLine, requestHeaders, requestBody));
     }
 
     private BufferedReader getBufferedReader(final String httpRequestMessage) {
