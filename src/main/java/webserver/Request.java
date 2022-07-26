@@ -1,29 +1,36 @@
 package webserver;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import webserver.http.Header;
 import webserver.http.HttpMethod;
+import webserver.http.RequestBody;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import static model.Constant.ROOT_FILE;
 import static model.Constant.ROOT_PATH;
+import static utils.IOUtils.readData;
+import static utils.IOUtils.readLines;
 
 public class Request {
-    private static final Logger logger = LoggerFactory.getLogger(Request.class);
+    private final RequestLine requestLine;
+    private final Header header;
+    private RequestBody requestBody;
 
-    private RequestLine requestLine;
-    private Header header;
-
-    public Request(List<String> requests) {
+    public Request(InputStream in) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+        List<String> requests = readLines(br);
         this.requestLine = new RequestLine(requests.get(0));
         requests.remove(0);
         this.header = new Header(requests);
-
+        this.requestBody = new RequestBody(readData(br, this.header.getContentLength()));
     }
 
     public Request(RequestLine requestLine, Header header) {
@@ -44,11 +51,15 @@ public class Request {
     }
 
     public Map<String, String> getHeader() {
-        return header.getHeader();
+        return header.getHeaders();
     }
 
     public HttpMethod getHttpMethod() {
         return requestLine.getHttpMethod();
+    }
+
+    public Map<String, String> getRequestBody() {
+        return requestBody.getRequestBodyEntry();
     }
 
     @Override

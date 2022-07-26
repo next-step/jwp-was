@@ -5,17 +5,21 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.HttpMethod;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static model.Constant.ROOT_FILE;
-import static utils.IOUtils.readLines;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+
+    private static final String USER_CREATE_PATH = "/user/create";
 
     private Socket connection;
 
@@ -28,14 +32,13 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            Request request = new Request(readLines(new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))));
+            Request request = new Request(in);
             String path = getPathFromRequest(request);
             logger.debug("requestPath : {}", path);
 
-            if (StringUtils.equals(request.getRequestPath(), "/user/create")) {
-                Map<String, String> params = request.getRequestQueryString();
-
-                User user = new User(params.get("userId"), params.get("password"), params.get("name"), params.get("email"));
+            if (StringUtils.equals(request.getRequestPath(), USER_CREATE_PATH) && request.getHttpMethod() == HttpMethod.POST) {
+                Map<String, String> requestBody = request.getRequestBody();
+                User user = new User(requestBody.get("userId"), requestBody.get("password"), requestBody.get("name"), requestBody.get("email"));
                 logger.debug("user : {}", user);
 
                 DataBase.addUser(user);
@@ -62,7 +65,6 @@ public class RequestHandler implements Runnable {
         DataOutputStream dos = response.getResponse();
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-//            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes(StringUtils.join(response.getHeader(), ": "));
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
