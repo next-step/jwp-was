@@ -24,9 +24,9 @@
       - [X] HttpPath
         - 문자열을 받아 HttpPath를 반환한다.
         - "/path" 형식이 아닌경우 Exception이 발생한다. 
-      - [ ] HttpVersion
-        - 문자열을 받아 HttpVersion을 반환한다.
-        - HttpVersion은 Protocol과 Version으로 이루어진다.
+      - [X] HttpProtocol
+        - 문자열을 받아 HttpProtocol 반환한다.
+        - HttpProtocol Protocol과 Version으로 이루어진다.
         - "HTTP/1.1" 형식이 아닌 경우 Exception이 발생한다.
   - [ ] POST RequestLine 파싱
   - [ ] Querystring RequestLine 파싱
