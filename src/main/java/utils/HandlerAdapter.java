@@ -1,11 +1,12 @@
 package utils;
 
 import annotation.GetMapping;
+import annotation.PostMapping;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import configuration.HandlerConfiguration;
 import exception.HttpNotFoundException;
 import model.*;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.util.StringUtils;
 import types.HttpMethod;
 
 import java.lang.annotation.Annotation;
@@ -25,7 +26,6 @@ public class HandlerAdapter {
 
     public HandlerInvokeResult invoke(HttpMessage httpMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
         RequestLine requestLine = httpMessage.getRequestLine();
-        UrlPath urlPath = requestLine.getUrlPath();
 
         if (this.handlers == null) {
             this.initHandlers();
@@ -33,10 +33,11 @@ public class HandlerAdapter {
 
         HandlerPair handlerPair = find(requestLine);
 
-        return this.invokeHandler(handlerPair, urlPath);
+        return this.invokeHandler(handlerPair, httpMessage);
     }
 
-    private HandlerInvokeResult invokeHandler(HandlerPair handlerPair, UrlPath urlPath) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+    private HandlerInvokeResult invokeHandler(HandlerPair handlerPair, HttpMessage httpMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+        RequestLine requestLine = httpMessage.getRequestLine();
         Object controller = handlerPair.getController();
         Method handler = handlerPair.getHandler();
 
@@ -48,13 +49,38 @@ public class HandlerAdapter {
         if (parameters.length == 1) {
             Parameter definedParameter = parameters[0];
             Class<?> parameterClass = definedParameter.getType();
-            String data = ObjectMapperFactory.getObjectMapper().writeValueAsString(urlPath.getQueryParameter().getParameters());
-            Object parameter = ObjectMapperFactory.getObjectMapper().readValue(data, parameterClass);
+            String data = this.getParameterData(requestLine.getHttpMethod(), httpMessage);
+            Object parameter = this.getParaMeterObject(data, parameterClass);
             return new HandlerInvokeResult(handler.getReturnType(), handler.invoke(controller, parameter));
         }
 
         // TODO 1개 초과 파라미터 설정시 어노테이션에 따라 파라미터 컨버팅 처리 구현
         return new HandlerInvokeResult(handler.getReturnType(), handler.invoke(controller));
+    }
+
+    private Object getParaMeterObject(String data, Class<?> parameterClass) throws JsonProcessingException {
+        if (data == null) {
+            return null;
+        }
+
+        return ObjectMapperFactory.getObjectMapper().readValue(data, parameterClass);
+    }
+
+
+    private String getParameterData(HttpMethod httpMethod, HttpMessage httpMessage) throws JsonProcessingException {
+        UrlPath urlPath = httpMessage.getRequestLine().getUrlPath();
+        QueryParameter queryParameter = urlPath.getQueryParameter();
+
+        if (httpMethod == HttpMethod.GET && queryParameter != null) {
+            return ObjectMapperFactory.getObjectMapper().writeValueAsString(queryParameter.getParameters());
+        }
+
+        String body = httpMessage.getBody();
+        if (httpMethod == HttpMethod.POST && StringUtils.hasText(body)) {
+            return ObjectMapperFactory.getObjectMapper().writeValueAsString(HttpParser.convertStringToMap(httpMessage.getBody()));
+        }
+
+        return null;
     }
 
     public static HandlerAdapter getInstance() {
@@ -108,7 +134,14 @@ public class HandlerAdapter {
         Class<?> targetAnnotation = this.getAnnotationType(annotationTypeName);
 
         return Arrays.stream(method.getAnnotations())
-                .anyMatch(annotation -> this.isEqualAnnotation(annotation, targetAnnotation) && Objects.equals(this.getPath(annotation), path));
+                .anyMatch(annotation -> {
+                    boolean isEqualAnnotation = this.isEqualAnnotation(annotation, targetAnnotation);
+
+                    String definedPath = this.getPath(annotation);
+                    boolean isEqualPath = Objects.equals(definedPath, path);
+
+                    return isEqualAnnotation && isEqualPath;
+                });
     }
 
     private boolean isEqualAnnotation(Annotation annotation, Class<?> targetAnnotation) {
@@ -136,7 +169,7 @@ public class HandlerAdapter {
                 .orElseThrow(HttpNotFoundException::new);
 
         try {
-            return (String) pathMethod.invoke(annotation);
+            return String.valueOf(pathMethod.invoke(annotation));
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

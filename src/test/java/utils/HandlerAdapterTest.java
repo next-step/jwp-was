@@ -34,4 +34,27 @@ class HandlerAdapterTest {
         Assertions.assertThat(actual.getUserId()).isEqualTo("fistkim101");
         Assertions.assertThat(actual.getEmail()).isEqualTo("fistkim101%40gmail.com");
     }
+
+    @DisplayName("postMapping 작동 검증")
+    @Test
+    void postTest() throws JsonProcessingException, InvocationTargetException, IllegalAccessException {
+        String bodyMessage = "userId=fistkim101&password=1234&name=leo&email=fistkim101%40gmail.com";
+        List<String> httpMessageData = List.of(
+                "POST /user/create HTTP/1.1",
+                "Host: localhost:8080",
+                "Connection: keep-alive",
+                "Content-Length: 59",
+                "Content-Type: application/x-www-form-urlencoded",
+                "Accept: */*",
+                "",
+                bodyMessage
+        );
+
+        HttpMessage httpMessage = new HttpMessage(new HttpMessageData(httpMessageData));
+
+        User actual = (User) HandlerAdapter.getInstance().invoke(httpMessage).getResult();
+
+        Assertions.assertThat(actual.getUserId()).isEqualTo("fistkim101");
+        Assertions.assertThat(actual.getEmail()).isEqualTo("fistkim101%40gmail.com");
+    }
 }

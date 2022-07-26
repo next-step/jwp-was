@@ -3,7 +3,6 @@ package webserver;
 import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 import utils.FileIoUtils;
 import utils.HandlerAdapter;
 
@@ -34,8 +33,8 @@ public class RequestHandler implements Runnable {
             List<String> data = new ArrayList<>();
             while (!end) {
                 String line = bufferedReader.readLine();
-                end = (!StringUtils.hasText(line));
                 data.add(line);
+                end = this.stopRead(data);
             }
 
             HttpMessageData httpMessageData = new HttpMessageData(data);
@@ -50,12 +49,18 @@ public class RequestHandler implements Runnable {
                 body = FileIoUtils.loadFileFromClasspath(urlPath.getPath());
             }
 
-            HandlerInvokeResult result = HandlerAdapter.getInstance().invoke(httpMessage);
-            if (result.getClazz().equals(String.class)) {
-                // TODO templates & model return
+            HandlerInvokeResult result = null;
+            if (!requestLine.getUrlPath().hasExtension()) {
+                result = HandlerAdapter.getInstance().invoke(httpMessage);
             }
 
-            body = this.bodyToBytes(result.getResult());
+            if ((result != null) && (result.getClazz().equals(String.class))) {
+                // TODO page templates & model return
+            }
+
+            if (body == null && result != null) {
+                body = this.bodyToBytes(result.getResult());
+            }
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body);
             responseBody(dos, body);
@@ -64,6 +69,14 @@ public class RequestHandler implements Runnable {
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean stopRead(List<String> data) {
+        if (data.size() < 2) {
+            return false;
+        }
+
+        return (data.get(data.size() - 2).equals(""));
     }
 
     private byte[] bodyToBytes(Object result) throws IOException {

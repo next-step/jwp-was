@@ -29,6 +29,19 @@ public class HttpParser {
         return new RequestLine(httpMethod, path, protocol);
     }
 
+    public static Map<String, String> convertStringToMap(String content) {
+        String[] parameterKeyAndValues = content.split(QUERY_PARAMETER_SEPARATOR);
+        Map<String, String> parameters = new HashMap<>();
+        Arrays.stream(parameterKeyAndValues).forEach(parameter -> {
+            String[] keyAndValue = parameter.split(QUERY_PARAMETER_KEY_VALUE_SEPARATOR);
+            String parameterKey = keyAndValue[0];
+            String parameterValue = keyAndValue[1];
+            parameters.put(parameterKey, parameterValue);
+        });
+
+        return parameters;
+    }
+
     private static UrlPath getPath(String[] requestLineData) {
         String path = requestLineData[1].split(PATH_SEPARATOR)[0];
         Map<String, String> queryParameters = getQueryParameters(requestLineData);
@@ -46,16 +59,7 @@ public class HttpParser {
         }
 
         String rawParameters = pathAndParameters.split(PATH_SEPARATOR)[1];
-        String[] parameterKeyAndValues = rawParameters.split(QUERY_PARAMETER_SEPARATOR);
-        Map<String, String> parameters = new HashMap<>();
-        Arrays.stream(parameterKeyAndValues).forEach(parameter -> {
-            String[] keyAndValue = parameter.split(QUERY_PARAMETER_KEY_VALUE_SEPARATOR);
-            String parameterKey = keyAndValue[0];
-            String parameterValue = keyAndValue[1];
-            parameters.put(parameterKey, parameterValue);
-        });
-
-        return parameters;
+        return convertStringToMap(rawParameters);
     }
 
     private static Protocol getProtocol(String[] requestLineData) {
