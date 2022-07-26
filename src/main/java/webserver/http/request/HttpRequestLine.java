@@ -1,4 +1,8 @@
-package domain;
+package webserver.http.request;
+
+import java.util.Objects;
+
+import webserver.http.HttpMethod;
 
 public class HttpRequestLine {
 	private static final String MESSAGE_INVALID_REQUEST_LINE = "유효하지 않은 Request Line 입니다.";
@@ -13,7 +17,7 @@ public class HttpRequestLine {
 	private HttpProtocol httpProtocol;
 
 	public HttpRequestLine(String method, String path, String protocol) {
-		this.httpMethod = HttpMethod.valueOf(method);
+		this.httpMethod = HttpMethod.of(method);
 		this.httpPath = HttpPath.of(path);
 		this.httpProtocol = HttpProtocol.of(protocol);
 	}
@@ -26,23 +30,37 @@ public class HttpRequestLine {
 		return new HttpRequestLine(splitLine[INDEX_METHOD], splitLine[INDEX_PATH], splitLine[INDEX_PROTOCOL_VERSION]);
 	}
 
-	public String getMethod() {
-		return httpMethod.name();
+	public HttpMethod getMethod() {
+		return httpMethod;
 	}
 
 	public String getPath() {
 		return httpPath.getPath();
 	}
 
-	public String getProtocol() {
-		return httpProtocol.getProtocol();
-	}
-
-	public String getVersion() {
-		return httpProtocol.getVersion();
+	public HttpProtocol getProtocol() {
+		return httpProtocol;
 	}
 
 	public QueryParameter getParameters() {
 		return httpPath.getParameter();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		HttpRequestLine that = (HttpRequestLine) o;
+		return httpMethod == that.httpMethod && Objects.equals(httpPath, that.httpPath) && Objects.equals(httpProtocol,
+																										  that.httpProtocol);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(httpMethod, httpPath, httpProtocol);
 	}
 }

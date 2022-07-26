@@ -1,4 +1,6 @@
-package domain;
+package webserver.http.request;
+
+import java.util.Objects;
 
 public class HttpProtocol {
 	private static final String MESSAGE_INVALID_PROTOCOL_AND_VERSION = "유효하지 않은 프로토콜/버전 정보입니다.";
@@ -29,5 +31,22 @@ public class HttpProtocol {
 
 	public String getProtocol() {
 		return protocol;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		HttpProtocol that = (HttpProtocol) o;
+		return Objects.equals(protocol, that.protocol) && Objects.equals(version, that.version);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(protocol, version);
 	}
 }

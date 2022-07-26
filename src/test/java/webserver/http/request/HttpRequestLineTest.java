@@ -1,10 +1,12 @@
-package domain;
+package webserver.http.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import webserver.http.HttpMethod;
 
 public class HttpRequestLineTest {
 
@@ -27,10 +29,9 @@ public class HttpRequestLineTest {
 		HttpRequestLine requestLine = HttpRequestLine.of(line);
 
 		// then
-		assertThat(requestLine.getMethod()).isEqualTo("GET");
+		assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
 		assertThat(requestLine.getPath()).isEqualTo("/users");
-		assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
-		assertThat(requestLine.getVersion()).isEqualTo("1.1");
+		assertThat(requestLine.getProtocol()).isEqualTo(HttpProtocol.of("HTTP/1.1"));
 	}
 
 	@Test
@@ -43,10 +44,9 @@ public class HttpRequestLineTest {
 		HttpRequestLine requestLine = HttpRequestLine.of(line);
 
 		// then
-		assertThat(requestLine.getMethod()).isEqualTo("POST");
+		assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.POST);
 		assertThat(requestLine.getPath()).isEqualTo("/users");
-		assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
-		assertThat(requestLine.getVersion()).isEqualTo("1.1");
+		assertThat(requestLine.getProtocol()).isEqualTo(HttpProtocol.of("HTTP/1.1"));
 	}
 
 	@Test
@@ -59,10 +59,9 @@ public class HttpRequestLineTest {
 		HttpRequestLine requestLine = HttpRequestLine.of(line);
 
 		// then
-		assertThat(requestLine.getMethod()).isEqualTo("GET");
+		assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
 		assertThat(requestLine.getPath()).isEqualTo("/users");
-		assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
-		assertThat(requestLine.getVersion()).isEqualTo("1.1");
+		assertThat(requestLine.getProtocol()).isEqualTo(HttpProtocol.of("HTTP/1.1"));
 		assertThat(requestLine.getParameters().getValue("userId")).isEqualTo("javajigi");
 		assertThat(requestLine.getParameters().getValue("password")).isEqualTo("password");
 		assertThat(requestLine.getParameters().getValue("name")).isEqualTo("JaeSung");

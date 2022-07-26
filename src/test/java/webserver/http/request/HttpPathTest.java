@@ -1,4 +1,4 @@
-package domain;
+package webserver.http.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
