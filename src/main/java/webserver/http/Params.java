@@ -39,9 +39,9 @@ public class Params {
         }
         String[] tokens = values.split(PARAM_DELIMITER);
         return new Params(Arrays.stream(tokens)
-                .map(Param::of)
+                .map(KeyValue::of)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toMap(Param::getKey, Param::getValue)));
+                .collect(Collectors.toMap(KeyValue::getKey, KeyValue::getValue)));
     }
 
     @Override

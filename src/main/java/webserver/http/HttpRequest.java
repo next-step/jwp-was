@@ -2,6 +2,7 @@ package webserver.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,9 +13,10 @@ public class HttpRequest {
     private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
     private Headers headers;
     private RequestLine requestLine;
+    private HttpBody httpBody;
 
     public HttpRequest(InputStream inputStream) {
-        this.headers = new Headers();
+
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
             String line = br.readLine();
@@ -22,10 +24,10 @@ public class HttpRequest {
                 return;
             }
             this.requestLine = new RequestLine(line);
-            line = br.readLine();
-            while (!line.equals("")) {
-                headers.putHeader(line);
-                line = br.readLine();
+            this.headers = new Headers(br);
+            if (requestLine.getMethod().isPost()) {
+                String body = IOUtils.readData(br, headers.getBodySize());
+                this.httpBody = new HttpBody(body);
             }
 
         } catch (IOException e) {
@@ -39,5 +41,9 @@ public class HttpRequest {
 
     public RequestLine getRequestLine() {
         return requestLine;
+    }
+
+    public HttpBody getHttpBody() {
+        return httpBody;
     }
 }

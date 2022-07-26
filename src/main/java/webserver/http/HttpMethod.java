@@ -8,6 +8,6 @@ public enum HttpMethod {
     }
 
     public boolean isPost() {
-        return this == GET;
+        return this == POST;
     }
 }

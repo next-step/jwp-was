@@ -5,11 +5,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ParamTest {
+class KeyValueTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"userId=javajigi", "password=pass"})
     void create(String param) {
-        assertThat(Param.of(param)).isNotNull();
+        assertThat(KeyValue.of(param)).isNotNull();
     }
 }

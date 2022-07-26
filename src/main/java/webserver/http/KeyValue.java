@@ -1,6 +1,6 @@
 package webserver.http;
 
-public class Param {
+public class KeyValue {
     private static final String INVALID_PARAMETERS = "잘못된 파라미터";
     private static final String REGEX = "=";
     private static final int PARAM_SIZE = 2;
@@ -10,12 +10,12 @@ public class Param {
     private final String key;
     private final String value;
 
-    private Param(String key, String value) {
+    private KeyValue(String key, String value) {
         this.key = key;
         this.value = value;
     }
 
-    public static Param of(String params) {
+    public static KeyValue of(String params) {
         if (params == null || params.isEmpty()) {
             throw new IllegalArgumentException(INVALID_PARAMETERS);
         }
@@ -23,7 +23,7 @@ public class Param {
         if (tokens.length != PARAM_SIZE) {
             return null;
         }
-        return new Param(tokens[KEY_INDEX], tokens[VALUE_INDEX]);
+        return new KeyValue(tokens[KEY_INDEX], tokens[VALUE_INDEX]);
     }
 
     public String getKey() {

@@ -11,8 +11,15 @@ public class RequestLine {
             throw new IllegalArgumentException("잘못된 HTTP 요청");
         }
         this.method = HttpMethod.valueOf(values[0]);
-        this.path = Path.of(values[1]);
+        this.path = createPath(values[1]);
         this.protocol = new Protocol(values[2]);
+    }
+
+    private Path createPath(String values) {
+        if (method.isPost()) {
+            return Path.createWithPost(values);
+        }
+        return Path.createWithGetMethod(values);
     }
 
     private String[] split(String requestLine) {

@@ -36,7 +36,7 @@ public class RequestHandler implements Runnable {
             byte[] body = null;
 
             if (path.isSameUrlPath("/user/create")) {
-                User user = UserFactory.from(path);
+                User user = UserFactory.from(httpRequest);
             }
 
             if (path.endWith("html") || path.endWith("ico")) {

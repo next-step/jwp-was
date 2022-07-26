@@ -18,7 +18,7 @@ class UserFactoryTest {
                 "name", "foo",
                 "email", "test@test.com"
         );
-        final Path path = Path.of("/user/create?userId=foo&password=pass&name=foo&email=test@test.com");
+        final Path path = Path.createWithGetMethod("/user/create?userId=foo&password=pass&name=foo&email=test@test.com");
 
         User actual = UserFactory.from(path);
 
