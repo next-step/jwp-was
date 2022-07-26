@@ -13,7 +13,7 @@ public class RequestLine {
 
     static {
         String httpMethodGroupRegex = "(" + String.join("|", HttpMethod.getValues()) + ")";
-        String keyValueRegex = "\\w*" + Queries.KEY_VALUE_DELIMITER + "\\w*";
+        String keyValueRegex = ".*" + Queries.KEY_VALUE_DELIMITER + ".*";
         String queryStringGroupRegex = "((?:" + keyValueRegex + ")(?:" + Queries.QUERY_STRING_DELIMITER + keyValueRegex + ")*)";
         String pathGroupRegex = Path.PATH_DELIMITER + "(" + "[^?]*)\\??" + queryStringGroupRegex + "?";
         String protocolGroupRegex = "(\\w+)/([\\d.]+)";
