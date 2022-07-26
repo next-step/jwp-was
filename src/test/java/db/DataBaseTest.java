@@ -39,7 +39,7 @@ class DataBaseTest {
     void findUserByIdTest() {
         DataBase.addUser(UserTest.TEST_USER);
 
-        User savedUser = DataBase.findUserById(UserTest.TEST_USER.getUserId());
+        User savedUser = DataBase.findUserById(UserTest.TEST_USER.getUserId()).get();
 
         assertThat(savedUser).isEqualTo(UserTest.TEST_USER);
     }

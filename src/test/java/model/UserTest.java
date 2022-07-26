@@ -9,8 +9,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 public class UserTest {
-    private final static String TEST_ID = "testId";
-    private final static String TEST_PW = "testPw";
+    public final static String TEST_ID = "testId";
+    public final static String TEST_PW = "testPw";
     private final static String TEST_NAME = "testName";
     private final static String TEST_EMAIL = "testEmail@email.com";
 

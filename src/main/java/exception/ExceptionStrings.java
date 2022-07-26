@@ -8,4 +8,5 @@ public final class ExceptionStrings {
     public static final String INVALID_QUERY_STRING = "Invalid query string";
     public static final String DUPLICATED_USER_ID = "Duplicated user key";
     public static final String CANNOT_FIND_HEADER_KEY = "Cannot find header key";
+    public static final String NOT_FOUND_MEMBER = "Not found member";
 }

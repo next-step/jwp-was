@@ -15,7 +15,7 @@ public final class SupportTemplates {
         pathMap.add("/user/form.html");
         pathMap.add("/user/list.html");
         pathMap.add("/user/login.html");
-        pathMap.add("/user/login-failed.html");
+        pathMap.add("/user/login_failed.html");
         pathMap.add("/user/profile.html");
         pathMap.add("/index.html");
     }

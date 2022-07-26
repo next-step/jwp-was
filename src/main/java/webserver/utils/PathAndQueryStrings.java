@@ -9,7 +9,7 @@ import java.util.Objects;
 public class PathAndQueryStrings {
     private static final int PATH_COMPONENT_COUNT = 2;
     private static final String PATH_SPLIT_REGEX = "\\?";
-    private static final String PATH_QUERY_SPLIT_REGEX = "&";
+    
 
     private String path;
     private Map<String, String> queryStringsMap;

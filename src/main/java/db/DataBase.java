@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
+import java.util.Optional;
 import model.User;
 
 public final class DataBase {
@@ -21,8 +22,8 @@ public final class DataBase {
         users.put(user.getUserId(), user);
     }
 
-    public static User findUserById(String userId) {
-        return users.get(userId);
+    public static Optional<User> findUserById(String userId) {
+        return Optional.ofNullable(users.get(userId));
     }
 
     public static Collection<User> findAll() {
