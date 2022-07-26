@@ -2,6 +2,7 @@ package endpoint;
 
 import webserver.http.request.HttpRequestMessage;
 import webserver.http.request.requestline.HttpMethod;
+import webserver.http.response.HttpResponseMessage;
 
 public class NoneEndPointHandler extends HttpRequestEndpointHandler {
 
@@ -10,6 +11,7 @@ public class NoneEndPointHandler extends HttpRequestEndpointHandler {
     }
 
     @Override
-    public void handle(HttpRequestMessage httpRequestMessage) {
+    public HttpResponseMessage handle(HttpRequestMessage httpRequestMessage) {
+        return HttpResponseMessage.notFound();
     }
 }

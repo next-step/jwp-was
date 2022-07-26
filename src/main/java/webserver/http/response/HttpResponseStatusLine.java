@@ -3,6 +3,8 @@ package webserver.http.response;
 import webserver.http.HttpProtocolSchema;
 import webserver.http.HttpVersion;
 
+import static webserver.http.response.HttpResponseMessage.RESPONSE_END_OF_LINE_MARKER;
+
 public class HttpResponseStatusLine {
     private static final String HTTP_RESPONSE_STATUS_LINE_DELIMITER = " ";
     private HttpProtocolSchema httpProtocolSchema;
@@ -18,6 +20,6 @@ public class HttpResponseStatusLine {
     }
 
     public String rawStatusLine() {
-        return httpProtocolSchema.rawHttpProtocolSchema() + HTTP_RESPONSE_STATUS_LINE_DELIMITER + httpStatus.fullStatusCode();
+        return httpProtocolSchema.rawHttpProtocolSchema() + HTTP_RESPONSE_STATUS_LINE_DELIMITER + httpStatus.fullStatusCode() + RESPONSE_END_OF_LINE_MARKER;
     }
 }

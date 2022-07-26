@@ -13,6 +13,8 @@ public class RequestEndpointRegistry {
 
     public static void initializeEndpointRegistry() {
         List<HttpRequestEndpointHandler> endpoints = List.of(
+                new MainPageHandlerHomeHttpRequestHandler(),
+                new CreateUserPageHandlerHomeHttpRequestHandler(),
                 new CreateUserGetMethodEndpointHandler(),
                 new CreateUserPostMethodEndpointHandler()
         );

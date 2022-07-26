@@ -5,8 +5,8 @@ import endpoint.HttpRequestEndpointHandler;
 import endpoint.RequestEndpointRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import webserver.http.request.HttpRequestMessage;
+import webserver.http.response.HttpResponseMessage;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -39,17 +39,20 @@ public class RequestHandler implements Runnable {
 
             Endpoint endpoint = new Endpoint(httpRequestMessage.httpMethod(), httpPath);
             HttpRequestEndpointHandler httpRequestEndpointHandler = RequestEndpointRegistry.getEndpoint(endpoint);
-            httpRequestEndpointHandler.handle(httpRequestMessage);
 
+            HttpResponseMessage httpResponseMessage = httpRequestEndpointHandler.handle(httpRequestMessage);
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body;
-            if (httpRequestMessage.httpPath().contains(".html")) {
-                body = FileIoUtils.loadFileFromClasspath("./templates" + httpRequestMessage.httpPath());
-            } else {
-                body = "Hello World".getBytes(UTF_8);
-            }
-            ResponseHandler.response200Header(dos, body.length);
-            ResponseHandler.responseBody(dos, body);
+
+            ResponseHandler.handleResponse(dos, httpResponseMessage);
+
+//            byte[] body;
+//            if (httpRequestMessage.httpPath().contains(".html")) {
+//                body = FileIoUtils.loadFileFromClasspath("./templates" + httpRequestMessage.httpPath());
+//            } else {
+//                body = "Hello World".getBytes(UTF_8);
+//            }
+//            ResponseHandler.response200Header(dos, body.length);
+//            ResponseHandler.responseBody(dos, body);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

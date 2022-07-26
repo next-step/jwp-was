@@ -1,7 +1,8 @@
 package endpoint;
 
 import webserver.http.request.HttpRequestMessage;
+import webserver.http.response.HttpResponseMessage;
 
 public interface HttpRequestHandler {
-    void handle(HttpRequestMessage httpRequestMessage);
+    HttpResponseMessage handle(HttpRequestMessage httpRequestMessage);
 }

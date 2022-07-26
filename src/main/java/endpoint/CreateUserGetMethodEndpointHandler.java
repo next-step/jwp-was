@@ -5,6 +5,7 @@ import application.CreateUserService;
 import webserver.http.request.HttpRequestMessage;
 import webserver.http.request.requestline.HttpMethod;
 import webserver.http.request.requestline.HttpQueryStrings;
+import webserver.http.response.HttpResponseMessage;
 
 public class CreateUserGetMethodEndpointHandler extends HttpRequestEndpointHandler {
     private static final String ENDPOINT_PATH = "/user/create";
@@ -14,7 +15,7 @@ public class CreateUserGetMethodEndpointHandler extends HttpRequestEndpointHandl
     }
 
     @Override
-    public void handle(HttpRequestMessage httpRequestMessage) {
+    public HttpResponseMessage handle(HttpRequestMessage httpRequestMessage) {
         HttpQueryStrings httpQueryStrings = httpRequestMessage.getHttpQueryStrings();
 
         String userId = httpQueryStrings.getQueryValue("userId");
@@ -25,5 +26,7 @@ public class CreateUserGetMethodEndpointHandler extends HttpRequestEndpointHandl
         CreateUserCommand createUserCommand = new CreateUserCommand(userId, password, name, mail);
 
         CreateUserService.createUser(createUserCommand);
+
+        return HttpResponseMessage.justOk();
     }
 }
