@@ -28,6 +28,16 @@ class HttpRequestTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
+    @DisplayName("회원가입 요청")
+    @Test
+    void create_user() {
+        final ResponseEntity<String> 회원가입_요청 = 회원가입_요청("admin", "password");
+
+        assertThat(회원가입_요청.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        assertThat(회원가입_요청.getHeaders().get("Location")).containsExactly("/index.html");
+
+    }
+
     @DisplayName("로그인 실패")
     @Test
     void login_failed() {
@@ -99,9 +109,9 @@ class HttpRequestTest {
         return restTemplate.postForEntity("http://localhost:8080/user/login", loginParams, String.class);
     }
 
-    private void 회원가입_요청(final String userId, final String password) {
+    private ResponseEntity<String> 회원가입_요청(final String userId, final String password) {
         final String createUserParams = String.format("userId=%s&password=%s&name=관리자&email=admin@email.com", userId, password);
 
-        restTemplate.postForEntity("http://localhost:8080/user/create", createUserParams, String.class);
+        return restTemplate.postForEntity("http://localhost:8080/user/create", createUserParams, String.class);
     }
 }
