@@ -1,5 +1,6 @@
 package webserver.http.request.parser;
 
+import webserver.http.request.Method;
 import webserver.http.request.RequestLine;
 
 public class RequestLineParser {
@@ -7,12 +8,10 @@ public class RequestLineParser {
 
     private static final int REQUEST_LINE_SPLIT_SIZE = 3;
 
-    private final MethodParser methodParser;
     private final URIParser uriParser;
     private final ProtocolParser protocolParser;
 
-    public RequestLineParser(MethodParser methodParser, URIParser uriParser, ProtocolParser protocolParser) {
-        this.methodParser = methodParser;
+    public RequestLineParser(URIParser uriParser, ProtocolParser protocolParser) {
         this.uriParser = uriParser;
         this.protocolParser = protocolParser;
     }
@@ -28,7 +27,7 @@ public class RequestLineParser {
         String protocol = splitMessage[2];
 
         return new RequestLine(
-                methodParser.parse(method),
+                Method.from(method),
                 uriParser.parse(uri),
                 protocolParser.parse(protocol)
         );

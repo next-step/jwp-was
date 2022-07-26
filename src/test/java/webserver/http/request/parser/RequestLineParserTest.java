@@ -16,14 +16,13 @@ class RequestLineParserTest {
 
     @BeforeEach
     void setUp() {
-        MethodParser methodParser = new MethodParser();
         URIParser uriParser = new URIParser(
                 new KeyValuePairParser(),
                 new QueryParametersParser(new KeyValuePairParser())
         );
         ProtocolParser protocolParser = new ProtocolParser();
 
-        requestLineParser = new RequestLineParser(methodParser, uriParser, protocolParser);
+        requestLineParser = new RequestLineParser(uriParser, protocolParser);
     }
 
     @DisplayName("문자열이 white space 값을 기준으로 3개의 문자열로 구분이 되지 않는 경우 예외발생")
