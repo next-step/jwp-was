@@ -5,6 +5,7 @@ import configuration.HandlerConfiguration;
 import exception.HttpNotFoundException;
 import model.HandlerPair;
 import model.Handlers;
+import model.HttpMessage;
 import model.RequestLine;
 import org.springframework.web.bind.annotation.PostMapping;
 import types.HttpMethod;
@@ -23,7 +24,8 @@ public class HandlerAdapter {
     private HandlerAdapter() {
     }
 
-    public Object invoke(RequestLine requestLine) {
+    public Object invoke(HttpMessage httpMessage) {
+        RequestLine requestLine = httpMessage.getRequestLine();
         if (this.handlers == null) {
             this.initHandlers();
         }
