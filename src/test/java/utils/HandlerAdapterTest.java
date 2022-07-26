@@ -18,7 +18,7 @@ class HandlerAdapterTest {
     void invokeTest() throws JsonProcessingException, InvocationTargetException, IllegalAccessException {
         List<String> httpMessageData = List.of("GET /user HTTP/1.1");
         HttpMessage httpMessage = new HttpMessage(new HttpMessageData(httpMessageData));
-        String expected = (String) HandlerAdapter.getInstance().invoke(httpMessage);
+        String expected = (String) HandlerAdapter.getInstance().invoke(httpMessage).getResult();
 
         Assertions.assertThat("getUserReturnValue").isEqualTo(expected);
     }
@@ -29,7 +29,7 @@ class HandlerAdapterTest {
         List<String> httpMessageData = List.of("GET /user/create?userId=fistkim101&password=1234&name=leo&email=fistkim101%40gmail.com HTTP/1.1");
         HttpMessage httpMessage = new HttpMessage(new HttpMessageData(httpMessageData));
 
-        User actual = (User) HandlerAdapter.getInstance().invoke(httpMessage);
+        User actual = (User) HandlerAdapter.getInstance().invoke(httpMessage).getResult();
 
         Assertions.assertThat(actual.getUserId()).isEqualTo("fistkim101");
         Assertions.assertThat(actual.getEmail()).isEqualTo("fistkim101%40gmail.com");

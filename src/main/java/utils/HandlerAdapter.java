@@ -23,7 +23,7 @@ public class HandlerAdapter {
     private HandlerAdapter() {
     }
 
-    public Object invoke(HttpMessage httpMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+    public HandlerInvokeResult invoke(HttpMessage httpMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
         RequestLine requestLine = httpMessage.getRequestLine();
         UrlPath urlPath = requestLine.getUrlPath();
 
@@ -36,13 +36,13 @@ public class HandlerAdapter {
         return this.invokeHandler(handlerPair, urlPath);
     }
 
-    private Object invokeHandler(HandlerPair handlerPair, UrlPath urlPath) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+    private HandlerInvokeResult invokeHandler(HandlerPair handlerPair, UrlPath urlPath) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
         Object controller = handlerPair.getController();
         Method handler = handlerPair.getHandler();
 
         Parameter[] parameters = handler.getParameters();
         if (parameters.length == 0) {
-            return handler.invoke(controller);
+            new HandlerInvokeResult(handler.getReturnType(), handler.invoke(controller));
         }
 
         if (parameters.length == 1) {
@@ -50,11 +50,11 @@ public class HandlerAdapter {
             Class<?> parameterClass = definedParameter.getType();
             String data = ObjectMapperFactory.getObjectMapper().writeValueAsString(urlPath.getQueryParameter().getParameters());
             Object parameter = ObjectMapperFactory.getObjectMapper().readValue(data, parameterClass);
-            return handler.invoke(controller, parameter);
+            return new HandlerInvokeResult(handler.getReturnType(), handler.invoke(controller, parameter));
         }
 
         // TODO 1개 초과 파라미터 설정시 어노테이션에 따라 파라미터 컨버팅 처리 구현
-        return handler.invoke(controller);
+        return new HandlerInvokeResult(handler.getReturnType(), handler.invoke(controller));
     }
 
     public static HandlerAdapter getInstance() {
