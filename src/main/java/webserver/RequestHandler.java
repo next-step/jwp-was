@@ -3,6 +3,7 @@ package webserver;
 import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.IOUtils;
 import webserver.http.request.RequestLine;
 import webserver.http.request.parser.KeyValuePairParser;
 import webserver.http.request.parser.ProtocolParser;
@@ -15,6 +16,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.List;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -34,9 +36,14 @@ public class RequestHandler implements Runnable {
         ) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             String requestLineMessage = bufferedReader.readLine();
+            List<String> headers = IOUtils.readWhileEmptyLine(bufferedReader);
+
             RequestLineParser requestLineParser = new RequestLineParser(new URIParser(new KeyValuePairParser(), new QueryParametersParser(new KeyValuePairParser())), new ProtocolParser());
             RequestLine requestLine = requestLineParser.parse(requestLineMessage);
+
             logger.info("[requestLine] = {}", requestLine);
+            headers.forEach(header -> logger.info("[header] {}", header));
+
             byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
             responseBody(dos, body);
