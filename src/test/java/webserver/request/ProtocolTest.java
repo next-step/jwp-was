@@ -37,4 +37,12 @@ class ProtocolTest {
 
         assertThat(actual).isEqualTo(expected);
     }
+
+    @DisplayName("프로토콜과 버전을 반환한다")
+    @Test
+    void return_protocol_version() {
+        final Protocol protocol = Protocol.parse("HTTP/1.1");
+
+        assertThat(protocol.value()).isEqualTo("HTTP/1.1");
+    }
 }

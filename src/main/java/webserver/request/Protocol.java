@@ -42,6 +42,10 @@ public class Protocol {
         }
     }
 
+    public String value() {
+        return type + PROTOCOL_DELIMITER + version;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
