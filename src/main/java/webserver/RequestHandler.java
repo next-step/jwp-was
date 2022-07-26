@@ -44,6 +44,9 @@ public class RequestHandler implements Runnable {
 
             HttpMessage httpMessage = new HttpMessage(new HttpMessageData(httpMessageData.getHttpMessageData()));
             RequestLine requestLine = httpMessage.getRequestLine();
+
+            // find handler and invoke
+
             byte[] body = null;
             if (requestLine.getUrlPath().hasExtension()) {
                 UrlPath urlPath = requestLine.getUrlPath();
