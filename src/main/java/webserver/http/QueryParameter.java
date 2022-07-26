@@ -1,4 +1,6 @@
-package webserver.requestline;
+package webserver.http;
+
+import utils.DecoderUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,7 +28,7 @@ public class QueryParameter {
         return new QueryParameter(
                 Arrays.stream(splitParameters)
                         .map(value -> value.split(KEY_VALUE_DELIMITER))
-                        .collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]))
+                        .collect(Collectors.toMap(entry -> DecoderUtils.decode(entry[0]), entry -> DecoderUtils.decode(entry[1])))
         );
     }
 

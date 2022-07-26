@@ -1,4 +1,4 @@
-package webserver.requestline;
+package webserver.http;
 
 public class ProtocolVersion {
     private static final String PROTOCOL_DELIMITER = "/";

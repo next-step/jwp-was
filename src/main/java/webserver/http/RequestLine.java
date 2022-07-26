@@ -1,4 +1,4 @@
-package webserver.requestline;
+package webserver.http;
 
 public class RequestLine {
 

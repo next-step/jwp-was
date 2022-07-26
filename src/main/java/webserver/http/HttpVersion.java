@@ -1,4 +1,4 @@
-package webserver.requestline;
+package webserver.http;
 
 import exception.ResourceNotFound;
 

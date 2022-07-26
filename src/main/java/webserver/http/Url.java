@@ -1,4 +1,4 @@
-package webserver.requestline;
+package webserver.http;
 
 public class Url {
     private static final String URL_DELIMITER = "\\?";
