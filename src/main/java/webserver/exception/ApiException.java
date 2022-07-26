@@ -1,30 +1,28 @@
 package webserver.exception;
 
 import webserver.response.HttpStatusCode;
-
-import java.util.Collections;
-import java.util.Map;
+import webserver.response.ResponseHeader;
 
 public final class ApiException extends RuntimeException {
 
     private final HttpStatusCode code;
-    private final Map<String, String> header;
+    private final ResponseHeader header;
 
-    public ApiException(HttpStatusCode code, Map<String, String> header) {
+    public ApiException(HttpStatusCode code, ResponseHeader header) {
         super(code.toString());
         this.code = code;
         this.header = header;
     }
 
     public ApiException(HttpStatusCode code) {
-        this(code, Collections.emptyMap());
+        this(code, ResponseHeader.empty());
     }
 
     public HttpStatusCode getCode() {
         return code;
     }
 
-    public Map<String, String> getHeader() {
+    public ResponseHeader getHeader() {
         return header;
     }
 }

@@ -13,14 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class HttpResponseTest {
 
     @Test
-    @DisplayName("빌더로 생성")
+    @DisplayName("정적 메소드로 생성")
     void instance() {
         assertAll(
-                () -> assertThatNoException().isThrownBy(() -> HttpResponse.Builder.ok().build()),
-                () -> assertThatNoException().isThrownBy(() -> HttpResponse.Builder.notFound().build()),
-                () -> assertThatNoException().isThrownBy(() -> HttpResponse.Builder.internalServerError().build()),
-                () -> assertThatNoException().isThrownBy(() -> HttpResponse.Builder.ok("body").build()),
-                () -> assertThatNoException().isThrownBy(() -> HttpResponse.Builder.ok().contentType("text/html"))
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty())),
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty(), new byte[0])),
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty(), "body")),
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.sendRedirect("path.html")),
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.sendRedirect("path.html", ResponseHeader.empty())),
+                () -> assertThatNoException().isThrownBy(HttpResponse::notFound),
+                () -> assertThatNoException().isThrownBy(HttpResponse::internalServerError)
         );
     }
 
@@ -30,7 +32,7 @@ class HttpResponseTest {
         //given
         String body = "body";
         //when, then
-        assertThat(HttpResponse.Builder.ok(body).build().contentLength())
+        assertThat(HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty(), body).contentLength())
                 .isEqualTo(body.getBytes(StandardCharsets.UTF_8).length);
     }
 }

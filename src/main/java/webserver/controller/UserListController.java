@@ -9,6 +9,7 @@ import webserver.request.HttpRequest;
 import webserver.request.Path;
 import webserver.response.HttpResponse;
 import webserver.response.HttpStatusCode;
+import webserver.response.ResponseHeader;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -31,14 +32,16 @@ public class UserListController implements Controller {
     @Override
     public HttpResponse execute(HttpRequest request) throws IOException {
         validateLoggedIn(request);
-        return HttpResponse.Builder.ok(userListBody())
-                .contentType("text/html;charset=utf-8")
-                .build();
+        return HttpResponse.of(
+                HttpStatusCode.OK,
+                ResponseHeader.from(Collections.singletonMap(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8")),
+                userListBody()
+        );
     }
 
     private void validateLoggedIn(HttpRequest request) {
         if (isNotLoggedIn(request)) {
-            throw new ApiException(HttpStatusCode.FOUND, Collections.singletonMap(HttpHeaders.LOCATION, "/user/login.html"));
+            throw new ApiException(HttpStatusCode.FOUND, ResponseHeader.from(Collections.singletonMap(HttpHeaders.LOCATION, "/user/login.html")));
         }
     }
 

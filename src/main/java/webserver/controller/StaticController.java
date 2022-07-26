@@ -1,12 +1,16 @@
 package webserver.controller;
 
 import utils.FileIoUtils;
+import webserver.HttpHeaders;
 import webserver.request.HttpMethod;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
+import webserver.response.HttpStatusCode;
+import webserver.response.ResponseHeader;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Collections;
 
 public class StaticController implements Controller {
 
@@ -20,9 +24,11 @@ public class StaticController implements Controller {
 
     @Override
     public HttpResponse execute(HttpRequest request) throws IOException, URISyntaxException {
-        return HttpResponse.Builder.ok(FileIoUtils.loadFileFromClasspath(staticPath(request)))
-                .contentType(String.format("text/%s;charset=utf-8", fileExtension(request)))
-                .build();
+        return HttpResponse.of(
+                HttpStatusCode.OK,
+                ResponseHeader.from(Collections.singletonMap(HttpHeaders.CONTENT_TYPE, String.format("text/%s;charset=utf-8", fileExtension(request)))),
+                FileIoUtils.loadFileFromClasspath(staticPath(request))
+        );
     }
 
     private String fileExtension(HttpRequest request) {

@@ -76,18 +76,16 @@ public class RequestHandler implements Runnable {
                 .filter(controller -> controller.isMatch(request))
                 .findAny()
                 .map(controller -> executeSafety(controller, request))
-                .orElse(HttpResponse.Builder.notFound().build());
+                .orElse(HttpResponse.notFound());
     }
 
     private HttpResponse executeSafety(Controller controller, HttpRequest request) {
         try {
             return controller.execute(request);
         } catch (ApiException e) {
-            return HttpResponse.Builder.status(e.getCode())
-                    .addHeaders(e.getHeader())
-                    .build();
+            return HttpResponse.of(e.getCode(), e.getHeader());
         } catch (Exception e) {
-            return HttpResponse.Builder.internalServerError().build();
+            return HttpResponse.internalServerError();
         }
     }
 

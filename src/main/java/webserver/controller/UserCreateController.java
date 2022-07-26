@@ -26,7 +26,7 @@ public class UserCreateController implements Controller {
                 extractRequiredBody(request, "name"),
                 extractRequiredBody(request, "email")
         ));
-        return HttpResponse.Builder.sendRedirect("/index.html").build();
+        return HttpResponse.sendRedirect("/index.html");
     }
 
     private String extractRequiredBody(HttpRequest request, String property) {
