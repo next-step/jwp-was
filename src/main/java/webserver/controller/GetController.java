@@ -1,5 +1,7 @@
 package webserver.controller;
 
+import exception.HttpMethodNotSupportedException;
+import webserver.http.HttpMethod;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
@@ -10,6 +12,10 @@ public abstract class GetController implements Controller {
 
     @Override
     public void handle(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+        HttpMethod method = request.getMethod();
+        if (!method.isGet()) {
+            throw new HttpMethodNotSupportedException(method);
+        }
         doGet(request, response);
     }
 
