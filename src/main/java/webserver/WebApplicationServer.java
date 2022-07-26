@@ -1,10 +1,17 @@
 package webserver;
 
-import java.net.ServerSocket;
-import java.net.Socket;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.request.RequestReader;
+import webserver.http.request.parser.HeadersParser;
+import webserver.http.request.parser.KeyValuePairParser;
+import webserver.http.request.parser.ParametersParser;
+import webserver.http.request.parser.ProtocolParser;
+import webserver.http.request.parser.RequestLineParser;
+import webserver.http.request.parser.URIParser;
+
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
@@ -24,10 +31,23 @@ public class WebApplicationServer {
 
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
+            RequestReader requestReader = createRequestReader();
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection));
+                Thread thread = new Thread(new RequestHandler(connection, requestReader));
                 thread.start();
             }
         }
+    }
+
+    private static RequestReader createRequestReader() {
+        KeyValuePairParser keyValuePairParser = new KeyValuePairParser();
+        ParametersParser parametersParser = new ParametersParser(keyValuePairParser);
+        URIParser uriParser = new URIParser(keyValuePairParser, parametersParser);
+
+        return new RequestReader(
+                new RequestLineParser(uriParser, new ProtocolParser()),
+                new HeadersParser(keyValuePairParser),
+                parametersParser
+        );
     }
 }
