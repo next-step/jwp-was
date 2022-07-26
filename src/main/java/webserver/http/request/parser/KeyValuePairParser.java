@@ -9,10 +9,11 @@ public class KeyValuePairParser {
 
     private static final String EMPTY_VALUE = "";
 
-    private static final int DELIMITER_LENGTH = 1;
-
     public KeyValuePair<String, String> parse(String message, String delimiter) {
-        validate(message, delimiter);
+        return parse(message, delimiter, true);
+    }
+    public KeyValuePair<String, String> parse(String message, String delimiter, boolean isValueRequired) {
+        validate(message, delimiter, isValueRequired);
 
         String literalSplitPattern = Pattern.quote(delimiter);
         String[] splitMessage = message.split(literalSplitPattern);
@@ -25,15 +26,15 @@ public class KeyValuePairParser {
         return new KeyValuePair<>(key, value);
     }
 
-    private void validate(String message, String delimiter) {
-        validateDelimiterLength(delimiter);
+    private void validate(String message, String delimiter, boolean isValueRequired) {
+        validateEmpty(message);
         validateExistsKey(message, delimiter);
-        validateDelimiterCount(message, delimiter);
+        validateKeyValueFormat(message, delimiter, isValueRequired);
     }
 
-    private void validateDelimiterLength(String delimiter) {
-        if (delimiter.length() != DELIMITER_LENGTH) {
-            throw new RuntimeException("구분자 length는 1이어야 합니다.");
+    private void validateEmpty(String message) {
+        if (message.isBlank()) {
+            throw new RuntimeException("key, value 파싱을 위한 메시지가 공백이 될수 없습니다.");
         }
     }
 
@@ -43,21 +44,29 @@ public class KeyValuePairParser {
         }
     }
 
-    private void validateDelimiterCount(String message, String delimiter) {
-        int delimiterCount = calculateDelimiterCount(message, delimiter);
-        if (delimiterCount >= SPLIT_SIZE) {
-            throw new RuntimeException("한개보다 많은 구분자가 포함될수 없습니다.");
+    private void validateKeyValueFormat(String message, String delimiter, boolean isValueRequired) {
+        String literalSplitPattern = Pattern.quote(delimiter);
+        int splitCount = message.split(literalSplitPattern).length;
+        if (isValueRequired) {
+            validateValueRequiredFormat(splitCount);
+            return;
         }
+
+        validateValueNonRequiredFormat(splitCount);
     }
 
-    private int calculateDelimiterCount(String message, String delimiter) {
-        int delimiterCount = 0;
-        for (int i = 0; i < message.length(); i++) {
-            if (delimiter.charAt(0) == message.charAt(i)) {
-                delimiterCount++;
-            }
+    private void validateValueRequiredFormat(int splitCount) {
+        if (splitCount == SPLIT_SIZE) {
+            return;
         }
-        return delimiterCount;
+        throw new RuntimeException("'key=value' 방식의 값이 아닙니다.");
+    }
+
+    private void validateValueNonRequiredFormat(int splitCount) {
+        if (splitCount <= SPLIT_SIZE) {
+            return;
+        }
+        throw new RuntimeException("'key[=value]' 방식의 값이 아닙니다.");
     }
 
     private boolean isEmptyValue(String[] splitMessage) {

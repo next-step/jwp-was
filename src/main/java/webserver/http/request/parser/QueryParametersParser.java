@@ -28,7 +28,7 @@ public class QueryParametersParser {
         }
 
         Map<String, List<String>> keyValues = Arrays.stream(message.split(KEY_VALUE_DELIMITER_REGEX))
-                .map(keyValue -> keyValuePairParser.parse(keyValue, KEY_VALUE_PAIR_DELIMITER))
+                .map(keyValue -> keyValuePairParser.parse(keyValue, KEY_VALUE_PAIR_DELIMITER, false))
                 .collect(Collectors.toMap(KeyValuePair::getKey,
                         pair -> {
                             List<String> subList = new ArrayList<>();

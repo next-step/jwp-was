@@ -15,7 +15,7 @@ public class URIParser {
     }
 
     public URI parse(String message) {
-        KeyValuePair<String, String> pathQueryParamPair = keyValuePairParser.parse(message, QUERY_PARAMETER_DELIMITER);
+        KeyValuePair<String, String> pathQueryParamPair = keyValuePairParser.parse(message, QUERY_PARAMETER_DELIMITER, false);
         String path = pathQueryParamPair.getKey();
         String queryParameters = pathQueryParamPair.getValue();
         return new URI(path, queryParametersParser.parse(queryParameters));
