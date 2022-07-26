@@ -1,14 +1,47 @@
 package webserver.ui;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import webserver.domain.ContentType;
+import webserver.domain.HttpRequest;
+import webserver.domain.HttpResponse;
+import webserver.domain.HttpStatus;
 import webserver.domain.Path;
 import webserver.domain.RequestLine;
 import webserver.domain.RequestMapping;
+import webserver.domain.ResponseBody;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static webserver.domain.HttpHeaders.CONTENT_TYPE;
+
 public interface Controller {
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    default HttpResponse execute(HttpRequest httpRequest){
+        try {
+            Method method = getExecutableMethod(httpRequest.getRequestLine());
+            Object result = method.invoke(this, httpRequest);
+
+            if (method.getDeclaredAnnotation(ResponseBody.class) != null) {
+                HttpResponse response = new HttpResponse(HttpStatus.OK, null, objectMapper.writeValueAsString(result));
+                response.addHeader(CONTENT_TYPE, ContentType.JSON.getContentType());
+
+                return response;
+            }
+
+            return (HttpResponse) result;
+        } catch (IllegalAccessException | InvocationTargetException | JsonProcessingException e) {
+            e.printStackTrace();
+            return new HttpResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage());
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            return new HttpResponse(HttpStatus.NOT_FOUND, null, e.getMessage());
+        }
+    }
 
     default Method getExecutableMethod(RequestLine requestLine) throws NoSuchMethodException {
         return Arrays.stream(this.getClass().getDeclaredMethods())

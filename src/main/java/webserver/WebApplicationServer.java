@@ -3,6 +3,7 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.config.WebConfig;
+import webserver.handlers.ControllerContainer;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,7 +11,6 @@ import java.net.Socket;
 public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
     private static final int DEFAULT_PORT = 8080;
-
     public static void main(String[] args) throws Exception {
         int port;
         if (args == null || args.length == 0) {
@@ -26,7 +26,7 @@ public class WebApplicationServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection, webConfig.frontController()));
+                Thread thread = new Thread(new RequestHandler(connection, webConfig.getBean(ControllerContainer.class)));
                 thread.start();
             }
         }

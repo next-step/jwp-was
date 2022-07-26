@@ -9,13 +9,9 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
-import static com.github.jknack.handlebars.internal.lang3.StringUtils.EMPTY;
-
 public class HttpRequest {
-    public static final int REQUEST_LINE_POINT = 0;
-    public static final int HEADER_START_POINT = 1;
-    public static final String QUERY_DELIMITER = "\\?";
 
+    public static final int MIN_CONTENT_LENGTH = 0;
     private final RequestLine requestLine;
     private final HttpHeaders headers;
     private final RequestBody requestBody;
@@ -33,17 +29,11 @@ public class HttpRequest {
         String line = URLDecoder.decode(br.readLine(), StandardCharsets.UTF_8);
         RequestLine requestLine = RequestLine.from(line);
         RequestBody requestBody = RequestBody.fromRequestLine(line);
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        line = br.readLine();
-        while (!EMPTY.equals(line)) {
-            httpHeaders.add(line);
-            line = br.readLine();
-        }
+        HttpHeaders httpHeaders = HttpHeaders.from(br);
 
         int contentLength = httpHeaders.getContentLength();
-        if (contentLength > 0) {
-             requestBody.addAttributes(IOUtils.readData(br, contentLength));
+        if (contentLength > MIN_CONTENT_LENGTH) {
+            requestBody.addAttributes(IOUtils.readData(br, contentLength));
         }
 
         return new HttpRequest(requestLine, httpHeaders, requestBody);
@@ -63,5 +53,13 @@ public class HttpRequest {
 
     public Cookie getCookie() {
         return headers.getCookie();
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%s \r\n " +
+                "%s \r\n " +
+                "%s \r\n", requestLine, headers, requestBody);
     }
 }

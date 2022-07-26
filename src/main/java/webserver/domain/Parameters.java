@@ -85,4 +85,11 @@ public class Parameters {
     public void addParameters(String key, String value) {
         store.put(key, value);
     }
+
+    @Override
+    public String toString() {
+        return store.entrySet().stream()
+                .map(entry -> entry.getKey() + ": " + entry.getValue() + "\r\n")
+                .collect(Collectors.joining());
+    }
 }

@@ -2,22 +2,22 @@ package webserver;
 
 import webserver.application.UserService;
 import webserver.ui.Controller;
-import webserver.ui.FrontController;
+import webserver.handlers.ControllerContainerImpl;
 import webserver.ui.UserController;
 import webserver.ui.WelcomeController;
 
 public class TestWebConfig {
-    private final FrontController frontController;
+    private final ControllerContainerImpl handleContainer;
 
     public TestWebConfig() {
-        frontController = FrontController.newInstance();
+        handleContainer = ControllerContainerImpl.newInstance();
 
-        frontController.addController(welcomeController())
+        handleContainer.addController(welcomeController())
                 .addController(userController());
     }
 
-    public FrontController frontController() {
-        return frontController;
+    public ControllerContainerImpl frontController() {
+        return handleContainer;
     }
 
     private Controller welcomeController() {

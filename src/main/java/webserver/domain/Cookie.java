@@ -1,5 +1,9 @@
 package webserver.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,6 +14,11 @@ public class Cookie {
     private final Map<String, String> store = new HashMap<>();
 
     public Cookie() {
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public Cookie(@JsonProperty(value = "store") Map<String, String> store) {
+
     }
 
     public static Cookie from(String line) {
@@ -39,5 +48,9 @@ public class Cookie {
 
     public String getAttribute(String key) {
         return store.getOrDefault(key, null);
+    }
+
+    public Map<String, String> getStore() {
+        return Collections.unmodifiableMap(store);
     }
 }

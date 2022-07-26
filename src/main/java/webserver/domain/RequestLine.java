@@ -52,4 +52,9 @@ public class RequestLine {
     public String getPathStr() {
         return path.getPathStr();
     }
+
+    @Override
+    public String toString() {
+        return method.name()+ " " + path + " " + protocol;
+    }
 }

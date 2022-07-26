@@ -18,7 +18,7 @@ public class HttpHeaderTest {
 
     @Test
     void createResponseHeader() {
-        String[] headers = new String[]{"Content-Type:application/json", "Content-Length:1024"};
+        String[] headers = new String[]{"Content-Type: application/json", "Content-Length: 1024"};
 
         HttpHeaders httpHeaders = HttpHeaders.newInstance(headers, 0, headers.length);
 
@@ -31,7 +31,7 @@ public class HttpHeaderTest {
     void addHeaderContent() {
         HttpHeaders httpHeaders = HttpHeaders.defaultResponseHeader();
 
-        httpHeaders.add("Content-Type:application/json");
+        httpHeaders.add("Content-Type: application/json");
 
         assertThat(httpHeaders.getAttribute("Content-Type")).isEqualTo("application/json");
     }

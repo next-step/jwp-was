@@ -33,4 +33,9 @@ public class View {
     public byte[] getContent() {
         return content;
     }
+
+    @Override
+    public String toString() {
+        return new String(content);
+    }
 }

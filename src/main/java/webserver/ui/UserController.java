@@ -1,7 +1,6 @@
 package webserver.ui;
 
 import model.dto.UserLoginRequest;
-import model.dto.UserResponse;
 import model.dto.UserSaveRequest;
 import org.springframework.http.HttpMethod;
 import webserver.application.UserService;
@@ -11,20 +10,23 @@ import webserver.domain.HttpResponse;
 import webserver.domain.HttpStatus;
 import webserver.domain.RequestBody;
 import webserver.domain.RequestMapping;
-import webserver.domain.TemplateEngineHelper;
+import webserver.domain.ResponseBody;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 
 public class UserController implements Controller {
-
     private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
+    @RequestMapping(value = "/users", method = {HttpMethod.GET})
+    @ResponseBody
+    public HttpRequest usersTestApi(HttpRequest httpRequest) {
+        return httpRequest;
+    }
     @RequestMapping(value = "/user/form.html", method = HttpMethod.GET)
     public HttpResponse getUsers(HttpRequest httpRequest) {
 

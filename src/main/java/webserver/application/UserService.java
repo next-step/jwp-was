@@ -5,7 +5,6 @@ import model.User;
 import model.dto.UserResponse;
 import webserver.domain.EntitySupplier;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 

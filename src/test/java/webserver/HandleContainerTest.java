@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import utils.FileIoUtils;
 import webserver.domain.HttpRequest;
 import webserver.domain.HttpResponse;
-import webserver.ui.FrontController;
+import webserver.handlers.ControllerContainerImpl;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -18,26 +18,26 @@ import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FrontControllerTest {
+class HandleContainerTest {
 
-    private static FrontController frontController;
+    private static ControllerContainerImpl handleContainer;
 
     @BeforeAll
     static void staticSetUp() {
-        frontController = new TestWebConfig().frontController();
+        handleContainer = new TestWebConfig().frontController();
     }
 
 
     @DisplayName("전달받은 requestLine이 유효한 경우 논리값 참을 반환한다.")
     @ParameterizedTest
-    @ValueSource(strings = {"GET /index.html http/1.1"})
+    @ValueSource(strings = {"GET /index.html HTTP/1.1\r\nAccept: text/html"})
     void supportWithValidPath(String requestLine) throws IOException {
         InputStream is = new ByteArrayInputStream(requestLine.getBytes());
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
         HttpRequest httpRequest = HttpRequest.newInstance(br);
 
-        assertThat(frontController.support(httpRequest.getRequestLine())).isTrue();
+        assertThat(handleContainer.support(httpRequest.getRequestLine())).isTrue();
 
     }
 
@@ -49,7 +49,7 @@ class FrontControllerTest {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         HttpRequest httpRequest = HttpRequest.newInstance(br);
 
-        assertThat(frontController.support(httpRequest.getRequestLine())).isFalse();
+        assertThat(handleContainer.support(httpRequest.getRequestLine())).isFalse();
     }
 
     @DisplayName("요청 request path가 유효한 html요청일경우 해당 html 파일을 찾아 반환한다.")
@@ -63,7 +63,7 @@ class FrontControllerTest {
         HttpRequest httpRequest = HttpRequest.newInstance(br);
 
 
-        HttpResponse httpResponse = frontController.execute(httpRequest);
+        HttpResponse httpResponse = handleContainer.execute(httpRequest);
 
         assertThat(httpResponse.getBodyOrView()).isEqualTo(expectedBody);
     }

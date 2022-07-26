@@ -8,14 +8,14 @@ import java.util.stream.Collectors;
 public enum ContentType {
     JS("application/javascript;charset=utf-8", "./static"),
     HTML("text/html;charset=utf-8", "./templates"),
-    CSS("text/css;charset=utf-8", "./static"),
-    SVG("image/svg+xml;charset=utf-8", "./static"),
-    TTF("application/x-font-ttf;charset=utf-8", "./static"),
-    OTF("application/x-font-opentype;charset=utf-8", "./static"),
-    WOFF("application/font-woff;charset=utf-8", "./static"),
-    WOFF2("application/font-woff2;charset=utf-8", "./static"),
-    ICO( "image/avif;charset=utf-8", "./templates"),
-    JSON("application/json;charset=utf-8", "");
+    CSS("text/css", "./static"),
+    SVG("image/svg+xml", "./static"),
+    TTF("application/octet-stream", "./static"),
+    OTF("application/x-font-opentype", "./static"),
+    WOFF("application/font-woff", "./static"),
+    WOFF2("application/font-woff2", "./static"),
+    ICO( "image/avif", "./templates"),
+    JSON("application/json", "");
 
     private static final Map<String, ContentType> contentTypeMap;
     private static final List<ContentType> resourceTypes;

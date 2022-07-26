@@ -2,10 +2,8 @@ package webserver.domain;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.function.Supplier;
 
 public class HttpResponse {
-    private static final StringBuilder stringBuilder = new StringBuilder();
     private final HttpStatus httpStatus;
     private final Attributes attributes = new Attributes();
     private final HttpHeaders headers;
@@ -33,7 +31,7 @@ public class HttpResponse {
 
     public static HttpResponse templateResponse(String templateName, Object param) throws IOException {
 
-        String templateBody = TemplateEngineHelper.applyTemplate( templateName, param);
+        String templateBody = TemplateEngineHelper.applyTemplate(templateName, param);
         HttpResponse httpResponse = new HttpResponse(HttpStatus.OK,
                 new View(templateName, templateBody.getBytes()),
                 null);
@@ -97,14 +95,9 @@ public class HttpResponse {
     }
 
     public String toStringHeader() {
-        String lineSeparator = "\r\n";
-        stringBuilder.setLength(0);
-        stringBuilder.append(getHttpStatusMessage())
-                .append(lineSeparator)
-                .append(headers.toString())
-                .append(lineSeparator);
-
-        return stringBuilder.toString();
+        return String.format(
+                "%s \r\n " +
+                "%s \r\n", getHttpStatusMessage(), headers);
     }
 
     public byte[] getBodyOrView() {
@@ -119,5 +112,10 @@ public class HttpResponse {
 
     public void addCookie(Cookie cookie) {
         addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
+
+    @Override
+    public String toString() {
+        return toStringHeader() + view;
     }
 }

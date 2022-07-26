@@ -1,10 +1,14 @@
 package webserver.domain;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static com.github.jknack.handlebars.internal.lang3.StringUtils.EMPTY;
 
 public class HttpHeaders {
     public static final String DELIMITER = ": ";
@@ -34,6 +38,18 @@ public class HttpHeaders {
     public static HttpHeaders defaultResponseHeader() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
+
+        return httpHeaders;
+    }
+
+    public static HttpHeaders from(BufferedReader br) throws IOException {
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        String line = br.readLine();
+        while (line != null && !EMPTY.equals(line)) {
+            httpHeaders.add(line);
+            line = br.readLine();
+        }
 
         return httpHeaders;
     }
@@ -89,19 +105,23 @@ public class HttpHeaders {
         }
     }
 
-    @Override
-    public String toString() {
-        return headers.entrySet().stream()
-                .map(entry -> entry.getKey()+ ": "+ entry.getValue()+"\r\n")
-                .collect(Collectors.joining());
-    }
-
     public int getContentLength() {
         String contentLength = getAttributeOrDefault(CONTENT_LENGTH, "0");
         return Integer.parseInt(contentLength);
     }
 
     public Cookie getCookie() {
-        return Cookie.from(getAttribute(COOKIE));
+        if (headers.containsKey(COOKIE)) {
+            return Cookie.from(getAttribute(COOKIE));
+        }
+        return new Cookie();
+    }
+
+    @Override
+    public String toString() {
+        String headerStr = headers.entrySet().stream()
+                .map(entry -> entry.getKey() + ": " + entry.getValue() + "\r\n")
+                .collect(Collectors.joining());
+        return headerStr + "\r\n";
     }
 }

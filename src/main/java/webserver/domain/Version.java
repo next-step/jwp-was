@@ -17,4 +17,8 @@ public enum Version {
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }
+
+    public String value() {
+        return value;
+    }
 }
