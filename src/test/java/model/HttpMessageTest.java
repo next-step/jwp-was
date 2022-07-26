@@ -18,7 +18,7 @@ class HttpMessageTest {
     @Test
     void validationTest() {
         List<String> wrongHttpMessageData1 = Collections.emptyList();
-        Assertions.assertThatThrownBy(() -> new HttpMessage(wrongHttpMessageData1))
+        Assertions.assertThatThrownBy(() -> new HttpMessage(new HttpMessageData(wrongHttpMessageData1)))
                 .isInstanceOf(IllegalArgumentException.class);
 
         List<String> wrongHttpMessageData2 = List.of(
@@ -32,7 +32,7 @@ class HttpMessageTest {
                 BODY_SEPARATOR,
                 "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net"
         );
-        Assertions.assertThatThrownBy(() -> new HttpMessage(wrongHttpMessageData2))
+        Assertions.assertThatThrownBy(() -> new HttpMessage(new HttpMessageData(wrongHttpMessageData2)))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -40,7 +40,7 @@ class HttpMessageTest {
     @Test
     void createHttpMessageRequestLineTest() {
         List<String> httpMessageData = List.of("POST /user/create HTTP/1.1");
-        HttpMessage httpMessage = new HttpMessage(httpMessageData);
+        HttpMessage httpMessage = new HttpMessage(new HttpMessageData(httpMessageData));
 
         RequestLine actual = httpMessage.getRequestLine();
         RequestLine expected = new RequestLine(HttpMethod.POST, new UrlPath("/user/create"), Protocol.HTTP_1_1);
@@ -59,7 +59,7 @@ class HttpMessageTest {
                 "Content-Type: application/x-www-form-urlencoded",
                 "Accept: */*"
         );
-        HttpMessage httpMessage = new HttpMessage(httpMessageData);
+        HttpMessage httpMessage = new HttpMessage(new HttpMessageData(httpMessageData));
 
         RequestHeaders actualRequestHeaders = httpMessage.getRequestHeaders();
         Map<String, String> expectedRequestHeaders = Map.of(
@@ -93,7 +93,7 @@ class HttpMessageTest {
                 bodyMessage
         );
 
-        HttpMessage httpMessage = new HttpMessage(httpMessageData);
+        HttpMessage httpMessage = new HttpMessage(new HttpMessageData(httpMessageData));
 
         String actual = bodyMessage;
         String expected = httpMessage.getBody();
