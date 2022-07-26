@@ -1,15 +1,14 @@
 package webserver;
 
-import model.HttpMessage;
-import model.HttpMessageData;
-import model.RequestLine;
-import model.UrlPath;
+import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import utils.FileIoUtils;
+import utils.HandlerAdapter;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -45,20 +44,33 @@ public class RequestHandler implements Runnable {
             HttpMessage httpMessage = new HttpMessage(new HttpMessageData(httpMessageData.getHttpMessageData()));
             RequestLine requestLine = httpMessage.getRequestLine();
 
-            // find handler and invoke
-
             byte[] body = null;
             if (requestLine.getUrlPath().hasExtension()) {
                 UrlPath urlPath = requestLine.getUrlPath();
                 body = FileIoUtils.loadFileFromClasspath(urlPath.getPath());
             }
 
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
+            HandlerInvokeResult result = HandlerAdapter.getInstance().invoke(httpMessage);
+            if (result.getClazz().equals(String.class)) {
+                // TODO templates & model return
+            }
+
+            body = this.bodyToBytes(result.getResult());
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private byte[] bodyToBytes(Object result) throws IOException {
+        ByteArrayOutputStream boas = new ByteArrayOutputStream();
+        try (ObjectOutputStream ois = new ObjectOutputStream(boas)) {
+            ois.writeObject(result);
+            return boas.toByteArray();
         }
     }
 
