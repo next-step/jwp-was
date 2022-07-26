@@ -1,11 +1,15 @@
 package webserver;
 
-import java.io.*;
-import java.net.Socket;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.request.HttpHeaders;
 import webserver.http.request.RequestLine;
+
+import java.io.*;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -23,6 +27,13 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             RequestLine requestLine = RequestLine.from(br.readLine());
+
+            List<String> headers = new ArrayList<>();
+            String nextLine = br.readLine();
+            while (!("".equals(nextLine) || Objects.isNull(nextLine))) {
+                headers.add(nextLine);
+            }
+            HttpHeaders httpHeaders = HttpHeaders.from(String.join("\n", headers));
 
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
