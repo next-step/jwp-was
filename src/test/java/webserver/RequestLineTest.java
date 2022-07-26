@@ -46,6 +46,15 @@ public class RequestLineTest {
 
         final RequestLine requestLine = new RequestLine(request);
 
-        assertThat(requestLine.getValuesOfParam("userId").get(0)).isEqualTo("javajigi");
+        assertThat(requestLine.getRequestParams().getOneValue("userId")).isEqualTo("javajigi");
+    }
+
+    @Test
+    void 회원가입_경로_확인() {
+        final String request = "GET /create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net/ HTTP/1.1";
+
+        final RequestLine requestLine = new RequestLine(request);
+
+        assertThat(requestLine.isCreateUserPath()).isEqualTo(true);
     }
 }

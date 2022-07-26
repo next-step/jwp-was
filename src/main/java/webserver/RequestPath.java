@@ -9,7 +9,7 @@ public class RequestPath {
     public static final int PATH_INDEX = 0;
 
     private String path;
-    private MultiValueMap<String, String> params;
+    private RequestParams params;
 
     public RequestPath(String request) {
         final String[] requests = request.split(REGEX_QUESTION_MARK);
@@ -19,14 +19,14 @@ public class RequestPath {
         if (requests.length < 1) {
             return;
         }
-        this.params = UriComponentsBuilder.fromUriString(request).build().getQueryParams();
+        this.params = new RequestParams(UriComponentsBuilder.fromUriString(request).build().getQueryParams());
     }
 
     public String getPath() {
         return path;
     }
 
-    public MultiValueMap<String, String> getParams() {
+    public RequestParams getParams() {
         return params;
     }
 }

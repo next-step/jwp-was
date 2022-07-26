@@ -42,8 +42,8 @@ public class RequestLine {
         return request.getPath();
     }
 
-    public List<String> getValuesOfParam(String key) {
-        return request.getParams().get(key);
+    public RequestParams getRequestParams() {
+        return request.getParams();
     }
 
     public String getProtocol() {
@@ -52,5 +52,9 @@ public class RequestLine {
 
     public String getVersion() {
         return protocol.getVersion();
+    }
+
+    public boolean isCreateUserPath() {
+        return request.getPath().equals("/create");
     }
 }

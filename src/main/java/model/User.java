@@ -1,5 +1,8 @@
 package model;
 
+import org.springframework.util.MultiValueMap;
+import webserver.RequestParams;
+
 public class User {
     private String userId;
     private String password;
@@ -11,6 +14,10 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public static User createUser(RequestParams params) {
+        return new User(params.getOneValue("userId"), params.getOneValue("password"), params.getOneValue("name"), params.getOneValue("email"));
     }
 
     public String getUserId() {

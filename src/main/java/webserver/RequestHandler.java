@@ -2,9 +2,12 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URISyntaxException;
 
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
 import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
@@ -23,12 +26,16 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
             RequestLine requestLine = new RequestLine(IOUtils.readRequestData(in));
-
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
+
+//            if (requestLine.isCreateUserPath()) {
+//                new User(requestLine.getRequestPath());
+//            }
+            byte[] body = FileIoUtils.loadFileFromClasspath(requestLine.getRequestPath());
+//            byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
             responseBody(dos, body);
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
