@@ -40,8 +40,8 @@ public class Path {
             throw new StringEmptyException("pathinfo is empty");
     }
 
-    public String getQueryString() {
-        return this.queryString.getValue();
+    public QueryString getQueryString() {
+        return this.queryString;
     }
 
     @Override

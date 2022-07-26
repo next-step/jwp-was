@@ -3,17 +3,24 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
+import webserver.request.domain.model.User;
+import webserver.request.domain.request.QueryString;
 import webserver.request.domain.request.RequestLine;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+
+    private User user;
 
 //    private HttpRequest httpRequest = new HttpRequest();
     private RequestLine requestLine;
@@ -42,12 +49,36 @@ public class RequestHandler implements Runnable {
             RequestLine requestLine = RequestLine.parse(br.readLine());
             DataOutputStream dos = new DataOutputStream(out);
 
-            String path = IOUtils.loadFileFromClasspath(requestLine.parsePath());
+            String path = matchResponse(requestLine);
             byte[] body = path.getBytes();
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
+        }
+    }
+
+    private String matchResponse(RequestLine requestLine) throws IOException, URISyntaxException {
+        String path = requestLine.parsePath();
+        if(path.endsWith("html")) {
+            return IOUtils.loadFileFromClasspath(path);
+        }
+
+        return parseQueryString(requestLine.parsePath(), requestLine.parseQueryString());
+    }
+
+    private String parseQueryString(String parsePath, QueryString queryString) {
+        String[] str = parsePath.split("/");
+        if(str[1].equals("user")) {
+            userController(queryString, str);
+        }
+
+        return "";
+    }
+
+    private void userController(QueryString queryString, String[] str) {
+        if(str[2].equals("create")) {
+            this.user = User.create(queryString.getDataPairs());
         }
     }
 

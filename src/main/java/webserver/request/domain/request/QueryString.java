@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,10 +30,7 @@ public class QueryString {
     private void splitQueryString(String value) {
         String[] arr = value.split(DELIMITER1);
 
-        for(String str : arr) {
-            String[] strings = str.split(DELIMITER2);
-            map.put(strings[0], strings[1]);
-        }
+        Arrays.stream(arr).map(str -> str.split(DELIMITER2)).forEach(strings -> map.put(strings[0], strings[1]));
     }
 
     public int getQueryStringPairs() {

@@ -46,7 +46,7 @@ public class RequestLine {
         return "";
     }
 
-    public String parseQueryString() {
+    public QueryString parseQueryString() {
         return path.getQueryString();
     }
 
