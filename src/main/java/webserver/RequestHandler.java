@@ -7,7 +7,7 @@ import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import webserver.domain.RequestLine;
+import webserver.requestline.RequestLine;
 
 public class RequestHandler implements Runnable {
 
@@ -27,6 +27,8 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             final RequestLine requestLine = convertStreamToRequestLine(in);
             final byte[] body = FileIoUtils.loadFileFromClasspath(requestLine.getUrl().getPath());
+
+
 
             final DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length);

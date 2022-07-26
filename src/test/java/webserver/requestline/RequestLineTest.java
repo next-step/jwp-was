@@ -1,4 +1,4 @@
-package webserver.domain;
+package webserver.requestline;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

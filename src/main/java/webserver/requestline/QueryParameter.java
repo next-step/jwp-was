@@ -1,4 +1,4 @@
-package webserver.domain;
+package webserver.requestline;
 
 import java.util.Arrays;
 import java.util.Collections;

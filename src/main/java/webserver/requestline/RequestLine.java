@@ -1,4 +1,4 @@
-package webserver.domain;
+package webserver.requestline;
 
 public class RequestLine {
 
