@@ -4,13 +4,13 @@ import java.util.HashMap;
 
 public class URI {
     private final String path;
-    private final QueryParameters queryParameters;
+    private final Parameters queryParameters;
 
     public URI(String path) {
-        this(path, new QueryParameters(new HashMap<>()));
+        this(path, new Parameters(new HashMap<>()));
     }
 
-    public URI(String path, QueryParameters queryParameters) {
+    public URI(String path, Parameters queryParameters) {
         this.path = path;
         this.queryParameters = queryParameters;
     }

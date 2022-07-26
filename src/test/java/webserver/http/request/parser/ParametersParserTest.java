@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import webserver.http.request.QueryParameters;
+import webserver.http.request.Parameters;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,14 +14,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.Lists.list;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class QueryParametersParserTest {
-    private final QueryParametersParser queryParametersParser = new QueryParametersParser(new KeyValuePairParser());
+class ParametersParserTest {
+    private final ParametersParser parametersParser = new ParametersParser(new KeyValuePairParser());
 
     @DisplayName("key1=value1&key2=value2 형식의 메시지로 요청이 온 경우, key, value 를 Map으로 갖는 QueryParameters 객체를 생성")
     @ParameterizedTest
     @MethodSource("provideForParse")
-    void parse(String message, QueryParameters expected) {
-        QueryParameters actual = queryParametersParser.parse(message);
+    void parse(String message, Parameters expected) {
+        Parameters actual = parametersParser.parse(message);
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(expected);
     }
@@ -40,11 +40,11 @@ class QueryParametersParserTest {
         keyValuesWithEmptyValue.put("key2", list("value2"));
 
         return Stream.of(
-                arguments("", new QueryParameters(new HashMap<>())),
-                arguments("key1=value1&key2=value2", new QueryParameters(keyValuesWithSingleValue)),
-                arguments("key1=value1&key2=value2&key1=value3", new QueryParameters(keyValuesWithMultipleValue)),
-                arguments("key1=&key2=value2", new QueryParameters(keyValuesWithEmptyValue)),
-                arguments("key1=&key2=value2&&&", new QueryParameters(keyValuesWithEmptyValue))
+                arguments("", new Parameters(new HashMap<>())),
+                arguments("key1=value1&key2=value2", new Parameters(keyValuesWithSingleValue)),
+                arguments("key1=value1&key2=value2&key1=value3", new Parameters(keyValuesWithMultipleValue)),
+                arguments("key1=&key2=value2", new Parameters(keyValuesWithEmptyValue)),
+                arguments("key1=&key2=value2&&&", new Parameters(keyValuesWithEmptyValue))
         );
     }
 }

@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static webserver.http.request.parser.fixture.URIFixture.fixtureWithQueryParameters;
 
 class URIParserTest {
-    private final URIParser uriParser = new URIParser(new KeyValuePairParser(), new QueryParametersParser(new KeyValuePairParser()));
+    private final URIParser uriParser = new URIParser(new KeyValuePairParser(), new ParametersParser(new KeyValuePairParser()));
 
     @DisplayName("queryParameter가 포함되지 않는 메시지인 경우, path와 빈 QueryParameters를 갖는 URI 객체를 생성한다.")
     @Test

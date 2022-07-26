@@ -1,7 +1,7 @@
 package webserver.http.request.parser;
 
 import webserver.http.request.KeyValuePair;
-import webserver.http.request.QueryParameters;
+import webserver.http.request.Parameters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class QueryParametersParser {
+public class ParametersParser {
 
     private static final String KEY_VALUE_DELIMITER_REGEX = "&";
 
@@ -18,13 +18,13 @@ public class QueryParametersParser {
 
     private final KeyValuePairParser keyValuePairParser;
 
-    public QueryParametersParser(KeyValuePairParser keyValuePairParser) {
+    public ParametersParser(KeyValuePairParser keyValuePairParser) {
         this.keyValuePairParser = keyValuePairParser;
     }
 
-    public QueryParameters parse(String message) {
+    public Parameters parse(String message) {
         if (message.isBlank()) {
-            return new QueryParameters(new HashMap<>());
+            return new Parameters(new HashMap<>());
         }
 
         Map<String, List<String>> keyValues = Arrays.stream(message.split(KEY_VALUE_DELIMITER_REGEX))
@@ -41,6 +41,6 @@ public class QueryParametersParser {
                         }
                 ));
 
-        return new QueryParameters(keyValues);
+        return new Parameters(keyValues);
     }
 }

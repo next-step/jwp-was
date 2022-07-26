@@ -7,9 +7,9 @@ public class URIParser {
     private static final String QUERY_PARAMETER_DELIMITER = "?";
     
     private final KeyValuePairParser keyValuePairParser;
-    private final QueryParametersParser queryParametersParser;
+    private final ParametersParser queryParametersParser;
 
-    public URIParser(KeyValuePairParser keyValuePairParser, QueryParametersParser queryParametersParser) {
+    public URIParser(KeyValuePairParser keyValuePairParser, ParametersParser queryParametersParser) {
         this.keyValuePairParser = keyValuePairParser;
         this.queryParametersParser = queryParametersParser;
     }

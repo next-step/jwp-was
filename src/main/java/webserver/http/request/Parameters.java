@@ -3,10 +3,10 @@ package webserver.http.request;
 import java.util.List;
 import java.util.Map;
 
-public class QueryParameters {
+public class Parameters {
     private final Map<String, List<String>> keyValues;
 
-    public QueryParameters(Map<String, List<String>> keyValues) {
+    public Parameters(Map<String, List<String>> keyValues) {
         this.keyValues = keyValues;
     }
 
@@ -15,5 +15,9 @@ public class QueryParameters {
         return "QueryParameters{" +
                 "keyValues=" + keyValues +
                 '}';
+    }
+
+    public void add(Parameters parameters) {
+        keyValues.putAll(parameters.keyValues);
     }
 }

@@ -18,7 +18,7 @@ class RequestLineParserTest {
     void setUp() {
         URIParser uriParser = new URIParser(
                 new KeyValuePairParser(),
-                new QueryParametersParser(new KeyValuePairParser())
+                new ParametersParser(new KeyValuePairParser())
         );
         ProtocolParser protocolParser = new ProtocolParser();
 
