@@ -139,7 +139,7 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
   - 요청에 응답하기 위한 내용을 생성하여 OutputStream으로 출력한다.
   - [ ] StatusLine
   - [ ] ResponseHeader
-  - [ ] ResponseBody
+  - [x] ResponseBody
 - [ ] URI에 따라 비즈니스 로직을 처리할 수 있는 객체를 생성한다. (Controller?)
   - [ ] HttpRequest#RequestLine의 내용으로 요청을 수행할 객체를 찾는다.
   - [ ] 요청을 수행할 객체가 비즈니스 로직을 처리할 객체에게 책임을 위임한다.
