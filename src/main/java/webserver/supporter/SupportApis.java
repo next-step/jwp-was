@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import webserver.servlet.Servlet;
 import webserver.servlet.UserCreateServlet;
+import webserver.servlet.UserListServlet;
 import webserver.servlet.UserLoginServlet;
 
 public class SupportApis {
@@ -14,6 +15,7 @@ public class SupportApis {
         apiMap = new HashMap<>();
         apiMap.put("/user/create", new UserCreateServlet());
         apiMap.put("/user/login", new UserLoginServlet());
+        apiMap.put("/user/list.html", new UserListServlet());
     }
 
     public static boolean isSupported(String path) {

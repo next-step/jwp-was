@@ -11,7 +11,7 @@ import java.util.Optional;
 import model.User;
 
 public final class DataBase {
-    private static Map<String, User> users = Maps.newHashMap();
+    private static Map<String, User> users = Maps.newLinkedHashMap();
 
     private DataBase() { }
 

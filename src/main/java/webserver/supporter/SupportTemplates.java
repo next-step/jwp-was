@@ -13,7 +13,6 @@ public final class SupportTemplates {
         pathMap.add("/qna/form.html");
         pathMap.add("/qna/show.html");
         pathMap.add("/user/form.html");
-        pathMap.add("/user/list.html");
         pathMap.add("/user/login.html");
         pathMap.add("/user/login_failed.html");
         pathMap.add("/user/profile.html");
