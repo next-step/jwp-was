@@ -2,26 +2,27 @@ package webserver.http.request.parser;
 
 import webserver.http.request.KeyValuePair;
 
+import java.util.regex.Pattern;
+
 public class KeyValuePairParser {
     private static final int SPLIT_SIZE = 2;
-
-    private static final String REPLACEMENT_DELIMITER_REGEX = " ";
 
     private static final String EMPTY_VALUE = "";
 
     private static final int DELIMITER_LENGTH = 1;
 
-    public KeyValuePair parse(String message, String delimiter) {
+    public KeyValuePair<String, String> parse(String message, String delimiter) {
         validate(message, delimiter);
 
-        String[] splitMessage = message.replace(delimiter, REPLACEMENT_DELIMITER_REGEX).split(REPLACEMENT_DELIMITER_REGEX);
+        String literalSplitPattern = Pattern.quote(delimiter);
+        String[] splitMessage = message.split(literalSplitPattern);
         String key = splitMessage[0];
         if (isEmptyValue(splitMessage)) {
-            return new KeyValuePair(key, EMPTY_VALUE);
+            return new KeyValuePair<>(key, EMPTY_VALUE);
         }
         String value = splitMessage[1];
 
-        return new KeyValuePair(key, value);
+        return new KeyValuePair<>(key, value);
     }
 
     private void validate(String message, String delimiter) {

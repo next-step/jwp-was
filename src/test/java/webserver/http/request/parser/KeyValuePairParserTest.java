@@ -53,19 +53,20 @@ class KeyValuePairParserTest {
     @DisplayName("입력받은 메시지를 구분자를 기준으로 key, value를 갖는 KeyValuePair 객체 생성")
     @ParameterizedTest
     @MethodSource("provideForParse")
-    void parse_contains_multiple_delimiter(String message, KeyValuePair expected) {
-        String delimiter = "=";
-
-        KeyValuePair actual = keyValuePairParser.parse(message, delimiter);
+    void parse_contains_multiple_delimiter(String delimiter, String message, KeyValuePair<String, String> expected) {
+        KeyValuePair<String, String> actual = keyValuePairParser.parse(message, delimiter);
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(expected);
     }
 
     private static Stream<Arguments> provideForParse() {
         return Stream.of(
-                arguments("key=", new KeyValuePair("key", "")),
-                arguments("key=value", new KeyValuePair("key", "value")),
-                arguments("key,value", new KeyValuePair("key,value", ""))
+                arguments("=", "key=", new KeyValuePair<>("key", "")),
+                arguments("=", "key=value", new KeyValuePair<>("key", "value")),
+                arguments("=", "key", new KeyValuePair<>("key", "")),
+                arguments("?", "/path?", new KeyValuePair<>("/path", "")),
+                arguments("?", "/path?query=string", new KeyValuePair<>("/path", "query=string")),
+                arguments("?", "/path/query/string", new KeyValuePair<>("/path/query/string", ""))
         );
     }
 }
