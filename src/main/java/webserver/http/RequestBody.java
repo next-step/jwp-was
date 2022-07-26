@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Parameters {
+public class RequestBody {
 
     private static final String AMPERSAND = "&";
     private static final String EQUAL_SIGN = "=";
@@ -14,7 +14,7 @@ public class Parameters {
     private final String queryString;
     private final Map<String, String> parameters;
 
-    public Parameters(String queryString) {
+    public RequestBody(String queryString) {
         this.queryString = queryString;
         this.parameters = parseQueryString(queryString);
     }

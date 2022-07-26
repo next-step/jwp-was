@@ -12,16 +12,16 @@ public class RequestPath {
 	private static final int INDEX_ONE = 1;
 
 	private final String path;
-	private final Parameters parameters;
+	private final RequestBody requestBody;
 
 	private RequestPath(String path) {
 		this.path = path;
-		this.parameters = null;
+		this.requestBody = null;
 	}
 
 	private RequestPath(String path, String queryString) {
 		this.path = path;
-		this.parameters = new Parameters(queryString);
+		this.requestBody = new RequestBody(queryString);
 	}
 
 	public static RequestPath from(String requestPath) {
@@ -46,16 +46,16 @@ public class RequestPath {
 	}
 
 	public String getQueryString() {
-		if (parameters == null) {
+		if (requestBody == null) {
 			return null;
 		}
-		return parameters.getQueryString();
+		return requestBody.getQueryString();
 	}
 
 	public String getParameter(String name) {
-		if (parameters == null) {
+		if (requestBody == null) {
 			return null;
 		}
-		return parameters.getParameter(name);
+		return requestBody.getParameter(name);
 	}
 }

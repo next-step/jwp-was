@@ -1,15 +1,15 @@
 package webserver.controller;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Collection;
-
 import db.DataBase;
 import model.User;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-public class UserListController extends AbstractController {
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Collection;
+
+public class UserListController extends GetController {
 
     @Override
     protected void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {

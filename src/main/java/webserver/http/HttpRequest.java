@@ -1,16 +1,15 @@
 package webserver.http;
 
-import static java.nio.charset.StandardCharsets.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import utils.IOUtils;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class HttpRequest {
 
@@ -18,14 +17,14 @@ public class HttpRequest {
 
     private RequestLine requestLine;
     private HttpHeaders headers;
-    private String requestBody;
+    private RequestBody requestBody;
 
     public HttpRequest(InputStream in) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             requestLine = new RequestLine(URLDecoder.decode(reader.readLine(), UTF_8));
             headers = HttpHeaders.from(reader);
-            requestBody = URLDecoder.decode(IOUtils.readData(reader, headers.getContentLength()), UTF_8);
+            requestBody = new RequestBody(URLDecoder.decode(IOUtils.readData(reader, headers.getContentLength()), UTF_8));
             logger.debug("request body = {}", requestBody);
         } catch (Exception e) {
             e.printStackTrace();
@@ -34,10 +33,6 @@ public class HttpRequest {
 
     public HttpHeaders getHeaders() {
         return headers;
-    }
-
-    public String getRequestBody() {
-        return requestBody;
     }
 
     public HttpMethod getMethod() {
@@ -53,6 +48,10 @@ public class HttpRequest {
     }
 
     public String getParameter(String name) {
+        HttpMethod method = getMethod();
+        if (method.isPost()) {
+            return requestBody.getParameter(name);
+        }
         return requestLine.getParameter(name);
     }
 }
