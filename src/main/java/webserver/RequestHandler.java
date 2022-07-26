@@ -1,9 +1,12 @@
 package webserver;
 
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.http.request.HttpHeaders;
+import webserver.http.request.Path;
+import webserver.http.request.Queries;
 import webserver.http.request.RequestLine;
 
 import java.io.*;
@@ -23,8 +26,7 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
+        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -39,8 +41,18 @@ public class RequestHandler implements Runnable {
             HttpHeaders httpHeaders = HttpHeaders.from(String.join("\n", headers));
 
             DataOutputStream dos = new DataOutputStream(out);
-            String path = requestLine.getPath().toString();
-            byte[] body = FileIoUtils.loadFileFromClasspath("./templates/" + (!"".equals(path) ? path : "index.html"));
+            Path path = requestLine.getPath();
+            Queries queries = path.getQueries();
+            String pathString = path.toString();
+            byte[] body;
+            switch (pathString) {
+                case "user/create":
+                    User user = new User(queries.get("userId").get(), queries.get("password").get(), queries.get("name").get(), queries.get("email").get());
+                    body = user.toString().getBytes();
+                    break;
+                default:
+                    body = FileIoUtils.loadFileFromClasspath("./templates/" + (!"".equals(pathString) ? pathString : "index.html"));
+            }
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
