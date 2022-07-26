@@ -20,7 +20,7 @@ public class UrlTest {
                 "name", "JaeSung"
         );
 
-        Url url = Url.from(input);
+        Url url = Url.parseFrom(input);
 
         assertAll(
                 () -> assertEquals("/users", url.getPath()),

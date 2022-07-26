@@ -24,3 +24,5 @@
     - [X] Request Parameter 추출하기
     - [X] Request Parameter 디코딩하기
     - [X] 빌더 패턴 이용하여 User 객체 생성하기
+- 요구사항 3
+  - [] 

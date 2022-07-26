@@ -10,8 +10,12 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import utils.IOUtils;
 import webserver.http.HttpMethod;
+import webserver.http.RequestHeader;
 import webserver.http.RequestLine;
+
+import static java.lang.Integer.parseInt;
 
 public class RequestHandler implements Runnable {
 
@@ -36,6 +40,10 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
+            if (requestLine.getMethod().equals(HttpMethod.POST) && requestLine.getUrl().getPath().equals("/user/create")) {
+                return;
+            }
+
             final byte[] body = FileIoUtils.loadFileFromClasspath(requestLine.getUrl().getPath());
 
             final DataOutputStream dos = new DataOutputStream(out);
@@ -46,7 +54,7 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void doGetSingUp(RequestLine requestLine) throws UnsupportedEncodingException {
+    private void doGetSingUp(RequestLine requestLine) {
         Map<String, String> parameters = requestLine.getUrl().getQueryParameter().getParameters();
         String userId = parameters.get("userId");
         String password = parameters.get("password");
@@ -66,11 +74,16 @@ public class RequestHandler implements Runnable {
         String line = br.readLine();
 
         final RequestLine requestLine = RequestLine.parseFrom(line);
+        final RequestHeader requestHeader = new RequestHeader();
 
         while (! line.equals(END_OF_LINE) || line == null) {
             logger.info(line);
             line = br.readLine();
+            requestHeader.add(line);
         }
+
+        String body = IOUtils.readData(br, requestHeader.getContentLength());
+        logger.info(body);
 
         return requestLine;
     }

@@ -13,7 +13,7 @@ public class Url {
         this.queryParameter = queryParameter;
     }
 
-    public static Url from(final String url) {
+    public static Url parseFrom(final String url) {
         String[] splitUrl = url.split(URL_DELIMITER);
 
         return new Url(
