@@ -132,9 +132,9 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 ### 기능 목록 
 - [ ] HTTP 요청을 처리하는 객체를 생성한다. (HttpRequest)
   - 요청한 내용을 InputStream으로 읽어 요청과 관련된 모든 내용을 담고 있는다.
-  - [ ] RequestLine
-  - [ ] RequestHeader
-  - [ ] RequestBody
+  - [x] RequestLine, RequestHeader, RequestBody 포함한다
+  - [ ] HttpRequestParser를 이용해 HttpRequest를 생성한다.
+    - [ ] BufferedReader를 주입받아 요청 문자열을 읽어 HttpRequest로 생성한다.
 - [ ] HTTP 응답을 처리하는 객체를 생성한다. (HttpResponse)
   - 요청에 응답하기 위한 내용을 생성하여 OutputStream으로 출력한다.
   - [ ] StatusLine
