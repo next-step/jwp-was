@@ -9,9 +9,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("http 응답 코드")
 class HttpStatusCodeTest {
 
+    @DisplayName("http status line 패턴으로 문자열 반환 확인")
     @ParameterizedTest
     @EnumSource(HttpStatusCode.class)
-    void string(HttpStatusCode code) {
+    void toString_httpStatusLinePattern(HttpStatusCode code) {
         assertThat(code.toString()).containsPattern("\\d+ [a-zA-Z]+");
     }
 }

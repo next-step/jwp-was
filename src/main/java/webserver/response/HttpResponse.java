@@ -9,7 +9,8 @@ import java.util.Set;
 
 public final class HttpResponse {
 
-    public static final HttpResponse NOT_FOUND = of(HttpStatusCode.NOT_FOUND, ResponseHeader.empty());
+    private static final HttpResponse NOT_FOUND = of(HttpStatusCode.NOT_FOUND, ResponseHeader.empty());
+    private static final HttpResponse INTERNAL_SERVER_ERROR = of(HttpStatusCode.INTERNAL_SERVER_ERROR, ResponseHeader.empty());
 
     private final HttpStatusCode code;
     private final ResponseHeader header;
@@ -24,16 +25,32 @@ public final class HttpResponse {
         this.body = body;
     }
 
-    public static HttpResponse of(HttpStatusCode code, ResponseHeader header) {
-        return new HttpResponse(code, header, new byte[0]);
-    }
-
     public static HttpResponse of(HttpStatusCode code, ResponseHeader header, byte[] body) {
         return new HttpResponse(code, header, body);
     }
 
+    public static HttpResponse of(HttpStatusCode code, ResponseHeader header) {
+        return of(code, header, new byte[0]);
+    }
+
     public static HttpResponse of(HttpStatusCode code, ResponseHeader header, String body) {
-        return new HttpResponse(code, header, body.getBytes(StandardCharsets.UTF_8));
+        return of(code, header, body.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static HttpResponse sendRedirect(String path) {
+        return sendRedirect(path, ResponseHeader.empty());
+    }
+
+    public static HttpResponse sendRedirect(String path, ResponseHeader header) {
+        return of(HttpStatusCode.FOUND, header.add(HttpHeaders.LOCATION, path));
+    }
+
+    public static HttpResponse notFound() {
+        return NOT_FOUND;
+    }
+
+    public static HttpResponse internalServerError() {
+        return INTERNAL_SERVER_ERROR;
     }
 
     public HttpStatusCode code() {

@@ -16,8 +16,6 @@ import webserver.exception.ApiException;
 import webserver.request.HttpRequest;
 import webserver.request.RequestBody;
 import webserver.response.HttpResponse;
-import webserver.response.HttpStatusCode;
-import webserver.response.ResponseHeader;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -78,7 +76,7 @@ public class RequestHandler implements Runnable {
                 .filter(controller -> controller.isMatch(request))
                 .findAny()
                 .map(controller -> executeSafety(controller, request))
-                .orElse(HttpResponse.NOT_FOUND);
+                .orElse(HttpResponse.notFound());
     }
 
     private HttpResponse executeSafety(Controller controller, HttpRequest request) {
@@ -87,7 +85,7 @@ public class RequestHandler implements Runnable {
         } catch (ApiException e) {
             return HttpResponse.of(e.getCode(), e.getHeader());
         } catch (Exception e) {
-            return HttpResponse.of(HttpStatusCode.INTERNAL_SERVER_ERROR, ResponseHeader.empty());
+            return HttpResponse.internalServerError();
         }
     }
 

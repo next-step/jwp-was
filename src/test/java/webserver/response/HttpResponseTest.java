@@ -13,12 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class HttpResponseTest {
 
     @Test
-    @DisplayName("생성")
+    @DisplayName("정적 메소드로 생성")
     void instance() {
         assertAll(
                 () -> assertThatNoException().isThrownBy(() -> HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty())),
                 () -> assertThatNoException().isThrownBy(() -> HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty(), new byte[0])),
-                () -> assertThatNoException().isThrownBy(() -> HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty(), "body"))
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty(), "body")),
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.sendRedirect("path.html")),
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.sendRedirect("path.html", ResponseHeader.empty())),
+                () -> assertThatNoException().isThrownBy(HttpResponse::notFound),
+                () -> assertThatNoException().isThrownBy(HttpResponse::internalServerError)
         );
     }
 

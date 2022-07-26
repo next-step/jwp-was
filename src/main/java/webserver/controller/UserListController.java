@@ -35,20 +35,22 @@ public class UserListController implements Controller {
         return HttpResponse.of(
                 HttpStatusCode.OK,
                 ResponseHeader.from(Collections.singletonMap(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8")),
-                handlebars.compile(USER_LIST_TEMPLATE)
-                        .apply(Collections.singletonMap("users", DataBase.findAll()))
+                userListBody()
         );
     }
 
     private void validateLoggedIn(HttpRequest request) {
         if (isNotLoggedIn(request)) {
-            throw new ApiException(HttpStatusCode.FOUND, ResponseHeader.from(Collections.singletonMap(
-                    HttpHeaders.LOCATION, "/user/login.html"
-            )));
+            throw new ApiException(HttpStatusCode.FOUND, ResponseHeader.from(Collections.singletonMap(HttpHeaders.LOCATION, "/user/login.html")));
         }
     }
 
     private boolean isNotLoggedIn(HttpRequest request) {
         return !request.cookie().contains("logined=true");
+    }
+
+    private String userListBody() throws IOException {
+        return handlebars.compile(USER_LIST_TEMPLATE)
+                .apply(Collections.singletonMap("users", DataBase.findAll()));
     }
 }

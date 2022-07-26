@@ -24,10 +24,9 @@ public class StaticController implements Controller {
 
     @Override
     public HttpResponse execute(HttpRequest request) throws IOException, URISyntaxException {
-        return HttpResponse.of(HttpStatusCode.OK,
-                ResponseHeader.from(Collections.singletonMap(
-                        HttpHeaders.CONTENT_TYPE, String.format("text/%s;charset=utf-8", fileExtension(request)))
-                ),
+        return HttpResponse.of(
+                HttpStatusCode.OK,
+                ResponseHeader.from(Collections.singletonMap(HttpHeaders.CONTENT_TYPE, String.format("text/%s;charset=utf-8", fileExtension(request)))),
                 FileIoUtils.loadFileFromClasspath(staticPath(request))
         );
     }

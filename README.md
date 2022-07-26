@@ -159,3 +159,14 @@ Accept: text/css,*/*;q=0.1
 Connection: keep-alive
 ```
 
+
+
+## 3단계 - HTTP 웹 서버 리팩토링
+
+### HTTP 요청/응답 처리 기능
+
+- HTTP 요청 Header/Body 처리, 응답 Header/Body 처리만을 담당하는 역할을 분리
+  - 클라이언트 요청 데이터를 처리하는 로직을 별도의 클래스로 분리(HttpRequest)
+  - 클라이언트 응답 데이터를 처리하는 로직을 별도의 클래스로 분리(HttpResponse)
+  - 다형성을 활용해 클라이언트 요청 URL에 대한 분기 처리를 제거
+

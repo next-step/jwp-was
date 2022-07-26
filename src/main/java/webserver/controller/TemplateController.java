@@ -24,7 +24,8 @@ public class TemplateController implements Controller {
 
     @Override
     public HttpResponse execute(HttpRequest request) throws IOException, URISyntaxException {
-        return HttpResponse.of(HttpStatusCode.OK,
+        return HttpResponse.of(
+                HttpStatusCode.OK,
                 ResponseHeader.from(Collections.singletonMap(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8")),
                 FileIoUtils.loadFileFromClasspath(templatePath(request))
         );
