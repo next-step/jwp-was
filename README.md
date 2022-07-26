@@ -14,3 +14,5 @@
 - [X] POST 요청 파싱하기
 - [X] QueryString 파싱하기
 - [X] HttpMethod 에 enum 적용하기
+### STEP 2
+- [X] Request 헤더 출력하고, path에 해당하는 파일 읽어 응답하기
