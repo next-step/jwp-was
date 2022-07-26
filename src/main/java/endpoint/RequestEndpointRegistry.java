@@ -1,5 +1,13 @@
 package endpoint;
 
+import endpoint.api.CreateUserGetMethodEndpointHandler;
+import endpoint.api.CreateUserPostMethodEndpointHandler;
+import endpoint.api.LoginEndpointHandler;
+import endpoint.page.CreateUserPageHandlerHomeHttpRequestHandler;
+import endpoint.page.LoginFailedPageHandlerHomeHttpRequestHandler;
+import endpoint.page.LoginPageHandlerHomeHttpRequestHandler;
+import endpoint.page.MainPageHandlerHomeHttpRequestHandler;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +24,10 @@ public class RequestEndpointRegistry {
                 new MainPageHandlerHomeHttpRequestHandler(),
                 new CreateUserPageHandlerHomeHttpRequestHandler(),
                 new CreateUserGetMethodEndpointHandler(),
-                new CreateUserPostMethodEndpointHandler()
+                new CreateUserPostMethodEndpointHandler(),
+                new LoginPageHandlerHomeHttpRequestHandler(),
+                new LoginFailedPageHandlerHomeHttpRequestHandler(),
+                new LoginEndpointHandler()
         );
 
         for (HttpRequestEndpointHandler endpointHandler : endpoints) {

@@ -1,5 +1,7 @@
-package endpoint;
+package endpoint.page;
 
+import endpoint.Endpoint;
+import endpoint.HttpRequestEndpointHandler;
 import webserver.http.request.HttpRequestMessage;
 import webserver.http.request.requestline.HttpMethod;
 import webserver.http.response.HttpResponseMessage;

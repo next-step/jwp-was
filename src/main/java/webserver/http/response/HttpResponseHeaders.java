@@ -1,5 +1,8 @@
 package webserver.http.response;
 
+import webserver.http.header.HttpCookie;
+import webserver.http.header.HttpCookies;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +15,11 @@ public class HttpResponseHeaders {
     public static final String TEXT_HTML_CHARSET_UTF_8 = "text/html;charset=utf-8";
     public static final String CONTENT_LENGTH = "Content-Length";
     public static final String LOCATION = "Location";
+    public static final String SET_COOKIE = "Set-Cookie";
     private static final String RESPONSE_HEADER_DELIMITER = ": ";
 
     private Map<String, String> headers = new LinkedHashMap<>();
+    private HttpCookies httpCookies = new HttpCookies();
 
     public void addHeader(String headerName, String headerValue) {
         headers.put(headerName, headerValue);
@@ -44,5 +49,10 @@ public class HttpResponseHeaders {
 
     public void addContentLengthHeader(int contentLength) {
         addHeader(CONTENT_LENGTH, String.valueOf(contentLength));
+    }
+
+    public void addCookie(HttpCookie httpCookie) {
+        httpCookies.addCookie(httpCookie);
+        addHeader(SET_COOKIE, httpCookies.rawCookies());
     }
 }

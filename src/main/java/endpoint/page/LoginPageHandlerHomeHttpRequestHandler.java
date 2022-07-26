@@ -1,13 +1,15 @@
-package endpoint;
+package endpoint.page;
 
+import endpoint.Endpoint;
+import endpoint.HttpRequestEndpointHandler;
 import webserver.http.request.HttpRequestMessage;
 import webserver.http.request.requestline.HttpMethod;
 import webserver.http.response.HttpResponseMessage;
 
-public class MainPageHandlerHomeHttpRequestHandler extends HttpRequestEndpointHandler {
-    private static final String ENDPOINT = "/index.html";
+public class LoginPageHandlerHomeHttpRequestHandler extends HttpRequestEndpointHandler {
+    private static final String ENDPOINT = "/user/login.html";
 
-    public MainPageHandlerHomeHttpRequestHandler() {
+    public LoginPageHandlerHomeHttpRequestHandler() {
         super(new Endpoint(HttpMethod.GET, ENDPOINT));
     }
 
