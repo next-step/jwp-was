@@ -1,18 +1,17 @@
 package utils;
 
 import annotation.GetMapping;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import configuration.HandlerConfiguration;
 import exception.HttpNotFoundException;
-import model.HandlerPair;
-import model.Handlers;
-import model.HttpMessage;
-import model.RequestLine;
+import model.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import types.HttpMethod;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
 
 public class HandlerAdapter {
@@ -24,20 +23,38 @@ public class HandlerAdapter {
     private HandlerAdapter() {
     }
 
-    public Object invoke(HttpMessage httpMessage) {
+    public Object invoke(HttpMessage httpMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
         RequestLine requestLine = httpMessage.getRequestLine();
+        UrlPath urlPath = requestLine.getUrlPath();
+
         if (this.handlers == null) {
             this.initHandlers();
         }
 
         HandlerPair handlerPair = find(requestLine);
-        try {
-            return handlerPair.getHandler().invoke(handlerPair.getController());
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+
+        return this.invokeHandler(handlerPair, urlPath);
+    }
+
+    private Object invokeHandler(HandlerPair handlerPair, UrlPath urlPath) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+        Object controller = handlerPair.getController();
+        Method handler = handlerPair.getHandler();
+
+        Parameter[] parameters = handler.getParameters();
+        if (parameters.length == 0) {
+            return handler.invoke(controller);
         }
 
-        return null;
+        if (parameters.length == 1) {
+            Parameter definedParameter = parameters[0];
+            Class<?> parameterClass = definedParameter.getType();
+            String data = ObjectMapperFactory.getObjectMapper().writeValueAsString(urlPath.getQueryParameter().getParameters());
+            Object parameter = ObjectMapperFactory.getObjectMapper().readValue(data, parameterClass);
+            return handler.invoke(controller, parameter);
+        }
+
+        // TODO 1개 초과 파라미터 설정시 어노테이션에 따라 파라미터 컨버팅 처리 구현
+        return handler.invoke(controller);
     }
 
     public static HandlerAdapter getInstance() {
@@ -68,7 +85,8 @@ public class HandlerAdapter {
         }
 
         if (handlerPairs.size() != 1) {
-            throw new IllegalArgumentException(); // TODO 1 unique(HttpMethod + path) : 1 handler validation
+            // TODO handler not found exception 정의
+            throw new IllegalArgumentException();
         }
 
         return handlerPairs.get(0);
