@@ -2,11 +2,11 @@ package webserver;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import utils.FileIoUtils;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.servlet.Servlet;
 import webserver.supporter.SupportApis;
+import webserver.supporter.SupportResources;
 import webserver.supporter.SupportTemplates;
 
 /**
@@ -16,8 +16,6 @@ import webserver.supporter.SupportTemplates;
  */
 public enum DispatcherServlet {
     INSTANCE;
-
-    private static final String PATH_TEMPLATES = "./templates";
 
     public void serve(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException, URISyntaxException {
         String requestPath = httpRequest.getPath();
@@ -29,18 +27,13 @@ public enum DispatcherServlet {
         }
 
         if (SupportTemplates.isSupported(requestPath)) {
-            responseStatic(httpRequest, httpResponse);
+            SupportTemplates.responseStatic(httpRequest, httpResponse);
+            return;
         }
 
-    }
-
-    private void responseStatic(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException, URISyntaxException {
-        byte[] body = FileIoUtils.loadFileFromClasspath(PATH_TEMPLATES + httpRequest.getPath());
-        httpResponse.protocol1_1();
-        httpResponse.statusOk();
-        httpResponse.addHeader("Content-Type", "text/html;charset=utf-8");
-        httpResponse.addHeader("Content-Length", Integer.toString(body.length));
-        httpResponse.setBody(body);
+        if (SupportResources.isSupported(requestPath)) {
+            SupportResources.responseResource(httpRequest, httpResponse);
+        }
     }
 
 }
