@@ -2,11 +2,13 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
 import webserver.http.request.HttpHeaders;
 import webserver.http.request.RequestLine;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,16 +32,18 @@ public class RequestHandler implements Runnable {
 
             List<String> headers = new ArrayList<>();
             String nextLine = br.readLine();
-            while (!("".equals(nextLine) || Objects.isNull(nextLine))) {
+            while (!Objects.isNull(nextLine) && !"".equals(nextLine)) {
                 headers.add(nextLine);
+                nextLine = br.readLine();
             }
             HttpHeaders httpHeaders = HttpHeaders.from(String.join("\n", headers));
 
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
+            String path = requestLine.getPath().toString();
+            byte[] body = FileIoUtils.loadFileFromClasspath("./templates/" + (!"".equals(path) ? path : "index.html"));
             response200Header(dos, body.length);
             responseBody(dos, body);
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }

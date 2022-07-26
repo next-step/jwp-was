@@ -32,4 +32,9 @@ public class Path {
     public Queries getQueries() {
         return queries;
     }
+
+    @Override
+    public String toString() {
+        return String.join(PATH_DELIMITER, subPaths);
+    }
 }

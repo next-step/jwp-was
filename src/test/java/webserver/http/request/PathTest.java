@@ -47,4 +47,9 @@ class PathTest {
         assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> path.getDepthOfSubPath("forth"))
                 .withMessage("잘못된 부분 경로입니다.");
     }
+
+    @Test
+    void 전체_경로_확인() {
+        assertThat(path.toString()).isEqualTo(String.join(Path.PATH_DELIMITER, nodes));
+    }
 }
