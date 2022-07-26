@@ -19,7 +19,7 @@ public class StaticAcceptanceStep {
                 .extract();
     }
 
-    public static void succeedRetrieveFile(ExtractableResponse<Response> response, String contentType) {
+    public static void retrieveFile(ExtractableResponse<Response> response, String contentType) {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(200),
                 () -> assertThat(response.header(HttpHeaders.CONTENT_TYPE)).contains(contentType)

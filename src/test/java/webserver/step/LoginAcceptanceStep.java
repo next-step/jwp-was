@@ -21,7 +21,7 @@ public class LoginAcceptanceStep {
                 .extract();
     }
 
-    public static void succeedLogin(ExtractableResponse<Response> response) {
+    public static void redirectIndexWithCookie(ExtractableResponse<Response> response) {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(302),
                 () -> assertThat(response.header(HttpHeaders.LOCATION)).contains("/index.html"),
@@ -29,7 +29,7 @@ public class LoginAcceptanceStep {
         );
     }
 
-    public static void redirectFailedLogin(ExtractableResponse<Response> response) {
+    public static void redirectLoginFailedWithCookie(ExtractableResponse<Response> response) {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(302),
                 () -> assertThat(response.header(HttpHeaders.LOCATION)).contains("/user/login_failed.html"),

@@ -19,7 +19,7 @@ public class TemplateAcceptanceStep {
                 .extract();
     }
 
-    public static void succeedRendering(ExtractableResponse<Response> response) {
+    public static void renderPage(ExtractableResponse<Response> response) {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(200),
                 () -> assertThat(response.header(HttpHeaders.CONTENT_TYPE)).contains("text/html;charset=utf-8")

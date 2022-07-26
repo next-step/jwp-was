@@ -32,7 +32,7 @@ public class UserAcceptanceStep {
                 .extract();
     }
 
-    public static void registeredUser(ExtractableResponse<Response> response, String targetId) {
+    public static void registeredUserAndRedirectIndex(ExtractableResponse<Response> response, String targetId) {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(302),
                 () -> assertThat(response.header(HttpHeaders.LOCATION)).contains("/index.html"),
@@ -47,7 +47,7 @@ public class UserAcceptanceStep {
         );
     }
 
-    public static void redirectedLoginPage(ExtractableResponse<Response> response) {
+    public static void redirectLoginPage(ExtractableResponse<Response> response) {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(302),
                 () -> assertThat(response.header(HttpHeaders.LOCATION)).contains("/login.html")

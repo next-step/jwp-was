@@ -51,44 +51,44 @@ class HttpRequestTest {
         //when
         ExtractableResponse<Response> indexPageResponse = TemplateAcceptanceStep.requestTemplatePage("/index.html");
         //then
-        TemplateAcceptanceStep.succeedRendering(indexPageResponse);
+        TemplateAcceptanceStep.renderPage(indexPageResponse);
     }
 
     @Test
-    @DisplayName("/form.html 으로 접근하여 회원가입")
+    @DisplayName("/form.html 으로 접근하여 회원가입이 완료되면 index.html 이동")
     void requestFormAndRegisterUser() {
         //when
         ExtractableResponse<Response> formPageResponse = TemplateAcceptanceStep.requestTemplatePage("/user/form.html");
         //then
-        TemplateAcceptanceStep.succeedRendering(formPageResponse);
+        TemplateAcceptanceStep.renderPage(formPageResponse);
         //when
         ExtractableResponse<Response> registeredResponse = UserAcceptanceStep.requestUserRegister("userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net");
         //then
-        UserAcceptanceStep.registeredUser(registeredResponse, "javajigi");
+        UserAcceptanceStep.registeredUserAndRedirectIndex(registeredResponse, "javajigi");
     }
 
     @Test
-    @DisplayName("/login.html 페이지에서 로그인 성공")
+    @DisplayName("/login.html 페이지에서 로그인 성공하면 logined=true 쿠키를 가지고 index.html 이동")
     void loginSucceed() {
         //given
         UserAcceptanceStep.requestUserRegister("userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net");
         //when
         ExtractableResponse<Response> loginPageResponse = TemplateAcceptanceStep.requestTemplatePage("/user/login.html");
         //then
-        TemplateAcceptanceStep.succeedRendering(loginPageResponse);
+        TemplateAcceptanceStep.renderPage(loginPageResponse);
         //when
         ExtractableResponse<Response> loginResponse = LoginAcceptanceStep.requestLogin("userId=javajigi&password=password");
         //then
-        LoginAcceptanceStep.succeedLogin(loginResponse);
+        LoginAcceptanceStep.redirectIndexWithCookie(loginResponse);
     }
 
     @Test
-    @DisplayName("로그인 실패")
+    @DisplayName("로그인 실패하면 logined=false 쿠키를 가지고 login_failed.html 페이지로 이동")
     void loginFailed() {
         //when
         ExtractableResponse<Response> loginResponse = LoginAcceptanceStep.requestLogin("userId=anonymous&password=password");
         //then
-        LoginAcceptanceStep.redirectFailedLogin(loginResponse);
+        LoginAcceptanceStep.redirectLoginFailedWithCookie(loginResponse);
     }
 
     @Test
@@ -109,7 +109,7 @@ class HttpRequestTest {
         //when
         ExtractableResponse<Response> response = UserAcceptanceStep.requestUserList(Collections.emptyMap());
         //then
-        UserAcceptanceStep.redirectedLoginPage(response);
+        UserAcceptanceStep.redirectLoginPage(response);
     }
 
     @Test
@@ -118,6 +118,6 @@ class HttpRequestTest {
         //when
         ExtractableResponse<Response> response = StaticAcceptanceStep.requestStaticFile("./css/styles.css");
         //then
-        StaticAcceptanceStep.succeedRetrieveFile(response, "text/css");
+        StaticAcceptanceStep.retrieveFile(response, "text/css");
     }
 }
