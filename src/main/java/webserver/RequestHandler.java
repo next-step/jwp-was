@@ -1,21 +1,20 @@
 package webserver;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.net.URISyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
 import webserver.domain.RequestLine;
 
 public class RequestHandler implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private Socket connection;
+    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final String END_OF_LINE = "";
+
+    private final Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -26,30 +25,29 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            showRequest(in);
+            final RequestLine requestLine = convertStreamToRequestLine(in);
+            final byte[] body = FileIoUtils.loadFileFromClasspath(requestLine.getUrl().getPath());
 
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
+            final DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length);
             responseBody(dos, body);
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
-    public void showRequest(InputStream is) {
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            String line = br.readLine();
-            RequestLine.parseFrom(line);
+    private RequestLine convertStreamToRequestLine(InputStream is) throws IOException {
+        final BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        String line = br.readLine();
 
-            while (line != null) {
-                logger.info(line);
-                line = br.readLine();
-            }
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+        final RequestLine requestLine = RequestLine.parseFrom(line);
+
+        while (! line.equals(END_OF_LINE) || line == null) {
+            logger.info(line);
+            line = br.readLine();
         }
+
+        return requestLine;
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
