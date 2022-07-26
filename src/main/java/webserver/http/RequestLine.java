@@ -1,6 +1,4 @@
-package webserver;
-
-import java.util.Map;
+package webserver.http;
 
 public class RequestLine {
 
@@ -9,17 +7,15 @@ public class RequestLine {
     private HttpMethod method;
     private RequestPath path;
     private HttpProtocolVersion protocolVersion;
-    private RequestParams requestParams;
 
     public RequestLine(String requestMessage) {
         String[] splitRequestMessage = requestMessage.split(MESSAGE_EMPTY_SPACE);
         if (splitRequestMessage.length != 3) {
             throw new IllegalArgumentException("잘못된 HTTP 요청 메시지입니다.");
         }
-        method = HttpMethod.of(splitRequestMessage[0]);
-        path = new RequestPath(splitRequestMessage[1]);
-        requestParams = new RequestParams(splitRequestMessage[1]);
-        protocolVersion = new HttpProtocolVersion(splitRequestMessage[2]);
+        this.method = HttpMethod.of(splitRequestMessage[0]);
+        this.path = new RequestPath(splitRequestMessage[1]);
+        this.protocolVersion = new HttpProtocolVersion(splitRequestMessage[2]);
     }
 
     public HttpMethod getMethod() {
@@ -38,7 +34,7 @@ public class RequestLine {
         return protocolVersion.getVersion();
     }
 
-    public Map<String, String> getQueryParsingData() {
-        return requestParams.getRequestData();
+    public String getQueryString() {
+        return path.getQueryString();
     }
 }
