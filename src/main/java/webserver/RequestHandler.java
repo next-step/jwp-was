@@ -1,9 +1,12 @@
 package webserver;
 
+import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import webserver.http.Contents;
+import webserver.http.HttpBody;
 import webserver.http.HttpRequest;
 import webserver.http.Path;
 import webserver.user.UserFactory;
@@ -36,7 +39,27 @@ public class RequestHandler implements Runnable {
             byte[] body = null;
 
             if (path.isSameUrlPath("/user/create")) {
-                User user = UserFactory.from(httpRequest);
+                final User user = UserFactory.from(httpRequest);
+                DataBase.addUser(user);
+                response302Header(dos);
+                return;
+            }
+            if (path.isSameUrlPath("/user/login")) {
+                final HttpBody httpBody = httpRequest.getHttpBody();
+                final Contents contents = httpBody.getContents();
+                final String userId = contents.getContent("userId");
+                final User user = DataBase.findUserById(userId);
+                if (user == null) {
+                    responseResource(out, "/user/login_failed.html");
+                    return;
+                }
+                String password = httpBody.getContents().getContent("password");
+                if (user.isSamePassword(password)) {
+                    responseLoginSuccess(dos);
+                    return;
+                }
+                responseResource(out, "/user/login_failed.html");
+                return;
             }
 
             if (path.endWith("html") || path.endWith("ico")) {
@@ -52,6 +75,17 @@ public class RequestHandler implements Runnable {
             responseBody(dos, body);
 
         } catch (IOException | URISyntaxException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void responseLoginSuccess(DataOutputStream dos) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
+            dos.writeBytes("Set-Cookie: logined=true \r\n");
+            dos.writeBytes("Location: / \r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
@@ -76,4 +110,20 @@ public class RequestHandler implements Runnable {
         }
     }
 
+    private void response302Header(DataOutputStream dos) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 REDIRECT \r\n");
+            dos.writeBytes("Location: /index.html\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void responseResource(OutputStream out, String url) throws IOException, URISyntaxException {
+        DataOutputStream dos = new DataOutputStream(out);
+        byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + url);
+        response200Header(dos, body.length);
+        responseBody(dos, body);
+    }
 }

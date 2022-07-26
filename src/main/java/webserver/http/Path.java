@@ -22,6 +22,9 @@ public class Path {
 
     public static Path createWithGetMethod(String value) {
         int paramIndex = value.indexOf(QUERY_STRING_DELIMITER);
+        if (paramIndex == NOT_FOUND && value.equals("/")) {
+            return new Path("/index.html");
+        }
         if (paramIndex == NOT_FOUND) {
             return new Path(value);
         }

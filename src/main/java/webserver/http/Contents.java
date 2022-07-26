@@ -11,14 +11,14 @@ public class Contents {
 
     private static final String PARAM_DELIMITER = "&";
 
-    private Map<String, String> Contents;
+    private Map<String, String> contents;
 
     private Contents() {
-        this.Contents = new HashMap<>();
+        this.contents = new HashMap<>();
     }
 
     private Contents(Map<String, String> Contents) {
-        this.Contents = Contents;
+        this.contents = Contents;
     }
 
     public static Contents from(String queryString) {
@@ -30,7 +30,7 @@ public class Contents {
     }
 
     public Map<String, String> getContents() {
-        return Collections.unmodifiableMap(Contents);
+        return Collections.unmodifiableMap(contents);
     }
 
     private static Contents parseContents(String values) {
@@ -44,4 +44,7 @@ public class Contents {
                 .collect(Collectors.toMap(KeyValue::getKey, KeyValue::getValue)));
     }
 
+    public String getContent(String userId) {
+        return contents.get(userId);
+    }
 }
