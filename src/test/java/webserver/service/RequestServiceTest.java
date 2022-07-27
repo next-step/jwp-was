@@ -6,9 +6,9 @@ import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.request.Cookie;
+import webserver.Cookie;
 import webserver.request.HelpData;
-import webserver.request.Request;
+import webserver.request.HttpRequest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,13 +18,13 @@ import static org.assertj.core.api.Assertions.*;
 class RequestServiceTest {
 
     RequestService requestService;
-    Request request;
+    HttpRequest request;
 
     @BeforeEach
     void setup() throws IOException {
         DataBase.clear();
         BufferedReader br = HelpData.postHelpData();
-        request = Request.parsing(br);
+        request = HttpRequest.parsing(br);
         requestService = new RequestService(request);
 
         DataBase.addUser(new User("java", "password", "name", "java@java.com"));
@@ -62,11 +62,7 @@ class RequestServiceTest {
     @Test
     @DisplayName("유저의 패스워드 아이디가 일치할 시 쿠기값 true")
     void check_id_password_cookie_true() {
-        User requestUser = User.builder()
-                .userId("java")
-                .password("password")
-                .build();
-        System.out.println(requestUser);
+        User requestUser = new User("java", "password", "name", "email");
 
         Cookie cookie = requestService.checkIdAndPassword(requestUser);
         assertThat(cookie.getCookie("logined")).isEqualTo("true");
