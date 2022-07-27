@@ -15,7 +15,7 @@
 - HTTP 요청과 응답을 파싱해 원하는 값을 가져올 수 있는 API를 제공
 - API는 TDD로 구현
 - RequestLine을 파싱한다. HTTP 요청의 첫번째 라인을 의미
-  - [ ] GET RequestLine 파싱
+  - [X] GET RequestLine 파싱
     - "GET /users HTTP/1.1"을 파싱하면 다음과 같은 결과를 얻을 수 있어야 한다.  
       method는 GET, path는 /users, protocol은 HTTP, version은 1.1
       - [X] HttpMethod
@@ -28,6 +28,7 @@
         - 문자열을 받아 HttpProtocol 반환한다.
         - HttpProtocol Protocol과 Version으로 이루어진다.
         - "HTTP/1.1" 형식이 아닌 경우 Exception이 발생한다.
-  - [ ] POST RequestLine 파싱
+  - [X] POST RequestLine 파싱
+    - "POST /users HTTP/1.1"을 파싱
   - [ ] Querystring RequestLine 파싱
   - [ ] GET RequestLine 파싱
