@@ -17,14 +17,21 @@ public class Request {
 
     private final String body;
 
+    private final List<Cookie> cookies;
+
     public Request(RequestLine requestLine, Headers headers, String body) {
         this.requestLine = requireNonNull(requestLine, "");
         this.headers = requireNonNull(headers, "");
         this.body = body;
+        this.cookies = Cookie.listOf(this.headers.getValue("cookie"));
     }
 
     public Request(RequestLine requestLine, Headers headers) {
         this(requestLine, headers, "");
+    }
+
+    public Request(RequestLine requestLine) {
+        this(requestLine, new Headers());
     }
 
     public String getPath() {
@@ -41,6 +48,14 @@ public class Request {
 
     public String getRequestBody() {
         return body;
+    }
+
+    public String getCookie(String name) {
+        return cookies.stream()
+                .filter(cookie -> cookie.equalName(name))
+                .findAny()
+                .map(Cookie::getValue)
+                .orElse("");
     }
 
     RequestLine getRequestLine() {

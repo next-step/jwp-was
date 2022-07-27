@@ -21,6 +21,10 @@ public class StatusLine {
         return protocolVersion.getMessage() + " " + status.getMessage();
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

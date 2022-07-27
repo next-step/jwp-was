@@ -7,10 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import webserver.handler.ResourceHandler;
-import webserver.http.Headers;
-import webserver.http.Request;
-import webserver.http.RequestLine;
-import webserver.http.Response;
+import webserver.http.*;
 
 import java.util.List;
 import java.util.Map;
@@ -59,7 +56,7 @@ class ResourceHandlerTest {
 
     private Request createRequest(String path) {
         RequestLine requestLine = RequestLine.parseOf("GET " + path + " HTTP/1.1");
-        Headers headers = Headers.of(Map.of("Accept", "*/*"));
+        Headers headers = Headers.of(new Header("Accept", "*/*"));
         return new Request(requestLine, headers);
     }
 

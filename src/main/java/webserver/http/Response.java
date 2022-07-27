@@ -17,16 +17,20 @@ public class Response {
         this(new StatusLine(Status.OK), new Headers(), new byte[]{});
     }
 
+    public Response(byte[] bytes) {
+        this(new StatusLine(Status.OK), new Headers(), bytes);
+    }
+
     private Response(StatusLine statusLine, Headers headers, byte[] body) {
         this.statusLine = statusLine;
         this.headers = headers;
         this.body = body;
+        setContentLength(String.valueOf(body.length));
     }
 
     public void sendRedirect(String location) {
         this.statusLine = new StatusLine(ProtocolVersion.HTTP11, Status.FOUND);
         this.headers.addHeader("Location", location);
-        // locationHeader 추가
     }
 
     public StatusLine getStatusLine() {
@@ -60,12 +64,8 @@ public class Response {
         this.headers.addHeader("Content-Type", contentType);
     }
 
-    public void setContentLength(String contentLength) {
+    private void setContentLength(String contentLength) {
         this.headers.addHeader("Content-Length", contentLength);
-    }
-
-    public String getLocation() {
-        return headers.getValue("Location");
     }
 
     @Override

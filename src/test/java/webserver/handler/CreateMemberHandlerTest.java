@@ -50,7 +50,7 @@ class CreateMemberHandlerTest {
 
         // then
         assertThat(response.getStatusLine()).isEqualTo(new StatusLine(ProtocolVersion.HTTP11, Status.FOUND));
-        assertThat(response.getLocation()).isEqualTo( "/index.html");
+        assertThat(response.getHeaders().getValue("Location")).isEqualTo( "/index.html");
     }
 
 }

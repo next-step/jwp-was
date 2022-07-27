@@ -21,27 +21,23 @@ public class Headers {
     }
 
     public static Headers parseOf(List<String> headerLines) {
-        List<Header> headers1 = headerLines.stream()
+        List<Header> headers = headerLines.stream()
                 .filter((headerLine) -> !headerLine.isEmpty())
                 .map(headerLine -> headerLine.split(HEADER_DELIMITER))
                 .map(entry -> new Header(entry[NAME_IDX], entry[FIELD_IDX]))
                 .collect(Collectors.toUnmodifiableList());
 
-
-        return new Headers(headers1);
+        return new Headers(headers);
     }
 
-    public static Headers of(Map<String, String> headers) {
-        return new Headers(headers.entrySet()
-                .stream()
-                .map(entry -> new Header(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toUnmodifiableList()));
+    public static Headers of(Header... header) {
+        return new Headers(Arrays.asList(header));
     }
 
     public String getValue(String name) {
         return this.headers
                 .stream()
-                .filter(header -> header.getName().equals(name))
+                .filter(header -> header.getName().equalsIgnoreCase(name))
                 .findAny()
                 .orElse(Header.EMPTY)
                 .getValue();

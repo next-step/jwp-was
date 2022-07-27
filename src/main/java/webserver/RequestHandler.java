@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 import webserver.handler.CreateMemberHandler;
+import webserver.handler.ListMemberHandler;
 import webserver.handler.LoginMemberHandler;
 import webserver.handler.ResourceHandler;
 import webserver.http.Headers;
@@ -24,7 +25,8 @@ public class RequestHandler implements Runnable {
     private final List<Handler> handlers = List.of(
             new ResourceHandler(),
             new CreateMemberHandler(),
-            new LoginMemberHandler()
+            new LoginMemberHandler(),
+            new ListMemberHandler()
     );
 
     public RequestHandler(Socket connectionSocket) {
@@ -101,7 +103,7 @@ public class RequestHandler implements Runnable {
     private String getRequestBody(BufferedReader reader, Headers headers) throws IOException {
         String value = headers.getValue("Content-Length");
 
-        if (value != null) {
+        if (value != null && !value.equals("")) {
             return IOUtils.readData(reader, Integer.parseInt(value));
         }
 

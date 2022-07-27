@@ -2,7 +2,6 @@ package webserver.handler;
 
 import db.DataBase;
 import model.User;
-import org.checkerframework.checker.units.qual.C;
 import webserver.Handler;
 import webserver.http.*;
 

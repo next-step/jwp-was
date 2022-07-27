@@ -6,4 +6,8 @@ public enum HttpMethod {
     public boolean isPost() {
         return this == POST;
     }
+
+    public boolean isGet() {
+        return this == GET;
+    }
 }

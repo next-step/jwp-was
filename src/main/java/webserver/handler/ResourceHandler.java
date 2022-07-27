@@ -31,9 +31,8 @@ public class ResourceHandler implements Handler {
 
         byte[] bytes = loadFile(path);
 
-        Response response = new Response();
+        Response response = new Response(bytes);
         response.setContentType(CONTENT_TYPE_BY_FILE.getOrDefault(getExtension(path), "text/html"));
-        response.setContentLength(String.valueOf(bytes.length));
         return response;
     }
 
