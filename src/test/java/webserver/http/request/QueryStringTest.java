@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import org.junit.jupiter.api.DisplayName;

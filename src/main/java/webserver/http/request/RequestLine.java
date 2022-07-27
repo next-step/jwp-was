@@ -1,8 +1,4 @@
-package webserver;
-
-import webserver.http.HttpMethod;
-import webserver.http.Path;
-import webserver.http.Protocol;
+package webserver.http.request;
 
 import java.util.Map;
 import java.util.Objects;

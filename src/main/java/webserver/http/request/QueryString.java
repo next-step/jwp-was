@@ -1,9 +1,7 @@
-package webserver.http;
+package webserver.http.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import exception.InvalidRequestException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,19 +13,20 @@ import java.util.stream.Stream;
 import static model.Constant.KEY_VALUE_SPERATOR;
 import static model.Constant.QUERY_STRING_SPERATOR;
 
-public class RequestBody {
-    private static final Logger logger = LoggerFactory.getLogger(RequestBody.class);
+public class QueryString {
+    private final Map<String, String> queryString;
 
-    private final Map<String, String> requestBodyEntry;
-
-    public RequestBody(String value) {
-        logger.debug("RequestBody : {}", value);
-        this.requestBodyEntry = StringUtils.isEmpty(value) ? Collections.emptyMap() : parse(value);
+    public QueryString(Map<String, String> queryString) {
+        this.queryString = queryString;
     }
 
-    public RequestBody(String... values) {
+    public QueryString(String value) {
+        this.queryString = StringUtils.isEmpty(value) ? Collections.emptyMap() : parse(value);
+    }
+
+    public QueryString(String... values) {
         if (values.length % 2 != 0) {
-            throw new InvalidRequestException("RequestBody");
+            throw new InvalidRequestException("QueryString");
         }
 
         Map<String, String> map = new HashMap<>();
@@ -37,7 +36,11 @@ public class RequestBody {
             map.put(values[i++], values[i++]);
         }
 
-        this.requestBodyEntry = map;
+        this.queryString = map;
+    }
+
+    public Map<String, String> getQueryString() {
+        return queryString;
     }
 
     private Map<String, String> parse(String value) {
@@ -46,20 +49,16 @@ public class RequestBody {
                 .collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
     }
 
-    public Map<String, String> getRequestBodyEntry() {
-        return requestBodyEntry;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RequestBody that = (RequestBody) o;
-        return Objects.equals(requestBodyEntry, that.requestBodyEntry);
+        QueryString that = (QueryString) o;
+        return Objects.equals(queryString, that.queryString);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestBodyEntry);
+        return Objects.hash(queryString);
     }
 }

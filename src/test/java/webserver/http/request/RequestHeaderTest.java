@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class HeaderTest {
+class RequestHeaderTest {
 
     @DisplayName("Hearder 를 담는 객체에 대한 테스트")
     @Test
@@ -26,6 +26,6 @@ class HeaderTest {
                 "User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
         );
 
-        assertAll(() -> assertThat(new Header(list)).isEqualTo(new Header(map)));
+        assertAll(() -> assertThat(new RequestHeader(list)).isEqualTo(new RequestHeader(map)));
     }
 }

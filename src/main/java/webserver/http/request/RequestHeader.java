@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 
@@ -7,16 +7,16 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Header {
+public class RequestHeader {
     private final Map<String, String> headers;
 
-    public Header(List<String> headerMap) {
+    public RequestHeader(List<String> headerMap) {
         this.headers = headerMap.stream()
                 .map(request -> request.split(": "))
                 .collect(Collectors.toMap(s -> s[0], s -> s[1]));
     }
 
-    public Header(Map<String, String> header) {
+    public RequestHeader(Map<String, String> header) {
         this.headers = header;
     }
 
@@ -32,7 +32,7 @@ public class Header {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Header header1 = (Header) o;
+        RequestHeader header1 = (RequestHeader) o;
         return Objects.equals(headers, header1.headers);
     }
 

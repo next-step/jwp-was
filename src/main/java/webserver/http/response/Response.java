@@ -1,16 +1,16 @@
-package webserver;
+package webserver.http.response;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.http.ContentType;
-import webserver.http.Header;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -22,18 +22,21 @@ public class Response {
     private static final String RESOURCES_TEMPLATES = "./templates";
     private static final String RESOURCES_STATIC = "./static";
 
-    private DataOutputStream response;
-    private Header header;
+    private final DataOutputStream response;
+    private final ResponseHeader headers;
 
     public Response(OutputStream out, String path) {
         this.response = new DataOutputStream(out);
-        this.header = new Header(getContentType(path));
+        this.headers = new ResponseHeader(getContentType(path));
     }
 
     private Map<String, String> getContentType(String path) {
-        return Map.of("Content-Type", Stream.of(ContentType.values())
+        logger.debug("path : {}", path);
+        return Stream.of(ContentType.values())
                 .filter(type -> path.endsWith(type.getExtension()))
-                .findFirst().get().getValue());
+                .map(type -> Map.of("Content-Type", type.getValue()))
+                .findFirst()
+                .orElse(Collections.emptyMap());
     }
 
     public byte[] getBody(String path) {
@@ -60,7 +63,7 @@ public class Response {
         return response;
     }
 
-    public Header getHeader() {
-        return header;
+    public ResponseHeader getHeaders() {
+        return headers;
     }
 }

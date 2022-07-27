@@ -1,9 +1,6 @@
-package webserver;
+package webserver.http.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
-import webserver.http.Header;
-import webserver.http.HttpMethod;
-import webserver.http.RequestBody;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,21 +18,22 @@ import static utils.IOUtils.readLines;
 
 public class Request {
     private final RequestLine requestLine;
-    private final Header header;
-    private RequestBody requestBody;
+    private final RequestHeader header;
+    private final RequestBody requestBody;
 
     public Request(InputStream in) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         List<String> requests = readLines(br);
         this.requestLine = new RequestLine(requests.get(0));
         requests.remove(0);
-        this.header = new Header(requests);
+        this.header = new RequestHeader(requests);
         this.requestBody = new RequestBody(readData(br, this.header.getContentLength()));
     }
 
-    public Request(RequestLine requestLine, Header header) {
+    public Request(RequestLine requestLine, RequestHeader header, RequestBody requestBody) {
         this.requestLine = requestLine;
         this.header = header;
+        this.requestBody = requestBody;
     }
 
     public String getRequestPath() {

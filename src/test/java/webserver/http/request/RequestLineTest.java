@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http.request;
 
 import exception.InvalidRequestException;
 import model.User;

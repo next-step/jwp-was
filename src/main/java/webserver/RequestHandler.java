@@ -5,7 +5,9 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.HttpMethod;
+import webserver.http.request.HttpMethod;
+import webserver.http.request.Request;
+import webserver.http.response.Response;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -34,17 +36,13 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             Request request = new Request(in);
             String path = getPathFromRequest(request);
+            Response response = new Response(out, path);
 
             if (StringUtils.equals(request.getRequestPath(), USER_CREATE_PATH) && request.getHttpMethod() == HttpMethod.POST) {
-                Map<String, String> requestBody = request.getRequestBody();
-                User user = new User(requestBody.get("userId"), requestBody.get("password"), requestBody.get("name"), requestBody.get("email"));
-                logger.debug("user : {}", user);
-
-                DataBase.addUser(user);
-                path = ROOT_FILE;
+                createUser(response, request.getRequestBody());
+                return;
             }
 
-            Response response = new Response(out, path);
             byte[] body = response.getBody(path);
 
             response200Header(response, body.length);
@@ -52,8 +50,16 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
         }
+    }
+
+    private void createUser(Response response, Map<String, String> requestBody) {
+        User user = new User(requestBody.get("userId"), requestBody.get("password"), requestBody.get("name"), requestBody.get("email"));
+        DataBase.addUser(user);
+
+        response302Header(response, ROOT_FILE);
     }
 
     private String getPathFromRequest(Request request) {
@@ -64,8 +70,19 @@ public class RequestHandler implements Runnable {
         DataOutputStream dos = response.getResponse();
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes(StringUtils.join(response.getHeader(), ": "));
+            dos.writeBytes(StringUtils.join(response.getHeaders(), ": "));
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(Response response, String redirectPath) {
+        DataOutputStream dos = response.getResponse();
+        try {
+            dos.writeBytes("HTTP/1.1 302 FOUND \r\n");
+            dos.writeBytes("Location: " + redirectPath + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
