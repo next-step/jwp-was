@@ -25,7 +25,7 @@ public class HttpRequest {
             requestLine = new RequestLine(URLDecoder.decode(reader.readLine(), UTF_8));
             headers = HttpHeaders.from(reader);
             requestBody = new RequestBody(URLDecoder.decode(IOUtils.readData(reader, headers.getContentLength()), UTF_8));
-            logger.debug("request body = {}", requestBody);
+            logger.debug("request body = {}", requestBody.getQueryString());
         } catch (Exception e) {
             e.printStackTrace();
         }

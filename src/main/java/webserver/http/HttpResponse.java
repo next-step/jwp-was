@@ -21,13 +21,27 @@ public class HttpResponse {
 
     private final DataOutputStream out;
     private final Map<String, String> headers = new HashMap<>();
+    private final StatusLine statusLine;
 
     public HttpResponse(OutputStream out) {
         this.out = new DataOutputStream(out);
+        this.statusLine = new StatusLine();
+    }
+
+    public void setStatus(HttpStatus status) {
+        statusLine.setStatus(status);
+    }
+
+    public HttpStatus getStatus() {
+        return statusLine.getStatus();
     }
 
     public void addHeader(String name, String value) {
         headers.put(name, value);
+    }
+
+    public String getHeader(String name) {
+        return headers.get(name);
     }
 
     public void forward(String path) throws IOException, URISyntaxException {
@@ -70,9 +84,9 @@ public class HttpResponse {
 
     public void sendRedirect(String url) {
         try {
-            out.writeBytes("HTTP/1.1 302 Found " + LINE_SEPARATOR);
+            addHeader("Location", url);
+            processStatusLine(HttpStatus.FOUND);
             processHeaders();
-            out.writeBytes(String.format("Location: %s%n", url));
             out.writeBytes(LINE_SEPARATOR);
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -81,12 +95,17 @@ public class HttpResponse {
 
     private void response200Header() {
         try {
-            out.writeBytes("HTTP/1.1 200 OK " + LINE_SEPARATOR);
+            processStatusLine(HttpStatus.OK);
             processHeaders();
             out.writeBytes(LINE_SEPARATOR);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private void processStatusLine(HttpStatus status) throws IOException {
+        setStatus(status);
+        out.writeBytes(statusLine + LINE_SEPARATOR);
     }
 
     private void processHeaders() throws IOException {
