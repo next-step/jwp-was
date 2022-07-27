@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import db.DataBase;
+import exception.HttpMethodNotSupportedException;
 import model.User;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
@@ -28,6 +29,19 @@ class LoginControllerTest {
     @BeforeEach
     void setup() {
         DataBase.addUser(new User(VALID_USER_ID, VALID_PASSWORD, "유저", "user@example.com"));
+    }
+
+    @DisplayName("사용자 로그인 요청 시, HTTP 메서드가 GET인 경우 HttpMethodNotSupportedException 예외가 발생한다.")
+    @Test
+    void invalidHttpMethod() {
+        String loginRequest = "GET /user/login HTTP/1.1";
+        HttpRequest request = new HttpRequest(new ByteArrayInputStream(loginRequest.getBytes(StandardCharsets.UTF_8)));
+        HttpResponse response = new HttpResponse(new ByteArrayOutputStream());
+
+        LoginController controller = new LoginController();
+
+        assertThatThrownBy(() -> controller.handle(request, response))
+            .isInstanceOf(HttpMethodNotSupportedException.class);
     }
 
     @DisplayName("사용자 로그인이 성공하면, 302 Found 응답과 함께 index.html로 리다이렉트한다.")
