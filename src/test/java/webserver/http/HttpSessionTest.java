@@ -25,4 +25,13 @@ class HttpSessionTest {
         session.setAttribute("name", "홍길동");
         assertThat(session.getAttribute("name")).isEqualTo("홍길동");
     }
+
+    @DisplayName("세션의 데이터를 삭제할 수 있다.")
+    @Test
+    void removeAttribute() {
+        HttpSession session = new HttpSession(UUID.randomUUID().toString());
+        session.setAttribute("name", "홍길동");
+        session.removeAttribute("name");
+        assertThat(session.getAttribute("name")).isNull();
+    }
 }
