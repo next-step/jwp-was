@@ -11,6 +11,14 @@ public class RequestLine {
         this.protocol = protocol;
     }
 
+    public boolean isGetMethod() {
+        return method.isGet();
+    }
+
+    public String getPath() {
+        return uri.getPath();
+    }
+
     @Override
     public String toString() {
         return "RequestLine{" +

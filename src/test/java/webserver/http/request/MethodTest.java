@@ -41,5 +41,18 @@ class MethodTest {
         );
     }
 
+    @DisplayName("GET 메서드 여부 반환")
+    @ParameterizedTest
+    @MethodSource("provideForIsGet")
+    void isGet(Method method, boolean expected) {
+        boolean actual = method.isGet();
+        assertThat(actual).isEqualTo(expected);
+    }
 
+    private static Stream<Arguments> provideForIsGet() {
+        return Stream.of(
+                arguments(Method.GET, true),
+                arguments(Method.POST, false)
+        );
+    }
 }

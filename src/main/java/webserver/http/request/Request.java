@@ -29,6 +29,14 @@ public class Request {
         this.requestBody.add(requestBody);
     }
 
+    public boolean isGetMethod() {
+        return requestLine.isGetMethod();
+    }
+
+    public String getPath() {
+        return requestLine.getPath();
+    }
+
     @Override
     public String toString() {
         return "Request{" +

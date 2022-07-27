@@ -12,4 +12,8 @@ public enum Method {
                 .findAny()
                 .orElseThrow(() -> new RuntimeException(String.format("현재 서버에서 처리할 수 없는 메소드입니다. {: %s}", value)));
     }
+
+    public boolean isGet() {
+        return GET == this;
+    }
 }

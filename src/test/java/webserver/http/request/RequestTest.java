@@ -127,4 +127,31 @@ class RequestTest {
 
         return request;
     }
+
+    @DisplayName("GET 메서드 여부 반환")
+    @ParameterizedTest
+    @MethodSource("provideForIsGet")
+    void isGetMethod(Method method, boolean expected) {
+        RequestLine requestLine = new RequestLine(method, new URI("/path"), new Protocol("HTTP", "1.1"));
+        Request request = new Request(requestLine, new Headers(new HashMap<>()));
+
+        boolean actual = request.isGetMethod();
+        assertThat(actual).isEqualTo(expected);
+    }
+    private static Stream<Arguments> provideForIsGet() {
+        return Stream.of(
+                arguments(Method.GET, true),
+                arguments(Method.POST, false)
+        );
+    }
+
+    @DisplayName("URI path를 반환")
+    @Test
+    void getPath() {
+        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path"), new Protocol("HTTP", "1.1"));
+        Request request = new Request(requestLine, new Headers(new HashMap<>()));
+
+        String actual = request.getPath();
+        assertThat(actual).isEqualTo("/path");
+    }
 }
