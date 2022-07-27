@@ -31,3 +31,13 @@
 - [x] 클라이언트 요청 데이터를 처리하는 로직을 별도의 클래스로 분리한다. (HttpRequest)
 - [x] 클라이언트 응답 데이터를 처리하는 로직을 별도의 클래스로 분리한다. (HttpResponse)
 - [x] 다형성을 활용해 클라이언트 요청 URL에 대한 분기 처리를 제거한다.
+
+## 기능 요구사항 - 4단계 (세션 구현하기)
+- [x] 세션은 다음 목록과 같은 메서드들을 지원해야 한다.
+  - [x] `String getId()`: 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환한다.
+  - [x] `void setAttribute(String name, Object value)`: 현재 세션에 value 인자로 전달되는 객체를 name 인자 이름으로 저장한다.
+  - [x] `Object getAttribute(String name)`: 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환한다.
+  - [x] `void removeAttribute(String name)`: 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제한다.
+  - [x] `void invalidate()`: 현재 세션에 저장되어 있는 모든 값을 삭제한다.
+- [x] 클라이언트가 최초 요청 시, 응답 시 Cookie에 세션 ID 값을 함께 전달한다.
+- [x] 동일한 클라이언트가 요청 시, 요청 헤더에 세션 ID가 존재하는 경우 응답 시 세션 ID 값을 전달하지 않는다.
