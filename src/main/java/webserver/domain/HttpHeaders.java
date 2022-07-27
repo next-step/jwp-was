@@ -2,9 +2,9 @@ package webserver.domain;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -16,14 +16,11 @@ public class HttpHeaders {
     public static final int VALUE_POINT = 1;
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String DEFAULT_CONTENT_TYPE = "text/html";
-    public static final String TEXT_HTML = "text/html";
-    public static final String HEADER_ATTR_DELIMITER = ",";
-    public static final String ACCEPT = "Accept";
-    public static final String ACCEPT_ALL = "*/*";
     public static final String CONTENT_LENGTH = "Content-Length";
     public static final String SET_COOKIE = "Set-Cookie";
     public static final String COOKIE = "Cookie";
     public static final String LOCATION = "Location";
+    public static final String INVALID_HEADER_KEY_VALUE_MSG = "유효한 속성 문자열이 아닙니다. value:";
 
     private final Map<String, String> headers = new HashMap<>();
 
@@ -56,10 +53,14 @@ public class HttpHeaders {
     }
 
     public void add(String headerStr) {
+        if (Objects.isNull(headerStr)) {
+            throw new IllegalArgumentException(INVALID_HEADER_KEY_VALUE_MSG + headerStr);
+        }
+
         String[] headerInfo = headerStr.split(DELIMITER);
 
         if (headerInfo.length != 2) {
-            throw new IllegalArgumentException("유효한 속성 문자열이 아닙니다. value:" + headerStr);
+            throw new IllegalArgumentException(INVALID_HEADER_KEY_VALUE_MSG + headerStr);
         }
 
         headers.put(headerInfo[KEY_POINT].trim(), headerInfo[VALUE_POINT].trim());
@@ -67,10 +68,6 @@ public class HttpHeaders {
 
     public void add(String key, String value) {
         headers.put(key, value);
-    }
-
-    public Map<String, String> getHeaders() {
-        return Collections.unmodifiableMap(headers);
     }
 
     public String getAttribute(String key) {
@@ -82,28 +79,6 @@ public class HttpHeaders {
 
     public String getAttributeOrDefault(String key, String defaultValue) {
         return headers.getOrDefault(key, defaultValue);
-    }
-
-    public String getContentType() {
-        return headers.getOrDefault(CONTENT_TYPE, TEXT_HTML);
-    }
-
-    public void setContentTypeFromAccept(String acceptStr) {
-        String accept = acceptStr.split(HEADER_ATTR_DELIMITER)[0];
-
-        if (!ACCEPT_ALL.equals(accept)) {
-            add(CONTENT_TYPE, accept);
-        }
-    }
-
-    public String getAccept() {
-        return getAttribute(ACCEPT);
-    }
-
-    public void setContentLength(int contentLength) {
-        if (contentLength > 0) {
-            add(CONTENT_LENGTH, String.valueOf(contentLength));
-        }
     }
 
     public int getContentLength() {
