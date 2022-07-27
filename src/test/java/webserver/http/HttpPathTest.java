@@ -1,6 +1,7 @@
 package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -22,5 +23,12 @@ public class HttpPathTest {
     void invalidStr(String path) {
         assertThatThrownBy(() -> new HttpPath(path))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("Querystring RequestLine 파싱")
+    @Test
+    void querystring() {
+        HttpPath httpPath = new HttpPath("/hello?key=value");
+        assertThat(httpPath.getHttpParams()).isNotNull();
     }
 }
