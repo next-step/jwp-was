@@ -18,6 +18,10 @@ public class DataBase {
         return users.get(userId);
     }
 
+    public static boolean existsUser(String userId) {
+        return users.containsKey(userId);
+    }
+
     public static Collection<User> findAll() {
         return users.values();
     }

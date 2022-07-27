@@ -41,10 +41,10 @@
   - [x] 응답을 관리하는 클래스를 만든다.
   - [x] 응답 Http status를 enum으로 관리한다.
 #### 기능 요구사항 5.
-- [ ] 로그인 성공 실패 분기 처리를 한다.
-  - [ ] 앞 단계에서 회원가입할 때 생성한 User 객체를 DataBase.addUser() 메서드를 활용해 RAM 메모리에 저장한다.
-  - [ ] login 실패 시 login_failed.html로 이동하도록 한다.
-  - [ ] logined=false 값을 넎는다.
+- [x] 로그인 성공 실패 분기 처리를 한다.
+  - [x] 앞 단계에서 회원가입할 때 생성한 User 객체를 DataBase.addUser() 메서드를 활용해 RAM 메모리에 저장한다.
+  - [x] login 실패 시 login_failed.html로 이동하도록 한다.
+  - [x] logined=false 값을 넎는다.
 #### 기능 요구사항 6.
 - [ ] 로그인 되었을 때 http://localhost:8080/user/list 로 접근했을 때 사용자 목록을 출력
   - [ ] handlebars.java template engine 사용하여 동적으로 html을 생성

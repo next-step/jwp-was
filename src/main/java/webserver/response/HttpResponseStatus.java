@@ -1,7 +1,7 @@
 package webserver.response;
 
-public enum ResponseStatus {
-    SUCCESS(200, "OK"),
+public enum HttpResponseStatus {
+    OK(200, "OK"),
     FOUND(302, "Found")
     ;
 
@@ -9,7 +9,7 @@ public enum ResponseStatus {
     private final int value;
     private final String reasonParse;
 
-    ResponseStatus(int value, String reasonParse) {
+    HttpResponseStatus(int value, String reasonParse) {
         this.value = value;
         this.reasonParse = reasonParse;
     }

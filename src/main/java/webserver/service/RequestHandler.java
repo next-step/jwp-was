@@ -58,7 +58,7 @@ public class RequestHandler implements Runnable {
             if (isPost(header)) {
                 ResponsePostHandler responsePostHandler = new ResponsePostHandler();
                 String requestBody = IOUtils.readData(br, header.contentLength());
-                writeAndFlush(responsePostHandler.handle(header, requestBody), EMPTY.getBytes(), dos);
+                writeAndFlush(responsePostHandler.handle(header, requestBody).toString(), EMPTY.getBytes(), dos);
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
