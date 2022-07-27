@@ -19,7 +19,7 @@ class RequestLineTest {
     @BeforeEach
     void setup() throws IOException {
         BufferedReader br = HelpData.getHelpData("GET");
-        requestLine = RequestLine.getInstance().parsing(br);
+        requestLine = RequestLine.parsing(br);
     }
 
     @Test
