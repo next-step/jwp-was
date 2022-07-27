@@ -55,16 +55,15 @@ public class RequestHandler implements Runnable {
                 QueryStringParser QSParser = new QueryStringParser(body);
                 Map<String, String> params = QSParser.getQueryParameters();
                 User user = DataBase.findUserById(params.get("userId"));
+                DataOutputStream dos = new DataOutputStream(out);
+                response302Header(dos, "/index.html");
                 if (user != null) {
                     if (user.getPassword().equals(params.get("password"))) {
-                        DataOutputStream dos = new DataOutputStream(out);
                         response302LoginHeader(dos, "logined=true", "/index.html");
                     } else {
-                        DataOutputStream dos = new DataOutputStream(out);
                         response302LoginHeader(dos,"logined=false","/user/login_failed.html");
                     }
                 } else {
-                    DataOutputStream dos = new DataOutputStream(out);
                     response302LoginHeader(dos,"logined=false","/user/login_failed.html");
                 }
             } else {
