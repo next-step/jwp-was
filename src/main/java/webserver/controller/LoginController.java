@@ -13,12 +13,13 @@ public class LoginController extends PostController {
         String password = request.getParameter("password");
 
         if (isLoggedIn(userId, password)) {
-            response.addHeader("Set-Cookie", "logined=true; Path=/");
+            response.addCookie("logined", "true");
+            response.addCookie("Path", "/");
             response.sendRedirect("/index.html");
             return;
         }
 
-        response.addHeader("Set-Cookie", "logined=false");
+        response.addCookie("logined", "false");
         response.sendRedirect("/user/login_failed.html");
     }
 

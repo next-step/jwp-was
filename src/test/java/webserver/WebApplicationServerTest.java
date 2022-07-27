@@ -104,10 +104,12 @@ class WebApplicationServerTest {
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.postForEntity(BASE_URL + "/user/login", requestBody, String.class);
+        HttpHeaders headers = response.getHeaders();
+        String cookie = headers.get("Set-Cookie").get(0);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        assertThat(response.getHeaders().getLocation()).isEqualTo(URI.create("/index.html"));
-        assertThat(response.getHeaders().get("Set-Cookie")).contains("logined=true; Path=/");
+        assertThat(headers.getLocation()).isEqualTo(URI.create("/index.html"));
+        assertThat(cookie).contains("logined=true", "Path=/");
     }
 
     @DisplayName("로그인 실패 시, 로그인 실패 쿠키와 함께 login_failed.html 페이지로 리다이렉트한다.")
@@ -119,10 +121,12 @@ class WebApplicationServerTest {
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.postForEntity(BASE_URL + "/user/login", requestBody, String.class);
+        HttpHeaders headers = response.getHeaders();
+        String cookie = headers.get("Set-Cookie").get(0);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        assertThat(response.getHeaders().getLocation()).isEqualTo(URI.create("/user/login_failed.html"));
-        assertThat(response.getHeaders().get("Set-Cookie")).contains("logined=false");
+        assertThat(headers.getLocation()).isEqualTo(URI.create("/user/login_failed.html"));
+        assertThat(cookie).contains("logined=false");
     }
 
     @DisplayName("로그인 상태인 경우, GET /user/list 요청 시 사용자 목록을 출력한다.")
@@ -149,5 +153,14 @@ class WebApplicationServerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expectedBody);
+    }
+
+    @DisplayName("클라이언트 요청 쿠키에 세션 ID가 존재하지 않으면, 세션 ID를 생성하여 쿠키에 저장 후 응답을 내려준다.")
+    @Test
+    void request_without_session_id() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL, String.class);
+        String cookie = response.getHeaders().get("Set-Cookie").get(0);
+        assertThat(cookie).contains("JSESSIONID");
     }
 }

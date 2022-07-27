@@ -63,7 +63,7 @@ class LoginControllerTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(response.getHeader("Location")).isEqualTo("/index.html");
-        assertThat(response.getHeader("Set-Cookie")).isEqualTo("logined=true; Path=/");
+        assertThat(response.getHeader("Set-Cookie")).contains("logined=true", "Path=/");
     }
 
     @DisplayName("사용자 로그인이 실패하면, 302 Found 응답과 함께 login_failed.html로 리다이렉트한다.")
