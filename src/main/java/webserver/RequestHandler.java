@@ -1,6 +1,8 @@
 package webserver;
 
 import com.google.common.base.Charsets;
+import db.DataBase;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -39,6 +41,19 @@ public class RequestHandler implements Runnable {
             Request request = requestReader.read(bufferedReader);
             logger.info("[request] = {}", request);
 
+            if (request.hasMethod(Method.GET) && "/".equals(request.getPath())) {
+                try {
+                    String resource = "/index.html";
+                    byte[] bytes = FileIoUtils.loadFileFromClasspath("./static" + resource);
+                    response200Header(dos, bytes.length, findContentType(resource));
+                    responseBody(dos, bytes);
+                    return;
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+
             if (request.hasMethod(Method.GET) && isResource(request)) {
                 try {
                     String resource = request.getPath();
@@ -51,15 +66,25 @@ public class RequestHandler implements Runnable {
                 }
             }
 
+            if (request.hasMethod(Method.POST) && request.getPath().equals("/user/create")) {
+                String userId = request.getParameter("userId");
+                String password = request.getParameter("password");
+                String name = request.getParameter("name");
+                String email = request.getParameter("email");
+                DataBase.addUser(new User(userId, password, name, email));
+                response302Header(dos, "/index.html");
+                return;
+            }
+
 
 
             byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (NullRequestException e) {
-            logger.warn(e.getMessage());
+            logger.warn(e.getMessage(), e);
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -92,6 +117,16 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: " + contentType + "\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(DataOutputStream dos, String location) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Location: " + location + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
