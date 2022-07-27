@@ -1,10 +1,9 @@
 package webserver;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.Cookie;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +29,7 @@ public class Header {
         try {
             br.readLine();
             String line = br.readLine();
-            while (!line.equals("")) {
+            while (!StringUtils.isEmpty(line)) {
                 String[] headerArr = line.split(": ");
                 headerMap.put(headerArr[0], headerArr[1]);
                 line = br.readLine();
