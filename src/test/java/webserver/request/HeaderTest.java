@@ -2,6 +2,7 @@ package webserver.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.Cookie;
 import webserver.Header;
 
 import java.io.BufferedReader;

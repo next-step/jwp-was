@@ -9,7 +9,6 @@ import java.util.Set;
 public class Cookie {
 
     private Map<String, String> cookies = Maps.newHashMap();
-    public static final String LOGINED_KEY = "logined";
     private static final String EQUALS = "=";
     private static final String SEMICOLON = "; ";
 

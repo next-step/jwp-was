@@ -26,9 +26,9 @@ public class Request {
     }
 
     public static Request parsing(BufferedReader br) throws IOException {
-        RequestLine requestLine = RequestLine.getInstance().parsing(br);
+        RequestLine requestLine = RequestLine.parsing(br);
         Header header = Header.parsing(br);
-        RequestBody requestBody = RequestBody.getInstance().parsing(br, header.getContentLength());
+        RequestBody requestBody = RequestBody.parsing(br, header.getContentLength());
 
         return new Request(requestLine, header, requestBody);
     }

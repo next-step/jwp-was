@@ -2,7 +2,7 @@ package webserver.response;
 
 import org.springframework.http.HttpStatus;
 import webserver.Header;
-import webserver.request.Cookie;
+import webserver.Cookie;
 import webserver.request.Model;
 
 import java.io.DataOutputStream;
