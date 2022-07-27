@@ -1,23 +1,18 @@
 package webserver;
 
-import static utils.IOUtils.readData;
 import static webserver.response.HttpStatusResponse.responseBodRequest400;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.HttpHeader;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
+import webserver.response.HttpResponseHeader;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -34,8 +29,7 @@ public class RequestHandler implements Runnable {
         try (InputStream inputStream = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
 
-            HttpRequest httpRequest = parseRequest(inputStream)
-                .orElseThrow(IllegalArgumentException::new);
+            HttpRequest httpRequest = HttpRequest.of(inputStream);
             HttpResponse httpResponse = new HttpResponse();
 
             DispatcherServlet.INSTANCE.serve(httpRequest, httpResponse);
@@ -43,6 +37,7 @@ public class RequestHandler implements Runnable {
             writeResponse(dos, httpResponse);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
+            e.printStackTrace();
         }
         catch (Exception e) {  // 예상되는 예외의 최상위 클래스로 할 것 정의해야함
             logger.error(e.getMessage());
@@ -57,7 +52,7 @@ public class RequestHandler implements Runnable {
 
     private void writeResponse(DataOutputStream dos, HttpResponse httpResponse) {
         try {
-            responseStartLine(dos, httpResponse.responseLine());
+            responseStatusLine(dos, httpResponse.statusLine());
             responseHeader(dos, httpResponse.getHeader());
             responseBody(dos, httpResponse.getBody());
         } catch (IOException e) {
@@ -65,16 +60,15 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void responseStartLine(DataOutputStream dos, String responseLine) throws IOException {
-        dos.writeBytes(responseLine + " \r\n");
-        logger.debug(responseLine);
+    private void responseStatusLine(DataOutputStream dos, String statusLine) throws IOException {
+        dos.writeBytes(statusLine + " \r\n");
+        logger.debug(statusLine);
     }
 
-    private void responseHeader(DataOutputStream dos, HttpHeader httpHeader) throws IOException {
-        for (String key : httpHeader.keySet()) {
-            dos.writeBytes(key + ": " + httpHeader.getHeader(key) + "\r\n");
-            logger.debug(key + ": " + httpHeader.getHeader(key));
-
+    private void responseHeader(DataOutputStream dos, HttpResponseHeader responseHeader) throws IOException {
+        for (String key : responseHeader.keySet()) {
+            dos.writeBytes(key + ": " + responseHeader.getHeader(key) + "\r\n");
+            logger.debug(key + ": " + responseHeader.getHeader(key));
         }
         dos.writeBytes("\r\n");
     }
@@ -87,36 +81,5 @@ public class RequestHandler implements Runnable {
             logger.error(e.getMessage());
         }
     }
-
-    private Optional<HttpRequest> parseRequest(InputStream is) {
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-
-            String line;
-            line = br.readLine();
-            if (line == null) {
-                return Optional.empty();
-            }
-            logger.debug(line);
-
-            HttpRequest httpRequest = new HttpRequest(line);
-            while (!line.equals("")) {
-                line = br.readLine();
-                httpRequest.addHeader(line);
-                logger.debug(line);
-            }
-
-            String body = readData(br, httpRequest.contentLength());
-            httpRequest.setBody(body);
-            logger.debug(body);
-
-            return Optional.of(httpRequest);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-
-        return Optional.empty();
-    }
-
 
 }

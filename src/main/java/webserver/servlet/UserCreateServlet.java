@@ -5,6 +5,7 @@ import java.util.Map;
 import model.User;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
+import webserver.utils.HttpHeader;
 
 public class UserCreateServlet implements Servlet {
 
@@ -19,10 +20,9 @@ public class UserCreateServlet implements Servlet {
         );
         DataBase.addUser(user);
 
-        httpResponse.protocol1_1();
-        httpResponse.statusFound();
-        httpResponse.addHeader("Content-Type", "text/html;charset=utf-8");
-        httpResponse.addHeader("Location", "http://localhost:8080/index.html");
+        httpResponse.found();
+        httpResponse.addHeader(HttpHeader.CONTENT_TYPE, "text/html;charset=utf-8");
+        httpResponse.addHeader(HttpHeader.LOCATION, "http://localhost:8080/index.html");
     }
 
 }

@@ -21,15 +21,14 @@ public class UserLoginServlet implements Servlet {
         User userFound = DataBase.findUserById(userId)
             .orElseThrow(() -> new IllegalStateException(NOT_FOUND_MEMBER));
 
-        httpResponse.protocol1_1();
+        httpResponse.found();
         httpResponse.addHeader("Content-Type", "text/html;charset=utf-8");
         if (userFound.fitPassword(password)) {
-            httpResponse.statusOk();
             httpResponse.addHeader("Set-Cookie", "logined=true; Path=/");
+            httpResponse.addHeader("Location", "http://localhost:8080/index.html");
             return;
         }
 
-        httpResponse.statusFound();
         httpResponse.addHeader("Set-Cookie", "logined=false; Path=/");
         httpResponse.addHeader("Location", "http://localhost:8080/user/login_failed.html");
     }

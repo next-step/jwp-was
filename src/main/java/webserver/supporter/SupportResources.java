@@ -41,8 +41,7 @@ public final class SupportResources {
         ContentType contentType = ContentType.valueOf(extend.toUpperCase());
 
         byte[] body = FileIoUtils.loadFileFromClasspath(PATH_STATIC + path);
-        httpResponse.protocol1_1();
-        httpResponse.statusOk();
+        httpResponse.ok();
         httpResponse.addHeader("Content-Type", contentType.type());
         httpResponse.addHeader("Content-Length", Integer.toString(body.length));
         httpResponse.setBody(body);

@@ -6,7 +6,10 @@ import db.DataBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import webserver.enums.StatusCode;
+import webserver.request.HttpRequestBody;
+import webserver.request.HttpRequestHeader;
 import webserver.request.HttpRequest;
+import webserver.request.RequestLine;
 import webserver.response.HttpResponse;
 
 class UserCreateServletTest {
@@ -22,13 +25,16 @@ class UserCreateServletTest {
 
     @Test
     void createTest() {
-        HttpRequest httpRequest = new HttpRequest("POST /user/create HTTP/1.1");
-        httpRequest.addHeader("Host: localhost:8080");
-        httpRequest.addHeader("Connection: keep-alive");
-        httpRequest.addHeader("Content-Length: 59");
-        httpRequest.addHeader("Content-Type: application/x-www-form-urlencoded");
-        httpRequest.addHeader("Accept: */*");
-        httpRequest.setBody("userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net");
+        RequestLine requestLine = RequestLine.of("POST /user/create HTTP/1.1");
+        HttpRequestHeader httpHeader = HttpRequestHeader.createEmpty();
+        httpHeader.putHeader("Host", "localhost:8080");
+        httpHeader.putHeader("Connection", "keep-alive");
+        httpHeader.putHeader("Content-Length", "59");
+        httpHeader.putHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpHeader.putHeader("Accept", "*/*");
+        HttpRequestBody httpBody = HttpRequestBody.of("userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net");
+
+        HttpRequest httpRequest = new HttpRequest(requestLine, httpHeader, httpBody);
         HttpResponse httpResponse = new HttpResponse();
 
         servlet.serve(httpRequest, httpResponse);

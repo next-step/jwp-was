@@ -7,6 +7,7 @@ import java.util.Set;
 import utils.FileIoUtils;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
+import webserver.utils.HttpHeader;
 
 public final class SupportTemplates {
     public static final String PATH_TEMPLATES = "./templates";
@@ -31,10 +32,9 @@ public final class SupportTemplates {
 
     public static void responseStatic(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException, URISyntaxException {
         byte[] body = FileIoUtils.loadFileFromClasspath(PATH_TEMPLATES + httpRequest.getPath());
-        httpResponse.protocol1_1();
-        httpResponse.statusOk();
-        httpResponse.addHeader("Content-Type", "text/html;charset=utf-8");
-        httpResponse.addHeader("Content-Length", Integer.toString(body.length));
+        httpResponse.ok();
+        httpResponse.addHeader(HttpHeader.CONTENT_TYPE, "text/html;charset=utf-8");
+        httpResponse.addHeader(HttpHeader.CONTENT_LENGTH, Integer.toString(body.length));
         httpResponse.setBody(body);
     }
 }

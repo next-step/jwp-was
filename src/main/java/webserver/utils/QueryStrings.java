@@ -25,6 +25,15 @@ public class QueryStrings {
         return new QueryStrings(parseQueryStrings(queryStrings));
     }
 
+    public static Map<String, String> toMap(String queryStrings) {
+        Objects.requireNonNull(queryStrings);
+
+        if (queryStrings.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        return parseQueryStrings(queryStrings);
+    }
+
     private static Map<String, String> parseQueryStrings(String queries) {
         String[] queryStrings = queries.split(QUERIES_SPLIT_REGEX);
         Map<String, String> queryStringsMap = new HashMap<>();

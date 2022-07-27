@@ -20,7 +20,6 @@ public class UserListServlet implements Servlet {
         String cookie = httpRequest.getHeader("Cookie");
         validate(cookie);
 
-        httpResponse.protocol1_1();
         httpResponse.addHeader("Content-Type", "text/html;charset=utf-8");
         String[] cookies = cookie.split(";");
         Arrays.stream(cookies)
@@ -49,7 +48,7 @@ public class UserListServlet implements Servlet {
             String profilePage = template.apply(Collections.singletonMap("users", DataBase.findAll()));
             byte[] body = profilePage.getBytes(StandardCharsets.UTF_8);
 
-            httpResponse.statusOk();
+            httpResponse.ok();
             httpResponse.addHeader("Content-Length", Integer.toString(body.length));
             httpResponse.setBody(body);
         } catch (IOException e) {
@@ -58,7 +57,7 @@ public class UserListServlet implements Servlet {
     }
 
     private void handleNotLoginUser(HttpResponse httpResponse) {
-        httpResponse.statusFound();
+        httpResponse.found();
         httpResponse.addHeader("Location", "http://localhost:8080/user/login.html");
     }
 

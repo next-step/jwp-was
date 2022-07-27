@@ -1,23 +1,57 @@
 package webserver.request;
 
+import static exception.ExceptionStrings.INVALID_REQUEST;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import webserver.enums.HttpMethod;
 import webserver.enums.Protocol;
+import webserver.utils.HttpHeader;
 
 public class HttpRequest {
 
     private RequestLine requestLine;
-    private HttpHeader httpHeader;
-    private HttpBody httpBody;
+    private HttpRequestHeader header;
+    private HttpRequestBody body;
 
     public HttpRequest(String requestLine) {
         this.requestLine = RequestLine.of(requestLine);
-        this.httpHeader = new HttpHeader();
-        this.httpBody = new HttpBody();
+        this.header = HttpRequestHeader.createEmpty();
+        this.body = HttpRequestBody.createEmpty();
+    }
+
+    public HttpRequest(RequestLine requestLine, HttpRequestHeader httpHeader, HttpRequestBody httpBody) {
+        this.requestLine = requestLine;
+        this.header = httpHeader;
+        this.body = httpBody;
+    }
+
+    public static HttpRequest of(InputStream is) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+
+        String line;
+        line = br.readLine();
+        if (line == null) {
+            throw new IllegalArgumentException(INVALID_REQUEST);
+        }
+
+        RequestLine requestLine = RequestLine.of(line);
+        HttpRequestHeader httpHeader = new HttpRequestHeader(br);
+
+        HttpRequestBody httpBody = HttpRequestBody.createEmpty();
+        if (httpHeader.hasContent()) {
+            httpBody = HttpRequestBody.of(br, httpHeader.getHeader(HttpHeader.CONTENT_LENGTH));
+        }
+
+        return new HttpRequest(requestLine, httpHeader, httpBody);
     }
 
     public Map<String, String> bodyQueryString() {
-        return httpBody.getBodyMap();
+        return body.map();
     }
 
     public RequestLine getRequestLine() {
@@ -41,23 +75,19 @@ public class HttpRequest {
     }
 
     public void addHeader(String key, String value) {
-        httpHeader.putHeader(key, value);
-    }
-
-    public void addHeader(String headerLine) {
-        httpHeader.addHeader(headerLine);
+        header.putHeader(key, value);
     }
 
     public String getHeader(String key) {
-        return httpHeader.getHeader(key);
+        return header.getHeader(key);
     }
 
     public int contentLength() {
-        return httpHeader.contentLength();
+        return header.contentLength();
     }
 
     public void setBody(String body) {
-        httpBody = new HttpBody(body);
+        this.body = HttpRequestBody.of(body);
     }
 
 }

@@ -1,18 +1,35 @@
 package webserver.request;
 
 import static exception.ExceptionStrings.CANNOT_FIND_HEADER_KEY;
+import static webserver.utils.HttpHeader.CONTENT_LENGTH;
 
 import com.google.common.collect.Maps;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import webserver.utils.HttpHeader;
 
-public class HttpHeader {
-
+public class HttpRequestHeader {
     private static final String HEADER_DELIMITER = ": ";
     private static final int HEADER_LINE_COUNT = 2;
 
     private Map<String, String> headers = Maps.newHashMap();
+
+    private HttpRequestHeader() { }
+
+    public HttpRequestHeader(BufferedReader br) throws IOException {
+        String line = br.readLine();
+        while (!line.isEmpty()) {
+            addHeader(line);
+            line = br.readLine();
+        }
+    }
+
+    public static HttpRequestHeader createEmpty() {
+        return new HttpRequestHeader();
+    }
 
     public void putHeader(String key, String value) {
         headers.put(key, value);
@@ -30,7 +47,7 @@ public class HttpHeader {
         return Collections.unmodifiableSet(headers.keySet());
     }
 
-    public void addHeader(String headerLine) {
+    private void addHeader(String headerLine) {
         if (headerLine == null) {
             return;
         }
@@ -42,10 +59,15 @@ public class HttpHeader {
     }
 
     public int contentLength() {
-        if (headers.containsKey("Content-Length")) {
-            return Integer.parseInt(headers.get("Content-Length"));
+        if (headers.containsKey(CONTENT_LENGTH)) {
+            return Integer.parseInt(headers.get(CONTENT_LENGTH));
         }
 
         return 0;
     }
+
+    public boolean hasContent() {
+        return headers.containsKey(HttpHeader.CONTENT_LENGTH);
+    }
+
 }
