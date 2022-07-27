@@ -3,23 +3,30 @@ package webserver.http;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class Response {
 
     private StatusLine statusLine;
 
-    private Headers headers;
+    private final Headers headers;
 
-    private byte[] body;
+    private final byte[] body;
 
-    public Response(StatusLine statusLine, Headers headers) {
-        this(statusLine, headers, new byte[]{});
+    public Response() {
+        this(new StatusLine(Status.OK), new Headers(), new byte[]{});
     }
 
-    public Response(StatusLine statusLine, Headers headers, byte[] body) {
+    private Response(StatusLine statusLine, Headers headers, byte[] body) {
         this.statusLine = statusLine;
         this.headers = headers;
         this.body = body;
+    }
+
+    public void sendRedirect(String location) {
+        this.statusLine = new StatusLine(ProtocolVersion.HTTP11, Status.FOUND);
+        this.headers.addHeader("Location", location);
+        // locationHeader 추가
     }
 
     public StatusLine getStatusLine() {
@@ -33,6 +40,10 @@ public class Response {
         return messages;
     }
 
+    public void addCookie(Cookie cookie) {
+        this.headers.addHeader("Set-Cookie", cookie.getValues());
+    }
+
     public Headers getHeaders() {
         return headers;
     }
@@ -43,6 +54,18 @@ public class Response {
 
     public boolean hasBody() {
         return body != null;
+    }
+
+    public void setContentType(String contentType) {
+        this.headers.addHeader("Content-Type", contentType);
+    }
+
+    public void setContentLength(String contentLength) {
+        this.headers.addHeader("Content-Length", contentLength);
+    }
+
+    public String getLocation() {
+        return headers.getValue("Location");
     }
 
     @Override

@@ -8,6 +8,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
+import webserver.handler.CreateMemberHandler;
+import webserver.handler.LoginMemberHandler;
+import webserver.handler.ResourceHandler;
 import webserver.http.Headers;
 import webserver.http.Request;
 import webserver.http.RequestLine;
@@ -20,7 +23,8 @@ public class RequestHandler implements Runnable {
 
     private final List<Handler> handlers = List.of(
             new ResourceHandler(),
-            new CreateMemberHandler()
+            new CreateMemberHandler(),
+            new LoginMemberHandler()
     );
 
     public RequestHandler(Socket connectionSocket) {

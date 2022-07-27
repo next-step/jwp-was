@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class User {
     private String userId;
     private String password;
@@ -32,5 +34,9 @@ public class User {
     @Override
     public String toString() {
         return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
+    }
+
+    public boolean matchPassword(String password) {
+        return Objects.equals(this.password, password);
     }
 }

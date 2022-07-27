@@ -1,14 +1,12 @@
-package webserver;
+package webserver.handler;
 
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import utils.FileIoUtils;
+import webserver.Handler;
 import webserver.http.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ResourceHandler implements Handler {
 
@@ -33,13 +31,10 @@ public class ResourceHandler implements Handler {
 
         byte[] bytes = loadFile(path);
 
-        Headers headers = Headers.of(Map.of(
-                "Content-Type", CONTENT_TYPE_BY_FILE.getOrDefault(getExtension(path), "text/html"),
-                "Content-Length", String.valueOf(bytes.length)
-        ));
-
-        StatusLine statusLine = new StatusLine(ProtocolVersion.HTTP11, Status.OK);
-        return new Response(statusLine, headers, bytes);
+        Response response = new Response();
+        response.setContentType(CONTENT_TYPE_BY_FILE.getOrDefault(getExtension(path), "text/html"));
+        response.setContentLength(String.valueOf(bytes.length));
+        return response;
     }
 
     private byte[] loadFile(String path) {

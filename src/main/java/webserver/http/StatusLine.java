@@ -13,6 +13,10 @@ public class StatusLine {
         this.status = status;
     }
 
+    public StatusLine(Status status) {
+        this(ProtocolVersion.HTTP11, status);
+    }
+
     String getMessage() {
         return protocolVersion.getMessage() + " " + status.getMessage();
     }

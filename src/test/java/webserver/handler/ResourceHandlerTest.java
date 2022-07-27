@@ -1,4 +1,4 @@
-package webserver;
+package webserver.handler;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -6,11 +6,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import webserver.handler.ResourceHandler;
 import webserver.http.Headers;
 import webserver.http.Request;
 import webserver.http.RequestLine;
 import webserver.http.Response;
 
+import java.util.List;
 import java.util.Map;
 
 class ResourceHandlerTest {

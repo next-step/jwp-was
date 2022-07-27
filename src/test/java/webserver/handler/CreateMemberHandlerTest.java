@@ -1,14 +1,11 @@
-package webserver;
+package webserver.handler;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.*;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,7 +50,7 @@ class CreateMemberHandlerTest {
 
         // then
         assertThat(response.getStatusLine()).isEqualTo(new StatusLine(ProtocolVersion.HTTP11, Status.FOUND));
-        assertThat(response.getHeaders()).isEqualTo(Headers.of(Map.of("Location", "/index.html")));
+        assertThat(response.getLocation()).isEqualTo( "/index.html");
     }
 
 }

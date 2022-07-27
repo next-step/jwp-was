@@ -1,7 +1,8 @@
-package webserver;
+package webserver.handler;
 
 import db.DataBase;
 import model.User;
+import webserver.Handler;
 import webserver.http.*;
 
 import java.util.Map;
@@ -26,7 +27,9 @@ public class CreateMemberHandler implements Handler {
 
         DataBase.addUser(new User(userId, password, name, email));
 
-        return new Response(new StatusLine(ProtocolVersion.HTTP11, Status.FOUND), Headers.of(Map.of("Location", "/index.html")));
+        Response response = new Response();
+        response.sendRedirect("/index.html");
+        return response;
     }
 
 }

@@ -1,9 +1,6 @@
 package webserver.http;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Headers {
@@ -13,34 +10,52 @@ public class Headers {
 
     private static final int FIELD_IDX = 1;
 
-    private final Map<String, String> headers;
+    private final List<Header> headers;
 
-    Headers(Map<String, String> headers) {
-        this.headers = Collections.unmodifiableMap(headers);
+    Headers() {
+        this(new ArrayList<>());
+    }
+
+    Headers(List<Header> headers) {
+        this.headers = headers;
     }
 
     public static Headers parseOf(List<String> headerLines) {
-        Map<String, String> headers = headerLines.stream()
+        List<Header> headers1 = headerLines.stream()
                 .filter((headerLine) -> !headerLine.isEmpty())
                 .map(headerLine -> headerLine.split(HEADER_DELIMITER))
-                .collect(Collectors.toMap(entry -> entry[NAME_IDX], entry -> entry[FIELD_IDX]));
+                .map(entry -> new Header(entry[NAME_IDX], entry[FIELD_IDX]))
+                .collect(Collectors.toUnmodifiableList());
 
-        return new Headers(headers);
+
+        return new Headers(headers1);
     }
 
     public static Headers of(Map<String, String> headers) {
-        return new Headers(headers);
+        return new Headers(headers.entrySet()
+                .stream()
+                .map(entry -> new Header(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toUnmodifiableList()));
     }
 
     public String getValue(String name) {
-        return headers.get(name);
+        return this.headers
+                .stream()
+                .filter(header -> header.getName().equals(name))
+                .findAny()
+                .orElse(Header.EMPTY)
+                .getValue();
     }
 
     List<String> getMessages() {
-        return headers.entrySet()
+        return headers
                 .stream()
-                .map(entry -> entry.getKey() + HEADER_DELIMITER + entry.getValue())
+                .map(entry -> entry.getName() + HEADER_DELIMITER + entry.getValue())
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    void addHeader(String name, String value) {
+        this.headers.add(new Header(name, value));
     }
 
     @Override
