@@ -18,7 +18,7 @@ public class Cookie {
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public Cookie(@JsonProperty(value = "store") Map<String, String> store) {
-
+        this.store.putAll(store);
     }
 
     public static Cookie from(String line) {
