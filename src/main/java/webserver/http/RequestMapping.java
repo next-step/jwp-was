@@ -18,6 +18,9 @@ public class RequestMapping {
         HANDLERS.put("/user/list", new UserListController());
     }
 
+    private RequestMapping() {
+    }
+
     public static Controller getHandler(String requestURI) {
         return HANDLERS.get(requestURI);
     }
