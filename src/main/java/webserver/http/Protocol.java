@@ -55,4 +55,9 @@ public class Protocol {
 	public int hashCode() {
 		return Objects.hash(protocol, version);
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%s/%s", protocol, version);
+	}
 }
