@@ -1,8 +1,5 @@
 package model;
 
-import utils.IOUtils;
-
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -22,7 +19,6 @@ public class User {
     public static User convertToUser(Map<String, String> requestMap) {
         return new User(requestMap.get("userId"), requestMap.get("password"), requestMap.get("name"), requestMap.get("email"));
     }
-
 
     public String getUserId() {
         return userId;
