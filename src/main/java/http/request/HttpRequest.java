@@ -1,6 +1,9 @@
 package http.request;
 
+import java.io.BufferedReader;
 import java.util.Optional;
+
+import utils.IOUtils;
 
 public class HttpRequest {
 
@@ -12,6 +15,19 @@ public class HttpRequest {
         this.requestLine = requestLine;
         this.headers = headers;
         this.body = body;
+    }
+
+    public static HttpRequest parse(BufferedReader bufferedReader) {
+        String line = IOUtils.readSingleLine(bufferedReader);
+        var requestLine = new RequestLine(line);
+        var headers = new Headers(IOUtils.readLines(bufferedReader));
+
+        if (headers.hasBody()) {
+            var body = IOUtils.readData(bufferedReader, headers.contentLength());
+            return new HttpRequest(requestLine, headers, body);
+        }
+
+        return new HttpRequest(requestLine, headers, "");
     }
 
     public boolean isStaticFile() {

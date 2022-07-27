@@ -7,9 +7,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FileIoUtils {
-    public static byte[] loadFileFromClasspath(String filePath) throws IOException, URISyntaxException {
-        Path path = fetchPath(filePath);
-        return Files.readAllBytes(path);
+    public static byte[] loadFileFromClasspath(String filePath)  {
+        try {
+            var path = fetchPath(filePath);
+            return Files.readAllBytes(path);
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("해당 URL의 파일을 찾을 수 없습니다. path = " + filePath, e);
+        }
     }
 
     private static Path fetchPath(String filePath) throws URISyntaxException {
