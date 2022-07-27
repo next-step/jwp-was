@@ -5,8 +5,9 @@ import exception.BadRequestException;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.Cookie;
-import webserver.request.Request;
+import webserver.Cookie;
+import webserver.controller.AbstractController;
+import webserver.request.HttpRequest;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -18,9 +19,9 @@ public class RequestService {
     private static final String COOKIE_LOGINED_SUCCESS_VALUE = "true";
     private static final String COOKIE_LOGINED_FAIL_VALUE = "false";
 
-    private final Request request;
+    private final HttpRequest request;
 
-    public RequestService(Request request) {
+    public RequestService(HttpRequest request) {
         this.request = request;
     }
 
@@ -50,23 +51,29 @@ public class RequestService {
         if (Objects.isNull(savedUser) ||
                 !savedUser.getPassword().equals(requestUser.getPassword())) {
             logger.debug("cookie 로그인 실패");
-            return cookie.setCookie(Cookie.LOGINED_KEY, COOKIE_LOGINED_FAIL_VALUE);
+            return cookie.setCookie(AbstractController.LOGINED_KEY, COOKIE_LOGINED_FAIL_VALUE);
         }
 
         logger.debug("cookie 로그인 성공");
-        return cookie.setCookie(Cookie.LOGINED_KEY, COOKIE_LOGINED_SUCCESS_VALUE);
+        return cookie.setCookie(AbstractController.LOGINED_KEY, COOKIE_LOGINED_SUCCESS_VALUE);
     }
 
     public List<User> findAllUser() {
         return DataBase.findAll()
                 .stream()
-                .map(user -> User.builder()
-                        .userId(user.getUserId())
-                        .password(user.getPassword())
-                        .name(user.getName())
-                        .email(user.getEmail())
-                        .build()
-                )
+                .map(user -> new User(
+                        user.getUserId()
+                        , user.getPassword()
+                        , user.getName()
+                        , user.getEmail()))
                 .collect(Collectors.toList());
+    }
+
+    public String getRedirectUrl(Cookie cookie) {
+        if (!Boolean.parseBoolean(cookie.getCookie(AbstractController.LOGINED_KEY))) {
+            return AbstractController.LOGIN_FAIL_URl;
+        }
+
+        return AbstractController.INDEX_URl;
     }
 }
