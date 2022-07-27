@@ -28,10 +28,6 @@ public class HttpResponseHeaders {
         return httpResponseHeaders;
     }
 
-    public void addHtmlContentTypeHeader() {
-        addHeader(CONTENT_TYPE, TEXT_HTML_CHARSET_UTF_8);
-    }
-
     public List<String> rawHeaders() {
         return headers.entrySet()
                 .stream()

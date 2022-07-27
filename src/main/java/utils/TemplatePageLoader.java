@@ -4,7 +4,7 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import endpoint.TemplatePage;
+import endpoint.TemplateResource;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -16,20 +16,20 @@ public class TemplatePageLoader {
     public static final String TEMPLATE_FILE_EXTENSION = ".html";
     public static final String PAGE_PATH_DELIMITER = "/";
 
-    public static TemplatePage notFoundPage() {
+    public static TemplateResource notFoundPage() {
         return getTemplatePage(NOT_FOUND_PAGE_FILE_PATH);
     }
 
-    public static TemplatePage getTemplatePage(String templatePageName) {
+    public static TemplateResource getTemplatePage(String templatePageName) {
         try {
             byte[] templatePageBytes = FileIoUtils.loadFileFromClasspath(TEMPLATES_BASE_PATH + templatePageName).orElse(EMPTY_TEMPLATE_BYTES);
-            return new TemplatePage(templatePageName, templatePageBytes);
+            return new TemplateResource(templatePageName, templatePageBytes);
         } catch (Exception e) {
-            return TemplatePage.NOT_FOUND_PAGE;
+            return TemplateResource.NOT_FOUND_PAGE;
         }
     }
 
-    public static TemplatePage getDynamicTemplatePage(String templatePageName, Map<String, ?> viewModelMap) {
+    public static TemplateResource getDynamicTemplatePage(String templatePageName, Map<String, ?> viewModelMap) {
         try {
             TemplateLoader loader = new ClassPathTemplateLoader();
             loader.setPrefix(TEMPLATES_BASE_PATH.replaceFirst("\\.", ""));
@@ -43,9 +43,9 @@ public class TemplatePageLoader {
 
             String profilePage = template.apply(viewModelMap);
 
-            return new TemplatePage(templatePageName, profilePage.getBytes(StandardCharsets.UTF_8));
+            return new TemplateResource(templatePageName, profilePage.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
-            return TemplatePage.NOT_FOUND_PAGE;
+            return TemplateResource.NOT_FOUND_PAGE;
         }
     }
 }

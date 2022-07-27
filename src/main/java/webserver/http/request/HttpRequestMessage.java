@@ -1,5 +1,6 @@
 package webserver.http.request;
 
+import endpoint.HttpStaticResourceFileExtension;
 import webserver.http.header.HttpCookie;
 import webserver.http.request.body.HttpRequestBody;
 import webserver.http.request.header.HttpRequestHeaders;
@@ -47,5 +48,9 @@ public class HttpRequestMessage {
         assert httpRequestLine.getHttpPath() != null;
 
         return httpRequestLine.getHttpPath().getHttpQueryStrings();
+    }
+
+    public HttpStaticResourceFileExtension httpPathExtension() {
+        return httpRequestLine.getHttpPathExtension();
     }
 }

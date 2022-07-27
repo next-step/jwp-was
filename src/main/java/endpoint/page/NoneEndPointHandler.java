@@ -14,6 +14,6 @@ public class NoneEndPointHandler extends HttpRequestEndpointHandler {
 
     @Override
     public HttpResponseMessage handle(HttpRequestMessage httpRequestMessage) {
-        return HttpResponseMessage.notFound();
+        return HttpResponseMessage.notFoundPage();
     }
 }

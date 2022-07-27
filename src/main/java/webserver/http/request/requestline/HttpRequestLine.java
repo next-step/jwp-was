@@ -1,5 +1,6 @@
 package webserver.http.request.requestline;
 
+import endpoint.HttpStaticResourceFileExtension;
 import webserver.http.HttpProtocolSchema;
 
 public class HttpRequestLine {
@@ -47,5 +48,9 @@ public class HttpRequestLine {
 
     public HttpProtocolSchema getHttpProtocolSchema() {
         return httpProtocolSchema;
+    }
+
+    public HttpStaticResourceFileExtension getHttpPathExtension() {
+        return httpPath.pathExtension();
     }
 }

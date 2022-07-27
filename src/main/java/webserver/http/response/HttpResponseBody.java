@@ -1,24 +1,24 @@
 package webserver.http.response;
 
-import endpoint.TemplatePage;
+import endpoint.HttpStaticResourceFileExtension;
+import endpoint.TemplateResource;
 
 public class HttpResponseBody {
     private byte[] bodyBytes;
 
-
-    private boolean isHtmlPageBody = false;
+    private HttpStaticResourceFileExtension httpStaticResourceFileExtension = HttpStaticResourceFileExtension.NOTHING;
 
     public HttpResponseBody(byte[] bodyBytes) {
         this.bodyBytes = bodyBytes;
     }
 
-    public HttpResponseBody(TemplatePage templatePage) {
-        this.isHtmlPageBody = true;
-        this.bodyBytes = templatePage.getPageFileBytes();
+    public HttpResponseBody(TemplateResource templateResource) {
+        this.httpStaticResourceFileExtension = HttpStaticResourceFileExtension.select(templateResource.fileExtensionName());
+        this.bodyBytes = templateResource.getFileBytes();
     }
 
-    public boolean isHtmlPageBody() {
-        return isHtmlPageBody;
+    public HttpStaticResourceFileExtension getHttpStaticResourceFileExtension() {
+        return httpStaticResourceFileExtension;
     }
 
     public byte[] getBodyBytes() {

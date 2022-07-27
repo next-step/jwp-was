@@ -1,5 +1,8 @@
 package webserver.http.request.requestline;
 
+import com.google.common.io.Files;
+import endpoint.HttpStaticResourceFileExtension;
+
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -63,5 +66,21 @@ public class HttpPath {
 
     public List<String> getPathComponents() {
         return new ArrayList<>(pathComponents);
+    }
+
+    private String lastPathComponent() {
+        if (pathComponents.isEmpty()) {
+            return "";
+        }
+
+        return pathComponents.get(pathComponents.size() - 1);
+    }
+
+    public HttpStaticResourceFileExtension pathExtension() {
+        String lastPathComponent = lastPathComponent();
+
+        String pathExtension = Files.getFileExtension(lastPathComponent);
+
+        return HttpStaticResourceFileExtension.select(pathExtension);
     }
 }

@@ -4,13 +4,15 @@ import endpoint.api.CreateUserGetMethodEndpointHandler;
 import endpoint.api.CreateUserPostMethodEndpointHandler;
 import endpoint.api.LoginEndpointHandler;
 import endpoint.page.*;
+import endpoint.staticresource.StaticResourceRequestHandler;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RequestEndpointRegistry {
-    public static final Map<Endpoint, HttpRequestHandler> endpointHandlerMap = new LinkedHashMap<>();
+    public static final Map<Endpoint, HttpRequestHandler> ENDPOINT_HTTP_REQUEST_HANDLER_MAP = new LinkedHashMap<>();
+    private static final HttpRequestHandler STATIC_RESOURCE_REQUEST_HANDLER = new StaticResourceRequestHandler();
 
     static {
         initializeEndpointRegistry();
@@ -33,11 +35,11 @@ public class RequestEndpointRegistry {
 
             HttpRequestHandler interceptor = getInterceptor(endpoint);
             if (interceptor != null) {
-                endpointHandlerMap.put(endpoint.endpoint, interceptor);
+                ENDPOINT_HTTP_REQUEST_HANDLER_MAP.put(endpoint.endpoint, interceptor);
                 continue;
             }
 
-            endpointHandlerMap.put(endpoint.endpoint, endpoint);
+            ENDPOINT_HTTP_REQUEST_HANDLER_MAP.put(endpoint.endpoint, endpoint);
         }
     }
 
@@ -58,6 +60,6 @@ public class RequestEndpointRegistry {
     }
 
     public static HttpRequestHandler getEndpoint(Endpoint endpoint) {
-        return endpointHandlerMap.getOrDefault(endpoint, HttpRequestEndpointHandler.NONE);
+        return ENDPOINT_HTTP_REQUEST_HANDLER_MAP.getOrDefault(endpoint, STATIC_RESOURCE_REQUEST_HANDLER);
     }
 }
