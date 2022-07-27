@@ -3,6 +3,8 @@ package webserver.http.response;
 import endpoint.TemplatePage;
 import utils.TemplatePageLoader;
 
+import java.util.Map;
+
 import static utils.TemplatePageLoader.EMPTY_TEMPLATE_BYTES;
 
 public class HttpResponseMessage {
@@ -36,6 +38,14 @@ public class HttpResponseMessage {
         return new HttpResponseMessage(
                 HttpResponseStatusLine.fromOnePointOne(HttpStatus.OK),
                 new HttpResponseBody(TemplatePageLoader.getTemplatePage(pagePath)),
+                new HttpResponseHeaders()
+        );
+    }
+
+    public static HttpResponseMessage dynamicPage(String pagePath, Map<String, ?> viewModelMap) {
+        return new HttpResponseMessage(
+                HttpResponseStatusLine.fromOnePointOne(HttpStatus.OK),
+                new HttpResponseBody(TemplatePageLoader.getDynamicTemplatePage(pagePath, viewModelMap)),
                 new HttpResponseHeaders()
         );
     }

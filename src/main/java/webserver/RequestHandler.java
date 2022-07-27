@@ -1,7 +1,7 @@
 package webserver;
 
 import endpoint.Endpoint;
-import endpoint.HttpRequestEndpointHandler;
+import endpoint.HttpRequestHandler;
 import endpoint.RequestEndpointRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,21 +38,12 @@ public class RequestHandler implements Runnable {
             String httpPath = httpRequestMessage.httpPath();
 
             Endpoint endpoint = new Endpoint(httpRequestMessage.httpMethod(), httpPath);
-            HttpRequestEndpointHandler httpRequestEndpointHandler = RequestEndpointRegistry.getEndpoint(endpoint);
+            HttpRequestHandler httpRequestHandler = RequestEndpointRegistry.getEndpoint(endpoint);
 
-            HttpResponseMessage httpResponseMessage = httpRequestEndpointHandler.handle(httpRequestMessage);
+            HttpResponseMessage httpResponseMessage = httpRequestHandler.handle(httpRequestMessage);
             DataOutputStream dos = new DataOutputStream(out);
 
             ResponseHandler.handleResponse(dos, httpResponseMessage);
-
-//            byte[] body;
-//            if (httpRequestMessage.httpPath().contains(".html")) {
-//                body = FileIoUtils.loadFileFromClasspath("./templates" + httpRequestMessage.httpPath());
-//            } else {
-//                body = "Hello World".getBytes(UTF_8);
-//            }
-//            ResponseHandler.response200Header(dos, body.length);
-//            ResponseHandler.responseBody(dos, body);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

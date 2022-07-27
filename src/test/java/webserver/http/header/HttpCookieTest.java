@@ -20,4 +20,20 @@ class HttpCookieTest {
 
         assertThat(httpCookie).isEqualTo(httpCookie2);
     }
+
+    @Test
+    void fromRawCookie() {
+        HttpCookie httpCookie = HttpCookie.fromRawCookie("logined=true");
+
+        assertThat(httpCookie).isEqualTo(new HttpCookie("logined", "true"));
+        assertThat(httpCookie.getRawCookie()).isEqualTo("logined=true");
+    }
+
+    @Test
+    void fromRawCookie_and_none() {
+        HttpCookie httpCookie = HttpCookie.fromRawCookie("logined");
+
+        assertThat(httpCookie).isEqualTo(HttpCookie.NONE);
+        assertThat(httpCookie.isNone()).isTrue();
+    }
 }
