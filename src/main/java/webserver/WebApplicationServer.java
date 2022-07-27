@@ -13,7 +13,6 @@ import webserver.controller.Controller;
 import webserver.controller.LoginController;
 import webserver.controller.UserCreateController;
 import webserver.controller.UserListController;
-import webserver.persistence.Users;
 
 public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
@@ -27,11 +26,10 @@ public class WebApplicationServer {
             port = Integer.parseInt(args[0]);
         }
 
-        var users = new Users();
         Map<Resource, Controller> controllers = Map.of(
-            new Resource("/user/create", POST), new UserCreateController(users),
-            new Resource("/user/login", POST), new LoginController(users),
-            new Resource("/user/list", GET), new UserListController(users)
+            new Resource("/user/create", POST), new UserCreateController(),
+            new Resource("/user/login", POST), new LoginController(),
+            new Resource("/user/list", GET), new UserListController()
         );
 
         try (ServerSocket listenSocket = new ServerSocket(port)) {

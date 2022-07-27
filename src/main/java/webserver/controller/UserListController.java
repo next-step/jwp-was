@@ -3,18 +3,12 @@ package webserver.controller;
 import java.util.Map;
 import java.util.Optional;
 
+import db.DataBase;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import webserver.config.TemplateEngine;
-import webserver.persistence.Users;
 
 public class UserListController implements Controller {
-
-    private final Users users;
-
-    public UserListController(Users users) {
-        this.users = users;
-    }
 
     @Override
     public HttpResponse run(HttpRequest request) {
@@ -23,7 +17,7 @@ public class UserListController implements Controller {
             return HttpResponse.found("/login.html");
         }
 
-        var response = users.findAll();
+        var response = DataBase.findAll();
 
         String compile = TemplateEngine.getInstance()
             .compile("/user/list", Map.of("users", response));

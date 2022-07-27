@@ -1,4 +1,4 @@
-package utils;
+package model.utils;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -12,6 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import utils.IOUtils;
 
 public class IOUtilsTest {
     private static final Logger logger = LoggerFactory.getLogger(IOUtilsTest.class);

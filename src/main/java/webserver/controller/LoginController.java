@@ -6,19 +6,13 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
+import db.DataBase;
 import http.Cookie;
 import http.HttpStatus;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import webserver.persistence.Users;
 
 public class LoginController implements Controller {
-
-    private final Users users;
-
-    public LoginController(Users users) {
-        this.users = users;
-    }
 
     @Override
     public HttpResponse run(HttpRequest request) {
@@ -30,7 +24,7 @@ public class LoginController implements Controller {
 
         var userId = params.get("userId");
 
-        var isLogined = users.findBy(userId)
+        var isLogined = DataBase.findUserById(userId)
             .filter(it -> it.canLogin(params.get("password")))
             .isPresent();
 

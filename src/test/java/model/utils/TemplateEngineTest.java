@@ -1,4 +1,4 @@
-package utils;
+package model.utils;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
