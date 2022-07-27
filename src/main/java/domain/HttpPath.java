@@ -46,7 +46,7 @@ public class HttpPath {
 
     private void validateQueryStringItems(String[] items) {
         if (items.length != CORRECT_LENGTH) {
-            throw new IllegalArgumentException("경로가 형식에 맞지 않습니다.");
+            throw new IllegalArgumentException(VALIDATION_MESSAGE);
         }
     }
 
@@ -65,6 +65,10 @@ public class HttpPath {
 
     @Override
     public String toString() {
+        return path;
+    }
+
+    public String getPath() {
         return path;
     }
 }

@@ -50,4 +50,8 @@ public class RequestLine {
         return String.format("Method: %s, Path: %s, Protocol: %s, Version: %s",
                 httpMethod, httpPath, httpProtocol.getProtocol(), httpProtocol.getVersion());
     }
+
+    public String getPath() {
+        return httpPath.getPath();
+    }
 }
