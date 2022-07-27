@@ -3,8 +3,7 @@ package webserver.domain;
 import java.util.Objects;
 
 public class HttpEntity<T> {
-    public static final HttpEntity<?> EMPTY = new HttpEntity<>();
-
+    public static final String STRING_EMPTY = "";
     private final HttpHeaders headers;
 
     private final T body;
@@ -27,6 +26,9 @@ public class HttpEntity<T> {
     }
 
     public HttpHeaders getHeaders() {
+        if (hasBody()) {
+            headers.add(HttpHeaders.CONTENT_LENGTH, getContentLength());
+        }
         return headers;
     }
 
@@ -36,6 +38,10 @@ public class HttpEntity<T> {
 
     public boolean hasBody() {
         return Objects.nonNull(body);
+    }
+
+    protected String getContentLength() {
+        return getBody().toString().length() + STRING_EMPTY;
     }
 
     @Override

@@ -8,6 +8,7 @@ public class RequestLine {
     public static final int PATH_POINT = 1;
     public static final int PROTOCOL_AND_VERSION_POINT = 2;
     public static final int METHOD_POINT = 0;
+    public static final String INVALID_REQUEST_LINE_MSG = "유효하지 않은 RequestLine입니다. valeu:";
 
     private HttpMethod method;
     private Protocol protocol;
@@ -22,9 +23,10 @@ public class RequestLine {
         this.protocol = protocol;
     }
 
+
     public static RequestLine from(String line) {
         if (line == null || line.isEmpty()) {
-            throw new IllegalArgumentException("유효하지 않은 RequestLine입니다. valeu:" + line);
+            throw new IllegalArgumentException(INVALID_REQUEST_LINE_MSG + line);
         }
 
         String[] attributes = line.split(DELIMITER);

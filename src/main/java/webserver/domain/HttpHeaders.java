@@ -44,8 +44,8 @@ public class HttpHeaders {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         String line = br.readLine();
-        while (line != null && !EMPTY.equals(line)) {
-            httpHeaders.add(line);
+        while (line != null && !line.isBlank()) {
+            httpHeaders.add(line.trim());
             line = br.readLine();
         }
 
@@ -95,9 +95,8 @@ public class HttpHeaders {
 
     @Override
     public String toString() {
-        String headerStr = headers.entrySet().stream()
+        return headers.entrySet().stream()
                 .map(entry -> entry.getKey() + ": " + entry.getValue() + "\r\n")
                 .collect(Collectors.joining());
-        return headerStr + "\r\n";
     }
 }

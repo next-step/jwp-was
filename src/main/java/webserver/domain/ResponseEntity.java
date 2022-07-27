@@ -2,6 +2,8 @@ package webserver.domain;
 
 import java.util.Objects;
 
+import static webserver.domain.HttpHeaders.CONTENT_LENGTH;
+
 public class ResponseEntity<T> extends HttpEntity<T> {
 
     private final HttpStatus httpStatus;
@@ -43,11 +45,15 @@ public class ResponseEntity<T> extends HttpEntity<T> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         String lineSeparator = System.lineSeparator();
+
         sb.append(this.httpStatus).append(lineSeparator);
+        if (hasBody()) {
+            getHeaders().add(CONTENT_LENGTH, getContentLength());
+        }
 
         sb.append(getHeaders()).append(lineSeparator);
         if (hasBody()) {
-            sb.append(lineSeparator).append(getBody()).append(lineSeparator);
+            sb.append(getBody());
         }
 
         return sb.toString();

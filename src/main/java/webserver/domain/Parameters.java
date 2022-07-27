@@ -12,7 +12,9 @@ import java.util.stream.Collectors;
 
 public class Parameters {
     public static final String QUERYSTRING_PARAM_DELIMITER = "&";
-    public static final String QUERYSTRING_KEY_VALUE_DELIMITER = "=";
+    public static final String LINE_SEPARATOR = System.lineSeparator();
+    public static final String KEY_VALUE_DELIMITER_QUERYSTRING = "=";
+    public static final String KEY_VALUE_DELIMITER = ": ";
     public static final int QUERY_VALUE_POINT = 1;
     public static final String DEFAULT_QUERY_VALUE = "";
 
@@ -28,11 +30,28 @@ public class Parameters {
     }
 
     private static Map<String, String> getParameterMap(String parameters) {
+        String trimParams = parameters.trim();
+        String[] params = trimParams.split(LINE_SEPARATOR);
 
-        return Arrays.stream(parameters.split(QUERYSTRING_PARAM_DELIMITER))
-                .map(str -> str.split(QUERYSTRING_KEY_VALUE_DELIMITER))
+        if (params.length > 1) {
+            return getParameterMap(params, KEY_VALUE_DELIMITER);
+        }
+
+        params = trimParams.split(QUERYSTRING_PARAM_DELIMITER);
+
+        if (params.length > 1) {
+            return getParameterMap(params, KEY_VALUE_DELIMITER_QUERYSTRING);
+        }
+
+        return new HashMap<>();
+    }
+
+    private static Map<String, String> getParameterMap(String[] parameters, String delimiter) {
+        return Arrays.stream(parameters)
+                .map(str -> str.split(delimiter))
                 .collect(Collectors.toMap(Parameters::queryKey, Parameters::queryValue));
     }
+
 
     private static String queryKey(String[] pair) {
         return pair[0];
@@ -91,5 +110,9 @@ public class Parameters {
         return store.entrySet().stream()
                 .map(entry -> entry.getKey() + ": " + entry.getValue() + "\r\n")
                 .collect(Collectors.joining());
+    }
+
+    public boolean isEmpty() {
+        return store.isEmpty();
     }
 }

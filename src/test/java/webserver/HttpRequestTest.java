@@ -8,15 +8,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import utils.FileIoUtils;
 import webserver.domain.HttpRequest;
-import webserver.domain.Parameters;
 import webserver.domain.Path;
 import webserver.domain.Protocol;
 import webserver.domain.RequestBody;
 import webserver.domain.RequestLine;
 import webserver.domain.Version;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,10 +39,11 @@ class HttpRequestTest {
 
     @DisplayName("HTTP GET 요청에 대한 파싱 결과를 확인할 수 있다.")
     @Test
-    void getRequestLine() {
-        ResponseEntity<HttpRequest> response = restTemplate.getForEntity("http://localhost:8080/users", HttpRequest.class);
-        HttpRequest httpRequest = response.getBody();
-        RequestLine requestLine = Objects.requireNonNull(httpRequest).getRequestLine();
+    void getRequestLine() throws IOException {
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/users",String.class);
+
+        HttpRequest httpRequest = toHttpRequest(response);
+        RequestLine requestLine = httpRequest.getRequestLine();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
@@ -49,9 +53,10 @@ class HttpRequestTest {
 
     @DisplayName("HTTP POST 요청에 대한 파싱 결과를 확인할 수 있다.")
     @Test
-    void postRequestLine() {
-        ResponseEntity<HttpRequest> response = restTemplate.postForEntity("http://localhost:8080/users", new RequestBody("body"), HttpRequest.class);
-        HttpRequest httpRequest = response.getBody();
+    void postRequestLine() throws IOException {
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/users", null, String.class);
+
+        HttpRequest httpRequest = toHttpRequest(response);
         RequestLine requestLine = Objects.requireNonNull(httpRequest).getRequestLine();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -63,11 +68,11 @@ class HttpRequestTest {
 
     @DisplayName("Query String 데이터를 파싱한 뒤 그 결과를 반환한다.")
     @Test
-    void getQueryString() {
-        ResponseEntity<HttpRequest> response = restTemplate.getForEntity("http://localhost:8080/users?userId=catsbi&password=password&name=hansol",
-                HttpRequest.class);
+    void getQueryString() throws IOException {
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/users?userId=catsbi&password=password&name=hansol",
+                String.class);
 
-        HttpRequest httpRequest = response.getBody();
+        HttpRequest httpRequest = toHttpRequest(response);
         RequestBody requestBody = Objects.requireNonNull(httpRequest).getRequestBody();
         RequestLine requestLine = Objects.requireNonNull(httpRequest).getRequestLine();
 
@@ -89,5 +94,12 @@ class HttpRequestTest {
         ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/index.html", String.class);
 
         assertThat(response.getBody()).isEqualTo(expectedBody);
+    }
+
+    private HttpRequest toHttpRequest(ResponseEntity<String> response) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(
+                new ByteArrayInputStream(Objects.requireNonNull(response.getBody()).trim().getBytes(StandardCharsets.UTF_8))));
+
+        return HttpRequest.newInstance(br);
     }
 }

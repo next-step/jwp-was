@@ -50,7 +50,7 @@ public class RequestBody {
         return parameters.toString();
     }
 
-    public Parameters getParameters() {
-        return parameters;
+    public boolean isEmpty() {
+        return parameters.isEmpty();
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import webserver.application.UserService;
 import webserver.domain.Cookie;
 import webserver.domain.DefaultView;
+import webserver.domain.HttpHeaders;
 import webserver.domain.HttpRequest;
 import webserver.domain.RequestBody;
 import webserver.domain.RequestMapping;
@@ -23,9 +24,15 @@ public class UserController implements Controller {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/users", method = {HttpMethod.GET})
+    @RequestMapping(value = "/users", method = {HttpMethod.GET, HttpMethod.POST})
     @ResponseBody
     public ResponseEntity<HttpRequest> usersTestApi(HttpRequest httpRequest) {
+        RequestBody body = httpRequest.getRequestBody();
+        HttpHeaders headers = httpRequest.getHeaders();
+        if (!body.isEmpty()) {
+            headers.add(HttpHeaders.CONTENT_LENGTH, body.toString().length() + "");
+        }
+
         return ResponseEntity.ok().jsonHeader().body(httpRequest);
     }
 
