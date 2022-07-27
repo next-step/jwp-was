@@ -11,5 +11,6 @@ import java.lang.annotation.Target;
 @Target(value = {ElementType.METHOD, ElementType.TYPE})
 public @interface RequestMapping {
     String value() default "";
+
     HttpMethod[] method() default HttpMethod.GET;
 }

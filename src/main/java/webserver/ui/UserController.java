@@ -5,12 +5,13 @@ import model.dto.UserSaveRequest;
 import org.springframework.http.HttpMethod;
 import webserver.application.UserService;
 import webserver.domain.Cookie;
+import webserver.domain.DefaultView;
 import webserver.domain.HttpRequest;
-import webserver.domain.HttpResponse;
-import webserver.domain.HttpStatus;
 import webserver.domain.RequestBody;
 import webserver.domain.RequestMapping;
 import webserver.domain.ResponseBody;
+import webserver.domain.ResponseEntity;
+import webserver.domain.TemplateView;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -24,39 +25,42 @@ public class UserController implements Controller {
 
     @RequestMapping(value = "/users", method = {HttpMethod.GET})
     @ResponseBody
-    public HttpRequest usersTestApi(HttpRequest httpRequest) {
-        return httpRequest;
+    public ResponseEntity<HttpRequest> usersTestApi(HttpRequest httpRequest) {
+        return ResponseEntity.ok().jsonHeader().body(httpRequest);
     }
-    @RequestMapping(value = "/user/form.html", method = HttpMethod.GET)
-    public HttpResponse getUsers(HttpRequest httpRequest) {
 
-        return HttpResponse.templateResponse("/user/form.html");
+    @RequestMapping(value = "/user/form.html", method = HttpMethod.GET)
+    public ResponseEntity<DefaultView> getUsers(HttpRequest httpRequest) {
+        DefaultView view = DefaultView.createDefaultHtmlView("/user/form");
+
+        return ResponseEntity.ok().htmlHeader().body(view);
     }
 
     @RequestMapping(value = "/user/login_failed.html", method = HttpMethod.GET)
-    public HttpResponse loginFailed(HttpRequest httpRequest) {
-        return HttpResponse.templateResponse("/user/login_failed.html");
+    public ResponseEntity<DefaultView> loginFailed(HttpRequest httpRequest) {
+        DefaultView view = DefaultView.createDefaultHtmlView("/user/login_failed");
+
+        return ResponseEntity.ok().htmlHeader().body(view);
     }
 
     @RequestMapping(value = "/user/create", method = {HttpMethod.GET, HttpMethod.POST})
-    public HttpResponse createUser(HttpRequest httpRequest) {
-        HttpResponse response = new HttpResponse(HttpStatus.FOUND, null, null);
+    public ResponseEntity<DefaultView> createUser(HttpRequest httpRequest) {
         RequestBody requestBody = httpRequest.getRequestBody();
 
         userService.createUser(UserSaveRequest.from(requestBody));
-        response.addHeader("Location", "/index.html");
 
-        return response;
+        return ResponseEntity.created("/index.html").body(DefaultView.createDefaultHtmlView("/index"));
     }
 
     @RequestMapping(value = "/user/login.html", method = {HttpMethod.GET})
-    public HttpResponse loginHtml(HttpRequest httpRequest) {
+    public ResponseEntity<DefaultView> loginHtml(HttpRequest httpRequest) {
+        DefaultView view = DefaultView.createDefaultHtmlView("/user/login");
 
-        return HttpResponse.templateResponse("/user/login.html");
+        return ResponseEntity.ok().htmlHeader().body(view);
     }
+
     @RequestMapping(value = "/user/login", method = {HttpMethod.POST})
-    public HttpResponse login(HttpRequest httpRequest) {
-        HttpResponse response;
+    public ResponseEntity<?> login(HttpRequest httpRequest) {
         RequestBody requestBody = httpRequest.getRequestBody();
         boolean loginResult = userService.login(UserLoginRequest.from(requestBody));
 
@@ -65,25 +69,22 @@ public class UserController implements Controller {
         cookie.addAttribute("logined", String.valueOf(loginResult));
 
         if (loginResult) {
-            response = HttpResponse.of(HttpStatus.OK, "/index.html");
-            response.addHeader("Location", "/index.html");
-            response.addCookie(cookie);
-            return response;
+            return ResponseEntity.found("/index.html").cookie(cookie).build();
         }
 
-        response = HttpResponse.of(HttpStatus.OK, "/user/login_failed.html");
-        response.addHeader("Location", "/index.html");
-        response.addCookie(cookie);
-        return response;
+        return ResponseEntity.found("/user/login_failed").cookie(cookie).build();
     }
 
     @RequestMapping(value = "/user/list.html", method = HttpMethod.GET)
-    public HttpResponse userList(HttpRequest httpRequest) throws IOException {
+    public ResponseEntity<TemplateView> userList(HttpRequest httpRequest) throws IOException {
+
         if (isLogin(httpRequest)) {
-            return HttpResponse.templateResponse("/user/login.html");
+            DefaultView view = TemplateView.createDefaultHtmlView("/user/list",
+                    Collections.singletonMap("users", userService.findAllUsers()));
+
+            return ResponseEntity.ok().htmlHeader().body(view);
         }
-        return HttpResponse.templateResponse("/user/list",
-                Collections.singletonMap("users", userService.findAllUsers()));
+        return ResponseEntity.found("/user/login_failed.html").build();
     }
 
     private boolean isLogin(HttpRequest httpRequest) {

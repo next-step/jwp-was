@@ -3,22 +3,22 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.domain.ContentType;
+import webserver.domain.DefaultView;
 import webserver.domain.HttpHeaders;
 import webserver.domain.HttpRequest;
-import webserver.domain.HttpResponse;
-import webserver.domain.HttpStatus;
 import webserver.domain.Path;
 import webserver.domain.RequestLine;
-import webserver.domain.View;
+import webserver.domain.ResponseEntity;
 import webserver.handlers.ControllerContainer;
 import webserver.ui.Controller;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
@@ -40,20 +40,20 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream();
              BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
              OutputStream out = connection.getOutputStream();
-             DataOutputStream dos = new DataOutputStream(out)) {
+             BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(out))) {
 
             HttpRequest httpRequest = HttpRequest.newInstance(br);
             logger.debug("Http Request: {}", httpRequest);
 
-            HttpResponse httpResponse = requestHandle(httpRequest);
-            responseHandle(dos, httpResponse);
+            ResponseEntity<?> responseEntity = requestHandle(httpRequest);
+            responseHandle(wr, responseEntity);
         } catch (IOException e) {
             e.printStackTrace();
             logger.error(e.getMessage());
         }
     }
 
-    private HttpResponse requestHandle(HttpRequest httpRequest) {
+    private ResponseEntity<?> requestHandle(HttpRequest httpRequest) {
         if (isResourceRequest(httpRequest.getRequestLine())) {
             return resourceHandle(httpRequest);
         }
@@ -64,7 +64,7 @@ public class RequestHandler implements Runnable {
             return controller.execute(httpRequest);
         }
 
-        return new HttpResponse(HttpStatus.NOT_FOUND, null, HttpStatus.NOT_FOUND.value());
+        return ResponseEntity.notFound().build();
     }
 
     private boolean isResourceRequest(RequestLine requestLine) {
@@ -73,37 +73,20 @@ public class RequestHandler implements Runnable {
         return ContentType.isResourceContent(path.getPathStr());
     }
 
-    private HttpResponse resourceHandle(HttpRequest httpRequest) {
+    private ResponseEntity<DefaultView> resourceHandle(HttpRequest httpRequest) {
         RequestLine requestLine = httpRequest.getRequestLine();
         Path path = requestLine.getPath();
         ContentType contentType = ContentType.suffixOf(path.getPathStr());
 
-        HttpResponse httpResponse = new HttpResponse(HttpStatus.OK, new View(contentType.prefix(), path.getPathStr()), null);
-        httpResponse.addHeader(HttpHeaders.CONTENT_TYPE, contentType.getContentType());
-
-        return httpResponse;
+        return ResponseEntity.ok()
+                .headers(HttpHeaders.CONTENT_TYPE, contentType.getContentType())
+                .body(new DefaultView(contentType.prefix(), path.getPathStr(), DefaultView.STRING_EMPTY));
     }
 
-    private void responseHandle(DataOutputStream dos, HttpResponse httpResponse) throws IOException {
-        sendResponseHeader(dos, httpResponse);
+    private void responseHandle(BufferedWriter dos, ResponseEntity<?> responseEntity) throws IOException {
+        logger.debug("Response Header: {}", responseEntity.getHeaders());
 
-        responseBody(dos, httpResponse);
-    }
-
-    private void sendResponseHeader(DataOutputStream dos, HttpResponse httpResponse) throws IOException {
-
-        String header = httpResponse.toStringHeader();
-        logger.debug("Response Header: {}", header);
-
-        dos.writeBytes(header);
-        dos.writeBytes("\r\n");
-
-    }
-
-    private void responseBody(DataOutputStream dos, HttpResponse httpResponse) throws IOException {
-        byte[] body = httpResponse.getBodyOrView();
-
-        dos.write(body, 0, body.length);
+        dos.write(responseEntity.toString());
         dos.flush();
     }
 }

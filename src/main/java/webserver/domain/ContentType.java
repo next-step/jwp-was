@@ -14,7 +14,7 @@ public enum ContentType {
     OTF("application/x-font-opentype", "./static"),
     WOFF("application/font-woff", "./static"),
     WOFF2("application/font-woff2", "./static"),
-    ICO( "image/avif", "./templates"),
+    ICO("image/avif", "./templates"),
     JSON("application/json", "");
 
     private static final Map<String, ContentType> contentTypeMap;

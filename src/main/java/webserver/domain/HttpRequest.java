@@ -59,7 +59,7 @@ public class HttpRequest {
     public String toString() {
         return String.format(
                 "%s \r\n " +
-                "%s \r\n " +
-                "%s \r\n", requestLine, headers, requestBody);
+                        "%s \r\n " +
+                        "%s \r\n", requestLine, headers, requestBody);
     }
 }

@@ -55,6 +55,6 @@ public class RequestLine {
 
     @Override
     public String toString() {
-        return method.name()+ " " + path + " " + protocol;
+        return method.name() + " " + path + " " + protocol;
     }
 }

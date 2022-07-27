@@ -11,6 +11,7 @@ import java.net.Socket;
 public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
     private static final int DEFAULT_PORT = 8080;
+
     public static void main(String[] args) throws Exception {
         int port;
         if (args == null || args.length == 0) {

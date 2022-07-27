@@ -5,9 +5,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import utils.FileIoUtils;
+import webserver.domain.HttpEntity;
 import webserver.domain.HttpRequest;
-import webserver.domain.HttpResponse;
 import webserver.handlers.ControllerContainerImpl;
+import webserver.ui.Controller;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -63,9 +64,10 @@ class HandleContainerTest {
         HttpRequest httpRequest = HttpRequest.newInstance(br);
 
 
-        HttpResponse httpResponse = handleContainer.execute(httpRequest);
+        Controller controller = handleContainer.findController(httpRequest.getRequestLine());
+        HttpEntity<?> responseEntity = controller.execute(httpRequest);
 
-        assertThat(httpResponse.getBodyOrView()).isEqualTo(expectedBody);
+        assertThat(responseEntity.getBody()).isEqualTo(expectedBody);
     }
 
 
