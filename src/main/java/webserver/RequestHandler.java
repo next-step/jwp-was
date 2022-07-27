@@ -34,7 +34,6 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             Request request = new Request(in);
             String path = getPathFromRequest(request);
-            logger.debug("requestPath : {}", path);
 
             if (StringUtils.equals(request.getRequestPath(), USER_CREATE_PATH) && request.getHttpMethod() == HttpMethod.POST) {
                 Map<String, String> requestBody = request.getRequestBody();
