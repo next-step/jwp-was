@@ -27,4 +27,12 @@ public class RequestHeader {
     public int contentLength() {
         return headerInfo.contentsLength();
     }
+
+    public String host() {
+        return headerInfo.host();
+    }
+
+    public String protocolVersion() {
+        return requestLine.protocol() + "/" + requestLine.version();
+    }
 }

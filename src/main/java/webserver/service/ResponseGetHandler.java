@@ -15,9 +15,9 @@ import webserver.response.get.GetUserFormHtmlResponse;
 
 public class ResponseGetHandler {
     private static final Logger logger = LoggerFactory.getLogger(ResponseGetHandler.class);
-    public static final String GET_INDEX_HTML = "/index.html";
-    public static final String GET_USER_FORM_HTML = "/user/form.html";
-    public static final String USER_CREATE = "/user/create";
+    private static final String GET_INDEX_HTML = "/index.html";
+    private static final String GET_USER_FORM_HTML = "/user/form.html";
+    private static final String USER_CREATE = "/user/create";
     private static final Set<String> AVAILABLE_INDEX = Set.of(
             GET_INDEX_HTML,
             GET_USER_FORM_HTML

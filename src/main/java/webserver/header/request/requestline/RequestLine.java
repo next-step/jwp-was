@@ -51,7 +51,7 @@ public class RequestLine {
         return protocol.name();
     }
 
-    public String getVersion() {
+    public String version() {
         return version.toString();
     }
 }

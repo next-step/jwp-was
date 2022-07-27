@@ -54,7 +54,7 @@ public class RequestHandler implements Runnable {
             if (isPost(requestLine)) {
                 ResponsePostHandler responsePostHandler = new ResponsePostHandler(connection);
                 String requestBody = IOUtils.readData(br, header.contentLength());
-                responsePostHandler.run(requestBody);
+                responsePostHandler.run(header, requestLine, requestBody);
             }
         } catch (IOException e) {
             logger.error(e.getMessage());

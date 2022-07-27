@@ -7,12 +7,17 @@ import java.util.Map;
 public class RequestHeaderInfos {
     private static final int REQUEST_LINE_NEXT_IDX = 1;
     private static final String HEADER_DELIMITER = ": ";
+    private static final String HOST = "Host";
     private static final String CONTENT_LENGTH = "Content-Length";
     private static final String DEFAULT_LENGTH = "0";
     private final Map<String, String> infos;
 
     public RequestHeaderInfos(String[] infos) {
         this.infos = Collections.unmodifiableMap(createHeaderInfo(infos));
+    }
+
+    public String host() {
+        return infos.get(HOST);
     }
 
     public int contentsLength() {

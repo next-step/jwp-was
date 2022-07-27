@@ -43,7 +43,7 @@ class RequestLineTest {
         assertThat(actual.index()).isEqualTo("/docs/index.html");
         assertThat(actual.requestParams()).isEmpty();
         assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name());
-        assertThat(actual.getVersion()).isEqualTo("1.1");
+        assertThat(actual.version()).isEqualTo("1.1");
     }
 
     @DisplayName("QueryString이 있는 GET 요청 생성")
@@ -61,7 +61,7 @@ class RequestLineTest {
         assertThat(actual.requestParams()).containsKey("name").containsValue("test");
         assertThat(actual.requestParams()).containsKey("age").containsValue("20");
         assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name());
-        assertThat(actual.getVersion()).isEqualTo("1.1");
+        assertThat(actual.version()).isEqualTo("1.1");
     }
 
     @DisplayName("POST 요청 생성")
@@ -78,7 +78,7 @@ class RequestLineTest {
         assertThat(actual.index()).isEqualTo("/docs/index.html");
         assertThat(actual.requestParams()).isEmpty();
         assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name());
-        assertThat(actual.getVersion()).isEqualTo("1.1");
+        assertThat(actual.version()).isEqualTo("1.1");
     }
 
     @DisplayName("QueryString이 있는 POST 요청 생성")
@@ -96,6 +96,6 @@ class RequestLineTest {
         assertThat(actual.requestParams()).containsKey("name").containsValue("test");
         assertThat(actual.requestParams()).containsKey("age").containsValue("20");
         assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name());
-        assertThat(actual.getVersion()).isEqualTo("1.1");
+        assertThat(actual.version()).isEqualTo("1.1");
     }
 }
