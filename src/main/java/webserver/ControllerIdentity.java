@@ -4,12 +4,12 @@ import java.util.Objects;
 
 import http.request.HttpMethod;
 
-public class Resource {
+public class ControllerIdentity {
 
     private final String path;
     private final HttpMethod httpMethod;
 
-    public Resource(String path, HttpMethod httpMethod) {
+    public ControllerIdentity(String path, HttpMethod httpMethod) {
         this.path = path;
         this.httpMethod = httpMethod;
     }
@@ -20,8 +20,8 @@ public class Resource {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        Resource resource = (Resource)o;
-        return Objects.equals(path, resource.path) && httpMethod == resource.httpMethod;
+        ControllerIdentity controllerIdentity = (ControllerIdentity)o;
+        return Objects.equals(path, controllerIdentity.path) && httpMethod == controllerIdentity.httpMethod;
     }
 
     @Override

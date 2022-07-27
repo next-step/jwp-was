@@ -30,9 +30,9 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-    private final Map<Resource, Controller> controllers;
+    private final Map<ControllerIdentity, Controller> controllers;
 
-    public RequestHandler(Socket connection, Map<Resource, Controller> controllers) {
+    public RequestHandler(Socket connection, Map<ControllerIdentity, Controller> controllers) {
         this.connection = connection;
         this.controllers = controllers;
     }
@@ -52,7 +52,7 @@ public class RequestHandler implements Runnable {
                 responseStaticFile(new DataOutputStream(out), httpRequest.getUrl(), httpRequest.getFileExtension());
                 return;
             }
-            var controller = controllers.get(new Resource(httpRequest.getUrl(), httpRequest.getMethod()));
+            var controller = controllers.get(new ControllerIdentity(httpRequest.getUrl(), httpRequest.getMethod()));
             var response = controller.run(httpRequest);
 
             DataOutputStream dos = new DataOutputStream(out);

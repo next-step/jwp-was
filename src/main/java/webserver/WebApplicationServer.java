@@ -26,10 +26,10 @@ public class WebApplicationServer {
             port = Integer.parseInt(args[0]);
         }
 
-        Map<Resource, Controller> controllers = Map.of(
-            new Resource("/user/create", POST), new UserCreateController(),
-            new Resource("/user/login", POST), new LoginController(),
-            new Resource("/user/list", GET), new UserListController()
+        Map<ControllerIdentity, Controller> controllers = Map.of(
+            new ControllerIdentity("/user/create", POST), new UserCreateController(),
+            new ControllerIdentity("/user/login", POST), new LoginController(),
+            new ControllerIdentity("/user/list", GET), new UserListController()
         );
 
         try (ServerSocket listenSocket = new ServerSocket(port)) {
