@@ -13,13 +13,13 @@ class HttpResponseStatusLineTest {
     void rawStatusLine() {
         assertAll(
                 () -> assertThat(new HttpResponseStatusLine(HttpProtocolSchema.of(HttpVersion.ONE), HttpStatus.OK).rawStatusLine())
-                        .isEqualTo("HTTP/1.0 200 OK"),
+                        .isEqualTo("HTTP/1.0 200 OK\r\n"),
                 () -> assertThat(new HttpResponseStatusLine(HttpProtocolSchema.of(HttpVersion.ONE), HttpStatus.NOT_FOUND).rawStatusLine())
-                        .isEqualTo("HTTP/1.0 404 Not Found"),
+                        .isEqualTo("HTTP/1.0 404 Not Found\r\n"),
                 () -> assertThat(HttpResponseStatusLine.fromOnePointOne(HttpStatus.OK).rawStatusLine())
-                        .isEqualTo("HTTP/1.1 200 OK"),
+                        .isEqualTo("HTTP/1.1 200 OK\r\n"),
                 () -> assertThat(HttpResponseStatusLine.fromOnePointOne(HttpStatus.NOT_FOUND).rawStatusLine())
-                        .isEqualTo("HTTP/1.1 404 Not Found")
+                        .isEqualTo("HTTP/1.1 404 Not Found\r\n")
         );
     }
 }
