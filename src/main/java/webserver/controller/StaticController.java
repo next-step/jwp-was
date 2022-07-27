@@ -1,12 +1,12 @@
 package webserver.controller;
 
 import utils.FileIoUtils;
-import webserver.HttpHeaders;
-import webserver.request.HttpMethod;
-import webserver.request.HttpRequest;
-import webserver.response.HttpResponse;
-import webserver.response.HttpStatusCode;
-import webserver.response.ResponseHeader;
+import webserver.http.HttpHeaders;
+import webserver.http.request.HttpMethod;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpStatusCode;
+import webserver.http.response.ResponseHeader;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

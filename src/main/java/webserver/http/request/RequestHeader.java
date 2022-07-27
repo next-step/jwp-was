@@ -1,6 +1,6 @@
-package webserver.request;
+package webserver.http.request;
 
-import webserver.HttpHeaders;
+import webserver.http.HttpHeaders;
 
 import java.util.Collections;
 import java.util.List;

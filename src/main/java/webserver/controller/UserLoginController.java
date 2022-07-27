@@ -2,14 +2,14 @@ package webserver.controller;
 
 import db.DataBase;
 import model.User;
-import webserver.HttpHeaders;
+import webserver.http.HttpHeaders;
 import webserver.exception.ApiException;
-import webserver.request.HttpMethod;
-import webserver.request.HttpRequest;
-import webserver.request.Path;
-import webserver.response.HttpResponse;
-import webserver.response.HttpStatusCode;
-import webserver.response.ResponseHeader;
+import webserver.http.request.HttpMethod;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.Path;
+import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpStatusCode;
+import webserver.http.response.ResponseHeader;
 
 import java.util.Collections;
 import java.util.Map;

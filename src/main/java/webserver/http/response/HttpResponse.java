@@ -1,7 +1,7 @@
-package webserver.response;
+package webserver.http.response;
 
 import utils.Assert;
-import webserver.HttpHeaders;
+import webserver.http.HttpHeaders;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;

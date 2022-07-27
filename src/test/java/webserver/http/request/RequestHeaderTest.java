@@ -1,8 +1,8 @@
-package webserver.request;
+package webserver.http.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.HttpHeaders;
+import webserver.http.HttpHeaders;
 
 import java.util.Arrays;
 import java.util.Collections;

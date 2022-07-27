@@ -13,9 +13,9 @@ import webserver.controller.UserCreateController;
 import webserver.controller.UserListController;
 import webserver.controller.UserLoginController;
 import webserver.exception.ApiException;
-import webserver.request.HttpRequest;
-import webserver.request.RequestBody;
-import webserver.response.HttpResponse;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestBody;
+import webserver.http.response.HttpResponse;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
