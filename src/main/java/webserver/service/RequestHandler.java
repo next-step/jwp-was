@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 import webserver.request.header.RequestHeader;
 import webserver.method.HttpMethod;
-import webserver.response.get.GetIndexHtmlResponse;
 
 public class RequestHandler implements Runnable {
     private static final String NEXT_LINE = "\n";
@@ -45,20 +44,20 @@ public class RequestHandler implements Runnable {
                 requestContents.append(line);
             }
 
-            RequestHeader header = RequestHeader.create(requestContents.toString());
+            RequestHeader requestHeader = RequestHeader.create(requestContents.toString());
 
-            if (isGet(header)) {
-                ResponseGetHandler responseGetHandler = new ResponseGetHandler();
-                GetIndexHtmlResponse response = new GetIndexHtmlResponse();
-                byte[] body = response.response(header.index());
-                writeAndFlush(responseGetHandler.handle(header, body.length), body, dos);
+            if (isGet(requestHeader)) {
+                CreateHeader createHeader = new CreateHeader();
+                CreateBody createBody = new CreateBody();
+                byte[] body = createBody.create(requestHeader);
+                writeAndFlush(createHeader.create(requestHeader, body.length), body, dos);
                 return;
             }
 
-            if (isPost(header)) {
+            if (isPost(requestHeader)) {
                 ResponsePostHandler responsePostHandler = new ResponsePostHandler();
-                String requestBody = IOUtils.readData(br, header.contentLength());
-                writeAndFlush(responsePostHandler.handle(header, requestBody).toString(), EMPTY.getBytes(), dos);
+                String requestBody = IOUtils.readData(br, requestHeader.contentLength());
+                writeAndFlush(responsePostHandler.handle(requestHeader, requestBody).toString(), EMPTY.getBytes(), dos);
             }
         } catch (IOException e) {
             logger.error(e.getMessage());

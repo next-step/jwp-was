@@ -26,7 +26,7 @@ public class RequestHeader {
         return requestLine.index();
     }
     public String requestParams(String key) {
-        return requestLine.requestParams().get(key);
+        return requestLine.requestParams().getOrDefault(key, "");
     }
 
     public String version() {
@@ -43,5 +43,9 @@ public class RequestHeader {
 
     public String protocolVersion() {
         return requestLine.protocol() + "/" + requestLine.version();
+    }
+
+    public String cookie() {
+        return headerInfo.cookie();
     }
 }

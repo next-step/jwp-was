@@ -46,8 +46,8 @@
   - [x] login 실패 시 login_failed.html로 이동하도록 한다.
   - [x] logined=false 값을 넎는다.
 #### 기능 요구사항 6.
-- [ ] 로그인 되었을 때 http://localhost:8080/user/list 로 접근했을 때 사용자 목록을 출력
-  - [ ] handlebars.java template engine 사용하여 동적으로 html을 생성
+- [x] 로그인 되었을 때 http://localhost:8080/user/list 로 접근했을 때 사용자 목록을 출력
+  - [x] handlebars.java template engine 사용하여 동적으로 html을 생성
 #### 기능 요구사항 7.
 - [ ] Stylesheet 파일을 지원하도록 구현하도록 한다.
   

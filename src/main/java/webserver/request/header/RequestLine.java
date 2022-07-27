@@ -48,6 +48,7 @@ public class RequestLine {
         }
         return path.index();
     }
+
     Map<String, String> requestParams() {
         return path.requestParams();
     }

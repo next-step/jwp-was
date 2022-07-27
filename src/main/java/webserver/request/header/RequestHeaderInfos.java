@@ -10,6 +10,8 @@ public class RequestHeaderInfos {
     private static final String HOST = "Host";
     private static final String CONTENT_LENGTH = "Content-Length";
     private static final String DEFAULT_LENGTH = "0";
+    public static final String DEFAULT_VALUE = "";
+    public static final String COOKIE = "Cookie";
     private final Map<String, String> infos;
 
     RequestHeaderInfos(String[] infos) {
@@ -17,11 +19,15 @@ public class RequestHeaderInfos {
     }
 
     String host() {
-        return infos.get(HOST);
+        return infos.getOrDefault(HOST, DEFAULT_VALUE);
     }
 
     int contentsLength() {
         return Integer.parseInt(infos.getOrDefault(CONTENT_LENGTH, DEFAULT_LENGTH));
+    }
+
+    public String cookie() {
+        return infos.getOrDefault(COOKIE, DEFAULT_VALUE);
     }
 
     private static Map<String, String> createHeaderInfo(String[] headerInfos) {
