@@ -1,6 +1,7 @@
 package webserver.http.request;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import webserver.http.HttpMethod;
 
@@ -15,9 +16,17 @@ public class HttpRequest {
 		this.httpRequestBody = httpRequestBody;
 	}
 
-
 	public boolean isLogin() {
 		return httpRequestHeaders.isLogin();
+	}
+
+	public String getHeader(String attribute) {
+		return httpRequestHeaders.getAttribute(attribute);
+	}
+
+	public String getParameter(String attribute) {
+		return Optional.ofNullable(httpRequestLine.getParameters().getValue(attribute))
+					   .orElse(httpRequestBody.getAttribute(attribute));
 	}
 
 	public String getPath() {

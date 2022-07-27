@@ -32,16 +32,20 @@ public class HttpRequestHeaders {
 		return new HttpRequestHeaders(headers);
 	}
 
+	public boolean isLogin() {
+		return headers.get(COOKIE).contains(LOGIN_TRUE);
+	}
+
 	public Boolean hasContentLength() {
 		return headers.containsKey(CONTENT_LENGTH);
 	}
 
-	public int getContentLength() {
-		return Integer.parseInt(headers.get(CONTENT_LENGTH));
+	public String getAttribute(String attribute) {
+		return headers.get(attribute);
 	}
 
-	public boolean isLogin() {
-		return headers.get(COOKIE).contains(LOGIN_TRUE);
+	public int getContentLength() {
+		return Integer.parseInt(headers.get(CONTENT_LENGTH));
 	}
 
 	@Override
