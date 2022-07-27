@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +85,37 @@ class ParametersTest {
                                         "키", Lists.list("밸류")
                                 )
                         ), null
+                )
+        );
+    }
+
+    @DisplayName("Parameter value 들을 인자로 받은 Charset으로 URLDecode 한다.")
+    @Test
+    void decodeCharacter() {
+        Parameters parameters = new Parameters(
+                new HashMap<>(
+                    Map.of(
+                            "userId", Lists.list("%ED%9A%8C%EC%9B%90"),
+                            "password", Lists.list("123123"),
+                            "name", Lists.list("%EA%B9%80%ED%8F%AC%EB%B9%84", "email%40email")
+                    )
+                )
+        );
+
+        parameters.decodeCharacter(StandardCharsets.UTF_8);
+
+        assertThat(parameters).usingRecursiveComparison()
+                .isEqualTo(expectedDecodedParameters());
+    }
+
+    private Parameters expectedDecodedParameters() {
+        return new Parameters(
+                new HashMap<>(
+                        Map.of(
+                                "userId", Lists.list("회원"),
+                                "password", Lists.list("123123"),
+                                "name", Lists.list("김포비", "email@email")
+                        )
                 )
         );
     }

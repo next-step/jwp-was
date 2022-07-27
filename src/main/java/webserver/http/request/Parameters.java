@@ -1,5 +1,7 @@
 package webserver.http.request;
 
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -21,6 +23,14 @@ public class Parameters {
             return null;
         }
         return strings.get(0);
+    }
+
+    public void decodeCharacter(Charset charset) {
+        keyValues.forEach(
+                (key, values) ->
+                    values.replaceAll(value -> URLDecoder.decode(value, charset)
+                )
+        );
     }
 
     @Override

@@ -1,5 +1,7 @@
 package webserver.http.request;
 
+import java.nio.charset.Charset;
+
 public class RequestLine {
     private final Method method;
     private final URI uri;
@@ -25,6 +27,10 @@ public class RequestLine {
 
     public void addParameters(Parameters parameters) {
         uri.addParameters(parameters);
+    }
+
+    public void decodeCharacter(Charset charset) {
+        uri.decodeCharacter(charset);
     }
 
     @Override

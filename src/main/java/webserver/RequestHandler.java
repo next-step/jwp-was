@@ -67,11 +67,14 @@ public class RequestHandler implements Runnable {
             }
 
             if (request.hasMethod(Method.POST) && request.getPath().equals("/user/create")) {
+                request.decodeCharacter(Charsets.UTF_8);
                 String userId = request.getParameter("userId");
                 String password = request.getParameter("password");
                 String name = request.getParameter("name");
                 String email = request.getParameter("email");
-                DataBase.addUser(new User(userId, password, name, email));
+                User newUser = new User(userId, password, name, email);
+                DataBase.addUser(newUser);
+                logger.info("[Add User = {}]", newUser);
                 response302Header(dos, "/index.html");
                 return;
             }

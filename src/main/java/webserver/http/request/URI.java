@@ -1,5 +1,6 @@
 package webserver.http.request;
 
+import java.nio.charset.Charset;
 import java.util.HashMap;
 
 public class URI {
@@ -25,6 +26,10 @@ public class URI {
 
     public void addParameters(Parameters parameters) {
         queryParameters.add(parameters);
+    }
+
+    public void decodeCharacter(Charset charset) {
+        queryParameters.decodeCharacter(charset);
     }
 
     @Override

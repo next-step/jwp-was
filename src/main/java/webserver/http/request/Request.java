@@ -1,5 +1,7 @@
 package webserver.http.request;
 
+import java.nio.charset.Charset;
+
 public class Request {
     private final RequestLine requestLine;
     private final Headers headers;
@@ -35,6 +37,10 @@ public class Request {
 
     public boolean hasContentType(String contentType) {
         return headers.hasContentType(contentType);
+    }
+
+    public void decodeCharacter(Charset charset) {
+        requestLine.decodeCharacter(charset);
     }
 
     @Override
