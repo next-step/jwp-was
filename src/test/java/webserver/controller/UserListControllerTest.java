@@ -1,5 +1,6 @@
 package webserver.controller;
 
+import static java.nio.charset.StandardCharsets.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
@@ -18,11 +19,11 @@ import webserver.http.HttpStatus;
 
 class UserListControllerTest {
 
-    @DisplayName("사용자 조회 요청 시, HTTP 메서드가 POST인 경우 HttpMethodNotSupportedException 예외가 발생한다.")
+    @DisplayName("사용자 목록 조회 요청 시, HTTP 메서드가 POST인 경우 HttpMethodNotSupportedException 예외가 발생한다.")
     @Test
     void invalidHttpMethod() {
         String loginRequest = "POST /user/list HTTP/1.1";
-        HttpRequest request = new HttpRequest(new ByteArrayInputStream(loginRequest.getBytes(StandardCharsets.UTF_8)));
+        HttpRequest request = new HttpRequest(new ByteArrayInputStream(loginRequest.getBytes(UTF_8)));
         HttpResponse response = new HttpResponse(new ByteArrayOutputStream());
 
         UserListController controller = new UserListController();
@@ -35,7 +36,7 @@ class UserListControllerTest {
     @Test
     void userListWithLoggedIn() throws IOException, URISyntaxException {
         String userListRequest = userListRequest(true);
-        HttpRequest request = new HttpRequest(new ByteArrayInputStream(userListRequest.getBytes(StandardCharsets.UTF_8)));
+        HttpRequest request = new HttpRequest(new ByteArrayInputStream(userListRequest.getBytes(UTF_8)));
         HttpResponse response = new HttpResponse(new ByteArrayOutputStream());
 
         UserListController controller = new UserListController();
@@ -48,7 +49,7 @@ class UserListControllerTest {
     @Test
     void userListWithoutLoggedIn() throws IOException, URISyntaxException {
         String userListRequest = userListRequest(false);
-        HttpRequest request = new HttpRequest(new ByteArrayInputStream(userListRequest.getBytes(StandardCharsets.UTF_8)));
+        HttpRequest request = new HttpRequest(new ByteArrayInputStream(userListRequest.getBytes(UTF_8)));
         HttpResponse response = new HttpResponse(new ByteArrayOutputStream());
 
         UserListController controller = new UserListController();

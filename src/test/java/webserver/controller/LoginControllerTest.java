@@ -1,13 +1,14 @@
 package webserver.controller;
 
+import static java.nio.charset.StandardCharsets.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,11 +32,16 @@ class LoginControllerTest {
         DataBase.addUser(new User(VALID_USER_ID, VALID_PASSWORD, "유저", "user@example.com"));
     }
 
+    @AfterEach
+    void teardown() {
+        DataBase.deleteAll();
+    }
+
     @DisplayName("사용자 로그인 요청 시, HTTP 메서드가 GET인 경우 HttpMethodNotSupportedException 예외가 발생한다.")
     @Test
     void invalidHttpMethod() {
         String loginRequest = "GET /user/login HTTP/1.1";
-        HttpRequest request = new HttpRequest(new ByteArrayInputStream(loginRequest.getBytes(StandardCharsets.UTF_8)));
+        HttpRequest request = new HttpRequest(new ByteArrayInputStream(loginRequest.getBytes(UTF_8)));
         HttpResponse response = new HttpResponse(new ByteArrayOutputStream());
 
         LoginController controller = new LoginController();
@@ -49,7 +55,7 @@ class LoginControllerTest {
     void loginSuccess() throws IOException, URISyntaxException {
         String loginRequest = loginRequest(VALID_USER_ID, VALID_PASSWORD);
 
-        HttpRequest request = new HttpRequest(new ByteArrayInputStream(loginRequest.getBytes(StandardCharsets.UTF_8)));
+        HttpRequest request = new HttpRequest(new ByteArrayInputStream(loginRequest.getBytes(UTF_8)));
         HttpResponse response = new HttpResponse(new ByteArrayOutputStream());
 
         LoginController controller = new LoginController();
@@ -65,7 +71,7 @@ class LoginControllerTest {
     void loginFailure() throws IOException, URISyntaxException {
         String loginRequest = loginRequest(INVALID_USER_ID, INVALID_PASSWORD);
 
-        HttpRequest request = new HttpRequest(new ByteArrayInputStream(loginRequest.getBytes(StandardCharsets.UTF_8)));
+        HttpRequest request = new HttpRequest(new ByteArrayInputStream(loginRequest.getBytes(UTF_8)));
         HttpResponse response = new HttpResponse(new ByteArrayOutputStream());
 
         LoginController controller = new LoginController();
