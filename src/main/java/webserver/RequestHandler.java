@@ -2,6 +2,7 @@ package webserver;
 
 import domain.HttpRequest;
 import domain.RequestLine;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -17,6 +18,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -38,6 +40,20 @@ public class RequestHandler implements Runnable {
             logger.debug(requestLine.toString());
 
             final DataOutputStream dos = new DataOutputStream(out);
+            if ("/user/create".equals(requestLine.getPath())) {
+                final Map<String, String> queryStrings = requestLine.getQueryStrings();
+                final User user = new User(
+                        queryStrings.get("userId"),
+                        queryStrings.get("password"),
+                        queryStrings.get("name"),
+                        queryStrings.get("email")
+                );
+                final byte[] body = user.toString().getBytes(StandardCharsets.UTF_8);
+                response200Header(dos, body.length);
+                responseBody(dos, body);
+                return;
+            }
+
             final byte[] body = FileIoUtils.loadFileFromClasspath(TEMPLATES_PATH + requestLine.getPath());
             response200Header(dos, body.length);
             responseBody(dos, body);

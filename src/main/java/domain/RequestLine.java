@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class RequestLine {
@@ -47,11 +48,18 @@ public class RequestLine {
 
     @Override
     public String toString() {
-        return String.format("Method: %s, Path: %s, Protocol: %s, Version: %s",
-                httpMethod, httpPath, httpProtocol.getProtocol(), httpProtocol.getVersion());
+        return "RequestLine{" +
+                "httpMethod=" + httpMethod +
+                ", httpPath=" + httpPath +
+                ", httpProtocol=" + httpProtocol +
+                '}';
     }
 
     public String getPath() {
         return httpPath.getPath();
+    }
+
+    public Map<String, String> getQueryStrings() {
+        return httpPath.getQueryStrings();
     }
 }
