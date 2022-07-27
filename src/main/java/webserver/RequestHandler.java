@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class RequestHandler implements Runnable {
             }
             // Request Line
             RequestLineParser RLParser = new RequestLineParser(line);
-            String path = RLParser.getUri().getPath();
+            String url = RLParser.getUri().getPath();
             // Request Header
             int contentLength = 0;
             while (!line.equals("")) {
@@ -41,19 +42,37 @@ public class RequestHandler implements Runnable {
                 }
             }
 
-            if (path.startsWith("/user/create")) {
+            if (url.startsWith("/user/create")) {
                 String body = IOUtils.readData(br, contentLength);
                 QueryStringParser QSParser = new QueryStringParser(body);
                 Map<String, String> params = QSParser.getQueryParameters();
                 User user = new User(params.get("userId"), params.get("password"),params.get("name"),params.get("email"));
-                logger.debug("User : {}",user);
+                DataBase.addUser(user);
                 DataOutputStream dos = new DataOutputStream(out);
                 response302Header(dos, "/index.html");
+            } else if ("/user/login".equals(url)) {
+                String body = IOUtils.readData(br, contentLength);
+                QueryStringParser QSParser = new QueryStringParser(body);
+                Map<String, String> params = QSParser.getQueryParameters();
+                User user = DataBase.findUserById(params.get("userId"));
+                if (user != null) {
+                    if (user.getPassword().equals(params.get("password"))) {
+                        DataOutputStream dos = new DataOutputStream(out);
+                        response302LoginHeader(dos, "logined=true", "/index.html");
+                    } else {
+                        DataOutputStream dos = new DataOutputStream(out);
+                        response302LoginHeader(dos,"logined=false","/user/login_failed.html");
+                    }
+                } else {
+                    DataOutputStream dos = new DataOutputStream(out);
+                    response302LoginHeader(dos,"logined=false","/user/login_failed.html");
+                }
+            } else {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + url);
+                response200Header(dos, body.length);
+                responseBody(dos, body);
             }
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + path);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
@@ -92,6 +111,16 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
 
+    private void response302LoginHeader(DataOutputStream dos, String cookie, String url) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
+            dos.writeBytes("Set-Cookie: " + cookie + "\r\n");
+            dos.writeBytes("Location: " + url + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 }
