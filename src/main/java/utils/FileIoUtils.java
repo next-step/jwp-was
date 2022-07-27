@@ -20,7 +20,6 @@ public class FileIoUtils {
     private static Path fetchPath(String filePath) throws URISyntaxException {
         if (filePath.endsWith(".html")) {
             return Paths.get(FileIoUtils.class.getClassLoader().getResource("./templates" + filePath).toURI());
-
         }
         return Paths.get(FileIoUtils.class.getClassLoader().getResource("./static" + filePath).toURI());
     }

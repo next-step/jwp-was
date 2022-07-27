@@ -14,7 +14,7 @@ public class UserListController implements Controller {
     public HttpResponse run(HttpRequest request) {
         Optional<String> cookie = request.getCookie("isLogined");
         if (cookie.isEmpty() || cookie.get().equals("false")) {
-            return HttpResponse.found("/login.html");
+            return HttpResponse.found("/user/login.html");
         }
 
         var response = DataBase.findAll();
