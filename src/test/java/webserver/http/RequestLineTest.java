@@ -23,4 +23,14 @@ public class RequestLineTest {
         assertThatThrownBy(() -> new RequestLine(requestLine))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @DisplayName("Querystring이 포함된 문자열을 받아 RequestLine을 생성한다")
+    @ParameterizedTest(name = "{0}")
+    @CsvSource({
+            "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1",
+            "POST /users?userId=test&password=1q2w3e4r&name=admin HTTP/1.1"
+    })
+    void querystringRequest(String requestLine) {
+        assertThat(new RequestLine(requestLine)).isNotNull();
+    }
 }
