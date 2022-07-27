@@ -37,6 +37,14 @@ public class Request {
         return requestLine.getPath();
     }
 
+    public String getParameter(String key) {
+        return requestLine.getParameter(key);
+    }
+
+    public boolean hasContentType(String contentType) {
+        return headers.hasContentType(contentType);
+    }
+
     @Override
     public String toString() {
         return "Request{" +

@@ -19,6 +19,10 @@ public class URI {
         return path;
     }
 
+    public String getParameter(String key) {
+        return queryParameters.get(key);
+    }
+
     @Override
     public String toString() {
         return "URI{" +

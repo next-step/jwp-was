@@ -2,6 +2,7 @@ package webserver.http.request;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class Parameters {
     private final Map<String, List<String>> keyValues;
@@ -12,6 +13,14 @@ public class Parameters {
 
     public void add(Parameters parameters) {
         keyValues.putAll(parameters.keyValues);
+    }
+
+    public String get(String key) {
+        List<String> strings = keyValues.get(key);
+        if (Objects.isNull(strings) || strings.isEmpty()) {
+            return null;
+        }
+        return strings.get(0);
     }
 
     @Override

@@ -31,6 +31,11 @@ public class Headers {
         return Integer.parseInt(keyValues.get("Content-Length"));
     }
 
+    public boolean hasContentType(String contentType) {
+        String value = keyValues.get("Content-Type");
+        return contentType.equals(value);
+    }
+
     @Override
     public String toString() {
         return "Headers{" +

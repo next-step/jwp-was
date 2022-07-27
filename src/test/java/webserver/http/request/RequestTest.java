@@ -154,4 +154,74 @@ class RequestTest {
         String actual = request.getPath();
         assertThat(actual).isEqualTo("/path");
     }
+
+    @DisplayName("requestLine에 저장된 key 에 해당하는 value를 가져온다.")
+    @ParameterizedTest
+    @MethodSource("ProvideForGetParameter")
+    void getParameter(Parameters parameters, String expected) {
+        URI uri = new URI("/path", parameters);
+        RequestLine requestLine = new RequestLine(Method.GET, uri, new Protocol("HTTP", "1.1"));
+        Request request = new Request(requestLine, new Headers(new HashMap<>()));
+
+
+        String actual = request.getParameter("key");
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    public static Stream<Arguments> ProvideForGetParameter() {
+        return Stream.of(
+                arguments(
+                        new Parameters(
+                                Map.of(
+                                        "키", Lists.list("밸류"),
+                                        "key", Lists.list("value")
+                                )
+                        ), "value"
+                ),
+                arguments(
+                        new Parameters(
+                                Map.of(
+                                        "키", Lists.list("밸류"),
+                                        "key", Lists.list("value2", "value3")
+                                )
+                        ), "value2"
+                ),
+                arguments(
+                        new Parameters(
+                                Map.of(
+                                        "키", Lists.list("밸류"),
+                                        "key", Lists.list()
+                                )
+                        ), null
+                ),
+                arguments(
+                        new Parameters(
+                                Map.of(
+                                        "키", Lists.list("밸류")
+                                )
+                        ), null
+                )
+        );
+    }
+
+    @DisplayName("Header에 해당하는 Content-Type 값이 존재하는지 검증")
+    @ParameterizedTest
+    @MethodSource("provideForHasContentType")
+    void hasContentType(Headers headers, String contentType, boolean expected) {
+        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path"), new Protocol("HTTP", "1.1"));
+        Request request = new Request(requestLine, headers);
+
+        boolean actual = request.hasContentType(contentType);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    public static Stream<Arguments> provideForHasContentType() {
+        HashMap<String, String> keyValues = new HashMap<>();
+        keyValues.put("Content-Length", "13");
+        return Stream.of(
+                arguments(new Headers(Map.of("Content-Type", "application/json")), "application/json", true),
+                arguments(new Headers(Map.of("Content-Type", "application/json")), "text/html", false),
+                arguments(new Headers(Map.of()), "text/html", false)
+        );
+    }
 }

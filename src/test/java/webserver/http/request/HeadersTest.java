@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,6 +45,24 @@ class HeadersTest {
         return Stream.of(
                 arguments(new Headers(new HashMap<>()), 0),
                 arguments(new Headers(keyValues), 13)
+        );
+    }
+
+    @DisplayName("Header에 해당하는 Content-Type 값이 존재하는지 검증")
+    @ParameterizedTest
+    @MethodSource("provideForHasContentType")
+    void hasContentType(Headers headers, String contentType, boolean expected) {
+        boolean actual = headers.hasContentType(contentType);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    public static Stream<Arguments> provideForHasContentType() {
+        HashMap<String, String> keyValues = new HashMap<>();
+        keyValues.put("Content-Length", "13");
+        return Stream.of(
+                arguments(new Headers(Map.of("Content-Type", "application/json")), "application/json", true),
+                arguments(new Headers(Map.of("Content-Type", "application/json")), "text/html", false),
+                arguments(new Headers(Map.of()), "text/html", false)
         );
     }
 }

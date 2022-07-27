@@ -19,6 +19,10 @@ public class RequestLine {
         return uri.getPath();
     }
 
+    public String getParameter(String key) {
+        return uri.getParameter(key);
+    }
+
     @Override
     public String toString() {
         return "RequestLine{" +
