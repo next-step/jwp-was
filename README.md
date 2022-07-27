@@ -23,19 +23,23 @@
 - [x] “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다.
   - [x] query string을 추출 하는 기능이 구현 되어 있으니, model.User 클래스에 저장한다.
 #### 리팩토링
-- [ ] 패키지 구조를 변경하여 한 눈에 구조가 들어오도록 한다.
-  - [ ] http 패키지를 만들어 그 안에 필요한 패키지를 생성
-  - [ ] header 패키지를 만들고 Header 클래스에 필요한 객체들을 생성한다.
-  - [ ] header 패키지가 사용 되도록 리팩토링 한다.
+- [x] 패키지 구조를 변경하여 한 눈에 구조가 들어오도록 한다.
+  - [x] http 패키지를 만들어 그 안에 필요한 패키지를 생성
+  - [x] header 패키지를 만들고 Header 클래스에 필요한 객체들을 생성한다.
+  - [x] header 패키지가 사용 되도록 리팩토링 한다.
 #### 기능 요구사항 3.
-- [ ] http://localhost:8080/user/form.html 파일의 form 태그 method를 get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.
-  - [ ] Post 메서드 일 때 requestBody를 읽도록 조건을 추가한다.
-  - [ ] reuqestBody를 파싱한다.
-  - [ ] 회원가입시 입력한 모든 데이터를 추출해 User 객체를 생성한다.
+- [x] http://localhost:8080/user/form.html 파일의 form 태그 method를 get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.
+  - [x] Post 메서드 일 때 requestBody를 읽도록 조건을 추가한다.
+  - [x] reuqestBody를 파싱한다.
+  - [x] 회원가입시 입력한 모든 데이터를 추출해 User 객체를 생성한다.
 #### 기능 요구사항 4.
-- [ ] redirect 방식처럼 회원가입을 완료한 후 “index.html”로 이동해야 한다.
-  - [ ] 응답 URL을 index.html로 지정
-  - [ ] 회원가입시 입력한 모든 데이터를 추출해 User 객체를 생성한다.
+- [x] redirect 방식처럼 회원가입을 완료한 후 “index.html”로 이동해야 한다.
+  - [x] 응답 URL을 index.html로 지정
+  - [x] 회원가입시 입력한 모든 데이터를 추출해 User 객체를 생성한다.
+### 리팩토링
+- [ ] 응답 반복 코드를 제거한다.
+  - [ ] 응답을 관리하는 클래스를 만든다.
+  - [ ] 응답 Http status를 ENUM으로 관리한다.
 #### 기능 요구사항 5.
 - [ ] 로그인 성공 실패 분기 처리를 한다.
   - [ ] 앞 단계에서 회원가입할 때 생성한 User 객체를 DataBase.addUser() 메서드를 활용해 RAM 메모리에 저장한다.
