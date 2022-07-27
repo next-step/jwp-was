@@ -83,7 +83,13 @@ public class RequestHandler implements Runnable {
             if (path.endWith("html") || path.endWith("ico")) {
                 body = FileIoUtils.loadFileFromClasspath("./templates" + path.getPath());
             }
-            if (path.endWith("css") || path.endWith("js")) {
+            if (path.endWith("css")) {
+                body = FileIoUtils.loadFileFromClasspath("./static" + path.getPath());
+                responseCssHeader(dos, body.length);
+                responseBody(dos, body);
+                return;
+            }
+            if (path.endWith("js") || path.startWith("/fonts")) {
                 body = FileIoUtils.loadFileFromClasspath("./static" + path.getPath());
             }
             if (body == null) {
@@ -112,6 +118,17 @@ public class RequestHandler implements Runnable {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void responseCssHeader(DataOutputStream dos, int lengthOfBodyContent) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/css\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {

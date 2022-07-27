@@ -53,6 +53,10 @@ public class Path {
         return path.endsWith(suffix);
     }
 
+    public boolean startWith(String suffix) {
+        return path.startsWith(suffix);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
