@@ -80,7 +80,7 @@ class LoginControllerTest {
         String lineSeparator = System.lineSeparator();
         String requestBody = String.format("userId=%s&password=%s", userId, password);
 
-        StringBuilder builder = new StringBuilder("POST /user/login HTTP/1.1 " + lineSeparator);
+        StringBuilder builder = new StringBuilder("POST /user/login HTTP/1.1 ").append(lineSeparator);
         builder.append("Content-Type: application/x-www-form-urlencoded").append(lineSeparator);
         builder.append(String.format("Content-Length: %d", requestBody.length())).append(lineSeparator);
         builder.append(lineSeparator);
