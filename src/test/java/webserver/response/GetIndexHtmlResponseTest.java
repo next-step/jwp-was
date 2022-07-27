@@ -21,7 +21,7 @@ class GetIndexHtmlResponseTest {
         byte[] expect = FileIoUtils.loadFileFromClasspath("./templates/index.html");
 
         // when
-        byte[] actual = getIndexHtmlResponse.response("/index.html");
+        byte[] actual = getIndexHtmlResponse.response("./templates", "/index.html");
 
         // then
         assertThat(actual).hasSameSizeAs(expect);

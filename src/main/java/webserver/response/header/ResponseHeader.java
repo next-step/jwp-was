@@ -23,7 +23,7 @@ public class ResponseHeader {
     }
 
     public ResponseHeader addContentType(ContentType contentType) {
-        infos.put(CONTENT_TYPE, contentType.content);
+        infos.put(CONTENT_TYPE, contentType.getContent());
         return this;
     }
 

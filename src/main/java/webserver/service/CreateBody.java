@@ -6,6 +6,7 @@ import webserver.request.RequestIndex;
 import webserver.request.header.RequestHeader;
 import webserver.response.get.GetIndexHtmlResponse;
 import webserver.response.get.UserList;
+import webserver.response.header.ContentType;
 
 public class CreateBody {
     public byte[] create(RequestHeader requestHeader) throws IOException {
@@ -15,6 +16,6 @@ public class CreateBody {
         }
 
         GetIndexHtmlResponse response = new GetIndexHtmlResponse();
-        return response.response(requestHeader.index());
+        return response.response(ContentType.filePath(requestHeader.index()), requestHeader.index());
     }
 }
