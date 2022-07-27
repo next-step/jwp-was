@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.HttpMethod;
 import webserver.http.request.Request;
+import webserver.http.request.RequestHeader;
 import webserver.http.response.Response;
 
 import java.io.DataOutputStream;
@@ -14,10 +15,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
+import static model.Constant.EXTENSION_SPERATOR;
 import static model.Constant.ROOT_FILE;
+import static utils.HandlebarsUtils.loader;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -25,6 +31,8 @@ public class RequestHandler implements Runnable {
     private static final String USER_CREATE_PATH = "/user/create";
     private static final String USER_LOGIN_PATH = "/user/login";
     private static final String USER_LOGIN_FAIL_PATH = "/user/login_failed.html";
+    private static final String USER_LIST_PATH = "/user/list.html";
+    private static final String COOKIE = "Cookie";
 
     private Socket connection;
 
@@ -51,6 +59,11 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
+            if (StringUtils.equals(request.getRequestPath(), USER_LIST_PATH) && request.getHttpMethod() == HttpMethod.GET) {
+                getUsers(response, request.getHeader());
+                return;
+            }
+
             byte[] body = response.getBody(path);
 
             response200Header(response, body.length);
@@ -61,6 +74,24 @@ public class RequestHandler implements Runnable {
             e.printStackTrace();
             logger.error(e.getMessage());
         }
+    }
+
+    private void getUsers(Response response, RequestHeader requestHeader) throws IOException {
+        if (isLoginStatus(requestHeader)) {
+            response302Header(response, USER_LIST_PATH);
+            return;
+        }
+        Collection<User> users = DataBase.findAll();
+        String loadData = loader(users, USER_LIST_PATH.substring(0, USER_LIST_PATH.indexOf(EXTENSION_SPERATOR)));
+        byte[] body = loadData.getBytes(StandardCharsets.UTF_8);
+
+        response200Header(response, body.length);
+        responseBody(response, body);
+    }
+
+    private boolean isLoginStatus(RequestHeader requestHeader) {
+        return Stream.of(requestHeader.getHeaders().get(COOKIE))
+                .anyMatch(loginStatus -> StringUtils.equals(loginStatus, "logined=true"));
     }
 
     private void loginUser(Response response, Map<String, String> requestBody) {
@@ -80,6 +111,7 @@ public class RequestHandler implements Runnable {
 
     private void createUser(Response response, Map<String, String> requestBody) {
         User user = new User(requestBody.get("userId"), requestBody.get("password"), requestBody.get("name"), requestBody.get("email"));
+        logger.debug("User : {}", user);
         DataBase.addUser(user);
 
         response302Header(response, ROOT_FILE);

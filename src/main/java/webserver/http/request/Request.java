@@ -1,6 +1,8 @@
 package webserver.http.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +19,8 @@ import static utils.IOUtils.readData;
 import static utils.IOUtils.readLines;
 
 public class Request {
+    private static final Logger logger = LoggerFactory.getLogger(Request.class);
+
     private final RequestLine requestLine;
     private final RequestHeader header;
     private final RequestBody requestBody;
@@ -48,8 +52,8 @@ public class Request {
         return ROOT_FILE;
     }
 
-    public Map<String, String> getHeader() {
-        return header.getHeaders();
+    public RequestHeader getHeader() {
+        return header;
     }
 
     public HttpMethod getHttpMethod() {
