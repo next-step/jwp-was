@@ -37,7 +37,6 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = new HttpRequest(in);
-
             Path path = httpRequest.getRequestLine().getPath();
             DataOutputStream dos = new DataOutputStream(out);
             Headers headers = httpRequest.getHeaders();
@@ -51,35 +50,22 @@ public class RequestHandler implements Runnable {
             }
             if (path.isSameUrlPath("/user/login")) {
                 final HttpBody httpBody = httpRequest.getHttpBody();
-                final Contents contents = httpBody.getContents();
-                final String userId = contents.getContent("userId");
-                final User user = DataBase.findUserById(userId);
-                if (user == null) {
-                    responseResource(out, "/user/login_failed.html");
-                    return;
-                }
-                String password = httpBody.getContents().getContent("password");
-                if (user.isSamePassword(password)) {
-                    responseLoginSuccess(dos);
-                    return;
-                }
-                responseResource(out, "/user/login_failed.html");
+                processLogin(out, dos, httpBody);
                 return;
             }
-            if (path.isSameUrlPath("/user/list")) {
-                if (headers.isLogin()) {
-                    Collection<User> users = DataBase.findAll();
-                    UserList userList = new UserList(new ArrayList<>(users));
-                    String template = userList.generateUserListTemplate();
-                    body = template.getBytes();
-                    response200Header(dos, body.length);
-                    responseBody(dos, body);
-                    return;
-                }
+            if (path.isSameUrlPath("/user/list") && headers.isLogin()) {
+                Collection<User> users = DataBase.findAll();
+                UserList userList = new UserList(new ArrayList<>(users));
+                String template = userList.generateUserListTemplate();
+                body = template.getBytes();
+                response200Header(dos, body.length);
+                responseBody(dos, body);
+                return;
+            }
+            if (path.isSameUrlPath("/user/list") && !headers.isLogin()) {
                 responseResource(out, "/user/login.html");
                 return;
             }
-
             if (path.endWith("html") || path.endWith("ico")) {
                 body = FileIoUtils.loadFileFromClasspath("./templates" + path.getPath());
             }
@@ -101,6 +87,24 @@ public class RequestHandler implements Runnable {
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private void processLogin(OutputStream out, DataOutputStream dos, HttpBody httpBody) throws IOException, URISyntaxException {
+        final Contents contents = httpBody.getContents();
+        final String userId = contents.getContent("userId");
+        final User user = DataBase.findUserById(userId);
+
+        if (user == null) {
+            responseResource(out, "/user/login_failed.html");
+            return;
+        }
+        String password = httpBody.getContents().getContent("password");
+        if (user.isSamePassword(password)) {
+            responseLoginSuccess(dos);
+            return;
+        }
+        responseResource(out, "/user/login_failed.html");
+        return;
     }
 
     private void responseLoginSuccess(DataOutputStream dos) {
