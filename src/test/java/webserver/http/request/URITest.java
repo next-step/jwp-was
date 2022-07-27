@@ -2,10 +2,12 @@ package webserver.http.request;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -56,5 +58,39 @@ class URITest {
                         ), null
                 )
         );
+    }
+
+
+    @DisplayName("Parameters를 추가")
+    @Test
+    void addParameters() {
+        Parameters originalParameters = new Parameters(
+                new HashMap<>(
+                    Map.of(
+                            "id", Lists.list("mint")
+                    )
+                )
+        );
+        URI uri = new URI("/path", originalParameters);
+
+        Parameters target = new Parameters(Map.of(
+                "name", Lists.list("jordy"),
+                "age", Lists.list("20")
+        ));
+
+        uri.addParameters(target);
+
+        assertThat(uri).usingRecursiveComparison()
+                .isEqualTo(expectedURI());
+    }
+
+    private URI expectedURI() {
+        Parameters addedParameters = new Parameters(Map.of(
+                "id", Lists.list("mint"),
+                "name", Lists.list("jordy"),
+                "age", Lists.list("20")
+        ));
+
+        return new URI("/path", addedParameters);
     }
 }

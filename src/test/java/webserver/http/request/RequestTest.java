@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -91,41 +90,44 @@ class RequestTest {
         );
     }
 
-    @DisplayName("Parameters 타입의 requestBody를 request.requestBody에 추가")
+    @DisplayName("Parameters를 request에 추가한다.")
     @Test
-    void addBody() {
-        Map<String, List<String>> originalBody = new HashMap<>();
-        originalBody.put("id", Lists.list("mint"));
-        Request request = new Request(
-                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), new Protocol("HTTP", "1.1")),
-                new Headers(new HashMap<>()),
-                new Parameters(originalBody)
+    void addParameters() {
+        Parameters originalParameters = new Parameters(
+                new HashMap<>(
+                        Map.of(
+                                "id", Lists.list("mint")
+                        )
+                )
         );
 
-        Map<String, List<String>> bodyParam = new HashMap<>();
-        bodyParam.put("name", Lists.list("jordy"));
-        bodyParam.put("age", Lists.list("20"));
-        Parameters target = new Parameters(bodyParam);
+        Request request = new Request(
+                new RequestLine(Method.GET, new URI("/path", originalParameters), new Protocol("HTTP", "1.1")),
+                new Headers(new HashMap<>())
+        );
 
-        request.addBody(target);
+        Parameters target = new Parameters(Map.of(
+                "name", Lists.list("jordy"),
+                "age", Lists.list("20")
+        ));
+
+        request.addParameters(target);
 
         assertThat(request).usingRecursiveComparison()
                 .isEqualTo(expectedRequest());
     }
 
     private Request expectedRequest() {
-        Map<String, List<String>> body = new HashMap<>();
-        body.put("id", Lists.list("mint"));
-        body.put("name", Lists.list("jordy"));
-        body.put("age", Lists.list("20"));
+        Parameters addedParameters = new Parameters(Map.of(
+                "id", Lists.list("mint"),
+                "name", Lists.list("jordy"),
+                "age", Lists.list("20")
+        ));
 
-        Request request = new Request(
-                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), new Protocol("HTTP", "1.1")),
-                new Headers(new HashMap<>()),
-                new Parameters(body)
+        return new Request(
+                new RequestLine(Method.GET, new URI("/path", addedParameters), new Protocol("HTTP", "1.1")),
+                new Headers(new HashMap<>())
         );
-
-        return request;
     }
 
     @DisplayName("GET 메서드 여부 반환")
@@ -138,6 +140,7 @@ class RequestTest {
         boolean actual = request.hasMethod(Method.GET);
         assertThat(actual).isEqualTo(expected);
     }
+
     private static Stream<Arguments> provideForIsGet() {
         return Stream.of(
                 arguments(Method.GET, true),

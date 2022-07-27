@@ -68,8 +68,7 @@ class RequestReaderTest {
                         "Host", "localhost:8080",
                         "Accept", "application/json"
                         )
-                ),
-                new Parameters(Map.of())
+                )
         );
     }
 
@@ -80,6 +79,7 @@ class RequestReaderTest {
                 "Host: localhost:8080\r\n" +
                 "Accept: application/json\r\n" +
                 "Content-Length: 17\r\n" +
+                "Content-Type: application/x-www-form-urlencoded\r\n" +
                 "\r\n" +
                 "name=jordy&age=20";
         BufferedReader bufferedReader = new BufferedReader(new StringReader(message));
@@ -95,7 +95,12 @@ class RequestReaderTest {
                 new RequestLine(
                         Method.POST,
                         new URI("/path",
-                                new Parameters(Map.of())
+                                new Parameters(
+                                        Map.of(
+                                                "name", Lists.list("jordy"),
+                                                "age", Lists.list("20")
+                                        )
+                                )
                         ),
                         new Protocol("HTTP", "1.1")
                 ),
@@ -103,13 +108,8 @@ class RequestReaderTest {
                         Map.of(
                                 "Host", "localhost:8080",
                                 "Accept", "application/json",
-                                "Content-Length", "17"
-                        )
-                ),
-                new Parameters(
-                        Map.of(
-                                "name", Lists.list("jordy"),
-                                "age", Lists.list("20")
+                                "Content-Length", "17",
+                                "Content-Type", "application/x-www-form-urlencoded"
                         )
                 )
         );

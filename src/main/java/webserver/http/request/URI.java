@@ -23,6 +23,10 @@ public class URI {
         return queryParameters.get(key);
     }
 
+    public void addParameters(Parameters parameters) {
+        queryParameters.add(parameters);
+    }
+
     @Override
     public String toString() {
         return "URI{" +

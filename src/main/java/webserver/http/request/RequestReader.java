@@ -33,10 +33,10 @@ public class RequestReader {
         Headers requestHeaders = headersParser.parse(headerMessages);
         Request request = new Request(requestLine, requestHeaders);
 
-        if (request.hasContents()) {
+        if (request.hasContents() && request.hasContentType("application/x-www-form-urlencoded")) {
             String requestBody = IOUtils.readData(bufferedReader, request.getContentLength());
             Parameters parameters = requestBodyParser.parse(requestBody);
-            request.addBody(parameters);
+            request.addParameters(parameters);
         }
 
         return request;

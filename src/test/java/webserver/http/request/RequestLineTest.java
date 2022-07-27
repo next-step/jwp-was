@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -23,6 +24,7 @@ class RequestLineTest {
         boolean actual = requestLine.hasMethod(Method.GET);
         assertThat(actual).isEqualTo(expected);
     }
+
     private static Stream<Arguments> provideForIsGet() {
         return Stream.of(
                 arguments(Method.GET, true),
@@ -82,6 +84,43 @@ class RequestLineTest {
                                 )
                         ), null
                 )
+        );
+    }
+
+    @DisplayName("Parameters를 requestLine에 추가")
+    @Test
+    void addParameters() {
+        Parameters originalParameters = new Parameters(
+                new HashMap<>(
+                    Map.of(
+                        "id", Lists.list("mint")
+                    )
+                )
+        );
+        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path", originalParameters), new Protocol("HTTP", "1.1"));
+
+        Parameters target = new Parameters(Map.of(
+                "name", Lists.list("jordy"),
+                "age", Lists.list("20")
+        ));
+
+        requestLine.addParameters(target);
+
+        assertThat(requestLine).usingRecursiveComparison()
+                .isEqualTo(expectedRequestLine());
+    }
+
+    private RequestLine expectedRequestLine() {
+        Parameters addedParameters = new Parameters(Map.of(
+                "id", Lists.list("mint"),
+                "name", Lists.list("jordy"),
+                "age", Lists.list("20")
+        ));
+
+        return new RequestLine(
+                Method.GET,
+                new URI("/path", addedParameters),
+                new Protocol("HTTP", "1.1")
         );
     }
 }

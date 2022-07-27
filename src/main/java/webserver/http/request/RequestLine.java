@@ -23,6 +23,10 @@ public class RequestLine {
         return uri.getParameter(key);
     }
 
+    public void addParameters(Parameters parameters) {
+        uri.addParameters(parameters);
+    }
+
     @Override
     public String toString() {
         return "RequestLine{" +

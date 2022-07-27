@@ -1,20 +1,12 @@
 package webserver.http.request;
 
-import java.util.HashMap;
-
 public class Request {
     private final RequestLine requestLine;
     private final Headers headers;
-    private final Parameters requestBody;
 
     public Request(RequestLine requestLine, Headers headers) {
-        this(requestLine, headers, new Parameters(new HashMap<>()));
-    }
-
-    public Request(RequestLine requestLine, Headers headers, Parameters requestBody) {
         this.requestLine = requestLine;
         this.headers = headers;
-        this.requestBody = requestBody;
     }
 
     public boolean hasContents() {
@@ -25,8 +17,8 @@ public class Request {
         return headers.getContentLength();
     }
 
-    public void addBody(Parameters requestBody) {
-        this.requestBody.add(requestBody);
+    public void addParameters(Parameters parameters) {
+        requestLine.addParameters(parameters);
     }
 
     public boolean hasMethod(Method method) {
@@ -50,7 +42,6 @@ public class Request {
         return "Request{" +
                 "requestLine=" + requestLine +
                 ", headers=" + headers +
-                ", requestBody=" + requestBody +
                 '}';
     }
 }
