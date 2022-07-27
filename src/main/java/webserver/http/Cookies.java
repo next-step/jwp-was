@@ -42,7 +42,7 @@ public class Cookies {
         cookies.put(name, value);
     }
 
-    public List<String> getCookiesAsString() {
+    public List<String> getCookies() {
         List<String> values = new ArrayList<>();
         cookies.forEach((key, value) -> values.add(String.format("%s=%s", key, value)));
         return values;

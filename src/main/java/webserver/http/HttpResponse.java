@@ -113,7 +113,7 @@ public class HttpResponse {
     }
 
     private void processHeaders() throws IOException {
-        List<String> cookies = this.cookies.getCookiesAsString();
+        List<String> cookies = this.cookies.getCookies();
         if (!cookies.isEmpty()) {
             addHeader("Set-Cookie", String.join(";", cookies));
         }
