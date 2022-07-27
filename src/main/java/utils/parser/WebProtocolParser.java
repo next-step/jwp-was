@@ -1,13 +1,13 @@
-package utils;
+package utils.parser;
 
 import model.WebProtocol;
 
-public class WebProtocolParser implements Parser {
+public class WebProtocolParser {
     private static final Integer PROTOCOL_INDEX = 0;
     private static final Integer PROTOCOL_VERSION_INDEX = 1;
     private static final String VERSION_SEPARATOR = "/";
 
-    public WebProtocol parse(String protocol) {
+    public static WebProtocol parse(String protocol) {
         String[] split = protocol.split(VERSION_SEPARATOR);
 
         String type = split[PROTOCOL_INDEX];

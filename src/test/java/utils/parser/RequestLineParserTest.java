@@ -1,9 +1,10 @@
-package utils;
+package utils.parser;
 
 import enums.HttpMethod;
 import model.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import utils.parser.RequestLineParser;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -12,8 +13,6 @@ public class RequestLineParserTest {
     static String GET_REQUEST_LINE = "GET /users HTTP/1.1";
     static String POST_REQUEST_LINE = "POST /users HTTP/1.1";
     static String GET_QUERY_STRING_REQUEST_LINE = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
-    RequestLineParser requestLineParser = new RequestLineParser();
-
     @Test
     @DisplayName("Request Line이 올바른 형식을 가지는지 테스트")
     void regexTest() {
@@ -29,9 +28,9 @@ public class RequestLineParserTest {
     @DisplayName("isRequestLinePattern 메소드는 입력값이 RequestLine 형식 여부를 반환한다.")
     void isRequestLinePatternTest() {
         assertAll(
-                () -> assertThat(requestLineParser.isRequestLinePattern(GET_REQUEST_LINE)).isTrue(),
-                () -> assertThat(requestLineParser.isRequestLinePattern(POST_REQUEST_LINE)).isTrue(),
-                () -> assertThat(requestLineParser.isRequestLinePattern(GET_QUERY_STRING_REQUEST_LINE)).isTrue()
+                () -> assertThat(RequestLineParser.isRequestLinePattern(GET_REQUEST_LINE)).isTrue(),
+                () -> assertThat(RequestLineParser.isRequestLinePattern(POST_REQUEST_LINE)).isTrue(),
+                () -> assertThat(RequestLineParser.isRequestLinePattern(GET_QUERY_STRING_REQUEST_LINE)).isTrue()
         );
     }
 
@@ -44,8 +43,8 @@ public class RequestLineParserTest {
         String protocolVersion = "1.1";
 
         //when
-        RequestLine getRequestLineResult = requestLineParser.parse(GET_REQUEST_LINE);
-        RequestLine postRequestLineResult = requestLineParser.parse(POST_REQUEST_LINE);
+        RequestLine getRequestLineResult = RequestLineParser.parse(GET_REQUEST_LINE);
+        RequestLine postRequestLineResult = RequestLineParser.parse(POST_REQUEST_LINE);
 
         //then
         assertAll(
@@ -69,7 +68,7 @@ public class RequestLineParserTest {
         String queryString = "userId=javajigi&password=password&name=JaeSung";
 
         //when
-        RequestLine queryStringRequestLineResult = requestLineParser.parse(GET_QUERY_STRING_REQUEST_LINE);
+        RequestLine queryStringRequestLineResult = RequestLineParser.parse(GET_QUERY_STRING_REQUEST_LINE);
 
         //then
         assertAll(
