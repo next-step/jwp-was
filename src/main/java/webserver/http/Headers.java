@@ -42,4 +42,12 @@ public class Headers {
     public int getBodySize() {
         return Integer.parseInt(headers.get("Content-Length"));
     }
+
+    public boolean isLogin() {
+        String cookie = headers.get("Cookie");
+        if (cookie != null || cookie.isEmpty()) {
+            return cookie.contains("logined=true");
+        }
+        return false;
+    }
 }

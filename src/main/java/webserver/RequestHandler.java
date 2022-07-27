@@ -6,9 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.http.Contents;
+import webserver.http.Headers;
 import webserver.http.HttpBody;
 import webserver.http.HttpRequest;
 import webserver.http.Path;
+import webserver.template.UserList;
 import webserver.user.UserFactory;
 
 import java.io.DataOutputStream;
@@ -17,6 +19,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -36,6 +40,7 @@ public class RequestHandler implements Runnable {
 
             Path path = httpRequest.getRequestLine().getPath();
             DataOutputStream dos = new DataOutputStream(out);
+            Headers headers = httpRequest.getHeaders();
             byte[] body = null;
 
             if (path.isSameUrlPath("/user/create")) {
@@ -59,6 +64,19 @@ public class RequestHandler implements Runnable {
                     return;
                 }
                 responseResource(out, "/user/login_failed.html");
+                return;
+            }
+            if (path.isSameUrlPath("/user/list")) {
+                if (headers.isLogin()) {
+                    Collection<User> users = DataBase.findAll();
+                    UserList userList = new UserList(new ArrayList<>(users));
+                    String template = userList.generateUserListTemplate();
+                    body = template.getBytes();
+                    response200Header(dos, body.length);
+                    responseBody(dos, body);
+                    return;
+                }
+                responseResource(out, "/user/login.html");
                 return;
             }
 
