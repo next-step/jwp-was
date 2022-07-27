@@ -34,10 +34,6 @@ public class HttpRequest {
         }
     }
 
-    public HttpHeaders getHeaders() {
-        return headers;
-    }
-
     public HttpMethod getMethod() {
         return requestLine.getMethod();
     }

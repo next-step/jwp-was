@@ -160,7 +160,41 @@ class WebApplicationServerTest {
     void request_without_session_id() {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL, String.class);
-        String cookie = response.getHeaders().get("Set-Cookie").get(0);
+        String cookie = String.join("", response.getHeaders().get("Set-Cookie"));
         assertThat(cookie).contains("JSESSIONID");
+    }
+
+    @DisplayName("서로 다른 클라이언트가 요청을 보낼 경우, 각각의 클라이언트에 대한 세션이 생성된다.")
+    @Test
+    void request_by_different_clients() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 클라이언트1 요청
+        ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL, String.class);
+        String clientSessionId = String.join("", response.getHeaders().get("Set-Cookie")).split("=")[1];
+
+        // 클라이언트2 요청
+        response = restTemplate.getForEntity(BASE_URL, String.class);
+        String otherSessionId = String.join("", response.getHeaders().get("Set-Cookie")).split("=")[1];
+
+        assertThat(clientSessionId).isNotEqualTo(otherSessionId);
+    }
+
+    @DisplayName("동일한 클라이언트가 요청을 보낼 경우, 응답 헤더에 세션 ID를 담지 않는다.")
+    @Test
+    void request_by_same_client() {
+        // 클라이언트 최초 요청
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL, String.class);
+        String cookie = String.join("", response.getHeaders().get("Set-Cookie"));
+        String sessionId = cookie.split("=")[1];
+        assertThat(cookie).contains("JSESSIONID");
+
+        // 클라이언트 재요청
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cookie", "JSESSIONID=" + sessionId);
+        HttpEntity<Object> entity = new HttpEntity<>(headers);
+        response = restTemplate.exchange(BASE_URL, HttpMethod.GET, entity, String.class);
+        assertThat(response.getHeaders().get("Set-Cookie")).isNull();
     }
 }
