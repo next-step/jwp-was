@@ -13,7 +13,7 @@ public enum Method {
                 .orElseThrow(() -> new RuntimeException(String.format("현재 서버에서 처리할 수 없는 메소드입니다. {: %s}", value)));
     }
 
-    public boolean isGet() {
-        return GET == this;
+    public boolean is(Method method) {
+        return method == this;
     }
 }

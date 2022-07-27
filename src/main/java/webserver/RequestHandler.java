@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import webserver.http.request.Method;
 import webserver.http.request.Request;
 import webserver.http.request.RequestReader;
 import webserver.http.request.exception.NullRequestException;
@@ -35,11 +36,10 @@ public class RequestHandler implements Runnable {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), Charsets.UTF_8));
              DataOutputStream dos = new DataOutputStream(connection.getOutputStream())
         ) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             Request request = requestReader.read(bufferedReader);
             logger.info("[request] = {}", request);
 
-            if (request.isGetMethod() && isResource(request)) {
+            if (request.hasMethod(Method.GET) && isResource(request)) {
                 try {
                     String resource = request.getPath();
                     byte[] bytes = FileIoUtils.loadFileFromClasspath("./static" + resource);

@@ -11,8 +11,8 @@ public class RequestLine {
         this.protocol = protocol;
     }
 
-    public boolean isGetMethod() {
-        return method.isGet();
+    public boolean hasMethod(Method method) {
+        return this.method.is(method);
     }
 
     public String getPath() {

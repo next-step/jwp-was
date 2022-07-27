@@ -45,7 +45,7 @@ class MethodTest {
     @ParameterizedTest
     @MethodSource("provideForIsGet")
     void isGet(Method method, boolean expected) {
-        boolean actual = method.isGet();
+        boolean actual = method.is(Method.GET);
         assertThat(actual).isEqualTo(expected);
     }
 

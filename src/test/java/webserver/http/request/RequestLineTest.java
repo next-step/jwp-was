@@ -18,7 +18,7 @@ class RequestLineTest {
     @MethodSource("provideForIsGet")
     void isGetMethod(Method method, boolean expected) {
         RequestLine requestLine = new RequestLine(method, new URI("/path"), new Protocol("HTTP", "1.1"));
-        boolean actual = requestLine.isGetMethod();
+        boolean actual = requestLine.hasMethod(Method.GET);
         assertThat(actual).isEqualTo(expected);
     }
     private static Stream<Arguments> provideForIsGet() {

@@ -135,7 +135,7 @@ class RequestTest {
         RequestLine requestLine = new RequestLine(method, new URI("/path"), new Protocol("HTTP", "1.1"));
         Request request = new Request(requestLine, new Headers(new HashMap<>()));
 
-        boolean actual = request.isGetMethod();
+        boolean actual = request.hasMethod(Method.GET);
         assertThat(actual).isEqualTo(expected);
     }
     private static Stream<Arguments> provideForIsGet() {

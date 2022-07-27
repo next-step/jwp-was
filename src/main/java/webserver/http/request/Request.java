@@ -29,8 +29,8 @@ public class Request {
         this.requestBody.add(requestBody);
     }
 
-    public boolean isGetMethod() {
-        return requestLine.isGetMethod();
+    public boolean hasMethod(Method method) {
+        return requestLine.hasMethod(method);
     }
 
     public String getPath() {
