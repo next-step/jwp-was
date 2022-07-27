@@ -6,19 +6,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import webserver.handler.ResourceHandler;
 import webserver.http.*;
 
-import java.util.List;
-import java.util.Map;
+class StaticFileHandlerTest {
 
-class ResourceHandlerTest {
-
-    private ResourceHandler resourceHandler;
+    private StaticFileHandler staticFileHandler;
 
     @BeforeEach
     void setup() {
-        resourceHandler = new ResourceHandler();
+        staticFileHandler = new StaticFileHandler();
     }
 
     @DisplayName("request line 의 path 가 확장자가 있으면 Resource 요청이다.")
@@ -28,7 +24,7 @@ class ResourceHandlerTest {
         Request request = createRequest("/index.html");
 
         // when
-        boolean support = resourceHandler.isSupport(request);
+        boolean support = staticFileHandler.isSupport(request);
 
         // then
         Assertions.assertThat(support).isTrue();
@@ -37,8 +33,8 @@ class ResourceHandlerTest {
     @DisplayName("파일 확장자에 따라서 Response 의 Content-Type 헤더가 다르다")
     @CsvSource(value = {
             "/index.html -> text/html",
-            "/index.css -> text/css",
-            "/index.js -> application/javascript"
+            "/css/styles.css -> text/css",
+            "/js/scripts.js -> application/javascript"
     }, delimiterString = " -> ")
     @ParameterizedTest
     void contentTypeTest(String filePath, String contentType) {
@@ -46,7 +42,7 @@ class ResourceHandlerTest {
         Request request = createRequest(filePath);
 
         // when
-        Response handle = resourceHandler.handle(request);
+        Response handle = staticFileHandler.handle(request);
 
         // then
         Headers headers = handle.getHeaders();

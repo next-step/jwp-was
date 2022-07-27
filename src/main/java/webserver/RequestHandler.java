@@ -11,7 +11,7 @@ import utils.IOUtils;
 import webserver.handler.CreateMemberHandler;
 import webserver.handler.ListMemberHandler;
 import webserver.handler.LoginMemberHandler;
-import webserver.handler.ResourceHandler;
+import webserver.handler.StaticFileHandler;
 import webserver.http.Headers;
 import webserver.http.Request;
 import webserver.http.RequestLine;
@@ -23,7 +23,7 @@ public class RequestHandler implements Runnable {
     private final Socket connection;
 
     private final List<Handler> handlers = List.of(
-            new ResourceHandler(),
+            new StaticFileHandler(),
             new CreateMemberHandler(),
             new LoginMemberHandler(),
             new ListMemberHandler()
@@ -42,7 +42,7 @@ public class RequestHandler implements Runnable {
 
             logger.debug("request:{} ", request);
 
-            Response response = handlerRequest(request);
+            Response response = handleRequest(request);
 
             logger.debug("response:{} ", response);
 
@@ -52,11 +52,11 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private Response handlerRequest(Request request) {
+    private Response handleRequest(Request request) {
         return handlers.stream()
                 .filter(handler -> handler.isSupport(request))
                 .findAny()
-                .orElseThrow()
+                .orElseThrow(() -> new NotMappingHandlerException("요청을 처리할 핸들러를 찾지 못했습니다." + request))
                 .handle(request);
     }
 
@@ -79,14 +79,14 @@ public class RequestHandler implements Runnable {
     private Request readRequest(BufferedReader reader) throws IOException {
         RequestLine requestLine = RequestLine.parseOf(reader.readLine());
 
-        Headers headers = getHeaders(reader);
+        Headers headers = readHeaders(reader);
 
-        String requestBody = getRequestBody(reader, headers);
+        String requestBody = readRequestBody(reader, headers);
 
         return new Request(requestLine, headers, requestBody);
     }
 
-    private Headers getHeaders(BufferedReader reader) throws IOException {
+    private Headers readHeaders(BufferedReader reader) throws IOException {
         List<String> headerLines = new ArrayList<>();
 
         String line = reader.readLine();
@@ -100,7 +100,7 @@ public class RequestHandler implements Runnable {
         return Headers.parseOf(headerLines);
     }
 
-    private String getRequestBody(BufferedReader reader, Headers headers) throws IOException {
+    private String readRequestBody(BufferedReader reader, Headers headers) throws IOException {
         String value = headers.getValue("Content-Length");
 
         if (value != null && !value.equals("")) {
