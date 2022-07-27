@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Map;
+import java.util.Optional;
 
 import static model.Constant.ROOT_FILE;
 
@@ -22,6 +23,8 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private static final String USER_CREATE_PATH = "/user/create";
+    private static final String USER_LOGIN_PATH = "/user/login";
+    private static final String USER_LOGIN_FAIL_PATH = "/user/login_failed.html";
 
     private Socket connection;
 
@@ -43,6 +46,11 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
+            if (StringUtils.equals(request.getRequestPath(), USER_LOGIN_PATH) && request.getHttpMethod() == HttpMethod.POST) {
+                loginUser(response, request.getRequestBody());
+                return;
+            }
+
             byte[] body = response.getBody(path);
 
             response200Header(response, body.length);
@@ -53,6 +61,21 @@ public class RequestHandler implements Runnable {
             e.printStackTrace();
             logger.error(e.getMessage());
         }
+    }
+
+    private void loginUser(Response response, Map<String, String> requestBody) {
+        User loginUser = Optional.ofNullable(DataBase.findUserById(requestBody.get("userId")))
+                .filter(user -> StringUtils.equals(user.getPassword(), requestBody.get("password")))
+                .orElse(null);
+
+        if (loginUser != null) {
+            response.getHeaders().add(Map.of("Set-Cookie", "logined=true; Path=/"));
+            response302Header(response, ROOT_FILE);
+            return;
+        }
+        response.getHeaders().add(Map.of("Set-Cookie", "logined=false; Path=/"));
+        response302Header(response, USER_LOGIN_FAIL_PATH);
+
     }
 
     private void createUser(Response response, Map<String, String> requestBody) {

@@ -9,7 +9,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class RequestHeaderTest {
+class HeaderTest {
 
     @DisplayName("Hearder 를 담는 객체에 대한 테스트")
     @Test

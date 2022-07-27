@@ -10,6 +10,10 @@ public class ResponseHeader {
         this.headers = header;
     }
 
+    public void add(Map<String, String> headers) {
+        this.headers.putAll(headers);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

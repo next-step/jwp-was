@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -31,12 +32,11 @@ public class Response {
     }
 
     private Map<String, String> getContentType(String path) {
-        logger.debug("path : {}", path);
-        return Stream.of(ContentType.values())
+        return new HashMap<>(Stream.of(ContentType.values())
                 .filter(type -> path.endsWith(type.getExtension()))
                 .map(type -> Map.of("Content-Type", type.getValue()))
                 .findFirst()
-                .orElse(Collections.emptyMap());
+                .orElse(Collections.emptyMap()));
     }
 
     public byte[] getBody(String path) {
