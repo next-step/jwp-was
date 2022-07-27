@@ -2,14 +2,14 @@ package utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.Request;
-import webserver.request.RequestLine;
-
+import webserver.request.HttpRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class IOUtils {
@@ -30,21 +30,22 @@ public class IOUtils {
         return String.copyValueOf(body);
     }
 
-    /**
-     *
-     * @param is 는
-     *          Request의 inputStream이며, Request 정보를 가지고 있다.
-     */
-    public static RequestLine getFirstLine(InputStream is) throws IOException {
-        return RequestLine.getInstance().parsing(getBufferedReader(is));
-    }
-
-    public static Request convertRequest(InputStream is) throws IOException {
-        return Request.parsing(getBufferedReader(is));
+    public static HttpRequest convertRequest(InputStream is) throws IOException {
+        return HttpRequest.parsing(getBufferedReader(is));
     }
 
 
     private static BufferedReader getBufferedReader(InputStream is) {
         return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+    }
+
+    public static Map<String, String> changeStringToMap(String queryString) {
+        String[] querySplit = queryString.split("\\&");
+        Map<String, String> requestMap = new HashMap<>();
+        for (String couple : querySplit) {
+            String[] keyValue = couple.split("=");
+            requestMap.put(keyValue[0], keyValue[1]);
+        }
+        return requestMap;
     }
 }

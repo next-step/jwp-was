@@ -32,8 +32,4 @@ public class FileIoUtils {
         return CLASSPATH_TEMPLATE + path;
     }
 
-    public static boolean isLastEndWithHtml(String path) {
-
-        return path.endsWith(".html");
-    }
 }
