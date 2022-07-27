@@ -2,15 +2,15 @@ package webserver.response.get;
 
 import db.DataBase;
 import model.User;
-import webserver.header.request.requestline.RequestLine;
+import webserver.request.header.RequestHeader;
 
 public class GetUserFormHtmlResponse {
-    public void response(RequestLine requestLine) {
+    public void response(RequestHeader requestHeader) {
         User user = new User(
-                requestLine.requestParams().get("userId"),
-                requestLine.requestParams().get("password"),
-                requestLine.requestParams().get("name"),
-                requestLine.requestParams().get("email")
+                requestHeader.requestParams("userId"),
+                requestHeader.requestParams("password"),
+                requestHeader.requestParams("name"),
+                requestHeader.requestParams("email")
         );
 
         DataBase.addUser(user);

@@ -1,20 +1,13 @@
 package webserver.service;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import webserver.header.request.requestline.RequestLine;
-import webserver.response.get.GetIndexHtmlResponse;
+import webserver.request.header.RequestHeader;
+import webserver.response.ResponseHeaderWriter;
 import webserver.response.get.GetUserFormHtmlResponse;
 
 public class ResponseGetHandler {
-    private static final Logger logger = LoggerFactory.getLogger(ResponseGetHandler.class);
     private static final String GET_INDEX_HTML = "/index.html";
     private static final String GET_USER_FORM_HTML = "/user/form.html";
     private static final String USER_CREATE = "/user/create";
@@ -23,61 +16,21 @@ public class ResponseGetHandler {
             GET_USER_FORM_HTML
     ) ;
 
-    private final Socket connection;
+    public String handle(RequestHeader requestHeader, int lengthOfBodyContent) throws IOException {
+        ResponseHeaderWriter responseHeaderWriter = new ResponseHeaderWriter();
 
-    public ResponseGetHandler(Socket connection) {
-        this.connection = connection;
-    }
-
-    public void run(RequestLine requestLine) throws IOException {
-        try (OutputStream out = connection.getOutputStream()) {
-            DataOutputStream dos = new DataOutputStream(out);
-
-            if (isAvailableRequest(requestLine.index())) {
-                GetIndexHtmlResponse response = new GetIndexHtmlResponse();
-                byte[] body = response.response(requestLine.index());
-                response200Header(dos, body.length);
-                responseBody(dos, body);
-                return;
-            }
-
-            if (requestLine.index().equals(USER_CREATE)) {
-                GetUserFormHtmlResponse response = new GetUserFormHtmlResponse();
-                response.response(requestLine);
-                byte[] body = "OK".getBytes();
-                response200Header(dos, body.length);
-                responseBody(dos, body);
-                return;
-            }
-
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+        if (isAvailableRequest(requestHeader.index())) {
+            return responseHeaderWriter.response200(requestHeader.protocolVersion(), lengthOfBodyContent);
         }
-    }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+        if (requestHeader.index().equals(USER_CREATE)) {
+            GetUserFormHtmlResponse response = new GetUserFormHtmlResponse();
+            response.response(requestHeader);
+            return responseHeaderWriter.response200(requestHeader.protocolVersion(), lengthOfBodyContent);
         }
-    }
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+        return responseHeaderWriter.response200(requestHeader.protocolVersion(), lengthOfBodyContent);
     }
-
     private boolean isAvailableRequest(String index) {
         return AVAILABLE_INDEX.contains(index);
     }
