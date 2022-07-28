@@ -1,5 +1,9 @@
 package webserver.response;
 
+import static webserver.request.Protocol.HTTP_1_1;
+import static webserver.response.ResponseBody.EMPTY_RESPONSE_BODY;
+import static webserver.response.StatusCode.FOUND;
+
 import java.util.Objects;
 
 public class HttpResponse {
@@ -14,7 +18,12 @@ public class HttpResponse {
         this.responseBody = responseBody;
     }
 
+    public static HttpResponse redirect(final String location) {
+        final ResponseHeaders headers = new ResponseHeaders();
+        headers.add("Location", location);
 
+        return new HttpResponse(new StatusLine(HTTP_1_1, FOUND), headers, EMPTY_RESPONSE_BODY);
+    }
 
     @Override
     public boolean equals(final Object o) {
