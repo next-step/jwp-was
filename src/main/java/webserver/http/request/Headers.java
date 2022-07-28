@@ -36,6 +36,10 @@ public class Headers {
         return contentType.equals(value);
     }
 
+    public String getValue(String name) {
+        return keyValues.get(name);
+    }
+
     @Override
     public String toString() {
         return "Headers{" +

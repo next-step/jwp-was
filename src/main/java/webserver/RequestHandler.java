@@ -1,5 +1,9 @@
 package webserver;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import com.google.common.base.Charsets;
 import db.DataBase;
 import model.User;
@@ -18,6 +22,8 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -119,6 +125,30 @@ public class RequestHandler implements Runnable {
                 }
             }
 
+            if (request.hasMethod(Method.GET) && request.hasPath("/user/list")) {
+                boolean isLogin = Optional.ofNullable(request.getHeader("Cookie"))
+                        .map(value -> value.contains("logined=true"))
+                        .orElse(false);
+
+                if (isLogin) {
+                    TemplateLoader loader = new ClassPathTemplateLoader();
+                    loader.setPrefix("/templates");
+                    loader.setSuffix(".html");
+                    Handlebars handlebars = new Handlebars(loader);
+
+                    Template template = handlebars.compile("user/list");
+
+                    Collection<User> users = DataBase.findAll();
+                    logger.info("[Users] = {}", users);
+                    String page = template.apply(Map.of("users", users));
+                    byte[] body = page.getBytes();
+                    response200Header(dos, body.length);
+                    responseBody(dos, body);
+                    return;
+                }
+                response302Header(dos, "/user/login.html");
+                return;
+            }
 
 
             byte[] body = "Hello World".getBytes();

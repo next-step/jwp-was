@@ -47,6 +47,10 @@ public class Request {
         requestLine.decodeCharacter(charset);
     }
 
+    public String getHeader(String name) {
+        return headers.getValue(name);
+    }
+
     @Override
     public String toString() {
         return "Request{" +
