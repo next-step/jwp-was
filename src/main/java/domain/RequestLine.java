@@ -1,6 +1,5 @@
 package domain;
 
-import java.util.Map;
 import java.util.Objects;
 
 public class RequestLine {
@@ -55,11 +54,15 @@ public class RequestLine {
                 '}';
     }
 
+    public HttpMethod getHttpMethod() {
+        return httpMethod;
+    }
+
     public String getPath() {
         return httpPath.getPath();
     }
 
-    public Map<String, String> getQueryStrings() {
-        return httpPath.getQueryStrings();
+    boolean isGET() {
+        return getHttpMethod() == HttpMethod.GET;
     }
 }

@@ -1,5 +1,6 @@
 package webserver;
 
+import domain.HttpMethod;
 import domain.HttpRequest;
 import domain.RequestLine;
 import model.User;
@@ -16,12 +17,10 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class RequestHandler implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
     private static final String TEMPLATES_PATH = "./templates";
 
     private final Socket connection;
@@ -31,22 +30,22 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
+        LOGGER.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             final HttpRequest httpRequest = convertToHttpRequest(in);
-            final RequestLine requestLine = httpRequest.getRequestLine();
-            logger.debug(requestLine.toString());
+            final RequestLine requestLine = httpRequest.makeRequestLine();
+            LOGGER.debug(requestLine.toString());
 
             final DataOutputStream dos = new DataOutputStream(out);
-            if ("/user/create".equals(requestLine.getPath())) {
-                final Map<String, String> queryStrings = requestLine.getQueryStrings();
+            if (requestLine.getHttpMethod() == HttpMethod.POST && "/user/create".equals(requestLine.getPath())) {
+                final Map<String, String> payloads = httpRequest.getPayloads();
                 final User user = new User(
-                        queryStrings.get("userId"),
-                        queryStrings.get("password"),
-                        queryStrings.get("name"),
-                        queryStrings.get("email")
+                        payloads.get("userId"),
+                        payloads.get("password"),
+                        payloads.get("name"),
+                        payloads.get("email")
                 );
                 final byte[] body = user.toString().getBytes(StandardCharsets.UTF_8);
                 response200Header(dos, body.length);
@@ -58,18 +57,13 @@ public class RequestHandler implements Runnable {
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 
     private HttpRequest convertToHttpRequest(InputStream in) throws IOException {
         final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-        final List<String> lines = new ArrayList<>();
-        String line;
-        while (!"".equals(line = br.readLine())) {
-            lines.add(line);
-        }
-        return new HttpRequest(lines);
+        return new HttpRequest(br);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
@@ -79,7 +73,7 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -88,7 +82,7 @@ public class RequestHandler implements Runnable {
             dos.write(body, 0, body.length);
             dos.flush();
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 }
