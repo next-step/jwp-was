@@ -32,4 +32,9 @@ public class HttpResponseBody {
     public String bodyString() {
         return new String(body);
     }
+
+    public int length() {
+        return body.length;
+    }
+
 }

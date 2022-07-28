@@ -6,8 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import webserver.enums.HttpMethod;
 import webserver.enums.Protocol;
-import webserver.utils.PathAndQueryStrings;
-import webserver.utils.QueryStrings;
+import webserver.utils.Uri;
 
 /**
  * HTTP Request 의 첫번째 라인 (== Start Line)
@@ -18,15 +17,13 @@ public final class RequestLine {
     private static final String REQUEST_LINE_SPLIT_REGEX = " ";
 
     private HttpMethod requestMethod;
-    private String path;
     private Protocol protocol;
-    private Map<String, String> queryStringsMap;
+    private Uri uri;
 
-    private RequestLine(HttpMethod requestMethod, PathAndQueryStrings queryStrings, Protocol protocol) {
+    private RequestLine(HttpMethod requestMethod, Uri uri, Protocol protocol) {
         this.requestMethod = requestMethod;
-        this.path = queryStrings.getPath();
+        this.uri = uri;
         this.protocol = protocol;
-        this.queryStringsMap = queryStrings.getQueryStringsMap();
     }
 
     public static RequestLine of(String startLine) {
@@ -38,7 +35,7 @@ public final class RequestLine {
     }
 
     public static RequestLine of(HttpMethod method, String path, Protocol protocol) {
-        return new RequestLine(method, PathAndQueryStrings.of(path), protocol);
+        return new RequestLine(method, Uri.of(path), protocol);
     }
 
     private static void validate(String line) {
@@ -62,12 +59,12 @@ public final class RequestLine {
             return false;
         }
         RequestLine that = (RequestLine) o;
-        return requestMethod == that.requestMethod && Objects.equals(path, that.path) && protocol == that.protocol && Objects.equals(queryStringsMap, that.queryStringsMap);
+        return requestMethod == that.requestMethod && protocol == that.protocol && Objects.equals(uri, that.uri);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestMethod, path, protocol, queryStringsMap);
+        return Objects.hash(requestMethod, protocol, uri);
     }
 
     public HttpMethod getHttpMethod() {
@@ -75,15 +72,11 @@ public final class RequestLine {
     }
 
     public String getPath() {
-        return path;
+        return uri.getPath();
     }
 
     public Protocol getProtocol() {
         return protocol;
-    }
-
-    public Map<String, String> getQueryStringsMap() {
-        return queryStringsMap;
     }
 
 }

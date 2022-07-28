@@ -9,6 +9,10 @@ import org.slf4j.LoggerFactory;
 public class HttpStatusResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpStatusResponse.class);
 
+    public static HttpResponse responseBadRequest400() {
+        return HttpResponse.createBadRequest();
+    }
+
     public static void responseBodRequest400(DataOutputStream dos) {
         final String badRequest = "Bod Request";
         byte[] body = badRequest.getBytes(StandardCharsets.UTF_8);

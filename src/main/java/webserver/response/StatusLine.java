@@ -23,8 +23,7 @@ public class StatusLine {
 
     @Override
     public String toString() {
-        return protocol.name() + "/" + protocol.version() + " " + statusCode.getStatusCode() + " " + statusCode.getMessage()
-            + " \r\n";
+        return protocol.protocol() + "/" + protocol.version() + " " + statusCode.getStatusCode() + " " + statusCode.getMessage();
     }
 
 }

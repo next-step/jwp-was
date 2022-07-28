@@ -1,7 +1,7 @@
 package webserver.request;
 
 import static exception.ExceptionStrings.CANNOT_FIND_HEADER_KEY;
-import static webserver.utils.HttpHeader.CONTENT_LENGTH;
+import static webserver.domain.HttpHeader.CONTENT_LENGTH;
 
 import com.google.common.collect.Maps;
 import java.io.BufferedReader;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import webserver.utils.HttpHeader;
+import webserver.domain.HttpHeader;
 
 public class HttpRequestHeader {
     private static final String HEADER_DELIMITER = ": ";
@@ -41,6 +41,10 @@ public class HttpRequestHeader {
         }
 
         return headers.get(key);
+    }
+
+    public boolean contains(String key) {
+        return headers.containsKey(key);
     }
 
     public Set<String> keySet() {

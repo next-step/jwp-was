@@ -3,6 +3,7 @@ package webserver.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ContentTypeTest {
@@ -15,6 +16,7 @@ class ContentTypeTest {
     final String png = "png";
     final String js = "js";
 
+    @DisplayName("확장자에 맞는 컨텐츠타입이 반환된다.")
     @Test
     void getContentTypeTest() {
         assertThat(ContentType.valueOf(css.toUpperCase())).isEqualTo(ContentType.CSS);

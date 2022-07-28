@@ -16,4 +16,11 @@ class StatusLineTest {
         assertThat(statusLine.getStatusCode()).isEqualTo(StatusCode.OK);
     }
 
+    @Test
+    void toStringTest() {
+        StatusLine statusLine = new StatusLine(Protocol.HTTP_1_1, StatusCode.OK);
+
+        assertThat(statusLine.toString()).isEqualTo("HTTP/1.1 200 OK");
+    }
+
 }

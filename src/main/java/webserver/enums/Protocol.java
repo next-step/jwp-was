@@ -37,4 +37,8 @@ public enum Protocol {
         );
     }
 
+    @Override
+    public String toString() {
+        return protocol + '/' + version;
+    }
 }

@@ -1,4 +1,4 @@
-package webserver.utils;
+package webserver.domain;
 
 public class HttpHeader {
     // https://github.com/itdar/TIL/blob/main/network/HttpMessage.md
@@ -56,4 +56,7 @@ public class HttpHeader {
     public static final String EXPIRES = "Expires";
     public static final String LAST_MODIFIED = "Last-Modified";
 
+    // Optional
+    public static final String COOKIE = "Cookie";
+    public static final String SET_COOKIE = "Set-Cookie";
 }

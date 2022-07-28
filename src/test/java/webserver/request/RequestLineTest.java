@@ -2,7 +2,6 @@ package webserver.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.entry;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,8 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.enums.HttpMethod;
 import webserver.enums.Protocol;
-import webserver.utils.PathAndQueryStrings;
-import webserver.utils.QueryStrings;
+import webserver.utils.Uri;
 
 class RequestLineTest {
     public static final String TEST_GET_REQUEST_LINE = "GET /users HTTP/1.1";
@@ -70,10 +68,10 @@ class RequestLineTest {
     @Test
     void pathTest() {
         final String testPath = "/testPath";
-        PathAndQueryStrings pathAndQueryStrings = PathAndQueryStrings.of(testPath);
+        Uri uri = Uri.of(testPath);
 
-        assertThat(pathAndQueryStrings.getPath()).isEqualTo(testPath);
-        assertThat(pathAndQueryStrings.getQueryStringsMap()).isEmpty();
+        assertThat(uri.getPath()).isEqualTo(testPath);
+        assertThat(uri.hasEmptyQueries()).isTrue();
     }
 
     @DisplayName("Path 파싱 시 QueryString 포함한 경우 Path, Map 둘 다 나온다.")
@@ -81,19 +79,19 @@ class RequestLineTest {
     void pathWithQueryStringTest() {
         final String testPath = "/testPath";
         final String testQueryStrings = "this=이것&that=저것";
-        PathAndQueryStrings pathAndQueryStrings = PathAndQueryStrings.of(testPath + "?" + testQueryStrings);
+        Uri uri = Uri.of(testPath + "?" + testQueryStrings);
 
-        assertThat(pathAndQueryStrings.getPath()).isEqualTo(testPath);
-        assertThat(pathAndQueryStrings.getQueryStringsMap())
-            .hasSize(2)
-            .contains(entry("this", "이것"), entry("that", "저것"));
+        assertThat(uri.getPath()).isEqualTo(testPath);
+        assertThat(uri.sizeOfQueries()).isEqualTo(2);
+        assertThat(uri.getQuery("this")).isEqualTo("이것");
+        assertThat(uri.getQuery("that")).isEqualTo("저것");
     }
 
     @DisplayName("null Path 입력 시 Path / QueryStrings 파싱은 실패한다.")
     @Test
     void emptyPathTest1() {
         assertThatThrownBy(
-            () -> PathAndQueryStrings.of(null)
+            () -> Uri.of(null)
         ).isInstanceOf(NullPointerException.class);
     }
 
@@ -102,7 +100,7 @@ class RequestLineTest {
     void emptyPathTest2() {
         final String testPath = "";
         assertThatThrownBy(
-            () -> PathAndQueryStrings.of(testPath)
+            () -> Uri.of(testPath)
         ).isInstanceOf(IllegalArgumentException.class);
     }
 

@@ -2,6 +2,7 @@ package webserver.utils;
 
 import static exception.ExceptionStrings.INVALID_QUERY_STRING;
 
+import com.google.common.collect.Maps;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,10 @@ public class QueryStrings {
             return new QueryStrings(Collections.emptyMap());
         }
         return new QueryStrings(parseQueryStrings(queryStrings));
+    }
+
+    public static QueryStrings empty() {
+        return new QueryStrings(Maps.newHashMap());
     }
 
     public static Map<String, String> toMap(String queryStrings) {
@@ -56,4 +61,32 @@ public class QueryStrings {
         return map;
     }
 
+    public boolean isEmpty() {
+        return map.isEmpty();
+    }
+
+    public int size() {
+        return map.size();
+    }
+
+    public String get(String key) {
+        return map.get(key);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        QueryStrings that = (QueryStrings) o;
+        return Objects.equals(map, that.map);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(map);
+    }
 }

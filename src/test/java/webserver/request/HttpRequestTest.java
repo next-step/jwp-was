@@ -5,6 +5,7 @@ import static webserver.request.RequestLineTest.TEST_GET_REQUEST_LINE;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ class HttpRequestTest {
         httpRequest = new HttpRequest(TEST_GET_REQUEST_LINE);
     }
 
+    @DisplayName("헤더에 키-밸류 형태로 값이 정상 저장된다.")
     @Test
     void headerTest() {
         httpRequest.addHeader("Host", "localhost:8080");

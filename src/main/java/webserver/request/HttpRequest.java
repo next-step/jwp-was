@@ -8,9 +8,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import webserver.domain.Cookies;
 import webserver.enums.HttpMethod;
 import webserver.enums.Protocol;
-import webserver.utils.HttpHeader;
+import webserver.domain.HttpHeader;
 
 public class HttpRequest {
 
@@ -70,10 +71,6 @@ public class HttpRequest {
         return requestLine.getProtocol();
     }
 
-    public Map<String, String> getQueryStringsMap() {
-        return requestLine.getQueryStringsMap();
-    }
-
     public void addHeader(String key, String value) {
         header.putHeader(key, value);
     }
@@ -82,12 +79,14 @@ public class HttpRequest {
         return header.getHeader(key);
     }
 
-    public int contentLength() {
-        return header.contentLength();
+    public Cookies getCookies() {
+        if (!this.header.contains(HttpHeader.COOKIE)) {
+            return Cookies.empty();
+        }
+        return Cookies.of(this.header.getHeader(HttpHeader.COOKIE));
     }
 
-    public void setBody(String body) {
-        this.body = HttpRequestBody.of(body);
+    public String getQueryString(String queryKey) {
+        return bodyQueryString().get(queryKey);
     }
-
 }

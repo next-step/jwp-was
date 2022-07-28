@@ -1,7 +1,5 @@
 package webserver;
 
-import static webserver.response.HttpStatusResponse.responseBodRequest400;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,15 +36,6 @@ public class RequestHandler implements Runnable {
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
             e.printStackTrace();
-        }
-        catch (Exception e) {  // 예상되는 예외의 최상위 클래스로 할 것 정의해야함
-            logger.error(e.getMessage());
-            e.printStackTrace();
-            try (OutputStream out = connection.getOutputStream()) {
-                responseBodRequest400(new DataOutputStream(out));
-            } catch (Exception ex) {
-                logger.error(ex.getMessage());
-            }
         }
     }
 

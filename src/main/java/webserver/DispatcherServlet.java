@@ -7,7 +7,6 @@ import webserver.response.HttpResponse;
 import webserver.servlet.Servlet;
 import webserver.supporter.SupportApis;
 import webserver.supporter.SupportResources;
-import webserver.supporter.SupportTemplates;
 
 /**
  * handlerMapping
@@ -26,14 +25,12 @@ public enum DispatcherServlet {
             return;
         }
 
-        if (SupportTemplates.isSupported(requestPath)) {
-            SupportTemplates.responseStatic(httpRequest, httpResponse);
+        if (SupportResources.isSupportedExtension(requestPath)) {
+            SupportResources.serve(httpRequest, httpResponse);
             return;
         }
 
-        if (SupportResources.isSupported(requestPath)) {
-            SupportResources.responseResource(httpRequest, httpResponse);
-        }
+        httpResponse.notFound();
     }
 
 }
