@@ -10,7 +10,7 @@ public class TemplateEngine {
 
     private final Handlebars handlebars;
 
-    public TemplateEngine(Handlebars handlebars) {
+    private TemplateEngine(Handlebars handlebars) {
         this.handlebars = handlebars;
     }
 
