@@ -16,9 +16,6 @@ public class HttpRequest {
     public static final String VALIDATION_MESSAGE = "잘못된 HTTP 요청입니다.";
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequest.class);
     private static final Pattern HEADER_DELIMITER = Pattern.compile(": ");
-    private static final String PAYLOAD_DELIMITER = "&";
-    private static final String PAYLOAD_ITEM_DELIMITER = "=";
-    private static final int CORRECT_LENGTH = 2;
 
     private final RequestLine requestLine;
     private final Map<String, String> headers;
@@ -71,30 +68,9 @@ public class HttpRequest {
         try {
             final int contentLength = getContentLength();
             final String payload = IOUtils.readData(br, contentLength);
-            return makePayloads(payload);
+            return HttpUtils.parseToMap(payload);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private Map<String, String> makePayloads(String payload) {
-        final Map<String, String> payloads = new HashMap<>();
-        final String[] splitPayloadSpecs = payload.split(PAYLOAD_DELIMITER);
-        for (String splitPayloadSpec : splitPayloadSpecs) {
-            addQueryString(payloads, splitPayloadSpec);
-        }
-        return payloads;
-    }
-
-    private void addQueryString(Map<String, String> queryStrings, String splitQueryStringSpec) {
-        final String[] querystringItems = splitQueryStringSpec.split(PAYLOAD_ITEM_DELIMITER);
-        validateQueryStringItems(querystringItems);
-        queryStrings.put(querystringItems[0], HttpUtils.decode(querystringItems[1]));
-    }
-
-    private void validateQueryStringItems(String[] items) {
-        if (items.length != CORRECT_LENGTH) {
-            throw new IllegalArgumentException(VALIDATION_MESSAGE);
         }
     }
 
