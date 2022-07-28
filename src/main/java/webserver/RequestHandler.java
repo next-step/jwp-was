@@ -1,13 +1,18 @@
 package webserver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
+import webserver.controller.ViewController;
+import webserver.request.HttpRequest;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -23,14 +28,37 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-        } catch (IOException e) {
+
+            List<String> request = getRequest(in);
+            HttpRequest httpRequest = new HttpRequest(request);
+
+            byte[] result = new ViewController().handle(httpRequest);
+
+            response(out, result);
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private List<String> getRequest(InputStream in) throws IOException {
+        List<String> request = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+
+        String line = br.readLine();
+        request.add(line);
+
+        while (line.equals("")) {
+            line = br.readLine();
+            request.add(line);
+        }
+
+        return request;
+    }
+
+    private void response(OutputStream out, byte[] body) {
+        DataOutputStream dos = new DataOutputStream(out);
+        response200Header(dos, body.length);
+        responseBody(dos, body);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {

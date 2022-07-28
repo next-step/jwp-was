@@ -18,9 +18,9 @@ public class RequestLine {
     }
 
     public RequestLine(String httpRequest) {
-        if (!PATTERN.matcher(httpRequest).matches()) {
-            throw new IllegalArgumentException();
-        }
+//        if (!PATTERN.matcher(httpRequest).matches()) {
+//            throw new IllegalArgumentException();
+//        }
 
         String[] splitRequestLine = httpRequest.split(" ");
 
