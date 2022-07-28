@@ -3,10 +3,16 @@ package webserver.response;
 import static webserver.request.Protocol.HTTP_1_1;
 import static webserver.response.ResponseBody.EMPTY_RESPONSE_BODY;
 import static webserver.response.StatusCode.FOUND;
+import static webserver.response.StatusCode.NOT_FOUND;
+import static webserver.response.StatusCode.OK;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Objects;
+import webserver.request.ContentType;
+import webserver.template.HandleBarTemplateLoader;
 
 public class HttpResponse {
 
@@ -25,6 +31,28 @@ public class HttpResponse {
         headers.add("Location", location);
 
         return new HttpResponse(new StatusLine(HTTP_1_1, FOUND), headers, EMPTY_RESPONSE_BODY);
+    }
+
+    public static HttpResponse ok(final String location, final Map<String, Object> params) {
+        try {
+            final String load = HandleBarTemplateLoader.load(location, params);
+            final byte[] bytes = load.getBytes(StandardCharsets.UTF_8);
+            return ok(bytes, ContentType.HTML);
+        } catch (IOException e) {
+            return HttpResponse.notFound();
+        }
+    }
+
+    public static HttpResponse ok(final byte[] body, ContentType contentType) {
+        final ResponseHeaders headers = new ResponseHeaders();
+        headers.add("Content-Type", contentType.getMediaType());
+        headers.add("Content-Length", String.valueOf(body.length));
+
+        return new HttpResponse(new StatusLine(HTTP_1_1, OK), headers, new ResponseBody(new String(body)));
+    }
+
+    private static HttpResponse notFound() {
+        return new HttpResponse(new StatusLine(HTTP_1_1, NOT_FOUND), new ResponseHeaders(), EMPTY_RESPONSE_BODY);
     }
 
     public HttpResponse addCookie(final String key, final String value) {

@@ -22,6 +22,10 @@ public class HttpRequest {
         return requestBody;
     }
 
+    public boolean hasCookie(final String value) {
+        return requestHeaders.hasCookie(value);
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
