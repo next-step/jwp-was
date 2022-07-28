@@ -129,7 +129,8 @@ class HttpHeadersTest {
         String[] pair = cookieArr[1].split(Cookie.KEY_VALUE_DELIMITER);
 
         Cookie cookie = httpHeaders.getCookie();
-        assertThat(cookie.getAttribute(pair[0])).isEqualTo(pair[1]);
+        assertThat(cookie.getName()).isEqualTo(pair[0]);
+        assertThat(cookie.getValue()).isEqualTo(pair[1]);
     }
 
 

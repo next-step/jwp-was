@@ -1,7 +1,5 @@
 package webserver.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -12,20 +10,22 @@ import java.nio.charset.StandardCharsets;
 /**
  * Http 요청 정보
  */
-public class HttpRequest {
+public class HttpRequest extends HttpEntity<RequestBody> {
 
     public static final int MIN_CONTENT_LENGTH = 0;
     private final RequestLine requestLine;
-    private final HttpHeaders headers;
-    private final RequestBody requestBody;
 
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public HttpRequest(@JsonProperty("requestLine") RequestLine requestLine,
-                       @JsonProperty("headers") HttpHeaders headers,
-                       @JsonProperty("requestBody") RequestBody requestBody) {
+    public HttpRequest(RequestLine requestLine) {
+        this(null, null, requestLine);
+    }
+
+    public HttpRequest(RequestBody body, RequestLine requestLine) {
+        this(null, body, requestLine);
+    }
+
+    public HttpRequest(HttpHeaders headers, RequestBody body, RequestLine requestLine) {
+        super(headers, body);
         this.requestLine = requestLine;
-        this.headers = headers;
-        this.requestBody = requestBody;
     }
 
     /**
@@ -45,7 +45,7 @@ public class HttpRequest {
             requestBody.addAttributes(IOUtils.readData(br, contentLength));
         }
 
-        return new HttpRequest(requestLine, httpHeaders, requestBody);
+        return new HttpRequest(httpHeaders, requestBody, requestLine);
     }
 
     /**
@@ -56,24 +56,17 @@ public class HttpRequest {
     }
 
     /**
-     * 요청 헤더 정보를 반환한다.
-     */
-    public HttpHeaders getHeaders() {
-        return headers;
-    }
-
-    /**
      * 요청 정보 body를 반환한다.
      */
     public RequestBody getRequestBody() {
-        return requestBody;
+        return getBody();
     }
 
     /**
      * 쿠키 정보를 반환한다.
      */
     public Cookie getCookie() {
-        return headers.getCookie();
+        return getHeaders().getCookie();
     }
 
     @Override
@@ -81,6 +74,6 @@ public class HttpRequest {
         return String.format(
                 "%s \r\n " +
                         "%s \r\n " +
-                        "%s \r\n", requestLine, headers, requestBody);
+                        "%s \r\n", requestLine, getHeaders(), getBody());
     }
 }

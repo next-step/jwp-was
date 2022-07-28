@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import utils.FileIoUtils;
+import webserver.domain.DefaultView;
 import webserver.domain.HttpEntity;
 import webserver.domain.HttpRequest;
 import webserver.handlers.ControllerContainerImpl;
@@ -57,7 +57,7 @@ class HandleContainerTest {
     @ParameterizedTest
     @ValueSource(strings = {"GET /index.html http/1.1"})
     void executeWithInValidPath(String requestLine) throws IOException, URISyntaxException {
-        byte[] expectedBody = FileIoUtils.loadFileFromClasspath("./templates/index.html");
+        DefaultView view = DefaultView.createDefaultHtmlView("/index");
 
         InputStream is = new ByteArrayInputStream(requestLine.getBytes());
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -67,7 +67,7 @@ class HandleContainerTest {
         Controller controller = handleContainer.findController(httpRequest.getRequestLine());
         HttpEntity<?> responseEntity = controller.execute(httpRequest);
 
-        assertThat(responseEntity.getBody()).isEqualTo(expectedBody);
+        assertThat(responseEntity.getBody()).isEqualTo(view);
     }
 
 

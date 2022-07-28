@@ -6,6 +6,7 @@ import utils.FileIoUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 /**
  * 기본 View 정보 객체
@@ -69,4 +70,20 @@ public class DefaultView {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DefaultView)) {
+            return false;
+        }
+        DefaultView that = (DefaultView) o;
+        return Objects.equals(prefix, that.prefix) && Objects.equals(suffix, that.suffix) && Objects.equals(viewName, that.viewName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(prefix, suffix, viewName);
+    }
 }

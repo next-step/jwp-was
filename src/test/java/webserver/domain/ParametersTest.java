@@ -28,7 +28,7 @@ class ParametersTest {
 
         assertAll(
                 ()-> assertThat(parameters.getParameters()).isEmpty(),
-                ()-> assertThatThrownBy(()-> parameters.addParameters("a"))
+                ()-> assertThatThrownBy(()-> parameters.addParameters("a", "b"))
                         .isInstanceOf(UnsupportedOperationException.class)
 
         );
