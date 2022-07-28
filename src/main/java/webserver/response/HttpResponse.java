@@ -18,6 +18,16 @@ import webserver.template.HandleBarTemplateLoader;
 
 public class HttpResponse {
 
+    private static final String LOCATION = "Location";
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String CONTENT_LENGTH = "Content-Length";
+    private static final String TEMPLATES = "templates";
+    private static final String STATIC = "static";
+    private static final String SET_COOKIE = "Set-Cookie";
+    private static final String CRLF = "\r\n";
+    private static final String COOKIE_FORMAT = "%s=%s; Path=/";
+    private static final String HEADER_DELIMITER = ": ";
+
     private final StatusLine responseLine;
     private final ResponseHeaders responseHeaders;
     private final ResponseBody responseBody;
@@ -30,7 +40,7 @@ public class HttpResponse {
 
     public static HttpResponse redirect(final String location) {
         final ResponseHeaders headers = new ResponseHeaders();
-        headers.add("Location", location);
+        headers.add(LOCATION, location);
 
         return new HttpResponse(new StatusLine(HTTP_1_1, FOUND), headers, EMPTY_RESPONSE_BODY);
     }
@@ -59,8 +69,8 @@ public class HttpResponse {
 
     public static HttpResponse ok(final byte[] body, ContentType contentType) {
         final ResponseHeaders headers = new ResponseHeaders();
-        headers.add("Content-Type", contentType.getMediaType());
-        headers.add("Content-Length", String.valueOf(body.length));
+        headers.add(CONTENT_TYPE, contentType.getMediaType());
+        headers.add(CONTENT_LENGTH, String.valueOf(body.length));
 
         return new HttpResponse(new StatusLine(HTTP_1_1, OK), headers, new ResponseBody(new String(body)));
     }
@@ -71,13 +81,13 @@ public class HttpResponse {
 
     private static String getFilePath(final String fileExtension) {
         if (fileExtension.endsWith("html") || fileExtension.endsWith("ico")) {
-            return "templates";
+            return TEMPLATES;
         }
-        return "static";
+        return STATIC;
     }
 
     public HttpResponse addCookie(final String key, final String value) {
-        responseHeaders.add("Set-Cookie", String.format("%s=%s; Path=/", key, value));
+        responseHeaders.add(SET_COOKIE, String.format(COOKIE_FORMAT, key, value));
         return this;
     }
 
@@ -89,14 +99,14 @@ public class HttpResponse {
     }
 
     private void writeStatusLine(final DataOutputStream dos) throws IOException {
-        dos.writeBytes(responseLine.value() + "\r\n");
+        dos.writeBytes(responseLine.value() + CRLF);
     }
 
     private void writeHeaders(final DataOutputStream dos) throws IOException {
         for (final String header : responseHeaders.getHeaders().keySet()) {
-            dos.writeBytes(header + ": " + responseHeaders.get(header) + "\r\n");
+            dos.writeBytes(header + HEADER_DELIMITER + responseHeaders.get(header) + CRLF);
         }
-        dos.writeBytes("\r\n");
+        dos.writeBytes(CRLF);
     }
 
     private void writeBody(final DataOutputStream dos) throws IOException {

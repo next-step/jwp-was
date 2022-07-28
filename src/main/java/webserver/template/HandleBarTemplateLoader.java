@@ -8,6 +8,8 @@ import java.io.IOException;
 
 public class HandleBarTemplateLoader {
 
+    private static final String INCREASE = "inc";
+
     private HandleBarTemplateLoader() {
         throw new AssertionError();
     }
@@ -17,7 +19,7 @@ public class HandleBarTemplateLoader {
         loader.setPrefix("/templates");
         loader.setSuffix(".html");
         Handlebars handlebars = new Handlebars(loader);
-        handlebars.registerHelper("inc", (context, options) -> (int) context + 1);
+        handlebars.registerHelper(INCREASE, (context, options) -> (int) context + 1);
 
         Template template = handlebars.compile(templateName);
 

@@ -9,9 +9,12 @@ import java.util.stream.Collectors;
 
 public class RequestBody {
 
-    private static final String EMPTY_VALUE = "";
+    public static final RequestBody EMPTY_REQUEST_BODY = new RequestBody("");
 
-    public static final RequestBody EMPTY_REQUEST_BODY = new RequestBody(EMPTY_VALUE);
+    private static final String EMPTY_VALUE = "";
+    private static final String PARAMETER_DELIMITER = "&";
+    private static final String KEY_VALUE_DELIMITER = "=";
+
 
     private final Map<String, String> parameters = new HashMap<>();
 
@@ -24,8 +27,8 @@ public class RequestBody {
     }
 
     private Map<String, String> parse(final String parameters) {
-        return Arrays.stream(parameters.split("&"))
-            .map(token -> token.split("="))
+        return Arrays.stream(parameters.split(PARAMETER_DELIMITER))
+            .map(token -> token.split(KEY_VALUE_DELIMITER))
             .filter(this::hasKey)
             .collect(Collectors.toMap(
                 key -> key[0],
