@@ -16,8 +16,8 @@ class QueryStringParserTest {
         String singleQueryString = "/system/users?userId=javajigi";
 
         assertAll(
-                () -> assertThat(severalQueryString.matches(regex)).isTrue(),
-                () -> assertThat(singleQueryString.matches(regex)).isTrue()
+            () -> assertThat(severalQueryString.matches(regex)).isTrue(),
+            () -> assertThat(singleQueryString.matches(regex)).isTrue()
         );
     }
 
@@ -33,5 +33,19 @@ class QueryStringParserTest {
 
         //then
         assertThat(queryStringParseResult).isEqualTo(queryString);
+    }
+
+    @Test
+    @DisplayName("queryString이 포함된 path를 removeQueryString시, queryString이 제거된다.")
+    void removeQueryStringTest() {
+        //given
+        String path = "/users?userId=javajigi&password=password&name=JaeSung";
+        String queryStringRemovedPath = "/users";
+
+        //when
+        String queryStringParseResult = QueryStringParser.removeQueryString(path);
+
+        //then
+        assertThat(queryStringParseResult).isEqualTo(queryStringRemovedPath);
     }
 }
