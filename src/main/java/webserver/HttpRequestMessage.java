@@ -1,4 +1,0 @@
-package webserver;
-
-interface HttpRequestMessage {
-}
