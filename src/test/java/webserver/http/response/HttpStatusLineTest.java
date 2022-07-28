@@ -14,9 +14,9 @@ public class HttpStatusLineTest {
 	public void getHttpStatusLine() {
 		HttpStatusLine httpStatusLine = new HttpStatusLine(HttpProtocol.of("HTTP/1.1"));
 
-		assertThat(httpStatusLine.getHttpStatusLine(HttpStatus.OK)).isEqualTo("HTTP 200 OK");
-		assertThat(httpStatusLine.getHttpStatusLine(HttpStatus.FOUND)).isEqualTo("HTTP 302 Found");
-		assertThat(httpStatusLine.getHttpStatusLine(HttpStatus.NOT_FOUND)).isEqualTo("HTTP 404 Not Found");
-		assertThat(httpStatusLine.getHttpStatusLine(HttpStatus.INTERNAL_SERVER_ERROR)).isEqualTo("HTTP 500 Internal Server Error");
+		assertThat(httpStatusLine.getHttpStatusLine(HttpStatus.OK)).isEqualTo("HTTP 200 OK\r\n");
+		assertThat(httpStatusLine.getHttpStatusLine(HttpStatus.FOUND)).isEqualTo("HTTP 302 Found\r\n");
+		assertThat(httpStatusLine.getHttpStatusLine(HttpStatus.NOT_FOUND)).isEqualTo("HTTP 404 Not Found\r\n");
+		assertThat(httpStatusLine.getHttpStatusLine(HttpStatus.INTERNAL_SERVER_ERROR)).isEqualTo("HTTP 500 Internal Server Error\r\n");
 	}
 }
