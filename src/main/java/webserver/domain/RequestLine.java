@@ -2,97 +2,81 @@ package webserver.domain;
 
 import org.springframework.http.HttpMethod;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+/**
+ * 요청 라인
+ */
 public class RequestLine {
+    public static final String QUERY_DELIMITER = "\\?";
     public static final String DELIMITER = " ";
-    public static final String PROTOCOL_SPLIT_DELIMITER = "/";
-    public static final String QUERYSTRING_DELIMITER = "\\?";
-    public static final int PATH_AND_QUERYSTRING_POINT = 1;
+    public static final int PATH_POINT = 1;
     public static final int PROTOCOL_AND_VERSION_POINT = 2;
     public static final int METHOD_POINT = 0;
-    public static final int PATH_POINT = 0;
-    public static final int PROTOCOL_POINT = 0;
-    public static final int VERSION_POINT = 1;
-    public static final int QUERYSTRING_POINT = 1;
-    public static final String QUERYSTRING_PARAM_DELIMITER = "&";
-    public static final String QUERYSTRING_KEY_VALUE_DELIMITER = "=";
-    public static final int QUERY_VALUE_POINT = 1;
-    public static final String DEFAULT_QUERY_VALUE = "";
+    public static final String INVALID_REQUEST_LINE_MSG = "유효하지 않은 RequestLine입니다. valeu:";
 
     private HttpMethod method;
-    private String path;
-    private String protocol;
-    private String version;
-    private Map<String, String> parameterMap;
+    private Protocol protocol;
+    private Path path;
 
-    public RequestLine(){}
+    public RequestLine() {
+    }
 
-    public RequestLine(HttpMethod method, String path, Map<String, String> parameterMap, String protocol, String version) {
+    public RequestLine(HttpMethod method, Path path, Protocol protocol) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
-        this.version = version;
-        this.parameterMap = parameterMap;
     }
 
+
+    /**
+     * 요청 라인 문자열에서 method, queryString, protocol을 추출해 요청 정보 객체를 생성해 반환한다.
+     * @param line 요청 라인 문자열
+     * @return 요청 정보
+     */
     public static RequestLine from(String line) {
+        if (line == null || line.isEmpty()) {
+            throw new IllegalArgumentException(INVALID_REQUEST_LINE_MSG + line);
+        }
+
         String[] attributes = line.split(DELIMITER);
-        String[] pathAndQueryString = attributes[PATH_AND_QUERYSTRING_POINT].split(QUERYSTRING_DELIMITER);
-        Map<String, String> parameterMap = getParameterMap(pathAndQueryString);
-        String[] protocolAndVersion = attributes[PROTOCOL_AND_VERSION_POINT].split(PROTOCOL_SPLIT_DELIMITER);
 
-        return new RequestLine(HttpMethod.valueOf(attributes[METHOD_POINT]),
-                pathAndQueryString[PATH_POINT],
-                parameterMap,
-                protocolAndVersion[PROTOCOL_POINT],
-                protocolAndVersion[VERSION_POINT]);
-    }
+        HttpMethod httpMethod = HttpMethod.valueOf(attributes[METHOD_POINT]);
+        Path path = new Path(attributes[PATH_POINT].split(QUERY_DELIMITER)[0]);
+        Protocol protocol = Protocol.newInstance(attributes[PROTOCOL_AND_VERSION_POINT]);
 
-    private static Map<String, String> getParameterMap(String[] pathAndQueryString) {
-        if (pathAndQueryString.length < 2) {
-            return new HashMap<>();
-        }
-
-        return Arrays.stream(pathAndQueryString[QUERYSTRING_POINT].split(QUERYSTRING_PARAM_DELIMITER))
-                .map(str -> str.split(QUERYSTRING_KEY_VALUE_DELIMITER))
-                .collect(Collectors.toMap(RequestLine::queryKey, RequestLine::queryValue));
-    }
-
-    private static String queryKey(String[] pair) {
-        return pair[0];
-    }
-
-    private static String queryValue(String[] pair) {
-        if (pair.length < 2) {
-            return DEFAULT_QUERY_VALUE;
-        }
-        return pair[QUERY_VALUE_POINT];
+        return new RequestLine(httpMethod, path, protocol);
     }
 
 
-
+    /**
+     * 요청 메서드를 반환한다.
+     */
     public HttpMethod getMethod() {
         return method;
     }
 
-    public String getPath() {
+    /**
+     * 요청 경로 객체를 반환한다.
+     */
+    public Path getPath() {
         return path;
     }
 
-    public String getProtocol() {
+    /**
+     * 요청 프로토콜을 반환한다.
+     */
+    public Protocol getProtocol() {
         return protocol;
     }
 
-    public String getVersion() {
-        return version;
+    /**
+     * 요청 경로 문자열을 반환한다.
+     */
+    public String getPathStr() {
+        return path.getPathStr();
     }
 
-    public Map<String, String> getParameterMap() {
-        return Collections.unmodifiableMap(parameterMap);
+    @Override
+    public String toString() {
+        return method.name() + " " + path + " " + protocol;
     }
 }

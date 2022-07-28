@@ -12,10 +12,8 @@ public class IOUtils {
     public static final int INIT_POINT = 0;
 
     /**
-     * @param BufferedReader는
-     *            Request Body를 시작하는 시점이어야
-     * @param contentLength는
-     *            Request Header의 Content-Length 값이다.
+     * @param br 는 Request Body를 시작하는 시점이어야
+     * @param contentLength 는 Request Header의 Content-Length 값이다.
      * @return
      * @throws IOException
      */
@@ -28,7 +26,7 @@ public class IOUtils {
     public static String readData(BufferedReader br) throws IOException {
         stringBuilder.setLength(INIT_POINT);
 
-        for(String line, newLine = System.lineSeparator() ; br.ready() && (line = br.readLine()) != null;) {
+        for (String line, newLine = System.lineSeparator(); br.ready() && (line = br.readLine()) != null; ) {
             stringBuilder.append(line).append(newLine);
         }
 
