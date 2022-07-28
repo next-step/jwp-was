@@ -1,7 +1,12 @@
 package http.request;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -69,5 +74,23 @@ class HttpRequestTest {
         assertThatThrownBy(httpRequest::getFileExtension)
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessageStartingWith("확장자를 찾을 수 없습니다.");
+    }
+
+    @Test
+    void parse() {
+        var request = "GET /index.html HTTP/1.1\n"
+            + "Host: localhost:8080\n"
+            + "Connection: keep-alive\n"
+            + "Accept: */*";
+        var inputStream = new ByteArrayInputStream(request.getBytes(StandardCharsets.UTF_8));
+        var bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+        var httpRequest = HttpRequest.parse(bufferedReader);
+
+        assertAll(
+            () -> assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET),
+            () -> assertThat(httpRequest.getUrl()).isEqualTo("/index.html"),
+            () -> assertThat(httpRequest.isStaticFile()).isTrue()
+        );
     }
 }

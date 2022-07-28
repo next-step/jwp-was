@@ -88,10 +88,8 @@ public class HttpResponse {
     }
 
     private void writeHeader(DataOutputStream dos) {
-        var protocol = getProtocol();
-        var httpStatus = getHttpStatus();
         try {
-            dos.writeBytes(String.format("%s/%s %d %s \r\n",
+            dos.writeBytes(String.format("%s/%s %d %s\r\n",
                 protocol.getProtocolType(),
                 protocol.getVersion(),
                 httpStatus.getStatusCode(),
