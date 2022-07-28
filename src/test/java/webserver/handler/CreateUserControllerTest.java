@@ -19,7 +19,7 @@ import webserver.response.StatusLine;
 
 class CreateUserControllerTest {
 
-    final CreateUserController controller = new CreateUserController();
+    private final CreateUserController controller = new CreateUserController();
 
     @DisplayName("회원 가입 후 페이지 이동 응답 객체를 반환한다")
     @Test
