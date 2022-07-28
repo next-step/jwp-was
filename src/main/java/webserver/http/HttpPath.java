@@ -1,12 +1,12 @@
 package webserver.http;
 
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HttpPath {
-    private static final String REGEX = "^/\\w*";
-    private static final Pattern PATTERN = Pattern.compile(REGEX);
+    private static final String PATH_REGEX = "^/\\w*";
+    private static final Pattern PATTERN = Pattern.compile(PATH_REGEX);
+    private static final String QUERYSTRING_START_PREFIX = "?";
 
     private final String path;
     private final HttpParams httpParams;
@@ -18,8 +18,8 @@ public class HttpPath {
     }
 
     private HttpParams parseQuerystring(String querystring) {
-        if (querystring.contains("?")) {
-            return new HttpParams(querystring.substring(querystring.indexOf("?")));
+        if (querystring.contains(QUERYSTRING_START_PREFIX)) {
+            return new HttpParams(querystring.substring(querystring.indexOf(QUERYSTRING_START_PREFIX)));
         }
         return new HttpParams();
     }
