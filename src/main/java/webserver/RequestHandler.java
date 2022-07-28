@@ -31,7 +31,6 @@ public class RequestHandler implements Runnable {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             List<String> httpMessageData = RequestService.getHttpMessageData(bufferedReader);
             HttpMessage httpMessage = new HttpMessage(httpMessageData, bufferedReader);
-            logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpMessage.toStringHttpMessage());
 
             ClientResponse clientResponse = RequestService.getClientResponse(httpMessage);
 

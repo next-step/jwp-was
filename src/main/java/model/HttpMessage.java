@@ -73,6 +73,7 @@ public class HttpMessage {
         value.append(this.requestHeaders.getInfo());
         value.append("\n");
         value.append(body);
+        value.append("\n");
         value.append("]");
 
         return value.toString();

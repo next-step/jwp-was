@@ -4,18 +4,12 @@ import annotation.GetMapping;
 import annotation.PostMapping;
 import db.DataBase;
 import model.ClientResponse;
+import model.Credential;
 import model.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-
-import java.net.URI;
+import service.UserService;
 
 public class UserController {
-
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
 
     @GetMapping(path = "/user")
     public ClientResponse getUserTest() {
@@ -30,10 +24,12 @@ public class UserController {
 
     @PostMapping(path = "/user/create")
     public ClientResponse createUserPost(User user) {
-        DataBase.addUser(user);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("http://localhost:8080/index.html"));
-        return new ClientResponse(HttpStatus.FOUND, httpHeaders, user);
+        return UserService.getInstance().createUser(user);
+    }
+
+    @PostMapping(path = "/user/login")
+    public ClientResponse login(Credential credential) {
+        return UserService.getInstance().auth(credential);
     }
 
 }
