@@ -40,22 +40,10 @@ public class RequestHandler implements Runnable {
 
             final DataOutputStream dos = new DataOutputStream(out);
             if (requestLine.getHttpMethod() == HttpMethod.POST && "/user/create".equals(requestLine.getPath())) {
-                final Map<String, String> payloads = httpRequest.getPayloads();
-                final User user = new User(
-                        payloads.get("userId"),
-                        payloads.get("password"),
-                        payloads.get("name"),
-                        payloads.get("email")
-                );
-                final byte[] body = user.toString().getBytes(StandardCharsets.UTF_8);
-                response200Header(dos, body.length);
-                responseBody(dos, body);
+                responseForPost(httpRequest, dos);
                 return;
             }
-
-            final byte[] body = FileIoUtils.loadFileFromClasspath(TEMPLATES_PATH + requestLine.getPath());
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            responseForGet(requestLine, dos);
         } catch (IOException | URISyntaxException e) {
             LOGGER.error(e.getMessage());
         }
@@ -64,6 +52,25 @@ public class RequestHandler implements Runnable {
     private HttpRequest convertToHttpRequest(InputStream in) throws IOException {
         final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         return new HttpRequest(br);
+    }
+
+    private void responseForGet(RequestLine requestLine, DataOutputStream dos) throws IOException, URISyntaxException {
+        final byte[] body = FileIoUtils.loadFileFromClasspath(TEMPLATES_PATH + requestLine.getPath());
+        response200Header(dos, body.length);
+        responseBody(dos, body);
+    }
+
+    private void responseForPost(HttpRequest httpRequest, DataOutputStream dos) {
+        final Map<String, String> payloads = httpRequest.getPayloads();
+        final User user = new User(
+                payloads.get("userId"),
+                payloads.get("password"),
+                payloads.get("name"),
+                payloads.get("email")
+        );
+        final byte[] body = user.toString().getBytes(StandardCharsets.UTF_8);
+        response200Header(dos, body.length);
+        responseBody(dos, body);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
