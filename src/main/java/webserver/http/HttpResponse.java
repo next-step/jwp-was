@@ -8,8 +8,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public class HttpResponse {
@@ -17,14 +15,15 @@ public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
     private DataOutputStream dos;
-    private Map<String, String> headers = new HashMap<>();
+    private ResponseHeader headers;
 
     public HttpResponse(OutputStream out) {
         this.dos = new DataOutputStream(out);
+        this.headers = new ResponseHeader();
     }
 
     public void addHeader(String key, String value) {
-        this.headers.put(key, value);
+        headers.addHeader(key, value);
     }
 
     public void forward(String path) throws IOException, URISyntaxException {
@@ -85,9 +84,9 @@ public class HttpResponse {
 
     public void processHeaders() {
         try {
-            Set<String> keys = headers.keySet();
+            Set<String> keys = headers.getHeaderKeys();
             for (String key : keys) {
-                dos.writeBytes(key + ": " + headers.get(key) + "\r\n");
+                dos.writeBytes(key + ": " + headers.getHeader(key) + "\r\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
