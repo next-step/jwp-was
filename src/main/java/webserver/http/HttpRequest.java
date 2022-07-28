@@ -1,4 +1,4 @@
-package domain;
+package webserver.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,6 @@ public class HttpRequest {
         Map<String, String> headers = new HashMap<>();
         String line;
         while (!"".equals(line = readLine(br))) {
-            LOGGER.info("line: {}", line);
             final String[] splitLine = HEADER_DELIMITER.split(line);
             headers.put(splitLine[0], splitLine[1]);
         }

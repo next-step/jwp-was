@@ -1,12 +1,12 @@
 package webserver;
 
-import domain.HttpMethod;
-import domain.HttpRequest;
-import domain.RequestLine;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import webserver.http.HttpMethod;
+import webserver.http.HttpRequest;
+import webserver.http.RequestLine;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -68,16 +68,25 @@ public class RequestHandler implements Runnable {
                 payloads.get("name"),
                 payloads.get("email")
         );
-        final byte[] body = user.toString().getBytes(StandardCharsets.UTF_8);
-        response200Header(dos, body.length);
-        responseBody(dos, body);
+        LOGGER.debug(user.toString());
+        response302Header(dos);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("HTTP/1.1 200 OK\r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(DataOutputStream dos) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found\r\n");
+            dos.writeBytes("Location: http://localhost:8080/index.html\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             LOGGER.error(e.getMessage());

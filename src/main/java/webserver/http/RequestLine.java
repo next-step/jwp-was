@@ -1,4 +1,4 @@
-package domain;
+package webserver.http;
 
 import java.util.Objects;
 
