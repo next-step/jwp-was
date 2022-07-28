@@ -14,7 +14,7 @@ import java.util.List;
 
 public class HttpRequestHeaderParser {
     private static final int REQUEST_LINE_INDEX = 0;
-    private static final Object END_OF_HTTP_REQUEST_HEADER = null;
+    private static final String END_OF_HTTP_REQUEST_HEADER = "";
 
     public static HttpRequestHeader parseHttpRequestHeaderParser(InputStream inputStream) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));

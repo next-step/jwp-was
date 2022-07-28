@@ -12,7 +12,7 @@ public class BufferedReaderUtils {
         String line = br.readLine();
         lines.add(line);
 
-        while (line != null) {
+        while (!line.equals("")) {
             line = br.readLine();
             lines.add(line);
         }
