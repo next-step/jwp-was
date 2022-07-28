@@ -21,4 +21,10 @@ class StatusCodeTest {
         assertThat(statusAndReason).isEqualTo("302 Found");
     }
 
+    @DisplayName("자원을 찾을 수 없는 상태 코드")
+    @Test
+    void status_not_found() {
+        final String statusAndReason = StatusCode.NOT_FOUND.message();
+        assertThat(statusAndReason).isEqualTo("404 Not Found");
+    }
 }
