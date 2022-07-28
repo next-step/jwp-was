@@ -3,9 +3,9 @@ package webserver.http.request;
 import java.util.Map;
 import java.util.Objects;
 
-import static model.Constant.VALUE_SPERATOR;
-
 public class RequestLine {
+    public static final String VALUE_SEPARATOR = " ";
+
     private final HttpMethod httpMethod;
     private final Path path;
     private final Protocol protocol;
@@ -27,7 +27,7 @@ public class RequestLine {
     }
 
     private static RequestLine makeRequestLine(String requestValue) {
-        String[] values = requestValue.split(VALUE_SPERATOR);
+        String[] values = requestValue.split(VALUE_SEPARATOR);
         return new RequestLine(HttpMethod.valueOf(values[0]), new Path(values[1]), new Protocol(values[2]));
     }
 

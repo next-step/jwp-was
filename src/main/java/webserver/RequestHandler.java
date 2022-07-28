@@ -21,18 +21,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static model.Constant.EXTENSION_SPERATOR;
-import static model.Constant.ROOT_FILE;
+import static model.Constant.*;
 import static utils.HandlebarsUtils.loader;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
+    public final static String EXTENSION_SPERATOR = ".";
+    public static final String ROOT_FILE = "/index.html";
+
     private static final String USER_CREATE_PATH = "/user/create";
     private static final String USER_LOGIN_PATH = "/user/login";
     private static final String USER_LOGIN_FAIL_PATH = "/user/login_failed.html";
     private static final String USER_LIST_PATH = "/user/list.html";
-    private static final String COOKIE = "Cookie";
 
     private Socket connection;
 
@@ -100,18 +101,17 @@ public class RequestHandler implements Runnable {
                 .orElse(null);
 
         if (loginUser != null) {
-            response.getHeaders().add(Map.of("Set-Cookie", "logined=true; Path=/"));
+            response.getHeaders().add(Map.of(SET_COOKIE, "logined=true; Path=/"));
             response302Header(response, ROOT_FILE);
             return;
         }
-        response.getHeaders().add(Map.of("Set-Cookie", "logined=false; Path=/"));
+        response.getHeaders().add(Map.of(SET_COOKIE, "logined=false; Path=/"));
         response302Header(response, USER_LOGIN_FAIL_PATH);
 
     }
 
     private void createUser(Response response, Map<String, String> requestBody) {
         User user = new User(requestBody.get("userId"), requestBody.get("password"), requestBody.get("name"), requestBody.get("email"));
-        logger.debug("User : {}", user);
         DataBase.addUser(user);
 
         response302Header(response, ROOT_FILE);
@@ -124,10 +124,10 @@ public class RequestHandler implements Runnable {
     private void response200Header(Response response, int lengthOfBodyContent) {
         DataOutputStream dos = response.getResponse();
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes(StringUtils.join(response.getHeaders(), ": "));
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
+            dos.writeBytes(PROTOCOL_VERSION_ONE_ONE + " 200 OK " + LINE_SEPARATOR);
+            dos.writeBytes(StringUtils.join(response.getHeaders(), HEADER_KEY_VALUE_SEPARATOR));
+            dos.writeBytes(CONTENT_LENGTH + HEADER_KEY_VALUE_SEPARATOR + lengthOfBodyContent + LINE_SEPARATOR);
+            dos.writeBytes(LINE_SEPARATOR);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -136,9 +136,9 @@ public class RequestHandler implements Runnable {
     private void response302Header(Response response, String redirectPath) {
         DataOutputStream dos = response.getResponse();
         try {
-            dos.writeBytes("HTTP/1.1 302 FOUND \r\n");
-            dos.writeBytes("Location: " + redirectPath + "\r\n");
-            dos.writeBytes("\r\n");
+            dos.writeBytes(PROTOCOL_VERSION_ONE_ONE + " 302 FOUND " + LINE_SEPARATOR);
+            dos.writeBytes(LOCATION + HEADER_KEY_VALUE_SEPARATOR + redirectPath + LINE_SEPARATOR);
+            dos.writeBytes(LINE_SEPARATOR);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

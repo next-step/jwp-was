@@ -5,10 +5,10 @@ import exception.InvalidRequestException;
 
 import java.util.Objects;
 
-import static model.Constant.PATH_AND_QUERY_STRING_SPERATOR;
-import static model.Constant.ROOT_PATH;
-
 public class Path {
+    public static final String PATH_AND_QUERY_STRING_SEPARATOR = "\\?";
+    public static final String ROOT_PATH = "/";
+
     private final String path;
     private final QueryString queryString;
 
@@ -32,7 +32,7 @@ public class Path {
         if (StringUtils.isEmpty(value) || !StringUtils.startsWith(value, ROOT_PATH)) {
             throw new InvalidRequestException("Path");
         }
-        return StringUtils.split(value, PATH_AND_QUERY_STRING_SPERATOR);
+        return StringUtils.split(value, PATH_AND_QUERY_STRING_SEPARATOR);
     }
 
     public String getPath() {

@@ -5,9 +5,9 @@ import exception.InvalidRequestException;
 
 import java.util.Objects;
 
-import static model.Constant.PROTOCOL_AND_VALUE_SPERATOR;
-
 public class Protocol {
+    public static final String PROTOCOL_AND_VALUE_SEPARATOR = "/";
+
     private final String protocol;
     private final Version version;
 
@@ -15,7 +15,7 @@ public class Protocol {
         if (StringUtils.isEmpty(value)) {
             throw new InvalidRequestException("Protocol");
         }
-        String[] protocols = value.split(PROTOCOL_AND_VALUE_SPERATOR);
+        String[] protocols = value.split(PROTOCOL_AND_VALUE_SEPARATOR);
         this.protocol = protocols[0];
         this.version = new Version(protocols[1]);
     }

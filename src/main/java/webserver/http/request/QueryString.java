@@ -10,10 +10,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static model.Constant.KEY_VALUE_SPERATOR;
-import static model.Constant.QUERY_STRING_SPERATOR;
-
 public class QueryString {
+    public final static String QUERY_STRING_SEPARATOR = "&";
+    public final static String MAP_KEY_VALUE_SEPARATOR = "=";
+
     private final Map<String, String> queryString;
 
     public QueryString(Map<String, String> queryString) {
@@ -44,8 +44,8 @@ public class QueryString {
     }
 
     private Map<String, String> parse(String value) {
-        return Stream.of(StringUtils.split(value, QUERY_STRING_SPERATOR))
-                .map(keyValue -> StringUtils.split(keyValue, KEY_VALUE_SPERATOR))
+        return Stream.of(StringUtils.split(value, QUERY_STRING_SEPARATOR))
+                .map(keyValue -> StringUtils.split(keyValue, MAP_KEY_VALUE_SEPARATOR))
                 .collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
     }
 

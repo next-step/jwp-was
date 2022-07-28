@@ -1,12 +1,11 @@
 package model;
 
 public class Constant {
-    public static final String VALUE_SPERATOR = " ";
-    public static final String PROTOCOL_AND_VALUE_SPERATOR = "/";
-    public static final String PATH_AND_QUERY_STRING_SPERATOR = "\\?";
-    public static final String ROOT_PATH = "/";
-    public static final String ROOT_FILE = "/index.html";
-    public final static String QUERY_STRING_SPERATOR = "&";
-    public final static String KEY_VALUE_SPERATOR = "=";
-    public final static String EXTENSION_SPERATOR = ".";
+    public static final String COOKIE = "Cookie";
+    public static final String SET_COOKIE = "Set-Cookie";
+    public static final String CONTENT_LENGTH = "Content-Length";
+    public static final String LOCATION = "Location";
+    public static final String HEADER_KEY_VALUE_SEPARATOR = ": ";
+    public static final String LINE_SEPARATOR = "\r\n";
+    public static final String PROTOCOL_VERSION_ONE_ONE = "HTTP/1.1";
 }

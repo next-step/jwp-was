@@ -13,13 +13,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static model.Constant.ROOT_FILE;
-import static model.Constant.ROOT_PATH;
 import static utils.IOUtils.readData;
 import static utils.IOUtils.readLines;
 
 public class Request {
     private static final Logger logger = LoggerFactory.getLogger(Request.class);
+
+    public static final String ROOT_PATH = "/";
+    public static final String ROOT_FILE = "/index.html";
+
 
     private final RequestLine requestLine;
     private final RequestHeader header;
@@ -61,7 +63,7 @@ public class Request {
     }
 
     public Map<String, String> getRequestBody() {
-        return requestBody.getRequestBodyEntry();
+        return requestBody.getRequestBodyMap();
     }
 
     @Override

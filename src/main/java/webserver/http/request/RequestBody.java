@@ -12,17 +12,17 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static model.Constant.KEY_VALUE_SPERATOR;
-import static model.Constant.QUERY_STRING_SPERATOR;
-
 public class RequestBody {
     private static final Logger logger = LoggerFactory.getLogger(RequestBody.class);
 
-    private final Map<String, String> requestBodyEntry;
+    public final static String MAP_KEY_VALUE_SEPARATOR = "=";
+    public final static String REQUEST_BODY_SEPARATOR = "&";
+
+    private final Map<String, String> requestBodyMap;
 
     public RequestBody(String value) {
-        logger.debug("RequestBody : {}", value);
-        this.requestBodyEntry = StringUtils.isEmpty(value) ? Collections.emptyMap() : parse(value);
+        this.requestBodyMap = StringUtils.isEmpty(value) ? Collections.emptyMap() : parse(value);
+        logger.debug("requestBody : {}", this.requestBodyMap);
     }
 
     public RequestBody(String... values) {
@@ -37,17 +37,17 @@ public class RequestBody {
             map.put(values[i++], values[i++]);
         }
 
-        this.requestBodyEntry = map;
+        this.requestBodyMap = map;
     }
 
     private Map<String, String> parse(String value) {
-        return Stream.of(StringUtils.split(value, QUERY_STRING_SPERATOR))
-                .map(keyValue -> StringUtils.split(keyValue, KEY_VALUE_SPERATOR))
+        return Stream.of(StringUtils.split(value, REQUEST_BODY_SEPARATOR))
+                .map(keyValue -> StringUtils.split(keyValue, MAP_KEY_VALUE_SEPARATOR))
                 .collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
     }
 
-    public Map<String, String> getRequestBodyEntry() {
-        return requestBodyEntry;
+    public Map<String, String> getRequestBodyMap() {
+        return requestBodyMap;
     }
 
     @Override
@@ -55,11 +55,11 @@ public class RequestBody {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RequestBody that = (RequestBody) o;
-        return Objects.equals(requestBodyEntry, that.requestBodyEntry);
+        return Objects.equals(requestBodyMap, that.requestBodyMap);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestBodyEntry);
+        return Objects.hash(requestBodyMap);
     }
 }
