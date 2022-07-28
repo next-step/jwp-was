@@ -1,20 +1,26 @@
 package model;
 
-public class HandlerInvokeResult {
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-    private final Class<?> clazz;
-    private final Object result;
+public class HandlerInvokeResult<T> {
 
-    public HandlerInvokeResult(Class<?> clazz, Object result) {
-        this.clazz = clazz;
+    private final ResponseEntity<T> result;
+
+    public HandlerInvokeResult(ResponseEntity<T> result) {
         this.result = result;
     }
 
-    public Class<?> getClazz() {
-        return clazz;
+    public ResponseEntity<T> getBody() {
+        return result;
     }
 
-    public Object getResult() {
-        return result;
+    public HttpStatus getHttpStatus() {
+        return this.result.getStatusCode();
+    }
+
+    public HttpHeaders getResponseHeaders() {
+        return this.result.getHeaders();
     }
 }

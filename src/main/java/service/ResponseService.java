@@ -1,41 +1,68 @@
 package service;
 
+import model.ClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 public class ResponseService {
     private static final Logger logger = LoggerFactory.getLogger(ResponseService.class);
 
-    public static void makeResponseHeader(DataOutputStream dataOutputStream, byte[] body) {
-        try {
-            dataOutputStream.writeBytes("HTTP/1.1 200 OK \r\n");
-            dataOutputStream.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            if (body == null) {
-                dataOutputStream.writeBytes("\r\n");
-                return;
-            }
+    public static void makeResponseHeader(DataOutputStream dataOutputStream, ClientResponse clientResponse) throws IOException {
+        if (clientResponse == null) {
+            return;
+        }
 
-            dataOutputStream.writeBytes("Content-Length: " + body.length + "\r\n");
+        byte[] body = null;
+        if (clientResponse.getBody() != null) {
+            body = clientResponse.getBytesBody();
+        }
+
+        HttpStatus responseStatusCode = clientResponse.getResponseHttpStatusCode();
+        HttpHeaders responseHeaders = clientResponse.getResponseHeaders();
+
+        dataOutputStream.writeBytes(String.format("HTTP/1.1 %s %s\r\n", responseStatusCode.value(), responseStatusCode.name()));
+        dataOutputStream.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+        if (body == null) {
             dataOutputStream.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+            return;
+        }
+        dataOutputStream.writeBytes("Content-Length: " + body.length + "\r\n");
+        dataOutputStream.writeBytes("\r\n");
+
+        if (responseHeaders != null) {
+            responseHeaders.keySet()
+                    .forEach(key -> {
+                        try {
+                            List<String> headerValues = responseHeaders.get(key);
+                            dataOutputStream.writeBytes(String.format("%s: %s", key, headerValues.get(0)));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+            dataOutputStream.writeBytes("\r\n");
         }
     }
 
-    public static void makeResponseBody(DataOutputStream dataOutputStream, byte[] body) {
-        try {
-            if (body == null) {
-                dataOutputStream.flush();
-                return;
-            }
-            dataOutputStream.write(body, 0, body.length);
+    public static void makeResponseBody(DataOutputStream dataOutputStream, ClientResponse clientResponse) throws IOException {
+        if (clientResponse == null) {
             dataOutputStream.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+            return;
         }
+
+        byte[] body = clientResponse.getBytesBody();
+        if (body == null) {
+            dataOutputStream.flush();
+            return;
+        }
+
+        dataOutputStream.write(body, 0, body.length);
+        dataOutputStream.flush();
     }
 
 }

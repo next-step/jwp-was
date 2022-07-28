@@ -1,10 +1,10 @@
 package service;
 
-import model.HandlerInvokeResult;
+import model.ClientResponse;
 import model.HttpMessage;
 import model.RequestLine;
 import model.UrlPath;
-import utils.FileIoUtils;
+import org.springframework.http.HttpStatus;
 import utils.HandlerAdapter;
 
 import java.io.BufferedReader;
@@ -30,31 +30,29 @@ public class RequestService {
         return data;
     }
 
-    public static byte[] getBody(HttpMessage httpMessage) throws IOException, URISyntaxException, InvocationTargetException, IllegalAccessException {
+    public static ClientResponse getClientResponse(HttpMessage httpMessage) throws IOException, URISyntaxException, InvocationTargetException, IllegalAccessException {
         RequestLine requestLine = httpMessage.getRequestLine();
 
         if (isRequestForFileResource(requestLine)) {
             UrlPath urlPath = requestLine.getUrlPath();
-            return FileIoUtils.loadFileFromClasspath(urlPath.getPath());
+            ClientResponse clientResponse = new ClientResponse(HttpStatus.OK, null);
+            clientResponse.setFileBody(urlPath);
+            return clientResponse;
         }
 
-        HandlerInvokeResult result = HandlerAdapter.getInstance().invoke(httpMessage);
-        if (result == null) {
-            return null;
+        ClientResponse clientResponse = HandlerAdapter.getInstance().invoke(httpMessage);
+        if (clientResponse != null && clientResponse.getBody() != null) {
+            clientResponse.convertBodyToBytes();
         }
 
-        if (result.getClazz().equals(String.class)) {
-            // TODO page templates & model return
-        }
-
-        return bodyToBytes(result.getResult());
+        return clientResponse;
     }
 
     public static boolean isRequestForFileResource(RequestLine requestLine) {
         return requestLine.getUrlPath().hasExtension();
     }
 
-    private static byte[] bodyToBytes(Object result) throws IOException {
+    public static byte[] bodyToBytes(Object result) throws IOException {
         if (result == null) {
             return null;
         }

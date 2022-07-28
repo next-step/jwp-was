@@ -3,9 +3,11 @@ package controller;
 import annotation.GetMapping;
 import annotation.PostMapping;
 import db.DataBase;
+import model.ClientResponse;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 
 public class UserController {
 
@@ -13,20 +15,20 @@ public class UserController {
 
 
     @GetMapping(path = "/user")
-    public String getUserTest() {
-        return "getUserReturnValue";
+    public ClientResponse getUserTest() {
+        return new ClientResponse(HttpStatus.OK, null, "getUserTest");
     }
 
     @GetMapping(path = "/user/create")
-    public User createUserGet(User user) {
+    public ClientResponse createUserGet(User user) {
         DataBase.addUser(user);
-        return user;
+        return new ClientResponse(HttpStatus.OK, null, user);
     }
 
     @PostMapping(path = "/user/create")
-    public User createUserPost(User user) {
+    public ClientResponse createUserPost(User user) {
         DataBase.addUser(user);
-        return user;
+        return new ClientResponse(HttpStatus.OK, null, user);
     }
 
 }

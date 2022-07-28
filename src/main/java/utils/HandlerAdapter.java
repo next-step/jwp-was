@@ -24,7 +24,7 @@ public class HandlerAdapter {
     private HandlerAdapter() {
     }
 
-    public HandlerInvokeResult invoke(HttpMessage httpMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+    public ClientResponse invoke(HttpMessage httpMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
         RequestLine requestLine = httpMessage.getRequestLine();
 
         if (this.handlers == null) {
@@ -39,14 +39,14 @@ public class HandlerAdapter {
         return this.invokeHandler(handlerPair, httpMessage);
     }
 
-    private HandlerInvokeResult invokeHandler(HandlerPair handlerPair, HttpMessage httpMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+    private ClientResponse invokeHandler(HandlerPair handlerPair, HttpMessage httpMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
         RequestLine requestLine = httpMessage.getRequestLine();
         Object controller = handlerPair.getController();
         Method handler = handlerPair.getHandler();
 
         Parameter[] parameters = handler.getParameters();
         if (parameters.length == 0) {
-            new HandlerInvokeResult(handler.getReturnType(), handler.invoke(controller));
+            return (ClientResponse) handler.invoke(controller);
         }
 
         if (parameters.length == 1) {
@@ -54,11 +54,11 @@ public class HandlerAdapter {
             Class<?> parameterClass = definedParameter.getType();
             String data = this.getParameterData(requestLine.getHttpMethod(), httpMessage);
             Object parameter = this.getParaMeterObject(data, parameterClass);
-            return new HandlerInvokeResult(handler.getReturnType(), handler.invoke(controller, parameter));
+            return (ClientResponse) handler.invoke(controller, parameter);
         }
 
         // TODO 1개 초과 파라미터 설정시 어노테이션에 따라 파라미터 컨버팅 처리 구현
-        return new HandlerInvokeResult(handler.getReturnType(), handler.invoke(controller));
+        return (ClientResponse) handler.invoke(controller);
     }
 
     private Object getParaMeterObject(String data, Class<?> parameterClass) throws JsonProcessingException {
