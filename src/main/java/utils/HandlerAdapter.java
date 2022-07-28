@@ -32,6 +32,9 @@ public class HandlerAdapter {
         }
 
         HandlerPair handlerPair = find(requestLine);
+        if (handlerPair == null) {
+            return null;
+        }
 
         return this.invokeHandler(handlerPair, httpMessage);
     }
@@ -112,7 +115,7 @@ public class HandlerAdapter {
 
         if (handlerPairs.size() != 1) {
             // TODO handler not found exception 정의
-            throw new IllegalArgumentException();
+            return null;
         }
 
         return handlerPairs.get(0);
