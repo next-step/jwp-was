@@ -17,7 +17,7 @@ class ContentTypeTest {
         "'', text/plain"
     })
     void content_type_by_extension(final String fileName, final String expected) {
-        String contentType = ContentType.of(fileName).getContentType();
+        String contentType = ContentType.of(fileName).getMediaType();
 
         assertThat(contentType).isEqualTo(expected);
     }

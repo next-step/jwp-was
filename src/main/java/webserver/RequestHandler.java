@@ -75,7 +75,7 @@ public class RequestHandler implements Runnable {
             }
 
             String fileExtension = FileIoUtils.getFileExtension(requestLine.getLocation());
-            final String contentType = ContentType.of(fileExtension).getContentType();
+            final String contentType = ContentType.of(fileExtension).getMediaType();
             String filePath = getFilePath(fileExtension);
 
             final byte[] body = FileIoUtils.loadFileFromClasspath(filePath + requestLine.getLocation());
@@ -105,7 +105,7 @@ public class RequestHandler implements Runnable {
         final String load = HandleBarTemplateLoader.load("user/list", params);
         final byte[] body = load.getBytes(StandardCharsets.UTF_8);
 
-        responseOk(dos, body, ContentType.HTML.getContentType());
+        responseOk(dos, body, ContentType.HTML.getMediaType());
     }
 
     private void responseOk(final DataOutputStream dos, final byte[] body, final String contentType) {
