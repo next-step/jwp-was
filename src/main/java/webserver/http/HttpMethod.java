@@ -1,5 +1,7 @@
 package webserver.http;
 
+import webserver.http.exception.NotImplementedException;
+
 import java.util.Arrays;
 
 public enum HttpMethod {
@@ -15,6 +17,6 @@ public enum HttpMethod {
         return Arrays.stream(values())
                 .filter(httpMethod -> httpMethod.value.equals(method))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 HTTP Method입니다."));
+                .orElseThrow(() -> new NotImplementedException("허용하지 않은 HTTP Method입니다."));
     }
 }
