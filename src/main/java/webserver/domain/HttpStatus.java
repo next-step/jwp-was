@@ -12,7 +12,7 @@ public enum HttpStatus {
     NOT_FOUND("404 Not Found"),
     INTERNAL_SERVER_ERROR("500 Internal Server Error");
 
-    public static final String HTTP_1_1 = "HTTP/1.1 ";
+    public static final Protocol protocol = Protocol.newInstance("HTTP/1.1");
 
     private final String value;
 
@@ -26,6 +26,6 @@ public enum HttpStatus {
 
     @Override
     public String toString() {
-        return HTTP_1_1 + value;
+        return protocol + " " + value;
     }
 }

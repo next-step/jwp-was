@@ -100,7 +100,8 @@ public class UserController implements Controller {
     private boolean isLogin(HttpRequest httpRequest) {
         Cookie cookie = httpRequest.getCookie();
         String loginedStr = cookie.getAttribute("logined");
-        return Boolean.getBoolean(loginedStr);
+
+        return Boolean.parseBoolean(loginedStr);
     }
 
 
