@@ -1,5 +1,8 @@
 package webserver.http.response;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,5 +43,9 @@ public class HttpResponseHeaders {
 
 	public void addAttribute(String attribute, String value) {
 		headers.put(attribute, value);
+	}
+
+	public void write(OutputStream outputStream) throws IOException {
+		outputStream.write(getResponseHeaders().getBytes(StandardCharsets.UTF_8));
 	}
 }

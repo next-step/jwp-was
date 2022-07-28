@@ -2,7 +2,6 @@ package webserver.http.response;
 
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 import webserver.http.ContentType;
 import webserver.http.request.HttpProtocol;
@@ -10,7 +9,6 @@ import webserver.http.request.HttpProtocol;
 public class HttpResponse {
 	private final String TEMPLATES_ROOT_PATH = "./templates";
 	private final String STATIC_ROOT_PATH = "./static";
-	private final String NEW_LINE = "\r\n";
 
 	private final OutputStream outputStream;
 	private final HttpResponseHeaders headers;
@@ -25,10 +23,8 @@ public class HttpResponse {
 
 	private String getRootPath(String path) {
 		if (path.contains(ContentType.HTML.getExtension()) || path.contains(ContentType.ICO.getExtension())) {
-			System.out.println("Path : " + TEMPLATES_ROOT_PATH + path);
 			return TEMPLATES_ROOT_PATH + path;
 		}
-		System.out.println("Path : " + STATIC_ROOT_PATH + path);
 		return STATIC_ROOT_PATH + path;
 	}
 
@@ -37,16 +33,10 @@ public class HttpResponse {
 	}
 
 	private void write(HttpStatus status) {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(statusLine.getHttpStatusLine(status) + NEW_LINE);
-		buffer.append(headers.getResponseHeaders());
-
-		if (!Objects.isNull(responseBody)) {
-			buffer.append(NEW_LINE + responseBody.getBody());
-		}
-
 		try {
-			outputStream.write(buffer.toString().getBytes(StandardCharsets.UTF_8));
+			statusLine.write(status, outputStream);
+			headers.write(outputStream);
+			responseBody.write(outputStream);
 			outputStream.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -55,8 +45,7 @@ public class HttpResponse {
 
 	public void forward(String uri) {
 		Resource resource = Resource.of(getRootPath(uri));
-		headers.addContentType(resource.getContentType());
-		headers.addContentLength(resource.getContentLength());
+		response200Header(resource.getContentType(), resource.getContentLength());
 		responseBody = new HttpResponseBody(resource);
 		write(HttpStatus.OK);
 	}
@@ -67,18 +56,13 @@ public class HttpResponse {
 	}
 
 	public void forwardBody(ContentType contentType, String body) {
-		headers.addContentType(contentType);
-		headers.addContentLength(body.getBytes(StandardCharsets.UTF_8).length);
+		response200Header(contentType, body.getBytes(StandardCharsets.UTF_8).length);
 		responseBody = new HttpResponseBody(body);
 		write(HttpStatus.OK);
 	}
 
-	public void response200Header(int contentLength) {
-	}
-
-	public void responseBody(byte[] body) {
-	}
-
-	public void processHeaders() {
+	public void response200Header(ContentType contentType, int contentLength) {
+		headers.addContentType(contentType);
+		headers.addContentLength(contentLength);
 	}
 }
