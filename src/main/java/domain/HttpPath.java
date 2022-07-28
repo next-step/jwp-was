@@ -1,19 +1,13 @@
 package domain;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import utils.HttpUtils;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class HttpPath {
     public static final String VALIDATION_MESSAGE = "경로가 형식에 맞지 않습니다.";
-
-    private static final Logger logger = LoggerFactory.getLogger(HttpPath.class);
     private static final String PATH_DELIMITER = "\\?";
     private static final String QUERY_STRING_DELIMITER = "&";
     private static final String QUERY_STRING_ITEM_DELIMITER = "=";
@@ -60,21 +54,12 @@ public class HttpPath {
     private void addQueryString(Map<String, String> queryStrings, String splitQueryStringSpec) {
         final String[] querystringItems = splitQueryStringSpec.split(QUERY_STRING_ITEM_DELIMITER);
         validateQueryStringItems(querystringItems);
-        queryStrings.put(querystringItems[0], decode(querystringItems[1]));
+        queryStrings.put(querystringItems[0], HttpUtils.decode(querystringItems[1]));
     }
 
     private void validateQueryStringItems(String[] items) {
         if (items.length != CORRECT_LENGTH) {
             throw new IllegalArgumentException(VALIDATION_MESSAGE);
-        }
-    }
-
-    private String decode(String value) {
-        try {
-            return URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            logger.error(e.getMessage());
-            return "";
         }
     }
 

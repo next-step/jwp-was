@@ -2,13 +2,11 @@ package domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.HttpUtils;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -72,7 +70,7 @@ public class HttpRequest {
 
         try {
             final int contentLength = getContentLength();
-            final String payload = decode(IOUtils.readData(br, contentLength));
+            final String payload = IOUtils.readData(br, contentLength);
             return makePayloads(payload);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -91,21 +89,12 @@ public class HttpRequest {
     private void addQueryString(Map<String, String> queryStrings, String splitQueryStringSpec) {
         final String[] querystringItems = splitQueryStringSpec.split(PAYLOAD_ITEM_DELIMITER);
         validateQueryStringItems(querystringItems);
-        queryStrings.put(querystringItems[0], decode(querystringItems[1]));
+        queryStrings.put(querystringItems[0], HttpUtils.decode(querystringItems[1]));
     }
 
     private void validateQueryStringItems(String[] items) {
         if (items.length != CORRECT_LENGTH) {
             throw new IllegalArgumentException(VALIDATION_MESSAGE);
-        }
-    }
-
-    private String decode(String value) {
-        try {
-            return URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            LOGGER.error(e.getMessage());
-            return "";
         }
     }
 
