@@ -13,6 +13,10 @@ public class StatusLine {
         this.statusCode = statusCode;
     }
 
+    public String value() {
+        return protocol.value() + " " + statusCode.message();
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

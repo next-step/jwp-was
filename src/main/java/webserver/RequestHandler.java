@@ -18,11 +18,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import utils.IOUtils;
+import webserver.handler.CreateUserController;
 import webserver.request.ContentType;
+import webserver.request.HttpRequest;
 import webserver.request.RequestBody;
 import webserver.request.RequestHeaders;
 import webserver.request.RequestLine;
 import webserver.request.UserBinder;
+import webserver.response.HttpResponse;
 import webserver.response.ResponseHeaders;
 import webserver.template.HandleBarTemplateLoader;
 
@@ -50,7 +53,11 @@ public class RequestHandler implements Runnable {
             final RequestBody requestBody = getRequestBody(bufferedReader, requestHeaders);
 
             if (requestForCreateUser(requestLine)) {
-                createUser(requestBody, dos);
+                final HttpRequest httpRequest = new HttpRequest(requestLine, requestHeaders, requestBody);
+                final CreateUserController createUserController = new CreateUserController();
+                final HttpResponse response = createUserController.handle(httpRequest);
+
+                response.write(dos);
                 return;
             }
 
@@ -158,14 +165,6 @@ public class RequestHandler implements Runnable {
         return Optional.ofNullable(DataBase.findUserById(user.getUserId()))
             .map(it -> it.getPassword().equals(user.getPassword()))
             .orElse(false);
-    }
-
-    private void createUser(final RequestBody requestBody, final DataOutputStream dos) {
-        User user = UserBinder.from(requestBody.getParameters());
-        logger.debug("user = {}", user);
-
-        DataBase.addUser(user);
-        response302Header(dos, "/index.html");
     }
 
     private boolean requestForCreateUser(final RequestLine requestLine) {
