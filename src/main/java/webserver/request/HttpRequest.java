@@ -18,6 +18,10 @@ public class HttpRequest {
         return requestLine;
     }
 
+    public RequestBody getRequestBody() {
+        return requestBody;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
