@@ -21,7 +21,7 @@ public class HttpRequest {
     private static final Pattern HEADER_DELIMITER = Pattern.compile(": ");
 
     private final RequestLine requestLine;
-    private final Map<String, String> headers;
+    private final Map<String, Object> headers;
     private final Map<String, String> payloads;
 
     public HttpRequest(InputStream in) {
@@ -38,8 +38,8 @@ public class HttpRequest {
         return new RequestLine(line);
     }
 
-    private Map<String, String> makeHeaders(BufferedReader br) {
-        Map<String, String> headers = new HashMap<>();
+    private Map<String, Object> makeHeaders(BufferedReader br) {
+        Map<String, Object> headers = new HashMap<>();
         String line;
         while (!"".equals(line = readLine(br))) {
             final String[] splitLine = HEADER_DELIMITER.split(line);
@@ -65,7 +65,7 @@ public class HttpRequest {
     }
 
     private Map<String, String> makePayloads(BufferedReader br) {
-        if (requestLine.isGET()) {
+        if (requestLine.isGet()) {
             return new HashMap<>();
         }
 
@@ -74,7 +74,7 @@ public class HttpRequest {
             final String payload = IOUtils.readData(br, contentLength);
             return HttpUtils.parseToMap(payload);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -91,13 +91,17 @@ public class HttpRequest {
         return Objects.hash(requestLine, headers, payloads);
     }
 
-    public String getHeader(String key) {
+    public RequestLine getRequestLine() {
+        return requestLine;
+    }
+
+    public Object getHeader(String key) {
         return headers.get(key);
     }
 
     public int getContentLength() {
         try {
-            return Integer.parseInt(getHeader("Content-Length"));
+            return Integer.parseInt((String) getHeader("Content-Length"));
         } catch (Exception e) {
             return 0;
         }
@@ -105,5 +109,22 @@ public class HttpRequest {
 
     public Map<String, String> getPayloads() {
         return payloads;
+    }
+
+    public String getPath() {
+        return requestLine.getPath();
+    }
+
+
+    public HttpProtocol getHttpProtocol() {
+        return requestLine.getHttpProtocol();
+    }
+
+    public boolean isGet() {
+        return requestLine.isGet();
+    }
+
+    public boolean isPost() {
+        return requestLine.isPost();
     }
 }

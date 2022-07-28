@@ -62,7 +62,15 @@ public class RequestLine {
         return httpPath.getPath();
     }
 
-    boolean isGET() {
-        return getHttpMethod() == HttpMethod.GET;
+    public HttpProtocol getHttpProtocol() {
+        return httpProtocol;
+    }
+
+    boolean isGet() {
+        return httpMethod == HttpMethod.GET;
+    }
+
+    public boolean isPost() {
+        return httpMethod == HttpMethod.POST;
     }
 }

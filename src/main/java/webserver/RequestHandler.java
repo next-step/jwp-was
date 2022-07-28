@@ -1,29 +1,37 @@
 package webserver;
 
-import model.User;
+import controller.Controller;
+import controller.DefaultController;
+import controller.UserCreateController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
-import webserver.http.HttpMethod;
 import webserver.http.HttpRequest;
-import webserver.http.RequestLine;
+import webserver.http.HttpResponse;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class RequestHandler implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
-    private static final String TEMPLATES_PATH = "./templates";
+    private static final Pattern STATIC_PATTERN = Pattern.compile(".+\\.html");
+    private static final DefaultController DEFAULT_CONTROLLER = new DefaultController();
 
     private final Socket connection;
+    private final Map<String, Controller> requestMapping = new HashMap<>();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
+        initRequestMapping();
+    }
+
+    private void initRequestMapping() {
+        requestMapping.put("/index", new DefaultController());
+        requestMapping.put("/user/create", new UserCreateController());
     }
 
     public void run() {
@@ -32,65 +40,28 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             final HttpRequest httpRequest = new HttpRequest(in);
-            final RequestLine requestLine = httpRequest.makeRequestLine();
-            LOGGER.debug(requestLine.toString());
+            final HttpResponse httpResponse = new HttpResponse(out, httpRequest);
+            handle(httpRequest, httpResponse);
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
 
-            final DataOutputStream dos = new DataOutputStream(out);
-            if (requestLine.getHttpMethod() == HttpMethod.POST && "/user/create".equals(requestLine.getPath())) {
-                responseForPost(httpRequest, dos);
+    private void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
+        if (STATIC_PATTERN.matcher(httpRequest.getPath()).matches()) {
+            DEFAULT_CONTROLLER.doGet(httpRequest, httpResponse);
+            return;
+        }
+
+        if (requestMapping.containsKey(httpRequest.getPath())) {
+            final Controller controller = requestMapping.get(httpRequest.getPath());
+            if (httpRequest.isGet()) {
+                controller.doGet(httpRequest, httpResponse);
                 return;
             }
-            responseForGet(requestLine, dos);
-        } catch (IOException | URISyntaxException e) {
-            LOGGER.error(e.getMessage());
-        }
-    }
-
-    private void responseForGet(RequestLine requestLine, DataOutputStream dos) throws IOException, URISyntaxException {
-        final byte[] body = FileIoUtils.loadFileFromClasspath(TEMPLATES_PATH + requestLine.getPath());
-        response200Header(dos, body.length);
-        responseBody(dos, body);
-    }
-
-    private void responseForPost(HttpRequest httpRequest, DataOutputStream dos) {
-        final Map<String, String> payloads = httpRequest.getPayloads();
-        final User user = new User(
-                payloads.get("userId"),
-                payloads.get("password"),
-                payloads.get("name"),
-                payloads.get("email")
-        );
-        LOGGER.debug(user.toString());
-        response302Header(dos);
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK\r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage());
-        }
-    }
-
-    private void response302Header(DataOutputStream dos) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found\r\n");
-            dos.writeBytes("Location: http://localhost:8080/index.html\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            if (httpRequest.isPost()) {
+                controller.doPost(httpRequest, httpResponse);
+            }
         }
     }
 }

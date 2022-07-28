@@ -27,7 +27,7 @@ class HttpRequestTest {
 
         // then
         assertAll(
-                () -> assertThat(httpRequest.makeRequestLine()).isEqualTo(
+                () -> assertThat(httpRequest.getRequestLine()).isEqualTo(
                         new RequestLine(
                                 HttpMethod.GET,
                                 new HttpPath("/user/create"),
@@ -57,7 +57,7 @@ class HttpRequestTest {
 
         // then
         assertAll(
-                () -> assertThat(httpRequest.makeRequestLine()).isEqualTo(
+                () -> assertThat(httpRequest.getRequestLine()).isEqualTo(
                         new RequestLine(
                                 HttpMethod.POST,
                                 new HttpPath("/user/create"),
