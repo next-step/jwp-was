@@ -3,10 +3,10 @@ package model;
 import enums.HttpMethod;
 
 public class RequestLine {
-    private HttpMethod httpMethod;
-    private String path;
-    private String queryString;
-    private WebProtocol webProtocol;
+    private final HttpMethod httpMethod;
+    private final String path;
+    private final String queryString;
+    private final WebProtocol webProtocol;
 
     public RequestLine(String httpMethod, String path, String queryString, WebProtocol webProtocol) {
         this.httpMethod = HttpMethod.getHttpMethod(httpMethod);
@@ -36,5 +36,9 @@ public class RequestLine {
 
     public WebProtocol getWebProtocol() {
         return webProtocol;
+    }
+
+    public Boolean hasQueryString() {
+        return queryString != null;
     }
 }

@@ -73,7 +73,8 @@ public class RequestLineParserTest {
         //then
         assertAll(
             () -> assertThat(queryStringRequestLineResult.getPath()).isEqualTo(queryStringRemovedPath),
-            () -> assertThat(queryStringRequestLineResult.getQueryString()).isEqualTo(queryString)
+            () -> assertThat(queryStringRequestLineResult.getQueryString()).isEqualTo(queryString),
+            () -> assertThat(queryStringRequestLineResult.hasQueryString()).isTrue()
         );
     }
 }
