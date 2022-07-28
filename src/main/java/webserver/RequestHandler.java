@@ -1,16 +1,15 @@
 package webserver;
 
-import model.*;
+import model.HttpMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
-import utils.HandlerAdapter;
+import service.RequestService;
+import service.ResponseService;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RequestHandler implements Runnable {
@@ -25,45 +24,19 @@ public class RequestHandler implements Runnable {
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
-        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+        try (InputStream inputStream = connection.getInputStream(); OutputStream outputStream = connection.getOutputStream()) {
 
-            InputStreamReader inputStreamReader = new InputStreamReader(in);
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            boolean end = false;
-            List<String> data = new ArrayList<>();
-            while (!end) {
-                String line = bufferedReader.readLine();
-                data.add(line);
-                end = this.stopRead(data);
-            }
+            List<String> httpMessageData = RequestService.getHttpMessageData(bufferedReader);
+            HttpMessage httpMessage = new HttpMessage(httpMessageData, bufferedReader);
+            logger.info("Request data >>>>>>" + httpMessage.toStringHttpMessage());
 
-            HttpMessageData httpMessageData = new HttpMessageData(data);
-            logger.info("Request data >>>>>>" + httpMessageData.toStringHttpMessageData());
+            byte[] body = RequestService.getBody(httpMessage);
 
-            HttpMessage httpMessage = new HttpMessage(new HttpMessageData(httpMessageData.getHttpMessageData()));
-            RequestLine requestLine = httpMessage.getRequestLine();
-
-            byte[] body = null;
-            if (requestLine.getUrlPath().hasExtension()) {
-                UrlPath urlPath = requestLine.getUrlPath();
-                body = FileIoUtils.loadFileFromClasspath(urlPath.getPath());
-            }
-
-            HandlerInvokeResult result = null;
-            if (!requestLine.getUrlPath().hasExtension()) {
-                result = HandlerAdapter.getInstance().invoke(httpMessage);
-            }
-
-            if ((result != null) && (result.getClazz().equals(String.class))) {
-                // TODO page templates & model return
-            }
-
-            if (body == null && result != null) {
-                body = this.bodyToBytes(result.getResult());
-            }
-            DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, body);
-            responseBody(dos, body);
+            DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+            ResponseService.makeResponseHeader(dataOutputStream, body);
+            ResponseService.makeResponseHeader(dataOutputStream, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         } catch (InvocationTargetException | IllegalAccessException e) {
@@ -71,49 +44,4 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private boolean stopRead(List<String> data) {
-        if (data.size() < 2) {
-            return false;
-        }
-
-        return (data.get(data.size() - 2).equals(""));
-    }
-
-    private byte[] bodyToBytes(Object result) throws IOException {
-        ByteArrayOutputStream boas = new ByteArrayOutputStream();
-        try (ObjectOutputStream ois = new ObjectOutputStream(boas)) {
-            ois.writeObject(result);
-            return boas.toByteArray();
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, byte[] body) {
-
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            if (body == null) {
-                dos.writeBytes("\r\n");
-                return;
-            }
-
-            dos.writeBytes("Content-Length: " + body.length + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            if (body == null) {
-                dos.flush();
-                return;
-            }
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
 }

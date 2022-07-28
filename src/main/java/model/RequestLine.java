@@ -40,4 +40,12 @@ public class RequestLine {
     public int hashCode() {
         return Objects.hash(httpMethod, urlPath, protocol);
     }
+
+    public String getInfo() {
+        String value = String.format("HttpMethod : %s \n", this.httpMethod) +
+                String.format("urlPath : %s \n", this.urlPath.toString()) +
+                String.format("Protocol : %s \n", this.protocol.toString());
+        return value;
+    }
+
 }

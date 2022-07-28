@@ -1,55 +1,57 @@
 package model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import utils.HttpParser;
+import utils.IOUtils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class HttpMessage {
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpMessage.class);
+    private static final String CONTENT_LENGTH_KEY = "Content-Length";
 
-    private final String BODY_SEPARATOR = "";
-
-    private final RequestLine requestLine;
+    private RequestLine requestLine;
 
     private RequestHeaders requestHeaders;
 
     private String body;
 
-    public HttpMessage(HttpMessageData data) {
-        List<String> httpMessageData = data.getHttpMessageData();
+    public HttpMessage(List<String> httpMessageData) throws IOException {
+        this(httpMessageData, null);
+    }
 
+    public HttpMessage(List<String> httpMessageData, BufferedReader bufferedReader) throws IOException {
         if (!(httpMessageData instanceof ArrayList)) {
             httpMessageData = new ArrayList<>(httpMessageData);
         }
 
-        if (this.isWrongFormat(httpMessageData)) {
+        if (httpMessageData.isEmpty()) {
             throw new IllegalArgumentException();
         }
-        String requestLine = httpMessageData.get(0);
-        this.requestLine = HttpParser.parseRequestLine(requestLine);
 
+        this.requestLine = HttpParser.parseRequestLine(httpMessageData.remove(0));
         if (httpMessageData.size() == 1) {
             return;
         }
 
-        httpMessageData.remove(requestLine);
+        this.requestHeaders = new RequestHeaders(httpMessageData);
+        this.body = this.parseBody(bufferedReader, requestHeaders);
+    }
 
-        if (!httpMessageData.contains(BODY_SEPARATOR)) {
-            this.requestHeaders = new RequestHeaders(this.getRequestHeaders(httpMessageData, httpMessageData.size()));
-            return;
+    private String parseBody(BufferedReader bufferedReader, RequestHeaders requestHeaders) throws IOException {
+        if (bufferedReader == null) {
+            return null;
         }
 
-        if (httpMessageData.contains(BODY_SEPARATOR)) {
-            int bodySeparatorIndex = httpMessageData.indexOf(BODY_SEPARATOR);
-            this.requestHeaders = new RequestHeaders(this.getRequestHeaders(httpMessageData, bodySeparatorIndex));
-            this.body = this.getBody(httpMessageData);
+        String contentLengthValue = requestHeaders.getRequestHeaders().get(CONTENT_LENGTH_KEY);
+        int contentLength = 0;
+        if (contentLengthValue != null) {
+            contentLength = Integer.parseInt(contentLengthValue);
         }
+
+        return IOUtils.readData(bufferedReader, contentLength);
     }
 
     public RequestLine getRequestLine() {
@@ -64,43 +66,12 @@ public class HttpMessage {
         return body;
     }
 
-    private boolean isWrongFormat(List<String> httpMessageData) {
-        if (httpMessageData.isEmpty() || httpMessageData.stream().filter(data -> data.equals(BODY_SEPARATOR)).count() > 1) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private List<String> getRequestHeaders(List<String> httpMessageData, int bodySeparatorIndex) {
-        return IntStream.range(0, bodySeparatorIndex)
-                .mapToObj(index -> httpMessageData.remove(0))
-                .collect(Collectors.toList());
-    }
-
-    private String getBody(List<String> httpMessageData) {
-        String bodySeparator = httpMessageData.remove(0);
-        if (!bodySeparator.equals(BODY_SEPARATOR)) {
-            logger.error(this.toStringHttpMessageData(httpMessageData));
-            throw new IllegalArgumentException();
-        }
-
-        if (httpMessageData.isEmpty()) {
-            return null;
-        }
-
-        if (httpMessageData.size() != 1) {
-            logger.error(this.toStringHttpMessageData(httpMessageData));
-            throw new IllegalArgumentException();
-        }
-
-        return httpMessageData.get(0);
-    }
-
-    private String toStringHttpMessageData(List<String> httpMessageData) {
+    public String toStringHttpMessage() {
         StringBuilder value = new StringBuilder();
         value.append("[" + "\n");
-        httpMessageData.forEach(data -> value.append(data).append("\n"));
+        value.append(this.requestLine.getInfo());
+        value.append("\n");
+        value.append(body);
         value.append("]");
 
         return value.toString();

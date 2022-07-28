@@ -7,10 +7,6 @@ public class UrlPath {
 
     private static final List<String> FILE_EXTENSIONS = List.of(".html");
 
-    private static final String PATH_SEPARATOR = "/";
-
-    private static final String EMPTY = "";
-
     private final String path;
 
     private QueryParameter queryParameter;
@@ -48,6 +44,19 @@ public class UrlPath {
     public boolean hasExtension() {
         return FILE_EXTENSIONS.stream()
                 .anyMatch(this.path::contains);
+    }
+
+    public String getInfo() {
+        StringBuilder value = new StringBuilder();
+        value.append(String.format("path : %s", this.path));
+        value.append("\n");
+
+        if (queryParameter != null) {
+            value.append("queryParameter :" + "\n");
+            value.append(this.queryParameter.getInfo());
+        }
+
+        return value.toString();
     }
 
 }

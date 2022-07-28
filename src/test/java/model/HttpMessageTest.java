@@ -6,41 +6,17 @@ import org.junit.jupiter.api.Test;
 import types.HttpMethod;
 import types.Protocol;
 
-import java.util.Collections;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 class HttpMessageTest {
 
-    private final String BODY_SEPARATOR = "";
-
-    @DisplayName("format validation 검증")
-    @Test
-    void validationTest() {
-        List<String> wrongHttpMessageData1 = Collections.emptyList();
-        Assertions.assertThatThrownBy(() -> new HttpMessage(new HttpMessageData(wrongHttpMessageData1)))
-                .isInstanceOf(IllegalArgumentException.class);
-
-        List<String> wrongHttpMessageData2 = List.of(
-                "POST /user/create HTTP/1.1",
-                "Host: localhost:8080",
-                "Connection: keep-alive",
-                "Content-Length: 59",
-                "Content-Type: application/x-www-form-urlencoded",
-                "Accept: */*",
-                BODY_SEPARATOR,
-                BODY_SEPARATOR,
-                "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net"
-        );
-        Assertions.assertThatThrownBy(() -> new HttpMessage(new HttpMessageData(wrongHttpMessageData2)))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
     @DisplayName("httpMessage 생성 검증 - requestLine")
     @Test
-    void createHttpMessageRequestLineTest() {
+    void createHttpMessageRequestLineTest() throws IOException {
         List<String> httpMessageData = List.of("POST /user/create HTTP/1.1");
-        HttpMessage httpMessage = new HttpMessage(new HttpMessageData(httpMessageData));
+        HttpMessage httpMessage = new HttpMessage(httpMessageData);
 
         RequestLine actual = httpMessage.getRequestLine();
         RequestLine expected = new RequestLine(HttpMethod.POST, new UrlPath("/user/create"), Protocol.HTTP_1_1);
@@ -50,7 +26,7 @@ class HttpMessageTest {
 
     @DisplayName("httpMessage 생성 검증 - requestHeaders")
     @Test
-    void createHttpMessageRequestLineRequestHeaderTest() {
+    void createHttpMessageRequestLineRequestHeaderTest() throws IOException {
         List<String> httpMessageData = List.of(
                 "POST /user/create HTTP/1.1",
                 "Host: localhost:8080",
@@ -59,7 +35,7 @@ class HttpMessageTest {
                 "Content-Type: application/x-www-form-urlencoded",
                 "Accept: */*"
         );
-        HttpMessage httpMessage = new HttpMessage(new HttpMessageData(httpMessageData));
+        HttpMessage httpMessage = new HttpMessage(httpMessageData);
 
         RequestHeaders actualRequestHeaders = httpMessage.getRequestHeaders();
         Map<String, String> expectedRequestHeaders = Map.of(
@@ -76,29 +52,6 @@ class HttpMessageTest {
             Assertions.assertThat(expectedRequestHeaders.get(key)).isEqualTo(value);
         }
 
-    }
-
-    @DisplayName("httpMessage 생성 검증 - body")
-    @Test
-    void createHttpMessageTest() {
-        String bodyMessage = "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
-        List<String> httpMessageData = List.of(
-                "POST /user/create HTTP/1.1",
-                "Host: localhost:8080",
-                "Connection: keep-alive",
-                "Content-Length: 59",
-                "Content-Type: application/x-www-form-urlencoded",
-                "Accept: */*",
-                BODY_SEPARATOR,
-                bodyMessage
-        );
-
-        HttpMessage httpMessage = new HttpMessage(new HttpMessageData(httpMessageData));
-
-        String actual = bodyMessage;
-        String expected = httpMessage.getBody();
-
-        Assertions.assertThat(actual).isEqualTo(expected);
     }
 
 }
