@@ -19,6 +19,7 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Objects;
+import java.util.Optional;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -77,6 +78,45 @@ public class RequestHandler implements Runnable {
                 logger.info("[Add User = {}]", newUser);
                 response302Header(dos, "/index.html");
                 return;
+            }
+
+            if (request.hasMethod(Method.POST) && request.hasPath("/user/login")) {
+                request.decodeCharacter(Charsets.UTF_8);
+                String userId = request.getParameter("userId");
+                String password = request.getParameter("password");
+
+                try {
+
+
+                    User findUser = Optional.ofNullable(DataBase.findUserById(userId))
+                            .filter(user -> user.hasPassword(password))
+                            .orElseThrow(() -> new RuntimeException("로그인에 실패했습니다."));
+
+                    logger.info("[login User] = {}", findUser);
+                    try {
+                        dos.writeBytes("HTTP/1.1 302 Found \r\n");
+                        dos.writeBytes("Location: " + "/index.html" + "\r\n");
+                        dos.writeBytes("Set-Cookie: " + "logined=true; Path=/" + "\r\n");
+                        dos.writeBytes("\r\n");
+                    } catch (IOException e) {
+                        logger.error(e.getMessage());
+                    } finally {
+                        return;
+                    }
+
+                } catch (RuntimeException ex) {
+                    logger.info("[login Fail]");
+                    try {
+                        dos.writeBytes("HTTP/1.1 302 Found \r\n");
+                        dos.writeBytes("Location: " + "/user/login_failed.html" + "\r\n");
+                        dos.writeBytes("Set-Cookie: " + "logined=false; Path=/" + "\r\n");
+                        dos.writeBytes("\r\n");
+                    } catch (IOException e) {
+                        logger.error(e.getMessage());
+                    } finally {
+                        return;
+                    }
+                }
             }
 
 
