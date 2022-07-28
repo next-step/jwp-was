@@ -1,6 +1,5 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,4 +29,14 @@ public class RequestHeaders {
         return requestHeaders;
     }
 
+    public String getInfo() {
+        StringBuilder data = new StringBuilder();
+        data.append("RequestHeaders : \n");
+        this.requestHeaders.forEach((key, value) -> {
+            data.append(String.format("key = %s || value = %s", key, value));
+            data.append("\n");
+        });
+
+        return data.toString();
+    }
 }

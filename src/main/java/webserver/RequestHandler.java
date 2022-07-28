@@ -30,13 +30,13 @@ public class RequestHandler implements Runnable {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             List<String> httpMessageData = RequestService.getHttpMessageData(bufferedReader);
             HttpMessage httpMessage = new HttpMessage(httpMessageData, bufferedReader);
-            logger.info("Request data >>>>>>" + httpMessage.toStringHttpMessage());
+            logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpMessage.toStringHttpMessage());
 
             byte[] body = RequestService.getBody(httpMessage);
 
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
             ResponseService.makeResponseHeader(dataOutputStream, body);
-            ResponseService.makeResponseHeader(dataOutputStream, body);
+            ResponseService.makeResponseBody(dataOutputStream, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         } catch (InvocationTargetException | IllegalAccessException e) {

@@ -70,6 +70,7 @@ public class HttpMessage {
         StringBuilder value = new StringBuilder();
         value.append("[" + "\n");
         value.append(this.requestLine.getInfo());
+        value.append(this.requestHeaders.getInfo());
         value.append("\n");
         value.append(body);
         value.append("]");

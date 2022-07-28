@@ -48,11 +48,9 @@ public class UrlPath {
 
     public String getInfo() {
         StringBuilder value = new StringBuilder();
-        value.append(String.format("path : %s", this.path));
-        value.append("\n");
-
+        value.append(this.path);
         if (queryParameter != null) {
-            value.append("queryParameter :" + "\n");
+            value.append("QueryParameter :" + "\n");
             value.append(this.queryParameter.getInfo());
         }
 

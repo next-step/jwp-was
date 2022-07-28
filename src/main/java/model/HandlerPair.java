@@ -4,11 +4,8 @@ import java.lang.reflect.Method;
 
 public class HandlerPair {
 
-    private Object controller;
-    private Method handler;
-
-    public HandlerPair() {
-    }
+    private final Object controller;
+    private final Method handler;
 
     public HandlerPair(Object controller, Method handler) {
         this.controller = controller;

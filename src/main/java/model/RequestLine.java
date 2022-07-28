@@ -43,8 +43,8 @@ public class RequestLine {
 
     public String getInfo() {
         String value = String.format("HttpMethod : %s \n", this.httpMethod) +
-                String.format("urlPath : %s \n", this.urlPath.toString()) +
-                String.format("Protocol : %s \n", this.protocol.toString());
+                String.format("urlPath : %s \n", this.urlPath.getInfo()) +
+                String.format("Protocol : %s \n", this.protocol.getInfo());
         return value;
     }
 

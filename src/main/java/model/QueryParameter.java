@@ -19,7 +19,7 @@ public class QueryParameter {
     public String getInfo() {
         StringBuilder data = new StringBuilder();
         this.parameters.forEach((key, value) -> {
-            data.append(String.format("key : %s, value : %s", key, value));
+            data.append(String.format("key = %s || value = %s", key, value));
             data.append("\n");
         });
 
