@@ -30,5 +30,4 @@
         - "HTTP/1.1" 형식이 아닌 경우 Exception이 발생한다.
   - [X] POST RequestLine 파싱
     - "POST /users HTTP/1.1"을 파싱
-  - [ ] Querystring RequestLine 파싱
-  - [ ] GET RequestLine 파싱
+  - [X] Querystring RequestLine 파싱
