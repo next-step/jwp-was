@@ -72,4 +72,21 @@ class RequestHeadersTest {
         assertThat(requestHeaders.get("notExistHeader")).isNull();
     }
 
+    @DisplayName("쿠키가 존재하는지 확인할 수 있다")
+    @Test
+    void has_cookie() {
+        final RequestHeaders requestHeaders = new RequestHeaders();
+        requestHeaders.add("Cookie: cookie=value");
+
+        assertThat(requestHeaders.hasCookie("cookie=value")).isTrue();
+    }
+
+    @DisplayName("존재하지 않는 쿠키를 조회할 수 없다")
+    @Test
+    void has_no_cookie() {
+        final RequestHeaders requestHeaders = new RequestHeaders();
+
+        assertThat(requestHeaders.hasCookie("cookie=value")).isFalse();
+    }
+
 }

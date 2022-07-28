@@ -55,6 +55,10 @@ public class RequestHeaders {
         return headers.containsKey("Content-Length") && getContentLength() > 0;
     }
 
+    public boolean hasCookie(final String value) {
+        return headers.containsKey("Cookie") && headers.get("Cookie").contains(value);
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
