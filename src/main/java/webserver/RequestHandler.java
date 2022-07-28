@@ -11,6 +11,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import webserver.controller.HandlerMapper;
 import webserver.controller.ViewController;
 import webserver.request.HttpRequest;
 
@@ -32,7 +33,9 @@ public class RequestHandler implements Runnable {
             List<String> request = getRequest(in);
             HttpRequest httpRequest = new HttpRequest(request);
 
-            byte[] result = new ViewController().handle(httpRequest);
+            HandlerMapper handlerMapper = new HandlerMapper();
+
+            byte[] result = handlerMapper.handle(httpRequest);
 
             response(out, result);
         } catch (IOException | URISyntaxException e) {

@@ -30,6 +30,10 @@ public class HttpRequest {
         return requestLine.getVersion();
     }
 
+    public QueryString getQueryString() {
+        return requestLine.getQueryString();
+    }
+
     public Map<String, String> headers() {
         return header.getHeaders();
     }
