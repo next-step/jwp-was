@@ -142,10 +142,10 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
     - [x] StatusCode
   - [x] ResponseHeader
   - [x] ResponseBody
-- [ ] URI에 따라 비즈니스 로직을 처리할 수 있는 객체를 생성한다. (Controller?)
+- [x] URI에 따라 비즈니스 로직을 처리할 수 있는 객체를 생성한다. (Controller?)
   - [x] HttpRequest#RequestLine의 내용으로 요청을 수행할 객체를 찾는다.
-  - [ ] 요청을 수행할 객체가 비즈니스 로직의 처리 결과를 응답 결과에 추가한다.
+  - [x] 요청을 수행할 객체가 비즈니스 로직의 처리 결과를 응답 결과에 추가한다.
     - [x] 회원가입 
     - [x] 로그인
-    - [ ] 사용자 목록
-    - [ ] 나머지
+    - [x] 사용자 목록
+    - [x] 정적 파일
