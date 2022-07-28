@@ -4,11 +4,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import http.Cookie;
+import http.Cookies;
 import http.HttpStatus;
 import http.request.ContentType;
 import http.request.Protocol;
@@ -20,7 +22,7 @@ public class HttpResponse {
     private final HttpStatus httpStatus;
     private final Map<String, String> headers;
     private final String body;
-    private final Set<Cookie> cookies;
+    private final Cookies cookies;
 
     public HttpResponse(Protocol protocol, HttpStatus httpStatus, Map<String, String> headers, String body,
         Set<Cookie> cookies) {
@@ -28,7 +30,7 @@ public class HttpResponse {
         this.httpStatus = httpStatus;
         this.headers = headers;
         this.body = body;
-        this.cookies = cookies;
+        this.cookies = new Cookies(cookies);
     }
 
     public HttpResponse(HttpStatus status, Map<String, String> headers) {
@@ -78,7 +80,7 @@ public class HttpResponse {
         return body;
     }
 
-    public Set<Cookie> getCookies() {
+    public Cookies getCookies() {
         return cookies;
     }
 
@@ -107,7 +109,7 @@ public class HttpResponse {
                 dos.writeBytes(String.format("%s: %s\r\n", entry.getKey(), entry.getValue()));
             }
 
-            for (Cookie cookie : getCookies()) {
+            for (Cookie cookie : cookies.getValues()) {
                 var prefix = String.format("Set-Cookie: %s=%s", cookie.getKey(), cookie.getValue());
 
                 var cookieResponse = Stream.concat(Stream.of(prefix), cookie.getOptions().stream())
@@ -130,5 +132,9 @@ public class HttpResponse {
         } catch (IOException e) {
             throw new IllegalArgumentException();
         }
+    }
+
+    public Optional<String> getCookie(String key) {
+        return cookies.getCookie(key);
     }
 }

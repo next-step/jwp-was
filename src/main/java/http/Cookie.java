@@ -45,4 +45,8 @@ public class Cookie {
     public int hashCode() {
         return Objects.hash(key);
     }
+
+    public boolean isEquals(String key) {
+        return this.key.equals(key);
+    }
 }
