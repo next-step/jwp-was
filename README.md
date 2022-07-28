@@ -13,9 +13,9 @@
 ---
 ##2단계 HTTP 웹 서버 구현 - 구현할 기능 목록
 
-- [ ] Http 요청이 들어오면 해당 RequesterLine의 path 에 해당하는 Resource를 반환할 수 있다.
-    - [ ] http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
-        - [ ] 입력으로 들어온 classpath의 resource(index.html 파일)를 읽을 수 있다.
+- [x] Http 요청이 들어오면 해당 RequesterLine의 path 에 해당하는 Resource를 반환할 수 있다.
+    - [x] http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
+        - [x] 입력으로 들어온 classpath의 resource(index.html 파일)를 읽을 수 있다.
         - [x] HttpRequestParser는
             - [x] 입력으로 들어온 모든 RequestLine을 라인별로 분리할 수 있다.
             - [x] RequestLine에서 path를 분리 할 수 있다.

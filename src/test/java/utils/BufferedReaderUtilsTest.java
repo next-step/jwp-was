@@ -22,9 +22,8 @@ class BufferedReaderUtilsTest {
         String httpRequestHeaderStringDummy = HTTP_REQUEST_HEADER_STRING_DUMMY;
 
         InputStream inputStream = new ByteArrayInputStream(httpRequestHeaderStringDummy.getBytes());
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-
-        List<String> result = BufferedReaderUtils.lines(br);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+        List<String> result = BufferedReaderUtils.lines(bufferedReader);
 
         assertAll(
             () -> assertThat(result.size()).isEqualTo(mockStringSize),
