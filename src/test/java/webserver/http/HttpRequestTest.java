@@ -3,8 +3,9 @@ package webserver.http;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.StringReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,10 +20,10 @@ class HttpRequestTest {
         // given
         final String request = "GET /user/create HTTP/1.1\r\n"
                 + "Host: localhost:8080\n\n";
-        final BufferedReader br = new BufferedReader(new StringReader(request));
+        final InputStream in = new ByteArrayInputStream(request.getBytes(StandardCharsets.UTF_8));
 
         // when
-        final HttpRequest httpRequest = new HttpRequest(br);
+        final HttpRequest httpRequest = new HttpRequest(in);
 
         // then
         assertAll(
@@ -49,10 +50,10 @@ class HttpRequestTest {
                 + "Accept: */*\r\n"
                 + "\r\n"
                 + "userId=user&password=password";
-        final BufferedReader br = new BufferedReader(new StringReader(request));
+        final InputStream in = new ByteArrayInputStream(request.getBytes(StandardCharsets.UTF_8));
 
         // when
-        final HttpRequest httpRequest = new HttpRequest(br);
+        final HttpRequest httpRequest = new HttpRequest(in);
 
         // then
         assertAll(
@@ -72,10 +73,10 @@ class HttpRequestTest {
     @Test
     void createException() {
         // given
-        final BufferedReader br = new BufferedReader(new StringReader(""));
+        final InputStream in = new ByteArrayInputStream("".getBytes(StandardCharsets.UTF_8));
 
         // when & then
-        assertThatThrownBy(() -> new HttpRequest(br))
+        assertThatThrownBy(() -> new HttpRequest(in))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(HttpRequest.VALIDATION_MESSAGE);
     }

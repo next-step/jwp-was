@@ -7,6 +7,9 @@ import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -21,10 +24,12 @@ public class HttpRequest {
     private final Map<String, String> headers;
     private final Map<String, String> payloads;
 
-    public HttpRequest(BufferedReader br) {
+    public HttpRequest(InputStream in) {
+        final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         this.requestLine = makeRequestLine(br);
         this.headers = makeHeaders(br);
         this.payloads = makePayloads(br);
+        LOGGER.debug(requestLine.toString());
     }
 
     private RequestLine makeRequestLine(BufferedReader br) {
@@ -84,10 +89,6 @@ public class HttpRequest {
     @Override
     public int hashCode() {
         return Objects.hash(requestLine, headers, payloads);
-    }
-
-    public RequestLine makeRequestLine() {
-        return requestLine;
     }
 
     public String getHeader(String key) {

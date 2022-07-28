@@ -8,15 +8,12 @@ import webserver.http.HttpMethod;
 import webserver.http.HttpRequest;
 import webserver.http.RequestLine;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class RequestHandler implements Runnable {
@@ -34,7 +31,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            final HttpRequest httpRequest = convertToHttpRequest(in);
+            final HttpRequest httpRequest = new HttpRequest(in);
             final RequestLine requestLine = httpRequest.makeRequestLine();
             LOGGER.debug(requestLine.toString());
 
@@ -47,11 +44,6 @@ public class RequestHandler implements Runnable {
         } catch (IOException | URISyntaxException e) {
             LOGGER.error(e.getMessage());
         }
-    }
-
-    private HttpRequest convertToHttpRequest(InputStream in) throws IOException {
-        final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-        return new HttpRequest(br);
     }
 
     private void responseForGet(RequestLine requestLine, DataOutputStream dos) throws IOException, URISyntaxException {
