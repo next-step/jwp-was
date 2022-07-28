@@ -3,6 +3,11 @@ package webserver;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import db.DataBase;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,20 +20,41 @@ import org.springframework.web.client.RestTemplate;
 
 class HttpRequestTest {
 
-    private RestTemplate restTemplate;
+    private static final String PORT = "8089";
+    private static final String URL = "http://localhost:" + PORT;
+    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
+
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @BeforeEach
-    void setUp() {
-        restTemplate = new RestTemplate();
+    void databaseClear() {
+        DataBase.clear();
     }
 
+    @BeforeAll
+    static void setUp() {
+        EXECUTOR.execute(() -> {
+            try {
+                WebApplicationServer.main(new String[]{PORT});
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    @AfterAll
+    static void tearDown() {
+        EXECUTOR.shutdown();
+    }
+
+    @DisplayName("초기 화면")
     @Test
     void request_resttemplate() {
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/index.html", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(URL + "/index.html", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    @DisplayName("회원가입 요청")
+    @DisplayName("회원가입 후 첫 화면으로 이동한다")
     @Test
     void create_user() {
         final ResponseEntity<String> 회원가입_요청 = 회원가입_요청("admin", "password");
@@ -95,23 +121,23 @@ class HttpRequestTest {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cookie", "logined=true");
 
-        return restTemplate.exchange("http://localhost:8080/user/list.html", HttpMethod.GET, new HttpEntity<>(headers),
+        return restTemplate.exchange(URL + "/user/list.html", HttpMethod.GET, new HttpEntity<>(headers),
             String.class);
     }
 
     private ResponseEntity<String> 사용자_목록_조회() {
-        return restTemplate.getForEntity("http://localhost:8080/user/list.html", String.class);
+        return restTemplate.getForEntity(URL + "/user/list.html", String.class);
     }
 
     private ResponseEntity<String> 로그인_요청(final String userId, final String password) {
         final String loginParams = String.format("userId=%s&password=%s", userId, password);
 
-        return restTemplate.postForEntity("http://localhost:8080/user/login", loginParams, String.class);
+        return restTemplate.postForEntity(URL + "/user/login", loginParams, String.class);
     }
 
     private ResponseEntity<String> 회원가입_요청(final String userId, final String password) {
-        final String createUserParams = String.format("userId=%s&password=%s&name=관리자&email=admin@email.com", userId, password);
+        final String createUserParams = String.format("userId=%s&password=%s&name=administrator&email=admin@email.com", userId, password);
 
-        return restTemplate.postForEntity("http://localhost:8080/user/create", createUserParams, String.class);
+        return restTemplate.postForEntity(URL + "/user/create", createUserParams, String.class);
     }
 }
