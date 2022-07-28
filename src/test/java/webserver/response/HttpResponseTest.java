@@ -40,4 +40,25 @@ class HttpResponseTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("응답 헤더에 쿠키를 추가한다")
+    @Test
+    void add_cookie_to_response_headers() {
+        // given
+        final StatusLine statusLine = new StatusLine(Protocol.parse("HTTP/1.1"), StatusCode.FOUND);
+        final ResponseHeaders responseHeaders = new ResponseHeaders();
+        responseHeaders.add("Location", "/index.html");
+        responseHeaders.add("Set-Cookie", "logined=true; Path=/");
+        final ResponseBody responseBody = ResponseBody.EMPTY_RESPONSE_BODY;
+
+        final HttpResponse expected = new HttpResponse(statusLine, responseHeaders, responseBody);
+
+        // when
+        final HttpResponse actual = HttpResponse.redirect("/index.html")
+            .addCookie("logined", "true");
+
+        // then
+        assertThat(actual).isEqualTo(expected);
+
+    }
+
 }

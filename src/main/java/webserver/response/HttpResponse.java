@@ -27,6 +27,11 @@ public class HttpResponse {
         return new HttpResponse(new StatusLine(HTTP_1_1, FOUND), headers, EMPTY_RESPONSE_BODY);
     }
 
+    public HttpResponse addCookie(final String key, final String value) {
+        responseHeaders.add("Set-Cookie", String.format("%s=%s; Path=/", key, value));
+        return this;
+    }
+
     public void write(final DataOutputStream dos) throws IOException {
         writeStatusLine(dos);
         writeHeaders(dos);
