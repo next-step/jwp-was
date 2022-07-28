@@ -13,7 +13,7 @@ class StatusLineTest {
     void status_ok() {
         final StatusLine statusLine = new StatusLine(Protocol.parse("HTTP/1.1"), StatusCode.OK);
 
-        assertThat(statusLine).isEqualTo(new StatusLine(Protocol.of("HTTP", "1.1"), StatusCode.OK));
+        assertThat(statusLine).isEqualTo(new StatusLine(Protocol.HTTP_1_1, StatusCode.OK));
     }
 
     @DisplayName("다른 페이지로 이동 상태 코드")
@@ -21,7 +21,7 @@ class StatusLineTest {
     void status_found() {
         final StatusLine statusLine = new StatusLine(Protocol.parse("HTTP/1.1"), StatusCode.FOUND);
 
-        assertThat(statusLine).isEqualTo(new StatusLine(Protocol.of("HTTP", "1.1"), StatusCode.FOUND));
+        assertThat(statusLine).isEqualTo(new StatusLine(Protocol.HTTP_1_1, StatusCode.FOUND));
     }
 
 }
