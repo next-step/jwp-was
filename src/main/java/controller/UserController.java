@@ -7,7 +7,10 @@ import model.ClientResponse;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+
+import java.net.URI;
 
 public class UserController {
 
@@ -28,7 +31,9 @@ public class UserController {
     @PostMapping(path = "/user/create")
     public ClientResponse createUserPost(User user) {
         DataBase.addUser(user);
-        return new ClientResponse(HttpStatus.OK, null, user);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(URI.create("http://localhost:8080/index.html"));
+        return new ClientResponse(HttpStatus.FOUND, httpHeaders, user);
     }
 
 }

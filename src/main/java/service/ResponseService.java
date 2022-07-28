@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 public class ResponseService {
     private static final Logger logger = LoggerFactory.getLogger(ResponseService.class);
@@ -33,20 +32,19 @@ public class ResponseService {
             return;
         }
         dataOutputStream.writeBytes("Content-Length: " + body.length + "\r\n");
-        dataOutputStream.writeBytes("\r\n");
 
         if (responseHeaders != null) {
             responseHeaders.keySet()
                     .forEach(key -> {
                         try {
-                            List<String> headerValues = responseHeaders.get(key);
-                            dataOutputStream.writeBytes(String.format("%s: %s", key, headerValues.get(0)));
+                            String headerValue = responseHeaders.get(key).get(0);
+                            dataOutputStream.writeBytes(key + ": " + headerValue + "\r\n");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     });
-            dataOutputStream.writeBytes("\r\n");
         }
+        dataOutputStream.writeBytes("\r\n");
     }
 
     public static void makeResponseBody(DataOutputStream dataOutputStream, ClientResponse clientResponse) throws IOException {
