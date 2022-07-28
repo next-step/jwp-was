@@ -20,16 +20,19 @@ public class HttpPath {
     private static final int CORRECT_LENGTH = 2;
 
     private final String path;
-    private final Map<String, String> queryStrings = new HashMap<>();
+    private final Map<String, String> queryStrings;
 
     public HttpPath(String pathSpec) {
         final String[] splitPathSpec = pathSpec.split(PATH_DELIMITER);
         validatePathSpec(splitPathSpec);
 
         this.path = splitPathSpec[0];
-        if (splitPathSpec.length == CORRECT_LENGTH) {
-            setQueryStrings(splitPathSpec[1]);
-        }
+        this.queryStrings = makeQueryStrings(splitPathSpec);
+    }
+
+    public HttpPath(String path, Map<String, String> queryStrings) {
+        this.path = path;
+        this.queryStrings = queryStrings;
     }
 
     private void validatePathSpec(String[] splitPathSpec) {
@@ -38,14 +41,23 @@ public class HttpPath {
         }
     }
 
-    private void setQueryStrings(String queryStringSpec) {
-        final String[] splitQueryStringSpecs = queryStringSpec.split(QUERY_STRING_DELIMITER);
-        for (String splitQueryStringSpec : splitQueryStringSpecs) {
-            addQueryString(splitQueryStringSpec);
+    private Map<String, String> makeQueryStrings(String[] splitPathSpec) {
+        if (splitPathSpec.length == CORRECT_LENGTH) {
+            return makeQueryStrings(splitPathSpec[1]);
         }
+        return new HashMap<>();
     }
 
-    private void addQueryString(String splitQueryStringSpec) {
+    private Map<String, String> makeQueryStrings(String queryStringSpec) {
+        final Map<String, String> queryStrings = new HashMap<>();
+        final String[] splitQueryStringSpecs = queryStringSpec.split(QUERY_STRING_DELIMITER);
+        for (String splitQueryStringSpec : splitQueryStringSpecs) {
+            addQueryString(queryStrings, splitQueryStringSpec);
+        }
+        return queryStrings;
+    }
+
+    private void addQueryString(Map<String, String> queryStrings, String splitQueryStringSpec) {
         final String[] querystringItems = splitQueryStringSpec.split(QUERY_STRING_ITEM_DELIMITER);
         validateQueryStringItems(querystringItems);
         queryStrings.put(querystringItems[0], decode(querystringItems[1]));
