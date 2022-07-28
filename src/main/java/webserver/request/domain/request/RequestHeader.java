@@ -25,21 +25,27 @@ public class RequestHeader {
     };
 
     private void validate(String[] header) {
-        if(header.length != MIN_HEADER_LENGTH) {
-            throw new StringEmptyException("header 속성을 확인해주세요.");
-        }
+//        if(header.length != MIN_HEADER_LENGTH) {
+//            throw new StringEmptyException("header 속성을 확인해주세요.");
+//        }
 
-        if (!StringUtils.hasText(header[0]) || !StringUtils.hasText(header[1])) {
-            throw new StringEmptyException("header 속성을 확인해주세요.");
-        }
+//        if (!StringUtils.hasText(header[0]) || !StringUtils.hasText(header[1])) {
+//            throw new StringEmptyException("header 속성을 확인해주세요.");
+//        }
     }
 
     public void addHeaderProperty(String header) {
         String[] headerMap = header.split(DELIMITER);
 
-        validate(headerMap);
+//        validate(headerMap);
 
-        this.headerMap.put(headerMap[0], headerMap[1]);
+        if(headerMap.length == 2) {
+            this.headerMap.put(headerMap[0], headerMap[1]);
+        }
+    }
+
+    public String getHeader(String header) {
+        return headerMap.get(header);
     }
 
     @Override

@@ -23,3 +23,6 @@
 - User 클래스 생성
 - RequestLine 파라미터 분리
 - 분리한 파라미터 메소드로 User 생성
+
+### 기능 요구사항 3
+- RequestBody 구현

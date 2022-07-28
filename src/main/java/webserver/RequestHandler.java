@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 import webserver.request.domain.model.User;
+import webserver.request.domain.request.HttpRequest;
 import webserver.request.domain.request.QueryString;
 import webserver.request.domain.request.RequestLine;
 
@@ -22,8 +23,8 @@ public class RequestHandler implements Runnable {
 
     private User user;
 
-//    private HttpRequest httpRequest = new HttpRequest();
-    private RequestLine requestLine;
+    private HttpRequest httpRequest;
+//    private RequestLine requestLine;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -37,35 +38,40 @@ public class RequestHandler implements Runnable {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             //showRequest(in);
 
+            httpRequest = new HttpRequest(in);
+
 //            BufferedReader br = new BufferedReader(new InputStreamReader(in, Charsets.UTF_8));
 //            String line = br.readLine();
-//            logger.debug("request line : {}", line);
+//            httpRequest.addProperty(line);
 //            while(!line.equals("")) {
 //                line = br.readLine();
-//                logger.debug("header : {}", line);
+//                httpRequest.addProperty(line);
 //            }
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, Charsets.UTF_8));
-            RequestLine requestLine = RequestLine.parse(br.readLine());
             DataOutputStream dos = new DataOutputStream(out);
 
-            String path = matchResponse(requestLine);
-            byte[] body = path.getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-        } catch (IOException | URISyntaxException e) {
+            //String path = matchResponse(httpRequest);
+//            byte[] body = path.getBytes();
+//            response200Header(dos, body.length);
+//            responseBody(dos, body);
+        } catch (IOException  e) {
             logger.error(e.getMessage());
         }
     }
 
-    private String matchResponse(RequestLine requestLine) throws IOException, URISyntaxException {
-        String path = requestLine.parsePath();
-        if(path.endsWith("html")) {
-            return IOUtils.loadFileFromClasspath(path);
-        }
-
-        return parseQueryString(requestLine.parsePath(), requestLine.parseQueryString());
-    }
+//    private String matchResponse(HttpRequest httpRequest) throws IOException, URISyntaxException {
+//        String method = httpRequest.getMethod();
+//        if(method.equals("GET")) {
+//            RequestLine requestLine = httpRequest.getRequestLine();
+//            String path = requestLine.parsePath();
+//            if (path.endsWith("html")) {
+//                return IOUtils.loadFileFromClasspath(path);
+//            }
+//        }
+//
+//        return "";
+//        //return parseQueryString(requestLine.parsePath(), requestLine.parseQueryString());
+//    }
 
     private String parseQueryString(String parsePath, QueryString queryString) {
         String[] str = parsePath.split("/");
