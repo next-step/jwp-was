@@ -33,11 +33,10 @@ public class RequestHandler implements Runnable {
         try (InputStream is = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-            Servlet DispatcherServlet = new DispatcherServlet();
-            HttpRequest httpRequest = HttpRequestParser.parse(is);
-            HttpResponse response = DispatcherServlet.service(httpRequest);
-            out.write(response.getBytes());
-            out.flush();
+            Servlet dispatcherServlet = new DispatcherServlet();
+            HttpRequest httpRequest = HttpRequestParser.parse(br);
+            HttpResponse httpResponse = new HttpResponse(httpRequest.getProtocol(), out);
+            dispatcherServlet.service(httpRequest, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

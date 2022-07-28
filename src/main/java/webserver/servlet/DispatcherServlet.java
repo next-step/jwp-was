@@ -22,8 +22,8 @@ public class DispatcherServlet implements Servlet {
 	}
 
 	@Override
-	public HttpResponse service(HttpRequest httpRequest) {
+	public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
 		Controller controller = controllerMap.getOrDefault(httpRequest.getPath(), new BaseController());
-		return controller.process(httpRequest);
+		controller.process(httpRequest, httpResponse);
 	}
 }

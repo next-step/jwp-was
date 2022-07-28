@@ -1,7 +1,6 @@
 package webserver.controller;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -14,7 +13,6 @@ import model.User;
 import webserver.http.ContentType;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
-import webserver.http.response.HttpStatus;
 import webserver.service.UserService;
 
 public class UserListController extends AbstractController {
@@ -31,18 +29,13 @@ public class UserListController extends AbstractController {
 	}
 
 	@Override
-	protected HttpResponse doGet(HttpRequest httpRequest) {
+	protected void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
 		if (httpRequest.isLogin()) {
 			Collection<User> allUsers = userService.findAll();
 			String page = createPage(allUsers);
-			return new HttpResponse.Builder()
-					.contentType(ContentType.HTML)
-					.contentLength(page.getBytes(StandardCharsets.UTF_8).length)
-					.statusLine(httpRequest.getProtocol(), HttpStatus.OK)
-					.responseBody(page)
-					.build();
+			httpResponse.forwardBody(ContentType.HTML, page);
 		}
-		return doRedirect(httpRequest, "/user/login.html");
+		httpResponse.sendRedirect("/user/login.html");
 	}
 
 	private String createPage(Collection<User> users) {
