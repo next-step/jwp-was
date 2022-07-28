@@ -5,6 +5,8 @@ import model.WebProtocol;
 
 import java.util.regex.Pattern;
 
+import static utils.parser.QueryStringParser.removeQueryString;
+
 public class RequestLineParser {
     private static final Pattern REQUEST_LINE = Pattern.compile("[A-Z]* {1}\\S* {1}[A-Z]*\\/[0-9|.]+");
     private static final Pattern QUERY_STRING = Pattern.compile("^(\\/[a-zA-Z]*)*\\?([^=]+=+[^=]+)+[^=]+(=+[^=]+)?$");
@@ -29,7 +31,7 @@ public class RequestLineParser {
         if (QUERY_STRING.matcher(path).matches()) {
             String queryString = QueryStringParser.parse(path);
 
-            return new RequestLine(method, path, queryString, webProtocol);
+            return new RequestLine(method, removeQueryString(path), queryString, webProtocol);
         }
 
         return new RequestLine(method, path, webProtocol);
