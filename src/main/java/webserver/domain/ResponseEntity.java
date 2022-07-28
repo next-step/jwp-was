@@ -4,6 +4,10 @@ import java.util.Objects;
 
 import static webserver.domain.HttpHeaders.CONTENT_LENGTH;
 
+/**
+ * Http 응답 정보
+ * @param <T> 응답 정보 Body 타입
+ */
 public class ResponseEntity<T> extends HttpEntity<T> {
 
     private final HttpStatus httpStatus;

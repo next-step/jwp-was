@@ -17,6 +17,9 @@ import webserver.domain.TemplateView;
 import java.io.IOException;
 import java.util.Collections;
 
+/**
+ * 유저 정보 컨트롤러
+ */
 public class UserController implements Controller {
     private final UserService userService;
 

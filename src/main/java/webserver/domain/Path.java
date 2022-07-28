@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
+/**
+ * 경로 정보
+ */
 public class Path {
     private final String pathStr;
 

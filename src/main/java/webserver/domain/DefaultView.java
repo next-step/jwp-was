@@ -7,11 +7,15 @@ import utils.FileIoUtils;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+/**
+ * 기본 View 정보 객체
+ */
 public class DefaultView {
     private static final Logger logger = LoggerFactory.getLogger(DefaultView.class);
     public static final String SUFFIX_HTML = ".html";
     public static final String PREFIX_TEMPLATE = "./templates";
     public static final String STRING_EMPTY = "";
+
     private final String prefix;
     private final String suffix;
     private final String viewName;
@@ -22,18 +26,33 @@ public class DefaultView {
         this.viewName = viewName;
     }
 
+    /**
+     * 전달받은 이름으로 기본 설정에 맞춰 View 정보를 구성해 인스턴스를 생성 및 반환한다.
+     *
+     * @param viewName 뷰 이름
+     * @return 뷰 정보 인스턴스
+     */
     public static DefaultView createDefaultHtmlView(String viewName) {
         return new DefaultView(PREFIX_TEMPLATE, viewName, SUFFIX_HTML);
     }
 
+    /**
+     * 해당 뷰의 접두사를 반환한다.
+     */
     public String getPrefix() {
         return prefix;
     }
 
+    /**
+     * 해당 뷰의 접미사를 반환한다.
+     */
     public String getSuffix() {
         return suffix;
     }
 
+    /**
+     * 해당 뷰의 이름을 반환한다.
+     */
     public String getViewName() {
         return viewName;
     }

@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+/**
+ * Template Engine을 사용하는 html 파일 정보 View 객체
+ */
 public class TemplateView extends DefaultView {
     private static final Logger logger = LoggerFactory.getLogger(TemplateView.class);
 

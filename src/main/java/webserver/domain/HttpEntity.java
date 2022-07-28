@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class HttpEntity<T> {
     public static final String STRING_EMPTY = "";
+
     private final HttpHeaders headers;
 
     private final T body;

@@ -1,14 +1,14 @@
 package webserver.handlers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import webserver.domain.RequestLine;
 import webserver.ui.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 컨트롤러 관리 객체
+ */
 public class ControllerContainerImpl implements ControllerContainer {
     private final List<Controller> controllers = new ArrayList<>();
 

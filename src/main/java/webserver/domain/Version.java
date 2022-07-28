@@ -2,6 +2,9 @@ package webserver.domain;
 
 import java.util.stream.Stream;
 
+/**
+ * Http 버전 정보
+ */
 public enum Version {
     ONE("1.0"), ONE_DOT_ONE("1.1"), TWO("2");
 

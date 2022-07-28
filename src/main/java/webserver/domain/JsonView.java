@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+/**
+ * Json 타입의 body 정보 객체
+ */
 public class JsonView extends DefaultView {
     private static final Logger logger = LoggerFactory.getLogger(JsonView.class);
 

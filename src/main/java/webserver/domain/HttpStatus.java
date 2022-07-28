@@ -1,5 +1,8 @@
 package webserver.domain;
 
+/**
+ * Http 요청에 대한 응답 상태
+ */
 public enum HttpStatus {
     OK("200 OK"),
     CREATED("201 Created"),

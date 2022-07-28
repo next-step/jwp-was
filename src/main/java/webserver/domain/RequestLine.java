@@ -2,6 +2,9 @@ package webserver.domain;
 
 import org.springframework.http.HttpMethod;
 
+/**
+ * 요청 라인
+ */
 public class RequestLine {
     public static final String QUERY_DELIMITER = "\\?";
     public static final String DELIMITER = " ";
@@ -24,6 +27,11 @@ public class RequestLine {
     }
 
 
+    /**
+     * 요청 라인 문자열에서 method, queryString, protocol을 추출해 요청 정보 객체를 생성해 반환한다.
+     * @param line 요청 라인 문자열
+     * @return 요청 정보
+     */
     public static RequestLine from(String line) {
         if (line == null || line.isEmpty()) {
             throw new IllegalArgumentException(INVALID_REQUEST_LINE_MSG + line);
@@ -39,18 +47,30 @@ public class RequestLine {
     }
 
 
+    /**
+     * 요청 메서드를 반환한다.
+     */
     public HttpMethod getMethod() {
         return method;
     }
 
+    /**
+     * 요청 경로 객체를 반환한다.
+     */
     public Path getPath() {
         return path;
     }
 
+    /**
+     * 요청 프로토콜을 반환한다.
+     */
     public Protocol getProtocol() {
         return protocol;
     }
 
+    /**
+     * 요청 경로 문자열을 반환한다.
+     */
     public String getPathStr() {
         return path.getPathStr();
     }

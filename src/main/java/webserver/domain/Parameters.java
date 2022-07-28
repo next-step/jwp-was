@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Http 의 queryString 이나 request Body의 정보를 담는 일급 컬렉션
+ */
 public class Parameters {
     public static final String QUERYSTRING_PARAM_DELIMITER = "&";
     public static final String LINE_SEPARATOR = System.lineSeparator();
@@ -25,6 +28,11 @@ public class Parameters {
         this.store = store;
     }
 
+    /**
+     * 키/값 문자열을 Map 자료구조로 변환하여 일급 컬렉션을 생성해 반환한다.
+     *
+     * @param parameters 키/값 목록 문자열
+     */
     public static Parameters from(String parameters) {
         return new Parameters(getParameterMap(parameters));
     }
@@ -64,14 +72,23 @@ public class Parameters {
         return pair[QUERY_VALUE_POINT];
     }
 
+    /**
+     * 변경불가능한 빈 속성들을 담은 일급 컬렉션을 생성해 반환한다.
+     */
     public static Parameters emptyInstance() {
         return new Parameters(Collections.emptyMap());
     }
 
+    /**
+     * 내부 값을 변경 가능한 일급 컬렉션을 생성해 반환한다.
+     */
     public static Parameters newInstance() {
         return new Parameters(new HashMap<>());
     }
 
+    /**
+     * 키/값 자료구조를 불변 객체로 만들어 반환한다.
+     */
     public Map<String, String> getParameters() {
         return Collections.unmodifiableMap(store);
     }
@@ -93,14 +110,31 @@ public class Parameters {
         return Objects.hash(store);
     }
 
+    /**
+     * 속성 정보를 찾아 반환한다.
+     *
+     * @param key 속성 이름
+     * @return 속성 정보
+     */
     public String get(String key) {
         return store.get(key);
     }
 
+    /**
+     * 키/값 목록 문자열을 가공해 속성을 추가한다.
+     *
+     * @param line 키/값 목록 문자열
+     */
     public void addParameters(String line) {
         store.putAll(getParameterMap(line));
     }
 
+    /**
+     * 속성 정보를 추가한다.
+     *
+     * @param key 속성 이름
+     * @param value 속성
+     */
     public void addParameters(String key, String value) {
         store.put(key, value);
     }
@@ -112,6 +146,9 @@ public class Parameters {
                 .collect(Collectors.joining());
     }
 
+    /**
+     * 속성 정보가 비어있는지 논리값을 반환한다.
+     */
     public boolean isEmpty() {
         return store.isEmpty();
     }

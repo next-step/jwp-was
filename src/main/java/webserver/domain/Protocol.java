@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
+/**
+ * 프로토콜 정보
+ */
 public class Protocol {
     public static final String DELIMITER = "/";
     public static final int PROTOCOL_INDEX = 0;
