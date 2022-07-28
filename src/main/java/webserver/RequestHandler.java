@@ -19,14 +19,13 @@ import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import utils.IOUtils;
 import webserver.handler.CreateUserController;
+import webserver.handler.LoginController;
 import webserver.request.ContentType;
 import webserver.request.HttpRequest;
 import webserver.request.RequestBody;
 import webserver.request.RequestHeaders;
 import webserver.request.RequestLine;
-import webserver.request.UserBinder;
 import webserver.response.HttpResponse;
-import webserver.response.ResponseHeaders;
 import webserver.template.HandleBarTemplateLoader;
 
 public class RequestHandler implements Runnable {
@@ -62,7 +61,11 @@ public class RequestHandler implements Runnable {
             }
 
             if (requestForLogin(requestLine)) {
-                login(requestBody, dos);
+                final HttpRequest httpRequest = new HttpRequest(requestLine, requestHeaders, requestBody);
+                final LoginController createUserController = new LoginController();
+                final HttpResponse response = createUserController.handle(httpRequest);
+
+                response.write(dos);
                 return;
             }
 
@@ -142,31 +145,6 @@ public class RequestHandler implements Runnable {
         return requestLine.isPost() && requestLine.getLocation().equals("/user/login");
     }
 
-    private void login(final RequestBody requestBody, final DataOutputStream dos) {
-        User user = UserBinder.from(requestBody.getParameters());
-        logger.debug("user = {}", user);
-
-        final boolean loginSuccess = login(user);
-        logger.debug("loginSuccess = {}", loginSuccess);
-
-        final ResponseHeaders responseHeaders = new ResponseHeaders();
-        if (loginSuccess) {
-            responseHeaders.add("Location", "/index.html");
-            responseHeaders.add("Set-Cookie", "logined=true; Path=/");
-            response302Header(dos, responseHeaders);
-            return;
-        }
-        responseHeaders.add("Location", "/user/login_failed.html");
-        responseHeaders.add("Set-Cookie", "logined=false; Path=/");
-        response302Header(dos, responseHeaders);
-    }
-
-    private boolean login(final User user) {
-        return Optional.ofNullable(DataBase.findUserById(user.getUserId()))
-            .map(it -> it.getPassword().equals(user.getPassword()))
-            .orElse(false);
-    }
-
     private boolean requestForCreateUser(final RequestLine requestLine) {
         return requestLine.isPost() && requestLine.getLocation().equals("/user/create");
     }
@@ -186,18 +164,6 @@ public class RequestHandler implements Runnable {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
             dos.writeBytes("Location: " + location + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response302Header(DataOutputStream dos, final ResponseHeaders responseHeaders) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            for (final String header : responseHeaders.getHeaders().keySet()) {
-                dos.writeBytes(header + ": " + responseHeaders.get(header) + "\r\n");
-            }
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
