@@ -8,9 +8,11 @@ import static webserver.response.StatusCode.OK;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
+import utils.FileIoUtils;
 import webserver.request.ContentType;
 import webserver.template.HandleBarTemplateLoader;
 
@@ -33,6 +35,18 @@ public class HttpResponse {
         return new HttpResponse(new StatusLine(HTTP_1_1, FOUND), headers, EMPTY_RESPONSE_BODY);
     }
 
+    public static HttpResponse ok(final String location) {
+        final String fileExtension = FileIoUtils.getFileExtension(location);
+        final String filePath = getFilePath(fileExtension);
+
+        try {
+            final byte[] body = FileIoUtils.loadFileFromClasspath(filePath + location);
+            return ok(body, ContentType.of(fileExtension));
+        } catch (IOException | URISyntaxException | NullPointerException e) {
+            return HttpResponse.notFound();
+        }
+    }
+
     public static HttpResponse ok(final String location, final Map<String, Object> params) {
         try {
             final String load = HandleBarTemplateLoader.load(location, params);
@@ -53,6 +67,13 @@ public class HttpResponse {
 
     private static HttpResponse notFound() {
         return new HttpResponse(new StatusLine(HTTP_1_1, NOT_FOUND), new ResponseHeaders(), EMPTY_RESPONSE_BODY);
+    }
+
+    private static String getFilePath(final String fileExtension) {
+        if (fileExtension.endsWith("html") || fileExtension.endsWith("ico")) {
+            return "templates";
+        }
+        return "static";
     }
 
     public HttpResponse addCookie(final String key, final String value) {
