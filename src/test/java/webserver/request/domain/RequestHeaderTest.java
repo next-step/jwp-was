@@ -32,13 +32,4 @@ public class RequestHeaderTest {
         assertThat(requestHeader1).isEqualTo(requestHeader2);
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"", " ", "Host:localhost:8080", "Host:"})
-    @DisplayName("header 에 빈값이나 속성 값이 없으면 예외를 던진다")
-    public void validateRequestHeader(String header) {
-        RequestHeader requestHeader = new RequestHeader();
-        assertThrows(StringEmptyException.class, () -> {
-            requestHeader.addHeaderProperty(header);
-        });
-    }
 }
