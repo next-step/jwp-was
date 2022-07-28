@@ -1,93 +1,84 @@
 package webserver.http.response;
 
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 import webserver.http.ContentType;
 import webserver.http.request.HttpProtocol;
 
 public class HttpResponse {
-	private static final String NEW_LINE = "\r\n";
+	private final String TEMPLATES_ROOT_PATH = "./templates";
+	private final String STATIC_ROOT_PATH = "./static";
+	private final String NEW_LINE = "\r\n";
 
-	private final HttpStatusLine httpStatusLine;
-	private final HttpResponseHeaders httpResponseHeaders;
-	private final HttpResponseBody httpResponseBody;
+	private final OutputStream outputStream;
+	private final HttpResponseHeaders headers;
+	private final HttpStatusLine statusLine;
+	private HttpResponseBody responseBody;
 
-	public static class Builder {
-		private HttpStatusLine httpStatusLine;
-		private HttpResponseHeaders httpResponseHeaders = new HttpResponseHeaders();
-		private HttpResponseBody httpResponseBody;
-
-		public Builder statusLine(HttpProtocol httpProtocol, HttpStatus httpStatus) {
-			httpStatusLine = new HttpStatusLine(httpProtocol, httpStatus);
-			return this;
-		}
-
-		public Builder responseBody(Resource resource) {
-			httpResponseBody = new HttpResponseBody(resource);
-			return this;
-		}
-
-		public Builder emptyBody() {
-			httpResponseBody = new HttpResponseBody("");
-			return this;
-		}
-
-		public Builder responseBody(String resource) {
-			httpResponseBody = new HttpResponseBody(resource);
-			return this;
-		}
-
-		public Builder contentType(ContentType contentType) {
-			httpResponseHeaders.putContentType(contentType);
-			return this;
-		}
-
-		public Builder contentLength(int contentLength) {
-			httpResponseHeaders.putContentLength(contentLength);
-			return this;
-		}
-
-		public Builder location(String location) {
-			httpResponseHeaders.putLocation(location);
-			return this;
-		}
-
-		public Builder cookie(String cookie) {
-			httpResponseHeaders.putCookie(cookie);
-			return this;
-		}
-
-		public HttpResponse build() {
-			return new HttpResponse(this);
-		}
-
+	public HttpResponse(HttpProtocol httpProtocol, OutputStream outputStream) {
+		this.outputStream = outputStream;
+		this.headers = new HttpResponseHeaders();
+		this.statusLine = new HttpStatusLine(httpProtocol);
 	}
 
-	public byte[] getBytes() {
+	private String getRootPath(String path) {
+		if (path.contains(ContentType.HTML.getExtension()) || path.contains(ContentType.ICO.getExtension())) {
+			System.out.println("Path : " + TEMPLATES_ROOT_PATH + path);
+			return TEMPLATES_ROOT_PATH + path;
+		}
+		System.out.println("Path : " + STATIC_ROOT_PATH + path);
+		return STATIC_ROOT_PATH + path;
+	}
+
+	public void addHeader(String attribute, String value) {
+		headers.addAttribute(attribute, value);
+	}
+
+	private void write(HttpStatus status) {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(httpStatusLine.getHttpStatusLine());
-		buffer.append(NEW_LINE);
-		buffer.append(httpResponseHeaders.getResponseHeaders());
-		buffer.append(NEW_LINE);
-		buffer.append(httpResponseBody.getBody());
-		return buffer.toString().getBytes(StandardCharsets.UTF_8);
+		buffer.append(statusLine.getHttpStatusLine(status) + NEW_LINE);
+		buffer.append(headers.getResponseHeaders());
+
+		if (!Objects.isNull(responseBody)) {
+			buffer.append(NEW_LINE + responseBody.getBody());
+		}
+
+		try {
+			outputStream.write(buffer.toString().getBytes(StandardCharsets.UTF_8));
+			outputStream.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	private HttpResponse (Builder builder) {
-		this.httpStatusLine = builder.httpStatusLine;
-		this.httpResponseHeaders = builder.httpResponseHeaders;
-		this.httpResponseBody = builder.httpResponseBody;
+	public void forward(String uri) {
+		Resource resource = Resource.of(getRootPath(uri));
+		headers.addContentType(resource.getContentType());
+		headers.addContentLength(resource.getContentLength());
+		responseBody = new HttpResponseBody(resource);
+		write(HttpStatus.OK);
 	}
 
-	public HttpStatusLine getHttpStatusLine() {
-		return httpStatusLine;
+	public void sendRedirect(String uri) {
+		headers.addLocation(uri);
+		write(HttpStatus.FOUND);
 	}
 
-	public HttpResponseHeaders getHttpResponseHeaders() {
-		return httpResponseHeaders;
+	public void forwardBody(ContentType contentType, String body) {
+		headers.addContentType(contentType);
+		headers.addContentLength(body.getBytes(StandardCharsets.UTF_8).length);
+		responseBody = new HttpResponseBody(body);
+		write(HttpStatus.OK);
 	}
 
-	public HttpResponseBody getHttpResponseBody() {
-		return httpResponseBody;
+	public void response200Header(int contentLength) {
+	}
+
+	public void responseBody(byte[] body) {
+	}
+
+	public void processHeaders() {
 	}
 }

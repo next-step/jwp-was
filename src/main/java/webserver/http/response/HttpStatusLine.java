@@ -8,14 +8,12 @@ public class HttpStatusLine {
 	private static final String FORMAT_STATUS_LINE = "%s %s %s";
 
 	private final HttpProtocol httpProtocol;
-	private final HttpStatus httpStatus;
 
-	public HttpStatusLine(HttpProtocol httpProtocol, HttpStatus httpStatus) {
+	public HttpStatusLine(HttpProtocol httpProtocol) {
 		this.httpProtocol = httpProtocol;
-		this.httpStatus = httpStatus;
 	}
 
-	public String getHttpStatusLine() {
+	public String getHttpStatusLine(HttpStatus httpStatus) {
 		return String.format(FORMAT_STATUS_LINE, httpProtocol.getProtocol(), httpStatus.getCode(), httpStatus.getMessage());
 	}
 
@@ -28,11 +26,11 @@ public class HttpStatusLine {
 			return false;
 		}
 		HttpStatusLine that = (HttpStatusLine) o;
-		return Objects.equals(httpProtocol, that.httpProtocol) && httpStatus == that.httpStatus;
+		return Objects.equals(httpProtocol, that.httpProtocol);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(httpProtocol, httpStatus);
+		return Objects.hash(httpProtocol);
 	}
 }

@@ -9,18 +9,21 @@ public class HttpResponseHeaders {
 	private static final String CONTENT_TYPE = "Content-Type";
 	private static final String CONTENT_LENGTH = "Content-Length";
 	public static final String LOCATION = "Location";
-	public static final String COOKIE = "Set-Cookie";
-	private static final String NEW_LINE = "\r\n";
 	private static final String HEADER_DELIMITER = ": ";
+	private static final String NEW_LINE = "\r\n";
 
 	private final Map<String, String> headers = new HashMap<>();
 
-	public void putContentType(ContentType contentType) {
+	public void addContentType(ContentType contentType) {
 		headers.put(CONTENT_TYPE, contentType.getMime());
 	}
 
-	public void putContentLength(int contentLength) {
+	public void addContentLength(int contentLength) {
 		headers.put(CONTENT_LENGTH, String.valueOf(contentLength));
+	}
+
+	public void addLocation(String location) {
+		headers.put(LOCATION, location);
 	}
 
 	public String getResponseHeaders() {
@@ -35,11 +38,7 @@ public class HttpResponseHeaders {
 		return stringBuilder.toString();
 	}
 
-	public void putLocation(String location) {
-		headers.put(LOCATION, location);
-	}
-
-	public void putCookie(String cookie) {
-		headers.put(COOKIE, cookie);
+	public void addAttribute(String attribute, String value) {
+		headers.put(attribute, value);
 	}
 }

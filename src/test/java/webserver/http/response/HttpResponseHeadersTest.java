@@ -12,8 +12,8 @@ public class HttpResponseHeadersTest {
 	@DisplayName("ResponseHeaders String 변환 테스트")
 	public void stringToResponseHeaders() {
 		HttpResponseHeaders httpResponseHeaders = new HttpResponseHeaders();
-		httpResponseHeaders.putContentLength(100);
-		httpResponseHeaders.putContentType(ContentType.HTML);
+		httpResponseHeaders.addContentLength(100);
+		httpResponseHeaders.addContentType(ContentType.HTML);
 
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("Content-Length: 100\r\n");
