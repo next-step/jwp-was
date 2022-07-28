@@ -31,6 +31,10 @@ public class Request {
         return requestLine.getPath();
     }
 
+    public boolean hasPath(String path) {
+        return getPath().equals(path);
+    }
+
     public String getParameter(String key) {
         return requestLine.getParameter(key);
     }

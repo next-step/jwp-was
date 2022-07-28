@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.HashMap;
@@ -156,6 +157,17 @@ class RequestTest {
 
         String actual = request.getPath();
         assertThat(actual).isEqualTo("/path");
+    }
+
+    @DisplayName("URI path를 가지고 있는지 여부 반환")
+    @ParameterizedTest
+    @CsvSource(value = {"/path, true", "/request, false"})
+    void hasPath(String path, boolean expected) {
+        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path"), new Protocol("HTTP", "1.1"));
+        Request request = new Request(requestLine, new Headers(new HashMap<>()));
+
+        boolean actual = request.hasPath(path);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("requestLine에 저장된 key 에 해당하는 value를 가져온다.")

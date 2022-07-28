@@ -41,7 +41,7 @@ public class RequestHandler implements Runnable {
             Request request = requestReader.read(bufferedReader);
             logger.info("[request] = {}", request);
 
-            if (request.hasMethod(Method.GET) && "/".equals(request.getPath())) {
+            if (request.hasMethod(Method.GET) && request.hasPath("/")) {
                 try {
                     String resource = "/index.html";
                     byte[] bytes = FileIoUtils.loadFileFromClasspath("./static" + resource);
@@ -66,7 +66,7 @@ public class RequestHandler implements Runnable {
                 }
             }
 
-            if (request.hasMethod(Method.POST) && request.getPath().equals("/user/create")) {
+            if (request.hasMethod(Method.POST) && request.hasPath("/user/create")) {
                 request.decodeCharacter(Charsets.UTF_8);
                 String userId = request.getParameter("userId");
                 String password = request.getParameter("password");
