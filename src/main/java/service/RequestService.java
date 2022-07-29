@@ -22,7 +22,7 @@ import java.util.List;
 public class RequestService {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestService.class);
-    private static final List<String> RESOURCE_FILE_EXTENSIONS = List.of(".css", ".js", ".ico", "ttf", "woff");
+    private static final List<String> RESOURCE_FILE_EXTENSIONS = List.of(".css", ".js", ".ico", "ttf", "woff", "png");
     private static final String HTML_EXTENSION = ".html";
     private static final String BODY_SEPARATOR = "";
 
