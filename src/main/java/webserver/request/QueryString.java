@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import utils.StringUtils;
 
 public class QueryString {
     private static final String PARAM_DELIMITER = "&";
@@ -15,7 +16,7 @@ public class QueryString {
     public QueryString(String queryString) {
         this.params = Stream.of(queryString.split(PARAM_DELIMITER))
                 .map(param -> param.split(KEY_VALUE_DELIMITER))
-                .collect(Collectors.toMap(value -> value[0], value -> decode(value[1])));
+                .collect(Collectors.toMap(value -> value[0], value -> StringUtils.decodeUrlEncoding(value[1])));
     }
 
     public Map<String, String> getParams() {
@@ -24,9 +25,5 @@ public class QueryString {
 
     public String getParam(String key) {
         return params.get(key);
-    }
-
-    private String decode(String input) {
-        return URLDecoder.decode(input, StandardCharsets.UTF_8);
     }
 }

@@ -14,6 +14,7 @@ import utils.FileIoUtils;
 import webserver.controller.HandlerMapper;
 import webserver.controller.ViewController;
 import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -35,11 +36,11 @@ public class RequestHandler implements Runnable {
 
             HandlerMapper handlerMapper = new HandlerMapper();
 
-            byte[] result = handlerMapper.handle(httpRequest);
+            HttpResponse httpResponse = handlerMapper.handle(httpRequest);
 
-            response(out, result);
-        } catch (IOException | URISyntaxException e) {
-            logger.error(e.getMessage());
+            response(out, httpResponse);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -58,8 +59,9 @@ public class RequestHandler implements Runnable {
         return request;
     }
 
-    private void response(OutputStream out, byte[] body) {
+    private void response(OutputStream out, HttpResponse httpResponse) {
         DataOutputStream dos = new DataOutputStream(out);
+        byte[] body = httpResponse.getBody();
         response200Header(dos, body.length);
         responseBody(dos, body);
     }
