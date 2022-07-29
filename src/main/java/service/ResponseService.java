@@ -26,7 +26,6 @@ public class ResponseService {
         HttpHeaders responseHeaders = clientResponse.getResponseHeaders();
 
         dataOutputStream.writeBytes(String.format("HTTP/1.1 %s %s\r\n", responseStatusCode.value(), responseStatusCode.name()));
-        dataOutputStream.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
         if (body != null) {
             dataOutputStream.writeBytes("Content-Length: " + body.length + "\r\n");
         }

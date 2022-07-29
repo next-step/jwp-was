@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import utils.HtmlPageFactory;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class UserService {
     public ClientResponse createUser(User user) {
         DataBase.addUser(user);
         HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.TEXT_HTML);
         httpHeaders.setLocation(URI.create("http://localhost:8080/index.html"));
         return new ClientResponse(HttpStatus.FOUND, httpHeaders, user);
     }
@@ -39,6 +41,7 @@ public class UserService {
         User user = DataBase.findUserById(credential.getUserId());
 
         HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.TEXT_HTML);
         if (!this.isLoginSuccess(user, credential)) {
             logger.info("login failed ...");
             httpHeaders.setLocation(URI.create("http://localhost:8080/user/login_failed.html"));
@@ -55,6 +58,7 @@ public class UserService {
     public ClientResponse getUsers() throws IOException {
         boolean logined = AuthService.userLogined.get();
         HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.TEXT_HTML);
         if (!logined) {
             httpHeaders.setLocation(URI.create("http://localhost:8080/user/login.html"));
             return new ClientResponse(HttpStatus.FOUND, httpHeaders, null);

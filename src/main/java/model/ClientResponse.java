@@ -45,8 +45,8 @@ public class ClientResponse {
         return bytesBody;
     }
 
-    public void setFileBody(UrlPath urlPath) throws IOException, URISyntaxException {
-        this.bytesBody = FileIoUtils.loadFileFromClasspath(urlPath.getPath());
+    public void setFileBody(UrlPath urlPath, boolean isRequestForTemplate) throws IOException, URISyntaxException {
+        this.bytesBody = FileIoUtils.loadFileFromClasspath(urlPath.getPath(), isRequestForTemplate);
     }
 
     public void convertBodyToBytes() throws IOException {

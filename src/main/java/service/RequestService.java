@@ -6,6 +6,7 @@ import model.RequestLine;
 import model.UrlPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import utils.HandlerAdapter;
 
@@ -21,8 +22,8 @@ import java.util.List;
 public class RequestService {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestService.class);
-    private static final List<String> LOGGING_EXCLUDE_EXTENSIONS = List.of(".html", ".css", ".js", ".ico");
-
+    private static final List<String> RESOURCE_FILE_EXTENSIONS = List.of(".css", ".js", ".ico");
+    private static final String HTML_EXTENSION = ".html";
     private static final String BODY_SEPARATOR = "";
 
     public static List<String> getHttpMessageData(BufferedReader bufferedReader) throws IOException {
@@ -36,17 +37,25 @@ public class RequestService {
     }
 
     public static ClientResponse getClientResponse(HttpMessage httpMessage) throws IOException, URISyntaxException, InvocationTargetException, IllegalAccessException {
-        RequestLine requestLine = httpMessage.getRequestLine();
-        if (LOGGING_EXCLUDE_EXTENSIONS.stream().noneMatch(requestLine.getUrlPath().getPath()::contains)) {
-            logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpMessage.toStringHttpMessage());
-        }
 
         AuthService.getInstance().setUserCredential(httpMessage.getRequestHeaders().getRequestHeaders());
 
+        RequestLine requestLine = httpMessage.getRequestLine();
         if (isRequestForFileResource(requestLine)) {
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.put(HttpHeaders.CONTENT_TYPE, List.of("text/css"));
+
+            UrlPath urlPath = requestLine.getUrlPath();
+            ClientResponse clientResponse = new ClientResponse(HttpStatus.OK, httpHeaders);
+            clientResponse.setFileBody(urlPath, false);
+            return clientResponse;
+        }
+
+        logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpMessage.toStringHttpMessage());
+        if (requestLine.getUrlPath().getPath().contains(HTML_EXTENSION)) {
             UrlPath urlPath = requestLine.getUrlPath();
             ClientResponse clientResponse = new ClientResponse(HttpStatus.OK, null);
-            clientResponse.setFileBody(urlPath);
+            clientResponse.setFileBody(urlPath, true);
             return clientResponse;
         }
 
@@ -60,10 +69,6 @@ public class RequestService {
         return clientResponse;
     }
 
-    public static boolean isRequestForFileResource(RequestLine requestLine) {
-        return requestLine.getUrlPath().hasExtension();
-    }
-
     public static byte[] bodyToBytes(Object result) throws IOException {
         if (result == null) {
             return null;
@@ -74,6 +79,10 @@ public class RequestService {
             ois.writeObject(result);
             return boas.toByteArray();
         }
+    }
+
+    private static boolean isRequestForFileResource(RequestLine requestLine) {
+        return RESOURCE_FILE_EXTENSIONS.stream().anyMatch(requestLine.getUrlPath().getPath()::contains);
     }
 
 }
