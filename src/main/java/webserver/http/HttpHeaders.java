@@ -46,8 +46,8 @@ public class HttpHeaders  {
         return headers.get(name);
     }
 
-    public String getCookie() {
-        return headers.get(COOKIE);
+    public Cookies getCookies() {
+        return new Cookies(get(COOKIE));
     }
 
     public int getContentLength() {
@@ -55,7 +55,7 @@ public class HttpHeaders  {
     }
 
     public String getAccept() {
-        String accept = headers.get(ACCEPT);
+        String accept = get(ACCEPT);
         return accept.split(DELIMITER_COMMA)[INDEX_ZERO];
     }
 }

@@ -1,16 +1,15 @@
 package webserver.http;
 
-import static java.nio.charset.StandardCharsets.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import utils.IOUtils;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class HttpRequest {
 
@@ -19,7 +18,6 @@ public class HttpRequest {
     private RequestLine requestLine;
     private HttpHeaders headers;
     private RequestBody requestBody;
-    private Cookies cookies;
 
     public HttpRequest(InputStream in) {
         try {
@@ -27,7 +25,6 @@ public class HttpRequest {
             requestLine = new RequestLine(URLDecoder.decode(reader.readLine(), UTF_8));
             headers = HttpHeaders.from(reader);
             requestBody = new RequestBody(URLDecoder.decode(IOUtils.readData(reader, headers.getContentLength()), UTF_8));
-            cookies = new Cookies(headers.getCookie());
             logger.debug("request body = {}", requestBody.getQueryString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,10 +52,10 @@ public class HttpRequest {
     }
 
     public Cookies getCookies() {
-        return cookies;
+        return headers.getCookies();
     }
 
     public String getSessionId() {
-        return cookies.getCookie("JSESSIONID");
+        return getCookies().getCookie("JSESSIONID");
     }
 }
