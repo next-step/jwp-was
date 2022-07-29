@@ -5,14 +5,9 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
@@ -46,10 +41,10 @@ public class RequestHandler implements Runnable {
                 line = br.readLine();
                 logger.debug("header: {}", line);
                 if (line.contains("Content-Length")){
-                    contentLength = getContentLength(line);
+                    contentLength = HeaderParser.getContentLength(line);
                 }
                 if (line.contains("Cookie")) {
-                    logined = isLogin(line);
+                    logined = HeaderParser.isLogin(line);
                 }
             }
 
@@ -133,29 +128,6 @@ public class RequestHandler implements Runnable {
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    private boolean isLogin(String line) {
-        String cookieString = line.split(":")[1].trim();
-        if (cookieString.isEmpty()) {
-            return false;
-        }
-        Map<String, String> cookies = new HashMap<>();
-        for (String cookie : cookieString.split(";")) {
-            String cookieName = cookie.split("=")[0];
-            String cookieValue = cookie.split("=")[1];
-            cookies.put(cookieName, cookieValue);
-        }
-        String loginedValue = cookies.get("logined");
-        if (loginedValue == null) {
-            return false;
-        }
-        return Boolean.parseBoolean(loginedValue);
-    }
-
-    private int getContentLength(String line) {
-        String[] headerTokens = line.split(":");
-        return Integer.parseInt(headerTokens[1].trim());
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
