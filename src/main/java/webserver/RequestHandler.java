@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,6 +89,41 @@ public class RequestHandler implements Runnable {
                 byte[] body = userList.getBytes(StandardCharsets.UTF_8);
                 response200Header(dos, body.length);
                 responseBody(dos, body);
+            } else if (url.endsWith(".css")) {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./static/" + url);
+                response200StaticHeader(dos, body.length, "css");
+                responseBody(dos, body);
+            } else if (url.endsWith(".js")) {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./static/" + url);
+                response200StaticHeader(dos, body.length, "js");
+                responseBody(dos, body);
+            } else if (url.endsWith(".ttf")) {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./static/" + url);
+                response200StaticHeader(dos, body.length, "fonts");
+                responseBody(dos, body);
+            } else if (url.endsWith(".woff")) {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./static/" + url);
+                response200StaticHeader(dos, body.length, "fonts");
+                responseBody(dos, body);
+            } else if (url.endsWith(".svg")) {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./static/" + url);
+                response200StaticHeader(dos, body.length, "fonts");
+                responseBody(dos, body);
+            }else if (url.endsWith(".png")) {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./static/" + url);
+                response200StaticHeader(dos, body.length, "images");
+                responseBody(dos, body);
+            } else if (url.endsWith(".ico")) {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./templates/" + url);
+                response200StaticHeader(dos, body.length, "images");
+                responseBody(dos, body);
             } else {
                 DataOutputStream dos = new DataOutputStream(out);
                 byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + url);
@@ -157,6 +193,17 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
             dos.writeBytes("Set-Cookie: " + cookie + "\r\n");
             dos.writeBytes("Location: " + url + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response200StaticHeader(DataOutputStream dos, int lengthOfBodyContent, String type) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/" + type + "\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
