@@ -36,24 +36,23 @@ public class RequestHandler implements Runnable {
             OutputStream out = connection.getOutputStream();
             var bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
         ) {
-
             var httpRequest = HttpRequest.parse(bufferedReader);
 
-            System.out.println(httpRequest.getUrl());
+            var response = createHttpResponse(httpRequest);
+
             var dataOutputStream = new DataOutputStream(out);
-
-            if (httpRequest.isStaticFile()) {
-                var httpResponse = HttpResponse.parseStaticFile(httpRequest.getUrl(), httpRequest.getFileExtension());
-                httpResponse.write(dataOutputStream);
-                return;
-            }
-
-            var controller = controllers.get(new ControllerIdentity(httpRequest.getUrl(), httpRequest.getMethod()));
-            var response = controller.run(httpRequest);
-
             response.write(dataOutputStream);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private HttpResponse createHttpResponse(HttpRequest httpRequest) {
+        if (httpRequest.isStaticFile()) {
+            return HttpResponse.parseStaticFile(httpRequest.getUrl(), httpRequest.getFileExtension());
+        }
+
+        var controller = controllers.get(new ControllerIdentity(httpRequest.getUrl(), httpRequest.getMethod()));
+        return controller.run(httpRequest);
     }
 }

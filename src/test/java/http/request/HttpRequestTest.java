@@ -12,6 +12,8 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import http.exception.NotFoundExtensionException;
+
 class HttpRequestTest {
 
     @Test
@@ -72,7 +74,7 @@ class HttpRequestTest {
         var httpRequest = new HttpRequest(requestLine, headers, "");
 
         assertThatThrownBy(httpRequest::getFileExtension)
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(NotFoundExtensionException.class)
             .hasMessageStartingWith("확장자를 찾을 수 없습니다.");
     }
 
