@@ -38,8 +38,6 @@ public class RequestService {
 
     public static ClientResponse getClientResponse(HttpMessage httpMessage) throws IOException, URISyntaxException, InvocationTargetException, IllegalAccessException {
 
-        AuthService.getInstance().setUserCredential(httpMessage.getRequestHeaders().getRequestHeaders());
-
         RequestLine requestLine = httpMessage.getRequestLine();
         if (isRequestForFileResource(requestLine)) {
             HttpHeaders httpHeaders = new HttpHeaders();
@@ -48,7 +46,6 @@ public class RequestService {
             UrlPath urlPath = requestLine.getUrlPath();
             ClientResponse clientResponse = new ClientResponse(HttpStatus.OK, httpHeaders);
             clientResponse.setFileBody(urlPath, false);
-            AuthService.getInstance().removeUserCredential();
             return clientResponse;
         }
 
@@ -57,10 +54,10 @@ public class RequestService {
             UrlPath urlPath = requestLine.getUrlPath();
             ClientResponse clientResponse = new ClientResponse(HttpStatus.OK, null);
             clientResponse.setFileBody(urlPath, true);
-            AuthService.getInstance().removeUserCredential();
             return clientResponse;
         }
 
+        AuthService.getInstance().setUserCredential(httpMessage.getRequestHeaders().getRequestHeaders());
         ClientResponse clientResponse = HandlerAdapter.getInstance().invoke(httpMessage);
         if (clientResponse != null && clientResponse.getBody() != null) {
             clientResponse.convertBodyToBytes();
