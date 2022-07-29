@@ -3,6 +3,8 @@ package http.request;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import http.exception.NotFoundExtensionException;
+
 public class RequestLine {
 
     private static final String REQUEST_LINE_DELIMITER = " ";
@@ -65,7 +67,7 @@ public class RequestLine {
 
     public String getFileExtension() {
         if (!isStaticFile()) {
-            throw new IllegalArgumentException("확장자를 찾을 수 없습니다. url=" + getUrl());
+            throw new NotFoundExtensionException(getUrl());
         }
 
         var splitedUrl = url.split("\\.");

@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import http.Cookie;
 import http.Cookies;
 import http.HttpStatus;
+import http.exception.HttpResponseWriteException;
 import http.request.ContentType;
 import http.request.Protocol;
 import utils.FileIoUtils;
@@ -120,7 +121,7 @@ public class HttpResponse {
 
             dos.writeBytes("\r\n");
         } catch (IOException e) {
-            throw new IllegalArgumentException();
+            throw new HttpResponseWriteException(e.getMessage());
         }
     }
 
@@ -130,7 +131,7 @@ public class HttpResponse {
             dos.write(body.getBytes(StandardCharsets.UTF_8), 0, body.length());
             dos.flush();
         } catch (IOException e) {
-            throw new IllegalArgumentException();
+            throw new HttpResponseWriteException(e.getMessage());
         }
     }
 
