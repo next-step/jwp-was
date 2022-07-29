@@ -41,6 +41,8 @@ public class RequestService {
             logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpMessage.toStringHttpMessage());
         }
 
+        AuthService.getInstance().setUserCredential(httpMessage.getRequestHeaders().getRequestHeaders());
+
         if (isRequestForFileResource(requestLine)) {
             UrlPath urlPath = requestLine.getUrlPath();
             ClientResponse clientResponse = new ClientResponse(HttpStatus.OK, null);
@@ -52,6 +54,8 @@ public class RequestService {
         if (clientResponse != null && clientResponse.getBody() != null) {
             clientResponse.convertBodyToBytes();
         }
+
+        AuthService.getInstance().removeUserCredential();
 
         return clientResponse;
     }
@@ -73,3 +77,23 @@ public class RequestService {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

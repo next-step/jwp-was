@@ -9,6 +9,8 @@ import model.User;
 import org.springframework.http.HttpStatus;
 import service.UserService;
 
+import java.io.IOException;
+
 public class UserController {
 
     @GetMapping(path = "/user")
@@ -30,6 +32,11 @@ public class UserController {
     @PostMapping(path = "/user/login")
     public ClientResponse login(Credential credential) {
         return UserService.getInstance().auth(credential);
+    }
+
+    @GetMapping(path = "/user/list")
+    public ClientResponse getUsers() throws IOException {
+        return UserService.getInstance().getUsers();
     }
 
 }

@@ -8,8 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import utils.HtmlPageFactory;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserService {
@@ -39,14 +42,27 @@ public class UserService {
         if (!this.isLoginSuccess(user, credential)) {
             logger.info("login failed ...");
             httpHeaders.setLocation(URI.create("http://localhost:8080/user/login_failed.html"));
-            httpHeaders.put(HttpHeaders.SET_COOKIE, List.of("logined=false; Path=/"));
+            httpHeaders.put(HttpHeaders.SET_COOKIE, List.of(AuthService.LOGIN_HEADER_KEY + "=false; Path=/"));
             return new ClientResponse(HttpStatus.FOUND, httpHeaders, null);
         }
 
         logger.info("login success ... (userId: {})", user.getUserId());
         httpHeaders.setLocation(URI.create("http://localhost:8080/index.html"));
-        httpHeaders.put(HttpHeaders.SET_COOKIE, List.of("logined=true; Path=/"));
+        httpHeaders.put(HttpHeaders.SET_COOKIE, List.of(AuthService.LOGIN_HEADER_KEY + "=true; Path=/"));
         return new ClientResponse(HttpStatus.FOUND, httpHeaders, null);
+    }
+
+    public ClientResponse getUsers() throws IOException {
+        boolean logined = AuthService.userLogined.get();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        if (!logined) {
+            httpHeaders.setLocation(URI.create("http://localhost:8080/user/login.html"));
+            return new ClientResponse(HttpStatus.FOUND, httpHeaders, null);
+        }
+
+        List<User> users = new ArrayList<>(DataBase.findAll());
+        String usersPage = HtmlPageFactory.getUsersPage(users);
+        return new ClientResponse(HttpStatus.OK, httpHeaders, usersPage);
     }
 
     private boolean isLoginSuccess(User user, Credential credential) {
