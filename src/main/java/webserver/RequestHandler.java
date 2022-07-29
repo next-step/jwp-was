@@ -3,17 +3,15 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
+import utils.IOUtils;
 import webserver.controller.HandlerMapper;
-import webserver.controller.ViewController;
 import webserver.request.HttpRequest;
+import webserver.request.RequestBody;
 import webserver.response.HttpResponse;
 
 public class RequestHandler implements Runnable {
@@ -31,8 +29,7 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
-            List<String> request = getRequest(in);
-            HttpRequest httpRequest = new HttpRequest(request);
+            HttpRequest httpRequest = getRequest(in);
 
             HandlerMapper handlerMapper = new HandlerMapper();
 
@@ -44,19 +41,26 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private List<String> getRequest(InputStream in) throws IOException {
+    private HttpRequest getRequest(InputStream in) throws IOException {
         List<String> request = new ArrayList<>();
         BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
         String line = br.readLine();
         request.add(line);
 
-        while (line.equals("")) {
+        while (!line.equals("")) {
             line = br.readLine();
             request.add(line);
         }
 
-        return request;
+        HttpRequest httpRequest = new HttpRequest(request);
+        // refactoring 필요
+        String contentLength = httpRequest.getHeaders().get("Content-Length");
+
+        String body = IOUtils.readData(br, Integer.parseInt(contentLength));
+        httpRequest.setBody(new RequestBody(body));
+
+        return httpRequest;
     }
 
     private void response(OutputStream out, HttpResponse httpResponse) {

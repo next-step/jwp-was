@@ -22,7 +22,7 @@ public class HttpRequestTest {
         assertEquals(result.getPath(), "/index.html");
         assertEquals(result.getProtocol(), "HTTP");
         assertEquals(result.getVersion(), "1.1");
-        assertEquals(result.headers(), Map.of(
+        assertEquals(result.getHeaders(), Map.of(
                 "Host", "localhost:8080",
                 "Connection", "keep-alive",
                 "Accept", "*/*"

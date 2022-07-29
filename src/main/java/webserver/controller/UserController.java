@@ -8,18 +8,19 @@ import java.util.Map;
 import model.User;
 import webserver.request.HttpRequest;
 import webserver.request.QueryString;
+import webserver.request.RequestBody;
 import webserver.response.HttpResponse;
 
 public class UserController implements Controller {
 
     @Override
     public HttpResponse execute(HttpRequest httpRequest) throws Exception {
-        QueryString queryString = httpRequest.getQueryString();
+        RequestBody body = httpRequest.getBody();
         User user = new User(
-                queryString.getParam("userId"),
-                queryString.getParam("password"),
-                queryString.getParam("name"),
-                queryString.getParam("email")
+                body.getValue("userId"),
+                body.getValue("password"),
+                body.getValue("name"),
+                body.getValue("email")
         );
 
         return new HttpResponse(HttpStatusCode.OK, user);

@@ -9,6 +9,7 @@ import utils.FileIoUtils;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ViewControllerTest {
@@ -24,6 +25,6 @@ public class ViewControllerTest {
 
         HttpResponse result = new ViewController().execute(httpRequest);
 
-        assertThat(result.getBody()).containsExactly(FileIoUtils.loadFileFromClasspath("./templates/index.html"));
+        assertArrayEquals(result.getBody(), FileIoUtils.loadFileFromClasspath("./templates/index.html"));
     }
 }
