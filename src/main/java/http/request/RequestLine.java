@@ -38,7 +38,11 @@ public class RequestLine {
         return protocol.getProtocolType();
     }
 
-    public Double getVersion() {
+    public String getVersion() {
         return protocol.getVersion();
+    }
+
+    public String getParameter(String key) {
+        return path.getQueryParameters(key);
     }
 }

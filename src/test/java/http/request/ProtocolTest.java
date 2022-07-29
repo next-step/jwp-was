@@ -15,7 +15,7 @@ class ProtocolTest {
 
         assertAll(
                 () -> assertThat(protocol.getProtocolType()).isEqualTo("HTTP"),
-                () -> assertThat(protocol.getVersion()).isEqualTo(1.1)
+                () -> assertThat(protocol.getVersion()).isEqualTo("1.1")
         );
     }
 
