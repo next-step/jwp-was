@@ -3,7 +3,7 @@ package webserver.controller;
 import webserver.request.HttpRequest;
 import webserver.request.Model;
 import webserver.response.HttpResponse;
-import webserver.service.RequestService;
+import webserver.service.UserService;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ public class ListUserController extends AbstractController {
     @Override
     public void doGet(HttpRequest request, HttpResponse response) {
         Model model = new Model();
-        RequestService requestService = new RequestService(request);
+        UserService requestService = new UserService(request);
 
         if (!request.getCookie(LOGINED_KEY)) {
             response.forward("user/list");

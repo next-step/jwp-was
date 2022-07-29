@@ -2,13 +2,13 @@ package webserver.controller;
 
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
-import webserver.service.RequestService;
+import webserver.service.UserService;
 
 public class CreateUserController extends AbstractController {
 
     @Override
     public void doPost(HttpRequest request, HttpResponse response) {
-        RequestService requestService = new RequestService(request);
+        UserService requestService = new UserService(request);
         requestService.saveMember();
         response.makeLocationPath(INDEX_URl);
         response.sendRedirect(request, response);
