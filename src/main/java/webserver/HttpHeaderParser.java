@@ -3,7 +3,7 @@ package webserver;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HeaderParser {
+public class HttpHeaderParser {
     static int getContentLength(String line) {
         String[] headerTokens = line.split(":");
         return Integer.parseInt(headerTokens[1].trim());
