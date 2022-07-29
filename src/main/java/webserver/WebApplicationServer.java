@@ -3,7 +3,8 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.config.WebConfig;
-import webserver.handlers.ControllerContainer;
+import webserver.handlers.RequestHandler;
+import webserver.handlers.ResponseHandler;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -27,7 +28,8 @@ public class WebApplicationServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection, webConfig.getBean(ControllerContainer.class)));
+                Thread thread = new Thread(new FrontController(connection, webConfig.getBean(RequestHandler.class),
+                        webConfig.getBean(ResponseHandler.class)));
                 thread.start();
             }
         }
