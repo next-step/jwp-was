@@ -12,11 +12,11 @@ public enum ContentType {
     PNG("png", "image/png");
 
     private final String fileExtension;
-    private final String contentType;
+    private final String mediaType;
 
-    ContentType(final String fileExtension, final String contentType) {
+    ContentType(final String fileExtension, final String mediaType) {
         this.fileExtension = fileExtension;
-        this.contentType = contentType;
+        this.mediaType = mediaType;
     }
 
     public static ContentType of(final String fileExtension) {
@@ -26,7 +26,7 @@ public enum ContentType {
             .orElse(HTML);
     }
 
-    public String getContentType() {
-        return contentType;
+    public String getMediaType() {
+        return mediaType;
     }
 }

@@ -112,3 +112,40 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 ### 기능 목록
 - [x] Location의 확장자를 활용해 응답 헤더에 Content-Type을 지정한다.
 - [x] ContentType은 enum으로 정의한다.
+
+---
+
+# 2단계 피드백 (3단계 요구사항과 일치)
+- [x] 문자열 상수화 
+- [x] 응답과 관련된 로직들은 분리 
+- [x] 비즈니스 로직들도 분리
+
+# 🚀 3단계 - HTTP 웹 서버 리팩토링
+
+### WAS 요구사항 
+> 여러 가지 역할을 가지는 코드가 혼재되어 있어 각각의 역할을 분리해 재사용 가능하도록 개선한다.  
+> HTTP 요청/응답 처리 기능은 개발자가 신경쓰지 않아도 재사용이 가능한 구조가 되도록 한다.
+
+### 코드 리팩토링 요구사항 
+> 리팩토링할 부분을 찾았다면 도움없이(힌트를 보지 않고) 리팩토링을 진행한다.
+
+### 기능 목록 
+- [x] HTTP 요청 정보를 가지는 객체를 생성한다. (HttpRequest)
+  - 요청한 내용을 InputStream으로 읽어 요청과 관련된 모든 내용을 담고 있는다.
+  - [x] RequestLine, RequestHeader, RequestBody 포함한다
+  - [x] HttpRequestParser를 이용해 HttpRequest를 생성한다.
+    - [x] BufferedReader를 주입받아 요청 문자열을 읽어 HttpRequest로 생성한다.
+- [x] HTTP 응답 정보를 가지는 객체를 생성한다. (HttpResponse)
+  - 요청에 응답하기 위한 내용을 생성한다.
+  - [x] StatusLine
+    - [x] Protocol 
+    - [x] StatusCode
+  - [x] ResponseHeader
+  - [x] ResponseBody
+- [x] URI에 따라 비즈니스 로직을 처리할 수 있는 객체를 생성한다. (Controller?)
+  - [x] HttpRequest#RequestLine의 내용으로 요청을 수행할 객체를 찾는다.
+  - [x] 요청을 수행할 객체가 비즈니스 로직의 처리 결과를 응답 결과에 추가한다.
+    - [x] 회원가입 
+    - [x] 로그인
+    - [x] 사용자 목록
+    - [x] 정적 파일

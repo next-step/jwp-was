@@ -1,12 +1,10 @@
 package webserver.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -66,8 +64,8 @@ class QueryParametersTest {
         final QueryParameters queryParameters = new QueryParameters(parameters);
 
         assertAll(
-            () -> Assertions.assertThat(queryParameters.get("userId")).isEqualTo("javajigi"),
-            () -> Assertions.assertThat(queryParameters.get("password")).isEqualTo("password")
+            () -> assertThat(queryParameters.get("userId")).isEqualTo("javajigi"),
+            () -> assertThat(queryParameters.get("password")).isEqualTo("password")
         );
     }
 

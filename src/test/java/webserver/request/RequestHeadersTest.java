@@ -3,7 +3,6 @@ package webserver.request;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -57,11 +56,11 @@ class RequestHeadersTest {
         requestHeaders.add("Accept: */*");
 
         org.junit.jupiter.api.Assertions.assertAll(
-            () -> Assertions.assertThat(requestHeaders.getHost()).isEqualTo("localhost:8080"),
-            () -> Assertions.assertThat(requestHeaders.getConnection()).isEqualTo("keep-alive"),
-            () -> Assertions.assertThat(requestHeaders.getContentLength()).isEqualTo(59),
-            () -> Assertions.assertThat(requestHeaders.getContentType()).isEqualTo("application/x-www-form-urlencoded"),
-            () -> Assertions.assertThat(requestHeaders.getAccept()).isEqualTo("*/*")
+            () -> assertThat(requestHeaders.getHost()).isEqualTo("localhost:8080"),
+            () -> assertThat(requestHeaders.getConnection()).isEqualTo("keep-alive"),
+            () -> assertThat(requestHeaders.getContentLength()).isEqualTo(59),
+            () -> assertThat(requestHeaders.getContentType()).isEqualTo("application/x-www-form-urlencoded"),
+            () -> assertThat(requestHeaders.getAccept()).isEqualTo("*/*")
         );
     }
 
@@ -70,7 +69,24 @@ class RequestHeadersTest {
     void not_exist_header() {
         final RequestHeaders requestHeaders = new RequestHeaders();
 
-        Assertions.assertThat(requestHeaders.get("notExistHeader")).isNull();
+        assertThat(requestHeaders.get("notExistHeader")).isNull();
+    }
+
+    @DisplayName("쿠키가 존재하는지 확인할 수 있다")
+    @Test
+    void has_cookie() {
+        final RequestHeaders requestHeaders = new RequestHeaders();
+        requestHeaders.add("Cookie: cookie=value");
+
+        assertThat(requestHeaders.hasCookie("cookie=value")).isTrue();
+    }
+
+    @DisplayName("존재하지 않는 쿠키를 조회할 수 없다")
+    @Test
+    void has_no_cookie() {
+        final RequestHeaders requestHeaders = new RequestHeaders();
+
+        assertThat(requestHeaders.hasCookie("cookie=value")).isFalse();
     }
 
 }

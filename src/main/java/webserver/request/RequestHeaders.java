@@ -6,6 +6,14 @@ import java.util.Objects;
 
 public class RequestHeaders {
 
+    private static final String HEADER_DELIMITER = ": ";
+    private static final String HOST = "Host";
+    private static final String CONNECTION = "Connection";
+    private static final String CONTENT_LENGTH = "Content-Length";
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String ACCEPT = "Accept";
+    private static final String COOKIE = "Cookie";
+
     private final Map<String, String> headers = new HashMap<>();
 
     public RequestHeaders() {
@@ -20,7 +28,7 @@ public class RequestHeaders {
             return;
         }
 
-        final String[] keyAndValue = header.split(": ");
+        final String[] keyAndValue = header.split(HEADER_DELIMITER);
         if (keyAndValue.length == 1) {
             return;
         }
@@ -28,23 +36,23 @@ public class RequestHeaders {
     }
 
     public String getHost() {
-        return headers.get("Host");
+        return headers.get(HOST);
     }
 
     public String getConnection() {
-        return headers.get("Connection");
+        return headers.get(CONNECTION);
     }
 
     public int getContentLength() {
-        return Integer.parseInt(headers.get("Content-Length"));
+        return Integer.parseInt(headers.get(CONTENT_LENGTH));
     }
 
     public String getContentType() {
-        return headers.get("Content-Type");
+        return headers.get(CONTENT_TYPE);
     }
 
     public String getAccept() {
-        return headers.get("Accept");
+        return headers.get(ACCEPT);
     }
 
     public String get(final String key) {
@@ -52,7 +60,11 @@ public class RequestHeaders {
     }
 
     public boolean hasRequestBody() {
-        return headers.containsKey("Content-Length") && getContentLength() > 0;
+        return headers.containsKey(CONTENT_LENGTH) && getContentLength() > 0;
+    }
+
+    public boolean hasCookie(final String value) {
+        return headers.containsKey(COOKIE) && headers.get(COOKIE).contains(value);
     }
 
     @Override
