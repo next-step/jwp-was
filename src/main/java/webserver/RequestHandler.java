@@ -1,5 +1,7 @@
 package webserver;
 
+import static http.request.HttpMethod.*;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,27 +17,30 @@ import org.slf4j.LoggerFactory;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import webserver.controller.Controller;
+import webserver.controller.LoginController;
+import webserver.controller.UserCreateController;
+import webserver.controller.UserListController;
 
 public class RequestHandler implements Runnable {
+
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Map<ControllerIdentity, Controller> CONTROLLERS = Map.of(
+        new ControllerIdentity("/user/create", POST), new UserCreateController(),
+        new ControllerIdentity("/user/login", POST), new LoginController(),
+        new ControllerIdentity("/user/list", GET), new UserListController());
 
-    private Socket connection;
-    private final Map<ControllerIdentity, Controller> controllers;
+    private final Socket connection;
 
-    public RequestHandler(Socket connection, Map<ControllerIdentity, Controller> controllers) {
+    public RequestHandler(Socket connection) {
         this.connection = connection;
-        this.controllers = controllers;
     }
 
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
             connection.getPort());
 
-        try (
-            InputStream inputStream = connection.getInputStream();
-            OutputStream out = connection.getOutputStream();
-            var bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
-        ) {
+        try (InputStream inputStream = connection.getInputStream(); OutputStream out = connection.getOutputStream(); var bufferedReader = new BufferedReader(
+            new InputStreamReader(inputStream))) {
             var httpRequest = HttpRequest.parse(bufferedReader);
 
             var response = createHttpResponse(httpRequest);
@@ -52,7 +57,7 @@ public class RequestHandler implements Runnable {
             return HttpResponse.parseStaticFile(httpRequest.getUrl(), httpRequest.getFileExtension());
         }
 
-        var controller = controllers.get(new ControllerIdentity(httpRequest.getUrl(), httpRequest.getMethod()));
+        var controller = CONTROLLERS.get(new ControllerIdentity(httpRequest.getUrl(), httpRequest.getMethod()));
         return controller.run(httpRequest);
     }
 }

@@ -1,18 +1,10 @@
 package webserver;
 
-import static http.request.HttpMethod.*;
-
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import webserver.controller.Controller;
-import webserver.controller.LoginController;
-import webserver.controller.UserCreateController;
-import webserver.controller.UserListController;
 
 public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
@@ -26,18 +18,12 @@ public class WebApplicationServer {
             port = Integer.parseInt(args[0]);
         }
 
-        Map<ControllerIdentity, Controller> controllers = Map.of(
-            new ControllerIdentity("/user/create", POST), new UserCreateController(),
-            new ControllerIdentity("/user/login", POST), new LoginController(),
-            new ControllerIdentity("/user/list", GET), new UserListController()
-        );
-
         try (ServerSocket listenSocket = new ServerSocket(port)) {
             logger.info("Web Application Server started {} port.", port);
 
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection, controllers));
+                Thread thread = new Thread(new RequestHandler(connection));
                 thread.start();
             }
         }
