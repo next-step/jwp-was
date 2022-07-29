@@ -32,8 +32,13 @@ public class HttpResponse {
         headers.put(key, value);
     }
 
-    public void forward(String path) {
-        final byte[] payload = getPayload(path);
+    public void forwardTemplate(String path) {
+        final byte[] payload = getTemplate(path);
+        writeForward(payload);
+    }
+
+    public void forwardStatic(String path) {
+        final byte[] payload = getStatic(path);
         writeForward(payload);
     }
 
@@ -47,9 +52,17 @@ public class HttpResponse {
         write(payload, HttpStatus.OK);
     }
 
-    private byte[] getPayload(String path) {
+    private byte[] getTemplate(String path) {
         try {
             return FileIoUtils.loadFileFromClasspath("./templates" + path);
+        } catch (IOException | URISyntaxException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private byte[] getStatic(String path) {
+        try {
+            return FileIoUtils.loadFileFromClasspath("./static" + path);
         } catch (IOException | URISyntaxException e) {
             throw new IllegalStateException(e);
         }
@@ -123,7 +136,6 @@ public class HttpResponse {
     }
 
     private void writePayload(byte[] payload) throws IOException {
-        dos.writeBytes("Content-Length: " + payload.length + "\r\n");
         dos.writeBytes("\r\n");
         dos.write(payload, 0, payload.length);
     }

@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class RequestHandler implements Runnable {
-    public static final Pattern STATIC_PATTERN = Pattern.compile("(.+).html");
+    public static final Pattern TEMPLATES_PATTERN = Pattern.compile("(.+).(htm|html)");
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
 
     private final Socket connection;
@@ -59,13 +59,14 @@ public class RequestHandler implements Runnable {
             }
             return;
         }
-
-        forwardStatic(httpRequest, httpResponse);
+        forwardNotMapped(httpRequest, httpResponse);
     }
 
-    private void forwardStatic(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (STATIC_PATTERN.matcher(httpRequest.getPath()).matches()) {
-            httpResponse.forward(httpRequest.getPath());
+    private void forwardNotMapped(HttpRequest httpRequest, HttpResponse httpResponse) {
+        if (TEMPLATES_PATTERN.matcher(httpRequest.getPath()).matches()) {
+            httpResponse.forwardTemplate(httpRequest.getPath());
+            return;
         }
+        httpResponse.forwardStatic(httpRequest.getPath());
     }
 }
