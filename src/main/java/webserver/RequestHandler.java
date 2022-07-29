@@ -2,6 +2,7 @@ package webserver;
 
 import controller.Controller;
 import controller.UserCreateController;
+import controller.UserListController;
 import controller.UserLoginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ public class RequestHandler implements Runnable {
     private void initRequestMapping() {
         requestMapping.put("/user/create", new UserCreateController());
         requestMapping.put("/user/login", new UserLoginController());
+        requestMapping.put("/user/list", new UserListController());
     }
 
     public void run() {
@@ -62,9 +64,8 @@ public class RequestHandler implements Runnable {
     }
 
     private void forwardStatic(HttpRequest httpRequest, HttpResponse httpResponse) {
-        final String path = httpRequest.getPath();
-        if (STATIC_PATTERN.matcher(path).matches()) {
-            httpResponse.forward(path);
+        if (STATIC_PATTERN.matcher(httpRequest.getPath()).matches()) {
+            httpResponse.forward(httpRequest.getPath());
         }
     }
 }

@@ -8,10 +8,11 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class HttpUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
-    private static final String ITEM_DELIMITER = "&";
+    private static final Pattern ITEM_DELIMITER_PATTERN = Pattern.compile("(&|; )");
     private static final String KEY_VALUE_DELIMITER = "=";
     private static final int CORRECT_LENGTH = 2;
     public static final String VALIDATION_MESSAGE = "형식에 맞지 않습니다.";
@@ -31,7 +32,7 @@ public class HttpUtils {
 
     public static Map<String, String> parseToMap(String string) {
         final Map<String, String> result = new HashMap<>();
-        final String[] items = string.split(ITEM_DELIMITER);
+        final String[] items = ITEM_DELIMITER_PATTERN.split(string);
         for (String item : items) {
             addItem(result, item);
         }

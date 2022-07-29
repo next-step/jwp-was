@@ -1,5 +1,9 @@
 package webserver.http;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -8,6 +12,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +37,11 @@ public class HttpResponse {
         writeForward(payload);
     }
 
+    public void forward(String path, Object context) {
+        final byte[] payload = getPayload(path, context);
+        writeForward(payload);
+    }
+
     private void writeForward(byte[] payload) {
         addHeader("Content-Length", payload.length);
         write(payload, HttpStatus.OK);
@@ -45,9 +55,36 @@ public class HttpResponse {
         }
     }
 
+    private byte[] getPayload(String path, Object context) {
+        try {
+            Template template = compileTemplate(path);
+            final String html = template.apply(context);
+            return html.getBytes(StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     public void redirect(String path) {
         addHeader("Location", path);
         write(HttpStatus.FOUND);
+    }
+
+    private Template compileTemplate(String path) {
+        Template template;
+        try {
+            template = getHandlebars().compile(path);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+        return template;
+    }
+
+    private Handlebars getHandlebars() {
+        TemplateLoader loader = new ClassPathTemplateLoader();
+        loader.setPrefix("/templates");
+        loader.setSuffix(".html");
+        return new Handlebars(loader);
     }
 
     private void write(HttpStatus httpStatus) {
