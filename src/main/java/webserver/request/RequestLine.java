@@ -9,6 +9,7 @@ import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
 
 public class RequestLine {
     private static final Logger logger = LoggerFactory.getLogger(RequestLine.class);
@@ -52,8 +53,8 @@ public class RequestLine {
         String[] queryStringArr = this.uri.split("\\?");
         String queryString = queryStringArr[1];
         logger.debug("queryParam {}", queryString);
-        User user = User.convertToUser(IOUtils.changeStringToMap(queryString));
-        return user;
+        Map<String, String> userQuery = IOUtils.changeStringToMap(queryString);
+        return new User(userQuery.get("userId"), userQuery.get("password"), userQuery.get("name"), userQuery.get("email"));
     }
 
     public String getUri() {

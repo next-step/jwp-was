@@ -66,10 +66,6 @@ public class HttpRequest {
         return requestLine;
     }
 
-    public RequestBody getRequestBody() {
-        return requestBody;
-    }
-
     public boolean getCookie(String isLogined) {
         return Boolean.parseBoolean(cookie.getCookie(isLogined));
     }
