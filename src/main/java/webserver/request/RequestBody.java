@@ -26,8 +26,8 @@ public class RequestBody {
     }
 
     public User bodyToUser() {
-        User user = User.convertToUser(body);
-        return user;
+
+        return new User(body.get("userId"), body.get("password"), body.get("name"), body.get("email"));
     }
 
     public Map<String, String> getBody() {

@@ -16,10 +16,6 @@ public class User {
         this.email = email;
     }
 
-    public static User convertToUser(Map<String, String> requestMap) {
-        return new User(requestMap.get("userId"), requestMap.get("password"), requestMap.get("name"), requestMap.get("email"));
-    }
-
     public String getUserId() {
         return userId;
     }
