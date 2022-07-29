@@ -34,7 +34,7 @@ public class Path {
         return path;
     }
 
-    public QueryParameters getQueryParameters() {
-        return queryParameters;
+    public String getQueryParameters(String key) {
+        return queryParameters.get(key);
     }
 }
