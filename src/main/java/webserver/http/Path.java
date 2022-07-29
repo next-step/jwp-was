@@ -1,5 +1,6 @@
 package webserver.http;
 
+import java.util.Collections;
 import java.util.Objects;
 
 public class Path {
@@ -9,7 +10,7 @@ public class Path {
     private static final String QUERY_REGEX_DELIMITER = "\\?";
 
     private String path;
-    private QueryString queryString; // nullable
+    private QueryString queryString;
 
     Path(String path, QueryString queryString) {
         this.path = path;
@@ -24,7 +25,7 @@ public class Path {
             return new Path(pathElements[PATH_INDEX], QueryString.parse(pathElements[QUERY_STRING_INDEX]));
         }
 
-        return new Path(pathString, null);
+        return new Path(pathString, new QueryString(Collections.EMPTY_MAP));
     }
 
     private static void validatePathString(String pathString) {

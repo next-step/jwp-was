@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
+import java.util.Collections;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +37,7 @@ class RequestLineTest {
     void parse_GET_RequestLine() {
         String request = "GET /users HTTP/1.1";
         RequestLine requestLine = RequestLine.parse(request);
-        assertThat(requestLine).isEqualTo(new RequestLine(Method.GET, new Path("/users", null), new Protocol("HTTP", Version.ONE_ONE)));
+        assertThat(requestLine).isEqualTo(new RequestLine(Method.GET, new Path("/users", new QueryString(Collections.EMPTY_MAP)), new Protocol("HTTP", Version.ONE_ONE)));
     }
 
     @Test
@@ -44,7 +45,7 @@ class RequestLineTest {
     void parse_POST_RequestLine() {
         String request = "POST /users HTTP/1.1";
         RequestLine requestLine = RequestLine.parse(request);
-        assertThat(requestLine).isEqualTo(new RequestLine(Method.POST, new Path("/users", null), new Protocol("HTTP", Version.ONE_ONE)));
+        assertThat(requestLine).isEqualTo(new RequestLine(Method.POST, new Path("/users", new QueryString(Collections.EMPTY_MAP)), new Protocol("HTTP", Version.ONE_ONE)));
     }
 
     @Test
