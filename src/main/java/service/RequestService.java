@@ -48,6 +48,7 @@ public class RequestService {
             UrlPath urlPath = requestLine.getUrlPath();
             ClientResponse clientResponse = new ClientResponse(HttpStatus.OK, httpHeaders);
             clientResponse.setFileBody(urlPath, false);
+            AuthService.getInstance().removeUserCredential();
             return clientResponse;
         }
 
@@ -56,6 +57,7 @@ public class RequestService {
             UrlPath urlPath = requestLine.getUrlPath();
             ClientResponse clientResponse = new ClientResponse(HttpStatus.OK, null);
             clientResponse.setFileBody(urlPath, true);
+            AuthService.getInstance().removeUserCredential();
             return clientResponse;
         }
 
