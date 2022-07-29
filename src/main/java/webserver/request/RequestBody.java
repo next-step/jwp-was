@@ -2,41 +2,35 @@ package webserver.request;
 
 import model.User;
 import utils.IOUtils;
-import utils.RequestUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RequestBody {
 
-    private String body;
+    private Map<String, String> body;
 
-    private RequestBody() {
+    public RequestBody() {
+        body = new HashMap<>();
     }
 
     private RequestBody(String body) {
-        this.body = body;
+        this.body = IOUtils.changeStringToMap(body);
     }
 
-    private static class InnerInstanceRequestLine {
-        private static final RequestBody instance = new RequestBody();
-    }
-
-    public static RequestBody getInstance() {
-        return RequestBody.InnerInstanceRequestLine.instance;
-    }
-
-    public RequestBody parsing(BufferedReader br, int contentLength) throws IOException {
+    public static RequestBody parsing(BufferedReader br, int contentLength) throws IOException {
 
         return new RequestBody(IOUtils.readData(br, contentLength));
     }
 
     public User bodyToUser() {
-        User user = RequestUtils.convertToUser(body);
-        return user;
+
+        return new User(body.get("userId"), body.get("password"), body.get("name"), body.get("email"));
     }
 
-    public String getBody() {
+    public Map<String, String> getBody() {
         return body;
     }
 }

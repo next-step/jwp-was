@@ -12,24 +12,23 @@ import static org.assertj.core.api.Assertions.*;
 
 class RequestBodyTest {
 
-    RequestBody requestBody = RequestBody.getInstance();
+    RequestBody requestBody;
 
     @BeforeEach
     void setup() throws IOException {
         BufferedReader br = HelpData.postHelpData();
         int contentLength = Header.parsing(br).getContentLength();
-        requestBody = requestBody.parsing(br, contentLength);
+        requestBody = RequestBody.parsing(br, contentLength);
     }
-
 
     @Test
     @DisplayName("요청에 대한 body가 잘 파싱되는지 확인")
     void parsing_request_body() throws IOException {
         BufferedReader br = HelpData.postHelpData();
         int contentLength = Header.parsing(br).getContentLength();
-        RequestBody parsingRequestBody = requestBody.parsing(br, contentLength);
-        System.out.println("length : " + "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net".length());
-        assertThat(parsingRequestBody.getBody()).isEqualTo("userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net");
+        RequestBody parsingRequestBody = RequestBody.parsing(br, contentLength);
+        assertThat(parsingRequestBody.getBody().get("userId")).isEqualTo("javajigi");
+        assertThat(parsingRequestBody.getBody().get("password")).isEqualTo("password");
     }
 
     @Test

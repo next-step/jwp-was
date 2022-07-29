@@ -1,7 +1,8 @@
-package webserver.request;
+package webserver;
 
 import com.google.common.collect.Maps;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,7 +10,6 @@ import java.util.Set;
 public class Cookie {
 
     private Map<String, String> cookies = Maps.newHashMap();
-    public static final String LOGINED_KEY = "logined";
     private static final String EQUALS = "=";
     private static final String SEMICOLON = "; ";
 
@@ -22,6 +22,9 @@ public class Cookie {
     }
 
     public Map<String, String> parsing(String cookieString) {
+        if (cookieString == null) {
+            return Maps.newHashMap();
+        }
 
         for (String cookieArr : cookieString.split(SEMICOLON)) {
             String[] keyValue = cookieArr.split(EQUALS);
@@ -40,10 +43,6 @@ public class Cookie {
 
     public String getCookie(String key) {
         return cookies.get(key);
-    }
-
-    public boolean isEmpty() {
-        return cookies.isEmpty();
     }
 
     public Set<String> keySet() {
