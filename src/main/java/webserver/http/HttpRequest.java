@@ -22,12 +22,14 @@ public class HttpRequest {
 
     private final RequestLine requestLine;
     private final Map<String, Object> headers;
+    private final Map<String, String> cookies;
     private final Map<String, String> attributes;
 
     public HttpRequest(InputStream in) {
         final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         this.requestLine = makeRequestLine(br);
         this.headers = makeHeaders(br);
+        this.cookies = makeCookies(headers);
         this.attributes = makeAttributes(br);
         LOGGER.debug(requestLine.toString());
     }
@@ -46,6 +48,14 @@ public class HttpRequest {
             headers.put(splitLine[0], splitLine[1]);
         }
         return headers;
+    }
+
+    private Map<String, String> makeCookies(Map<String, Object> headers) {
+        final Object cookie = headers.get("Cookie");
+        if (cookie == null) {
+            return new HashMap<>();
+        }
+        return HttpUtils.parseToMap((String) cookie);
     }
 
     private String readLine(BufferedReader br) {
@@ -95,6 +105,14 @@ public class HttpRequest {
         return requestLine;
     }
 
+    public String getPath() {
+        return requestLine.getPath();
+    }
+
+    public HttpProtocol getHttpProtocol() {
+        return requestLine.getHttpProtocol();
+    }
+
     public Object getHeader(String key) {
         return headers.get(key);
     }
@@ -115,13 +133,8 @@ public class HttpRequest {
         return attributes.get(key);
     }
 
-    public String getPath() {
-        return requestLine.getPath();
-    }
-
-
-    public HttpProtocol getHttpProtocol() {
-        return requestLine.getHttpProtocol();
+    public String getCookie(String key) {
+        return cookies.get(key);
     }
 
     public boolean isGet() {
