@@ -3,6 +3,7 @@ package webserver;
 import controller.Controller;
 import controller.DefaultController;
 import controller.UserCreateController;
+import controller.UserLoginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.HttpRequest;
@@ -32,6 +33,7 @@ public class RequestHandler implements Runnable {
     private void initRequestMapping() {
         requestMapping.put("/index", new DefaultController());
         requestMapping.put("/user/create", new UserCreateController());
+        requestMapping.put("/user/login", new UserLoginController());
     }
 
     public void run() {

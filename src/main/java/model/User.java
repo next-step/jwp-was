@@ -38,4 +38,8 @@ public class User {
                 ", email='" + email + '\'' +
                 '}';
     }
+
+    public boolean isLogin(String password) {
+        return this.password.equals(password);
+    }
 }

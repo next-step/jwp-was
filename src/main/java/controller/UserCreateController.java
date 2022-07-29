@@ -1,5 +1,6 @@
 package controller;
 
+import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,8 @@ public class UserCreateController extends Controller {
                 payloads.get("name"),
                 payloads.get("email")
         );
-        LOGGER.debug(user.toString());
+
+        DataBase.addUser(user);
 
         httpResponse.redirect("/index.html");
     }
