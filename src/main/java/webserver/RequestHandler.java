@@ -1,16 +1,20 @@
 package webserver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.net.URISyntaxException;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.controller.Controller;
+import webserver.controller.ControllerMatcher;
+import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final String ROOT = "/";
 
     private Socket connection;
 
@@ -23,33 +27,45 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            HttpRequest request = HttpRequest.from(in);
+            String path = getDefaultPath(request.getPath());
+            Controller controller = ControllerMatcher.matchController(path);
+            if (controller == null) {
+                HttpResponse notFoundResponse = HttpResponse.NOT_FOUND;
+                writeResponse(notFoundResponse, new DataOutputStream(out));
+                return;
+            }
+            HttpResponse response = controller.service(request);
+            writeResponse(response, new DataOutputStream(out));
         } catch (IOException e) {
             logger.error(e.getMessage());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private String getDefaultPath(String path) {
+        if (ROOT.equals(path)) {
+            return "/index.html";
+        }
+        return path;
+    }
+
+    private void writeResponse(HttpResponse response, DataOutputStream dos) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes(String.format("HTTP/1.1 %s \r%n", response.getHttpStatusCode()));
+            writeHeaders(response, dos);
             dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
+            dos.write(response.body(), 0, response.getContentLength());
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
+        }
+    }
+
+    private void writeHeaders(HttpResponse response, DataOutputStream dos) throws IOException {
+        for (Map.Entry<String, String> entry : response.headerEntries()) {
+            dos.writeBytes(String.format("%s: %s\r%n", entry.getKey(), entry.getValue()));
         }
     }
 }
