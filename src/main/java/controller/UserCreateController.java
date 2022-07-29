@@ -7,19 +7,16 @@ import org.slf4j.LoggerFactory;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-import java.util.Map;
-
 public class UserCreateController extends Controller {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserCreateController.class);
 
     @Override
     public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
-        final Map<String, String> payloads = httpRequest.getPayloads();
         final User user = new User(
-                payloads.get("userId"),
-                payloads.get("password"),
-                payloads.get("name"),
-                payloads.get("email")
+                httpRequest.getAttribute("userId"),
+                httpRequest.getAttribute("password"),
+                httpRequest.getAttribute("name"),
+                httpRequest.getAttribute("email")
         );
 
         DataBase.addUser(user);

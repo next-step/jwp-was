@@ -34,7 +34,7 @@ class HttpRequestTest {
                                 new HttpProtocol("HTTP/1.1")
                         )
                 ),
-                () -> assertThat(httpRequest.getPayloads()).isEqualTo(new HashMap<>())
+                () -> assertThat(httpRequest.getAttributes()).isEqualTo(new HashMap<>())
         );
     }
 
@@ -65,7 +65,7 @@ class HttpRequestTest {
                         )
                 ),
                 () -> assertThat(httpRequest.getContentLength()).isEqualTo(29),
-                () -> assertThat(httpRequest.getPayloads()).isEqualTo(Map.of("userId", "user", "password", "password"))
+                () -> assertThat(httpRequest.getAttributes()).isEqualTo(Map.of("userId", "user", "password", "password"))
         );
     }
 

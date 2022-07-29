@@ -22,13 +22,13 @@ public class HttpRequest {
 
     private final RequestLine requestLine;
     private final Map<String, Object> headers;
-    private final Map<String, String> payloads;
+    private final Map<String, String> attributes;
 
     public HttpRequest(InputStream in) {
         final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         this.requestLine = makeRequestLine(br);
         this.headers = makeHeaders(br);
-        this.payloads = makePayloads(br);
+        this.attributes = makeAttributes(br);
         LOGGER.debug(requestLine.toString());
     }
 
@@ -64,7 +64,7 @@ public class HttpRequest {
         }
     }
 
-    private Map<String, String> makePayloads(BufferedReader br) {
+    private Map<String, String> makeAttributes(BufferedReader br) {
         if (requestLine.isGet()) {
             return new HashMap<>();
         }
@@ -83,12 +83,12 @@ public class HttpRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HttpRequest that = (HttpRequest) o;
-        return Objects.equals(requestLine, that.requestLine) && Objects.equals(headers, that.headers) && Objects.equals(payloads, that.payloads);
+        return Objects.equals(requestLine, that.requestLine) && Objects.equals(headers, that.headers) && Objects.equals(attributes, that.attributes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestLine, headers, payloads);
+        return Objects.hash(requestLine, headers, attributes);
     }
 
     public RequestLine getRequestLine() {
@@ -107,8 +107,12 @@ public class HttpRequest {
         }
     }
 
-    public Map<String, String> getPayloads() {
-        return payloads;
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
+    public String getAttribute(String key) {
+        return attributes.get(key);
     }
 
     public String getPath() {
