@@ -1,14 +1,24 @@
 package webserver.http.request;
 
+import webserver.http.cookie.Cookies;
+
 import java.nio.charset.Charset;
+import java.util.HashMap;
 
 public class Request {
     private final RequestLine requestLine;
     private final Headers headers;
 
+    private final Cookies cookies;
+
     public Request(RequestLine requestLine, Headers headers) {
+        this(requestLine, headers, new Cookies(new HashMap<>()));
+    }
+
+    public Request(RequestLine requestLine, Headers headers, Cookies cookies) {
         this.requestLine = requestLine;
         this.headers = headers;
+        this.cookies = cookies;
     }
 
     public boolean hasContents() {

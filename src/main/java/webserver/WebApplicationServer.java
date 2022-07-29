@@ -2,6 +2,7 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.cookie.parser.CookiesParser;
 import webserver.http.request.RequestReader;
 import webserver.http.request.parser.HeadersParser;
 import webserver.http.request.parser.KeyValuePairParser;
@@ -43,11 +44,13 @@ public class WebApplicationServer {
         KeyValuePairParser keyValuePairParser = new KeyValuePairParser();
         ParametersParser parametersParser = new ParametersParser(keyValuePairParser);
         URIParser uriParser = new URIParser(keyValuePairParser, parametersParser);
+        CookiesParser cookiesParser = new CookiesParser(keyValuePairParser);
 
         return new RequestReader(
                 new RequestLineParser(uriParser, new ProtocolParser()),
                 new HeadersParser(keyValuePairParser),
-                parametersParser
+                parametersParser,
+                cookiesParser
         );
     }
 }

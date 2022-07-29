@@ -40,6 +40,10 @@ public class Headers {
         return keyValues.get(name);
     }
 
+    public boolean contains(String name) {
+        return keyValues.containsKey(name);
+    }
+
     @Override
     public String toString() {
         return "Headers{" +

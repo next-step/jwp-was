@@ -57,12 +57,42 @@ class HeadersTest {
     }
 
     public static Stream<Arguments> provideForHasContentType() {
-        HashMap<String, String> keyValues = new HashMap<>();
-        keyValues.put("Content-Length", "13");
         return Stream.of(
                 arguments(new Headers(Map.of("Content-Type", "application/json")), "application/json", true),
                 arguments(new Headers(Map.of("Content-Type", "application/json")), "text/html", false),
                 arguments(new Headers(Map.of()), "text/html", false)
+        );
+    }
+
+    @DisplayName("특정한 key의 헤더가 포함되어있는지 여부를 확인한다.")
+    @ParameterizedTest
+    @MethodSource("provideForGetValue")
+    void getValue(Headers headers, String name, String expected) {
+        String actual = headers.getValue(name);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    public static Stream<Arguments> provideForGetValue() {
+        return Stream.of(
+                arguments(new Headers(Map.of("Content-Type", "application/json")), "Content-Type", "application/json"),
+                arguments(new Headers(Map.of("Accept", "application/json")), "Accept", "application/json"),
+                arguments(new Headers(Map.of()), "Content-Type", null)
+        );
+    }
+
+    @DisplayName("특정한 key의 헤더가 포함되어있는지 여부를 확인한다.")
+    @ParameterizedTest
+    @MethodSource("provideForContains")
+    void contains(Headers headers, String name, boolean expected) {
+        boolean actual = headers.contains(name);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    public static Stream<Arguments> provideForContains() {
+        return Stream.of(
+                arguments(new Headers(Map.of("Content-Type", "application/json")), "Content-Type", true),
+                arguments(new Headers(Map.of("Accept", "application/json")), "Content-Type", false),
+                arguments(new Headers(Map.of()), "Content-Type", false)
         );
     }
 }
