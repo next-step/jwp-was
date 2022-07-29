@@ -1,5 +1,6 @@
 package webserver.response;
 
+import exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,8 @@ public enum FileResponse {
             return FileIoUtils.loadFileFromClasspath(path);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            return getBody("/error/not_found.html");
         }
         return new byte[0];
     }
@@ -57,7 +60,7 @@ public enum FileResponse {
     }
 
     public static Optional<HttpResponse> redirect(String requestPath) {
-        Constants.logger.debug("pathname = {}", requestPath);
+        Constants.logger.debug("[FileResponse]pathname = {}", requestPath);
         return Arrays.stream(FileResponse.values())
                 .filter(value -> requestPath.endsWith(value.suffix))
                 .map(value -> value.responseFunction.apply(requestPath))

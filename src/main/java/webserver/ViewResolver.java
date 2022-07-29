@@ -22,15 +22,10 @@ public class ViewResolver {
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix(PREFIX);
         loader.setSuffix(SUFFIX);
-        Handlebars handlebars = new Handlebars(loader);
-        if (!PathMapping.isExist(path)) {
-            return handlebars.compile("/error/not_found").apply("");
-        }
 
+        Handlebars handlebars = new Handlebars(loader);
         Template template = handlebars.compile(path);
 
-        String apply = template.apply(response.getModelMap());
-
-        return apply;
+        return template.apply(response.getModelMap());
     }
 }

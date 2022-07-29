@@ -1,22 +1,23 @@
 package webserver.response;
 
+import exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import utils.FileIoUtils;
 import webserver.Header;
 import webserver.Cookie;
-import webserver.RequestHandler;
 import webserver.ViewResolver;
 import webserver.controller.PathMapping;
 import webserver.request.HttpRequest;
 import webserver.request.Model;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 public class HttpResponse {
+    private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
     private HttpStatus httpStatus;
     private byte[] body;
@@ -52,8 +53,13 @@ public class HttpResponse {
     }
 
     private HttpResponse getApiHttpResponse(HttpRequest request, HttpResponse response) {
-        PathMapping.findMappingUrl(request)
-                .mappingController(request, response);
+        try {
+            PathMapping.findMappingUrl(request)
+                    .mappingController(request, response);
+        } catch (NotFoundException e) {
+            logger.error("error {}", e.getMessage());
+            return notFoundRedirect(response, "/error/not_found.html");
+        }
 
         return response;
     }
@@ -66,7 +72,7 @@ public class HttpResponse {
         return body;
     }
 
-    public int getBodyLength(){
+    public int getBodyLength() {
         return body.length;
     }
 
@@ -113,5 +119,15 @@ public class HttpResponse {
     public void forward(HttpResponse response, String path) throws IOException {
         response.makeStatus(HttpStatus.OK);
         response.addBody(ViewResolver.mapping(response, path).getBytes());
+    }
+
+    public HttpResponse notFoundRedirect(HttpResponse response, String path) {
+        response.makeStatus(HttpStatus.NOT_FOUND);
+        try {
+            response.addBody(FileIoUtils.loadFileFromClasspath(path));
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 }

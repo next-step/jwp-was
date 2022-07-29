@@ -19,7 +19,10 @@ public enum ResponseWriter {
         responseBody(dos, response);
     }),
     REDIRECT(HttpStatus.FOUND, ResponseWriter::response302Header),
-    NOT_FOUND(HttpStatus.NOT_FOUND, ResponseWriter::response404Header);
+    NOT_FOUND(HttpStatus.NOT_FOUND, (dos, response) -> {
+        response404Header(dos, response);
+        responseBody(dos, response);
+    });
 
     private static final String HEADER_CONTENT_TYPE_KEY = "Content-Type";
     private static final String CONTENT_TYPE_HTML_TEXT = "text/html";
@@ -38,7 +41,7 @@ public enum ResponseWriter {
     public static void response302Header(DataOutputStream dos, HttpResponse response) {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            contentTypeLine(dos, response);
             cookieLine(dos, response);
             dos.writeBytes("Location: " + HOST + response.getLocationPath() + " \r\n");
             dos.writeBytes("\r\n");
@@ -62,8 +65,8 @@ public enum ResponseWriter {
     private static void response404Header(DataOutputStream dos, HttpResponse response) {
         try {
             dos.writeBytes("HTTP/1.1 404 NOT Found \r\n");
+            contentTypeLine(dos, response);
             cookieLine(dos, response);
-            dos.writeBytes("Content-Length: " + response.getBodyLength() + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());

@@ -1,10 +1,10 @@
 package webserver.controller;
 
+import exception.NotFoundException;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public enum PathMapping {
@@ -16,10 +16,7 @@ public enum PathMapping {
     }),
     LOGIN("/user/login", (request, response) -> {
         new LoginController().service(request, response);
-    }),
-    NONE("none", ((request, response) -> {
-        new NotFoundController().service(request, response);
-    }));
+    });
 
     String path;
     BiConsumer<HttpRequest, HttpResponse> consumer;
@@ -33,15 +30,10 @@ public enum PathMapping {
         return Arrays.stream(PathMapping.values())
                 .filter(value -> value.path.startsWith(request.getRequestPath()))
                 .findAny()
-                .orElse(PathMapping.NONE);
+                .orElseThrow(() -> new NotFoundException("잘못된 경로입니다."));
     }
 
     public void mappingController(HttpRequest request, HttpResponse response) {
         this.consumer.accept(request, response);
-    }
-
-    public static boolean isExist(String requestPath) {
-        return Arrays.stream(PathMapping.values())
-                .anyMatch(value -> value.path.equals(requestPath));
     }
 }
