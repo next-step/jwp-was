@@ -13,7 +13,6 @@ import java.util.Map;
 
 public class HttpResponse {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpResponse.class);
-    private static final String TEMPLATES_PATH = "./templates";
 
     private final DataOutputStream dos;
     private final HttpProtocol httpProtocol;
@@ -30,21 +29,25 @@ public class HttpResponse {
 
     public void forward(String path) {
         final byte[] payload = getPayload(path);
+        writeForward(payload);
+    }
+
+    private void writeForward(byte[] payload) {
         addHeader("Content-Length", payload.length);
         write(payload, HttpStatus.OK);
+    }
+
+    private byte[] getPayload(String path) {
+        try {
+            return FileIoUtils.loadFileFromClasspath("./templates" + path);
+        } catch (IOException | URISyntaxException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public void redirect(String path) {
         addHeader("Location", path);
         write(HttpStatus.FOUND);
-    }
-
-    private byte[] getPayload(String path) {
-        try {
-            return FileIoUtils.loadFileFromClasspath(TEMPLATES_PATH + path);
-        } catch (IOException | URISyntaxException e) {
-            throw new IllegalStateException(e);
-        }
     }
 
     private void write(HttpStatus httpStatus) {

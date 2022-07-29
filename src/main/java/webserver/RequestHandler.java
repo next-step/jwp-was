@@ -1,7 +1,6 @@
 package webserver;
 
 import controller.Controller;
-import controller.DefaultController;
 import controller.UserCreateController;
 import controller.UserLoginController;
 import org.slf4j.Logger;
@@ -18,9 +17,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class RequestHandler implements Runnable {
+    public static final Pattern STATIC_PATTERN = Pattern.compile("(.+).html");
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
-    private static final Pattern STATIC_PATTERN = Pattern.compile(".+\\.html");
-    private static final DefaultController DEFAULT_CONTROLLER = new DefaultController();
 
     private final Socket connection;
     private final Map<String, Controller> requestMapping = new HashMap<>();
@@ -31,7 +29,6 @@ public class RequestHandler implements Runnable {
     }
 
     private void initRequestMapping() {
-        requestMapping.put("/index", new DefaultController());
         requestMapping.put("/user/create", new UserCreateController());
         requestMapping.put("/user/login", new UserLoginController());
     }
@@ -50,20 +47,24 @@ public class RequestHandler implements Runnable {
     }
 
     private void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (STATIC_PATTERN.matcher(httpRequest.getPath()).matches()) {
-            DEFAULT_CONTROLLER.doGet(httpRequest, httpResponse);
-            return;
-        }
-
         if (requestMapping.containsKey(httpRequest.getPath())) {
             final Controller controller = requestMapping.get(httpRequest.getPath());
             if (httpRequest.isGet()) {
                 controller.doGet(httpRequest, httpResponse);
-                return;
             }
             if (httpRequest.isPost()) {
                 controller.doPost(httpRequest, httpResponse);
             }
+            return;
+        }
+
+        forwardStatic(httpRequest, httpResponse);
+    }
+
+    private void forwardStatic(HttpRequest httpRequest, HttpResponse httpResponse) {
+        final String path = httpRequest.getPath();
+        if (STATIC_PATTERN.matcher(path).matches()) {
+            httpResponse.forward(path);
         }
     }
 }
