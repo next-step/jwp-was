@@ -42,9 +42,7 @@ public class RequestHandler implements Runnable {
     }
 
     private void handle(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-        String sessionId = request.getSessionId();
-
-        if (sessionId == null) {
+        if (request.getSessionId() == null) {
             response.addCookie("JSESSIONID", UUID.randomUUID().toString());
         }
 

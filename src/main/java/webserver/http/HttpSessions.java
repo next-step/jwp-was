@@ -1,6 +1,7 @@
 package webserver.http;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class HttpSessions {
@@ -19,6 +20,13 @@ public class HttpSessions {
             return session;
         }
 
+        return session;
+    }
+
+    public static HttpSession createSession() {
+        String sessionId = UUID.randomUUID().toString();
+        HttpSession session = new HttpSession(sessionId);
+        sessions.put(sessionId, session);
         return session;
     }
 }

@@ -4,6 +4,7 @@ import db.DataBase;
 import model.User;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
 
 public class LoginController extends PostController {
 
@@ -12,19 +13,15 @@ public class LoginController extends PostController {
         String userId = request.getParameter("userId");
         String password = request.getParameter("password");
 
-        if (isLoggedIn(userId, password)) {
-            response.addCookie("logined", "true");
-            response.addCookie("Path", "/");
+        User user = DataBase.findUserById(userId);
+
+        if (user != null && user.authenticate(password)) {
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
             response.sendRedirect("/index.html");
             return;
         }
 
-        response.addCookie("logined", "false");
         response.sendRedirect("/user/login_failed.html");
-    }
-
-    private boolean isLoggedIn(String userId, String password) {
-        User user = DataBase.findUserById(userId);
-        return user != null && password.equals(user.getPassword());
     }
 }

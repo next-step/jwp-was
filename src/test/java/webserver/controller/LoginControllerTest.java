@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,7 +64,6 @@ class LoginControllerTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(response.getHeader("Location")).isEqualTo("/index.html");
-        assertThat(response.getHeader("Set-Cookie")).contains("logined=true", "Path=/");
     }
 
     @DisplayName("사용자 로그인이 실패하면, 302 Found 응답과 함께 login_failed.html로 리다이렉트한다.")
@@ -79,7 +79,6 @@ class LoginControllerTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(response.getHeader("Location")).isEqualTo("/user/login_failed.html");
-        assertThat(response.getHeader("Set-Cookie")).isEqualTo("logined=false");
     }
 
     private String loginRequest(String userId, String password) {
@@ -89,6 +88,7 @@ class LoginControllerTest {
         StringBuilder builder = new StringBuilder("POST /user/login HTTP/1.1 ").append(lineSeparator);
         builder.append("Content-Type: application/x-www-form-urlencoded").append(lineSeparator);
         builder.append(String.format("Content-Length: %d", requestBody.length())).append(lineSeparator);
+        builder.append(String.format("Cookie: JSESSIONID=%s", UUID.randomUUID())).append(lineSeparator);
         builder.append(lineSeparator);
         builder.append(requestBody);
         return builder.toString();
