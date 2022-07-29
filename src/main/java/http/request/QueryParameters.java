@@ -1,5 +1,6 @@
 package http.request;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class QueryParameters {
     private Map<String, String> pairs;
 
     private QueryParameters(Map<String, String> pairs) {
-        this.pairs = pairs;
+        this.pairs = Collections.unmodifiableMap(pairs);
     }
 
     public static QueryParameters from(String queryString) {
@@ -25,10 +26,6 @@ public class QueryParameters {
             dataPairs.put(data[KEY_INDEX], data[VALUE_INDEX]);
         }
         return new QueryParameters(dataPairs);
-    }
-
-    public Map<String, String> getPairs() {
-        return pairs;
     }
 
     public String get(String key) {
