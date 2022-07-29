@@ -77,19 +77,19 @@ public class RequestHandler implements Runnable {
                 String userList = HandleBarTemplateLoader.load("user/list", users);
                 HttpResponseWriter.responseUserListResource(out, userList);
             } else if (url.endsWith(".css")) {
-                HttpResponseWriter.responseStaticResorce(out, url, "css");
+                HttpResponseWriter.responseStaticResource(out, url, "css");
             } else if (url.endsWith(".js")) {
-                HttpResponseWriter.responseStaticResorce(out, url, "js");
+                HttpResponseWriter.responseStaticResource(out, url, "js");
             } else if (url.endsWith(".ttf")) {
-                HttpResponseWriter.responseStaticResorce(out, url, "fonts");
+                HttpResponseWriter.responseStaticResource(out, url, "fonts");
             } else if (url.endsWith(".woff")) {
-                HttpResponseWriter.responseStaticResorce(out, url, "fonts");
+                HttpResponseWriter.responseStaticResource(out, url, "fonts");
             } else if (url.endsWith(".svg")) {
-                HttpResponseWriter.responseStaticResorce(out, url, "fonts");
+                HttpResponseWriter.responseStaticResource(out, url, "fonts");
             }else if (url.endsWith(".png")) {
-                HttpResponseWriter.responseStaticResorce(out, url, "images");
+                HttpResponseWriter.responseStaticResource(out, url, "images");
             } else if (url.endsWith(".ico")) {
-                HttpResponseWriter.responseStaticResorce(out, url, "images");
+                HttpResponseWriter.responseResource(out, url);
             } else {
                 HttpResponseWriter.responseResource(out, url);
             }

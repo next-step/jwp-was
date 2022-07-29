@@ -79,7 +79,7 @@ public class HttpResponseWriter {
         responseBody(dos, body);
     }
 
-    public static void responseStaticResorce(OutputStream out, String url, String type) throws IOException, URISyntaxException {
+    public static void responseStaticResource(OutputStream out, String url, String type) throws IOException, URISyntaxException {
         DataOutputStream dos = new DataOutputStream(out);
         byte[] body = FileIoUtils.loadFileFromClasspath("./static" + url);
         response200StaticHeader(dos, body.length, type);
