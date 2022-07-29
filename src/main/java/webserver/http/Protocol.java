@@ -2,6 +2,7 @@ package webserver.http;
 
 public class Protocol {
     private static final String SLASH_DELIMITER = "/";
+    private static final String HTTP_PROTOCOL = "HTTP";
     private static final int PROTOCOL_AND_VERSION_PARSING_ELEMENT_NUMBER = 2;
     private static final int PROTOCOL_INDEX = 0;
     private static final int VERSION_INDEX = 1;
@@ -33,7 +34,7 @@ public class Protocol {
     }
 
     private static void validateProtocol(String protocol) {
-        if (!protocol.equals("HTTP")) {
+        if (!protocol.equals(HTTP_PROTOCOL)) {
             throw new IllegalArgumentException(String.format("요청된 HTTP RequestLine 의 protocol 는 'HTTP' 여야 합니다. 현재 입력된 protocol : %s", protocol));
         }
     }
