@@ -49,7 +49,6 @@ public class RequestService {
             return clientResponse;
         }
 
-        logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpMessage.toStringHttpMessage());
         if (requestLine.getUrlPath().getPath().contains(HTML_EXTENSION)) {
             UrlPath urlPath = requestLine.getUrlPath();
             ClientResponse clientResponse = new ClientResponse(HttpStatus.OK, null);
@@ -57,6 +56,7 @@ public class RequestService {
             return clientResponse;
         }
 
+        logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpMessage.toStringHttpMessage());
         AuthService.getInstance().setUserCredential(httpMessage.getRequestHeaders().getRequestHeaders());
         ClientResponse clientResponse = HandlerAdapter.getInstance().invoke(httpMessage);
         if (clientResponse != null && clientResponse.getBody() != null) {
