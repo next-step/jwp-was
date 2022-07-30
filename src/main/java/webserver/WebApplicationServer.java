@@ -2,14 +2,14 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.cookie.parser.CookiesParser;
-import webserver.http.request.RequestReader;
-import webserver.http.header.parser.HeadersParser;
-import webserver.http.request.parser.KeyValuePairParser;
-import webserver.http.request.parser.ParametersParser;
-import webserver.http.protocol.parser.ProtocolParser;
-import webserver.http.request.parser.RequestLineParser;
-import webserver.http.request.parser.URIParser;
+import webserver.http.view.CookiesParser;
+import webserver.http.view.request.RequestReader;
+import webserver.http.view.HeadersParser;
+import webserver.http.view.KeyValuePairParser;
+import webserver.http.view.request.ParametersParser;
+import webserver.http.view.ProtocolParser;
+import webserver.http.view.request.RequestLineParser;
+import webserver.http.view.request.URIParser;
 
 import java.net.ServerSocket;
 import java.net.Socket;
