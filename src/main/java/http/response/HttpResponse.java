@@ -21,16 +21,16 @@ public class HttpResponse {
 
     private final Protocol protocol;
     private final HttpStatus httpStatus;
-    private final Map<String, String> headers;
-    private final String body;
+    private final HttpResponseHeaders httpResponseHeaders;
+    private final HttpResponseBody body;
     private final Cookies cookies;
 
     public HttpResponse(Protocol protocol, HttpStatus httpStatus, Map<String, String> headers, String body,
         Set<Cookie> cookies) {
         this.protocol = protocol;
         this.httpStatus = httpStatus;
-        this.headers = headers;
-        this.body = body;
+        this.httpResponseHeaders = new HttpResponseHeaders(headers, body.length());
+        this.body = new HttpResponseBody(body);
         this.cookies = new Cookies(cookies);
     }
 
@@ -73,12 +73,8 @@ public class HttpResponse {
         return httpStatus;
     }
 
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
     public String getBody() {
-        return body;
+        return body.getValue();
     }
 
     public Cookies getCookies() {
@@ -99,14 +95,7 @@ public class HttpResponse {
                 httpStatus.getMessage())
             );
 
-            if (getHeaders().get("Content-Type") == null) {
-                dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            }
-            if (getHeaders().get("Content-Length") == null) {
-                dos.writeBytes("Content-Length: " + getBody().length() + "\r\n");
-            }
-
-            for (Map.Entry<String, String> entry : getHeaders().entrySet()) {
+            for (Map.Entry<String, String> entry : httpResponseHeaders.entrySet()) {
                 dos.writeBytes(String.format("%s: %s\r\n", entry.getKey(), entry.getValue()));
             }
 
@@ -123,12 +112,11 @@ public class HttpResponse {
         } catch (IOException e) {
             throw new HttpResponseWriteException(e.getMessage());
         }
-    }
+}
 
     private void writeBody(DataOutputStream dos) {
-        var body = getBody();
         try {
-            dos.write(body.getBytes(StandardCharsets.UTF_8), 0, body.length());
+            dos.write(body.getValue().getBytes(StandardCharsets.UTF_8), 0, body.length());
             dos.flush();
         } catch (IOException e) {
             throw new HttpResponseWriteException(e.getMessage());
@@ -137,5 +125,9 @@ public class HttpResponse {
 
     public Optional<String> getCookie(String key) {
         return cookies.getCookie(key);
+    }
+
+    public Map<String, String> getHeaders() {
+        return httpResponseHeaders.getHeaders();
     }
 }
