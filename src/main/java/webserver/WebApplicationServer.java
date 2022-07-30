@@ -6,7 +6,7 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import webserver.service.RequestHandler;
+import webserver.http.service.RequestHandler;
 
 public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
