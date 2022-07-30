@@ -1,5 +1,12 @@
 package dummy;
 
+import model.HttpHeader;
+import model.HttpRequestHeader;
+import model.RequestLine;
+import model.WebProtocol;
+
+import java.util.Map;
+
 public class HttpRequestHeaderDummy {
     public static String HTTP_REQUEST_HEADER_STRING_DUMMY = "GET /jason/test/ HTTP/1.1\n" +
         "Host: localhost:8080\n" +
@@ -14,4 +21,11 @@ public class HttpRequestHeaderDummy {
         "Pragma: no-cache\n" +
         "Cache-Control: no-cache\n"
         + "\n";
+
+    public static HttpRequestHeader GET_USER_HTTP_REQUEST_DUMMY
+        = new HttpRequestHeader(new RequestLine("GET", "/user/something", "userId=javajigi&password=password&name=JaeSung", new WebProtocol("HTTP", "1.1")), new HttpHeader(Map.of("Host", "localhost:8080")));
+
+    public static HttpRequestHeader GET_INDEX_HTTP_REQUEST_DUMMY
+        = new HttpRequestHeader(new RequestLine("GET", "/index.html",  new WebProtocol("HTTP", "1.1")), new HttpHeader(Map.of("Host", "localhost:8080")));
+
 }
