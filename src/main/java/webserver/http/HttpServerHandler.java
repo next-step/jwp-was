@@ -1,4 +1,4 @@
-package webserver.http.service;
+package webserver.http;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -12,18 +12,21 @@ import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import utils.IOUtils;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.handler.RequestHandlerExecutor;
 import webserver.http.request.header.RequestHeader;
 import webserver.http.request.method.HttpMethod;
+import webserver.http.response.HttpResponse;
 
-public class RequestHandler implements Runnable {
+public class HttpServerHandler implements Runnable {
     private static final String NEXT_LINE = "\n";
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpServerHandler.class);
     private static final String EMPTY = "";
+
     private final Socket connection;
 
-    public RequestHandler(Socket connectionSocket) {
-        this.connection = connectionSocket;
+    public HttpServerHandler(Socket connection) {
+        this.connection = connection;
     }
 
     public void run() {
@@ -45,20 +48,11 @@ public class RequestHandler implements Runnable {
             }
 
             RequestHeader requestHeader = RequestHeader.create(requestContents.toString());
+            HttpRequest httpRequest = new HttpRequest();
+            byte[] body = httpRequest.run(requestHeader);
 
-            if (isGet(requestHeader)) {
-                CreateHeader createHeader = new CreateHeader();
-                CreateBody createBody = new CreateBody();
-                byte[] body = createBody.create(requestHeader);
-                writeAndFlush(createHeader.create(requestHeader, body.length), body, dos);
-                return;
-            }
-
-            if (isPost(requestHeader)) {
-                ResponsePostHandler responsePostHandler = new ResponsePostHandler();
-                String requestBody = IOUtils.readData(br, requestHeader.contentLength());
-                writeAndFlush(responsePostHandler.handle(requestHeader, requestBody), EMPTY.getBytes(), dos);
-            }
+            HttpResponse httpResponse = new HttpResponse();
+            writeAndFlush(httpResponse.run(requestHeader, body.length), body, dos);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

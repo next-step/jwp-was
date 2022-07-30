@@ -9,7 +9,7 @@ import webserver.http.request.header.RequestHeader;
 import webserver.http.service.ResponsePostHandler;
 import webserver.http.service.exception.InvalidRequestException;
 
-class ResponsePostHandlerTest {
+class ResponsePostRequestHandlerTest {
 
     @DisplayName("관리되지 않는 요청은 실패되어야 한다.")
     @Test
