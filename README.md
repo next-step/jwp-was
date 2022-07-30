@@ -180,5 +180,5 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 ### 4단계 피드백
 - [x] SessionIdGenerator에 `@FunctionalInterface`를 추가한다.
   - `@FunctionalInterface`를 붙여주면 함수형 인터페이스임을 명시할 수 있어서 추가 함수를 작성할 실수를 컴파일 타임에 방지할 수 있다.
-- [ ] 쿠키 관련 클래스 분리
+- [x] 쿠키 관련 클래스 분리
 

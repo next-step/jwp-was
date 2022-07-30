@@ -77,20 +77,20 @@ class RequestHeadersTest {
     @Test
     void has_cookie() {
         final RequestHeaders requestHeaders = new RequestHeaders();
-        requestHeaders.add("Cookie: cookie=value");
+        requestHeaders.addCookie("cookie=value");
 
-        assertThat(requestHeaders.hasCookie("cookie=value")).isTrue();
+        assertThat(requestHeaders.hasCookie("cookie")).isTrue();
     }
 
     @DisplayName("존재하지 않는 쿠키를 조회할 수 없다")
     @ParameterizedTest
     @CsvSource({
-        "'', cookie",
-        "cookie=value;, value"
+        "notExist=true, cookie",
+        "cookie=value, value"
     })
     void has_no_cookie(String cookie, String cookieName) {
         final RequestHeaders requestHeaders = new RequestHeaders();
-        requestHeaders.add("Cookie: " + cookie);
+        requestHeaders.addCookie(cookie);
 
         assertThat(requestHeaders.hasCookie(cookieName)).isFalse();
     }
@@ -107,7 +107,7 @@ class RequestHeadersTest {
     @Test
     void get_cookie() {
         final RequestHeaders requestHeaders = new RequestHeaders();
-        requestHeaders.add("Cookie: cookie=value");
+        requestHeaders.addCookie("cookie=value");
 
         assertThat(requestHeaders.getCookie("cookie")).isEqualTo("value");
     }

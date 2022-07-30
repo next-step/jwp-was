@@ -17,7 +17,7 @@ public class Cookie {
     public static Cookie parse(final String nameAndValueFair) {
         validateCookieNameAndValueFair(nameAndValueFair);
         final String[] nameAndValueArray = nameAndValueFair.split(COOKIE_DELIMITER);
-        return new Cookie(nameAndValueArray[0], nameAndValueArray[1]);
+        return new Cookie(nameAndValueArray[0].trim(), nameAndValueArray[1].trim());
     }
 
     private static void validateCookieNameAndValueFair(final String nameAndValueFair) {
