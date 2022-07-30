@@ -43,8 +43,12 @@ public class Response {
     }
 
     public void addBody(String body) {
-        this.body = body.getBytes();
-        this.headers.add("Content-Length", String.valueOf(body.length()));
+        this.addBody(body.getBytes());
+    }
+
+    public void addBody(byte[] body) {
+        this.body = body;
+        this.headers.add("Content-Length", String.valueOf(body.length));
     }
 
     public void addCookie(Cookie cookie) {

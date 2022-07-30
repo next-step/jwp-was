@@ -74,9 +74,9 @@ class ResponseTest {
                 );
     }
 
-    @DisplayName("응답객체에 body와 해당 body크기 만큼 Content-Length 헤더 값을 추가한다.")
+    @DisplayName("addBody(String) 응답객체에 body와 해당 body크기 만큼 Content-Length 헤더 값을 추가한다.")
     @Test
-    void addBody() {
+    void addBody_string() {
         Response response = new Response(
                 Status.ok(),
                 new Headers(new HashMap<>()),
@@ -84,6 +84,26 @@ class ResponseTest {
                 null);
 
         response.addBody("body");
+
+        assertThat(response).usingRecursiveComparison()
+                .isEqualTo(new Response(
+                        Status.ok(),
+                        new Headers(Map.of("Content-Length", "4")),
+                        new Cookies(Map.of()),
+                        new byte[]{98, 111, 100, 121})
+                );
+    }
+
+    @DisplayName("addBody(byte[]) 응답객체에 body와 해당 body크기 만큼 Content-Length 헤더 값을 추가한다.")
+    @Test
+    void addBody_bytes() {
+        Response response = new Response(
+                Status.ok(),
+                new Headers(new HashMap<>()),
+                new Cookies(Map.of()),
+                null);
+
+        response.addBody(new byte[]{98, 111, 100, 121});
 
         assertThat(response).usingRecursiveComparison()
                 .isEqualTo(new Response(
