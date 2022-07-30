@@ -22,6 +22,8 @@ import webserver.response.HttpResponse;
 import webserver.response.ResponseBody;
 import webserver.response.ResponseHeaders;
 import webserver.response.StatusLine;
+import webserver.session.HttpSession;
+import webserver.session.HttpSessionContext;
 
 class UserListControllerTest {
 
@@ -37,10 +39,14 @@ class UserListControllerTest {
     @Test
     void after_login_access_user_list_return_ok_response() throws IOException {
         // given
+        final HttpSession session = new HttpSession(() -> "12345");
+        session.setAttribute("logined", true);
+        HttpSessionContext.add(session);
+
         String httpRequestMessage = "GET /user/list.html HTTP/1.1\r\n"
             + "Host: localhost:8080\r\n"
             + "Connection: keep-alive\r\n"
-            + "Cookie: logined=true\r\n"
+            + "Cookie: JWP_SESSION_ID=12345;\r\n"
             + "\r\n";
 
         BufferedReader bufferedReader = getBufferedReader(httpRequestMessage);
@@ -73,7 +79,6 @@ class UserListControllerTest {
         String httpRequestMessage = "GET /user/list.html HTTP/1.1\r\n"
             + "Host: localhost:8080\r\n"
             + "Connection: keep-alive\r\n"
-            + "Cookie: logined=false\r\n"
             + "\r\n";
 
         BufferedReader bufferedReader = getBufferedReader(httpRequestMessage);

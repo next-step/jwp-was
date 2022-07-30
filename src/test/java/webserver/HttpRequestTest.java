@@ -73,8 +73,7 @@ class HttpRequestTest {
 
         assertAll(
             () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND),
-            () -> assertThat(response.getHeaders().get("Location")).containsExactly("/user/login_failed.html"),
-            () -> assertThat(response.getHeaders().get("Set-Cookie")).containsExactly("logined=false; Path=/")
+            () -> assertThat(response.getHeaders().get("Location")).containsExactly("/user/login_failed.html")
         );
     }
 
@@ -87,8 +86,7 @@ class HttpRequestTest {
 
         assertAll(
             () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND),
-            () -> assertThat(response.getHeaders().get("Location")).containsExactly("/index.html"),
-            () -> assertThat(response.getHeaders().get("Set-Cookie")).containsExactly("logined=true; Path=/")
+            () -> assertThat(response.getHeaders().get("Location")).containsExactly("/index.html")
         );
     }
 
@@ -107,9 +105,9 @@ class HttpRequestTest {
     @DisplayName("로그인 상태에서 사용자 목록 페이지 조회시 사용자 목록을 조회한다.")
     @Test
     void logged_in_access_user_list() {
-        회원가입_요청("administrator", "password");
+        final String sessionId = getSessionId(회원가입_요청("administrator", "password"));
 
-        final ResponseEntity<String> response = 로그인_상태로_사용자_목록_조회();
+        final ResponseEntity<String> response = 로그인_상태로_사용자_목록_조회("administrator", "password", sessionId);
 
         assertAll(
             () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK),
@@ -117,9 +115,23 @@ class HttpRequestTest {
         );
     }
 
-    private ResponseEntity<String> 로그인_상태로_사용자_목록_조회() {
+    private static String getSessionId(final ResponseEntity<String> 회원가입_요청) {
+        return 회원가입_요청.getHeaders().get("Set-Cookie").stream()
+            .filter(cookie -> cookie.startsWith("JWP_SESSION_ID"))
+            .findFirst()
+            .map(cookie -> cookie.split(";")[0])
+            .map(cookie -> cookie.split("=")[1])
+            .orElseThrow(() -> new RuntimeException("Cookie not found"));
+    }
+
+    private ResponseEntity<String> 로그인_상태로_사용자_목록_조회(String userId, String password, String sessionId) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Cookie", "logined=true");
+        headers.add("Cookie", "JWP_SESSION_ID=" + sessionId);
+
+        final String loginParams = String.format("userId=%s&password=%s", userId, password);
+
+        restTemplate.exchange(URL + "/user/login", HttpMethod.POST, new HttpEntity<>(loginParams, headers),
+            String.class);
 
         return restTemplate.exchange(URL + "/user/list.html", HttpMethod.GET, new HttpEntity<>(headers),
             String.class);
