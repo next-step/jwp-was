@@ -1,15 +1,13 @@
 package webserver.http;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import webserver.http.HttpHeaders;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class HttpHeadersTest {
 
@@ -19,7 +17,7 @@ class HttpHeadersTest {
         HttpHeaders httpHeaders = new HttpHeaders(headers());
         assertAll(() -> {
             assertThat(httpHeaders.getAccept()).isEqualTo("application/json");
-            assertThat(httpHeaders.getCookie()).isEqualTo("logined=true");
+            assertThat(httpHeaders.getCookies().getCookie("logined")).isEqualTo("true");
             assertThat(httpHeaders.getContentLength()).isEqualTo(60);
         });
     }

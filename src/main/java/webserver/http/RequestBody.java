@@ -1,6 +1,7 @@
 package webserver.http;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,11 +21,16 @@ public class RequestBody {
     }
 
     private Map<String, String> parseQueryString(String queryString) {
+        if (queryString == null || queryString.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
         Map<String, String> params = new HashMap<>();
         Arrays.stream(queryString.split(AMPERSAND)).forEach(parameter -> {
             String[] nameValuePair = parameter.split(EQUAL_SIGN);
             params.put(nameValuePair[INDEX_ZERO], nameValuePair[INDEX_ONE]);
         });
+
         return params;
     }
 

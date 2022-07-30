@@ -1,10 +1,5 @@
 package webserver.http;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
-import utils.HandlebarsUtils;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,7 +7,14 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import utils.FileIoUtils;
+import utils.HandlebarsUtils;
 
 public class HttpResponse {
 
@@ -21,13 +23,29 @@ public class HttpResponse {
 
     private final DataOutputStream out;
     private final Map<String, String> headers = new HashMap<>();
+    private final StatusLine statusLine;
+    private final Cookies cookies;
 
     public HttpResponse(OutputStream out) {
         this.out = new DataOutputStream(out);
+        this.statusLine = new StatusLine();
+        this.cookies = new Cookies();
+    }
+
+    public void setStatus(HttpStatus status) {
+        statusLine.setStatus(status);
+    }
+
+    public HttpStatus getStatus() {
+        return statusLine.getStatus();
     }
 
     public void addHeader(String name, String value) {
         headers.put(name, value);
+    }
+
+    public String getHeader(String name) {
+        return headers.get(name);
     }
 
     public void forward(String path) throws IOException, URISyntaxException {
@@ -70,9 +88,9 @@ public class HttpResponse {
 
     public void sendRedirect(String url) {
         try {
-            out.writeBytes("HTTP/1.1 302 Found " + LINE_SEPARATOR);
+            addHeader("Location", url);
+            processStatusLine(HttpStatus.FOUND);
             processHeaders();
-            out.writeBytes(String.format("Location: %s%n", url));
             out.writeBytes(LINE_SEPARATOR);
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -81,7 +99,7 @@ public class HttpResponse {
 
     private void response200Header() {
         try {
-            out.writeBytes("HTTP/1.1 200 OK " + LINE_SEPARATOR);
+            processStatusLine(HttpStatus.OK);
             processHeaders();
             out.writeBytes(LINE_SEPARATOR);
         } catch (IOException e) {
@@ -89,7 +107,17 @@ public class HttpResponse {
         }
     }
 
+    private void processStatusLine(HttpStatus status) throws IOException {
+        setStatus(status);
+        out.writeBytes(statusLine + LINE_SEPARATOR);
+    }
+
     private void processHeaders() throws IOException {
+        List<String> cookies = this.cookies.getCookies();
+        if (!cookies.isEmpty()) {
+            addHeader("Set-Cookie", String.join(";", cookies));
+        }
+
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             out.writeBytes(String.format("%s: %s%n", entry.getKey(), entry.getValue()));
         }
@@ -102,5 +130,9 @@ public class HttpResponse {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    public void addCookie(String name, String value) {
+        cookies.add(name, value);
     }
 }

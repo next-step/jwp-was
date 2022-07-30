@@ -1,15 +1,16 @@
 package webserver.http;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utils.IOUtils;
+import static java.nio.charset.StandardCharsets.*;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import utils.IOUtils;
 
 public class HttpRequest {
 
@@ -25,14 +26,10 @@ public class HttpRequest {
             requestLine = new RequestLine(URLDecoder.decode(reader.readLine(), UTF_8));
             headers = HttpHeaders.from(reader);
             requestBody = new RequestBody(URLDecoder.decode(IOUtils.readData(reader, headers.getContentLength()), UTF_8));
-            logger.debug("request body = {}", requestBody);
+            logger.debug("request body = {}", requestBody.getQueryString());
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public HttpHeaders getHeaders() {
-        return headers;
     }
 
     public HttpMethod getMethod() {
@@ -53,5 +50,17 @@ public class HttpRequest {
             return requestBody.getParameter(name);
         }
         return requestLine.getParameter(name);
+    }
+
+    public Cookies getCookies() {
+        return headers.getCookies();
+    }
+
+    public String getSessionId() {
+        return getCookies().getCookie("JSESSIONID");
+    }
+
+    public HttpSession getSession() {
+        return HttpSessions.getSession(getSessionId());
     }
 }
