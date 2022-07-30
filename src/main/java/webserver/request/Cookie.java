@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class Cookie {
 
+    private static final String COOKIE_DELIMITER = "=";
     private final String name;
     private final String value;
 
@@ -11,6 +12,18 @@ public class Cookie {
         validateCookieName(name);
         this.name = name;
         this.value = value;
+    }
+
+    public static Cookie parse(final String nameAndValueFair) {
+        validateCookieNameAndValueFair(nameAndValueFair);
+        final String[] nameAndValueArray = nameAndValueFair.split(COOKIE_DELIMITER);
+        return new Cookie(nameAndValueArray[0], nameAndValueArray[1]);
+    }
+
+    private static void validateCookieNameAndValueFair(final String nameAndValueFair) {
+        if (nameAndValueFair == null || nameAndValueFair.isBlank() || nameAndValueFair.split(COOKIE_DELIMITER).length != 2) {
+            throw new IllegalArgumentException("쿠키 유형이 올바르지 않습니다. : " + nameAndValueFair);
+        }
     }
 
     private void validateCookieName(final String name) {

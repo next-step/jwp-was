@@ -21,6 +21,15 @@ class CookieTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("쿠키를 파싱한다")
+    @Test
+    void parse_cookie() {
+        final Cookie actual = Cookie.parse("name=value");
+        final Cookie expected = new Cookie("name", "value");
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
     @DisplayName("쿠키를 생성하면서 이름이 없으면 예외를 던진다")
     @ParameterizedTest
     @NullAndEmptySource
