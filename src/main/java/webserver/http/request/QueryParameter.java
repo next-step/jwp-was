@@ -1,6 +1,7 @@
-package webserver.http;
+package webserver.http.request;
 
 import utils.DecoderUtils;
+import webserver.http.Url;
 
 import java.util.Arrays;
 import java.util.Collections;

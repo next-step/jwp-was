@@ -2,9 +2,9 @@ package controller;
 
 import model.User;
 import webserver.http.HttpMethod;
-import webserver.http.HttpRequest;
-import webserver.http.QueryParameter;
-import webserver.http.RequestBody;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.QueryParameter;
+import webserver.http.request.RequestBody;
 
 import java.util.Map;
 

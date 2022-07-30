@@ -1,4 +1,8 @@
-package webserver.http;
+package webserver.http.request;
+
+import webserver.http.HttpMethod;
+import webserver.http.ProtocolVersion;
+import webserver.http.Url;
 
 public class RequestLine {
 

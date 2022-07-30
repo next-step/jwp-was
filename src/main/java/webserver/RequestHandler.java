@@ -10,7 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import utils.IOUtils;
-import webserver.http.*;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestBody;
+import webserver.http.request.RequestHeader;
+import webserver.http.request.RequestLine;
 
 
 public class RequestHandler implements Runnable {
@@ -40,7 +43,6 @@ public class RequestHandler implements Runnable {
                 // TODO: html 경로를 controller 에서 관리하도록 변경
                 body = FileIoUtils.loadFileFromClasspath("/user/form.html");
             }
-
 
             final DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length);

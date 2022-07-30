@@ -1,7 +1,10 @@
-package webserver.http;
+package webserver.http.request;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.*;
+import webserver.http.request.RequestLine;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,8 +24,8 @@ public class RequestLineTest {
         assertAll(
                 () -> assertEquals(HttpMethod.GET, httpMethod),
                 () -> assertEquals("/users", url.getPath()),
-                () -> assertEquals(Protocol.HTTP, protocolVersion.getProtocol()),
-                () -> assertEquals(HttpVersion.VER_1_1, protocolVersion.getVersion())
+                () -> Assertions.assertEquals(Protocol.HTTP, protocolVersion.getProtocol()),
+                () -> Assertions.assertEquals(HttpVersion.VER_1_1, protocolVersion.getVersion())
         );
     }
 

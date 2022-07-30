@@ -22,6 +22,13 @@ public class ProtocolVersion {
         );
     }
 
+    public static ProtocolVersion ofServerProtocolVersion(){
+        return new ProtocolVersion(
+                Protocol.HTTP,
+                HttpVersion.VER_1_1
+        );
+    }
+
     public Protocol getProtocol() {
         return protocol;
     }

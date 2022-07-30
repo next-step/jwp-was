@@ -1,5 +1,7 @@
 package webserver.http;
 
+import webserver.http.request.QueryParameter;
+
 public class Url {
     private static final String URL_DELIMITER = "\\?";
     public static final int PATH_INDEX = 0;

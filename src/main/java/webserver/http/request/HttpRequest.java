@@ -1,4 +1,8 @@
-package webserver.http;
+package webserver.http.request;
+
+import webserver.http.request.RequestBody;
+import webserver.http.request.RequestHeader;
+import webserver.http.request.RequestLine;
 
 public class HttpRequest {
 
