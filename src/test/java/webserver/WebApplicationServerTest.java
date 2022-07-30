@@ -25,8 +25,6 @@ import org.springframework.web.client.RestTemplate;
 import db.DataBase;
 import model.User;
 import utils.FileIoUtils;
-import webserver.http.HttpSession;
-import webserver.http.HttpSessions;
 
 class WebApplicationServerTest {
 
@@ -101,15 +99,13 @@ class WebApplicationServerTest {
     @DisplayName("로그인 성공 시, index.html 페이지로 리다이렉트한다.")
     @Test
     void request_login_success() {
-        HttpSession session = HttpSessions.createSession();
-        session.setAttribute("user", DataBase.findUserById(VALID_USER_ID));
-
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("userId", VALID_USER_ID);
         body.add("password", VALID_PASSWORD);
 
+        String sessionId = UUID.randomUUID().toString();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Cookie", String.format("JSESSIONID=%s", session.getId()));
+        headers.add("Cookie", String.format("JSESSIONID=%s", sessionId));
 
         HttpEntity<Object> entity = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
@@ -123,30 +119,38 @@ class WebApplicationServerTest {
     @DisplayName("로그인 실패 시, login_failed.html 페이지로 리다이렉트한다.")
     @Test
     void request_login_failure() {
-        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add("userId", INVALID_USER_ID);
-        requestBody.add("password", INVALID_PASSWORD);
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("userId", INVALID_USER_ID);
+        body.add("password", INVALID_PASSWORD);
 
+        String sessionId = UUID.randomUUID().toString();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cookie", String.format("JSESSIONID=%s", sessionId));
+
+        HttpEntity<Object> entity = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.postForEntity(BASE_URL + "/user/login", requestBody, String.class);
-        HttpHeaders headers = response.getHeaders();
-        String cookie = headers.get("Set-Cookie").get(0);
+        ResponseEntity<String> response = restTemplate.exchange(BASE_URL + "/user/login", HttpMethod.POST, entity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        assertThat(headers.getLocation()).isEqualTo(URI.create("/user/login_failed.html"));
+        assertThat(response.getHeaders().getLocation()).isEqualTo(URI.create("/user/login_failed.html"));
     }
 
     @DisplayName("로그인 상태인 경우, GET /user/list 요청 시 사용자 목록을 출력한다.")
     @Test
     void request_user_list_with_logged_in() {
-        HttpSession session = HttpSessions.createSession();
-        session.setAttribute("user", DataBase.findUserById(VALID_USER_ID));
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("userId", VALID_USER_ID);
+        body.add("password", VALID_PASSWORD);
 
+        String sessionId = UUID.randomUUID().toString();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Cookie", String.format("JSESSIONID=%s", session.getId()));
-        HttpEntity<Object> entity = new HttpEntity<>(headers);
+        headers.add("Cookie", String.format("JSESSIONID=%s", sessionId));
 
+        HttpEntity<Object> entity = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
+        restTemplate.exchange(BASE_URL + "/user/login", HttpMethod.POST, entity, String.class);
+
+        entity = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(BASE_URL + "/user/list", HttpMethod.GET, entity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -158,8 +162,8 @@ class WebApplicationServerTest {
     void request_user_list_without_logged_in() throws IOException, URISyntaxException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cookie", String.format("JSESSIONID=%s", UUID.randomUUID()));
-        HttpEntity<Object> entity = new HttpEntity<>(headers);
 
+        HttpEntity<Object> entity = new HttpEntity<>(headers);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(BASE_URL + "/user/list", HttpMethod.GET, entity, String.class);
         String expectedBody = new String(FileIoUtils.loadFileFromClasspath("./templates/user/login.html"));
