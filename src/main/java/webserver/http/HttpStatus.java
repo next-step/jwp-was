@@ -16,6 +16,7 @@ public enum HttpStatus {
         this.statusMessage = statusMessage;
     }
 
+    @Override
     public String toString() {
         return statusCode + " " + statusMessage;
     }
