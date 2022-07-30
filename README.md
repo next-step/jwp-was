@@ -25,4 +25,7 @@
     - [X] Request Parameter 디코딩하기
     - [X] 빌더 패턴 이용하여 User 객체 생성하기
 - 요구사항 3
-  - [] 
+  - [X] POST `/user/create` 요청 처리하기
+    - [X] RequestBody 생성하기
+    - [X] HttpRequest 정의하여 추상화하기
+    - [X] Controller 정의하여 추상화하기
