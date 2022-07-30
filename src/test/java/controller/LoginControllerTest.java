@@ -25,9 +25,9 @@ class LoginControllerTest {
 
         String response = byteArrayOutputStream.toString();
         System.out.println(response);
-        assertThat(response).contains("302 Found");
-        assertThat(response).contains("logined=true;");
-        assertThat(response).contains("/index.html");
+        assertThat(response).contains("HTTP/1.1 302 Found");
+        assertThat(response).contains("logined=true; Path=/");
+        assertThat(response).contains("Location: /index.html");
     }
 
     @Test
@@ -40,8 +40,8 @@ class LoginControllerTest {
 
         String response = byteArrayOutputStream.toString();
 
-        assertThat(response).contains("302 Found");
-        assertThat(response).contains("/user/login_failed.html");
+        assertThat(response).contains("HTTP/1.1 302 Found");
+        assertThat(response).contains("Location: /user/login_failed.html");
     }
 
     private InputStream createInputStream(String filename) throws FileNotFoundException {

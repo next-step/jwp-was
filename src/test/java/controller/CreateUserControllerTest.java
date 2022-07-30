@@ -5,7 +5,10 @@ import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.exception.MethodNotAllowedException;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -24,8 +27,8 @@ class CreateUserControllerTest {
 
         String response = byteArrayOutputStream.toString();
 
-        assertThat(response).contains("302 Found");
-        assertThat(response).contains("/index.html");
+        assertThat(response).contains("HTTP/1.1 302 Found");
+        assertThat(response).contains("Location: /index.html");
     }
 
     @Test
@@ -38,8 +41,8 @@ class CreateUserControllerTest {
 
         String response = byteArrayOutputStream.toString();
 
-        assertThat(response).contains("302 Found");
-        assertThat(response).contains("/index.html");
+        assertThat(response).contains("HTTP/1.1 302 Found");
+        assertThat(response).contains("Location: /index.html");
     }
 
     @Test

@@ -26,7 +26,7 @@ class ListUserControllerTest {
         String response = byteArrayOutputStream.toString();
 
         System.out.println(response);
-        assertThat(response).contains("200 OK");
+        assertThat(response).contains("HTTP/1.1 200 OK");
         assertThat(response).contains("Content-Type: text/html;charset=utf-8");
     }
 
@@ -41,10 +41,10 @@ class ListUserControllerTest {
         String response = byteArrayOutputStream.toString();
 
         System.out.println(response);
-        assertThat(response).contains("302 Found");
-        assertThat(response).contains("/user/login.html");
+        assertThat(response).contains("HTTP/1.1 302 Found");
+        assertThat(response).contains("Location: /user/login.html");
     }
-    
+
     private InputStream createInputStream(String filename) throws FileNotFoundException {
         return new FileInputStream(testDirectory + filename);
     }
