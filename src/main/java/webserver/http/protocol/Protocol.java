@@ -1,4 +1,4 @@
-package webserver.http.request;
+package webserver.http.protocol;
 
 public class Protocol {
     private final String type;
@@ -7,6 +7,10 @@ public class Protocol {
     public Protocol(String type, String version) {
         this.type = type;
         this.version = version;
+    }
+    
+    public static Protocol http1Point1() {
+        return new Protocol("HTTP", "1.1");
     }
 
     @Override

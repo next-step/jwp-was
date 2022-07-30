@@ -7,10 +7,12 @@ import org.junit.jupiter.api.Test;
 import webserver.http.cookie.Cookie;
 import webserver.http.cookie.Cookies;
 import webserver.http.cookie.parser.CookiesParser;
-import webserver.http.request.parser.HeadersParser;
+import webserver.http.header.Headers;
+import webserver.http.header.parser.HeadersParser;
+import webserver.http.protocol.Protocol;
 import webserver.http.request.parser.KeyValuePairParser;
 import webserver.http.request.parser.ParametersParser;
-import webserver.http.request.parser.ProtocolParser;
+import webserver.http.protocol.parser.ProtocolParser;
 import webserver.http.request.parser.RequestLineParser;
 import webserver.http.request.parser.URIParser;
 

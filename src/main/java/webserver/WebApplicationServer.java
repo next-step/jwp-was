@@ -4,10 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.cookie.parser.CookiesParser;
 import webserver.http.request.RequestReader;
-import webserver.http.request.parser.HeadersParser;
+import webserver.http.header.parser.HeadersParser;
 import webserver.http.request.parser.KeyValuePairParser;
 import webserver.http.request.parser.ParametersParser;
-import webserver.http.request.parser.ProtocolParser;
+import webserver.http.protocol.parser.ProtocolParser;
 import webserver.http.request.parser.RequestLineParser;
 import webserver.http.request.parser.URIParser;
 

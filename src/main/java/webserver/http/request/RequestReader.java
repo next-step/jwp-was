@@ -3,8 +3,9 @@ package webserver.http.request;
 import utils.IOUtils;
 import webserver.http.cookie.Cookies;
 import webserver.http.cookie.parser.CookiesParser;
+import webserver.http.header.Headers;
 import webserver.http.request.exception.NullRequestException;
-import webserver.http.request.parser.HeadersParser;
+import webserver.http.header.parser.HeadersParser;
 import webserver.http.request.parser.ParametersParser;
 import webserver.http.request.parser.RequestLineParser;
 

@@ -1,7 +1,8 @@
-package webserver.http.request.parser;
+package webserver.http.header.parser;
 
-import webserver.http.request.Headers;
+import webserver.http.header.Headers;
 import webserver.http.request.KeyValuePair;
+import webserver.http.request.parser.KeyValuePairParser;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,5 +1,6 @@
 package webserver.http.request.parser;
 
+import webserver.http.protocol.parser.ProtocolParser;
 import webserver.http.request.Method;
 import webserver.http.request.RequestLine;
 

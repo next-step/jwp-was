@@ -7,6 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import webserver.http.header.Headers;
+import webserver.http.protocol.Protocol;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -231,8 +233,6 @@ class RequestTest {
     }
 
     public static Stream<Arguments> provideForHasContentType() {
-        HashMap<String, String> keyValues = new HashMap<>();
-        keyValues.put("Content-Length", "13");
         return Stream.of(
                 arguments(new Headers(Map.of("Content-Type", "application/json")), "application/json", true),
                 arguments(new Headers(Map.of("Content-Type", "application/json")), "text/html", false),

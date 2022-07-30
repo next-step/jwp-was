@@ -1,8 +1,9 @@
-package webserver.http.request.parser;
+package webserver.http.protocol.parser;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.request.Protocol;
+import webserver.http.protocol.Protocol;
+import webserver.http.protocol.parser.ProtocolParser;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

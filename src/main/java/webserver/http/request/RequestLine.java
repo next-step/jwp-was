@@ -1,5 +1,7 @@
 package webserver.http.request;
 
+import webserver.http.protocol.Protocol;
+
 import java.nio.charset.Charset;
 
 public class RequestLine {

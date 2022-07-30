@@ -1,6 +1,7 @@
 package webserver.http.request;
 
 import webserver.http.cookie.Cookies;
+import webserver.http.header.Headers;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;

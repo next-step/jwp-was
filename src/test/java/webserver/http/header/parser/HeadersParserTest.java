@@ -1,9 +1,11 @@
-package webserver.http.request.parser;
+package webserver.http.header.parser;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.request.Headers;
+import webserver.http.header.Headers;
+import webserver.http.header.parser.HeadersParser;
+import webserver.http.request.parser.KeyValuePairParser;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,6 +1,6 @@
-package webserver.http.request.parser;
+package webserver.http.protocol.parser;
 
-import webserver.http.request.Protocol;
+import webserver.http.protocol.Protocol;
 
 public class ProtocolParser {
 

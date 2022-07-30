@@ -1,9 +1,10 @@
-package webserver.http.request;
+package webserver.http.header;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import webserver.http.header.Headers;
 
 import java.util.HashMap;
 import java.util.Map;
