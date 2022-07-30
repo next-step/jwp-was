@@ -48,12 +48,7 @@ public class RequestHandler implements Runnable {
             }
 
             if (url.startsWith("/user/create")) {
-                String body = IOUtils.readData(br, contentLength);
-                System.out.println(body);
-                QueryStringParser QSParser = new QueryStringParser(body);
-                Map<String, String> params = QSParser.getQueryParameters();
-                User user = new User(params.get("userId"), params.get("password"),params.get("name"),params.get("email"));
-                DataBase.addUser(user);
+                new UserCreate(IOUtils.readData(br, contentLength));
                 DataOutputStream dos = new DataOutputStream(out);
                 HttpResponseWriter.response302Header(dos, "/index.html");
             } else if ("/user/login".equals(url)) {
