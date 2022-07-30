@@ -16,6 +16,8 @@ public final class RequestHeader {
 
     private final Map<String, String> headers;
 
+    private RequestCookie cookieCache;
+
     private RequestHeader(Map<String, String> headers) {
         this.headers = Collections.unmodifiableMap(headers);
     }
@@ -56,8 +58,16 @@ public final class RequestHeader {
         return Integer.parseInt(headers.getOrDefault(HttpHeaders.CONTENT_LENGTH, DEFAULT_CONTENT_LENGTH));
     }
 
-    public String cookie() {
-        return headers.getOrDefault(HttpHeaders.COOKIE, "");
+    public Optional<String> cookieValue(String key) {
+        return cookie().value(key);
+    }
+
+    private RequestCookie cookie() {
+        if (cookieCache != null) {
+            return cookieCache;
+        }
+        cookieCache = RequestCookie.from(headers.get(HttpHeaders.COOKIE));
+        return cookieCache;
     }
 
     @Override

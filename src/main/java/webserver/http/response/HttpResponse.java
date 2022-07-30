@@ -65,7 +65,7 @@ public final class HttpResponse {
         return body;
     }
 
-    public Set<Map.Entry<String, String>> headerEntries() {
+    public Set<Map.Entry<String, Object>> headerEntries() {
         return header.entries();
     }
 }

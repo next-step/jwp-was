@@ -45,6 +45,6 @@ class ResponseHeaderTest {
     @DisplayName("개체들 조회")
     void entries() {
         assertThat(ResponseHeader.from(Collections.singletonMap("key", "value")).entries())
-                .containsExactly(new AbstractMap.SimpleEntry("key", "value"));
+                .containsExactly(new AbstractMap.SimpleEntry<>("key", "value"));
     }
 }

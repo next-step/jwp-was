@@ -10,14 +10,14 @@ import java.util.Set;
 
 public final class ResponseHeader {
 
-    private final Map<String, String> headers;
+    private final Map<String, Object> headers;
 
-    private ResponseHeader(Map<String, String> headers) {
+    private ResponseHeader(Map<String, Object> headers) {
         Assert.notNull(headers, "'headers' must not be null");
         this.headers = Collections.unmodifiableMap(headers);
     }
 
-    public static ResponseHeader from(Map<String, String> headers) {
+    public static ResponseHeader from(Map<String, Object> headers) {
         return new ResponseHeader(Objects.requireNonNullElse(headers, Collections.emptyMap()));
     }
 
@@ -25,12 +25,12 @@ public final class ResponseHeader {
         return from(Collections.emptyMap());
     }
 
-    public Set<Map.Entry<String, String>> entries() {
+    public Set<Map.Entry<String, Object>> entries() {
         return headers.entrySet();
     }
 
-    public ResponseHeader add(String header, String value) {
-        HashMap<String, String> newHeader = new HashMap<>(headers);
+    public ResponseHeader add(String header, Object value) {
+        HashMap<String, Object> newHeader = new HashMap<>(headers);
         newHeader.put(header, value);
         return from(newHeader);
     }

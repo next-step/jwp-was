@@ -64,4 +64,15 @@ class RequestHeaderTest {
                 () -> assertThat(header.value("Cookie")).isEqualTo(Optional.of("logined=true"))
         );
     }
+
+    @Test
+    @DisplayName("쿠키 값 조회")
+    void cookieValue() {
+        //given
+        RequestHeader header = RequestHeader.from(
+                Arrays.asList("Host: localhost:8080", "Accept: */*", "Cookie: logined=true")
+        );
+        //when, then
+        assertThat(header.cookieValue("logined")).isEqualTo(Optional.of("true"));
+    }
 }
