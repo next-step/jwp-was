@@ -19,6 +19,10 @@ public class Cookie {
         }
     }
 
+    public boolean isSameName(final String name) {
+        return this.name.equals(name);
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

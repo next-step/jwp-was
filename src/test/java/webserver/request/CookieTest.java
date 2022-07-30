@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -28,6 +29,18 @@ class CookieTest {
         assertThatThrownBy(() -> new Cookie(cookieName, "value"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("쿠키 이름은 비어 있을 수 없습니다");
+    }
+
+    @DisplayName("쿠키의 이름이 동일한지 확인한다")
+    @ParameterizedTest
+    @CsvSource({
+        "name, true",
+        "notExistName, false"
+    })
+    void is_same_name(String findCookieName, boolean expected) {
+        final Cookie cookie = new Cookie("name", "value");
+
+        assertThat(cookie.isSameName(findCookieName)).isEqualTo(expected);
     }
 
 }
