@@ -170,3 +170,24 @@ Connection: keep-alive
   - 클라이언트 응답 데이터를 처리하는 로직을 별도의 클래스로 분리(HttpResponse)
   - 다형성을 활용해 클라이언트 요청 URL에 대한 분기 처리를 제거
 
+
+
+## 4단계 - 세션 구현하기
+
+- 서블릿에서 지원하는 `HttpSession` 구현  
+- 상태 값을 공유하기 위해 고유한 아이디 활용
+- 고유한 아이디는 쿠키 활용
+
+### 구현해야 할 메소드 종류
+
+- `String getId()`
+  - 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환 
+- `void setAttribute(String name, Object value)`
+  - 현재 세션에 value 인자로 전달되는 객체를 name 인자 이름으로 저장 
+- `Object getAttribute(String name)`
+  -  현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환
+- `void removeAttribute(String name)`
+  - 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
+- `void invalidate()`
+  - 현재 세션에 저장되어 있는 모든 값을 삭제
+
