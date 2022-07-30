@@ -2,8 +2,8 @@ package webserver.controller;
 
 import com.github.jknack.handlebars.Handlebars;
 import db.DataBase;
-import webserver.http.HttpHeaders;
 import webserver.exception.ApiException;
+import webserver.http.HttpHeaders;
 import webserver.http.request.HttpMethod;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.Path;
@@ -46,7 +46,7 @@ public class UserListController implements Controller {
     }
 
     private boolean isNotLoggedIn(HttpRequest request) {
-        return !request.cookie().contains("logined=true");
+        return !request.containsSessionAttribute("user");
     }
 
     private String userListBody() throws IOException {

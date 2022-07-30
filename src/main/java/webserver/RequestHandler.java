@@ -13,6 +13,7 @@ import webserver.controller.UserCreateController;
 import webserver.controller.UserListController;
 import webserver.controller.UserLoginController;
 import webserver.exception.ApiException;
+import webserver.http.SessionStorage;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.response.HttpResponse;
@@ -29,6 +30,7 @@ import java.util.Set;
 public class RequestHandler implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
+    private static final SessionStorage SESSION_STORAGE = SessionStorage.empty();
     private static final Set<Controller> CONTROLLERS;
 
     static {
@@ -38,7 +40,7 @@ public class RequestHandler implements Runnable {
         CONTROLLERS = Set.of(
                 new UserCreateController(),
                 new UserListController(new Handlebars(loader)),
-                new UserLoginController(),
+                new UserLoginController(SESSION_STORAGE),
                 new TemplateController(),
                 new StaticController()
         );
@@ -64,7 +66,7 @@ public class RequestHandler implements Runnable {
     }
 
     private HttpRequest httpRequest(BufferedReader br) throws IOException {
-        HttpRequest request = HttpRequest.from(IOUtils.readLines(br));
+        HttpRequest request = HttpRequest.of(SESSION_STORAGE, IOUtils.readLines(br));
         if (request.contentLength() > 0) {
             return request.withBody(RequestBody.from(IOUtils.readData(br, request.contentLength())));
         }
@@ -102,7 +104,7 @@ public class RequestHandler implements Runnable {
     }
 
     private void writeHeaders(HttpResponse response, DataOutputStream dos) throws IOException {
-        for (Map.Entry<String, String> entry : response.headerEntries()) {
+        for (Map.Entry<String, Object> entry : response.headerEntries()) {
             dos.writeBytes(String.format("%s: %s\r%n", entry.getKey(), entry.getValue()));
         }
     }
