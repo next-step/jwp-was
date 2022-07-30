@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import utils.IOUtils;
 import webserver.http.HttpMethod;
+import webserver.http.RequestBody;
 import webserver.http.RequestHeader;
 import webserver.http.RequestLine;
 
@@ -82,8 +83,10 @@ public class RequestHandler implements Runnable {
             requestHeader.add(line);
         }
 
-        String body = IOUtils.readData(br, requestHeader.getContentLength());
-        logger.info(body);
+        RequestBody requestBody = RequestBody.parseFrom(
+                IOUtils.readData(br, requestHeader.getContentLength())
+        );
+        logger.info(String.valueOf(requestBody));
 
         return requestLine;
     }
