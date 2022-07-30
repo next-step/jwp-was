@@ -38,4 +38,13 @@ public class RequestLine {
     public ProtocolVersion getProtocolVersion() {
         return protocolVersion;
     }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method=" + method +
+                ", url=" + url +
+                ", protocolVersion=" + protocolVersion +
+                '}';
+    }
 }

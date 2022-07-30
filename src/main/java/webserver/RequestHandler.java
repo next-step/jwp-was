@@ -11,10 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import utils.IOUtils;
-import webserver.http.HttpMethod;
-import webserver.http.RequestBody;
-import webserver.http.RequestHeader;
-import webserver.http.RequestLine;
+import webserver.http.*;
 
 import static java.lang.Integer.parseInt;
 
@@ -34,18 +31,22 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            final RequestLine requestLine = convertStreamToRequestLine(in);
+            final HttpRequest httpRequest = convertStreamToHttpRequest(in);
+            final HttpMethod httpMethod = httpRequest.getRequestLine().getMethod();
+            final String path = httpRequest.getRequestLine().getUrl().getPath();
 
-            if (requestLine.getMethod().equals(HttpMethod.GET) && requestLine.getUrl().getPath().equals("/user/create")) {
-                doGetSingUp(requestLine);
+            if (httpMethod.equals(HttpMethod.GET) && path.equals("/user/create")) {
+                Map<String, String> parameters = httpRequest.getRequestLine().getUrl().getQueryParameter().getParameters();
+                doGetSingUp(parameters);
                 return;
             }
 
-            if (requestLine.getMethod().equals(HttpMethod.POST) && requestLine.getUrl().getPath().equals("/user/create")) {
+            if (httpMethod.equals(HttpMethod.POST) && path.equals("/user/create")) {
+                doPostSignUp(httpRequest.getRequestBody());
                 return;
             }
 
-            final byte[] body = FileIoUtils.loadFileFromClasspath(requestLine.getUrl().getPath());
+            final byte[] body = FileIoUtils.loadFileFromClasspath(httpRequest.getRequestLine().getUrl().getPath());
 
             final DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length);
@@ -55,8 +56,7 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void doGetSingUp(RequestLine requestLine) {
-        Map<String, String> parameters = requestLine.getUrl().getQueryParameter().getParameters();
+    private void doGetSingUp(Map<String, String> parameters) {
         String userId = parameters.get("userId");
         String password = parameters.get("password");
         String name = parameters.get("name");
@@ -70,25 +70,41 @@ public class RequestHandler implements Runnable {
                 .build();
     }
 
-    private RequestLine convertStreamToRequestLine(InputStream is) throws IOException {
+    private void doPostSignUp(RequestBody requestBody) {
+        Map<String, String> body = requestBody.getContents();
+        String userId = body.get("userId");
+        String password = body.get("password");
+        String name = body.get("name");
+        String email = body.get("email");
+
+        User user = new User.Builder()
+                .userId(userId)
+                .password(password)
+                .name(name)
+                .email(email)
+                .build();
+    }
+
+    private HttpRequest convertStreamToHttpRequest(InputStream is) throws IOException {
         final BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
         String line = br.readLine();
 
         final RequestLine requestLine = RequestLine.parseFrom(line);
-        final RequestHeader requestHeader = new RequestHeader();
+        logger.info(requestLine.toString());
 
+        final RequestHeader requestHeader = new RequestHeader();
         while (! line.equals(END_OF_LINE) || line == null) {
             logger.info(line);
             line = br.readLine();
             requestHeader.add(line);
         }
 
-        RequestBody requestBody = RequestBody.parseFrom(
+        final RequestBody requestBody = RequestBody.parseFrom(
                 IOUtils.readData(br, requestHeader.getContentLength())
         );
-        logger.info(String.valueOf(requestBody));
+        logger.info(requestBody.toString());
 
-        return requestLine;
+        return new HttpRequest(requestLine, requestHeader, requestBody);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
