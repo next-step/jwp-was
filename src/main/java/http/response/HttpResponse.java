@@ -51,7 +51,7 @@ public class HttpResponse {
     }
 
     public static HttpResponse parseStaticFile(String url, String fileExtension) {
-        var prefix = url.endsWith(".html") ? "./templates" : "/static";
+        var prefix = url.endsWith(".html") ? "./templates" : "./static";
 
         var bytes = FileIoUtils.loadFileFromClasspath(prefix, url);
         var contentType = ContentType.of(fileExtension);
