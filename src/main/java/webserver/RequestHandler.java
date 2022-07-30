@@ -38,11 +38,12 @@ public class RequestHandler implements Runnable {
             while (!line.equals("")) {
                 line = br.readLine();
                 logger.debug("header: {}", line);
+                HttpHeader httpHeader = new HttpHeader(line);
                 if (line.contains("Content-Length")){
-                    contentLength = HttpHeaderParser.getContentLength(line);
+                    contentLength = httpHeader.getContentLength();
                 }
                 if (line.contains("Cookie")) {
-                    logined = HttpHeaderParser.isLogin(line);
+                    logined = httpHeader.isLogin();
                 }
             }
 

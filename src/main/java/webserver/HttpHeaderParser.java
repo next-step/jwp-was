@@ -4,15 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpHeaderParser {
-    static int getContentLength(String line) {
-        String[] headerTokens = line.split(":");
-        return Integer.parseInt(headerTokens[1].trim());
-    }
-
-    static boolean isLogin(String line) {
-        String cookieString = line.split(":")[1].trim();
+    static String isLogin(String cookieString) {
         if (cookieString.isEmpty()) {
-            return false;
+            return "false";
         }
         Map<String, String> cookies = new HashMap<>();
         for (String cookie : cookieString.split(";")) {
@@ -22,8 +16,8 @@ public class HttpHeaderParser {
         }
         String loginedValue = cookies.get("logined");
         if (loginedValue == null) {
-            return false;
+            return "false";
         }
-        return Boolean.parseBoolean(loginedValue);
+        return loginedValue;
     }
 }
