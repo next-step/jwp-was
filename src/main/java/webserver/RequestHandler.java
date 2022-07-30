@@ -20,10 +20,12 @@ import webserver.servlet.Servlet;
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private Socket connection;
+    private final Socket connection;
+    private final Servlet dispatcherServlet;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
+        this.dispatcherServlet = new DispatcherServlet();
     }
 
     public void run() {
@@ -33,7 +35,6 @@ public class RequestHandler implements Runnable {
         try (InputStream is = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-            Servlet dispatcherServlet = new DispatcherServlet();
             HttpRequest httpRequest = HttpRequestParser.parse(br);
             HttpResponse httpResponse = new HttpResponse(httpRequest.getProtocol(), out);
             dispatcherServlet.service(httpRequest, httpResponse);
