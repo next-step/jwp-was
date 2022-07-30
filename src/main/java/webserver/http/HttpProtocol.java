@@ -1,4 +1,4 @@
-package domain;
+package webserver.http;
 
 import java.util.Objects;
 
@@ -43,5 +43,13 @@ public class HttpProtocol {
     @Override
     public int hashCode() {
         return Objects.hash(protocol, version);
+    }
+
+    @Override
+    public String toString() {
+        return "HttpProtocol{" +
+                "protocol='" + protocol + '\'' +
+                ", version='" + version + '\'' +
+                '}';
     }
 }

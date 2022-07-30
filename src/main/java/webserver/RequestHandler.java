@@ -1,77 +1,72 @@
 package webserver;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
-import domain.HttpRequest;
-import domain.RequestLineParser;
+import controller.Controller;
+import controller.UserCreateController;
+import controller.UserListController;
+import controller.UserLoginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.IOUtils;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 public class RequestHandler implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final String REQUEST_LINE_DELIMITER = "\r\n";
-    private static final String VALIDATION_MESSAGE = "잘못된 요청입니다.";
+    public static final Pattern TEMPLATES_PATTERN = Pattern.compile("(.+).(htm|html)");
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
 
     private final Socket connection;
+    private final Map<String, Controller> requestMapping = new HashMap<>();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
+        initRequestMapping();
+    }
+
+    private void initRequestMapping() {
+        requestMapping.put("/user/create", new UserCreateController());
+        requestMapping.put("/user/login", new UserLoginController());
+        requestMapping.put("/user/list", new UserListController());
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
+        LOGGER.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            printRequestLine(in);
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            final HttpRequest httpRequest = new HttpRequest(in);
+            final HttpResponse httpResponse = new HttpResponse(out, httpRequest);
+            handle(httpRequest, httpResponse);
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 
-    private void printRequestLine(InputStream in) throws IOException {
-        final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-        final String request = IOUtils.readData(br, 1024);
-        final HttpRequest httpRequest = new RequestLineParser().parse(getRequestLine(request));
-        logger.debug(httpRequest.toString());
-    }
-
-    private String getRequestLine(String request) {
-        return Arrays.stream(request.split(REQUEST_LINE_DELIMITER))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(VALIDATION_MESSAGE));
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+    private void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
+        if (requestMapping.containsKey(httpRequest.getPath())) {
+            final Controller controller = requestMapping.get(httpRequest.getPath());
+            if (httpRequest.isGet()) {
+                controller.doGet(httpRequest, httpResponse);
+            }
+            if (httpRequest.isPost()) {
+                controller.doPost(httpRequest, httpResponse);
+            }
+            return;
         }
+        forwardNotMapped(httpRequest, httpResponse);
     }
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+    private void forwardNotMapped(HttpRequest httpRequest, HttpResponse httpResponse) {
+        if (TEMPLATES_PATTERN.matcher(httpRequest.getPath()).matches()) {
+            httpResponse.forwardTemplate(httpRequest.getPath());
+            return;
         }
+        httpResponse.forwardStatic(httpRequest.getPath());
     }
 }

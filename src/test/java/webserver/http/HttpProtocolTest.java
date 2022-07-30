@@ -1,11 +1,9 @@
-package domain;
+package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("HttpProtocol 단위 테스트")
@@ -16,7 +14,7 @@ class HttpProtocolTest {
             "HTTP",
             "HTTP/1.1/1.1"
     })
-    void initException(String protocol) {
+    void createException(String protocol) {
         assertThatThrownBy(() -> new HttpProtocol(protocol))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(HttpProtocol.VALIDATION_MESSAGE);
