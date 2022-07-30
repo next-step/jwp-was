@@ -1,8 +1,8 @@
-package webserver.method;
+package webserver.request.method;
 
 import java.util.Arrays;
 
-import webserver.method.exception.InvalidHttpMethodException;
+import webserver.request.method.exception.InvalidHttpMethodException;
 
 public enum HttpMethod {
     GET("GET"),

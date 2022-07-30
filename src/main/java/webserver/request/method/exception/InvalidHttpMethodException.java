@@ -1,4 +1,4 @@
-package webserver.method.exception;
+package webserver.request.method.exception;
 
 public class InvalidHttpMethodException extends RuntimeException{
     public InvalidHttpMethodException(String message) {

@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import utils.IOUtils;
 import webserver.request.header.RequestHeader;
-import webserver.method.HttpMethod;
+import webserver.request.method.HttpMethod;
 
 public class RequestHandler implements Runnable {
     private static final String NEXT_LINE = "\n";
@@ -57,7 +57,7 @@ public class RequestHandler implements Runnable {
             if (isPost(requestHeader)) {
                 ResponsePostHandler responsePostHandler = new ResponsePostHandler();
                 String requestBody = IOUtils.readData(br, requestHeader.contentLength());
-                writeAndFlush(responsePostHandler.handle(requestHeader, requestBody).toString(), EMPTY.getBytes(), dos);
+                writeAndFlush(responsePostHandler.handle(requestHeader, requestBody), EMPTY.getBytes(), dos);
             }
         } catch (IOException e) {
             logger.error(e.getMessage());

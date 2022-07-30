@@ -54,7 +54,7 @@
 ### 3단계
 #### 기능 요구사항 1.
 - [ ] HTTP 요청 Header/Body 처리, 응답 Header/Body 처리만을 담당하는 역할을 분리해 재사용 가능하도록 한다.
-  - [ ] 현재 Header와 Body는 분리가 되어 있다. HttpMethod를 request 패키지로 이동한다.
+  - [x] 현재 Header와 Body는 분리가 되어 있다. HttpMethod를 request 패키지로 이동한다.
   - [ ] 현재 가지는 구조는 한 눈에 보기 힘들다. webserver 아래로 httprequest와 httpresponse를 나누고 그 아래에 service를 두도록 한다.
   - [ ] 다형성을 활용해 요청에 관한 URL handler를 분기 하도록 한다. -> 인터페이스를 활용해 보도록 한다. -> Map을 이용하자.
   - [ ] RequestHandler의 다중 if가 제거 되었는지 체크한다. 만약 되지 않았다면 인터페이스를 활용한 handler분기가 제대로 되지 않은 것이니 다시 리팩토링 한다.

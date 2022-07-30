@@ -2,7 +2,7 @@ package webserver.request.header;
 
 import java.util.Map;
 
-import webserver.method.HttpMethod;
+import webserver.request.method.HttpMethod;
 
 public class RequestLine {
     private static final String REQUEST_DELIMITER = " ";
