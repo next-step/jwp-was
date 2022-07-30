@@ -9,12 +9,12 @@ public class HttpRequest {
 
     private final RequestLine requestLine;
     private final Headers headers;
-    private final String body;
+    private final RequestBody body;
 
     public HttpRequest(RequestLine requestLine, Headers headers, String body) {
         this.requestLine = requestLine;
         this.headers = headers;
-        this.body = body;
+        this.body = new RequestBody(body);
     }
 
     public static HttpRequest parse(BufferedReader bufferedReader) {
@@ -43,7 +43,7 @@ public class HttpRequest {
     }
 
     public String getBody() {
-        return body;
+        return body.getValue();
     }
 
     public Optional<String> getCookie(String key) {
