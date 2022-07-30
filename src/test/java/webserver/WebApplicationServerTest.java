@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -213,5 +215,42 @@ class WebApplicationServerTest {
         HttpEntity<Object> entity = new HttpEntity<>(headers);
         response = restTemplate.exchange(BASE_URL, HttpMethod.GET, entity, String.class);
         assertThat(response.getHeaders().get("Set-Cookie")).isNull();
+    }
+
+    @DisplayName("서버의 최대 Thread Pool 수만큼 요청을 보낸다.")
+    @Test
+    void request_maximum_threads() throws InterruptedException {
+        int threadPoolSize = 250;
+        CountDownLatch countDownLatch = new CountDownLatch(threadPoolSize);
+        RestTemplate restTemplate = new RestTemplate();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
+        for (int count = 0; count < threadPoolSize; count++) {
+            executorService.execute(() -> {
+                restTemplate.getForEntity(BASE_URL, String.class);
+                countDownLatch.countDown();
+            });
+        }
+        boolean await = countDownLatch.await(10, TimeUnit.SECONDS);
+
+        assertThat(countDownLatch.getCount()).isZero();
+        assertThat(await).isTrue();
+    }
+
+    @DisplayName("서버의 최대 Thread Pool 수보다 더 많은 요청을 보낸다.")
+    @Test
+    void request_more_than_maximum_threads() throws InterruptedException {
+        int threadPoolSize = 300;
+        CountDownLatch latch = new CountDownLatch(threadPoolSize);
+        RestTemplate restTemplate = new RestTemplate();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
+        for (int count = 0; count < threadPoolSize; count++) {
+            executorService.execute(() -> restTemplate.getForEntity(BASE_URL, String.class));
+        }
+        boolean await = latch.await(10, TimeUnit.SECONDS);
+
+        assertThat(latch.getCount()).isNotZero();
+        assertThat(await).isFalse();
     }
 }
