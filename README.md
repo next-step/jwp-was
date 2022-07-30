@@ -158,20 +158,21 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 > 세션은 클라이언트와 서버 간에 상태 값을 공유하기 위해 고유한 아이디를 활용하고, 이 고유한 아이디는 쿠키를 활용해 공유한다.
  
 ### 기능 목록
-- [ ] HttpSession
-  - [ ] String getId()
+- [x] HttpSession
+  - [x] String getId()
     - UUID.randomUUID()로 고유한 아이디를 생성한다 
-  - [ ] void setAttribute(String name, Object value)
+  - [x] void setAttribute(String name, Object value)
     - 세션에 저장된 값을 저장한다.
-  - [ ] Object getAttribute(String name)
+  - [x] Object getAttribute(String name)
     - 세션에 저장된 값을 읽어온다.
-  - [ ] void removeAttribute(String name)
+  - [x] void removeAttribute(String name)
     - 세션에 저장된 값을 삭제한다.
-  - [ ] void invalidate()
+  - [x] void invalidate()
     - 세션을 삭제한다.
 - [ ] 서버 최초 접근 시 세션을 생성한다.
   - [ ] 클라이언트 요청 헤더에 세션 쿠키가 없으면 최초 접근이라고 판단한다.
   - [ ] 클라이언트 요청 헤더에 세션 쿠키가 있지만 서버 내부의 쿠키의 값에 해당하는 세션이 없으면 최초 접근이라고 판단한다.
+  - [ ] 생성한 세션은 세션 Context에 저장한다.
 - [ ] 클라이언트 요청에 해당하는 세션이 서버에 존재하는 경우(최초 생성된 경우 포함) 세션의 아이디를 쿠키에 추가하여 응답한다. 
 - [ ] 로그인 시 세션에 로그인 정보를 저장한다.
 - [ ] 사용자 목록 조회 시 세션에 저장된 로그인 여부에 따라 분기 처리한다.
