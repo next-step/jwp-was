@@ -5,22 +5,24 @@ import webserver.http.HttpMethod;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.QueryParameter;
 import webserver.http.request.RequestBody;
+import webserver.http.response.HttpResponse;
 
 import java.util.Map;
 
 public class SignUpController {
 
     public static final String path = "/user/create";
+    private static final String viewPath = "/user/form.html";
 
-    public void run(HttpRequest httpRequest) {
+    public HttpResponse run(HttpRequest httpRequest) {
         final HttpMethod httpMethod = httpRequest.getRequestLine().getMethod();
 
         if (httpMethod.equals(HttpMethod.GET)) {
             doGet(httpRequest.getRequestLine().getUrl().getQueryParameter());
-            return;
+            return HttpResponse.redirect("blblblb"); // TODO: 임시
         } else if (httpMethod.equals(httpMethod.POST)) {
             doPost(httpRequest.getRequestBody());
-            return;
+            return HttpResponse.redirect("blblblb"); // TODO: 임시
         } else {
             throw new IllegalArgumentException();
         }
@@ -39,10 +41,9 @@ public class SignUpController {
                 .name(name)
                 .email(email)
                 .build();
-
     }
 
-    public void doPost(RequestBody requestBody) {
+    private void doPost(RequestBody requestBody) {
         Map<String, String> body = requestBody.getContents();
         String userId = body.get("userId");
         String password = body.get("password");

@@ -1,9 +1,16 @@
 package webserver;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import controller.SignUpController;
 import org.slf4j.Logger;
@@ -14,7 +21,10 @@ import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.request.RequestHeader;
 import webserver.http.request.RequestLine;
-
+import webserver.http.response.HttpResponse;
+import webserver.http.response.ResponseBody;
+import webserver.http.response.ResponseHeader;
+import webserver.http.response.ResponseLine;
 
 public class RequestHandler implements Runnable {
 
@@ -33,20 +43,17 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             final HttpRequest httpRequest = convertStreamToHttpRequest(in);
-            final String path = httpRequest.getRequestLine().getUrl().getPath();
 
-            byte[] body = {};
-            if (path.equals(SignUpController.path)) {
-                SignUpController signUpController = new SignUpController();
-                signUpController.run(httpRequest);
+            HttpResponse httpResponse = route(httpRequest);
 
-                // TODO: html 경로를 controller 에서 관리하도록 변경
-                body = FileIoUtils.loadFileFromClasspath("/user/form.html");
-            }
-
+//                body = FileIoUtils.loadFileFromClasspath("/user/form.html");
             final DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            final Optional<ResponseBody> responseBody = httpResponse.getResponseBody();
+
+            final byte[] body = FileIoUtils.loadFileFromClasspath(responseBody.get().getView().getFilePath());
+            writeResponseLine(dos, httpResponse.getResponseLine());
+            writeResponseHeader(dos, body.length, httpResponse.getResponseHeader());
+            writeResponseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
@@ -79,18 +86,39 @@ public class RequestHandler implements Runnable {
         return new HttpRequest(requestLine, requestHeader, requestBody);
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private HttpResponse route(final HttpRequest httpRequest){
+        final String path = httpRequest.getRequestLine().getUrl().getPath();
+
+        if (path.equals(SignUpController.path)) {
+            SignUpController signUpController = new SignUpController();
+            return signUpController.run(httpRequest);
+        }
+
+        return null; // TODO: server error 로 변경하기
+    }
+
+    private void writeResponseLine(final DataOutputStream dos, final ResponseLine responseLine) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
+            dos.writeBytes(responseLine.toPrint());
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
+    private void writeResponseHeader(final DataOutputStream dos, final int lengthOfBodyContent, ResponseHeader responseHeader){
+        responseHeader.setContentLength(Integer.toString(lengthOfBodyContent));
+        List<String> headersToPrint = responseHeader.toPrint();
+
+        headersToPrint.forEach(header -> {
+            try {
+                dos.writeBytes(header);
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
+        });
+    }
+
+    private void writeResponseBody(DataOutputStream dos, byte[] body) {
         try {
             dos.write(body, 0, body.length);
             dos.flush();

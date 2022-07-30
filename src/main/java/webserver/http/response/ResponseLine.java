@@ -11,6 +11,8 @@ public class ResponseLine {
         this.statusCode = statusCode;
     }
 
+    public static ResponseLine of200() { return new ResponseLine(StatusCode.OK); }
+
     public static ResponseLine of302() {
         return new ResponseLine(StatusCode.FOUND);
     }
@@ -21,5 +23,10 @@ public class ResponseLine {
 
     public StatusCode getStatusCode() {
         return statusCode;
+    }
+
+    public String toPrint(){
+        return protocolVersion.getProtocol().toString() + "/" + protocolVersion.getVersion().getName() + " "
+                + statusCode.getStatus() + " " + statusCode.name() + " \r\n";
     }
 }

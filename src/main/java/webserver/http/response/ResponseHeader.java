@@ -3,13 +3,16 @@ package webserver.http.response;
 import com.google.common.collect.Maps;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ResponseHeader {
 
     private static final String CONNECTION = "Connection";
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String LOCATION = "location";
+    private static final String CONTENT_LENGTH = "Content-Length";
     private static final Map<String, String> BASE_HEADERS = Map.of(
             CONNECTION, "Keep-Alive",
             CONTENT_TYPE, "text/html; charset=utf-8"
@@ -35,5 +38,15 @@ public class ResponseHeader {
 
     public String getLocation(){
         return headers.get(LOCATION);
+    }
+
+    public void setContentLength(String value) {
+        this.headers.put(CONTENT_LENGTH, value);
+    }
+
+    public List<String> toPrint() {
+        return headers.keySet().stream()
+                .map(key -> key + ": " + headers.get(key) + "\r\n")
+                .collect(Collectors.toList());
     }
 }
