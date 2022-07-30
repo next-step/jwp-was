@@ -17,7 +17,7 @@ public class HttpRequestHeader {
         return httpHeader;
     }
 
-    public String getFilePath() {
+    public String getPath() {
         return requestLine.getPath();
     }
 }

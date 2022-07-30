@@ -25,6 +25,7 @@ public class HttpRequestHeaderParserTest {
             () -> assertThat(result.getClass()).isEqualTo(HttpRequestHeader.class),
             () -> assertThat(result.getHttpHeader().getValueByKey("Host")).isEqualTo("localhost:8080"),
             () -> assertThat(result.getRequestLine().getHttpMethod()).isEqualTo(GET),
+            () -> assertThat(result.getPath()).isEqualTo("/jason/test/"),
             () -> assertThat(result.getRequestLine().getWebProtocol().getType()).isEqualTo("HTTP")
         );
     }
