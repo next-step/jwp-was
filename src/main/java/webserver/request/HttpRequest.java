@@ -1,6 +1,9 @@
 package webserver.request;
 
 import java.util.Objects;
+import webserver.session.HttpSession;
+import webserver.session.HttpSessionContext;
+import webserver.session.HttpSessionIdHolder;
 
 public class HttpRequest {
 
@@ -22,8 +25,8 @@ public class HttpRequest {
         return requestBody;
     }
 
-    public boolean hasCookie(final String value) {
-        return requestHeaders.hasCookie(value);
+    public HttpSession getSession() {
+        return HttpSessionContext.get(HttpSessionIdHolder.getSessionId());
     }
 
     @Override

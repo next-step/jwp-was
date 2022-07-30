@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.session.HttpSessionContext;
 
 class HttpRequestParserTest {
 
@@ -60,6 +61,25 @@ class HttpRequestParserTest {
 
         // then
         assertThat(actual).isEqualTo(new HttpRequest(requestLine, requestHeaders, requestBody));
+    }
+
+    @DisplayName("HTTP 요청 정보를 읽어 세션을 생성한다")
+    @Test
+    void create_session() throws IOException {
+        // given
+        String httpRequestMessage = "GET /index.html?userId=admin&email=admin@email.com HTTP/1.1\r\n"
+            + "Host: localhost:8080\r\n"
+            + "Connection: keep-alive\r\n"
+            + "Cookie: JWP_SESSION_ID=12345;\r\n"
+            + "\r\n";
+
+        BufferedReader bufferedReader = getBufferedReader(httpRequestMessage);
+        HttpRequestParser.parse(bufferedReader);
+
+        // when
+        final boolean has = HttpSessionContext.has("12345");
+
+        assertThat(has).isTrue();
     }
 
     private BufferedReader getBufferedReader(final String httpRequestMessage) {

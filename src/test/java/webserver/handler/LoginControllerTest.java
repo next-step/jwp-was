@@ -19,6 +19,8 @@ import webserver.request.HttpRequestParser;
 import webserver.response.HttpResponse;
 import webserver.response.ResponseHeaders;
 import webserver.response.StatusLine;
+import webserver.session.HttpSession;
+import webserver.session.HttpSessionContext;
 
 class LoginControllerTest {
 
@@ -34,10 +36,15 @@ class LoginControllerTest {
     @Test
     void after_login_success_return_redirect_response() throws IOException {
         // given
+        final HttpSession session = new HttpSession(() -> "12345");
+        session.setAttribute("logined", true);
+        HttpSessionContext.add(session);
+
         String httpRequestMessage = "POST /user/login HTTP/1.1\r\n"
             + "Host: localhost:8080\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 26\r\n"
+            + "Cookie: JWP_SESSION_ID=12345;\r\n"
             + "\r\n"
             + "userId=admin&password=pass\n\n";
 
@@ -48,7 +55,7 @@ class LoginControllerTest {
         final HttpResponse actual = controller.handle(httpRequest);
 
         //then
-        final HttpResponse expected = loginResponse("/index.html", "true");
+        final HttpResponse expected = loginResponse("/index.html");
 
         assertThat(actual).isEqualTo(expected);
 
@@ -58,10 +65,15 @@ class LoginControllerTest {
     @Test
     void after_login_failed_return_redirect_response() throws IOException {
         // given
+        final HttpSession session = new HttpSession(() -> "12345");
+        session.setAttribute("logined", false);
+        HttpSessionContext.add(session);
+
         String httpRequestMessage = "POST /user/login HTTP/1.1\r\n"
             + "Host: localhost:8080\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 26\r\n"
+            + "Cookie: JWP_SESSION_ID=12345;\r\n"
             + "\r\n"
             + "userId=admin&password=wrong\n\n";
 
@@ -72,16 +84,15 @@ class LoginControllerTest {
         final HttpResponse actual = controller.handle(httpRequest);
 
         //then
-        final HttpResponse expected = loginResponse("/user/login_failed.html", "false");
+        final HttpResponse expected = loginResponse("/user/login_failed.html");
 
         assertThat(actual).isEqualTo(expected);
 
     }
 
-    private static HttpResponse loginResponse(final String location, final String logined) {
+    private static HttpResponse loginResponse(final String location) {
         final ResponseHeaders headers = new ResponseHeaders();
         headers.add("Location", location);
-        headers.add("Set-Cookie", "logined=" + logined + "; Path=/");
         return new HttpResponse(new StatusLine(HTTP_1_1, FOUND), headers, EMPTY_RESPONSE_BODY);
     }
 

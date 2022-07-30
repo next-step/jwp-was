@@ -14,10 +14,12 @@ import webserver.handler.RequestMapping;
 import webserver.request.HttpRequest;
 import webserver.request.HttpRequestParser;
 import webserver.response.HttpResponse;
+import webserver.session.HttpSessionIdHolder;
 
 public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final String SESSION_COOKIE_NAME = "JWP_SESSION_ID";
 
     private final Socket connection;
 
@@ -35,7 +37,10 @@ public class RequestHandler implements Runnable {
 
             final HttpRequest httpRequest = HttpRequestParser.parse(bufferedReader);
             final Controller controller = RequestMapping.map(httpRequest.getRequestLine());
-            final HttpResponse httpResponse = controller.handle(httpRequest);
+            final HttpResponse httpResponse = controller.handle(httpRequest)
+                .addCookie(SESSION_COOKIE_NAME, HttpSessionIdHolder.getSessionId());
+
+            HttpSessionIdHolder.invalidate();
 
             httpResponse.write(dos);
 
