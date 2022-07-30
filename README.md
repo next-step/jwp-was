@@ -110,3 +110,6 @@ Set-Cookie: logined=true; Path=/
 - [X] 지금까지 구현한 소스 코드는 stylesheet 파일을 지원하지 못하고 있다. Stylesheet 파일을 지원하도록 구현하도록 한다.
 ### 실습 마무리
 - [X] Content-Type 처리
+### 피드백 구현 사항
+- [ ] 변수명 대문자 시작X, 축약어 사용X
+- [ ] 
