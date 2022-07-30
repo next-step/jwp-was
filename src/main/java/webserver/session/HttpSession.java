@@ -15,7 +15,7 @@ public class HttpSession {
         return id.getId();
     }
 
-    public void setAttribute(final String name, final String value) {
+    public void setAttribute(final String name, final Object value) {
         attributes.setAttribute(name, value);
     }
 
