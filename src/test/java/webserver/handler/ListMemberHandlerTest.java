@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.RequestMappingInfo;
 import webserver.http.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,17 +18,17 @@ class ListMemberHandlerTest {
         listMemberHandler = new ListMemberHandler();
     }
 
-    @DisplayName("[GET] /user/list 요청을 처리할 수 있다.")
+    @DisplayName("request path 가 /user/list 이고 request method 가 get 인 요청과 매핑된다.")
     @Test
     void supportTest() {
         // given
-        Request request = new Request(RequestLine.parseOf("GET /user/list HTTP/1.1"));
+        RequestMappingInfo expected = new RequestMappingInfo("/user/list", HttpMethod.GET);
 
         // when
-        boolean support = listMemberHandler.isSupport(request);
+        RequestMappingInfo actual = listMemberHandler.getMappingInfo();
 
         // then
-        Assertions.assertThat(support).isTrue();
+        Assertions.assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("로그인 하지 않은 사용자가 접근하면 login.html 로 리다이렉트 시켜야 한다.")

@@ -3,6 +3,7 @@ package webserver.handler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.RequestMappingInfo;
 import webserver.http.*;
 
 import java.util.ArrayList;
@@ -20,20 +21,17 @@ class CreateMemberHandlerTest {
     }
 
 
-    @DisplayName("request path 가 /user/create 이고 request method 가 post 이면 해당 Handler 를 사용할 수 있다.")
+    @DisplayName("request path 가 /user/create 이고 request method 가 post 인 요청과 매핑된다.")
     @Test
     void supportTest() {
         // given
-        Request request = new Request(
-                RequestLine.parseOf("POST /user/create HTTP/1.1"),
-                Headers.parseOf(new ArrayList<>()),
-                "");
+        RequestMappingInfo expected = new RequestMappingInfo("/user/create", HttpMethod.POST);
 
         // when
-        boolean support = createMemberHandler.isSupport(request);
+        RequestMappingInfo actual = createMemberHandler.getMappingInfo();
 
         // then
-        assertThat(support).isTrue();
+        assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("회원가입 후 index.html 로 리다이렉트 될 수 있도록 응답해야 한다.")

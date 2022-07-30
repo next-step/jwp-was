@@ -5,7 +5,7 @@ import webserver.http.Response;
 
 public interface Handler {
 
-    boolean isSupport(Request request);
+    RequestMappingInfo getMappingInfo();
 
     void handle(Request request, Response response);
 }

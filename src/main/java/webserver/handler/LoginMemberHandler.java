@@ -3,6 +3,7 @@ package webserver.handler;
 import db.DataBase;
 import model.User;
 import webserver.Handler;
+import webserver.RequestMappingInfo;
 import webserver.http.*;
 
 import java.util.Map;
@@ -12,10 +13,10 @@ public class LoginMemberHandler implements Handler {
     private final UrlEncodedBodyParser urlEncodedBodyParser = new UrlEncodedBodyParser();
 
     @Override
-    public boolean isSupport(Request request) {
-        return request.getPath().equals("/user/login") && request.getMethod().isPost();
+    public RequestMappingInfo getMappingInfo() {
+        return new RequestMappingInfo("/user/login", HttpMethod.POST);
     }
-    
+
     @Override
     public void handle(Request request, Response response) {
         Map<String, String> parseBody = urlEncodedBodyParser.parseBody(request.getRequestBody());
@@ -25,6 +26,7 @@ public class LoginMemberHandler implements Handler {
 
         if (userById != null && userById.matchPassword(password)) {
             handleResponse(new Cookie("logined", "true", "/"), "/index.html", response);
+            return;
         }
 
         handleResponse(new Cookie("logined", "false", "/"), "/user/login_failed.html", response);

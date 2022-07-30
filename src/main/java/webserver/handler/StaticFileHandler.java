@@ -1,8 +1,9 @@
 package webserver.handler;
 
 import utils.FileIoUtils;
-import webserver.LoadFileException;
 import webserver.Handler;
+import webserver.LoadFileException;
+import webserver.RequestMappingInfo;
 import webserver.config.StaticLocationConfig;
 import webserver.http.*;
 
@@ -23,15 +24,10 @@ public class StaticFileHandler implements Handler {
     private final StaticLocationConfig staticLocationConfig = new StaticLocationConfig();
 
     @Override
-    public boolean isSupport(Request request) {
-        String path = request.getPath();
-
-        String extension = getExtension(path);
-
-        return !"".equals(extension);
+    public RequestMappingInfo getMappingInfo() {
+        return new RequestMappingInfo("/**", HttpMethod.GET);
     }
 
-    @Override
     public void handle(Request request, Response response) {
         String path = request.getPath();
 
@@ -49,5 +45,4 @@ public class StaticFileHandler implements Handler {
             throw new LoadFileException("[" + path + "] 파일 로드 실패", e);
         }
     }
-
 }

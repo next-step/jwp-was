@@ -6,6 +6,8 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import webserver.Handler;
+import webserver.RequestMappingInfo;
+import webserver.http.HttpMethod;
 import webserver.http.Request;
 import webserver.http.Response;
 
@@ -14,9 +16,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 public class ListMemberHandler implements Handler {
+
     @Override
-    public boolean isSupport(Request request) {
-        return request.getPath().equals("/user/list") && request.getMethod().isGet();
+    public RequestMappingInfo getMappingInfo() {
+        return new RequestMappingInfo("/user/list", HttpMethod.GET);
     }
 
     @Override

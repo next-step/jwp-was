@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import webserver.RequestMappingInfo;
 import webserver.http.*;
 
 class StaticFileHandlerTest {
@@ -17,17 +18,13 @@ class StaticFileHandlerTest {
         staticFileHandler = new StaticFileHandler();
     }
 
-    @DisplayName("request line 의 path 가 확장자가 있으면 Resource 요청이다.")
+    @DisplayName("Request Path 패턴이 /**, Method 가 GET 인 요청과 매핑된다.")
     @Test
     void supportTest() {
-        // given
-        Request request = createRequest("/index.html");
-
-        // when
-        boolean support = staticFileHandler.isSupport(request);
+        RequestMappingInfo mappingInfo = staticFileHandler.getMappingInfo();
 
         // then
-        Assertions.assertThat(support).isTrue();
+        Assertions.assertThat(mappingInfo).isEqualTo(new RequestMappingInfo("/**", HttpMethod.GET));
     }
 
     @DisplayName("파일 확장자에 따라서 Response 의 Content-Type 헤더가 다르다")

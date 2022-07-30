@@ -3,6 +3,7 @@ package webserver.handler;
 import db.DataBase;
 import model.User;
 import webserver.Handler;
+import webserver.RequestMappingInfo;
 import webserver.http.*;
 
 import java.util.Map;
@@ -10,8 +11,8 @@ import java.util.Map;
 public class CreateMemberHandler implements Handler {
 
     @Override
-    public boolean isSupport(Request request) {
-        return request.getPath().equals("/user/create") && request.getMethod().isPost();
+    public RequestMappingInfo getMappingInfo() {
+        return new RequestMappingInfo("/user/create", HttpMethod.POST);
     }
 
     @Override

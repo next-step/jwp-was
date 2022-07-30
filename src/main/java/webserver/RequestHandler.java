@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.IOUtils;
+import utils.IOUtils;;
 import webserver.handler.CreateMemberHandler;
 import webserver.handler.ListMemberHandler;
 import webserver.handler.LoginMemberHandler;
@@ -22,11 +22,11 @@ public class RequestHandler implements Runnable {
 
     private final Socket connection;
 
-    private final List<Handler> handlers = List.of(
-            new StaticFileHandler(),
+    private final HandlerMapping handlerMapping = new HandlerMapping(
             new CreateMemberHandler(),
+            new ListMemberHandler(),
             new LoginMemberHandler(),
-            new ListMemberHandler()
+            new StaticFileHandler()
     );
 
     public RequestHandler(Socket connectionSocket) {
@@ -52,11 +52,9 @@ public class RequestHandler implements Runnable {
     }
 
     private void handleRequest(Request request, Response response) {
-        handlers.stream()
-                .filter(handler -> handler.isSupport(request))
-                .findAny()
-                .orElseThrow(() -> new NotMappingHandlerException("요청을 처리할 핸들러를 찾지 못했습니다." + request))
-                .handle(request, response);
+        Handler handler = handlerMapping.getHandler(request);
+
+        handler.handle(request, response);
     }
 
     private void writeResponse(OutputStream out, Response response) throws IOException {

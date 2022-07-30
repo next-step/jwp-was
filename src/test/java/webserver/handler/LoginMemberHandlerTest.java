@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.RequestMappingInfo;
 import webserver.http.*;
 
 import java.util.ArrayList;
@@ -19,17 +20,17 @@ class LoginMemberHandlerTest {
         loginMemberHandler = new LoginMemberHandler();
     }
 
-    @DisplayName("[POST] 메서드로 /user/login 로그인 요청을 처리할 수 있다.")
+    @DisplayName("request path 가 /user/login 이고 request method 가 post 인 요청과 매핑된다.")
     @Test
     void supportTest() {
         // given
-        Request request = createLoginRequest("userId=test&password=test");
+        RequestMappingInfo expected = new RequestMappingInfo("/user/login", HttpMethod.POST);
 
         // when
-        boolean support = loginMemberHandler.isSupport(request);
+        RequestMappingInfo actual = loginMemberHandler.getMappingInfo();
 
         // then
-        Assertions.assertThat(support).isTrue();
+        Assertions.assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("로그인 성공 시 로그인 성공 쿠키가 생성 되고 index.html 로 이동해야 한다.")
