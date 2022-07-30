@@ -44,6 +44,10 @@ public class Headers {
         return keyValues.containsKey(name);
     }
 
+    public void add(String name, String value) {
+        keyValues.put(name, value);
+    }
+
     @Override
     public String toString() {
         return "Headers{" +

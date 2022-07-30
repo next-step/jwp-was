@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import webserver.http.header.Headers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -94,6 +93,39 @@ class HeadersTest {
                 arguments(new Headers(Map.of("Content-Type", "application/json")), "Content-Type", true),
                 arguments(new Headers(Map.of("Accept", "application/json")), "Content-Type", false),
                 arguments(new Headers(Map.of()), "Content-Type", false)
+        );
+    }
+
+    @DisplayName("새로운 헤더를 추가한다. 만약 동일한 name의 헤더를 추가하는 경우 기존의 값을 덮어쓴다.")
+    @ParameterizedTest
+    @MethodSource("provideForAdd")
+    void add(String name, String value, Headers expected) {
+        Headers headers = new Headers(
+                new HashMap<>(
+                        Map.of("Content-Type", "application/json")
+                )
+        );
+        headers.add(name, value);
+
+        assertThat(headers).usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
+    public static Stream<Arguments> provideForAdd() {
+        return Stream.of(
+                arguments("Content-Length", "26",
+                        new Headers(
+                                Map.of(
+                                        "Content-Type", "application/json",
+                                        "Content-Length", "26"
+                                )
+                        )
+                ),
+                arguments("Content-Type", "text/html",
+                        new Headers(
+                                Map.of("Content-Type", "text/html")
+                        )
+                )
         );
     }
 }
