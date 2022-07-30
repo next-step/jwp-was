@@ -6,6 +6,7 @@ import model.User;
 import webserver.request.HttpRequest;
 import webserver.request.UserBinder;
 import webserver.response.HttpResponse;
+import webserver.session.HttpSession;
 
 public class LoginController implements Controller {
 
@@ -16,8 +17,10 @@ public class LoginController implements Controller {
 
         final boolean loginSuccess = login(user);
 
-        return HttpResponse.redirect(getRedirectLocation(loginSuccess))
-            .addCookie("logined", String.valueOf(loginSuccess));
+        final HttpSession httpSession = request.getSession();
+        httpSession.setAttribute("logined", loginSuccess);
+
+        return HttpResponse.redirect(getRedirectLocation(loginSuccess));
     }
 
     private boolean login(final User user) {
