@@ -6,6 +6,7 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -82,11 +83,33 @@ class RequestHeadersTest {
     }
 
     @DisplayName("존재하지 않는 쿠키를 조회할 수 없다")
+    @ParameterizedTest
+    @CsvSource({
+        "'', cookie",
+        "cookie=value;, value"
+    })
+    void has_no_cookie(String cookie, String cookieName) {
+        final RequestHeaders requestHeaders = new RequestHeaders();
+        requestHeaders.add("Cookie: " + cookie);
+
+        assertThat(requestHeaders.hasCookie(cookieName)).isFalse();
+    }
+
+    @DisplayName("존재하지 않는 쿠키를 조회하면 null을 반환한다")
     @Test
-    void has_no_cookie() {
+    void get_cookie_without_value() {
         final RequestHeaders requestHeaders = new RequestHeaders();
 
-        assertThat(requestHeaders.hasCookie("cookie=value")).isFalse();
+        assertThat(requestHeaders.getCookie("value")).isNull();
+    }
+
+    @DisplayName("쿠키를 조회할 수 있다")
+    @Test
+    void get_cookie() {
+        final RequestHeaders requestHeaders = new RequestHeaders();
+        requestHeaders.add("Cookie: cookie=value");
+
+        assertThat(requestHeaders.getCookie("cookie")).isEqualTo("value");
     }
 
 }
