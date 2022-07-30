@@ -49,6 +49,7 @@ public class RequestHandler implements Runnable {
 
             if (url.startsWith("/user/create")) {
                 String body = IOUtils.readData(br, contentLength);
+                System.out.println(body);
                 QueryStringParser QSParser = new QueryStringParser(body);
                 Map<String, String> params = QSParser.getQueryParameters();
                 User user = new User(params.get("userId"), params.get("password"),params.get("name"),params.get("email"));
@@ -72,7 +73,7 @@ public class RequestHandler implements Runnable {
                 }
             } else if ("/user/list".equals(url)) {
                 if (!logined) {
-                    HttpResponseWriter.responseResource(out, "./templates/user/login.html");
+                    HttpResponseWriter.responseResource(out, "/user/login.html");
                 }
                 Collection<User> users = DataBase.findAll();
                 String userList = HandleBarTemplateLoader.load("user/list", users);

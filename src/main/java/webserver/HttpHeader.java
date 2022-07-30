@@ -12,7 +12,7 @@ public class HttpHeader {
         if (headerKey.isEmpty()) {
             return;
         }
-        String headerValue = line.split(":")[1];
+        String headerValue = line.split(":")[1].trim();
 
         if (Objects.equals(headerKey, "Cookie")) {
             String logined = HttpHeaderParser.isLogin(headerValue);
