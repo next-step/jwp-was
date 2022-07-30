@@ -45,8 +45,10 @@ class CreateMemberHandlerTest {
                 Headers.parseOf(new ArrayList<>()),
                 "userId=javajigi&password=password&name=재성&email=javajigi@slipp.net");
 
+        Response response = new Response();
+
         // when
-        Response response = createMemberHandler.handle(request);
+        createMemberHandler.handle(request, response);
 
         // then
         assertThat(response.getStatusLine()).isEqualTo(new StatusLine(ProtocolVersion.HTTP11, Status.FOUND));

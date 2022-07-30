@@ -7,5 +7,5 @@ public interface Handler {
 
     boolean isSupport(Request request);
 
-    Response handle(Request request);
+    void handle(Request request, Response response);
 }

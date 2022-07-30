@@ -15,7 +15,7 @@ public class CreateMemberHandler implements Handler {
     }
 
     @Override
-    public Response handle(Request request) {
+    public void handle(Request request, Response response) {
         UrlEncodedBodyParser urlEncodedBodyParser = new UrlEncodedBodyParser();
 
         Map<String, String> body = urlEncodedBodyParser.parseBody(request.getRequestBody());
@@ -26,10 +26,7 @@ public class CreateMemberHandler implements Handler {
         String email = body.get("email");
 
         DataBase.addUser(new User(userId, password, name, email));
-
-        Response response = new Response();
         response.sendRedirect("/index.html");
-        return response;
     }
 
 }

@@ -40,12 +40,13 @@ class StaticFileHandlerTest {
     void contentTypeTest(String filePath, String contentType) {
         // given
         Request request = createRequest(filePath);
+        Response response = new Response();
 
         // when
-        Response handle = staticFileHandler.handle(request);
+        staticFileHandler.handle(request, response);
 
         // then
-        Headers headers = handle.getHeaders();
+        Headers headers = response.getHeaders();
         String contentTypeHeader = headers.getValue("Content-Type");
         Assertions.assertThat(contentTypeHeader).isEqualTo(contentType);
     }

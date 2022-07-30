@@ -35,9 +35,10 @@ class ListMemberHandlerTest {
     void redirectLoginPageTest() {
         // given
         Request request = new Request(RequestLine.parseOf("GET /user/list HTTP/1.1"));
+        Response response = new Response();
 
         // when
-        Response response = listMemberHandler.handle(request);
+        listMemberHandler.handle(request, response);
 
         // then
         Assertions.assertThat(response.getHeaders().getValue("Location")).isEqualTo("/user/login.html");
@@ -50,9 +51,10 @@ class ListMemberHandlerTest {
         // given
         Header cookieHeader = new Header("cookie", "logined=true");
         Request request = new Request(RequestLine.parseOf("GET /user/list HTTP/1.1"), Headers.of(cookieHeader));
+        Response response = new Response();
 
         // when
-        Response response = listMemberHandler.handle(request);
+        listMemberHandler.handle(request, response);
 
         // then
         Assertions.assertThat(response.hasBody()).isEqualTo(true);

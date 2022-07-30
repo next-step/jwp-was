@@ -20,19 +20,18 @@ public class ListMemberHandler implements Handler {
     }
 
     @Override
-    public Response handle(Request request) {
+    public void handle(Request request, Response response) {
         String logined = request.getCookie("logined");
 
         if (logined.equals("true")) {
-            return createTemplateResponse();
+            handlerTemplateResponse(response);
+            return;
         }
 
-        Response response = new Response();
         response.sendRedirect("/user/login.html");
-        return response;
     }
 
-    private Response createTemplateResponse() {
+    private void handlerTemplateResponse(Response response) {
         try {
             TemplateLoader loader = new ClassPathTemplateLoader();
             loader.setPrefix("/templates");
@@ -42,7 +41,7 @@ public class ListMemberHandler implements Handler {
             Template template = handlebars.compile("user/list");
 
             byte[] templateBody = template.apply(Collections.singletonMap("users", DataBase.findAll())).getBytes(StandardCharsets.UTF_8);
-            return new Response(templateBody);
+            response.setBody(templateBody);
         } catch (IOException e) {
             throw new RuntimeException();
         }

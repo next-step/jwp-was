@@ -38,9 +38,10 @@ class LoginMemberHandlerTest {
         // given
         DataBase.addUser(new User("testUser", "testPw", "test", "test@test.com"));
         Request request = createLoginRequest("userId=testUser&password=testPw");
+        Response response = new Response();
 
         // when
-        Response response = loginMemberHandler.handle(request);
+        loginMemberHandler.handle(request, response);
 
         // then
         Assertions.assertThat(response.getStatusLine()).isEqualTo(new StatusLine(ProtocolVersion.HTTP11, Status.FOUND));
@@ -53,9 +54,10 @@ class LoginMemberHandlerTest {
     void loginFailTest() {
         // given
         Request request = createLoginRequest("userId=testUser&password=testPw");
+        Response response = new Response();
 
         // when
-        Response response = loginMemberHandler.handle(request);
+        loginMemberHandler.handle(request, response);
 
         // then
         Assertions.assertThat(response.getStatusLine()).isEqualTo(new StatusLine(ProtocolVersion.HTTP11, Status.FOUND));

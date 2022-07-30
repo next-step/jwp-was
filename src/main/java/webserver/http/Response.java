@@ -11,7 +11,7 @@ public class Response {
 
     private final Headers headers;
 
-    private final byte[] body;
+    private byte[] body;
 
     public Response() {
         this(new StatusLine(Status.OK), new Headers(), new byte[]{});
@@ -42,6 +42,11 @@ public class Response {
         messages.add(statusLine.getMessage());
         messages.addAll(headers.getMessages());
         return messages;
+    }
+
+    public void setBody(byte[] body) {
+        this.body = body;
+        setContentLength(String.valueOf(body.length));
     }
 
     public void addCookie(Cookie cookie) {

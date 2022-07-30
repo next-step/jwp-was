@@ -32,14 +32,13 @@ public class StaticFileHandler implements Handler {
     }
 
     @Override
-    public Response handle(Request request) {
+    public void handle(Request request, Response response) {
         String path = request.getPath();
 
         byte[] bytes = loadFile(path);
 
-        Response response = new Response(bytes);
+        response.setBody(bytes);
         response.setContentType(CONTENT_TYPE_BY_EXTENSION.get(getExtension(path)));
-        return response;
     }
 
     private byte[] loadFile(String path) {

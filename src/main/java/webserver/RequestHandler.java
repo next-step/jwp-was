@@ -39,11 +39,10 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             Request request = readRequest(new BufferedReader(new InputStreamReader(in)));
-
             logger.debug("request:{} ", request);
 
-            Response response = handleRequest(request);
-
+            Response response = new Response();
+            handleRequest(request, response);
             logger.debug("response:{} ", response);
 
             writeResponse(out, response);
@@ -52,12 +51,12 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private Response handleRequest(Request request) {
-        return handlers.stream()
+    private void handleRequest(Request request, Response response) {
+        handlers.stream()
                 .filter(handler -> handler.isSupport(request))
                 .findAny()
                 .orElseThrow(() -> new NotMappingHandlerException("요청을 처리할 핸들러를 찾지 못했습니다." + request))
-                .handle(request);
+                .handle(request, response);
     }
 
     private void writeResponse(OutputStream out, Response response) throws IOException {
