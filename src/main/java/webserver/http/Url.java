@@ -29,4 +29,12 @@ public class Url {
     public QueryParameter getQueryParameter() {
         return queryParameter;
     }
+
+    @Override
+    public String toString() {
+        return "Url{" +
+                "path='" + path + '\'' +
+                ", queryParameter=" + queryParameter +
+                '}';
+    }
 }

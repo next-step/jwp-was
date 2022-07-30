@@ -4,6 +4,7 @@ import exception.InvalidHeaderException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 
@@ -24,7 +25,7 @@ public class RequestHeader {
 
     public void add (final String header){
         if (header.isEmpty() || header.isBlank() || header == null) {
-            throw new InvalidHeaderException();
+            return;
         }
 
         String[] splitHeader = header.split(REQUEST_HEADER_DELIMITER);
@@ -55,8 +56,11 @@ public class RequestHeader {
         return headers.get(CONNECTION);
     }
 
-    public int getContentLength() {
-        return parseInt(headers.get(CONTENT_LENGTH));
+    public Optional<Integer> getContentLength() {
+        if (headers.containsKey(CONTENT_LENGTH)) {
+            return Optional.of(parseInt(headers.get(CONTENT_LENGTH)));
+        }
+        return Optional.empty();
     }
 
     public String getContentType() {

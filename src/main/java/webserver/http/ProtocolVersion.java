@@ -29,4 +29,12 @@ public class ProtocolVersion {
     public HttpVersion getVersion() {
         return version;
     }
+
+    @Override
+    public String toString() {
+        return "ProtocolVersion{" +
+                "protocol=" + protocol +
+                ", version=" + version +
+                '}';
+    }
 }

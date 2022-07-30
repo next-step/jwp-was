@@ -14,13 +14,16 @@ public class SignUpController {
 
     public void run(HttpRequest httpRequest) {
         final HttpMethod httpMethod = httpRequest.getRequestLine().getMethod();
+
         if (httpMethod.equals(HttpMethod.GET)) {
             doGet(httpRequest.getRequestLine().getUrl().getQueryParameter());
-        }
-        if (httpMethod.equals(httpMethod.POST)) {
+            return;
+        } else if (httpMethod.equals(httpMethod.POST)) {
             doPost(httpRequest.getRequestBody());
+            return;
+        } else {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
     }
 
     private void doGet(QueryParameter queryParameter) {
@@ -36,6 +39,7 @@ public class SignUpController {
                 .name(name)
                 .email(email)
                 .build();
+
     }
 
     public void doPost(RequestBody requestBody) {

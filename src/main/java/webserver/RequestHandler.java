@@ -3,18 +3,15 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.util.Map;
+import java.util.Collections;
 
 import controller.SignUpController;
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import utils.IOUtils;
 import webserver.http.*;
 
-import static java.lang.Integer.parseInt;
 
 public class RequestHandler implements Runnable {
 
@@ -35,12 +32,15 @@ public class RequestHandler implements Runnable {
             final HttpRequest httpRequest = convertStreamToHttpRequest(in);
             final String path = httpRequest.getRequestLine().getUrl().getPath();
 
+            byte[] body = {};
             if (path.equals(SignUpController.path)) {
                 SignUpController signUpController = new SignUpController();
                 signUpController.run(httpRequest);
+
+                // TODO: html 경로를 controller 에서 관리하도록 변경
+                body = FileIoUtils.loadFileFromClasspath("/user/form.html");
             }
 
-            final byte[] body = FileIoUtils.loadFileFromClasspath(httpRequest.getRequestLine().getUrl().getPath());
 
             final DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length);
@@ -64,9 +64,14 @@ public class RequestHandler implements Runnable {
             requestHeader.add(line);
         }
 
-        final RequestBody requestBody = RequestBody.parseFrom(
-                IOUtils.readData(br, requestHeader.getContentLength())
-        );
+        RequestBody requestBody;
+        if (requestHeader.getContentLength().isEmpty()) {
+            requestBody = new RequestBody(Collections.EMPTY_MAP);
+        } else {
+            requestBody = RequestBody.parseFrom(
+                    IOUtils.readData(br, requestHeader.getContentLength().get())
+            );
+        }
         logger.info(requestBody.toString());
 
         return new HttpRequest(requestLine, requestHeader, requestBody);

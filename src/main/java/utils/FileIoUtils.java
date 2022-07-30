@@ -11,6 +11,7 @@ public class FileIoUtils {
     private static final String FILE_DIR = "./templates";
 
     public static byte[] loadFileFromClasspath(String filePath) throws IOException, URISyntaxException {
+        System.out.println(filePath);
         final Path path = Paths.get(FileIoUtils.class.getClassLoader().getResource(FILE_DIR + filePath).toURI());
         return Files.readAllBytes(path);
     }
