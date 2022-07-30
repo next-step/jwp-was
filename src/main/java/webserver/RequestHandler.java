@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.Map;
 
+import controller.SignUpController;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,18 +33,11 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             final HttpRequest httpRequest = convertStreamToHttpRequest(in);
-            final HttpMethod httpMethod = httpRequest.getRequestLine().getMethod();
             final String path = httpRequest.getRequestLine().getUrl().getPath();
 
-            if (httpMethod.equals(HttpMethod.GET) && path.equals("/user/create")) {
-                Map<String, String> parameters = httpRequest.getRequestLine().getUrl().getQueryParameter().getParameters();
-                doGetSingUp(parameters);
-                return;
-            }
-
-            if (httpMethod.equals(HttpMethod.POST) && path.equals("/user/create")) {
-                doPostSignUp(httpRequest.getRequestBody());
-                return;
+            if (path.equals(SignUpController.path)) {
+                SignUpController signUpController = new SignUpController();
+                signUpController.run(httpRequest);
             }
 
             final byte[] body = FileIoUtils.loadFileFromClasspath(httpRequest.getRequestLine().getUrl().getPath());
@@ -54,35 +48,6 @@ public class RequestHandler implements Runnable {
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    private void doGetSingUp(Map<String, String> parameters) {
-        String userId = parameters.get("userId");
-        String password = parameters.get("password");
-        String name = parameters.get("name");
-        String email = parameters.get("email");
-
-        User user = new User.Builder()
-                .userId(userId)
-                .password(password)
-                .name(name)
-                .email(email)
-                .build();
-    }
-
-    private void doPostSignUp(RequestBody requestBody) {
-        Map<String, String> body = requestBody.getContents();
-        String userId = body.get("userId");
-        String password = body.get("password");
-        String name = body.get("name");
-        String email = body.get("email");
-
-        User user = new User.Builder()
-                .userId(userId)
-                .password(password)
-                .name(name)
-                .email(email)
-                .build();
     }
 
     private HttpRequest convertStreamToHttpRequest(InputStream is) throws IOException {
