@@ -21,6 +21,10 @@ public class Header {
         return value;
     }
 
+    boolean equalsName(String name) {
+        return this.name.equals(name);
+    }
+
     @Override
     public String toString() {
         return name + ":" + value;

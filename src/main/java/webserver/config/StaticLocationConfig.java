@@ -1,16 +1,35 @@
 package webserver.config;
 
-import java.util.Map;
+import utils.FileIoUtils;
+
+import java.net.URISyntaxException;
+import java.util.List;
 
 public class StaticLocationConfig {
 
-    private final static Map<String, String> STATIC_PATH_BY_EXT = Map.of(
-            "html", "./templates",
-            "ico", "./static/images"
-    );
+    private List<String> staticLocations = List.of("./templates", "./static");
 
-    public String getStaticLocation(String ext) {
-        return STATIC_PATH_BY_EXT.getOrDefault(ext, "./static");
+    public StaticLocationConfig() {
+    }
+
+    public StaticLocationConfig(List<String> customStaticLocations) {
+        this.staticLocations = customStaticLocations;
+    }
+
+    public String getStaticLocation(String path) {
+        return staticLocations
+                .stream()
+                .filter(staticLocation -> existsFromClassPath(staticLocation + path))
+                .findFirst()
+                .orElseThrow();
+    }
+
+    private boolean existsFromClassPath(String path) {
+        try {
+            return FileIoUtils.existsFileFromClassPath(path);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

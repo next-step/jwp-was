@@ -5,22 +5,26 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.List;
+
 
 class StaticLocationConfigTest {
 
-    @DisplayName("html 파일은 ./templates 폴더, ico 파일은 ./static/images, 나머지 파일은 ./static 폴더 하위에 있다.")
+    @DisplayName("html 파일은 ./templates 폴더, 나머지 파일은 ./static 폴더 하위에 있다.")
     @CsvSource(
             value = {
-                    "html -> ./templates",
-                    "ico -> ./static/images",
-                    "css -> ./static",
-                    "js -> ./static",
+                    "/index.html -> ./templates",
+                    "/favicon.ico -> ./templates",
+                    "/css/styles.css -> ./static",
+                    "/js/scripts.js -> ./static",
             },
             delimiterString = " -> ")
     @ParameterizedTest
     void staticLocationTest(String ext, String location) {
         // given
-        StaticLocationConfig staticLocationConfig = new StaticLocationConfig();
+        List<String> staticFileLocations = List.of("./templates", "./static");
+
+        StaticLocationConfig staticLocationConfig = new StaticLocationConfig(staticFileLocations);
 
         // when
         String staticLocation = staticLocationConfig.getStaticLocation(ext);

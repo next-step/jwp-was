@@ -30,7 +30,7 @@ public class Response {
 
     public void sendRedirect(String location) {
         this.statusLine = new StatusLine(ProtocolVersion.HTTP11, Status.FOUND);
-        this.headers.addHeader("Location", location);
+        this.headers.setHeader("Location", location);
     }
 
     public StatusLine getStatusLine() {
@@ -66,11 +66,11 @@ public class Response {
     }
 
     public void setContentType(String contentType) {
-        this.headers.addHeader("Content-Type", contentType);
+        this.headers.setHeader("Content-Type", contentType);
     }
 
     private void setContentLength(String contentLength) {
-        this.headers.addHeader("Content-Length", contentLength);
+        this.headers.setHeader("Content-Length", contentLength);
     }
 
     @Override

@@ -54,6 +54,12 @@ public class Headers {
         this.headers.add(new Header(name, value));
     }
 
+    void setHeader(String name, String value) {
+        headers.removeIf(header -> header.equalsName(name));
+
+        this.headers.add(new Header(name, value));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

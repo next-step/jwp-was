@@ -43,8 +43,8 @@ public class StaticFileHandler implements Handler {
 
     private byte[] loadFile(String path) {
         try {
-            String extension = getExtension(path);
-            return FileIoUtils.loadFileFromClasspath(staticLocationConfig.getStaticLocation(extension) + path);
+            String staticLocation = staticLocationConfig.getStaticLocation(path);
+            return FileIoUtils.loadFileFromClasspath(staticLocation + path);
         } catch (IOException | URISyntaxException e) {
             throw new LoadFileException("[" + path + "] 파일 로드 실패", e);
         }
