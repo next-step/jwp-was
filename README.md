@@ -113,3 +113,5 @@ Set-Cookie: logined=true; Path=/
 ### 피드백 구현 사항
 - [X] 변수명 대문자 시작X, 축약어 사용X
 - [X] HttpHeader 클래스 만들기
+- [X] HttpMethod enum 클래스 생성
+- [X] RequestLine 클래스 이름 변경

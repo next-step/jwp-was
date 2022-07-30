@@ -30,7 +30,7 @@ public class RequestHandler implements Runnable {
                 return;
             }
             // Request Line
-            RequestLineParser requestLineParser = new RequestLineParser(line);
+            RequestLine requestLineParser = new RequestLine(line);
             String url = requestLineParser.getUri().getPath();
             // Request Header
             int contentLength = 0;

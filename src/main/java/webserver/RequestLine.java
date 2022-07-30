@@ -3,17 +3,16 @@ package webserver;
 import error.NotHttpMethodConstantException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;import java.util.HashMap;
 
 import java.util.Objects;
 
-public class RequestLineParser {
-    private static final Logger log = LoggerFactory.getLogger(RequestLineParser.class);
+public class RequestLine {
+    private static final Logger log = LoggerFactory.getLogger(RequestLine.class);
     private final HttpMethod method;
     private final Uri uri;
     private final ProtocolAndVersion protocolAndVersion;
 
-    public RequestLineParser(String requestLine) {
+    public RequestLine(String requestLine) {
         String[] requestLineElements = requestLine.split(" ");
         this.method = stringToHttpMethod(requestLineElements[0]);
         this.uri = new Uri(requestLineElements[1]);
