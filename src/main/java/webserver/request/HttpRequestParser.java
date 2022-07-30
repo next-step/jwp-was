@@ -3,8 +3,14 @@ package webserver.request;
 import java.io.BufferedReader;
 import java.io.IOException;
 import utils.IOUtils;
+import webserver.session.HttpSession;
+import webserver.session.HttpSessionContext;
+import webserver.session.HttpSessionIdHolder;
+import webserver.session.UUIDSessionIdGenerator;
 
 public class HttpRequestParser {
+
+    private static final String SESSION_COOKIE_NAME = "JWP_SESSION_ID";
 
     private HttpRequestParser() {
         throw new AssertionError();
@@ -15,7 +21,22 @@ public class HttpRequestParser {
         final RequestHeaders requestHeaders = parseHeaders(bufferedReader);
         final RequestBody requestBody = parseBody(bufferedReader, requestHeaders);
 
+        createSession(requestHeaders.getCookie(SESSION_COOKIE_NAME));
+
         return new HttpRequest(requestLine, requestHeaders, requestBody);
+    }
+
+    private static void createSession(final String sessionId) {
+        HttpSessionIdHolder.generate(getCookieSessionIdOrNewSessionId(sessionId));
+    }
+
+    private static String getCookieSessionIdOrNewSessionId(final String sessionId) {
+        if (!HttpSessionContext.has(sessionId)) {
+            final HttpSession httpSession = new HttpSession(new UUIDSessionIdGenerator());
+            HttpSessionContext.add(httpSession);
+            return httpSession.getId();
+        }
+        return sessionId;
     }
 
     private static RequestHeaders parseHeaders(final BufferedReader bufferedReader) throws IOException {
