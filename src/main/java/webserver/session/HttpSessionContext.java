@@ -19,4 +19,7 @@ public class HttpSessionContext {
         return SESSION_CONTEXT.get(id);
     }
 
+    public static boolean has(final String sessionId) {
+        return SESSION_CONTEXT.containsKey(sessionId);
+    }
 }
