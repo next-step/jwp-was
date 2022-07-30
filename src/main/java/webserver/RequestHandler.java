@@ -17,7 +17,6 @@ import java.net.Socket;
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private static final String ROOT_PATH = "/";
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -40,14 +39,7 @@ public class RequestHandler implements Runnable {
         try {
             HttpRequest request = new HttpRequest(in);
 
-            String path = getDefaultPath(request.getPath());
-
-            Controller controller = RequestMapping.getController(path);
-
-            if (controller == null) {
-                response.forward(path);
-                return;
-            }
+            Controller controller = RequestMapping.getController(request.getPath());
             controller.service(request, response);
         } catch (NotFoundException e) {
             logger.error(e.getMessage());
@@ -63,12 +55,5 @@ public class RequestHandler implements Runnable {
             e.printStackTrace();
             response.forwardError(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private String getDefaultPath(String path) {
-        if (ROOT_PATH.equals(path)) {
-            return "/index.html";
-        }
-        return path;
     }
 }
