@@ -187,5 +187,5 @@ HTML과 URL을 비교해 보고 사용자가 입력한 값을 파싱해 model.Us
 
 - [x] 최대 ThradPool의 크기는 250, 모든 Thread가 사용 중인(Busy) 상태이면 100명까지 대기 상태가 되도록 구현한다.
   - Java에서 기본으로 제공하는 ThreadPoolExecutor를 활용해 ThreadPool 기능을 추가한다.
-- [ ] 서버의 ThreadPool 수보다 많은 요청을 동시에 보내본다.
-  - 250개보다 많은 요청을 보내 모두  
+- [x] 서버의 ThreadPool 수보다 많은 요청을 동시에 보내본다.
+  - 250개보다 많은 요청을 보내 모두 정상 응답을 받는다  
