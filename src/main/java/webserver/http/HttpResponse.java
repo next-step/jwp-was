@@ -2,6 +2,7 @@ package webserver.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.DefaultPageUtils;
 import utils.FileIoUtils;
 
 import java.io.DataOutputStream;
@@ -94,23 +95,10 @@ public class HttpResponse {
     }
 
     public void forwardError(HttpStatus httpStatus) {
-        String errorPage = makeErrorPage(httpStatus);
+        String errorPage = DefaultPageUtils.makeErrorPage(httpStatus);
         byte[] contents = errorPage.getBytes();
         responseErrorHeader(httpStatus, contents.length);
         responseBody(contents);
-    }
-
-    private String makeErrorPage(HttpStatus httpStatus) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<!DOCTYPE html><html>");
-        sb.append("<head></head>");
-        sb.append("<body><h1>Whitelabel Error Page</h1>");
-        sb.append("<div>");
-        sb.append(httpStatus.toString());
-        sb.append("</div>");
-        sb.append("</body>");
-        sb.append("</html>");
-        return sb.toString();
     }
 
     public void responseErrorHeader(HttpStatus httpStatus, int contentLength) {
