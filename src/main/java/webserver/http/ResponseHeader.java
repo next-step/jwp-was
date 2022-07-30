@@ -8,7 +8,6 @@ public class ResponseHeader {
 
     private Map<String, String> headers = new HashMap<>();
 
-
     public void addHeader(String key, String value) {
         this.headers.put(key, value);
     }
