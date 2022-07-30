@@ -14,7 +14,6 @@ import webserver.domain.ResponseBody;
 import webserver.domain.ResponseEntity;
 import webserver.domain.TemplateView;
 
-import java.io.IOException;
 import java.util.Collections;
 
 /**
@@ -33,14 +32,14 @@ public class UserController implements Controller {
         RequestBody body = httpRequest.getRequestBody();
         HttpHeaders headers = httpRequest.getHeaders();
         if (!body.isEmpty()) {
-            headers.add(HttpHeaders.CONTENT_LENGTH, body.toString().length() + "");
+            headers.add(HttpHeaders.CONTENT_LENGTH, httpRequest.toString().length() + "");
         }
 
         return ResponseEntity.ok().jsonHeader().body(httpRequest);
     }
 
     @RequestMapping(value = "/user/form.html", method = HttpMethod.GET)
-    public ResponseEntity<DefaultView> getUsers(HttpRequest httpRequest) {
+    public ResponseEntity<DefaultView> userForm(HttpRequest httpRequest) {
         DefaultView view = DefaultView.createDefaultHtmlView("/user/form");
 
         return ResponseEntity.ok().htmlHeader().body(view);
@@ -82,11 +81,11 @@ public class UserController implements Controller {
             return ResponseEntity.found("/index.html").cookie(cookie).build();
         }
 
-        return ResponseEntity.found("/user/login_failed").cookie(cookie).build();
+        return ResponseEntity.found("/user/login_failed.html").cookie(cookie).build();
     }
 
     @RequestMapping(value = "/user/list.html", method = HttpMethod.GET)
-    public ResponseEntity<TemplateView> userList(HttpRequest httpRequest) throws IOException {
+    public ResponseEntity<TemplateView> userList(HttpRequest httpRequest) {
 
         if (isLogin(httpRequest)) {
             DefaultView view = TemplateView.createDefaultHtmlView("/user/list",

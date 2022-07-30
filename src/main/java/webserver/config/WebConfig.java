@@ -8,6 +8,12 @@ import webserver.handlers.RequestHandler;
 import webserver.handlers.RequestHandlerImpl;
 import webserver.handlers.ResponseHandler;
 import webserver.handlers.ResponseHandlerImpl;
+import webserver.resolvers.DefaultViewResolver;
+import webserver.resolvers.JsonViewResolver;
+import webserver.resolvers.Resolver;
+import webserver.resolvers.ResolverContainer;
+import webserver.resolvers.TemplateViewResolver;
+import webserver.resolvers.ViewResolverContainer;
 import webserver.ui.Controller;
 import webserver.ui.UserController;
 import webserver.ui.WelcomeController;
@@ -24,17 +30,16 @@ public class WebConfig {
         addBean(controllerContainer());
         addBean(requestHandler());
         addBean(responseHandler());
+        addBean(resolverContainer());
     }
 
-    private ResponseHandler responseHandler() {
-        return new ResponseHandlerImpl();
-    }
+    protected void addBean(Object bean) {
+        Class<?>[] beanTypes = bean.getClass().getInterfaces();
+        if (beanTypes.length < 1) {
+            throw new NoSuchBeanDefinitionException(NO_SUCH_BEAN_EXCEPTION_MSG + bean.getClass().getName());
+        }
 
-    private RequestHandler requestHandler() {
-        ControllerContainer controllerContainer = getBeanOrSupply(ControllerContainer.class, this::controllerContainer);
-        addBean(controllerContainer);
-
-        return new RequestHandlerImpl(controllerContainer);
+        store.put(beanTypes[0], bean);
     }
 
     public <T> T getBean(Class<T> type) {
@@ -52,14 +57,18 @@ public class WebConfig {
         return supplier.get();
     }
 
+    private RequestHandler requestHandler() {
+        ControllerContainer container = getBeanOrSupply(ControllerContainer.class, this::controllerContainer);
+        addBean(container);
 
-    protected void addBean(Object bean) {
-        Class<?>[] beanTypes = bean.getClass().getInterfaces();
-        if (beanTypes.length < 1) {
-            throw new NoSuchBeanDefinitionException(NO_SUCH_BEAN_EXCEPTION_MSG + bean.getClass().getName());
-        }
+        return new RequestHandlerImpl(container);
+    }
 
-        store.put(beanTypes[0], bean);
+    private ResponseHandler responseHandler() {
+        ResolverContainer container = getBeanOrSupply(ResolverContainer.class, this::resolverContainer);
+        addBean(container);
+
+        return new ResponseHandlerImpl(container);
     }
 
 
@@ -81,4 +90,24 @@ public class WebConfig {
     private UserService userService() {
         return new UserService();
     }
+
+    private ResolverContainer resolverContainer() {
+        return new ViewResolverContainer()
+                .add(defaultViewResolver())
+                .add(templateViewResolver())
+                .add(jsonViewResolver());
+    }
+
+    private Resolver defaultViewResolver() {
+        return new DefaultViewResolver();
+    }
+
+    private Resolver templateViewResolver() {
+        return new TemplateViewResolver();
+    }
+
+    private Resolver jsonViewResolver() {
+        return new JsonViewResolver();
+    }
+
 }

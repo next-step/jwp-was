@@ -2,10 +2,7 @@ package webserver.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Objects;
 
 /**
@@ -60,14 +57,11 @@ public class DefaultView {
 
     @Override
     public String toString() {
-        try {
-            byte[] bytes = FileIoUtils.loadFileFromClasspath(prefix + viewName + suffix);
-
-            return new String(bytes);
-        } catch (IOException | URISyntaxException e) {
-            logger.error(e.getMessage());
-            return STRING_EMPTY;
-        }
+        return "DefaultView{" +
+                "prefix='" + prefix + '\'' +
+                ", suffix='" + suffix + '\'' +
+                ", viewName='" + viewName + '\'' +
+                '}';
     }
 
     @Override

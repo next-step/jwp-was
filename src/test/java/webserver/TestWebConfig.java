@@ -1,12 +1,13 @@
 package webserver;
 
 import webserver.application.UserService;
+import webserver.config.WebConfig;
 import webserver.ui.Controller;
 import webserver.handlers.ControllerContainerImpl;
 import webserver.ui.UserController;
 import webserver.ui.WelcomeController;
 
-public class TestWebConfig {
+public class TestWebConfig extends WebConfig {
     private final ControllerContainerImpl handleContainer;
 
     public TestWebConfig() {

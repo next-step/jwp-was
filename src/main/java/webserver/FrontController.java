@@ -8,12 +8,9 @@ import webserver.handlers.RequestHandler;
 import webserver.handlers.ResponseHandler;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
@@ -37,9 +34,7 @@ public class FrontController implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream();
-             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-             OutputStream out = connection.getOutputStream();
-             BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(out))) {
+             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
 
             HttpRequest httpRequest = HttpRequest.newInstance(br);
             logger.info("Http Request: {}", httpRequest);
@@ -47,8 +42,7 @@ public class FrontController implements Runnable {
             ResponseEntity<?> response = requestHandler.handle(httpRequest);
 
             logger.info("Http Response: {}", response.getHeaders());
-            responseHandler.changeWriter(wr).handle(response);
-
+            responseHandler.changeConnection(connection).handle(response);
         } catch (IOException e) {
             e.printStackTrace();
             logger.error(e.getMessage());

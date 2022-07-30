@@ -6,6 +6,7 @@ import static webserver.domain.HttpHeaders.CONTENT_LENGTH;
 
 /**
  * Http 응답 정보
+ *
  * @param <T> 응답 정보 Body 타입
  */
 public class ResponseEntity<T> extends HttpEntity<T> {
@@ -23,6 +24,10 @@ public class ResponseEntity<T> extends HttpEntity<T> {
     public ResponseEntity(HttpHeaders headers, T body, HttpStatus httpStatus) {
         super(headers, body);
         this.httpStatus = httpStatus;
+    }
+
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
     }
 
     @Override
@@ -95,6 +100,10 @@ public class ResponseEntity<T> extends HttpEntity<T> {
 
     public static ResponseBuilder status(HttpStatus status) {
         return new ResponseBuilder<>(status);
+    }
+
+    public ResponseEntity<?> newInstanceFromBody(String resultBody) {
+        return new ResponseEntity<>(getHeaders(), resultBody, httpStatus);
     }
 
 

@@ -2,9 +2,8 @@ package webserver.handlers;
 
 import webserver.domain.ResponseEntity;
 
-import java.io.BufferedWriter;
-import java.io.Writer;
+import java.net.Socket;
 
-public interface ResponseHandler extends Handler<ResponseEntity<?>, Void>{
-    ResponseHandler changeWriter(BufferedWriter writer);
+public interface ResponseHandler extends Handler<ResponseEntity<?>, Void> {
+    ResponseHandler changeConnection(Socket conn);
 }
