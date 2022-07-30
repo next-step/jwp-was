@@ -5,6 +5,10 @@ import java.util.Map;
 
 public class RequestHeader {
 
+    private static final String COOKIE = "Cookie";
+    private static final String HEADER_DELIMETER = ": ";
+    private static final String EMPTY_HEADER_VALUE = "";
+
     private Map<String, String> headers = new HashMap<>();
 
     public void addHeader(String requestHeaderLine) {
@@ -12,7 +16,7 @@ public class RequestHeader {
             return;
         }
 
-        String[] splitedHeader = requestHeaderLine.split(": ");
+        String[] splitedHeader = requestHeaderLine.split(HEADER_DELIMETER);
         if (splitedHeader.length == 2) {
             this.headers.put(splitedHeader[0].trim(), splitedHeader[1].trim());
         }
@@ -23,7 +27,7 @@ public class RequestHeader {
     }
 
     public String getHeader(String contentTypeKey) {
-        return this.headers.getOrDefault(contentTypeKey, "");
+        return this.headers.getOrDefault(contentTypeKey, EMPTY_HEADER_VALUE);
     }
 
     public int getContentLength() {
@@ -33,5 +37,9 @@ public class RequestHeader {
             defaultContentLength = Integer.parseInt(contentLength);
         }
         return defaultContentLength;
+    }
+
+    public Cookies getCookie() {
+        return new Cookies(getHeader(COOKIE));
     }
 }
