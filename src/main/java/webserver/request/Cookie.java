@@ -23,6 +23,10 @@ public class Cookie {
         return this.name.equals(name);
     }
 
+    public String getValue() {
+        return value;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -39,4 +43,5 @@ public class Cookie {
     public int hashCode() {
         return Objects.hash(name, value);
     }
+
 }

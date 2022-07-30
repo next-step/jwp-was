@@ -43,4 +43,15 @@ class CookieTest {
         assertThat(cookie.isSameName(findCookieName)).isEqualTo(expected);
     }
 
+    @DisplayName("쿠키의 값을 조회할 수 있다")
+    @Test
+    void get_value() {
+        final Cookie cookie = new Cookie("name", "value");
+
+        final String actual = cookie.getValue();
+
+        assertThat(actual).isEqualTo("value");
+
+    }
+
 }
