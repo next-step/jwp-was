@@ -4,10 +4,7 @@ import db.DataBase;
 import model.User;
 import webserver.exception.ApiException;
 import webserver.http.HttpHeaders;
-import webserver.http.HttpSession;
-import webserver.http.Session;
 import webserver.http.SessionConfig;
-import webserver.http.SessionStorage;
 import webserver.http.request.HttpMethod;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.Path;
@@ -22,12 +19,6 @@ public class UserLoginController implements Controller {
 
     private static final Path USER_LOGIN_PATH = Path.from("/user/login");
 
-    private final SessionStorage sessionStorage;
-
-    public UserLoginController(SessionStorage sessionStorage) {
-        this.sessionStorage = sessionStorage;
-    }
-
     @Override
     public boolean isMatch(HttpRequest request) {
         return request.matchMethodAndPath(HttpMethod.POST, USER_LOGIN_PATH);
@@ -41,23 +32,12 @@ public class UserLoginController implements Controller {
     private HttpResponse login(HttpRequest request) {
         User user = DataBase.findUserById(extractRequiredBody(request, "userId"));
         validateUser(request, user);
+        request.setSessionAttribute("user", user);
         return HttpResponse.sendRedirect("/index.html",
                 ResponseHeader.from(Map.of(
-                        HttpHeaders.SET_COOKIE, ResponseCookie.of(SessionConfig.sessionCookieName(), saveUserSession(request, user).getId())
+                        HttpHeaders.SET_COOKIE, ResponseCookie.of(SessionConfig.sessionCookieName(), request.sessionId())
                 ))
         );
-    }
-
-    private Session saveUserSession(HttpRequest request, User user) {
-        return request.session()
-                .map(session -> {
-                    session.setAttribute("user", user);
-                    return session;
-                }).orElseGet(() -> {
-                    Session session = HttpSession.from(Map.of("user", user));
-                    sessionStorage.add(session);
-                    return session;
-                });
     }
 
     private void validateUser(HttpRequest request, User user) {

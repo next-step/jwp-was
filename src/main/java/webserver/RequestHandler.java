@@ -40,7 +40,7 @@ public class RequestHandler implements Runnable {
         CONTROLLERS = Set.of(
                 new UserCreateController(),
                 new UserListController(new Handlebars(loader)),
-                new UserLoginController(SESSION_STORAGE),
+                new UserLoginController(),
                 new TemplateController(),
                 new StaticController()
         );

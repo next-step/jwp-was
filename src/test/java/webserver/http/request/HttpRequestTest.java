@@ -10,7 +10,6 @@ import webserver.http.SessionStorage;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -55,11 +54,10 @@ class HttpRequestTest {
         //when, then
         assertThat(request.withBody(body)).isEqualTo(HttpRequest.of(request, body));
     }
-
-
+    
     @Test
-    @DisplayName("요청 세션 조회")
-    void session() {
+    @DisplayName("요청 세션 Id 조회")
+    void sessionId() {
         //given
         Session emptySession = HttpSession.empty();
         HttpRequest request = HttpRequest.of(SessionStorage.from(List.of(emptySession)),
@@ -69,6 +67,6 @@ class HttpRequestTest {
                 )
         );
         //when, then
-        assertThat(request.session()).isEqualTo(Optional.of(emptySession));
+        assertThat(request.sessionId()).isEqualTo(emptySession.getId());
     }
 }

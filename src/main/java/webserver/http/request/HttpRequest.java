@@ -1,6 +1,7 @@
 package webserver.http.request;
 
 import utils.Assert;
+import webserver.http.HttpSession;
 import webserver.http.Session;
 import webserver.http.SessionConfig;
 import webserver.http.SessionStorage;
@@ -17,6 +18,8 @@ public final class HttpRequest {
     private final RequestLine requestLine;
     private final RequestHeader header;
     private final RequestBody body;
+
+    private Session sessionCache;
 
     private HttpRequest(SessionStorage sessionStorage, RequestLine requestLine, RequestHeader header, RequestBody body) {
         Assert.notNull(sessionStorage, "'sessionStorage' must not be null");
@@ -68,15 +71,16 @@ public final class HttpRequest {
         return header.cookieValue(name);
     }
 
-    public Optional<Session> session() {
-        return cookieValue(SessionConfig.sessionCookieName())
-                .flatMap(sessionStorage::find);
+    public String sessionId() {
+        return session().getId();
+    }
+
+    public void setSessionAttribute(String name, Object value) {
+        session().setAttribute(name, value);
     }
 
     public boolean containsSessionAttribute(String name) {
-        return session()
-                .map(session -> session.containsAttribute(name))
-                .orElse(false);
+        return session().containsAttribute(name);
     }
 
     public int contentLength() {
@@ -89,6 +93,22 @@ public final class HttpRequest {
 
     public HttpRequest withBody(RequestBody body) {
         return of(this, body);
+    }
+
+    private Session session() {
+        if (sessionCache != null) {
+            return sessionCache;
+        }
+        sessionCache = cookieValue(SessionConfig.sessionCookieName())
+                .flatMap(sessionStorage::find)
+                .orElseGet(this::newSession);
+        return sessionCache;
+    }
+
+    private Session newSession() {
+        Session session = HttpSession.empty();
+        sessionStorage.add(session);
+        return session;
     }
 
     @Override
