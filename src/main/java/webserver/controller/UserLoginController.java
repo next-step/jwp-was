@@ -2,6 +2,7 @@ package webserver.controller;
 
 import webserver.exception.InvalidPasswordException;
 import webserver.exception.NotFoundUserException;
+import webserver.http.HttpCookies;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.service.UserService;
@@ -15,21 +16,24 @@ public class UserLoginController extends AbstractController {
 	}
 
 	@Override
-	protected HttpResponse doGet(HttpRequest httpRequest) {
+	protected void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
 		if (httpRequest.isLogin()) {
-			return doRedirect(httpRequest, "/index.html");
+			httpResponse.sendRedirect("/index.html");
+			return;
 		}
-
-		return super.doGet(httpRequest);
+		doGet(httpRequest, httpResponse);
 	}
 
 	@Override
-	protected HttpResponse doPost(HttpRequest httpRequest) {
+	protected void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
 		try {
 			userService.login(httpRequest.getHttpBody());
-			return doRedirect(httpRequest, "/index.html", "logined=true; Path=/");
+
+			httpResponse.addHeader("SET-COOKIE", HttpCookies.of("logined=true; Path=/").getFlatCookies());
+			httpResponse.sendRedirect("/index.html");
 		} catch (InvalidPasswordException | NotFoundUserException e) {
-			return doRedirect(httpRequest, "/user/login_failed.html", "logined=false; Path=/");
+			httpResponse.addHeader("SET-COOKIE", HttpCookies.of("logined=false; Path=/").getFlatCookies());
+			httpResponse.sendRedirect("/user/login_failed.html");
 		}
 	}
 }

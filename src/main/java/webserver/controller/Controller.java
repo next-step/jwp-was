@@ -4,5 +4,5 @@ import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
 public interface Controller {
-	HttpResponse process(HttpRequest httpRequest);
+	void process(HttpRequest httpRequest, HttpResponse httpResponse);
 }

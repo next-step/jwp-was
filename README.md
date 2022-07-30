@@ -1,6 +1,6 @@
 ## 요구사항 정리
 
-## STEP 1.
+## STEP 1. TDD 실습
 ### 요구사항 1 - GET 요청
 - HTTP GET 요청에 대한 RequestLine을 파싱
 - 파싱하는 로직 구현을 TDD로 구현
@@ -27,7 +27,8 @@
 ### 요구사항 4 - enum 적용
 - HTTP method인 GET, POST를 enum 으로 구현 
 
-## STEP 2.
+
+## STEP 2. HTTP 웹 서버 구현
 ### 요구사항 1
 - http://localhost:8080/index.html 접속, webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답
 - utils.FileIoUtils의 loadFileFromClasspath() 메소드를 이용
@@ -61,5 +62,22 @@
 ### 요구사항 7
 - 지금까지 구현한 소스 코드는 stylesheet 파일을 지원하지 못하고 있음
 - Stylesheet 파일을 지원하도록 구현
+
+
+## STEP 3. HTTP 웹 서버 리펙토링
+### 리펙토링 1 
+- 메소드 분리 및 클래스 분리
+- RequestHandler 클래스 책임분리
+  - HttpRequest
+  - HttpResponse
+ 
+### 리펙토링 2
+- 클라이언트 요청 데이터를 처리하는 별도 클래스로 분리
+- 클라이언트 응답 데이터를 처리하는 로직을 별도의 클래스로 분리
+- 다형성을 활용해 클라이언트 요청 URL에 대한 분기 처리 제거
+
+### 추가 요구사항 변경이 발생하는 경우
+- HTTP에서 POST 방식으로 데이터를 전달할 때 body를 통한 데이터 전달뿐만 아니라 Query String을 활용한 데이터 전달도 지원
+
 
 

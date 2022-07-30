@@ -13,8 +13,8 @@ public class UserRegisterController extends AbstractController {
 	}
 
 	@Override
-	protected HttpResponse doPost(HttpRequest httpRequest) {
+	protected void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
 		userService.register(httpRequest.getHttpBody());
-		return doRedirect(httpRequest, "/index.html");
+		httpResponse.sendRedirect("/index.html");
 	}
 }

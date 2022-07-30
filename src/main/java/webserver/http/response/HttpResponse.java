@@ -1,93 +1,86 @@
 package webserver.http.response;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 import webserver.http.ContentType;
 import webserver.http.request.HttpProtocol;
 
 public class HttpResponse {
-	private static final String NEW_LINE = "\r\n";
+	private final String TEMPLATES_ROOT_PATH = "./templates";
+	private final String STATIC_ROOT_PATH = "./static";
+	private final String NEW_LINE = "\r\n";
 
-	private final HttpStatusLine httpStatusLine;
-	private final HttpResponseHeaders httpResponseHeaders;
-	private final HttpResponseBody httpResponseBody;
+	private final OutputStream outputStream;
+	private final HttpResponseHeaders headers;
+	private final HttpStatusLine statusLine;
 
-	public static class Builder {
-		private HttpStatusLine httpStatusLine;
-		private HttpResponseHeaders httpResponseHeaders = new HttpResponseHeaders();
-		private HttpResponseBody httpResponseBody;
-
-		public Builder statusLine(HttpProtocol httpProtocol, HttpStatus httpStatus) {
-			httpStatusLine = new HttpStatusLine(httpProtocol, httpStatus);
-			return this;
-		}
-
-		public Builder responseBody(Resource resource) {
-			httpResponseBody = new HttpResponseBody(resource);
-			return this;
-		}
-
-		public Builder emptyBody() {
-			httpResponseBody = new HttpResponseBody("");
-			return this;
-		}
-
-		public Builder responseBody(String resource) {
-			httpResponseBody = new HttpResponseBody(resource);
-			return this;
-		}
-
-		public Builder contentType(ContentType contentType) {
-			httpResponseHeaders.putContentType(contentType);
-			return this;
-		}
-
-		public Builder contentLength(int contentLength) {
-			httpResponseHeaders.putContentLength(contentLength);
-			return this;
-		}
-
-		public Builder location(String location) {
-			httpResponseHeaders.putLocation(location);
-			return this;
-		}
-
-		public Builder cookie(String cookie) {
-			httpResponseHeaders.putCookie(cookie);
-			return this;
-		}
-
-		public HttpResponse build() {
-			return new HttpResponse(this);
-		}
-
+	public HttpResponse(HttpProtocol httpProtocol, OutputStream outputStream) {
+		this.outputStream = outputStream;
+		this.headers = new HttpResponseHeaders();
+		this.statusLine = new HttpStatusLine(httpProtocol);
 	}
 
-	public byte[] getBytes() {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(httpStatusLine.getHttpStatusLine());
-		buffer.append(NEW_LINE);
-		buffer.append(httpResponseHeaders.getResponseHeaders());
-		buffer.append(NEW_LINE);
-		buffer.append(httpResponseBody.getBody());
-		return buffer.toString().getBytes(StandardCharsets.UTF_8);
+	private String getRootPath(String path) {
+		if (path.contains(ContentType.HTML.getExtension()) || path.contains(ContentType.ICO.getExtension())) {
+			return TEMPLATES_ROOT_PATH + path;
+		}
+		return STATIC_ROOT_PATH + path;
 	}
 
-	private HttpResponse (Builder builder) {
-		this.httpStatusLine = builder.httpStatusLine;
-		this.httpResponseHeaders = builder.httpResponseHeaders;
-		this.httpResponseBody = builder.httpResponseBody;
+	public void addHeader(String attribute, String value) {
+		headers.addAttribute(attribute, value);
 	}
 
-	public HttpStatusLine getHttpStatusLine() {
-		return httpStatusLine;
+	public void forward(String uri) {
+		Resource resource = Resource.of(getRootPath(uri));
+		response200Header(resource.getContentType(), resource.getContentLength());
+		write(HttpStatus.OK, resource.getResource());
 	}
 
-	public HttpResponseHeaders getHttpResponseHeaders() {
-		return httpResponseHeaders;
+	public void sendRedirect(String uri) {
+		headers.addLocation(uri);
+		write(HttpStatus.FOUND);
 	}
 
-	public HttpResponseBody getHttpResponseBody() {
-		return httpResponseBody;
+	public void forwardBody(ContentType contentType, String body) {
+		byte[] responseBody = body.getBytes(StandardCharsets.UTF_8);
+		response200Header(contentType, responseBody.length);
+		write(HttpStatus.OK, responseBody);
+	}
+
+	public void response200Header(ContentType contentType, int contentLength) {
+		headers.addContentType(contentType);
+		headers.addContentLength(contentLength);
+	}
+
+	private void write(HttpStatus status, byte[] responseBody) {
+		try {
+			writeHeader(status);
+			writeBody(responseBody);
+			outputStream.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void write(HttpStatus status) {
+		try {
+			writeHeader(status);
+			outputStream.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void writeHeader(HttpStatus status) throws IOException {
+		statusLine.write(status, outputStream);
+		headers.write(outputStream);
+	}
+
+	private void writeBody(byte[] responseBody) throws IOException {
+		outputStream.write(NEW_LINE.getBytes(StandardCharsets.UTF_8));
+		outputStream.write(responseBody);
 	}
 }
