@@ -76,4 +76,14 @@ class HttpSessionTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("세션의 ID를 조회할 수 있다.")
+    @Test
+    void get_id() {
+        final HttpSession httpSession = new HttpSession(() -> "12345");
+
+        String actual = httpSession.getId();
+
+        assertThat(actual).isEqualTo("12345");
+    }
+
 }

@@ -17,4 +17,13 @@ class SessionIdTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("세션 ID를 문자열로 조회한다")
+    @Test
+    void get_id() {
+        final SessionId sessionId = new SessionId(() -> "12345");
+
+        final String actual = sessionId.getId();
+
+        assertThat(actual).isEqualTo("12345");
+    }
 }

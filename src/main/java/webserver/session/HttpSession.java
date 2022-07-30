@@ -11,6 +11,10 @@ public class HttpSession {
         this.id = new SessionId(sessionIdGenerator);
     }
 
+    public String getId() {
+        return id.getId();
+    }
+
     public void setAttribute(final String name, final String value) {
         attributes.setAttribute(name, value);
     }
