@@ -13,11 +13,11 @@ public class QueryStringParser {
     private static final int FIELD_NAME_INDEX = 0;
     private static final int VALUE_INDEX = 1;
 
-    public static Map<String, String> parse(String path) {
-        String queryString = path.substring(path.indexOf(QUERYSTRING_SEPARATOR) + 1);
-        String[] fields = queryString.split(FIELD_SEPARATOR);
+    public static Map<String, String> parse(String keyValueString) {
+        String queryString = keyValueString.substring(keyValueString.indexOf(QUERYSTRING_SEPARATOR) + 1);
+        String[] keyValues = queryString.split(FIELD_SEPARATOR);
 
-        return Arrays.stream(fields).collect(
+        return Arrays.stream(keyValues).collect(
             Collectors
                 .toMap(
                     filedName -> filedName.split(FIELD_NAME_VALUE_SEPARATOR)[FIELD_NAME_INDEX],
