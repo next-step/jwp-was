@@ -26,8 +26,3 @@
 
 ### 기능 요구사항 3
 - RequestBody 구현
-
-### 기능 요구 사항 4
-- HttpResponse 구현
-- redirect 구현
-- GET,POST가 아닌 url(path)를 기준으로 분기하기 
