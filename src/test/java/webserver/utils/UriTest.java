@@ -37,11 +37,11 @@ class UriTest {
             = Uri.of("/user/create?userId=testId&password=testPw&name=testName&email=testEmail@email.com");
 
         assertThat(uri.getPath()).isEqualTo("/user/create");
-        assertThat(uri.sizeOfQueries()).isEqualTo(4);
-        assertThat(uri.getQuery("userId")).isEqualTo("testId");
-        assertThat(uri.getQuery("password")).isEqualTo("testPw");
-        assertThat(uri.getQuery("name")).isEqualTo("testName");
-        assertThat(uri.getQuery("email")).isEqualTo("testEmail@email.com");
+        assertThat(uri.sizeOfParams()).isEqualTo(4);
+        assertThat(uri.getParameter("userId")).isEqualTo("testId");
+        assertThat(uri.getParameter("password")).isEqualTo("testPw");
+        assertThat(uri.getParameter("name")).isEqualTo("testName");
+        assertThat(uri.getParameter("email")).isEqualTo("testEmail@email.com");
     }
 
 }

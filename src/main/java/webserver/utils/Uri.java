@@ -49,11 +49,11 @@ public class Uri {
         return queryStrings.isEmpty();
     }
 
-    public int sizeOfQueries() {
+    public int sizeOfParams() {
         return queryStrings.size();
     }
 
-    public String getQuery(String key) {
+    public String getParameter(String key) {
         return queryStrings.get(key);
     }
 

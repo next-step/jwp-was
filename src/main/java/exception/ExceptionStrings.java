@@ -11,4 +11,5 @@ public final class ExceptionStrings {
     public static final String CANNOT_FIND_HEADER_KEY = "Cannot find header key";
     public static final String NOT_FOUND_MEMBER = "Not found member";
     public static final String INVALID_COOKIE_KEY = "Invalid cookie key";
+    public static final String NOT_EXIST_REQUEST_PARAMETER = "Not exist request parameter";
 }

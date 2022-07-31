@@ -2,7 +2,6 @@ package webserver.request;
 
 import static exception.ExceptionStrings.INVALID_REQUEST_LINE;
 
-import java.util.Map;
 import java.util.Objects;
 import webserver.enums.HttpMethod;
 import webserver.enums.Protocol;
@@ -48,6 +47,10 @@ public final class RequestLine {
         if (line.split(REQUEST_LINE_SPLIT_REGEX).length < REQUEST_LINE_COMPONENT_COUNT) {
             throw new IllegalArgumentException(INVALID_REQUEST_LINE);
         }
+    }
+
+    public String getParameter(String key) {
+        return this.uri.getParameter(key);
     }
 
     @Override

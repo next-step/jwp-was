@@ -13,8 +13,8 @@ public class UserLoginServlet implements Servlet {
 
     @Override
     public void serve(HttpRequest httpRequest, HttpResponse httpResponse) {
-        String userId = httpRequest.getQueryString("userId");
-        String password = httpRequest.getQueryString("password");
+        String userId = httpRequest.getParameter("userId");
+        String password = httpRequest.getParameter("password");
         validate(userId, password);
 
         User userFound = DataBase.findUserById(userId)

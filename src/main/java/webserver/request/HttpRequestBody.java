@@ -11,14 +11,15 @@ import webserver.utils.QueryStrings;
 
 public class HttpRequestBody {
 
-    private final Map<String, String> map;
+    private static final String EMPTY_VALUE = "";
+    private final Map<String, String> paramMap;
 
     private HttpRequestBody() {
         this(Collections.emptyMap());
     }
 
-    private HttpRequestBody(Map<String, String> map) {
-        this.map = map;
+    private HttpRequestBody(Map<String, String> paramMap) {
+        this.paramMap = paramMap;
     }
 
     public static HttpRequestBody createEmpty() {
@@ -43,7 +44,14 @@ public class HttpRequestBody {
     }
 
     public Map<String, String> map() {
-        return this.map;
+        return this.paramMap;
     }
 
+    public String getParameter(String key) {
+        return paramMap.getOrDefault(key, EMPTY_VALUE);
+    }
+
+    public boolean hasEmptyParams() {
+        return paramMap.isEmpty();
+    }
 }

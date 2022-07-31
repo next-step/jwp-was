@@ -49,6 +49,10 @@ public class RequestHandler implements Runnable {
         }
     }
 
+    private String getDefaultPath(String string) {
+        return "defaultPath";
+    }
+
     private void responseStatusLine(DataOutputStream dos, String statusLine) throws IOException {
         dos.writeBytes(statusLine + " \r\n");
         logger.debug(statusLine);

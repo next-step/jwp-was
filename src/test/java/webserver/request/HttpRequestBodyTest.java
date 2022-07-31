@@ -13,15 +13,15 @@ class HttpRequestBodyTest {
     void createWithQueryStrings() {
         HttpRequestBody requestBody = HttpRequestBody.of("test1=test1&test2=test2");
 
-        assertThat(requestBody.map().get("test1")).isEqualTo("test1");
-        assertThat(requestBody.map().get("test2")).isEqualTo("test2");
+        assertThat(requestBody.getParameter("test1")).isEqualTo("test1");
+        assertThat(requestBody.getParameter("test2")).isEqualTo("test2");
     }
 
     @Test
     void createWithEmptyTest() {
         HttpRequestBody httpBody = HttpRequestBody.createEmpty();
 
-        assertThat(httpBody.map()).isEmpty();
+        assertThat(httpBody.hasEmptyParams()).isTrue();
     }
 
     @Test

@@ -1,8 +1,12 @@
 package webserver.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static webserver.request.RequestLineTest.TEST_GET_REQUEST_LINE;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -16,10 +20,33 @@ import webserver.enums.Protocol;
 class HttpRequestTest {
 
     private HttpRequest httpRequest;
+    private String testDirectory = "./src/test/resources/";
 
     @BeforeEach
     void setUp() {
         httpRequest = new HttpRequest(TEST_GET_REQUEST_LINE);
+    }
+
+    @Test
+    void request_GET() throws Exception {
+        InputStream in = new FileInputStream(testDirectory + "Http_GET.txt");
+        HttpRequest request = HttpRequest.of(in);
+
+        assertEquals(HttpMethod.GET, request.getMethod());
+        assertEquals("/user/create", request.getPath());
+        assertEquals("keep-alive", request.getHeader("Connection"));
+        assertEquals("javajigi", request.getParameter("userId"));
+    }
+
+    @Test
+    public void request_POST() throws Exception {
+        InputStream in = new FileInputStream(testDirectory + "Http_POST.txt");
+        HttpRequest request = HttpRequest.of(in);
+
+        assertEquals(HttpMethod.POST, request.getMethod());
+        assertEquals("/user/create", request.getPath());
+        assertEquals("keep-alive", request.getHeader("Connection"));
+        assertEquals("javajigi", request.getParameter("userId"));
     }
 
     @DisplayName("헤더에 키-밸류 형태로 값이 정상 저장된다.")

@@ -1,17 +1,17 @@
 package webserver.request;
 
 import static exception.ExceptionStrings.INVALID_REQUEST;
+import static exception.ExceptionStrings.NOT_EXIST_REQUEST_PARAMETER;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import webserver.domain.Cookies;
+import webserver.domain.HttpHeader;
 import webserver.enums.HttpMethod;
 import webserver.enums.Protocol;
-import webserver.domain.HttpHeader;
 
 public class HttpRequest {
 
@@ -19,8 +19,8 @@ public class HttpRequest {
     private HttpRequestHeader header;
     private HttpRequestBody body;
 
-    public HttpRequest(String requestLine) {
-        this.requestLine = RequestLine.of(requestLine);
+    public HttpRequest(String startLine) {
+        this.requestLine = RequestLine.of(startLine);
         this.header = HttpRequestHeader.createEmpty();
         this.body = HttpRequestBody.createEmpty();
     }
@@ -51,14 +51,6 @@ public class HttpRequest {
         return new HttpRequest(requestLine, httpHeader, httpBody);
     }
 
-    public Map<String, String> bodyQueryString() {
-        return body.map();
-    }
-
-    public RequestLine getRequestLine() {
-        return requestLine;
-    }
-
     public HttpMethod getMethod() {
         return requestLine.getHttpMethod();
     }
@@ -86,7 +78,16 @@ public class HttpRequest {
         return Cookies.of(this.header.getHeader(HttpHeader.COOKIE));
     }
 
-    public String getQueryString(String queryKey) {
-        return bodyQueryString().get(queryKey);
+    public String getParameter(String key) {
+        String param = requestLine.getParameter(key);
+        if (param.isEmpty()) {
+            param = body.getParameter(key);
+        }
+
+        if (param.isEmpty()) {
+            throw new IllegalArgumentException(NOT_EXIST_REQUEST_PARAMETER);
+        }
+
+        return param;
     }
 }

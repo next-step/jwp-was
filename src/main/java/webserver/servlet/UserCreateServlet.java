@@ -10,12 +10,11 @@ public class UserCreateServlet implements Servlet {
 
     @Override
     public void serve(HttpRequest httpRequest, HttpResponse httpResponse) {
-        Map<String, String> bodyQueryStrings = httpRequest.bodyQueryString();
         User user = new User(
-            bodyQueryStrings.get("userId"),
-            bodyQueryStrings.get("password"),
-            bodyQueryStrings.get("name"),
-            bodyQueryStrings.get("email")
+            httpRequest.getParameter("userId"),
+            httpRequest.getParameter("password"),
+            httpRequest.getParameter("name"),
+            httpRequest.getParameter("email")
         );
         DataBase.addUser(user);
 

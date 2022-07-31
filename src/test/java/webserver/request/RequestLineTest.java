@@ -82,9 +82,9 @@ class RequestLineTest {
         Uri uri = Uri.of(testPath + "?" + testQueryStrings);
 
         assertThat(uri.getPath()).isEqualTo(testPath);
-        assertThat(uri.sizeOfQueries()).isEqualTo(2);
-        assertThat(uri.getQuery("this")).isEqualTo("이것");
-        assertThat(uri.getQuery("that")).isEqualTo("저것");
+        assertThat(uri.sizeOfParams()).isEqualTo(2);
+        assertThat(uri.getParameter("this")).isEqualTo("이것");
+        assertThat(uri.getParameter("that")).isEqualTo("저것");
     }
 
     @DisplayName("null Path 입력 시 Path / QueryStrings 파싱은 실패한다.")
