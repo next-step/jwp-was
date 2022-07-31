@@ -1,6 +1,7 @@
 package constant;
 
 public enum Message {
+    NOT_FOUND_CONTENT_TYPE("잘못된 ContentType 입니다."),
     NOT_ALLOW_HTTP_METHOD("허용되지 않은 HttpMethod 입니다.");
 
     private String value;
