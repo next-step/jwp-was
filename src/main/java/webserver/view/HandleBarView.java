@@ -2,9 +2,6 @@ package webserver.view;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
-import webserver.http.Request;
 import webserver.http.Response;
 
 import java.io.IOException;
@@ -22,7 +19,7 @@ public class HandleBarView implements View {
         this.handlebars = handlebars;
     }
 
-    public void render(Map<String, ?> models, Request request, Response response) {
+    public void render(Map<String, ?> models, Response response) {
         try {
             Template template = handlebars.compile(url);
 

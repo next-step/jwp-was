@@ -1,6 +1,5 @@
 package webserver.view;
 
-import webserver.http.Request;
 import webserver.http.Response;
 
 import java.util.Map;
@@ -14,7 +13,7 @@ public class RedirectView implements View {
     }
 
     @Override
-    public void render(Map<String, ?> models, Request request, Response response) {
+    public void render(Map<String, ?> models, Response response) {
         response.sendRedirect(url);
     }
 }

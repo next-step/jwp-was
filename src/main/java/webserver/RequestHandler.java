@@ -63,7 +63,7 @@ public class RequestHandler implements Runnable {
 
         View view = viewResolver.resolveView(modelAndView.getView());
 
-        view.render(modelAndView.getModel(), request, response);
+        view.render(modelAndView.getModel(), response);
     }
 
     private void writeResponse(OutputStream out, Response response) throws IOException {
