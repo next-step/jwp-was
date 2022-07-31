@@ -13,12 +13,12 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import model.User;
 
-public class UserCreateController implements Controller {
+public class UserCreateController extends AbstractController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserCreateController.class);
 
     @Override
-    public HttpResponse run(HttpRequest request) {
+    public HttpResponse doPost(HttpRequest request) {
         var body = request.getBody();
         var params = Arrays.stream(body.split("&"))
             .map(it -> it.split("="))

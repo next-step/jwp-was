@@ -8,10 +8,10 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import webserver.config.TemplateEngine;
 
-public class UserListController implements Controller {
+public class UserListController extends AbstractController {
 
     @Override
-    public HttpResponse run(HttpRequest request) {
+    public HttpResponse doGet(HttpRequest request) {
         Optional<String> cookie = request.getCookie("isLogined");
         if (cookie.isEmpty() || cookie.get().equals("false")) {
             return HttpResponse.found("/user/login.html");

@@ -12,10 +12,10 @@ import http.HttpStatus;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 
-public class LoginController implements Controller {
+public class LoginController extends AbstractController {
 
     @Override
-    public HttpResponse run(HttpRequest request) {
+    public HttpResponse doPost(HttpRequest request) {
         var body = request.getBody();
         var params = Arrays.stream(body.split("&"))
             .map(it -> it.split("="))

@@ -31,7 +31,7 @@ class UserCreateControllerTest {
         );
 
         var controller = new UserCreateController();
-        var response = controller.run(httpRequest);
+        var response = controller.service(httpRequest);
 
         var actual = DataBase.findUserById("user")
                 .get();

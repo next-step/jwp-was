@@ -32,7 +32,7 @@ class UserListControllerTest {
             new Headers(List.of("Content-type: text/html", "Cookie: isLogined=true")), "");
 
         var controller = new UserListController();
-        var response = controller.run(httpRequest);
+        var response = controller.service(httpRequest);
 
         assertAll(
             () -> assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.OK),

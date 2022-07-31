@@ -4,5 +4,6 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 
 public interface Controller {
-    HttpResponse run(HttpRequest request);
+
+    HttpResponse service(HttpRequest request);
 }

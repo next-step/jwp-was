@@ -36,7 +36,7 @@ class LoginControllerTest {
         );
 
         var controller = new LoginController();
-        var response = controller.run(httpRequest);
+        var response = controller.service(httpRequest);
 
         assertAll(
             ()-> assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.FOUND),
