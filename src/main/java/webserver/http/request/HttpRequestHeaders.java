@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import webserver.http.HttpCookies;
+
 public class HttpRequestHeaders {
 	protected static final String HEADER_DELIMITER = ":";
 	protected static final int INDEX_KEY = 0;
 	protected static final int INDEX_VALUE = 1;
 	public static final String CONTENT_LENGTH = "Content-Length";
 	public static final String COOKIE = "Cookie";
-	public static final String LOGIN_TRUE = "logined=true";
 
 	private final Map<String, String> headers;
 
@@ -32,10 +33,6 @@ public class HttpRequestHeaders {
 		return new HttpRequestHeaders(headers);
 	}
 
-	public boolean isLogin() {
-		return headers.get(COOKIE).contains(LOGIN_TRUE);
-	}
-
 	public Boolean hasContentLength() {
 		return headers.containsKey(CONTENT_LENGTH);
 	}
@@ -46,6 +43,10 @@ public class HttpRequestHeaders {
 
 	public int getContentLength() {
 		return Integer.parseInt(headers.get(CONTENT_LENGTH));
+	}
+
+	public HttpCookies getCookies() {
+		return HttpCookies.of(headers.get(COOKIE));
 	}
 
 	@Override

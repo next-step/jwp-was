@@ -31,7 +31,7 @@ public class HttpRequestParserTest {
 	@Test
 	@DisplayName("바디 파싱")
 	public void parseBody() throws IOException {
-		String body = "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
+		String body = "userId=javajigi&password=password&name=TEST&email=javajigi@slipp.net";
 		HttpRequestHeaders header = HttpRequestHeaders.of(Map.of("Content-Length", String.valueOf(body.getBytes(StandardCharsets.UTF_8).length)));
 		StringReader sr = new StringReader(body);
 		BufferedReader reader = new BufferedReader(sr);
@@ -45,8 +45,8 @@ public class HttpRequestParserTest {
 	@Test
 	@DisplayName("Request 파싱")
 	public void parse() throws IOException {
-		String data = "POST /user/create HTTP/1.1\r\nHost: localhost:8080\r\nConnection: keep-alive\r\nContent-Length: 93\r\nContent-Type: "
-					  + "application/x-www-form-urlencoded\r\nAccept: */*\r\n \r\nuserId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net\r\n";
+		String data = "POST /user/create HTTP/1.1\r\nHost: localhost:8080\r\nConnection: keep-alive\r\nContent-Length: 68\r\nContent-Type: "
+					  + "application/x-www-form-urlencoded\r\nAccept: */*\r\n \r\nuserId=javajigi&password=password&name=TEST&email=javajigi@slipp.net\r\n";
 		StringReader sr = new StringReader(data);
 		BufferedReader reader = new BufferedReader(sr);
 		HttpRequest actual = HttpRequestParser.parse(reader);
@@ -54,10 +54,10 @@ public class HttpRequestParserTest {
 		HttpRequestLine line = HttpRequestLine.of("POST /user/create HTTP/1.1");
 		HttpRequestHeaders headers = HttpRequestHeaders.of(Map.of("Host", "localhost",
 															 "Connection", "keep-alive",
-															 "Content-Length", "93",
+															 "Content-Length", "68",
 															 "Content-Type", "application/x-www-form-urlencoded",
 															 "Accept", "*/*"));
-		HttpRequestBody body = HttpRequestBody.of("userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net");
+		HttpRequestBody body = HttpRequestBody.of("userId=javajigi&password=password&name=TEST&email=javajigi@slipp.net");
 
 		assertThat(actual).isEqualTo(new HttpRequest(line, headers, body));
 	}
