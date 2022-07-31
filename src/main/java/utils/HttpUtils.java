@@ -30,8 +30,8 @@ public class HttpUtils {
         }
     }
 
-    public static Map<String, String> parseToMap(String string) {
-        final Map<String, String> result = new HashMap<>();
+    public static Map<String, Object> parseToMap(String string) {
+        final Map<String, Object> result = new HashMap<>();
         final String[] items = ITEM_DELIMITER_PATTERN.split(string);
         for (String item : items) {
             addItem(result, item);
@@ -39,7 +39,7 @@ public class HttpUtils {
         return result;
     }
 
-    private static void addItem(Map<String, String> result, String item) {
+    private static void addItem(Map<String, Object> result, String item) {
         final String[] keyValue = item.split(KEY_VALUE_DELIMITER);
         validateKeyValue(keyValue);
         result.put(keyValue[0], decode(keyValue[1]));

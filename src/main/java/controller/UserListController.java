@@ -10,7 +10,7 @@ import java.util.Collection;
 public class UserListController extends Controller {
     @Override
     public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-        final Boolean logined = Boolean.valueOf(httpRequest.getCookie("logined"));
+        final boolean logined = httpRequest.getCookie("logined", Boolean.class);
         if (!logined) {
             httpResponse.redirect("/index.html");
         }

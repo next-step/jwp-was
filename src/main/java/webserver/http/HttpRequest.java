@@ -2,6 +2,7 @@ package webserver.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.CastingUtils;
 import utils.HttpUtils;
 import utils.IOUtils;
 
@@ -22,8 +23,8 @@ public class HttpRequest {
 
     private final RequestLine requestLine;
     private final Map<String, Object> headers;
-    private final Map<String, String> cookies;
-    private final Map<String, String> attributes;
+    private final Map<String, Object> cookies;
+    private final Map<String, Object> attributes;
 
     public HttpRequest(InputStream in) {
         final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
@@ -50,7 +51,7 @@ public class HttpRequest {
         return headers;
     }
 
-    private Map<String, String> makeCookies(Map<String, Object> headers) {
+    private Map<String, Object> makeCookies(Map<String, Object> headers) {
         final Object cookie = headers.get("Cookie");
         if (cookie == null) {
             return new HashMap<>();
@@ -74,7 +75,7 @@ public class HttpRequest {
         }
     }
 
-    private Map<String, String> makeAttributes(BufferedReader br) {
+    private Map<String, Object> makeAttributes(BufferedReader br) {
         if (requestLine.isGet()) {
             return new HashMap<>();
         }
@@ -125,16 +126,24 @@ public class HttpRequest {
         }
     }
 
-    public Map<String, String> getAttributes() {
+    public Map<String, Object> getAttributes() {
         return attributes;
     }
 
+    public <T> T getAttribute(String key, Class<T> returnType) {
+        return CastingUtils.cast(attributes.get(key), returnType);
+    }
+
     public String getAttribute(String key) {
-        return attributes.get(key);
+        return getAttribute(key, String.class);
+    }
+
+    public <T> T getCookie(String key, Class<T> returnType) {
+        return CastingUtils.cast(cookies.get(key), returnType);
     }
 
     public String getCookie(String key) {
-        return cookies.get(key);
+        return getCookie(key, String.class);
     }
 
     public boolean isGet() {

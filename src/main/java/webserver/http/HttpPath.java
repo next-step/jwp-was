@@ -1,5 +1,6 @@
 package webserver.http;
 
+import utils.CastingUtils;
 import utils.HttpUtils;
 
 import java.util.HashMap;
@@ -12,7 +13,7 @@ public class HttpPath {
     private static final int CORRECT_LENGTH = 2;
 
     private final String path;
-    private final Map<String, String> queryStrings;
+    private final Map<String, Object> queryStrings;
 
     public HttpPath(String pathSpec) {
         final String[] splitPathSpec = pathSpec.split(PATH_DELIMITER);
@@ -22,7 +23,7 @@ public class HttpPath {
         this.queryStrings = makeQueryStrings(splitPathSpec);
     }
 
-    public HttpPath(String path, Map<String, String> queryStrings) {
+    public HttpPath(String path, Map<String, Object> queryStrings) {
         this.path = path;
         this.queryStrings = queryStrings;
     }
@@ -33,7 +34,7 @@ public class HttpPath {
         }
     }
 
-    private Map<String, String> makeQueryStrings(String[] splitPathSpec) {
+    private Map<String, Object> makeQueryStrings(String[] splitPathSpec) {
         if (splitPathSpec.length == CORRECT_LENGTH) {
             return HttpUtils.parseToMap(splitPathSpec[1]);
         }
@@ -65,7 +66,15 @@ public class HttpPath {
         return path;
     }
 
-    public Map<String, String> getQueryStrings() {
+    public Map<String, Object> getQueryStrings() {
         return queryStrings;
+    }
+
+    public <T> T getQueryString(String key, Class<T> returnType) {
+        return CastingUtils.cast(queryStrings.get(key), returnType);
+    }
+
+    public String getQueryString(String key) {
+        return getQueryString(key, String.class);
     }
 }
