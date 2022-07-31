@@ -39,7 +39,7 @@ class PathTest {
             "/users, false"
     })
     void isFilePath(String pathString, boolean trueOrFalse) {
-        Path path = new Path(pathString, new QueryString(Collections.EMPTY_MAP));
+        Path path = new Path(pathString, new QueryString(Collections.emptyMap()));
         assertThat(path.isFilePath()).isEqualTo(trueOrFalse);
     }
 }

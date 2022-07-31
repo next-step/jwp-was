@@ -26,7 +26,7 @@ public class Path {
             return new Path(pathElements[PATH_INDEX], QueryString.parse(pathElements[QUERY_STRING_INDEX]));
         }
 
-        return new Path(pathString, new QueryString(Collections.EMPTY_MAP));
+        return new Path(pathString, new QueryString(Collections.emptyMap()));
     }
 
     private static void validatePathString(String pathString) {
@@ -48,6 +48,10 @@ public class Path {
 
     public String getPath() {
         return this.path;
+    }
+
+    public String getQueryStringValue(String key) {
+        return this.queryString.getValue(key);
     }
 
     @Override

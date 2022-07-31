@@ -46,6 +46,10 @@ public class RequestLine {
         return this.path.getPath();
     }
 
+    public String getQueryStringValue(String key) {
+        return this.path.getQueryStringValue(key);
+    }
+
     public boolean isFilePath() {
         return this.path.isFilePath();
     }

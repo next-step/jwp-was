@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.URISyntaxException;
 
+import db.DataBase;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -32,6 +34,16 @@ public class RequestHandler implements Runnable {
             String line = br.readLine();
             RequestLine requestLine = RequestLine.parse(line);
             byte[] body = {};
+            if (requestLine.getPath().startsWith("/user/create")) {
+                User user = new User(
+                        requestLine.getQueryStringValue("userId"),
+                        requestLine.getQueryStringValue("password"),
+                        requestLine.getQueryStringValue("name"),
+                        requestLine.getQueryStringValue("email")
+                );
+                DataBase.addUser(user);
+            }
+
             if (requestLine.isFilePath()) {
                 body = FileIoUtils.loadFileFromClasspath("./templates" + requestLine.getPath());
             }
@@ -40,8 +52,7 @@ public class RequestHandler implements Runnable {
             responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
-        }
-        catch (URISyntaxException e) {
+        } catch (URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
