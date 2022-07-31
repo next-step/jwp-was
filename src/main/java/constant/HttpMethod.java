@@ -5,9 +5,13 @@ import java.util.Arrays;
 public enum HttpMethod {
     GET,
     POST,
-    PATCH,
+    PUT,
+    HEAD,
     DELETE,
-    PUT;
+    PATCH,
+    OPTIONS,
+    CONNECT,
+    TRACE;
 
     public static HttpMethod of(String httpmethod) {
         return Arrays.stream(values())

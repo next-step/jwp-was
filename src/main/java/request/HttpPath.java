@@ -1,12 +1,12 @@
-package model;
+package request;
 
 import java.util.Objects;
 
 public class HttpPath {
-    public static String DELIMITER = "\\?";
-    public static int PATH_INDEX = 0;
-    public static int QUERY_STRING_INDEX = 1;
-    public static int LIMIT = 2;
+    private static String DELIMITER = "\\?";
+    private static int PATH_INDEX = 0;
+    private static int QUERY_STRING_INDEX = 1;
+    private static int LIMIT = 2;
 
     private String path;
     private QueryString queryString;
@@ -17,6 +17,10 @@ public class HttpPath {
 
     public QueryString getQueryString() {
         return queryString;
+    }
+
+    public String getParameter(String key) {
+        return queryString.getParameter(key);
     }
 
     public HttpPath(String path, QueryString queryString) {
