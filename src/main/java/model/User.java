@@ -39,7 +39,7 @@ public class User {
                 '}';
     }
 
-    public boolean isLogin(String password) {
+    public boolean equalsPassword(String password) {
         return this.password.equals(password);
     }
 }

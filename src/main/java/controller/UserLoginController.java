@@ -9,7 +9,7 @@ public class UserLoginController extends Controller {
     @Override
     public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
         final User user = DataBase.findUserById(httpRequest.getAttribute("userId"));
-        if (isLogin(user, httpRequest.getAttribute("password"))) {
+        if (loginFailed(user, httpRequest.getAttribute("password"))) {
             setLoginCookie(httpResponse, false);
             httpResponse.redirect("/user/login_failed.html");
             return;
@@ -19,8 +19,8 @@ public class UserLoginController extends Controller {
         httpResponse.redirect("/index.html");
     }
 
-    private boolean isLogin(User user, String password) {
-        return user == null || !user.isLogin(password);
+    private boolean loginFailed(User user, String password) {
+        return user == null || !user.equalsPassword(password);
     }
 
     private void setLoginCookie(HttpResponse httpResponse, boolean login) {
