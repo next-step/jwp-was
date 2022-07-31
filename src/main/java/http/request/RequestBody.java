@@ -1,14 +1,27 @@
 package http.request;
 
+import static java.util.stream.Collectors.*;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 public class RequestBody {
 
-    private final String value;
+    private final Map<String, String> value;
 
     public RequestBody(String body) {
-        this.value = body;
+        this.value = Arrays.stream(body.split("&"))
+            .map(it -> it.split("="))
+            .map(it -> Map.entry(it[0], it[1]))
+            .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public String getValue() {
-        return value;
+    public Map<String, String> getParameters() {
+        return new HashMap<>(value);
+    }
+
+    public String getValue(String key) {
+        return value.get(key);
     }
 }

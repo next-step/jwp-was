@@ -95,4 +95,38 @@ class HttpRequestTest {
             () -> assertThat(httpRequest.isStaticFile()).isTrue()
         );
     }
+
+    @DisplayName("GET 메서드는 쿼리파라미터를 읽을 수 있다.")
+    @Test
+    void getParameters() {
+        var request = "GET /user/list?user=1 HTTP/1.1\n"
+            + "Host: localhost:8080\n"
+            + "Connection: keep-alive\n"
+            + "Content-Length: 6\n"
+            + "Accept: */*\n\n"
+            + "user=2";
+        var inputStream = new ByteArrayInputStream(request.getBytes(StandardCharsets.UTF_8));
+        var bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+        var httpRequest = HttpRequest.parse(bufferedReader);
+
+        assertThat(httpRequest.getParameters().get("user")).isEqualTo("1");
+    }
+
+    @DisplayName("POST 메서드는 body 정보를 읽을 수 있다.")
+    @Test
+    void getParameters2() {
+        var request = "POST /user/list?user=1 HTTP/1.1\n"
+            + "Host: localhost:8080\n"
+            + "Connection: keep-alive\n"
+            + "Content-Length: 6\n"
+            + "Accept: */*\n\n"
+            + "user=2";
+        var inputStream = new ByteArrayInputStream(request.getBytes(StandardCharsets.UTF_8));
+        var bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+        var httpRequest = HttpRequest.parse(bufferedReader);
+
+        assertThat(httpRequest.getParameters().get("user")).isEqualTo("2");
+    }
 }
