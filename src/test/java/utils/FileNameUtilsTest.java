@@ -20,5 +20,4 @@ class FileNameUtilsTest {
         Assertions.assertThat(FileNameUtils.getExtension(path)).isEqualTo(ext);
     }
 
-
 }
