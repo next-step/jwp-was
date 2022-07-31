@@ -3,7 +3,7 @@ package webserver.handler;
 import utils.FileIoUtils;
 import webserver.Handler;
 import webserver.LoadFileException;
-import webserver.RequestMappingInfo;
+import webserver.ModelAndView;
 import webserver.config.StaticLocationConfig;
 import webserver.http.*;
 
@@ -23,13 +23,14 @@ public class StaticFileHandler implements Handler {
 
     private final StaticLocationConfig staticLocationConfig = new StaticLocationConfig();
 
-    public void handle(Request request, Response response) {
+    public ModelAndView handle(Request request, Response response) {
         String path = request.getPath();
 
         byte[] bytes = loadFile(path);
 
         response.setBody(bytes);
         response.setContentType(CONTENT_TYPE_BY_EXTENSION.get(getExtension(path)));
+        return null;
     }
 
     private byte[] loadFile(String path) {

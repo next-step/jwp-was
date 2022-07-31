@@ -9,11 +9,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;;
-import webserver.handler.CreateMemberHandler;
-import webserver.handler.ListMemberHandler;
-import webserver.handler.LoginMemberHandler;
-import webserver.handler.StaticFileHandler;
+import webserver.handler.*;
 import webserver.http.*;
+import webserver.view.View;
+import webserver.view.ViewResolver;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -28,6 +27,8 @@ public class RequestHandler implements Runnable {
                     new RequestMappingInfo("/.*", HttpMethod.GET), new StaticFileHandler()
             )
     );
+
+    private final ViewResolver viewResolver = new ViewResolver();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -54,7 +55,15 @@ public class RequestHandler implements Runnable {
     private void handleRequest(Request request, Response response) {
         Handler handler = handlerMapping.getHandler(request);
 
-        handler.handle(request, response);
+        ModelAndView modelAndView = handler.handle(request, response);
+
+        if (modelAndView == null) {
+            return;
+        }
+
+        View view = viewResolver.resolveView(modelAndView.getView());
+
+        view.render(modelAndView.getModel(), request, response);
     }
 
     private void writeResponse(OutputStream out, Response response) throws IOException {
