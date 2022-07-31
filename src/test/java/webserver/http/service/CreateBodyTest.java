@@ -3,6 +3,7 @@ package webserver.http.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ class CreateBodyTest {
 
     @DisplayName("GET /user/list 로그인 한 경우")
     @Test
-    void userList() throws IOException {
+    void userList() throws IOException, URISyntaxException {
         // given
         DataBase.addUser(new User("test01", "password01", "테스트01", "test01@email.com"));
 

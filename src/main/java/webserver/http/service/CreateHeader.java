@@ -20,7 +20,7 @@ public class CreateHeader {
             return new ResponseHeader(requestHeader.protocolVersion(), HttpResponseStatus.OK)
                     .addContentType(ContentType.HTML)
                     .addContentLength(lengthOfBodyContent)
-                    .addLocation(RequestIndex.GET_INDEX_HTML.getPath())
+                    .addLocation(requestHeader.index())
                     .toString();
         }
 

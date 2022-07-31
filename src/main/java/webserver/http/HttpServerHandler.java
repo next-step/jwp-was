@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import webserver.http.request.HttpRequest;
-import webserver.http.request.handler.RequestHandlerExecutor;
 import webserver.http.request.header.RequestHeader;
 import webserver.http.request.method.HttpMethod;
 import webserver.http.response.HttpResponse;
@@ -48,11 +47,14 @@ public class HttpServerHandler implements Runnable {
             }
 
             RequestHeader requestHeader = RequestHeader.create(requestContents.toString());
+
             HttpRequest httpRequest = new HttpRequest();
             byte[] body = httpRequest.run(requestHeader);
 
             HttpResponse httpResponse = new HttpResponse();
-            writeAndFlush(httpResponse.run(requestHeader, body.length), body, dos);
+            String responseHeader = httpResponse.run(requestHeader, body.length);
+
+            writeAndFlush(responseHeader, body, dos);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -64,14 +66,6 @@ public class HttpServerHandler implements Runnable {
 
     private boolean isEnd(String line) {
         return !EMPTY.equals(line);
-    }
-
-    private boolean isGet(RequestHeader requestLine) {
-        return HttpMethod.isGet(requestLine.httpMethod());
-    }
-
-    private boolean isPost(RequestHeader requestLine) {
-        return HttpMethod.isPost(requestLine.httpMethod());
     }
 
     private static void writeAndFlush(String header, byte[] body, DataOutputStream dos) {

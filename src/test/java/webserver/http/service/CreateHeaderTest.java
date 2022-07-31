@@ -32,7 +32,7 @@ class CreateHeaderTest {
                 "HTTP/1.1 200 OK\r\n" +
                         "Content-Length: 0\r\n" +
                         "Content-Type: text/html;charset=utf-8\r\n" +
-                        "Location: /index.html\r\n" +
+                        "Location: /user/create\r\n" +
                         "\r\n"
         );
     }
