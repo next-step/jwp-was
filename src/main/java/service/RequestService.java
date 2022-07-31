@@ -1,14 +1,15 @@
 package service;
 
 import model.ClientResponse;
-import model.HttpMessage;
+import model.HttpRequestMessage;
 import model.RequestLine;
 import model.UrlPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import types.MediaType;
 import utils.HandlerAdapter;
+import types.HttpStatus;
+import model.HttpHeaders;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -36,12 +37,12 @@ public class RequestService {
         return data;
     }
 
-    public static ClientResponse getClientResponse(HttpMessage httpMessage) throws IOException, URISyntaxException, InvocationTargetException, IllegalAccessException {
+    public static ClientResponse getClientResponse(HttpRequestMessage httpRequestMessage) throws IOException, URISyntaxException, InvocationTargetException, IllegalAccessException {
 
-        RequestLine requestLine = httpMessage.getRequestLine();
+        RequestLine requestLine = httpRequestMessage.getRequestLine();
         if (isRequestForFileResource(requestLine)) {
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.put(HttpHeaders.CONTENT_TYPE, List.of("text/css"));
+            httpHeaders.setContentType(MediaType.TEXT_CSS);
 
             UrlPath urlPath = requestLine.getUrlPath();
             ClientResponse clientResponse = new ClientResponse(HttpStatus.OK, httpHeaders);
@@ -56,9 +57,9 @@ public class RequestService {
             return clientResponse;
         }
 
-        logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpMessage.toStringHttpMessage());
-        AuthService.getInstance().setUserCredential(httpMessage.getRequestHeaders().getRequestHeaders());
-        ClientResponse clientResponse = HandlerAdapter.getInstance().invoke(httpMessage);
+        logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpRequestMessage.toStringHttpMessage());
+        AuthService.getInstance().setUserCredential(httpRequestMessage.getRequestHeaders().getRequestHeaders());
+        ClientResponse clientResponse = HandlerAdapter.getInstance().invoke(httpRequestMessage);
         if (clientResponse != null && clientResponse.getBody() != null) {
             clientResponse.convertBodyToBytes();
         }

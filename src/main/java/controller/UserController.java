@@ -6,8 +6,8 @@ import db.DataBase;
 import model.ClientResponse;
 import model.Credential;
 import model.User;
-import org.springframework.http.HttpStatus;
 import service.UserService;
+import types.HttpStatus;
 
 import java.io.IOException;
 

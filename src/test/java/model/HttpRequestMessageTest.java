@@ -10,15 +10,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-class HttpMessageTest {
+class HttpRequestMessageTest {
 
     @DisplayName("httpMessage 생성 검증 - requestLine")
     @Test
     void createHttpMessageRequestLineTest() throws IOException {
         List<String> httpMessageData = List.of("POST /user/create HTTP/1.1");
-        HttpMessage httpMessage = new HttpMessage(httpMessageData);
+        HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMessageData);
 
-        RequestLine actual = httpMessage.getRequestLine();
+        RequestLine actual = httpRequestMessage.getRequestLine();
         RequestLine expected = new RequestLine(HttpMethod.POST, new UrlPath("/user/create"), Protocol.HTTP_1_1);
 
         Assertions.assertThat(actual).isEqualTo(expected);
@@ -35,9 +35,9 @@ class HttpMessageTest {
                 "Content-Type: application/x-www-form-urlencoded",
                 "Accept: */*"
         );
-        HttpMessage httpMessage = new HttpMessage(httpMessageData);
+        HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMessageData);
 
-        RequestHeaders actualRequestHeaders = httpMessage.getRequestHeaders();
+        RequestHeaders actualRequestHeaders = httpRequestMessage.getRequestHeaders();
         Map<String, String> expectedRequestHeaders = Map.of(
                 "Host", "localhost:8080",
                 "Connection", "keep-alive",

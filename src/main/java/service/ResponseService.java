@@ -3,8 +3,8 @@ package service;
 import model.ClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import model.HttpHeaders;
+import types.HttpStatus;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -22,19 +22,19 @@ public class ResponseService {
             body = clientResponse.getBytesBody();
         }
 
-        HttpStatus responseStatusCode = clientResponse.getResponseHttpStatusCode();
+        HttpStatus responseHttpStatus = clientResponse.getResponseHttpStatus();
         HttpHeaders responseHeaders = clientResponse.getResponseHeaders();
 
-        dataOutputStream.writeBytes(String.format("HTTP/1.1 %s %s\r\n", responseStatusCode.value(), responseStatusCode.name()));
+        dataOutputStream.writeBytes(String.format("HTTP/1.1 %s %s\r\n", responseHttpStatus.getCode(), responseHttpStatus.name()));
         if (body != null) {
             dataOutputStream.writeBytes("Content-Length: " + body.length + "\r\n");
         }
 
         if (responseHeaders != null) {
-            responseHeaders.keySet()
+            responseHeaders.getHeaders().keySet()
                     .forEach(key -> {
                         try {
-                            String headerValue = responseHeaders.get(key).get(0);
+                            String headerValue = responseHeaders.getHeaders().get(key);
                             dataOutputStream.writeBytes(key + ": " + headerValue + "\r\n");
                         } catch (IOException e) {
                             e.printStackTrace();

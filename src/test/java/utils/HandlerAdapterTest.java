@@ -1,7 +1,7 @@
 package utils;
 
 import model.ClientResponse;
-import model.HttpMessage;
+import model.HttpRequestMessage;
 import model.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -17,9 +17,9 @@ class HandlerAdapterTest {
     @Test
     void invokeTest() throws IOException, InvocationTargetException, IllegalAccessException {
         List<String> httpMessageData = List.of("GET /user HTTP/1.1");
-        HttpMessage httpMessage = new HttpMessage(httpMessageData);
+        HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMessageData);
 
-        ClientResponse clientResponse = HandlerAdapter.getInstance().invoke(httpMessage);
+        ClientResponse clientResponse = HandlerAdapter.getInstance().invoke(httpRequestMessage);
         String expected = clientResponse.getBody().toString();
 
         Assertions.assertThat("getUserTest").isEqualTo(expected);
@@ -29,9 +29,9 @@ class HandlerAdapterTest {
     @Test
     void invokeParameterTest() throws IOException, InvocationTargetException, IllegalAccessException {
         List<String> httpMessageData = List.of("GET /user/create?userId=fistkim101&password=1234&name=leo&email=fistkim101%40gmail.com HTTP/1.1");
-        HttpMessage httpMessage = new HttpMessage(httpMessageData);
+        HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMessageData);
 
-        User actual = (User) HandlerAdapter.getInstance().invoke(httpMessage).getBody();
+        User actual = (User) HandlerAdapter.getInstance().invoke(httpRequestMessage).getBody();
 
         Assertions.assertThat(actual.getUserId()).isEqualTo("fistkim101");
         Assertions.assertThat(actual.getEmail()).isEqualTo("fistkim101%40gmail.com");

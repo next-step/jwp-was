@@ -260,39 +260,3 @@ Connection: keep-alive
 
 * 응답 헤더의 Content-Type을 text/html로 보내면 브라우저는 html 파일로 인식하기 때문에 css가 정상적으로 동작하지 않는다.
 * Stylesheet인 경우 응답 헤더의 Content-Type을 text/css로 전송한다. Content-Type은 확장자를 통해 구분할 수도 있으며, 요청 헤더의 Accept를 활용할 수도 있다.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

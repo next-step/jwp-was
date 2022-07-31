@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HttpMessage {
+public class HttpRequestMessage {
 
     private static final String CONTENT_LENGTH_KEY = "Content-Length";
 
@@ -18,11 +18,11 @@ public class HttpMessage {
 
     private String body;
 
-    public HttpMessage(List<String> httpMessageData) throws IOException {
+    public HttpRequestMessage(List<String> httpMessageData) throws IOException {
         this(httpMessageData, null);
     }
 
-    public HttpMessage(List<String> httpMessageData, BufferedReader bufferedReader) throws IOException {
+    public HttpRequestMessage(List<String> httpMessageData, BufferedReader bufferedReader) throws IOException {
         if (!(httpMessageData instanceof ArrayList)) {
             httpMessageData = new ArrayList<>(httpMessageData);
         }

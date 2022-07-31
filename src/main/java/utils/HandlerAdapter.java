@@ -24,8 +24,8 @@ public class HandlerAdapter {
     private HandlerAdapter() {
     }
 
-    public ClientResponse invoke(HttpMessage httpMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
-        RequestLine requestLine = httpMessage.getRequestLine();
+    public ClientResponse invoke(HttpRequestMessage httpRequestMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+        RequestLine requestLine = httpRequestMessage.getRequestLine();
 
         if (this.handlers == null) {
             this.initHandlers();
@@ -36,11 +36,11 @@ public class HandlerAdapter {
             return null;
         }
 
-        return this.invokeHandler(handlerPair, httpMessage);
+        return this.invokeHandler(handlerPair, httpRequestMessage);
     }
 
-    private ClientResponse invokeHandler(HandlerPair handlerPair, HttpMessage httpMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
-        RequestLine requestLine = httpMessage.getRequestLine();
+    private ClientResponse invokeHandler(HandlerPair handlerPair, HttpRequestMessage httpRequestMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+        RequestLine requestLine = httpRequestMessage.getRequestLine();
         Object controller = handlerPair.getController();
         Method handler = handlerPair.getHandler();
 
@@ -52,7 +52,7 @@ public class HandlerAdapter {
         if (parameters.length == 1) {
             Parameter definedParameter = parameters[0];
             Class<?> parameterClass = definedParameter.getType();
-            String data = this.getParameterData(requestLine.getHttpMethod(), httpMessage);
+            String data = this.getParameterData(requestLine.getHttpMethod(), httpRequestMessage);
             Object parameter = this.getParaMeterObject(data, parameterClass);
             return (ClientResponse) handler.invoke(controller, parameter);
         }
@@ -70,17 +70,17 @@ public class HandlerAdapter {
     }
 
 
-    private String getParameterData(HttpMethod httpMethod, HttpMessage httpMessage) throws JsonProcessingException {
-        UrlPath urlPath = httpMessage.getRequestLine().getUrlPath();
+    private String getParameterData(HttpMethod httpMethod, HttpRequestMessage httpRequestMessage) throws JsonProcessingException {
+        UrlPath urlPath = httpRequestMessage.getRequestLine().getUrlPath();
         QueryParameter queryParameter = urlPath.getQueryParameter();
 
         if (httpMethod == HttpMethod.GET && queryParameter != null) {
             return ObjectMapperFactory.getObjectMapper().writeValueAsString(queryParameter.getParameters());
         }
 
-        String body = httpMessage.getBody();
+        String body = httpRequestMessage.getBody();
         if (httpMethod == HttpMethod.POST && StringUtils.hasText(body)) {
-            return ObjectMapperFactory.getObjectMapper().writeValueAsString(HttpParser.convertStringToMap(httpMessage.getBody()));
+            return ObjectMapperFactory.getObjectMapper().writeValueAsString(HttpParser.convertStringToMap(httpRequestMessage.getBody()));
         }
 
         return null;

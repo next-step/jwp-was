@@ -3,12 +3,12 @@ package service;
 import db.DataBase;
 import model.ClientResponse;
 import model.Credential;
+import model.HttpHeaders;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import types.HttpStatus;
+import types.MediaType;
 import utils.HtmlPageFactory;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class UserService {
         DataBase.addUser(user);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.TEXT_HTML);
-        httpHeaders.setLocation(URI.create("http://localhost:8080/index.html"));
+        httpHeaders.setLocation(URI.create("http://localhost:8080/index.html").toString());
         return new ClientResponse(HttpStatus.FOUND, httpHeaders, user);
     }
 
@@ -44,14 +44,14 @@ public class UserService {
         httpHeaders.setContentType(MediaType.TEXT_HTML);
         if (!this.isLoginSuccess(user, credential)) {
             logger.info("login failed ...");
-            httpHeaders.setLocation(URI.create("http://localhost:8080/user/login_failed.html"));
-            httpHeaders.put(HttpHeaders.SET_COOKIE, List.of(AuthService.LOGIN_HEADER_KEY + "=false; Path=/"));
+            httpHeaders.setLocation(URI.create("http://localhost:8080/user/login_failed.html").toString());
+            httpHeaders.setCookie(AuthService.LOGIN_HEADER_KEY + "=false; Path=/");
             return new ClientResponse(HttpStatus.FOUND, httpHeaders, null);
         }
 
         logger.info("login success ... (userId: {})", user.getUserId());
-        httpHeaders.setLocation(URI.create("http://localhost:8080/index.html"));
-        httpHeaders.put(HttpHeaders.SET_COOKIE, List.of(AuthService.LOGIN_HEADER_KEY + "=true; Path=/"));
+        httpHeaders.setLocation(URI.create("http://localhost:8080/index.html").toString());
+        httpHeaders.setCookie(AuthService.LOGIN_HEADER_KEY + "=true; Path=/");
         return new ClientResponse(HttpStatus.FOUND, httpHeaders, null);
     }
 
@@ -60,7 +60,7 @@ public class UserService {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.TEXT_HTML);
         if (!logined) {
-            httpHeaders.setLocation(URI.create("http://localhost:8080/user/login.html"));
+            httpHeaders.setLocation(URI.create("http://localhost:8080/user/login.html").toString());
             return new ClientResponse(HttpStatus.FOUND, httpHeaders, null);
         }
 

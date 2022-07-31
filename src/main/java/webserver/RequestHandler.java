@@ -1,7 +1,7 @@
 package webserver;
 
 import model.ClientResponse;
-import model.HttpMessage;
+import model.HttpRequestMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.RequestService;
@@ -30,9 +30,9 @@ public class RequestHandler implements Runnable {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             List<String> httpMessageData = RequestService.getHttpMessageData(bufferedReader);
-            HttpMessage httpMessage = new HttpMessage(httpMessageData, bufferedReader);
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMessageData, bufferedReader);
 
-            ClientResponse clientResponse = RequestService.getClientResponse(httpMessage);
+            ClientResponse clientResponse = RequestService.getClientResponse(httpRequestMessage);
 
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
             ResponseService.makeResponseHeader(dataOutputStream, clientResponse);
