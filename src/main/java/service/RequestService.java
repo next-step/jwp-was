@@ -1,15 +1,11 @@
 package service;
 
-import model.ClientResponse;
-import model.HttpRequestMessage;
-import model.RequestLine;
-import model.UrlPath;
+import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import types.HttpStatus;
 import types.MediaType;
 import utils.HandlerAdapter;
-import types.HttpStatus;
-import model.HttpHeaders;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -60,23 +56,20 @@ public class RequestService {
         logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpRequestMessage.toStringHttpMessage());
         AuthService.getInstance().setUserCredential(httpRequestMessage.getRequestHeaders().getRequestHeaders());
         ClientResponse clientResponse = HandlerAdapter.getInstance().invoke(httpRequestMessage);
-        if (clientResponse != null && clientResponse.getBody() != null) {
-            clientResponse.convertBodyToBytes();
-        }
 
         AuthService.getInstance().removeUserCredential();
 
         return clientResponse;
     }
 
-    public static byte[] bodyToBytes(Object result) throws IOException {
-        if (result == null) {
+    public static byte[] bodyToBytes(Object body) throws IOException {
+        if (body == null) {
             return null;
         }
 
         ByteArrayOutputStream boas = new ByteArrayOutputStream();
         try (ObjectOutputStream ois = new ObjectOutputStream(boas)) {
-            ois.writeObject(result);
+            ois.writeObject(body);
             return boas.toByteArray();
         }
     }

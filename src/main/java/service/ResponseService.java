@@ -1,9 +1,9 @@
 package service;
 
 import model.ClientResponse;
+import model.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import model.HttpHeaders;
 import types.HttpStatus;
 
 import java.io.DataOutputStream;
@@ -17,10 +17,7 @@ public class ResponseService {
             return;
         }
 
-        byte[] body = null;
-        if (clientResponse.getBody() != null) {
-            body = clientResponse.getBytesBody();
-        }
+        byte[] body = clientResponse.getBytesBody();
 
         HttpStatus responseHttpStatus = clientResponse.getResponseHttpStatus();
         HttpHeaders responseHeaders = clientResponse.getResponseHeaders();

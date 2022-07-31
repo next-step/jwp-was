@@ -6,6 +6,7 @@ import model.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import service.RequestService;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -20,21 +21,20 @@ class HandlerAdapterTest {
         HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMessageData);
 
         ClientResponse clientResponse = HandlerAdapter.getInstance().invoke(httpRequestMessage);
-        String expected = clientResponse.getBody().toString();
 
-        Assertions.assertThat("getUserTest").isEqualTo(expected);
+        Assertions.assertThat(clientResponse.getBytesBody()).isEqualTo(RequestService.bodyToBytes("getUserTest"));
     }
 
     @DisplayName("요청 실려온 queryParameter를 handler의 parameter로 컨버팅 하는지 검증")
     @Test
     void invokeParameterTest() throws IOException, InvocationTargetException, IllegalAccessException {
-        List<String> httpMessageData = List.of("GET /user/create?userId=fistkim101&password=1234&name=leo&email=fistkim101%40gmail.com HTTP/1.1");
+        List<String> httpMessageData = List.of("GET /user/create?userId=fistkim101&password=1234&name=kim&email=fistkim101%40gmail.com HTTP/1.1");
         HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMessageData);
 
-        User actual = (User) HandlerAdapter.getInstance().invoke(httpRequestMessage).getBody();
+        User actual = new User("fistkim101", "1234", "kim", "fistkim101%40gmail.com");
+        byte[] expected = HandlerAdapter.getInstance().invoke(httpRequestMessage).getBytesBody();
 
-        Assertions.assertThat(actual.getUserId()).isEqualTo("fistkim101");
-        Assertions.assertThat(actual.getEmail()).isEqualTo("fistkim101%40gmail.com");
+        Assertions.assertThat(RequestService.bodyToBytes(actual)).isEqualTo(expected);
     }
 
 }

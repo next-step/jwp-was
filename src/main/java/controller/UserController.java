@@ -14,23 +14,23 @@ import java.io.IOException;
 public class UserController {
 
     @GetMapping(path = "/user")
-    public ClientResponse getUserTest() {
+    public ClientResponse getUserTest() throws IOException {
         return new ClientResponse(HttpStatus.OK, null, "getUserTest");
     }
 
     @GetMapping(path = "/user/create")
-    public ClientResponse createUserGet(User user) {
+    public ClientResponse createUserGet(User user) throws IOException {
         DataBase.addUser(user);
         return new ClientResponse(HttpStatus.OK, null, user);
     }
 
     @PostMapping(path = "/user/create")
-    public ClientResponse createUserPost(User user) {
+    public ClientResponse createUserPost(User user) throws IOException {
         return UserService.getInstance().createUser(user);
     }
 
     @PostMapping(path = "/user/login")
-    public ClientResponse login(Credential credential) {
+    public ClientResponse login(Credential credential) throws IOException {
         return UserService.getInstance().auth(credential);
     }
 

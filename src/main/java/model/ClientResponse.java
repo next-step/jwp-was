@@ -3,7 +3,6 @@ package model;
 import service.RequestService;
 import types.HttpStatus;
 import utils.FileIoUtils;
-import model.HttpHeaders;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -11,7 +10,6 @@ import java.net.URISyntaxException;
 public class ClientResponse {
     private final HttpStatus responseHttpStatus;
     private HttpHeaders responseHeaders;
-    private Object body;
     private byte[] bytesBody;
 
     public ClientResponse(HttpStatus responseHttpStatus) {
@@ -23,10 +21,10 @@ public class ClientResponse {
         this.responseHeaders = responseHeaders;
     }
 
-    public ClientResponse(HttpStatus responseHttpStatus, HttpHeaders responseHeaders, Object body) {
+    public ClientResponse(HttpStatus responseHttpStatus, HttpHeaders responseHeaders, Object body) throws IOException {
         this.responseHttpStatus = responseHttpStatus;
         this.responseHeaders = responseHeaders;
-        this.body = body;
+        this.bytesBody = RequestService.bodyToBytes(body);
     }
 
     public HttpStatus getResponseHttpStatus() {
@@ -37,20 +35,12 @@ public class ClientResponse {
         return responseHeaders;
     }
 
-    public Object getBody() {
-        return body;
-    }
-
     public byte[] getBytesBody() {
         return bytesBody;
     }
 
     public void setFileBody(UrlPath urlPath, boolean isRequestForTemplate) throws IOException, URISyntaxException {
         this.bytesBody = FileIoUtils.loadFileFromClasspath(urlPath.getPath(), isRequestForTemplate);
-    }
-
-    public void convertBodyToBytes() throws IOException {
-        this.bytesBody = RequestService.bodyToBytes(this.body);
     }
 
 }

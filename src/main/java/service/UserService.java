@@ -29,7 +29,7 @@ public class UserService {
         return userService;
     }
 
-    public ClientResponse createUser(User user) {
+    public ClientResponse createUser(User user) throws IOException {
         DataBase.addUser(user);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.TEXT_HTML);
@@ -37,7 +37,7 @@ public class UserService {
         return new ClientResponse(HttpStatus.FOUND, httpHeaders, user);
     }
 
-    public ClientResponse auth(Credential credential) {
+    public ClientResponse auth(Credential credential) throws IOException {
         User user = DataBase.findUserById(credential.getUserId());
 
         HttpHeaders httpHeaders = new HttpHeaders();
