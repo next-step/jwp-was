@@ -1,10 +1,9 @@
-package webserver.http;
+package webserver.http.request.requestline;
 
 public class RequestLine {
     private static final String BLANK_DELIMITER = " ";
     private static final int METHOD_INDEX = 0;
     private static final int PATH_INDEX = 1;
-
     private static final int PROTOCOL_AND_VERSION_INDEX = 2;
     private static final int REQUEST_PARSING_ELEMENT_NUMBER = 3;
 
@@ -52,6 +51,10 @@ public class RequestLine {
 
     public boolean isFilePath() {
         return this.path.isFilePath();
+    }
+
+    public boolean isMethodEqual(Method method) {
+        return this.method.isMethodEqual(method);
     }
 
     @Override

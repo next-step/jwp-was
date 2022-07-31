@@ -14,7 +14,11 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import webserver.http.RequestLine;
+import utils.IOUtils;
+import webserver.http.request.header.HttpHeader;
+import webserver.http.request.requestline.Method;
+import webserver.http.request.requestline.QueryString;
+import webserver.http.request.requestline.RequestLine;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -34,12 +38,26 @@ public class RequestHandler implements Runnable {
             String line = br.readLine();
             RequestLine requestLine = RequestLine.parse(line);
             byte[] body = {};
-            if (requestLine.getPath().startsWith("/user/create")) {
+
+            HttpHeader header = new HttpHeader();
+            while (line != null && !line.equals("")) {
+                line = br.readLine();
+                if (line.equals("")) {
+                    break;
+                }
+                header.setField(line);
+            }
+
+            int contentLength = header.getContentLength();
+
+            if (requestLine.isMethodEqual(Method.POST) && requestLine.getPath().equals("/user/create")) {
+                String bodyString = IOUtils.readData(br, contentLength);
+                QueryString queryString = QueryString.parse(bodyString);
                 User user = new User(
-                        requestLine.getQueryStringValue("userId"),
-                        requestLine.getQueryStringValue("password"),
-                        requestLine.getQueryStringValue("name"),
-                        requestLine.getQueryStringValue("email")
+                        queryString.getValue("userId"),
+                        queryString.getValue("password"),
+                        queryString.getValue("name"),
+                        queryString.getValue("email")
                 );
                 DataBase.addUser(user);
             }
@@ -50,9 +68,7 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length);
             responseBody(dos, body);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        } catch (URISyntaxException e) {
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }

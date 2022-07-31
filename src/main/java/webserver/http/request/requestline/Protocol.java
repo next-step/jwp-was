@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request.requestline;
 
 public class Protocol {
     private static final String SLASH_DELIMITER = "/";
