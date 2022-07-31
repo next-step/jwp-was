@@ -40,7 +40,7 @@ public class UserService {
 		}
 	}
 
-	public void login(HttpRequestBody httpRequestBody) {
+	public User login(HttpRequestBody httpRequestBody) {
 		String userId = httpRequestBody.getAttribute(USERID);
 		String password = httpRequestBody.getAttribute(PASSWORD);
 
@@ -52,6 +52,8 @@ public class UserService {
 		if (!user.getPassword().equals(password)) {
 			throw new InvalidPasswordException();
 		}
+
+		return user;
 	}
 
 	public Collection<User> findAll() {

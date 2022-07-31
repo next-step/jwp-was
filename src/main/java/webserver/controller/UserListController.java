@@ -13,15 +13,18 @@ import model.User;
 import webserver.http.ContentType;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.service.LoginService;
 import webserver.service.UserService;
 
 public class UserListController extends AbstractController {
 
 	private final UserService userService;
+	private final LoginService loginService;
 	private final Handlebars handlebars;
 
 	public UserListController() {
 		userService = new UserService();
+		loginService = new LoginService();
 		TemplateLoader loader = new ClassPathTemplateLoader();
 		loader.setPrefix("/templates");
 		loader.setSuffix(".html");
@@ -30,7 +33,7 @@ public class UserListController extends AbstractController {
 
 	@Override
 	protected void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-		if (httpRequest.isLogin()) {
+		if (loginService.isLogin(httpRequest)) {
 			Collection<User> allUsers = userService.findAll();
 			String page = createPage(allUsers);
 			httpResponse.forwardBody(ContentType.HTML, page);
