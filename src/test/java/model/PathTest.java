@@ -1,0 +1,43 @@
+package model;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@DisplayName("Path 테스트")
+class PathTest {
+
+    @DisplayName("root 패스 생성")
+    @Test
+    void root() {
+        Path path = Path.of("/");
+        assertThat(path.getPath()).isEqualTo("/");
+        assertThat(path.getParameters()).isEqualTo("");
+    }
+
+    @DisplayName("파라미터 없는 index.html 패스 생성")
+    @Test
+    void index() {
+        Path path = Path.of("/index.html");
+        assertThat(path.getPath()).isEqualTo("/index.html");
+        assertThat(path.getParameters()).isEqualTo("");
+    }
+    
+    @DisplayName("파라미터 한개인 index.html 패스 생성")
+    @Test
+    void oneParameter() {
+        Path path = Path.of("/index.html?id=1");
+        assertThat(path.getPath()).isEqualTo("/index.html");
+        assertThat(path.getParameters()).isEqualTo("id=1");
+    }
+
+    @DisplayName("파라미터 두개인 index.html 패스 생성")
+    @Test
+    void twoParameter() {
+        Path path = Path.of("/index.html?id=1&name=jdragon");
+        assertThat(path.getPath()).isEqualTo("/index.html");
+        assertThat(path.getParameters()).isEqualTo("id=1&name=jdragon");
+    }
+
+}

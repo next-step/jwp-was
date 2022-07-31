@@ -14,4 +14,11 @@ public class RestTemplateTest {
         ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
+    @Test
+    void request_resttemplate_index() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/index.html", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 }

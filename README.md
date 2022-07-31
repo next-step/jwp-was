@@ -18,7 +18,7 @@
 - [x] InputStream 을 문자열로 변환
 - [x] 모든 Request Header 를 출력
 - [x] RequestLine 에서 Path 분리하기
-- [ ] Path 에 해당하는 파일 읽어 응답하기
+- [x] Path 에 해당하는 파일 읽어 응답하기
 
 ## 요구사항 2
 
