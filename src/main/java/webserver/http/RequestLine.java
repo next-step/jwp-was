@@ -42,6 +42,14 @@ public class RequestLine {
         }
     }
 
+    public String getPath() {
+        return this.path.getPath();
+    }
+
+    public boolean isFilePath() {
+        return this.path.isFilePath();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

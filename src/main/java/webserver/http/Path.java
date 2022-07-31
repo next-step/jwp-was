@@ -8,6 +8,7 @@ public class Path {
     private static final int QUERY_STRING_INDEX = 1;
     private static final String QUERY_DELIMITER = "?";
     private static final String QUERY_REGEX_DELIMITER = "\\?";
+    private static final String HTML_FILE_EXTENSION = ".html";
 
     private String path;
     private QueryString queryString;
@@ -36,6 +37,17 @@ public class Path {
         if (!pathString.startsWith("/")) {
             throw new IllegalArgumentException(String.format("요청된 HTTP RequestLine 의 path 는 '/'로 시작해야 합니다. 현재 입력된 path : %s", pathString));
         }
+    }
+
+    public boolean isFilePath() {
+        if (this.path.endsWith(HTML_FILE_EXTENSION)) {
+            return true;
+        }
+        return false;
+    }
+
+    public String getPath() {
+        return this.path;
     }
 
     @Override
