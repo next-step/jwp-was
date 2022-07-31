@@ -1,14 +1,12 @@
-package model;
+package request;
 
 import constant.HttpMethod;
 
-import java.util.Map;
-
 public class RequestLine {
-    public static final String DELIMITER = " ";
-    public static final int HTTP_METHOD_INDEX = 0;
-    public static final int HTTP_PATH_INDEX = 1;
-    public static final int HTTP_PROTOCOL_INDEX = 2;
+    private static final String DELIMITER = " ";
+    private static final int HTTP_METHOD_INDEX = 0;
+    private static final int HTTP_PATH_INDEX = 1;
+    private static final int HTTP_PROTOCOL_INDEX = 2;
 
     private HttpMethod httpMethod;
     private HttpPath httpPath;
@@ -26,6 +24,14 @@ public class RequestLine {
 
     public HttpPath getHttpPath() {
         return httpPath;
+    }
+
+    public String getPath() {
+        return httpPath.getPath();
+    }
+
+    public String getParameter(String key) {
+        return httpPath.getParameter(key);
     }
 
     public HttpProtocol getHttpProtocol() {

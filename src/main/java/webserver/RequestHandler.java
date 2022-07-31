@@ -1,11 +1,25 @@
 package webserver;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
+import constant.HttpContentType;
+import constant.HttpHeader;
+import controller.Controller;
+import controller.UserCreateController;
 import java.io.*;
 import java.net.Socket;
 
-import model.RequestLine;
+import java.util.List;
+import java.util.Map;
+import request.HttpRequest;
+import request.RequestLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import response.HttpResponse;
+import utils.FileIoUtils;
+import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -21,38 +35,39 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream();
-             BufferedReader br = new BufferedReader(new InputStreamReader(in));
-             OutputStream out = connection.getOutputStream(); ) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            DataOutputStream dos = new DataOutputStream(connection.getOutputStream()); ) {
 
-            // TODO: STEP1을 위해 첫째 줄만 사용한다.
-            RequestLine requestLine = RequestLine.from(br.readLine());
+            HttpRequest request = HttpRequest.from(IOUtils.readLines(br));
+            request.addBody(IOUtils.readData(br, request.getContentLength()));
 
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = requestLine.toString().getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            Controller controller = DispatcherServlet.isMatcher(request.getPath());
+            HttpResponse response = controller.service(request);
+
+            writeResponse(response, dos);
         } catch (IOException e) {
+            logger.error(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void writeResponse(HttpResponse response, DataOutputStream dos) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes(String.format("HTTP/1.1 %s \r\n", response.getResponseCode() ));
+            writeHeaders(response, dos);
             dos.writeBytes("\r\n");
-        } catch (IOException e) {
+            dos.write(response.getBody(), 0, response.getBody().length);
+            dos.flush();
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+    private void writeHeaders(HttpResponse response, DataOutputStream dos) throws IOException {
+        for (Map.Entry<String, String> header : response.getHeaderEntiry()) {
+            dos.writeBytes(String.format("%s: %s\r\n", header.getKey(), header.getValue()));
         }
     }
 }

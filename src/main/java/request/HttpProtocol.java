@@ -1,11 +1,11 @@
-package model;
+package request;
 
 import java.util.Objects;
 
 public class HttpProtocol {
-    public static String DELIMITER = "/";
-    public static int PROTOCOL_INDEX = 0;
-    public static int VERSION_INDEX = 1;
+    private static String DELIMITER = "/";
+    private static int PROTOCOL_INDEX = 0;
+    private static int VERSION_INDEX = 1;
 
     private String protocol;
     private String version;

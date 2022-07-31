@@ -1,4 +1,4 @@
-package model;
+package request;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,10 +6,10 @@ import java.util.Objects;
 import java.util.StringTokenizer;
 
 public class QueryString {
-    public static String DELIMITER = "&";
-    public static String QUERY_DELIMITER = "=";
-    public static int QUERY_STRING_KEY_INDEX = 0;
-    public static int QUERY_STRING_VALUE_INDEX = 1;
+    private static String DELIMITER = "&";
+    private static String QUERY_DELIMITER = "=";
+    private static int QUERY_STRING_KEY_INDEX = 0;
+    private static int QUERY_STRING_VALUE_INDEX = 1;
 
     private Map<String, Object> queryString;
 
@@ -19,6 +19,10 @@ public class QueryString {
 
     public QueryString(Map<String, Object> queryString) {
         this.queryString = queryString;
+    }
+
+    public String getParameter(String key) {
+        return (String) queryString.get(key);
     }
 
     @Override
