@@ -4,10 +4,12 @@ import exception.NotFoundHttpMethodException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DisplayName("RequestLine 테스트")
+@DisplayName("RequestLineFactory 테스트")
 class RequestLineFactoryTest {
 
     @DisplayName("HttpMethod 를 찾을 수 없는 경우")
@@ -43,7 +45,10 @@ class RequestLineFactoryTest {
         RequestLine requestLine = parsing("GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1");
         assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(requestLine.getPath()).isEqualTo("/users");
-        assertThat(requestLine.getParameters()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
+        assertThat(requestLine.getParameters()).contains(
+                Map.entry("userId", "javajigi"),
+                Map.entry("password", "password"),
+                Map.entry("name", "JaeSung"));
         assertThat(requestLine.getProtocol()).isEqualTo("HTTP");
         assertThat(requestLine.getVersion()).isEqualTo("1.1");
     }

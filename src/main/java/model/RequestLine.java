@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Map;
+
 public class RequestLine {
     private HttpMethod method;
     private Path path;
@@ -33,7 +35,7 @@ public class RequestLine {
         return version;
     }
 
-    public String getParameters() {
+    public Map<String, String> getParameters() {
         return path.getParameters();
     }
 }
