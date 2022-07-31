@@ -19,13 +19,16 @@ import webserver.http.view.request.RequestReader;
 import webserver.http.domain.exception.NullRequestException;
 import webserver.http.view.response.ResponseWriter;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -55,32 +58,24 @@ public class RequestHandler implements Runnable {
             logger.info("[request] = {}", request);
 
             if (request.hasMethod(Method.GET) && request.hasPath("/")) {
-                try {
-                    String resource = "/index.html";
-                    byte[] bytes = FileIoUtils.loadFileFromClasspath("./static" + resource);
-                    Response response = Response.ok();
-                    response.addHeader("Content-Type", findContentType(resource));
-                    response.addBody(bytes);
-                    responseWriter.write(dos, response);
-                    return;
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException(e);
-                }
+                String resource = "/index.html";
+                byte[] bytes = FileIoUtils.loadFileFromClasspath("./static" + resource);
+                Response response = Response.ok();
+                response.addHeader("Content-Type", findContentType(resource));
+                response.addBody(bytes);
+                responseWriter.write(dos, response);
+                return;
             }
 
 
             if (request.hasMethod(Method.GET) && isResource(request)) {
-                try {
-                    String resource = request.getPath();
-                    byte[] bytes = FileIoUtils.loadFileFromClasspath("./static" + resource);
-                    Response response = Response.ok();
-                    response.addHeader("Content-Type", findContentType(resource));
-                    response.addBody(bytes);
-                    responseWriter.write(dos, response);
-                    return;
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException(e);
-                }
+                String resource = request.getPath();
+                byte[] bytes = FileIoUtils.loadFileFromClasspath("./static" + resource);
+                Response response = Response.ok();
+                response.addHeader("Content-Type", findContentType(resource));
+                response.addBody(bytes);
+                responseWriter.write(dos, response);
+                return;
             }
 
             if (request.hasMethod(Method.POST) && request.hasPath("/user/create")) {
@@ -181,6 +176,18 @@ public class RequestHandler implements Runnable {
 
     private boolean isResource(Request request) {
         URL resource = FileIoUtils.class.getClassLoader().getResource("./static" + request.getPath());
-        return Objects.nonNull(resource);
+        if (Objects.isNull(resource)) {
+            return false;
+        }
+        File file = getFile(resource);
+        return file.isFile();
+    }
+
+    private File getFile(@Nonnull URL resource) {
+        try {
+            return Paths.get(resource.toURI()).toFile();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

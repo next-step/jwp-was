@@ -5,6 +5,7 @@ import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 public class Response {
@@ -69,5 +70,15 @@ public class Response {
 
     public byte[] getBody() {
         return body;
+    }
+
+    @Override
+    public String toString() {
+        return "Response{" +
+                "status=" + status +
+                ", headers=" + headers +
+                ", addedCookies=" + addedCookies +
+                ", body=" + Arrays.toString(body) +
+                '}';
     }
 }
