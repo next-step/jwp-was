@@ -24,15 +24,14 @@ class QueryStringParserTest {
     }
 
     @Test
-    @DisplayName("queryString이 포함된 path를 parsing시, queryString이 분리된다.")
+    @DisplayName("queryString이 포함된 path를 parsing시, queryString이 UrlDecode되어 분리된다.")
     void queryStringParsingTest() {
         //given
-        String path = "/users?userId=javajigi&password=password&name=JaeSung";
-        String queryString = "userId=javajigi&password=password&name=JaeSung";
+        String path = "/users?userId=javajigi&password=password&name=%EC%B0%A8%EC%9E%AC%EC%96%B8";
         Map<String, String> filedNameToValue = Map.of(
             "userId", "javajigi",
             "password", "password",
-            "name", "JaeSung"
+            "name", "차재언"
         );
 
         //when
