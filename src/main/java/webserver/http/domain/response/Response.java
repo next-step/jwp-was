@@ -29,6 +29,12 @@ public class Response {
         return new Response(new Status(Protocol.http1Point1(), StatusCode.OK));
     }
 
+    public static Response okWithBody(String body) {
+        Response response = ok();
+        response.addBody(body);
+        return response;
+    }
+
     public static Response sendRedirect(String location) {
         Response response = new Response(new Status(Protocol.http1Point1(), StatusCode.FOUND));
         response.headers.add("Location", location);

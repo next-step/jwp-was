@@ -17,4 +17,8 @@ public class Cookies {
     public List<Cookie> getCookies() {
         return List.copyOf(cookies.values());
     }
+
+    public Cookie getCookie(String name) {
+        return cookies.get(name);
+    }
 }

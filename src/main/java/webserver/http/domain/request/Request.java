@@ -1,16 +1,21 @@
 package webserver.http.domain.request;
 
+import webserver.http.domain.Cookie;
 import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class Request {
     private final RequestLine requestLine;
     private final Headers headers;
 
     private final Cookies cookies;
+
+    private final Map<String, Object> attributes = new HashMap<>();
 
     public Request(RequestLine requestLine, Headers headers) {
         this(requestLine, headers, new Cookies(new HashMap<>()));
@@ -60,6 +65,18 @@ public class Request {
 
     public String getHeader(String name) {
         return headers.getValue(name);
+    }
+
+    public void setAttribute(String name, Object value) {
+        attributes.put(name, value);
+    }
+
+    public Map<String, Object> getAttributes() {
+        return Map.copyOf(attributes);
+    }
+
+    public Optional<Cookie> getCookie(String name) {
+        return Optional.ofNullable(cookies.getCookie(name));
     }
 
     @Override

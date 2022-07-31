@@ -1,5 +1,7 @@
 package webserver.http.domain;
 
+import java.util.Objects;
+
 public class Cookie {
     private static final String DEFAULT_PATH = "/";
 
@@ -15,6 +17,10 @@ public class Cookie {
         this.name = name;
         this.value = value;
         this.path = path;
+    }
+
+    public boolean hasValue(String value) {
+        return Objects.equals(value, this.value);
     }
 
     public String getName() {
