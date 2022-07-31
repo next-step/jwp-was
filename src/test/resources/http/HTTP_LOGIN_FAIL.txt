@@ -1,0 +1,7 @@
+POST /user/login HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Accept: */*
+
+userId=user1&password=1111
+

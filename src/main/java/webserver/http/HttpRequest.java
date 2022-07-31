@@ -2,7 +2,10 @@ package webserver.http;
 
 import utils.IOUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class HttpRequest {
 
@@ -44,6 +47,10 @@ public class HttpRequest {
 
     public String getHeader(String key) {
         return requestHeader.getHeader(key);
+    }
+
+    public Cookies getCookie() {
+        return requestHeader.getCookie();
     }
 
     public HttpMethod getMethod() {

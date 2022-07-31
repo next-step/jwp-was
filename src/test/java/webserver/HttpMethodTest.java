@@ -1,8 +1,11 @@
 package webserver;
 
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.*;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import webserver.http.HttpMethod;
+import webserver.http.exception.MethodNotAllowedException;
 
 import java.util.stream.Stream;
 
@@ -32,6 +35,6 @@ class HttpMethodTest {
     void 유효하지않은_HTTP_METHOD_테스트(String name) {
         assertThatThrownBy(
                 () -> HttpMethod.of(name)
-        ).isInstanceOf(IllegalArgumentException.class);
+        ).isInstanceOf(MethodNotAllowedException.class);
     }
 }

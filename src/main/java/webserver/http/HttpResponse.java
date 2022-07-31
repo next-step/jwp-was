@@ -2,14 +2,13 @@ package webserver.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.DefaultPageUtils;
 import utils.FileIoUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public class HttpResponse {
@@ -17,21 +16,27 @@ public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
     private DataOutputStream dos;
-    private Map<String, String> headers = new HashMap<>();
+    private ResponseHeader headers;
 
     public HttpResponse(OutputStream out) {
         this.dos = new DataOutputStream(out);
+        this.headers = new ResponseHeader();
     }
 
     public void addHeader(String key, String value) {
-        this.headers.put(key, value);
+        headers.addHeader(key, value);
+    }
+
+    public void updateStatus(HttpStatus status) {
+        headers.updateStatus(status);
     }
 
     public void forward(String path) throws IOException, URISyntaxException {
         HttpContentType contentType = HttpContentType.of(getFileExtension(path));
         byte[] body = FileIoUtils.loadFileFromClasspath(contentType.getResourcePath() + path);
         addHeader("Content-Type", contentType.getValue());
-        response200Header(body.length);
+        addHeader("Content-Length", String.valueOf(body.length));
+        responseHeader();
         responseBody(body);
     }
 
@@ -44,19 +49,29 @@ public class HttpResponse {
     public void forwardBody(String body) {
         byte[] contents = body.getBytes();
         addHeader("Content-Type", "text/html;charset=utf-8");
-        response200Header(contents.length);
+        addHeader("Content-Length", String.valueOf(contents.length));
+        responseHeader();
         responseBody(contents);
     }
 
-    public void response200Header(int contentLength) {
+    public void responseHeader() {
         try {
-            dos.writeBytes("HTTP/1.1 " + getStatus(HttpStatus.OK) + " \r\n");
+            processStatusLine();
             processHeaders();
-            dos.writeBytes("Content-Length: " + contentLength + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    public void sendRedirect(String location) {
+        updateStatus(HttpStatus.FOUND);
+        addHeader("Location", location);
+        responseHeader();
+    }
+
+    private void processStatusLine() throws IOException {
+        dos.writeBytes("HTTP/1.1 " + headers.getStatus() + " \r\n");
     }
 
     public void responseBody(byte[] body) {
@@ -68,29 +83,19 @@ public class HttpResponse {
         }
     }
 
-    public void sendRedirect(String location) {
-        try {
-            dos.writeBytes("HTTP/1.1 " + getStatus(HttpStatus.FOUND) + " \r\n");
-            processHeaders();
-            dos.writeBytes("Location: " + location + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+    public void processHeaders() throws IOException {
+        Set<String> keys = headers.getHeaderKeys();
+        for (String key : keys) {
+            dos.writeBytes(key + ": " + headers.getHeader(key) + "\r\n");
         }
     }
 
-    private String getStatus(HttpStatus httpStatus) {
-        return httpStatus.getStatusCode() + " " + httpStatus.getStatusMessage();
-    }
-
-    public void processHeaders() {
-        try {
-            Set<String> keys = headers.keySet();
-            for (String key : keys) {
-                dos.writeBytes(key + ": " + headers.get(key) + "\r\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void forwardError(HttpStatus httpStatus) {
+        updateStatus(httpStatus);
+        String errorPage = DefaultPageUtils.makeErrorPage(httpStatus);
+        byte[] contents = errorPage.getBytes();
+        addHeader("Content-Length", String.valueOf(contents.length));
+        responseHeader();
+        responseBody(contents);
     }
 }

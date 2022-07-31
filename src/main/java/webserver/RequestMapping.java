@@ -1,9 +1,6 @@
 package webserver;
 
-import controller.Controller;
-import controller.CreateUserController;
-import controller.ListUserController;
-import controller.LoginController;
+import controller.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +16,6 @@ public class RequestMapping {
     }
 
     public static Controller getController(String requestUrl) {
-        return controllers.get(requestUrl);
+        return controllers.getOrDefault(requestUrl, new DefaultResourceController());
     }
 }
