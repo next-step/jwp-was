@@ -10,6 +10,7 @@ import webserver.http.view.request.ParametersParser;
 import webserver.http.view.ProtocolParser;
 import webserver.http.view.request.RequestLineParser;
 import webserver.http.view.request.URIParser;
+import webserver.http.view.response.ResponseWriter;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -33,8 +34,9 @@ public class WebApplicationServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             RequestReader requestReader = createRequestReader();
+            ResponseWriter responseWriter = new ResponseWriter();
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection, requestReader));
+                Thread thread = new Thread(new RequestHandler(connection, requestReader, responseWriter));
                 thread.start();
             }
         }

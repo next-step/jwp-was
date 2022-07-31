@@ -10,10 +10,14 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import webserver.http.domain.Cookie;
 import webserver.http.domain.request.Method;
 import webserver.http.domain.request.Request;
+import webserver.http.domain.response.Response;
+import webserver.http.domain.response.StatusCode;
 import webserver.http.view.request.RequestReader;
 import webserver.http.domain.request.exception.NullRequestException;
+import webserver.http.view.response.ResponseWriter;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -32,10 +36,12 @@ public class RequestHandler implements Runnable {
 
     private final Socket connection;
     private final RequestReader requestReader;
+    private final ResponseWriter responseWriter;
 
-    public RequestHandler(Socket connectionSocket, RequestReader requestReader) {
+    public RequestHandler(Socket connectionSocket, RequestReader requestReader, ResponseWriter responseWriter) {
         this.connection = connectionSocket;
         this.requestReader = requestReader;
+        this.responseWriter = responseWriter;
     }
 
     public void run() {
@@ -52,8 +58,10 @@ public class RequestHandler implements Runnable {
                 try {
                     String resource = "/index.html";
                     byte[] bytes = FileIoUtils.loadFileFromClasspath("./static" + resource);
-                    response200Header(dos, bytes.length, findContentType(resource));
-                    responseBody(dos, bytes);
+                    Response response = Response.ok();
+                    response.addHeader("Content-Type", findContentType(resource));
+                    response.addBody(bytes);
+                    responseWriter.write(dos, response);
                     return;
                 } catch (URISyntaxException e) {
                     throw new RuntimeException(e);
@@ -65,8 +73,10 @@ public class RequestHandler implements Runnable {
                 try {
                     String resource = request.getPath();
                     byte[] bytes = FileIoUtils.loadFileFromClasspath("./static" + resource);
-                    response200Header(dos, bytes.length, findContentType(resource));
-                    responseBody(dos, bytes);
+                    Response response = Response.ok();
+                    response.addHeader("Content-Type", findContentType(resource));
+                    response.addBody(bytes);
+                    responseWriter.write(dos, response);
                     return;
                 } catch (URISyntaxException e) {
                     throw new RuntimeException(e);
@@ -82,7 +92,8 @@ public class RequestHandler implements Runnable {
                 User newUser = new User(userId, password, name, email);
                 DataBase.addUser(newUser);
                 logger.info("[Add User = {}]", newUser);
-                response302Header(dos, "/index.html");
+                Response response = Response.sendRedirect("/index.html");
+                responseWriter.write(dos, response);
                 return;
             }
 
@@ -92,36 +103,22 @@ public class RequestHandler implements Runnable {
                 String password = request.getParameter("password");
 
                 try {
-
-
                     User findUser = Optional.ofNullable(DataBase.findUserById(userId))
                             .filter(user -> user.hasPassword(password))
                             .orElseThrow(() -> new RuntimeException("로그인에 실패했습니다."));
 
                     logger.info("[login User] = {}", findUser);
-                    try {
-                        dos.writeBytes("HTTP/1.1 302 Found \r\n");
-                        dos.writeBytes("Location: " + "/index.html" + "\r\n");
-                        dos.writeBytes("Set-Cookie: " + "logined=true; Path=/" + "\r\n");
-                        dos.writeBytes("\r\n");
-                    } catch (IOException e) {
-                        logger.error(e.getMessage());
-                    } finally {
-                        return;
-                    }
+                    Response response = Response.sendRedirect("/index.html");
+                    response.addCookie(new Cookie("logined", "true"));
+                    responseWriter.write(dos, response);
+                    return;
 
                 } catch (RuntimeException ex) {
                     logger.info("[login Fail]");
-                    try {
-                        dos.writeBytes("HTTP/1.1 302 Found \r\n");
-                        dos.writeBytes("Location: " + "/user/login_failed.html" + "\r\n");
-                        dos.writeBytes("Set-Cookie: " + "logined=false; Path=/" + "\r\n");
-                        dos.writeBytes("\r\n");
-                    } catch (IOException e) {
-                        logger.error(e.getMessage());
-                    } finally {
-                        return;
-                    }
+                    Response response = Response.sendRedirect("/user/login_failed.html");
+                    response.addCookie(new Cookie("logined", "false"));
+                    responseWriter.write(dos, response);
+                    return;
                 }
             }
 
@@ -142,18 +139,20 @@ public class RequestHandler implements Runnable {
                     logger.info("[Users] = {}", users);
                     String page = template.apply(Map.of("users", users));
                     byte[] body = page.getBytes();
-                    response200Header(dos, body.length);
-                    responseBody(dos, body);
+                    Response response = Response.ok();
+                    response.addBody(body);
+                    responseWriter.write(dos, response);
                     return;
                 }
-                response302Header(dos, "/user/login.html");
+                Response response = Response.sendRedirect("/user/login.html");
+                responseWriter.write(dos, response);
                 return;
             }
 
-
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            Response resourceNotFound = Response.from(StatusCode.NOT_FOUND);
+            resourceNotFound.addHeader("Content-Type", "text/html");
+            resourceNotFound.addBody("<h1><meta charset=\"UTF-8\">요청하신 리소스를 찾지 못했습니다. ;(</h1>");
+            responseWriter.write(dos, resourceNotFound);
         } catch (NullRequestException e) {
             logger.warn(e.getMessage(), e);
         } catch (IOException e) {
@@ -183,46 +182,5 @@ public class RequestHandler implements Runnable {
     private boolean isResource(Request request) {
         URL resource = FileIoUtils.class.getClassLoader().getResource("./static" + request.getPath());
         return Objects.nonNull(resource);
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent, String contentType) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: " + contentType + "\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response302Header(DataOutputStream dos, String location) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: " + location + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
     }
 }
