@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import webserver.http.domain.KeyValuePair;
+import webserver.http.domain.exception.BadRequestException;
 
 import java.util.stream.Stream;
 
@@ -22,7 +23,7 @@ class KeyValuePairParserTest {
         String delimiter = "=";
         String message = "";
         assertThatThrownBy(() -> keyValuePairParser.parse(message, delimiter, false))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(BadRequestException.class)
                 .hasMessage("key, value 파싱을 위한 메시지가 공백이 될수 없습니다.");
     }
 
@@ -49,7 +50,7 @@ class KeyValuePairParserTest {
         String message = "=value";
 
         assertThatThrownBy(() -> keyValuePairParser.parse(message, delimiter, false))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(BadRequestException.class)
                 .hasMessage("메시지에 key가 반드시 존재해야 합니다.");
     }
 

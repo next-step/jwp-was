@@ -3,6 +3,7 @@ package webserver.http.view;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.domain.Protocol;
+import webserver.http.domain.exception.BadRequestException;
 import webserver.http.view.ProtocolParser;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,7 +17,7 @@ class ProtocolParserTest {
     void parse_fail() {
         String nonValidMessage = "HTTP/1.1/3";
         assertThatThrownBy(() -> protocolParser.parse(nonValidMessage))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(BadRequestException.class)
                 .hasMessage("'[타입]/[버전]' 형식의 HTTP 프로토콜 메시지가 아닙니다. {message=HTTP/1.1/3}");
     }
 

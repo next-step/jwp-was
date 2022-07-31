@@ -1,5 +1,6 @@
 package webserver.http.view.request;
 
+import webserver.http.domain.exception.BadRequestException;
 import webserver.http.view.ProtocolParser;
 import webserver.http.domain.request.Method;
 import webserver.http.domain.request.RequestLine;
@@ -20,7 +21,7 @@ public class RequestLineParser {
     public RequestLine parse(String message) {
         String[] splitMessage = message.split(REQUEST_LINE_DELIMITER_REGEX);
         if (splitMessage.length != REQUEST_LINE_SPLIT_SIZE) {
-            throw new RuntimeException(String.format("'[Method] [URI] [Protocol]' 형식의 requestLine 메시지가 아닙니다. {message=%s}", message));
+            throw new BadRequestException(String.format("'[Method] [URI] [Protocol]' 형식의 requestLine 메시지가 아닙니다. {message=%s}", message));
         }
 
         String method = splitMessage[0];

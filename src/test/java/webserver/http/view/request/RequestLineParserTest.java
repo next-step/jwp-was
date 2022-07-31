@@ -3,6 +3,7 @@ package webserver.http.view.request;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.domain.exception.BadRequestException;
 import webserver.http.view.ProtocolParser;
 import webserver.http.domain.request.Method;
 import webserver.http.domain.Protocol;
@@ -32,7 +33,7 @@ class RequestLineParserTest {
     void parse_fail() {
         String invalidRequestLineMessage = "GET /uri?name=jordy PROTO/1,1 OTHER-DATA";
         assertThatThrownBy(() -> requestLineParser.parse(invalidRequestLineMessage))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(BadRequestException.class)
                 .hasMessage("'[Method] [URI] [Protocol]' 형식의 requestLine 메시지가 아닙니다. {message=" + invalidRequestLineMessage + "}");
     }
 

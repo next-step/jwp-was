@@ -1,6 +1,7 @@
 package webserver.http.view;
 
 import webserver.http.domain.KeyValuePair;
+import webserver.http.domain.exception.BadRequestException;
 
 import java.util.regex.Pattern;
 
@@ -34,13 +35,13 @@ public class KeyValuePairParser {
 
     private void validateEmpty(String message) {
         if (message.isBlank()) {
-            throw new RuntimeException("key, value 파싱을 위한 메시지가 공백이 될수 없습니다.");
+            throw new BadRequestException("key, value 파싱을 위한 메시지가 공백이 될수 없습니다.");
         }
     }
 
     private void validateExistsKey(String message, String delimiter) {
         if (message.startsWith(delimiter)) {
-            throw new RuntimeException("메시지에 key가 반드시 존재해야 합니다.");
+            throw new BadRequestException("메시지에 key가 반드시 존재해야 합니다.");
         }
     }
 
@@ -59,14 +60,14 @@ public class KeyValuePairParser {
         if (splitCount == SPLIT_SIZE) {
             return;
         }
-        throw new RuntimeException("'key=value' 방식의 값이 아닙니다.");
+        throw new BadRequestException("'key=value' 방식의 값이 아닙니다.");
     }
 
     private void validateValueNonRequiredFormat(int splitCount) {
         if (splitCount <= SPLIT_SIZE) {
             return;
         }
-        throw new RuntimeException("'key[=value]' 방식의 값이 아닙니다.");
+        throw new BadRequestException("'key[=value]' 방식의 값이 아닙니다.");
     }
 
     private boolean isEmptyValue(String[] splitMessage) {

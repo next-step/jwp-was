@@ -4,6 +4,7 @@ import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.domain.Headers;
+import webserver.http.domain.exception.BadRequestException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,7 @@ class HeadersParserTest {
         );
 
         assertThatThrownBy(() -> headersParser.parse(messages))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(BadRequestException.class)
                 .hasMessage("'key=value' 방식의 값이 아닙니다.");
     }
 
