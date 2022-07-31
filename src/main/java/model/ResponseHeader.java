@@ -12,8 +12,8 @@ public class ResponseHeader {
 
     public static ResponseHeader textHtml(int length) {
         Map<String, Object> map = new HashMap<>();
-        map.put("Content-Type", "text/html;charset=utf-8");
-        map.put("Content-Length", length);
+        map.put(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8");
+        map.put(HttpHeaders.CONTENT_LENGTH, length);
         return new ResponseHeader(map);
     }
 

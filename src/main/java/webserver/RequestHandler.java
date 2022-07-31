@@ -1,19 +1,13 @@
 package webserver;
 
 import exception.ResourceNotFoundException;
-import model.HttpRequest;
-import model.HttpResponse;
-import model.HttpStatusCode;
-import model.ResponseHeader;
+import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import utils.IOUtils;
 
-import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -33,9 +27,9 @@ public class RequestHandler implements Runnable {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
-        try (InputStream in = connection.getInputStream(); DataOutputStream dos = new DataOutputStream(connection.getOutputStream())) {
-            List<String> lines = IOUtils.readLines(in);
-            HttpRequest request = HttpRequest.of(lines);
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+             DataOutputStream dos = new DataOutputStream(connection.getOutputStream())) {
+             HttpRequest request = createHttpRequest(bufferedReader);
 
             HttpResponse httpResponse = handle(request);
 
@@ -43,6 +37,15 @@ public class RequestHandler implements Runnable {
         } catch (IOException | URISyntaxException | ResourceNotFoundException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private HttpRequest createHttpRequest(BufferedReader bufferedReader) throws IOException {
+        List<String> lines = IOUtils.readLines(bufferedReader);
+        HttpRequest request = HttpRequest.of(lines);
+        if (request.hasContent()) {
+            return request.writeBody(HttpRequestBody.from(IOUtils.readData(bufferedReader,request.getContentLength())));
+        }
+        return request;
     }
 
     private HttpResponse handle(HttpRequest request) throws IOException, URISyntaxException{

@@ -26,8 +26,7 @@ public class IOUtils {
         return String.copyValueOf(body);
     }
 
-    public static List<String> readLines(InputStream in) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+    public static List<String> readLines(BufferedReader bufferedReader) throws IOException {
         List<String> lines = new ArrayList<>();
         String line;
         while ( (line = bufferedReader.readLine() ) != null && !line.isEmpty()) {

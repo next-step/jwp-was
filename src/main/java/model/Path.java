@@ -1,9 +1,11 @@
 package model;
 
+import utils.RequestUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import static utils.DelimiterConstants.*;
+import static utils.DelimiterConstants.PATH_PARAMETER_DELIMITER;
 
 public class Path {
     private static final int PATH_INDEX = 0;
@@ -20,19 +22,9 @@ public class Path {
     public static Path of(String path) {
         String[] split = path.split(PATH_PARAMETER_DELIMITER);
         if (hasParameters(split)) {
-            return new Path(split[PATH_INDEX], createParameters(split[PARAMETER_INDEX]));
+            return new Path(split[PATH_INDEX], RequestUtils.createRequestDataMap(split[PARAMETER_INDEX]));
         }
         return new Path(split[PATH_INDEX], new HashMap<>());
-    }
-
-    private static Map<String, String> createParameters(String stringParameters) {
-        Map<String, String> map = new HashMap<>();
-        String[] splitParameters = stringParameters.split(QUERY_STRING_DELIMITER);
-        for (String parameter : splitParameters) {
-            String[] splitParameter = parameter.split(PARAMETER_KEY_VALUE_DELIMITER);
-            map.put(splitParameter[0], splitParameter[1]);
-        }
-        return map;
     }
 
     private static boolean hasParameters(String[] split) {

@@ -74,3 +74,11 @@
 > Stylesheet 파일을 지원하도록 구현하도록 한다.
 
 - 추후 설계
+
+
+
+## 궁금한점
+
+- BufferedReader 의 offset 0 부터 length 만큼 읽는 부분
+  - readLine 으로 읽으면 처음부터 다 읽는데 read 로 읽으면 빈줄 뒤에 body 만 읽는다. 0부터 읽는데 왜 body만 읽을까?
+

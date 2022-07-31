@@ -27,8 +27,9 @@ public class IOUtilsTest {
     void readLines() throws IOException {
         String data = "GET /index.html HTTP/1.1\nHost: localhost:8080\nConnection: keep-alive";
         InputStream in = new ByteArrayInputStream(data.getBytes());
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
-        List<String> result = IOUtils.readLines(in);
+        List<String> result = IOUtils.readLines(br);
 
         assertThat(result).containsExactly(
                 "GET /index.html HTTP/1.1",

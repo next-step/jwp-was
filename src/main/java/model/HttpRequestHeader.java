@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 public class HttpRequestHeader {
+    private static final String DEFAULT_CONTENT_LENGTH = "0";
+
     private Map<String, String> headers;
 
     private HttpRequestHeader(Map<String, String> headers) {
@@ -22,5 +24,9 @@ public class HttpRequestHeader {
 
     public Map<String, String> getHeaders() {
         return headers;
+    }
+
+    public int getContentLength() {
+        return Integer.parseInt(headers.getOrDefault(HttpHeaders.CONTENT_LENGTH, DEFAULT_CONTENT_LENGTH));
     }
 }
