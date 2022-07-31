@@ -8,7 +8,6 @@ import types.HttpMethod;
 import types.Protocol;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,10 +29,10 @@ public class HttpParser {
     }
 
     public static Map<String, String> convertStringToMap(String content) {
-        String[] parameterKeyAndValues = content.split(QUERY_PARAMETER_SEPARATOR);
+        String[] parameterKeyAndValues = content.split(HttpParser.QUERY_PARAMETER_SEPARATOR);
         Map<String, String> parameters = new HashMap<>();
         Arrays.stream(parameterKeyAndValues).forEach(parameter -> {
-            String[] keyAndValue = parameter.split(QUERY_PARAMETER_KEY_VALUE_SEPARATOR);
+            String[] keyAndValue = parameter.split(HttpParser.QUERY_PARAMETER_KEY_VALUE_SEPARATOR);
             String parameterKey = keyAndValue[0];
             String parameterValue = keyAndValue[1];
             parameters.put(parameterKey, parameterValue);
@@ -43,23 +42,15 @@ public class HttpParser {
     }
 
     private static UrlPath getPath(String[] requestLineData) {
-        String path = requestLineData[1].split(PATH_SEPARATOR)[0];
-        Map<String, String> queryParameters = getQueryParameters(requestLineData);
-        if (queryParameters.isEmpty()) {
+
+        if (!requestLineData[1].contains("?")) {
+            String path = requestLineData[1];
             return new UrlPath(path);
         }
 
-        return new UrlPath(path, new QueryParameter(queryParameters));
-    }
-
-    private static Map<String, String> getQueryParameters(String[] requestLineData) {
-        String pathAndParameters = requestLineData[1];
-        if (!pathAndParameters.contains(QUERY_PARAMETER_SEPARATOR)) {
-            return Collections.emptyMap();
-        }
-
-        String rawParameters = pathAndParameters.split(PATH_SEPARATOR)[1];
-        return convertStringToMap(rawParameters);
+        String path = requestLineData[1].split(PATH_SEPARATOR)[0];
+        String queryString = requestLineData[1].split(PATH_SEPARATOR)[1];
+        return new UrlPath(path, new QueryParameter(queryString));
     }
 
     private static Protocol getProtocol(String[] requestLineData) {
