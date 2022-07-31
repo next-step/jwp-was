@@ -4,15 +4,15 @@ import model.HttpRequestHeader;
 
 public interface PathHandler {
     String RESOURCE_SEPARATOR = "/";
-    String FILE_SEPARATOR = ".";
+    String TEMPLATE_IDENTIFIER = ".html";
     int ROOT_RESOURCE_INDEX = 1;
 
     Boolean canHandling(HttpRequestHeader httpRequestHeader);
 
-    Byte[] Handle(HttpRequestHeader httpRequestHeader);
+    byte[] Handle(HttpRequestHeader httpRequestHeader);
 
-    default Boolean hasFileSeparator(HttpRequestHeader httpRequestHeader) {
+    default Boolean hasTemplateIdentifier(HttpRequestHeader httpRequestHeader) {
 
-        return httpRequestHeader.getPath().contains(FILE_SEPARATOR);
+        return httpRequestHeader.getPath().contains(TEMPLATE_IDENTIFIER);
     }
 }

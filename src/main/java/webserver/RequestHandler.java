@@ -5,12 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.URISyntaxException;
 
+import handler.PathHandler;
 import model.HttpRequestHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import utils.parser.HttpRequestHeaderParser;
 
 public class RequestHandler implements Runnable {
@@ -30,17 +29,17 @@ public class RequestHandler implements Runnable {
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
             HttpRequestHeader httpRequestHeader = HttpRequestHeaderParser.parseHttpRequestHeaderParser(inputStream);
 
-            byte[] body = FileIoUtils.loadFileFromClasspath(httpRequestHeader.getFilePath());
+            HandlerSelector handlerSelector = new HandlerSelector();
+            PathHandler pathHandler = handlerSelector.selectAvailableHandler(httpRequestHeader);
+
+            byte[] body = pathHandler.Handle(httpRequestHeader);
 
             response200Header(dataOutputStream, body.length);
             responseBody(dataOutputStream, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
         }
     }
-
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
         try {

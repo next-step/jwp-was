@@ -23,15 +23,15 @@
           - [x] 입력으로 들어온 Header 리스트들을 HttpHeader 객체로 변환 할 수 있다.
 
 
-- [ ] “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다.
-    - [ ] Header의 첫 번째 라인에서 요청 URL을 추출한다.
+- [x] “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다.
+    - [x] Header의 첫 번째 라인에서 요청 URL을 추출한다.
     - [x] PathHandler 인터페이스는 canHandling(), Handle() 메소드를 가진다.
       - [x] UserHandler의 canHandling()은 path의 Root Resource가 `user` 로 시작한다면 true를 반환한다.
-      - [ ] UserHandler의 Handle()은 입력한 값을 파싱해 접근 경로와 이름=값을 추출해 User 클래스를 생성 할 수 있다.
+      - [x] UserHandler의 Handle()은 입력한 값을 파싱해 접근 경로와 이름=값을 추출해 User 클래스를 생성 할 수 있다.
       - [x] IndexHandler의 canHandling()은 path의 Root Resource가 파일 확장자 `.` 를 가지면 true를 반환한다.
     - [x] HandlerSelector는 canHandling 가능한 Handler 객체를 반환한다.
-    - [ ] path의 resource에 File 구분자가 존재하면
-    - [ ] http://localhost:8080/index.html로 접속했을 때는 root경로의 index.html을 처리하는 IndexHandler가 동작한다.
-    - [ ] http://localhost:8080/user/form.html로 접속했을 떄는 root경로+User경로의 user/form.html을 처리하는 UserHandler가 동작한다.
-    - [ ] 예약어(RFC3986 https://datatracker.ietf.org/doc/html/rfc3986#section-2.2 )는 url safe 하도록 PercentEncoding 된 형태로
+    - [x] path의 resource에 File 구분자가 존재하면
+    - [x] http://localhost:8080/index.html로 접속했을 때는 root경로의 index.html을 처리하는 IndexHandler가 동작한다.
+    - [x] http://localhost:8080/user/form.html로 접속했을 떄는 root경로+User경로의 user/form.html을 처리하는 UserHandler가 동작한다.
+    - [x] 예약어(RFC3986 https://datatracker.ietf.org/doc/html/rfc3986#section-2.2 )는 url safe 하도록 PercentEncoding 된 형태로
       넘어오기 때문에 decoding 하여야 한다.

@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Map;
+
 public class HttpRequestHeader {
     private final RequestLine requestLine;
     private final HttpHeader httpHeader;
@@ -19,5 +21,13 @@ public class HttpRequestHeader {
 
     public String getPath() {
         return requestLine.getPath();
+    }
+
+    public Boolean isEqualPath(String path) {
+        return requestLine.getPath().equals(path);
+    }
+
+    public Map<String, String> getQueryString() {
+        return requestLine.getQueryString();
     }
 }
