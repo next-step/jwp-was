@@ -1,14 +1,25 @@
 package model;
 
+
 import java.util.Map;
 
 public class HttpRequestHeader {
     private final RequestLine requestLine;
     private final HttpHeader httpHeader;
+    private final Map<String, String> requestBody;
 
-    public HttpRequestHeader(RequestLine requestLine, HttpHeader httpHeader) {
+    private HttpRequestHeader(RequestLine requestLine, HttpHeader httpHeader, Map<String, String> requestBody) {
         this.requestLine = requestLine;
         this.httpHeader = httpHeader;
+        this.requestBody = requestBody;
+    }
+
+    public static HttpRequestHeader getRequestHeaderOf(RequestLine requestLine, HttpHeader httpHeader) {
+        return new HttpRequestHeader(requestLine, httpHeader, null);
+    }
+
+    public static HttpRequestHeader postRequestHeaderWithBody(RequestLine requestLine, HttpHeader httpHeader, Map<String, String> requestBody) {
+        return new HttpRequestHeader(requestLine, httpHeader, requestBody);
     }
 
     public RequestLine getRequestLine() {
@@ -29,5 +40,9 @@ public class HttpRequestHeader {
 
     public Map<String, String> getQueryString() {
         return requestLine.getQueryString();
+    }
+
+    public Map<String, String> getRequestBody() {
+        return requestBody;
     }
 }

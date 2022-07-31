@@ -1,9 +1,11 @@
 package utils.parser;
 
+import enums.HttpMethod;
 import model.HttpHeader;
 import model.HttpRequestHeader;
 import model.RequestLine;
 import utils.BufferedReaderUtils;
+import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +13,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
+
+import static model.HttpRequestHeader.getRequestHeaderOf;
+import static model.HttpRequestHeader.postRequestHeaderWithBody;
 
 public class HttpRequestHeaderParser {
     private static final int REQUEST_LINE_INDEX = 0;
@@ -23,7 +29,7 @@ public class HttpRequestHeaderParser {
         RequestLine requestLine = RequestLineParser.parse(httpRequestHeaders.get(REQUEST_LINE_INDEX));
         HttpHeader httpHeader = HttpHeaderParser.parseHeader(extractHttpHeaders(httpRequestHeaders));
 
-        return new HttpRequestHeader(requestLine, httpHeader);
+        return createHttpRequestHeader(requestLine, httpHeader, br);
     }
 
     private static List<String> extractHttpHeaders(List<String> httpRequestHeaderLines) {
@@ -31,5 +37,20 @@ public class HttpRequestHeaderParser {
         httpRequestHeaderLines.remove(END_OF_HTTP_REQUEST_HEADER);
 
         return httpRequestHeaderLines;
+    }
+
+    private static HttpRequestHeader createHttpRequestHeader(RequestLine requestLine, HttpHeader httpHeader, BufferedReader br) throws IOException {
+        if (requestLine.getHttpMethod() == HttpMethod.GET) {
+            return getRequestHeaderOf(requestLine, httpHeader);
+        }
+
+        if (requestLine.getHttpMethod() == HttpMethod.POST) {
+            int contentLength = Integer.parseInt(httpHeader.getValueByKey("Content-Length"));
+            Map<String, String> httpBody = QueryStringParser.parse(IOUtils.readData(br, contentLength));
+
+            return postRequestHeaderWithBody(requestLine, httpHeader, httpBody);
+        }
+
+        return null;
     }
 }

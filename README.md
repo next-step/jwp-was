@@ -41,6 +41,6 @@
   
   
 - 기능 요구사항 3
-- [x] http://localhost:8080/user/form.html 파일의 form 태그 method를 get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.
-- [ ] POST method로 데이터를 전달할 경우 전달하는 데이터는 HTTP Body에 담긴다.
-  - [ ] HttpRequestHeader에 RequestBody 필드를 추가한다.
+- [x] http://localhost:8080/user/form.html 파일의 시한다.
+- [x] POST method로 데이터를 전달할 경우 전달하는 데이터는 HTTP Body에 담긴다.
+  - [x] HttpRequestHeader에 RequestBody 필드를 추가한다.

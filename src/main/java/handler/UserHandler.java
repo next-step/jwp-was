@@ -28,7 +28,7 @@ public class UserHandler implements PathHandler {
         }
 
         if (httpRequestHeader.isEqualPath(CREATE_REQUEST_PATH)) {
-            userService.createUser(httpRequestHeader.getQueryString());
+            userService.createUser(httpRequestHeader.getRequestBody());
         }
 
         return new byte[0];
