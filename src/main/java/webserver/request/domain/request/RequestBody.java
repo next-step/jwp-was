@@ -32,4 +32,7 @@ public class RequestBody {
         return map.get(parameter);
     }
 
+    public Map<String, String> getDataPairs() {
+        return map;
+    }
 }

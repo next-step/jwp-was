@@ -1,6 +1,7 @@
 package webserver.request.domain.request;
 
 import com.google.common.base.Charsets;
+import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,20 +22,28 @@ public class HttpRequest {
         BufferedReader br = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
         String line = br.readLine();
 
+        System.out.println(line);
+
+        if (line == null) {
+            return;
+        }
+
         parseRequestLine(line);
 
-        parseHeaders(br, line);
-
-        if(method.equals(Method.POST)) {
-            line = br.readLine();
-            requestBody = new RequestBody(line);
-        }
-    }
-
-    private void parseHeaders(BufferedReader br, String line) throws IOException {
         while (!line.equals("")) {
             line = br.readLine();
+            System.out.println(line);
             requestHeader.addHeaderProperty(line);
+        }
+
+        //parseHeaders(br, line);
+
+        if(method.equals(Method.POST)) {
+            //line = br.readLine();
+            int readNums = Integer.parseInt(requestHeader.getHeader("Content-Length"));
+            String body = IOUtils.readData(br, readNums);
+            System.out.println(body);
+            requestBody = new RequestBody(body);
         }
     }
 
@@ -76,5 +85,13 @@ public class HttpRequest {
         if(method.equals(Method.GET))
             return queryString.getParameter(parameter);
         return requestBody.getParameter(parameter);
+    }
+
+    public QueryString getQueryString() {
+        return queryString;
+    }
+
+    public RequestBody getBody() {
+        return requestBody;
     }
 }
