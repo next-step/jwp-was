@@ -4,12 +4,16 @@ import webserver.http.Response;
 
 import java.util.Map;
 
-public class RedirectView implements View {
+class RedirectView implements View {
 
     private final String url;
 
-    public RedirectView(String url) {
+    RedirectView(String url) {
         this.url = url;
+    }
+
+    String getUrl() {
+        return url;
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class HandleBarView implements View {
+class HandleBarView implements View {
 
     private final String url;
 
