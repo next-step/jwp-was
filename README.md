@@ -11,6 +11,31 @@
 ---
 ---
 
+## 3단계. HTTP 웹 서버 리팩토링 
+- 요구사항: HTTP 요청 Header/Body 처리, 응답 Header/Body 처리만을 담당하는 역할을 분리해 재사용 가능하도록 한다.
+  1. [ ] 메서드 분리 및 클래스 분리 
+    - RequestHandler 클래스의 책임을 분리한다.
+      - RequestHandler 클래스는 많은 책임을 가지고 있다. 객체 지향 설계 원칙 중 “단일 책임의 원칙”에 따라 RequestHandler 클래스가 가지고 있는 책임을 찾아 각 책임을 새로운 클래스를 만들어 분리한다.
+    - 다음과 같이 3개의 역할로 분리해 리팩토링을 시도하고, 테스트 가능한 부분은 단위 테스트를 진행한다.
+      - 클라이언트 요청 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpRequest)
+      - 클라이언트 응답 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpResponse)
+      - 다형성을 활용해 클라이언트 요청 URL에 대한 분기 처리를 제거한다.
+  2. [ ] 클라이언트 요청 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpRequest)
+    - 클라이언트 요청 데이터를 담고 있는 InputStream을 생성자로 받아 HTTP 메소드, URL, 헤더, 본문을 분리하는 작업을 한다.
+    - 헤더는 Map<String, String>에 저장해 관리하고 getHeader(“필드 이름”) 메소드를 통해 접근 가능하도록 구현한다.
+    - GET과 POST 메소드에 따라 전달되는 인자를 Map<String, String>에 저장해 관리하고 getParameter(“인자 이름”) 메소드를 통해 접근 가능하도록 구현한다.
+    - RequestHandler가 새로 추가한 HttpRequest를 사용하도록 리팩토링한다.
+  3. [ ] 클라이언트 응답 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpResponse)
+      - RequestHandler 클래스를 보면 응답 데이터 처리를 위한 많은 중복이 있다. 이 중복을 제거해 본다.
+      - 응답 헤더 정보를 Map<String, String>으로 관리한다.
+      - 응답을 보낼 때 HTML, CSS, 자바스크립트 파일을 직접 읽어 응답으로 보내는 메소드는 forward(), 다른 URL로 리다이렉트하는 메소드는 sendRedirect() 메소드를 나누어 구현한다.
+      - RequestHandler가 새로 추가한 HttpResponse를 사용하도록 리팩토링한다.
+  4. [ ] 다형성을 활용해 클라이언트 요청 URL에 대한 분기 처리를 제거
+  5. [ ] 추가 요구사항이나 변경이 발생하는 경우 처리에 대한 고려
+
+
+---
+--- 
 ## 2단계. HTTP 웹 서버 구현
 - [x] 기능 요구사항 1
 > http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
@@ -35,7 +60,7 @@ Accept: */*
 
 <br>
 
-- [ ] 기능 요구사항 3
+- [x] 기능 요구사항 3
 > http://localhost:8080/user/form.html 파일의 form 태그 method를 get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.
 
 - HTTP Request Header 예
@@ -52,12 +77,12 @@ userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajig
 
 <br>
 
-- [ ] 기능 요구사항 4
+- [x] 기능 요구사항 4
 > “회원가입”을 완료하면 /index.html 페이지로 이동하고 싶다. 현재는 URL이 /user/create 로 유지되는 상태로 읽어서 전달할 파일이 없다. 따라서 redirect 방식처럼 회원가입을 완료한 후 “index.html”로 이동해야 한다. 즉, 브라우저의 URL이 /index.html로 변경해야 한다.
 
 <br>
 
-- [ ] 기능 요구사항 5 
+- [x] 기능 요구사항 5 
 >  “로그인” 메뉴를 클릭하면 http://localhost:8080/user/login.html 으로 이동해 로그인할 수 있다. 로그인이 성공하면 index.html로 이동하고, 로그인이 실패하면 /user/login_failed.html로 이동해야 한다.  
 
 >  앞에서 회원가입한 사용자로 로그인할 수 있어야 한다. 로그인이 성공하면 cookie를 활용해 로그인 상태를 유지할 수 있어야 한다. 로그인이 성공할 경우 요청 header의 Cookie header 값이 logined=true, 로그인이 실패하면 Cookie header 값이 logined=false로 전달되어야 한다.
@@ -78,14 +103,14 @@ Set-Cookie: logined=true; Path=/
 
 <br>
 
-- [ ] 기능 요구사항 6
+- [x] 기능 요구사항 6
 > 접근하고 있는 사용자가 “로그인” 상태일 경우(Cookie 값이 logined=true) 경우 http://localhost:8080/user/list 로 접근했을 때 사용자 목록을 출력한다. 만약 로그인하지 않은 상태라면 로그인 페이지(login.html)로 이동한다.
 
 > 동적으로 html을 생성하기 위해 handlebars.java template engine을 활용한다. 
 
 <br> 
 
-- [ ] 기능 요구사항 7
+- [x] 기능 요구사항 7
 > 지금까지 구현한 소스 코드는 stylesheet 파일을 지원하지 못하고 있다. Stylesheet 파일을 지원하도록 구현하도록 한다.
 ```
 HTTP Request Header 예
