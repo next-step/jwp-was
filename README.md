@@ -22,25 +22,32 @@
             - [x] 입력으로 들어온 모든 RequestLine을 라인별로 분리할 수 있다.
             - [x] RequestLine에서 path를 분리 할 수 있다.
         - [x] HttpHeaderParser는
-          - [x] 입력으로 들어온 Header 리스트들을 HttpHeader 객체로 변환 할 수 있다.
+            - [x] 입력으로 들어온 Header 리스트들을 HttpHeader 객체로 변환 할 수 있다.
 
 - 기능 요구사항 2
 
 - [x] “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다.
     - [x] Header의 첫 번째 라인에서 요청 URL을 추출한다.
     - [x] PathHandler 인터페이스는 canHandling(), Handle() 메소드를 가진다.
-      - [x] UserHandler의 canHandling()은 path의 Root Resource가 `user` 로 시작한다면 true를 반환한다.
-      - [x] UserHandler의 Handle()은 입력한 값을 파싱해 접근 경로와 이름=값을 추출해 User 클래스를 생성 할 수 있다.
-      - [x] IndexHandler의 canHandling()은 path의 Root Resource가 파일 확장자 `.` 를 가지면 true를 반환한다.
+        - [x] UserHandler의 canHandling()은 path의 Root Resource가 `user` 로 시작한다면 true를 반환한다.
+        - [x] UserHandler의 Handle()은 입력한 값을 파싱해 접근 경로와 이름=값을 추출해 User 클래스를 생성 할 수 있다.
+        - [x] IndexHandler의 canHandling()은 path의 Root Resource가 파일 확장자 `.` 를 가지면 true를 반환한다.
     - [x] HandlerSelector는 canHandling 가능한 Handler 객체를 반환한다.
     - [x] path의 resource에 File 구분자가 존재하면
     - [x] http://localhost:8080/index.html로 접속했을 때는 root경로의 index.html을 처리하는 IndexHandler가 동작한다.
     - [x] http://localhost:8080/user/form.html로 접속했을 떄는 root경로+User경로의 user/form.html을 처리하는 UserHandler가 동작한다.
     - [x] 예약어(RFC3986 https://datatracker.ietf.org/doc/html/rfc3986#section-2.2 )는 url safe 하도록 PercentEncoding 된 형태로
       넘어오기 때문에 decoding 하여야 한다.
-  
-  
+
+
 - 기능 요구사항 3
 - [x] http://localhost:8080/user/form.html 파일의 시한다.
 - [x] POST method로 데이터를 전달할 경우 전달하는 데이터는 HTTP Body에 담긴다.
-  - [x] HttpRequestHeader에 RequestBody 필드를 추가한다.
+    - [x] HttpRequestHeader에 RequestBody 필드를 추가한다.
+
+- 기능 요구사항 4
+- [ ] “회원가입”을 완료하면 /index.html 페이지로 이동해야함
+    - [ ] redirect 방식으로 브라우저의 URL이 /index.html로 변경되도록 만든다.
+    - [ ] HTTP 응답 헤더의 status code를 200이 아니라 302 code 사용
+      - [ ] Handler들의 Handle 메소드 호출시, HttpResponseHeader가 반환된다.
+      - [ ] HttpResponseHeader로 모든 response 종류를 처리할 수 있다.
