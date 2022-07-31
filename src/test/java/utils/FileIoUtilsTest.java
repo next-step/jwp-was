@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.domain.exception.ResourceNotFoundException;
+import webserver.utils.FileIoUtils;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

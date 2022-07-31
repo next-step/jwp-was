@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import utils.FileIoUtils;
+import webserver.utils.FileIoUtils;
 import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;

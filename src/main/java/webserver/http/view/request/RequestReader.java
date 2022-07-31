@@ -1,6 +1,6 @@
 package webserver.http.view.request;
 
-import utils.IOUtils;
+import webserver.utils.IOUtils;
 import webserver.http.domain.Cookies;
 import webserver.http.domain.request.Parameters;
 import webserver.http.domain.request.Request;

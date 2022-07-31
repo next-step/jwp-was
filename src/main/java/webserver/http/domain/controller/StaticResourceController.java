@@ -1,6 +1,6 @@
 package webserver.http.domain.controller;
 
-import utils.FileIoUtils;
+import webserver.utils.FileIoUtils;
 import webserver.http.domain.ContentType;
 import webserver.http.domain.request.Method;
 import webserver.http.domain.request.Request;

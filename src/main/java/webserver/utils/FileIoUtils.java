@@ -1,4 +1,4 @@
-package utils;
+package webserver.utils;
 
 import webserver.http.domain.exception.ResourceNotFoundException;
 
