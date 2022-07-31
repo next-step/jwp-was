@@ -6,7 +6,12 @@ import java.util.Set;
 
 public class ResponseHeader {
 
+    private HttpStatus httpStatus;
     private Map<String, String> headers = new HashMap<>();
+
+    public ResponseHeader() {
+        this.httpStatus = HttpStatus.OK;
+    }
 
     public void addHeader(String key, String value) {
         this.headers.put(key, value);
@@ -18,5 +23,13 @@ public class ResponseHeader {
 
     public Set<String> getHeaderKeys() {
         return headers.keySet();
+    }
+
+    public void updateStatus(HttpStatus status) {
+        this.httpStatus = status;
+    }
+
+    public String getStatus() {
+        return httpStatus.toString();
     }
 }
