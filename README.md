@@ -13,6 +13,8 @@
 ---
 ##2단계 HTTP 웹 서버 구현 - 구현할 기능 목록
 
+- 기능 요구사항 1
+
 - [x] Http 요청이 들어오면 해당 RequesterLine의 path 에 해당하는 Resource를 반환할 수 있다.
     - [x] http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
         - [x] 입력으로 들어온 classpath의 resource(index.html 파일)를 읽을 수 있다.
@@ -22,6 +24,7 @@
         - [x] HttpHeaderParser는
           - [x] 입력으로 들어온 Header 리스트들을 HttpHeader 객체로 변환 할 수 있다.
 
+- 기능 요구사항 2
 
 - [x] “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다.
     - [x] Header의 첫 번째 라인에서 요청 URL을 추출한다.
@@ -35,3 +38,9 @@
     - [x] http://localhost:8080/user/form.html로 접속했을 떄는 root경로+User경로의 user/form.html을 처리하는 UserHandler가 동작한다.
     - [x] 예약어(RFC3986 https://datatracker.ietf.org/doc/html/rfc3986#section-2.2 )는 url safe 하도록 PercentEncoding 된 형태로
       넘어오기 때문에 decoding 하여야 한다.
+  
+  
+- 기능 요구사항 3
+- [x] http://localhost:8080/user/form.html 파일의 form 태그 method를 get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.
+- [ ] POST method로 데이터를 전달할 경우 전달하는 데이터는 HTTP Body에 담긴다.
+  - [ ] HttpRequestHeader에 RequestBody 필드를 추가한다.
