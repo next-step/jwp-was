@@ -69,6 +69,10 @@ public class HttpRequest extends HttpEntity<RequestBody> {
         return getHeaders().getCookie();
     }
 
+    public boolean hasCookie() {
+        return !Cookie.EMPTY.equals(getHeaders().getCookie());
+    }
+
     @Override
     public String toString() {
         return String.format(

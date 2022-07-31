@@ -41,7 +41,7 @@ public class FrontController implements Runnable {
 
             ResponseEntity<?> response = requestHandler.handle(httpRequest);
 
-            logger.info("Http Response: {}", response.getHeaders());
+            logger.info("Http Response: {}\r\n{}", response.getHttpStatus(), response.getHeaders());
             responseHandler.changeConnection(connection).handle(response);
         } catch (IOException e) {
             e.printStackTrace();
