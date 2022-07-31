@@ -63,10 +63,6 @@ public class Request {
         requestLine.decodeCharacter(charset);
     }
 
-    public String getHeader(String name) {
-        return headers.getValue(name);
-    }
-
     public void setAttribute(String name, Object value) {
         attributes.put(name, value);
     }
