@@ -20,6 +20,8 @@ public class HttpRequest {
     public static final String VALIDATION_MESSAGE = "잘못된 HTTP 요청입니다.";
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequest.class);
     private static final Pattern HEADER_DELIMITER = Pattern.compile(": ");
+    private static final Pattern COOKIE_PATTERN = Pattern.compile("(?:; )?([^;]+)=([^;]+)");
+    private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("&?([^=&]+)=([^=&]+)");
 
     private final RequestLine requestLine;
     private final Map<String, Object> headers;
@@ -56,7 +58,7 @@ public class HttpRequest {
         if (cookie == null) {
             return new HashMap<>();
         }
-        return HttpUtils.parseToMap((String) cookie);
+        return HttpUtils.parseParameters((String) cookie, COOKIE_PATTERN);
     }
 
     private String readLine(BufferedReader br) {
@@ -83,7 +85,7 @@ public class HttpRequest {
         try {
             final int contentLength = getContentLength();
             final String payload = IOUtils.readData(br, contentLength);
-            return HttpUtils.parseToMap(payload);
+            return HttpUtils.parseParameters(payload, ATTRIBUTE_PATTERN);
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }

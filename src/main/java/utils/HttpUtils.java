@@ -8,46 +8,33 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HttpUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
-    private static final Pattern ITEM_DELIMITER_PATTERN = Pattern.compile("(&|; )");
-    private static final String KEY_VALUE_DELIMITER = "=";
-    private static final int CORRECT_LENGTH = 2;
-    public static final String VALIDATION_MESSAGE = "형식에 맞지 않습니다.";
 
     private HttpUtils() {
         throw new AssertionError();
     }
 
-    public static String decode(String value) {
+    public static Map<String, Object> parseParameters(String string, Pattern keyValuePattern) {
+        final Map<String, Object> result = new HashMap<>();
+        final String decode = decode(string);
+        final Matcher matcher = keyValuePattern.matcher(decode);
+
+        while (matcher.find()) {
+            result.put(matcher.group(1), matcher.group(2));
+        }
+        return result;
+    }
+
+    private static String decode(String value) {
         try {
             return URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
             LOGGER.error(e.getMessage());
             return "";
-        }
-    }
-
-    public static Map<String, Object> parseToMap(String string) {
-        final Map<String, Object> result = new HashMap<>();
-        final String[] items = ITEM_DELIMITER_PATTERN.split(string);
-        for (String item : items) {
-            addItem(result, item);
-        }
-        return result;
-    }
-
-    private static void addItem(Map<String, Object> result, String item) {
-        final String[] keyValue = item.split(KEY_VALUE_DELIMITER);
-        validateKeyValue(keyValue);
-        result.put(keyValue[0], decode(keyValue[1]));
-    }
-
-    private static void validateKeyValue(String[] items) {
-        if (items.length != CORRECT_LENGTH) {
-            throw new IllegalArgumentException(VALIDATION_MESSAGE);
         }
     }
 }
