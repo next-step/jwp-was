@@ -18,11 +18,6 @@ import java.util.Collections;
 public class ListMemberHandler implements Handler {
 
     @Override
-    public RequestMappingInfo getMappingInfo() {
-        return new RequestMappingInfo("/user/list", HttpMethod.GET);
-    }
-
-    @Override
     public void handle(Request request, Response response) {
         String logined = request.getCookie("logined");
 

@@ -23,11 +23,6 @@ public class StaticFileHandler implements Handler {
 
     private final StaticLocationConfig staticLocationConfig = new StaticLocationConfig();
 
-    @Override
-    public RequestMappingInfo getMappingInfo() {
-        return new RequestMappingInfo("/**", HttpMethod.GET);
-    }
-
     public void handle(Request request, Response response) {
         String path = request.getPath();
 

@@ -11,11 +11,6 @@ import java.util.Map;
 public class CreateMemberHandler implements Handler {
 
     @Override
-    public RequestMappingInfo getMappingInfo() {
-        return new RequestMappingInfo("/user/create", HttpMethod.POST);
-    }
-
-    @Override
     public void handle(Request request, Response response) {
         UrlEncodedBodyParser urlEncodedBodyParser = new UrlEncodedBodyParser();
 

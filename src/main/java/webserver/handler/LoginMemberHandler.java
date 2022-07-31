@@ -13,11 +13,6 @@ public class LoginMemberHandler implements Handler {
     private final UrlEncodedBodyParser urlEncodedBodyParser = new UrlEncodedBodyParser();
 
     @Override
-    public RequestMappingInfo getMappingInfo() {
-        return new RequestMappingInfo("/user/login", HttpMethod.POST);
-    }
-
-    @Override
     public void handle(Request request, Response response) {
         Map<String, String> parseBody = urlEncodedBodyParser.parseBody(request.getRequestBody());
         String userId = parseBody.get("userId");

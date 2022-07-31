@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +13,7 @@ import webserver.handler.CreateMemberHandler;
 import webserver.handler.ListMemberHandler;
 import webserver.handler.LoginMemberHandler;
 import webserver.handler.StaticFileHandler;
-import webserver.http.Headers;
-import webserver.http.Request;
-import webserver.http.RequestLine;
-import webserver.http.Response;
+import webserver.http.*;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -23,10 +21,12 @@ public class RequestHandler implements Runnable {
     private final Socket connection;
 
     private final HandlerMapping handlerMapping = new HandlerMapping(
-            new CreateMemberHandler(),
-            new ListMemberHandler(),
-            new LoginMemberHandler(),
-            new StaticFileHandler()
+            Map.of(
+                    new RequestMappingInfo("/user/create", HttpMethod.POST), new CreateMemberHandler(),
+                    new RequestMappingInfo("/user/list", HttpMethod.GET), new ListMemberHandler(),
+                    new RequestMappingInfo("/user/login", HttpMethod.POST), new LoginMemberHandler(),
+                    new RequestMappingInfo("/.*", HttpMethod.GET), new StaticFileHandler()
+            )
     );
 
     public RequestHandler(Socket connectionSocket) {

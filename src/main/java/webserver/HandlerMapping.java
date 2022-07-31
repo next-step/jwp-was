@@ -3,36 +3,37 @@ package webserver;
 import webserver.http.Request;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 class HandlerMapping {
 
     private final Map<RequestMappingInfo, Handler> handlerRegistry;
 
-    public HandlerMapping(Handler... handlers) {
-        this.handlerRegistry = createRequestMappingHandlers(List.of(handlers));
+    HandlerMapping(Map<RequestMappingInfo, Handler> handlers) {
+        validateMappingHandler(handlers);
+        this.handlerRegistry = new HashMap<>(handlers);
     }
 
-    private Map<RequestMappingInfo, Handler> createRequestMappingHandlers(List<Handler> handlers) {
-        Map<RequestMappingInfo, Handler> mappingHandlers = new HashMap<>();
-
-        for (Handler handler : handlers) {
-            validateMappingHandler(mappingHandlers, handler);
-
-            mappingHandlers.put(handler.getMappingInfo(), handler);
-        }
-
-        return mappingHandlers;
-    }
-
-    private void validateMappingHandler(Map<RequestMappingInfo, Handler> requestHandles, Handler handler) {
-        if (requestHandles.containsKey(handler.getMappingInfo())) {
-            throw new IllegalStateException("이미 등록된 Request Mapping 입니다. " + handler.getMappingInfo());
+    private void validateMappingHandler(Map<RequestMappingInfo, Handler> requestHandles) {
+        long mappingInfoCount = requestHandles.entrySet().size();
+        long handlerCount = requestHandles.values().size();
+        if (mappingInfoCount != handlerCount) {
+            throw new IllegalStateException();
         }
     }
 
-    public Handler getHandler(Request request) {
-        return handlerRegistry.get(new RequestMappingInfo(request.getPath(), request.getMethod()));
+    Handler getHandler(Request request) {
+        Handler handler = handlerRegistry.get(new RequestMappingInfo(request.getPath(), request.getMethod()));
+
+        if (handler != null) {
+            return handler;
+        }
+
+        return handlerRegistry.keySet()
+                .stream()
+                .filter(requestMappingInfo -> requestMappingInfo.matchRequest(request))
+                .map(handlerRegistry::get)
+                .findAny()
+                .orElseThrow();
     }
 }
