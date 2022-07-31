@@ -23,9 +23,20 @@ public class HttpRequestHeaderDummy {
         + "\n";
 
     public static HttpRequestHeader GET_USER_HTTP_REQUEST_DUMMY
-        = new HttpRequestHeader(new RequestLine("GET", "/user/something", "userId=javajigi&password=password&name=JaeSung", new WebProtocol("HTTP", "1.1")), new HttpHeader(Map.of("Host", "localhost:8080")));
+        = new HttpRequestHeader(
+        new RequestLine(
+            "GET",
+            "/user/something",
+            Map.of(
+                "userId", "javajigi",
+                "password", "password",
+                "name", "JaeSung"
+            ),
+            new WebProtocol("HTTP", "1.1")),
+        new HttpHeader(Map.of("Host", "localhost:8080")
+        ));
 
     public static HttpRequestHeader GET_INDEX_HTTP_REQUEST_DUMMY
-        = new HttpRequestHeader(new RequestLine("GET", "/index.html",  new WebProtocol("HTTP", "1.1")), new HttpHeader(Map.of("Host", "localhost:8080")));
+        = new HttpRequestHeader(new RequestLine("GET", "/index.html", new WebProtocol("HTTP", "1.1")), new HttpHeader(Map.of("Host", "localhost:8080")));
 
 }

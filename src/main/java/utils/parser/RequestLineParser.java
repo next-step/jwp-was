@@ -3,6 +3,7 @@ package utils.parser;
 import model.RequestLine;
 import model.WebProtocol;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static utils.parser.QueryStringParser.removeQueryString;
@@ -29,7 +30,7 @@ public class RequestLineParser {
         WebProtocol webProtocol = WebProtocolParser.parse(split[PROTOCOL_WITH_VERSION_INDEX]);
 
         if (QUERY_STRING.matcher(path).matches()) {
-            String queryString = QueryStringParser.parse(path);
+            Map<String, String> queryString = QueryStringParser.parse(path);
 
             return new RequestLine(method, removeQueryString(path), queryString, webProtocol);
         }

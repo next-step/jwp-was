@@ -2,13 +2,15 @@ package model;
 
 import enums.HttpMethod;
 
+import java.util.Map;
+
 public class RequestLine {
     private final HttpMethod httpMethod;
     private final String path;
-    private final String queryString;
+    private final Map<String, String> queryString;
     private final WebProtocol webProtocol;
 
-    public RequestLine(String httpMethod, String path, String queryString, WebProtocol webProtocol) {
+    public RequestLine(String httpMethod, String path, Map<String, String> queryString, WebProtocol webProtocol) {
         this.httpMethod = HttpMethod.getHttpMethod(httpMethod);
         this.path = path;
         this.queryString = queryString;
@@ -30,7 +32,7 @@ public class RequestLine {
         return path;
     }
 
-    public String getQueryString() {
+    public Map<String, String> getQueryString() {
         return queryString;
     }
 

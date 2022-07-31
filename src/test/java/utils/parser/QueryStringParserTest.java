@@ -3,6 +3,8 @@ package utils.parser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,12 +29,17 @@ class QueryStringParserTest {
         //given
         String path = "/users?userId=javajigi&password=password&name=JaeSung";
         String queryString = "userId=javajigi&password=password&name=JaeSung";
+        Map<String, String> filedNameToValue = Map.of(
+            "userId", "javajigi",
+            "password", "password",
+            "name", "JaeSung"
+        );
 
         //when
-        String queryStringParseResult = QueryStringParser.parse(path);
+        Map<String, String> queryStringParseResult = QueryStringParser.parse(path);
 
         //then
-        assertThat(queryStringParseResult).isEqualTo(queryString);
+        assertThat(queryStringParseResult).isEqualTo(filedNameToValue);
     }
 
     @Test

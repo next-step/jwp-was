@@ -5,6 +5,8 @@ import model.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -64,8 +66,12 @@ public class RequestLineParserTest {
     @DisplayName("requestLine parsing시, queryString이 포함되어 있다면 queryString도 파싱한다.")
     void queryStringParsingTest() {
         //given
-        String queryString = "userId=javajigi&password=password&name=JaeSung";
         String queryStringRemovedPath = "/users";
+        Map<String, String> filedNameToValue = Map.of(
+            "userId", "javajigi",
+            "password", "password",
+            "name", "JaeSung"
+        );
 
         //when
         RequestLine queryStringRequestLineResult = RequestLineParser.parse(GET_QUERY_STRING_REQUEST_LINE);
@@ -73,7 +79,7 @@ public class RequestLineParserTest {
         //then
         assertAll(
             () -> assertThat(queryStringRequestLineResult.getPath()).isEqualTo(queryStringRemovedPath),
-            () -> assertThat(queryStringRequestLineResult.getQueryString()).isEqualTo(queryString),
+            () -> assertThat(queryStringRequestLineResult.getQueryString()).isEqualTo(filedNameToValue),
             () -> assertThat(queryStringRequestLineResult.hasQueryString()).isTrue()
         );
     }
