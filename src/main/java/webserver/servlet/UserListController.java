@@ -3,6 +3,8 @@ package webserver.servlet;
 import db.DataBase;
 import java.io.IOException;
 import java.util.Collections;
+import jdk.jshell.spi.ExecutionControl;
+import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import utils.HandlebarsTemplate;
 import webserver.domain.ContentType;
 import webserver.domain.Cookies;
@@ -10,12 +12,17 @@ import webserver.domain.HttpHeader;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
-public class UserListServlet implements Servlet {
+public class UserListController implements Controller {
 
     private static final String COOKIE_NAME_LOGINED = "logined";
 
     @Override
-    public void serve(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+
+    }
+
+    @Override
+    public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
         Cookies cookies = httpRequest.getCookies();
         String loginCookie = cookies.get(COOKIE_NAME_LOGINED);
 

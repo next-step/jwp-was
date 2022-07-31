@@ -5,10 +5,10 @@ import model.User;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
-public class UserCreateServlet implements Servlet {
+public class UserCreateController implements Controller {
 
     @Override
-    public void serve(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
         User user = new User(
             httpRequest.getParameter("userId"),
             httpRequest.getParameter("password"),
@@ -18,6 +18,11 @@ public class UserCreateServlet implements Servlet {
         DataBase.addUser(user);
 
         httpResponse.sendRedirect("http://localhost:8080/index.html");
+    }
+
+    @Override
+    public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
+
     }
 
 }

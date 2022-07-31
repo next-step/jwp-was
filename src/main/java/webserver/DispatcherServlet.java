@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
-import webserver.servlet.Servlet;
+import webserver.servlet.Controller;
 import webserver.supporter.SupportApis;
 import webserver.supporter.SupportResources;
 
@@ -20,8 +20,8 @@ public enum DispatcherServlet {
         String requestPath = httpRequest.getPath();
 
         if (SupportApis.isSupported(requestPath)) {
-            Servlet servlet = SupportApis.getServlet(requestPath);
-            servlet.serve(httpRequest, httpResponse);
+            Controller controller = SupportApis.getServlet(requestPath);
+            controller.service(httpRequest, httpResponse);
             return;
         }
 

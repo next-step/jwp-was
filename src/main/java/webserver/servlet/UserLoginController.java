@@ -9,10 +9,10 @@ import webserver.domain.HttpHeader;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
-public class UserLoginServlet implements Servlet {
+public class UserLoginController implements Controller {
 
     @Override
-    public void serve(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
         String userId = httpRequest.getParameter("userId");
         String password = httpRequest.getParameter("password");
         validate(userId, password);
@@ -28,6 +28,11 @@ public class UserLoginServlet implements Servlet {
 
         httpResponse.addHeader(HttpHeader.SET_COOKIE, "logined=false; Path=/");
         httpResponse.sendRedirect("http://localhost:8080/user/login_failed.html");
+    }
+
+    @Override
+    public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
+
     }
 
     private void validate(String userId, String password) {

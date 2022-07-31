@@ -15,12 +15,12 @@ import webserver.request.HttpRequest;
 import webserver.request.RequestLine;
 import webserver.response.HttpResponse;
 
-class UserLoginServletTest {
-    private Servlet servlet;
+class UserLoginControllerTest {
+    private Controller controller;
 
     @BeforeEach
     void setUp() {
-        servlet = new UserLoginServlet();
+        controller = new UserLoginController();
 
         DataBase.deleteAll();
         DataBase.addUser(UserTest.TEST_USER);
@@ -40,7 +40,7 @@ class UserLoginServletTest {
         HttpRequest httpRequest = new HttpRequest(requestLine, httpHeader, httpBody);
         HttpResponse httpResponse = new HttpResponse();
 
-        servlet.serve(httpRequest, httpResponse);
+        controller.service(httpRequest, httpResponse);
 
         assertThat(httpResponse.getStatus()).isEqualTo(StatusCode.FOUND);
         assertThat(httpResponse.getHeader().getHeader("Location")).isEqualTo("http://localhost:8080/user/login_failed.html");
@@ -60,7 +60,7 @@ class UserLoginServletTest {
         HttpRequest httpRequest = new HttpRequest(requestLine, httpHeader, httpBody);
         HttpResponse httpResponse = new HttpResponse();
 
-        servlet.serve(httpRequest, httpResponse);
+        controller.service(httpRequest, httpResponse);
 
         assertThat(httpResponse.getStatus()).isEqualTo(StatusCode.FOUND);
         assertThat(httpResponse.getHeader().getHeader("Set-Cookie")).isEqualTo("logined=true; Path=/");
