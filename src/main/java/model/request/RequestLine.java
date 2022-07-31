@@ -5,6 +5,8 @@ import model.WebProtocol;
 
 import java.util.Map;
 
+import java.util.Map;
+
 public class RequestLine {
     private final HttpMethod httpMethod;
     private final String path;
