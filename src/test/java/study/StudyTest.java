@@ -1,6 +1,7 @@
 package study;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ public class StudyTest {
 
     private final String HEADER_KEY_VALUE_SEPARATOR = ": ";
 
+    @DisplayName("String contain 판단 테스트")
     @Test
     void containTest() {
         String rightSampleHeader = "Connection: keep-alive";
@@ -22,6 +24,7 @@ public class StudyTest {
         Assertions.assertThat(wrongSampleHeader3.contains(HEADER_KEY_VALUE_SEPARATOR)).isFalse();
     }
 
+    @DisplayName("toStringHttpMessageData 출력 테스트")
     @Test
     void stringBuilderTest() {
         List<String> httpMessageData = new ArrayList<>();
@@ -43,5 +46,3 @@ public class StudyTest {
     }
 
 }
-
-
