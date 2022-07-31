@@ -15,7 +15,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 ;
 
@@ -28,14 +27,12 @@ public class RequestHandler implements Runnable {
             List.of("./templates", "./static")
     );
 
-    private final HandlerMapping handlerMapping = new HandlerMapping(
-            Map.of(
-                    new RequestMappingInfo("/user/create", HttpMethod.POST), new CreateMemberHandler(),
-                    new RequestMappingInfo("/user/list", HttpMethod.GET), new ListMemberHandler(),
-                    new RequestMappingInfo("/user/login", HttpMethod.POST), new LoginMemberHandler(),
-                    new RequestMappingInfo("/.*", HttpMethod.GET), new StaticFileHandler(staticLocationProvider)
-            )
-    );
+    private final HandlerMapping handlerMapping = new HandlerMapping(List.of(
+            new RequestMappingRegistration("/user/create", HttpMethod.POST, new CreateMemberHandler()),
+            new RequestMappingRegistration("/user/list", HttpMethod.GET, new ListMemberHandler()),
+            new RequestMappingRegistration("/user/login", HttpMethod.POST, new LoginMemberHandler()),
+            new RequestMappingRegistration("/.*", HttpMethod.GET, new StaticFileHandler(staticLocationProvider))
+    ));
 
     private final ViewResolver viewResolver = new ViewResolver("/templates", ".html");
 

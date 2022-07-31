@@ -9,6 +9,7 @@ import webserver.http.HttpMethod;
 import webserver.http.Request;
 import webserver.http.RequestLine;
 
+import java.util.List;
 import java.util.Map;
 
 class HandlerMappingTest {
@@ -28,5 +29,17 @@ class HandlerMappingTest {
 
         Assertions.assertThat(handler).isInstanceOf(CreateMemberHandler.class);
     }
+
+    @DisplayName("같은 요청 매핑에 다른 핸들러를 매핑할 수 없다.")
+    @Test
+    void duplicateHandlerTest() {
+        Assertions.assertThatThrownBy(() -> new HandlerMapping(List.of(
+                        new RequestMappingRegistration("/user/create", HttpMethod.POST, new CreateMemberHandler()),
+                        new RequestMappingRegistration("/user/create", HttpMethod.POST, new LoginMemberHandler())
+                )))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("이미 등록된 매핑정보 입니다.");
+    }
+
 
 }

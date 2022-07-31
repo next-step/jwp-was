@@ -3,6 +3,7 @@ package webserver;
 import webserver.http.Request;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 class HandlerMapping {
@@ -10,15 +11,28 @@ class HandlerMapping {
     private final Map<RequestMappingInfo, Handler> handlerRegistry;
 
     HandlerMapping(Map<RequestMappingInfo, Handler> handlers) {
-        validateMappingHandler(handlers);
-        this.handlerRegistry = new HashMap<>(handlers);
+        this.handlerRegistry = handlers;
     }
 
-    private void validateMappingHandler(Map<RequestMappingInfo, Handler> requestHandles) {
-        long mappingInfoCount = requestHandles.entrySet().size();
-        long handlerCount = requestHandles.values().size();
-        if (mappingInfoCount != handlerCount) {
-            throw new IllegalStateException();
+    HandlerMapping(List<RequestMappingRegistration> registrations) {
+        this.handlerRegistry = createHandlerRegistry(registrations);
+    }
+
+    private Map<RequestMappingInfo, Handler> createHandlerRegistry(List<RequestMappingRegistration> registrations) {
+        Map<RequestMappingInfo, Handler> handlerRegistry = new HashMap<>();
+
+        for (RequestMappingRegistration registration : registrations) {
+            checkDuplicatedMapping(handlerRegistry, registration);
+
+            handlerRegistry.put(registration.getRequestMappingInfo(), registration.getHandler());
+        }
+
+        return handlerRegistry;
+    }
+
+    private void checkDuplicatedMapping(Map<RequestMappingInfo, Handler> handlerRegistry, RequestMappingRegistration registration) {
+        if (handlerRegistry.containsKey(registration.getRequestMappingInfo())) {
+            throw new IllegalArgumentException("이미 등록된 매핑정보 입니다. " + registration.getRequestMappingInfo());
         }
     }
 
