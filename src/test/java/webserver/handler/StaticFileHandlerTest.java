@@ -3,10 +3,9 @@ package webserver.handler;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import webserver.RequestMappingInfo;
+import webserver.StaticLocationProvider;
 import webserver.http.*;
 
 class StaticFileHandlerTest {
@@ -15,7 +14,7 @@ class StaticFileHandlerTest {
 
     @BeforeEach
     void setup() {
-        staticFileHandler = new StaticFileHandler();
+        staticFileHandler = new StaticFileHandler(new StaticLocationProvider());
     }
 
     @DisplayName("파일 확장자에 따라서 Response 의 Content-Type 헤더가 다르다")

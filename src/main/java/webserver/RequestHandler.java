@@ -1,34 +1,43 @@
 package webserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.IOUtils;
+import webserver.handler.CreateMemberHandler;
+import webserver.handler.ListMemberHandler;
+import webserver.handler.LoginMemberHandler;
+import webserver.handler.StaticFileHandler;
+import webserver.http.*;
+import webserver.view.View;
+import webserver.view.ViewResolver;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utils.IOUtils;;
-import webserver.handler.*;
-import webserver.http.*;
-import webserver.view.View;
-import webserver.view.ViewResolver;
+;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private final Socket connection;
 
+    private final StaticLocationProvider staticLocationProvider = new StaticLocationProvider(
+            List.of("./templates", "./static")
+    );
+
     private final HandlerMapping handlerMapping = new HandlerMapping(
             Map.of(
                     new RequestMappingInfo("/user/create", HttpMethod.POST), new CreateMemberHandler(),
                     new RequestMappingInfo("/user/list", HttpMethod.GET), new ListMemberHandler(),
                     new RequestMappingInfo("/user/login", HttpMethod.POST), new LoginMemberHandler(),
-                    new RequestMappingInfo("/.*", HttpMethod.GET), new StaticFileHandler()
+                    new RequestMappingInfo("/.*", HttpMethod.GET), new StaticFileHandler(staticLocationProvider)
             )
     );
 
-    private final ViewResolver viewResolver = new ViewResolver();
+    private final ViewResolver viewResolver = new ViewResolver("/templates", ".html");
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;

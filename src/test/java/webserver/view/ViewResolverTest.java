@@ -10,7 +10,7 @@ class ViewResolverTest {
     @Test
     void redirectViewTest() {
         // given
-        ViewResolver viewResolver = new ViewResolver();
+        ViewResolver viewResolver = new ViewResolver("", "");
 
         // when
         View view = viewResolver.resolveView("redirect:/index.html");
@@ -24,10 +24,10 @@ class ViewResolverTest {
     @Test
     void handleBarViewTest() {
         // given
-        ViewResolver viewResolver = new ViewResolver();
+        ViewResolver viewResolver = new ViewResolver("", "");
 
         // when
-        View view = viewResolver.resolveView("/index.html");
+        View view = viewResolver.resolveView("/index");
 
         // then
         Assertions.assertThat(view).isInstanceOf(HandleBarView.class);

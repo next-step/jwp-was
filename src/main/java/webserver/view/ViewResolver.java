@@ -1,13 +1,17 @@
 package webserver.view;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-
 public class ViewResolver {
 
     private static final String REDIRECT_PREFIX = "redirect:";
 
-    private final Handlebars handlebars = new Handlebars(new ClassPathTemplateLoader("/templates", ".html"));
+    private final String prefix;
+
+    private final String suffix;
+
+    public ViewResolver(String prefix, String suffix) {
+        this.prefix = prefix;
+        this.suffix = suffix;
+    }
 
     public View resolveView(String view) {
         if (view.startsWith(REDIRECT_PREFIX)) {
@@ -15,7 +19,7 @@ public class ViewResolver {
             return new RedirectView(targetUrl);
         }
 
-        return new HandleBarView(view, handlebars);
+        return new HandleBarView(view, prefix, suffix);
     }
 
 }

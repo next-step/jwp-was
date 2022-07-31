@@ -1,16 +1,22 @@
-package webserver.config;
+package webserver;
 
 import utils.FileIoUtils;
 
 import java.net.URISyntaxException;
 import java.util.List;
 
-public class StaticLocationConfig {
+public class StaticLocationProvider {
+
+    private static final List<String> DEFAULT_STATIC_LOCATIONS = List.of("./templates", "./static");
 
     private final List<String> staticLocations;
 
-    public StaticLocationConfig(List<String> customStaticLocations) {
+    public StaticLocationProvider(List<String> customStaticLocations) {
         this.staticLocations = customStaticLocations;
+    }
+
+    public StaticLocationProvider() {
+        this(DEFAULT_STATIC_LOCATIONS);
     }
 
     public String getStaticLocation(String path) {
