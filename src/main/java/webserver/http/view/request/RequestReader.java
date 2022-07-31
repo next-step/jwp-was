@@ -7,10 +7,8 @@ import webserver.http.domain.request.Request;
 import webserver.http.domain.request.RequestLine;
 import webserver.http.view.CookiesParser;
 import webserver.http.domain.Headers;
-import webserver.http.domain.request.exception.NullRequestException;
+import webserver.http.domain.exception.NullRequestException;
 import webserver.http.view.HeadersParser;
-import webserver.http.view.request.ParametersParser;
-import webserver.http.view.request.RequestLineParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;

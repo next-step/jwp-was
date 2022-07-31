@@ -1,4 +1,4 @@
-package webserver.http.domain.request.exception;
+package webserver.http.domain.exception;
 
 public class NullRequestException extends RuntimeException{
     public NullRequestException(String message) {

@@ -16,7 +16,7 @@ import webserver.http.domain.request.Request;
 import webserver.http.domain.response.Response;
 import webserver.http.domain.response.StatusCode;
 import webserver.http.view.request.RequestReader;
-import webserver.http.domain.request.exception.NullRequestException;
+import webserver.http.domain.exception.NullRequestException;
 import webserver.http.view.response.ResponseWriter;
 
 import java.io.BufferedReader;
