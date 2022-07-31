@@ -49,6 +49,18 @@ class HttpRequestTest {
         assertEquals("javajigi", request.getParameter("userId"));
     }
 
+    @Test
+    public void request_POST2() throws Exception {
+        InputStream in = new FileInputStream(testDirectory + "Http_POST2.txt");
+        HttpRequest request = HttpRequest.of(in);
+
+        assertEquals(HttpMethod.POST, request.getMethod());
+        assertEquals("/user/create", request.getPath());
+        assertEquals("keep-alive", request.getHeader("Connection"));
+        assertEquals("1", request.getParameter("id"));
+        assertEquals("javajigi", request.getParameter("userId"));
+    }
+
     @DisplayName("헤더에 키-밸류 형태로 값이 정상 저장된다.")
     @Test
     void headerTest() {

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.domain.ContentType;
+import webserver.domain.HttpHeader;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
@@ -41,8 +42,8 @@ public final class SupportResources {
             return;
         }
 
-        byte[] body = FileIoUtils.loadFileFromClasspath(PATH_STATIC + path);
-        httpResponse.okWithBody(body, contentType.type());
+        httpResponse.addHeader(HttpHeader.CONTENT_TYPE, contentType.type());
+        httpResponse.forward(PATH_STATIC + path);
     }
 
 }

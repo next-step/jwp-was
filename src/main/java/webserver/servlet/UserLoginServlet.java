@@ -21,13 +21,13 @@ public class UserLoginServlet implements Servlet {
             .orElseThrow(() -> new IllegalStateException(NOT_FOUND_MEMBER));
 
         if (userFound.fitPassword(password)) {
-            httpResponse.found("http://localhost:8080/index.html");
             httpResponse.addHeader(HttpHeader.SET_COOKIE, "logined=true; Path=/");
+            httpResponse.sendRedirect("http://localhost:8080/index.html");
             return;
         }
 
-        httpResponse.found("http://localhost:8080/user/login_failed.html");
         httpResponse.addHeader(HttpHeader.SET_COOKIE, "logined=false; Path=/");
+        httpResponse.sendRedirect("http://localhost:8080/user/login_failed.html");
     }
 
     private void validate(String userId, String password) {

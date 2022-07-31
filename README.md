@@ -25,13 +25,13 @@
     - 헤더는 Map<String, String>에 저장해 관리하고 getHeader(“필드 이름”) 메소드를 통해 접근 가능하도록 구현한다.
     - GET과 POST 메소드에 따라 전달되는 인자를 Map<String, String>에 저장해 관리하고 getParameter(“인자 이름”) 메소드를 통해 접근 가능하도록 구현한다.
     - RequestHandler가 새로 추가한 HttpRequest를 사용하도록 리팩토링한다.
-  3. [ ] 클라이언트 응답 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpResponse)
+  3. [x] 클라이언트 응답 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpResponse)
       - RequestHandler 클래스를 보면 응답 데이터 처리를 위한 많은 중복이 있다. 이 중복을 제거해 본다.
       - 응답 헤더 정보를 Map<String, String>으로 관리한다.
       - 응답을 보낼 때 HTML, CSS, 자바스크립트 파일을 직접 읽어 응답으로 보내는 메소드는 forward(), 다른 URL로 리다이렉트하는 메소드는 sendRedirect() 메소드를 나누어 구현한다.
       - RequestHandler가 새로 추가한 HttpResponse를 사용하도록 리팩토링한다.
   4. [ ] 다형성을 활용해 클라이언트 요청 URL에 대한 분기 처리를 제거
-  5. [ ] 추가 요구사항이나 변경이 발생하는 경우 처리에 대한 고려
+  5. [x] 추가 요구사항이나 변경이 발생하는 경우 처리에 대한 고려
 
 
 ---

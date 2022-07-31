@@ -1,7 +1,6 @@
 package webserver.servlet;
 
 import db.DataBase;
-import java.util.Map;
 import model.User;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
@@ -18,7 +17,7 @@ public class UserCreateServlet implements Servlet {
         );
         DataBase.addUser(user);
 
-        httpResponse.found("http://localhost:8080/index.html");
+        httpResponse.sendRedirect("http://localhost:8080/index.html");
     }
 
 }
