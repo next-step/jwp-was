@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Headers {
     private Map<String, String> headers;
@@ -35,8 +36,16 @@ public class Headers {
         headers.put(tokens[0].trim(), tokens[1].trim());
     }
 
+    public void put(String key, String value) {
+        headers.put(key, value);
+    }
+
     public String getHeader(String key) {
         return headers.get(key);
+    }
+
+    public Set<String> getKeySet() {
+        return headers.keySet();
     }
 
     public int getBodySize() {

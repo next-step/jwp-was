@@ -4,16 +4,15 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import webserver.http.Contents;
 import webserver.http.Headers;
 import webserver.http.HttpBody;
 import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 import webserver.http.Path;
 import webserver.template.UserList;
 import webserver.user.UserFactory;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,131 +37,53 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = new HttpRequest(in);
             Path path = httpRequest.getRequestLine().getPath();
-            DataOutputStream dos = new DataOutputStream(out);
+            HttpResponse httpResponse = new HttpResponse(out);
             Headers headers = httpRequest.getHeaders();
-            byte[] body = null;
 
             if (path.isSameUrlPath("/user/create")) {
                 final User user = UserFactory.from(httpRequest);
                 DataBase.addUser(user);
-                response302Header(dos);
+                httpResponse.sendRedirect("/index.html");
                 return;
             }
             if (path.isSameUrlPath("/user/login")) {
                 final HttpBody httpBody = httpRequest.getHttpBody();
-                processLogin(out, dos, httpBody);
+                processLogin(httpResponse, httpBody);
                 return;
             }
             if (path.isSameUrlPath("/user/list") && headers.isLogin()) {
                 Collection<User> users = DataBase.findAll();
                 UserList userList = new UserList(new ArrayList<>(users));
                 String template = userList.generateUserListTemplate();
-                body = template.getBytes();
-                response200Header(dos, body.length);
-                responseBody(dos, body);
+                httpResponse.forwardBody(template);
                 return;
             }
             if (path.isSameUrlPath("/user/list") && !headers.isLogin()) {
-                responseResource(out, "/user/login.html");
+                httpResponse.sendRedirect("/user/login.html");
                 return;
             }
-            if (path.endWith("html") || path.endWith("ico")) {
-                body = FileIoUtils.loadFileFromClasspath("./templates" + path.getPath());
-            }
-            if (path.endWith("css")) {
-                body = FileIoUtils.loadFileFromClasspath("./static" + path.getPath());
-                responseCssHeader(dos, body.length);
-                responseBody(dos, body);
-                return;
-            }
-            if (path.endWith("js") || path.startWith("/fonts")) {
-                body = FileIoUtils.loadFileFromClasspath("./static" + path.getPath());
-            }
-            if (body == null) {
-                logger.error("not found: {}", path.getPath());
-            }
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-
+            httpResponse.forward(path.getPath());
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void processLogin(OutputStream out, DataOutputStream dos, HttpBody httpBody) throws IOException, URISyntaxException {
+    private void processLogin(HttpResponse httpResponse, HttpBody httpBody) throws IOException, URISyntaxException {
         final Contents contents = httpBody.getContents();
         final String userId = contents.getContent("userId");
         final User user = DataBase.findUserById(userId);
 
         if (user == null) {
-            responseResource(out, "/user/login_failed.html");
+            httpResponse.sendRedirect("/user/login_failed.html");
             return;
         }
         String password = httpBody.getContents().getContent("password");
         if (user.isSamePassword(password)) {
-            responseLoginSuccess(dos);
+            httpResponse.responseLoginSuccess();
             return;
+
         }
-        responseResource(out, "/user/login_failed.html");
+        httpResponse.sendRedirect("/user/login_failed.html");
         return;
-    }
-
-    private void responseLoginSuccess(DataOutputStream dos) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
-            dos.writeBytes("Set-Cookie: logined=true \r\n");
-            dos.writeBytes("Location: / \r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseCssHeader(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/css\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response302Header(DataOutputStream dos) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 REDIRECT \r\n");
-            dos.writeBytes("Location: /index.html\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseResource(OutputStream out, String url) throws IOException, URISyntaxException {
-        DataOutputStream dos = new DataOutputStream(out);
-        byte[] body = FileIoUtils.loadFileFromClasspath("./templates" + url);
-        response200Header(dos, body.length);
-        responseBody(dos, body);
     }
 }
