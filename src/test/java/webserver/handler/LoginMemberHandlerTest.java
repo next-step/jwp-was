@@ -20,19 +20,6 @@ class LoginMemberHandlerTest {
         loginMemberHandler = new LoginMemberHandler();
     }
 
-    @DisplayName("request path 가 /user/login 이고 request method 가 post 인 요청과 매핑된다.")
-    @Test
-    void supportTest() {
-        // given
-//        RequestMappingInfo expected = new RequestMappingInfo("/user/login", HttpMethod.POST);
-//
-//        // when
-//        RequestMappingInfo actual = loginMemberHandler.getMappingInfo();
-//
-//        // then
-//        Assertions.assertThat(actual).isEqualTo(expected);
-    }
-
     @DisplayName("로그인 성공 시 로그인 성공 쿠키가 생성 되고 index.html 로 이동해야 한다.")
     @Test
     void loginSuccessTest() {
