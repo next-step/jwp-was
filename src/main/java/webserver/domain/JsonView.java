@@ -1,10 +1,9 @@
 package webserver.domain;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Json 타입의 body 정보 객체
@@ -19,16 +18,34 @@ public class JsonView extends DefaultView {
         this.body = body;
     }
 
+    public Object getBody() {
+        return body;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof JsonView)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        JsonView jsonView = (JsonView) o;
+        return Objects.equals(body, jsonView.body);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), body);
+    }
+
     @Override
     public String toString() {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            return objectMapper.writeValueAsString(body);
-        } catch (IOException ie) {
-            logger.error(ie.getMessage());
-
-            return STRING_EMPTY;
-        }
+        return "JsonView{" +
+                "body=" + body +
+                '}';
     }
 }

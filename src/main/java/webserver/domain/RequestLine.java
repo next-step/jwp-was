@@ -29,6 +29,7 @@ public class RequestLine {
 
     /**
      * 요청 라인 문자열에서 method, queryString, protocol을 추출해 요청 정보 객체를 생성해 반환한다.
+     *
      * @param line 요청 라인 문자열
      * @return 요청 정보
      */

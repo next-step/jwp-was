@@ -8,8 +8,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.github.jknack.handlebars.internal.lang3.StringUtils.EMPTY;
-
 public class HttpHeaders {
     public static final String DELIMITER = ": ";
     public static final int KEY_POINT = 0;
@@ -83,7 +81,7 @@ public class HttpHeaders {
     /**
      * 헤더 정보를 추가한다.
      *
-     * @param key 이름
+     * @param key   이름
      * @param value 속성
      */
     public void add(String key, String value) {
@@ -96,7 +94,7 @@ public class HttpHeaders {
      *
      * @param key 헤더 이름
      * @return 헤더 속성
-     * @exception IllegalArgumentException 존재하지 않는 헤더 이름을 찾으려하면 예외를 던진다.
+     * @throws IllegalArgumentException 존재하지 않는 헤더 이름을 찾으려하면 예외를 던진다.
      */
     public String getAttribute(String key) {
         if (!headers.containsKey(key)) {
@@ -108,7 +106,7 @@ public class HttpHeaders {
     /**
      * 헤더 속성을 찾아 반환하는데, 없을 경우 인수로 전달받은 기본 값을 반환한다.
      *
-     * @param key 헤더 이름
+     * @param key          헤더 이름
      * @param defaultValue 기본 값
      * @return 헤더 속성
      */
@@ -126,6 +124,7 @@ public class HttpHeaders {
 
     /**
      * 헤더 이름이 Cookie인 속성을 찾아 쿠키 객체로 만들어 반환한다.
+     *
      * @return 쿠키 객체
      */
     public Cookie getCookie() {

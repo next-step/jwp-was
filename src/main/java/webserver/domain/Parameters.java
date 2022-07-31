@@ -132,7 +132,7 @@ public class Parameters {
     /**
      * 속성 정보를 추가한다.
      *
-     * @param key 속성 이름
+     * @param key   속성 이름
      * @param value 속성
      */
     public void addParameters(String key, String value) {
