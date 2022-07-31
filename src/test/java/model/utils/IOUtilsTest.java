@@ -1,9 +1,10 @@
-package utils;
+package model.utils;
 
 import static org.assertj.core.api.Assertions.*;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import utils.IOUtils;
 
 public class IOUtilsTest {
     private static final Logger logger = LoggerFactory.getLogger(IOUtilsTest.class);
@@ -29,8 +32,9 @@ public class IOUtilsTest {
     void testReadData() {
         String input = "test1\ntest2\ntest3";
         var inputStream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
+        var bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-        var actual = IOUtils.readData(inputStream);
+        var actual = IOUtils.readLines(bufferedReader);
 
         assertThat(actual).containsExactly("test1", "test2", "test3");
     }

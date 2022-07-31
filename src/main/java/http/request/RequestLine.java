@@ -1,6 +1,9 @@
 package http.request;
 
 import java.util.Map;
+import java.util.regex.Pattern;
+
+import http.exception.NotFoundExtensionException;
 
 public class RequestLine {
 
@@ -8,9 +11,10 @@ public class RequestLine {
     private static final String QUERY_PARAMETER_DELIMITER = "\\?";
 
     private static final int ONLY_PATH = 1;
+    private static final Pattern REGEX = Pattern.compile("([/.\\w]+)([.][\\w]+)([?][\\w./=]+)?");
 
     private final HttpMethod httpMethod;
-    private final String path;
+    private final String url;
     private final Protocol protocol;
     private final QueryParams queryParams;
 
@@ -22,7 +26,7 @@ public class RequestLine {
 
         var pathWithParameters = specs[1]
             .split(QUERY_PARAMETER_DELIMITER);
-        this.path = pathWithParameters[0];
+        this.url = pathWithParameters[0];
         this.queryParams = parseParameters(pathWithParameters);
     }
 
@@ -33,12 +37,12 @@ public class RequestLine {
         return QueryParams.of(pathWithParameters[1]);
     }
 
-    public String getMethod() {
-        return httpMethod.name();
+    public HttpMethod getMethod() {
+        return httpMethod;
     }
 
-    public String getPath() {
-        return path;
+    public String getUrl() {
+        return url;
     }
 
     public String getProtocol() {
@@ -52,5 +56,21 @@ public class RequestLine {
 
     public Map<String, String> getQueryParams() {
         return queryParams.get();
+    }
+
+    public boolean isStaticFile() {
+        String lastPath = url.substring(url.lastIndexOf("/"));
+
+        return REGEX.matcher(lastPath)
+            .find();
+    }
+
+    public String getFileExtension() {
+        if (!isStaticFile()) {
+            throw new NotFoundExtensionException(getUrl());
+        }
+
+        var splitedUrl = url.split("\\.");
+        return splitedUrl[splitedUrl.length - 1];
     }
 }
