@@ -1,6 +1,7 @@
 package slipp.controller;
 
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,11 @@ class UserListControllerTest {
                         "email2"
                 )
         );
+    }
+
+    @AfterEach
+    void tearDown() {
+        DataBase.clearAll();
     }
 
     @DisplayName("GET 요청이고 /user/list path 요청인 경우, true 반환")

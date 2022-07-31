@@ -1,5 +1,6 @@
 package slipp.controller;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,6 +33,11 @@ import static webserver.http.domain.request.Method.POST;
 
 class UserCreateControllerTest {
     private UserCreateController userCreateController = new UserCreateController();
+
+    @AfterEach
+    void tearDown() {
+        DataBase.clearAll();
+    }
 
     @DisplayName("POST 요청이고 /user/create path 요청인 경우, true 반환")
     @ParameterizedTest
