@@ -36,8 +36,10 @@ public class UserFactory {
         if (method.isPost()) {
             HttpBody httpBody = httpRequest.getHttpBody();
             Contents contents = httpBody.getContents();
+            String email = contents.getContent("email");
+
             return mapper.convertValue(contents.getContents(), User.class);
         }
-        return null;
+        return new User();
     }
 }

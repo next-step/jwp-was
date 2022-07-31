@@ -1,5 +1,9 @@
 package webserver.http;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 public class KeyValue {
     private static final String INVALID_PARAMETERS = "잘못된 파라미터";
     private static final String REGEX = "=";
@@ -23,7 +27,15 @@ public class KeyValue {
         if (tokens.length != PARAM_SIZE) {
             return null;
         }
-        return new KeyValue(tokens[KEY_INDEX], tokens[VALUE_INDEX]);
+        return new KeyValue(tokens[KEY_INDEX], decode(tokens[VALUE_INDEX]));
+    }
+
+    private static String decode(String value) {
+        try {
+            return URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
     }
 
     public String getKey() {
