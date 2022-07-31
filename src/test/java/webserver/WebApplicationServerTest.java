@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,8 +27,6 @@ import org.springframework.web.client.RestTemplate;
 import db.DataBase;
 import model.User;
 import utils.FileIoUtils;
-import webserver.http.HttpSession;
-import webserver.http.HttpSessions;
 
 class WebApplicationServerTest {
 
@@ -101,15 +101,13 @@ class WebApplicationServerTest {
     @DisplayName("로그인 성공 시, index.html 페이지로 리다이렉트한다.")
     @Test
     void request_login_success() {
-        HttpSession session = HttpSessions.createSession();
-        session.setAttribute("user", DataBase.findUserById(VALID_USER_ID));
-
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("userId", VALID_USER_ID);
         body.add("password", VALID_PASSWORD);
 
+        String sessionId = UUID.randomUUID().toString();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Cookie", String.format("JSESSIONID=%s", session.getId()));
+        headers.add("Cookie", String.format("JSESSIONID=%s", sessionId));
 
         HttpEntity<Object> entity = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
@@ -123,30 +121,38 @@ class WebApplicationServerTest {
     @DisplayName("로그인 실패 시, login_failed.html 페이지로 리다이렉트한다.")
     @Test
     void request_login_failure() {
-        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add("userId", INVALID_USER_ID);
-        requestBody.add("password", INVALID_PASSWORD);
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("userId", INVALID_USER_ID);
+        body.add("password", INVALID_PASSWORD);
 
+        String sessionId = UUID.randomUUID().toString();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cookie", String.format("JSESSIONID=%s", sessionId));
+
+        HttpEntity<Object> entity = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.postForEntity(BASE_URL + "/user/login", requestBody, String.class);
-        HttpHeaders headers = response.getHeaders();
-        String cookie = headers.get("Set-Cookie").get(0);
+        ResponseEntity<String> response = restTemplate.exchange(BASE_URL + "/user/login", HttpMethod.POST, entity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        assertThat(headers.getLocation()).isEqualTo(URI.create("/user/login_failed.html"));
+        assertThat(response.getHeaders().getLocation()).isEqualTo(URI.create("/user/login_failed.html"));
     }
 
     @DisplayName("로그인 상태인 경우, GET /user/list 요청 시 사용자 목록을 출력한다.")
     @Test
     void request_user_list_with_logged_in() {
-        HttpSession session = HttpSessions.createSession();
-        session.setAttribute("user", DataBase.findUserById(VALID_USER_ID));
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("userId", VALID_USER_ID);
+        body.add("password", VALID_PASSWORD);
 
+        String sessionId = UUID.randomUUID().toString();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Cookie", String.format("JSESSIONID=%s", session.getId()));
-        HttpEntity<Object> entity = new HttpEntity<>(headers);
+        headers.add("Cookie", String.format("JSESSIONID=%s", sessionId));
 
+        HttpEntity<Object> entity = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
+        restTemplate.exchange(BASE_URL + "/user/login", HttpMethod.POST, entity, String.class);
+
+        entity = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(BASE_URL + "/user/list", HttpMethod.GET, entity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -158,8 +164,8 @@ class WebApplicationServerTest {
     void request_user_list_without_logged_in() throws IOException, URISyntaxException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cookie", String.format("JSESSIONID=%s", UUID.randomUUID()));
-        HttpEntity<Object> entity = new HttpEntity<>(headers);
 
+        HttpEntity<Object> entity = new HttpEntity<>(headers);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(BASE_URL + "/user/list", HttpMethod.GET, entity, String.class);
         String expectedBody = new String(FileIoUtils.loadFileFromClasspath("./templates/user/login.html"));
@@ -209,5 +215,42 @@ class WebApplicationServerTest {
         HttpEntity<Object> entity = new HttpEntity<>(headers);
         response = restTemplate.exchange(BASE_URL, HttpMethod.GET, entity, String.class);
         assertThat(response.getHeaders().get("Set-Cookie")).isNull();
+    }
+
+    @DisplayName("서버의 최대 Thread Pool 수만큼 요청을 보낸다.")
+    @Test
+    void request_maximum_threads() throws InterruptedException {
+        int threadPoolSize = 250;
+        CountDownLatch countDownLatch = new CountDownLatch(threadPoolSize);
+        RestTemplate restTemplate = new RestTemplate();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
+        for (int count = 0; count < threadPoolSize; count++) {
+            executorService.execute(() -> {
+                restTemplate.getForEntity(BASE_URL, String.class);
+                countDownLatch.countDown();
+            });
+        }
+        boolean await = countDownLatch.await(10, TimeUnit.SECONDS);
+
+        assertThat(countDownLatch.getCount()).isZero();
+        assertThat(await).isTrue();
+    }
+
+    @DisplayName("서버의 최대 Thread Pool 수보다 더 많은 요청을 보낸다.")
+    @Test
+    void request_more_than_maximum_threads() throws InterruptedException {
+        int threadPoolSize = 300;
+        CountDownLatch latch = new CountDownLatch(threadPoolSize);
+        RestTemplate restTemplate = new RestTemplate();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
+        for (int count = 0; count < threadPoolSize; count++) {
+            executorService.execute(() -> restTemplate.getForEntity(BASE_URL, String.class));
+        }
+        boolean await = latch.await(10, TimeUnit.SECONDS);
+
+        assertThat(latch.getCount()).isNotZero();
+        assertThat(await).isFalse();
     }
 }
