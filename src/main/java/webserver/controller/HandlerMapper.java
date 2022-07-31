@@ -1,11 +1,7 @@
 package webserver.controller;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.net.URISyntaxException;
-import model.User;
+import enums.HttpStatusCode;
+import java.util.List;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
@@ -13,9 +9,14 @@ public class HandlerMapper {
     private static final String USER_CONTROLLER_PATH = "/user/create";
 
     public HttpResponse handle(HttpRequest httpRequest) throws Exception {
-        if (httpRequest.getPath().equals(USER_CONTROLLER_PATH)) {
-            return new UserController().execute(httpRequest);
+        List<Controller> controllerList = List.of(new ViewController(), new UserController());
+
+        for (Controller controller : controllerList) {
+            if (controller.canExecute(httpRequest)) {
+                return controller.execute(httpRequest);
+            }
         }
-        return new ViewController().execute(httpRequest);
+
+        return new HttpResponse(HttpStatusCode.NOT_FOUND);
     }
 }

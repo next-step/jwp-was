@@ -6,18 +6,18 @@ import java.util.Map;
 
 public class HttpRequest {
     private final RequestLine requestLine;
-    private final Header header;
+    private final HttpHeader headers;
     private RequestBody body;
 
-    public HttpRequest(RequestLine requestLine, Header header, RequestBody body) {
+    public HttpRequest(RequestLine requestLine, HttpHeader headers, RequestBody body) {
         this.requestLine = requestLine;
-        this.header = header;
+        this.headers = headers;
         this.body = body;
     }
 
     public HttpRequest(List<String> request) {
         this.requestLine = new RequestLine(request.get(0));
-        this.header = new Header(request.subList(1, request.size()));
+        this.headers = new HttpHeader(request.subList(1, request.size()));
         this.body = null;
     }
 
@@ -50,6 +50,6 @@ public class HttpRequest {
     }
 
     public Map<String, String> getHeaders() {
-        return header.getHeaders();
+        return headers.getHeaders();
     }
 }

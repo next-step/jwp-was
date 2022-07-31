@@ -2,16 +2,20 @@ package webserver.request;
 
 import java.util.*;
 
-public class Header {
+public class HttpHeader {
     private static final String KEY_VALUE_DELIMITER = ": ";
 
     private final Map<String, String> headers;
 
-    public Header(Map<String, String> headers) {
+    public HttpHeader() {
+        this(new HashMap<>());
+    }
+
+    public HttpHeader(Map<String, String> headers) {
         this.headers = headers;
     }
 
-    public Header(List<String> headerLines) {
+    public HttpHeader(List<String> headerLines) {
         if (headerLines.size() == 0) {
             this.headers = Collections.emptyMap();
             return;
@@ -30,7 +34,15 @@ public class Header {
         this.headers = headers;
     }
 
-    Map<String, String> getHeaders() {
+    public Map<String, String> getHeaders() {
         return headers;
+    }
+
+    public String getHeader(String key) {
+        return headers.get(key);
+    }
+
+    public void setHeader(String key, String value) {
+        headers.put(key, value);
     }
 }

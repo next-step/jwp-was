@@ -20,7 +20,7 @@ public class HttpResponseTest {
 
         HttpResponse result = new HttpResponse(HttpStatusCode.OK, user);
 
-        assertEquals(result.getStatusCode(), HttpStatusCode.OK.getCode());
+        assertEquals(result.getStatusCode(), HttpStatusCode.OK);
         assertArrayEquals(result.getBody(), userJsonString.getBytes(StandardCharsets.UTF_8));
     }
 }
