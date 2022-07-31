@@ -1,6 +1,5 @@
 package webserver.request;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -16,11 +15,16 @@ public class RequestHeaders {
     private static final String COOKIE = "Cookie";
 
     private final Map<String, String> headers = new HashMap<>();
+    private final Cookies cookies = new Cookies();
 
     public RequestHeaders() {
     }
 
     public RequestHeaders(Map<String, String> headers) {
+        if (headers.containsKey(COOKIE)) {
+            this.cookies.addCookies(headers.get(COOKIE));
+        }
+
         this.headers.putAll(headers);
     }
 
@@ -33,6 +37,11 @@ public class RequestHeaders {
         if (keyAndValue.length == 1) {
             return;
         }
+
+        if (COOKIE.equals(keyAndValue[0].trim())) {
+            this.cookies.addCookies(keyAndValue[1].trim());
+        }
+
         headers.put(keyAndValue[0].trim(), keyAndValue[1].trim());
     }
 
@@ -65,26 +74,15 @@ public class RequestHeaders {
     }
 
     public boolean hasCookie(final String cookieName) {
-        return headers.containsKey(COOKIE) &&
-            Arrays.stream(getCookies())
-                .filter(cookie -> cookie.startsWith(cookieName))
-                .anyMatch(cookie -> cookie.split("=").length == 2);
+        return cookies.hasCookie(cookieName);
+    }
+
+    public void addCookie(final String cookie) {
+        cookies.addCookies(cookie);
     }
 
     public String getCookie(final String cookieName) {
-        if (!hasCookie(cookieName)) {
-            return null;
-        }
-
-        return Arrays.stream(getCookies())
-            .filter(cookie -> cookie.startsWith(cookieName))
-            .findFirst()
-            .map(cookie -> cookie.split("=")[1])
-            .orElse(null);
-    }
-
-    private String[] getCookies() {
-        return headers.get(COOKIE).split(";");
+        return cookies.getCookie(cookieName);
     }
 
     @Override

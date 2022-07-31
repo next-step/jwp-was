@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import db.DataBase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -113,6 +114,19 @@ class HttpRequestTest {
             () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK),
             () -> assertThat(response.getBody()).contains("<td>administrator</td>")
         );
+    }
+
+    @DisplayName("서버의 ThreadPool 보다 많은 수로 요청을 보낸 후 응답을 받는다")
+    @Test
+    void request_thread_pool_over() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        boolean actual = IntStream.range(0, 500)
+            .parallel()
+            .mapToObj(index -> restTemplate.getForEntity(URL + "/index.html", String.class))
+            .allMatch(response -> response.getStatusCode().is2xxSuccessful());
+
+        assertThat(actual).isTrue();
     }
 
     private static String getSessionId(final ResponseEntity<String> 회원가입_요청) {
