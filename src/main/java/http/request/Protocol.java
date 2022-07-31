@@ -5,9 +5,9 @@ public class Protocol {
     private final static String DELIMITER = "/";
 
     private ProtocolType protocolType;
-    private Double version;
+    private String version;
 
-    private Protocol(ProtocolType protocolType, Double version) {
+    private Protocol(ProtocolType protocolType, String version) {
         this.protocolType = protocolType;
         this.version = version;
     }
@@ -18,7 +18,7 @@ public class Protocol {
 
         return new Protocol(
                 ProtocolType.valueOf(protocolSplits[0]),
-                Double.parseDouble(protocolSplits[1])
+                protocolSplits[1]
         );
     }
 
@@ -32,7 +32,7 @@ public class Protocol {
         return protocolType.name();
     }
 
-    public Double getVersion() {
+    public String getVersion() {
         return version;
     }
 }

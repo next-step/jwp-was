@@ -18,7 +18,7 @@ public class RequestLineTest {
                 () -> assertThat(requestLine.getHttpMethod()).isEqualTo("GET"),
                 () -> assertThat(requestLine.getPath()).isEqualTo("/users"),
                 () -> assertThat(requestLine.getProtocolType()).isEqualTo("HTTP"),
-                () -> assertThat(requestLine.getVersion()).isEqualTo(1.1)
+                () -> assertThat(requestLine.getVersion()).isEqualTo("1.1")
         );
     }
 
@@ -42,7 +42,7 @@ public class RequestLineTest {
                 () -> assertThat(requestLine.getHttpMethod()).isEqualTo("POST"),
                 () -> assertThat(requestLine.getPath()).isEqualTo("/users"),
                 () -> assertThat(requestLine.getProtocolType()).isEqualTo("HTTP"),
-                () -> assertThat(requestLine.getVersion()).isEqualTo(1.1)
+                () -> assertThat(requestLine.getVersion()).isEqualTo("1.1")
         );
     }
 

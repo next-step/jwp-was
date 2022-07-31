@@ -20,8 +20,8 @@ public class RequestLine {
         this.protocol = Protocol.from(splits[PROTOCOL_INDEX]);
     }
 
-    private void validateHttpMethod(String str) {
-        if (!str.equals(str.toUpperCase())) {
+    private void validateHttpMethod(String httpMethod) {
+        if (!httpMethod.equals(httpMethod.toUpperCase())) {
             throw new IllegalArgumentException("Http 메소드는 대문자여야 합니다.");
         }
     }
@@ -38,7 +38,11 @@ public class RequestLine {
         return protocol.getProtocolType();
     }
 
-    public Double getVersion() {
+    public String getVersion() {
         return protocol.getVersion();
+    }
+
+    public String getParameter(String key) {
+        return path.getQueryParameters(key);
     }
 }
