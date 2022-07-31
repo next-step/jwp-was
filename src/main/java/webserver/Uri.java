@@ -9,15 +9,12 @@ public class Uri {
     private final QueryStringParser queryString;
 
     public Uri(String uri) {
-        if (!uri.contains("?")) {
-            log.info("Query가 없습니다.");
-            this.path = uri;
-            this.queryString = null;
+        QueryStringParser queryString = null;
+        if (uri.contains("?")) {
+            queryString = new QueryStringParser(uri.split("\\?")[1]);
         }
-        else {
-            this.path = uri.split("\\?")[0];
-            this.queryString = new QueryStringParser(uri.split("\\?")[1]);
-        }
+        this.path = uri.split("\\?")[0];
+        this.queryString = queryString;
     }
 
     public String getPath() {
