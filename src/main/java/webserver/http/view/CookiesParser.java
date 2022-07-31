@@ -5,6 +5,7 @@ import webserver.http.domain.Cookies;
 import webserver.http.domain.KeyValuePair;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toMap;
@@ -22,8 +23,12 @@ public class CookiesParser {
         return Arrays.stream(message.split(EACH_COOKIE_DELIMITER_REGEX))
                 .map(cookie -> keyValuePairParser.parse(cookie, COOKIE_KEY_VALUE_DELIMITER, false))
                 .collect(collectingAndThen(
-                                toMap(KeyValuePair::getKey, pair ->
-                                        new Cookie(pair.getKey(), pair.getValue())),
+                                toMap(
+                                        KeyValuePair::getKey, pair ->
+                                        new Cookie(pair.getKey(), pair.getValue()),
+                                        (oldCookie, newCookie) -> newCookie,
+                                        LinkedHashMap::new
+                                ),
                                 Cookies::new
                         )
                 );

@@ -1,6 +1,7 @@
 package webserver.http.domain;
 
 import java.util.Map;
+import java.util.Set;
 
 public class Headers {
     private final Map<String, String> keyValues;
@@ -46,6 +47,10 @@ public class Headers {
 
     public void add(String name, String value) {
         keyValues.put(name, value);
+    }
+
+    public Set<String> getAllKeys() {
+        return keyValues.keySet();
     }
 
     @Override

@@ -5,7 +5,7 @@ import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class Response {
     private final Status status;
@@ -14,7 +14,7 @@ public class Response {
     private byte[] body;
 
     public Response(Status status) {
-        this(status, new Headers(new HashMap<>()), new Cookies(new HashMap<>()), null);
+        this(status, new Headers(new LinkedHashMap<>()), new Cookies(new LinkedHashMap<>()), null);
     }
 
     public Response(Status status, Headers headers, Cookies addedCookies, byte[] body) {
@@ -53,5 +53,21 @@ public class Response {
 
     public void addCookie(Cookie cookie) {
         addedCookies.addCookie(cookie);
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public Headers getHeaders() {
+        return headers;
+    }
+
+    public Cookies getAddedCookies() {
+        return addedCookies;
+    }
+
+    public byte[] getBody() {
+        return body;
     }
 }

@@ -30,4 +30,12 @@ public class Status {
     public static Status internalError() {
         return new Status(Protocol.http1Point1(), StatusCode.INTERNAL_ERROR);
     }
+
+    public Protocol getProtocol() {
+        return protocol;
+    }
+
+    public StatusCode getStatusCode() {
+        return statusCode;
+    }
 }

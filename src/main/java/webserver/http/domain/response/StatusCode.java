@@ -15,4 +15,12 @@ public enum StatusCode {
         this.message = message;
         this.code = code;
     }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public int getCode() {
+        return code;
+    }
 }

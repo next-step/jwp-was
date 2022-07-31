@@ -93,6 +93,7 @@ class RequestReaderTest {
         Request request = requestReader.read(bufferedReader);
 
         assertThat(request).usingRecursiveComparison()
+                .ignoringCollectionOrder()
                 .isEqualTo(getRequestIncludingCookies());
     }
 

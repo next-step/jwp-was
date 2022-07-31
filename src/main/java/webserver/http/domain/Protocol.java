@@ -13,6 +13,14 @@ public class Protocol {
         return new Protocol("HTTP", "1.1");
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
     @Override
     public String toString() {
         return "Protocol{" +

@@ -19,6 +19,7 @@ class CookiesParserTest {
         Cookies actual = cookiesParser.parse(message);
 
         assertThat(actual).usingRecursiveComparison()
+                .ignoringCollectionOrder()
                 .isEqualTo(new Cookies(
                 Map.of(
                         "Idea", new Cookie("Idea", "7d39d793-8ebb-45b8-9e1e-7c66b1449982"),
