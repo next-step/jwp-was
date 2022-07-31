@@ -21,8 +21,8 @@ public class Contents {
         this.contents = Contents;
     }
 
-    public static Contents from(String queryString) {
-        return parseContents(queryString);
+    public static Contents from(String values) {
+        return parseContents(values);
     }
 
     public static Contents from(Map<String, String> Contents) {

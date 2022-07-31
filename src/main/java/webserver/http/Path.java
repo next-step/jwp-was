@@ -20,7 +20,7 @@ public class Path {
         this.params = params;
     }
 
-    public static Path createWithGetMethod(String value) {
+    public static Path from(String value) {
         int paramIndex = value.indexOf(QUERY_STRING_DELIMITER);
         if (paramIndex == NOT_FOUND && value.equals("/")) {
             return new Path("/index.html");
@@ -31,10 +31,6 @@ public class Path {
         final String path = value.substring(0, paramIndex);
         final Params params = Params.from(value.substring(paramIndex + 1));
         return new Path(path, params);
-    }
-
-    public static Path createWithPost(String value) {
-        return new Path(value, null);
     }
 
     public boolean isSameUrlPath(String path) {
