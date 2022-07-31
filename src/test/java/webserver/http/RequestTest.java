@@ -1,14 +1,11 @@
 package webserver.http;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class RequestTest {
 
@@ -34,6 +31,6 @@ class RequestTest {
 
         assertThat(request.getRequestLine()).isEqualTo(requestLine);
         assertThat(request.getHeaders()).isEqualTo(headers);
-        assertThat(request.getRequestBody()).isEqualTo(body);
+        assertThat(request.getBody()).isEqualTo(new RequestBody(body));
     }
 }

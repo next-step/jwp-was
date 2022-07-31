@@ -1,10 +1,5 @@
 package webserver.http;
 
-import utils.IOUtils;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -15,14 +10,14 @@ public class Request {
 
     private final Headers headers;
 
-    private final String body;
+    private final RequestBody body;
 
     private final List<Cookie> cookies;
 
     public Request(RequestLine requestLine, Headers headers, String body) {
         this.requestLine = requireNonNull(requestLine, "");
         this.headers = requireNonNull(headers, "");
-        this.body = body;
+        this.body = new RequestBody(body);
         this.cookies = Cookie.listOf(this.headers.getValue("cookie"));
     }
 
@@ -46,8 +41,8 @@ public class Request {
         return requestLine.getMethod();
     }
 
-    public String getRequestBody() {
-        return body;
+    public String getBodyValue(String name) {
+        return body.getValue(name);
     }
 
     public String getCookie(String name) {
@@ -60,6 +55,10 @@ public class Request {
 
     RequestLine getRequestLine() {
         return requestLine;
+    }
+
+    RequestBody getBody() {
+        return body;
     }
 
     @Override

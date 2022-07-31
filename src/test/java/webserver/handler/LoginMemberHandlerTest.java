@@ -6,8 +6,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.RequestMappingInfo;
-import webserver.http.*;
+import webserver.ModelAndView;
+import webserver.http.Headers;
+import webserver.http.Request;
+import webserver.http.RequestLine;
+import webserver.http.Response;
 
 import java.util.ArrayList;
 
@@ -18,6 +21,7 @@ class LoginMemberHandlerTest {
     @BeforeEach
     void setup() {
         loginMemberHandler = new LoginMemberHandler();
+        DataBase.clear();
     }
 
     @DisplayName("로그인 성공 시 로그인 성공 쿠키가 생성 되고 index.html 로 이동해야 한다.")
@@ -29,11 +33,10 @@ class LoginMemberHandlerTest {
         Response response = new Response();
 
         // when
-        loginMemberHandler.handle(request, response);
+        ModelAndView modelAndView = loginMemberHandler.handle(request, response);
 
         // then
-        Assertions.assertThat(response.getStatusLine()).isEqualTo(new StatusLine(ProtocolVersion.HTTP11, Status.FOUND));
-        Assertions.assertThat(response.getHeaders().getValue("Location")).isEqualTo("/index.html");
+        Assertions.assertThat(modelAndView.getView()).isEqualTo("redirect:/index.html");
         Assertions.assertThat(response.getHeaders().getValue("Set-Cookie")).isEqualTo("logined=true; Path=/");
     }
 
@@ -45,11 +48,10 @@ class LoginMemberHandlerTest {
         Response response = new Response();
 
         // when
-        loginMemberHandler.handle(request, response);
+        ModelAndView modelAndView = loginMemberHandler.handle(request, response);
 
         // then
-        Assertions.assertThat(response.getStatusLine()).isEqualTo(new StatusLine(ProtocolVersion.HTTP11, Status.FOUND));
-        Assertions.assertThat(response.getHeaders().getValue("Location")).isEqualTo("/user/login_failed.html");
+        Assertions.assertThat(modelAndView.getView()).isEqualTo("redirect:/user/login_failed.html");
         Assertions.assertThat(response.getHeaders().getValue("Set-Cookie")).isEqualTo("logined=false; Path=/");
     }
 

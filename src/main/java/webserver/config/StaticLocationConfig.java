@@ -7,10 +7,7 @@ import java.util.List;
 
 public class StaticLocationConfig {
 
-    private List<String> staticLocations = List.of("./templates", "./static");
-
-    public StaticLocationConfig() {
-    }
+    private final List<String> staticLocations;
 
     public StaticLocationConfig(List<String> customStaticLocations) {
         this.staticLocations = customStaticLocations;

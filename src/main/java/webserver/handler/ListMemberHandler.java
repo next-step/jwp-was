@@ -13,7 +13,7 @@ public class ListMemberHandler implements Handler {
         String logined = request.getCookie("logined");
 
         if (logined.equals("true")) {
-            ModelAndView modelAndView = new ModelAndView("user/list");
+            ModelAndView modelAndView = new ModelAndView("/user/list");
             modelAndView.addAttribute("users", DataBase.findAll());
             return modelAndView;
         }

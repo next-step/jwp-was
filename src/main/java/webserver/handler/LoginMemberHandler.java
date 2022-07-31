@@ -4,19 +4,16 @@ import db.DataBase;
 import model.User;
 import webserver.Handler;
 import webserver.ModelAndView;
-import webserver.http.*;
-
-import java.util.Map;
+import webserver.http.Cookie;
+import webserver.http.Request;
+import webserver.http.Response;
 
 public class LoginMemberHandler implements Handler {
 
-    private final UrlEncodedBodyParser urlEncodedBodyParser = new UrlEncodedBodyParser();
-
     @Override
     public ModelAndView handle(Request request, Response response) {
-        Map<String, String> parseBody = urlEncodedBodyParser.parseBody(request.getRequestBody());
-        String userId = parseBody.get("userId");
-        String password = parseBody.get("password");
+        String userId = request.getBodyValue("userId");
+        String password = request.getBodyValue("password");
         User userById = DataBase.findUserById(userId);
 
         if (userById != null && userById.matchPassword(password)) {
