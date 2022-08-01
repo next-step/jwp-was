@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import webserver.domain.DefaultView;
 import webserver.domain.HttpEntity;
 import webserver.domain.HttpRequest;
+import webserver.handlers.ControllerContainer;
 import webserver.handlers.ControllerContainerImpl;
 import webserver.ui.Controller;
 
@@ -21,11 +22,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class HandleContainerTest {
 
-    private static ControllerContainerImpl handleContainer;
+    private static ControllerContainer handleContainer;
 
     @BeforeAll
     static void staticSetUp() {
-        handleContainer = new TestWebConfig().frontController();
+        TestWebConfig config = new TestWebConfig();
+        handleContainer = config.controllerContainer();
     }
 
 

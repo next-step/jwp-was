@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * Http 요청 정보
@@ -69,11 +70,47 @@ public class HttpRequest extends HttpEntity<RequestBody> {
         return getHeaders().getCookie();
     }
 
+    public boolean hasCookie() {
+        return !Cookie.EMPTY.equals(getHeaders().getCookie());
+    }
+
     @Override
     public String toString() {
         return String.format(
                 "%s \r\n " +
                         "%s \r\n " +
                         "%s \r\n", requestLine, getHeaders(), getBody());
+    }
+
+    public HttpSession getSession() {
+        Cookie cookie = getCookie();
+        String sessionId = cookie.getValue();
+        SessionManager sessionManager = SessionManager.getInstance();
+
+        if (Objects.isNull(sessionId) || sessionId.isEmpty()) {
+            return sessionManager.createSession();
+        }
+
+        return sessionManager.findBySessionId(cookie.getValue());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        HttpRequest that = (HttpRequest) o;
+        return Objects.equals(requestLine, that.requestLine);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), requestLine);
     }
 }

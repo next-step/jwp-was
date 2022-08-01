@@ -9,9 +9,10 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 import static webserver.domain.Cookie.CookieAttribute.NONE;
+import static webserver.domain.Cookie.CookieAttribute.PATH;
 
 public class Cookie {
-
+    public static final Cookie EMPTY = new Cookie();
     public static final String EMPTY_STR = "";
     public static final String COOKIE_ATTR_DELIMITER = "; ";
     public static final String EMPTY_COOKIE_ATTR_MAP_MSG = "쿠키 속성이 유효하지 않습니다.";
@@ -51,6 +52,10 @@ public class Cookie {
             }
 
             return defaultValue;
+        }
+
+        public String attributeName() {
+            return this.attributeName;
         }
     }
 
@@ -121,6 +126,10 @@ public class Cookie {
         return value;
     }
 
+    public void setPath(String path) {
+        cookieAttMap.put(PATH, path);
+    }
+
     public void addAttribute(String key, String value) {
         CookieAttribute ca = CookieAttribute.lineOf(key);
         if (!NONE.equals(ca)) {
@@ -130,8 +139,10 @@ public class Cookie {
 
     @Override
     public String toString() {
-        return cookieAttMap.entrySet().stream()
-                .map(entry -> entry.getKey() + KEY_VALUE_DELIMITER + entry.getValue())
+        return name + KEY_VALUE_DELIMITER + value +
+                COOKIE_ATTR_DELIMITER +
+                cookieAttMap.entrySet().stream()
+                .map(entry -> entry.getKey().attributeName() + KEY_VALUE_DELIMITER + entry.getValue())
                 .collect(Collectors.joining(COOKIE_ATTR_DELIMITER));
     }
 
@@ -145,5 +156,22 @@ public class Cookie {
 
     public Map<CookieAttribute, String> getStore() {
         return Collections.unmodifiableMap(cookieAttMap);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Cookie)) {
+            return false;
+        }
+        Cookie cookie = (Cookie) o;
+        return Objects.equals(name, cookie.name) && Objects.equals(value, cookie.value) && Objects.equals(cookieAttMap, cookie.cookieAttMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, value, cookieAttMap);
     }
 }

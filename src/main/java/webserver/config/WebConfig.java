@@ -2,6 +2,7 @@ package webserver.config;
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import webserver.application.UserService;
+import webserver.domain.SessionManager;
 import webserver.handlers.ControllerContainer;
 import webserver.handlers.ControllerContainerImpl;
 import webserver.handlers.RequestHandler;
@@ -85,6 +86,10 @@ public class WebConfig {
 
     private Controller userController() {
         return new UserController(userService());
+    }
+
+    private SessionManager sessionManager() {
+        return SessionManager.getInstance();
     }
 
     private UserService userService() {

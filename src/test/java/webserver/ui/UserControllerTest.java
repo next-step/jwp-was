@@ -6,11 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import utils.FileIoUtils;
-import webserver.application.UserService;
+import webserver.TestWebConfig;
 import webserver.domain.DefaultView;
 import webserver.domain.HttpHeaders;
 import webserver.domain.HttpRequest;
 import webserver.domain.ResponseEntity;
+import webserver.resolvers.ResolverContainer;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -28,10 +29,13 @@ import static webserver.ui.ConstantForUserControllerTest.POST_USER_LOGIN_REQUEST
 class UserControllerTest {
 
     private static UserController userController;
+    private static ResolverContainer resolverContainer;
 
     @BeforeAll
     static void setUp() {
-        userController = new UserController(new UserService());
+        TestWebConfig config = new TestWebConfig();
+        userController = config.userController();
+        resolverContainer = config.resolverContainer();
     }
 
     @DisplayName("유효한 요청 정보를 전달하면 다시 반환받아 확인할 수 있다.")
@@ -53,7 +57,7 @@ class UserControllerTest {
                 () -> assertThat(actualHeaders.getAttribute("Accept"))
                         .isEqualTo(expectedHeaders.getAttribute("Accept")),
 
-                ()-> assertThat(actualHeaders.getContentLength())
+                () -> assertThat(actualHeaders.getContentLength())
                         .isEqualTo(expectedHeaders.getContentLength())
         );
     }
@@ -66,7 +70,7 @@ class UserControllerTest {
         ResponseEntity<DefaultView> response = userController.userForm(null);
         DefaultView view = response.getBody();
 
-        assertThat(view).hasToString(new String(expectedBody));
+        assertThat(resolverContainer.find(view).resolve(view)).hasToString(new String(expectedBody));
     }
 
     @DisplayName("loginFailed 메서드는 로그인 실패 페이지 템플릿을 반환한다.")
@@ -77,7 +81,7 @@ class UserControllerTest {
         ResponseEntity<DefaultView> response = userController.loginFailed(null);
         DefaultView view = response.getBody();
 
-        assertThat(view).hasToString(new String(expectedBody));
+        assertThat(resolverContainer.find(view).resolve(view)).hasToString(new String(expectedBody));
     }
 
     @DisplayName("createUser 메서드는 요청정보가 유효한 경우 index.html 템플릿으로 리다이렉트 시킨다.")
@@ -93,8 +97,8 @@ class UserControllerTest {
         DefaultView actualView = response.getBody();
 
         assertAll(
-                ()-> assertThat(actualHeaders.getAttribute("Location")).isEqualTo("/index.html"),
-                ()-> assertThat(actualView).hasToString(new String(expectedBody))
+                () -> assertThat(actualHeaders.getAttribute("Location")).isEqualTo("/index.html"),
+                () -> assertThat(resolverContainer.find(actualView).resolve(actualView)).hasToString(new String(expectedBody))
         );
     }
 
@@ -106,7 +110,7 @@ class UserControllerTest {
         ResponseEntity<DefaultView> response = userController.loginHtml(null);
         DefaultView actualView = response.getBody();
 
-        assertThat(actualView).hasToString(new String(expectedBody));
+        assertThat(resolverContainer.find(actualView).resolve(actualView)).hasToString(new String(expectedBody));
     }
 
     @DisplayName("login 메서드는 요청 정보가 유효한 경우 logined=true 값을 쿠키에 추가해 index.html 페이지 템플릿을 반환한다.")
@@ -123,7 +127,7 @@ class UserControllerTest {
         HttpHeaders actualHeader = response.getHeaders();
 
         assertAll(
-                ()-> assertThat(actualHeader.getAttribute("Location")).isEqualTo("/index.html")
+                () -> assertThat(actualHeader.getAttribute("Location")).isEqualTo("/index.html")
         );
     }
 
@@ -141,7 +145,7 @@ class UserControllerTest {
         HttpHeaders actualHeader = response.getHeaders();
 
         assertAll(
-                ()-> assertThat(actualHeader.getAttribute("Location")).isEqualTo("/user/login_failed.html")
+                () -> assertThat(actualHeader.getAttribute("Location")).isEqualTo("/user/login_failed.html")
         );
     }
 

@@ -15,7 +15,7 @@ public interface ResolverContainer {
         return resolvers().stream()
                 .filter(resolver -> resolver.support(obj))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchResolverException(obj.getClass().getName()));
+                .orElseGet(EmptyViewResolver::getInstance);
     }
 
     default ResolverContainer add(Object obj) {

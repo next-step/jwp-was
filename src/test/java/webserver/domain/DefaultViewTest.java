@@ -3,6 +3,7 @@ package webserver.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import utils.FileIoUtils;
+import webserver.resolvers.DefaultViewResolver;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -30,11 +31,12 @@ class DefaultViewTest {
     @Test
     void createDetailViewFromViewName() throws IOException, URISyntaxException {
         DefaultView indexView = DefaultView.createDefaultHtmlView("/index");
+        DefaultViewResolver resolver = new DefaultViewResolver();
 
         byte[] bytes = FileIoUtils.loadFileFromClasspath("./templates/index.html");
         String expectedIndexView = new String(bytes);
 
-        assertThat(indexView).hasToString(expectedIndexView);
+        assertThat(resolver.resolve(indexView)).hasToString(expectedIndexView);
     }
 
 }

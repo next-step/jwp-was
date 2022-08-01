@@ -8,18 +8,24 @@ import webserver.domain.Cookie;
 import webserver.domain.DefaultView;
 import webserver.domain.HttpHeaders;
 import webserver.domain.HttpRequest;
+import webserver.domain.HttpSession;
 import webserver.domain.RequestBody;
 import webserver.domain.RequestMapping;
 import webserver.domain.ResponseBody;
 import webserver.domain.ResponseEntity;
+import webserver.domain.SessionManager;
 import webserver.domain.TemplateView;
 
 import java.util.Collections;
+import java.util.Objects;
+
+import static webserver.domain.HttpSession.SESSION_COOKIE_NAME;
 
 /**
  * 유저 정보 컨트롤러
  */
 public class UserController implements Controller {
+    public static final String LOGINED = "logined";
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -63,6 +69,10 @@ public class UserController implements Controller {
 
     @RequestMapping(value = "/user/login.html", method = {HttpMethod.GET})
     public ResponseEntity<DefaultView> loginHtml(HttpRequest httpRequest) {
+        if (isLogin(httpRequest)) {
+            return ResponseEntity.found("/index.html").build();
+        }
+
         DefaultView view = DefaultView.createDefaultHtmlView("/user/login");
 
         return ResponseEntity.ok().htmlHeader().body(view);
@@ -73,9 +83,11 @@ public class UserController implements Controller {
         RequestBody requestBody = httpRequest.getRequestBody();
         boolean loginResult = userService.login(UserLoginRequest.from(requestBody));
 
-        Cookie cookie = new Cookie();
-        cookie.addAttribute("Path", "/");
-        cookie.addAttribute("logined", String.valueOf(loginResult));
+        HttpSession session = httpRequest.getSession();
+        session.setAttribute(LOGINED, loginResult);
+
+        Cookie cookie = new Cookie(SESSION_COOKIE_NAME, session.getId());
+        cookie.setPath("/");
 
         if (loginResult) {
             return ResponseEntity.found("/index.html").cookie(cookie).build();
@@ -97,10 +109,16 @@ public class UserController implements Controller {
     }
 
     private boolean isLogin(HttpRequest httpRequest) {
+        if (Objects.isNull(httpRequest) || !httpRequest.hasCookie()) {
+            return false;
+        }
         Cookie cookie = httpRequest.getCookie();
-        String loginedStr = cookie.getAttribute("logined");
+        String sessionId = cookie.getValue();
 
-        return Boolean.parseBoolean(loginedStr);
+        SessionManager sessionManager = SessionManager.getInstance();
+        HttpSession session = sessionManager.findBySessionId(sessionId);
+
+        return Objects.nonNull(session) && (boolean) session.getAttribute(LOGINED);
     }
 
 
