@@ -37,60 +37,6 @@ public class HttpRequest {
         LOGGER.debug(requestLine.toString());
     }
 
-    private RequestLine makeRequestLine(BufferedReader br) {
-        final String line = readLine(br);
-        validate(line);
-        return new RequestLine(line);
-    }
-
-    private Map<String, Object> makeHeaders(BufferedReader br) {
-        Map<String, Object> headers = new HashMap<>();
-        String line;
-        while (!"".equals(line = readLine(br))) {
-            final String[] splitLine = HEADER_DELIMITER.split(line);
-            headers.put(splitLine[0], splitLine[1]);
-        }
-        return headers;
-    }
-
-    private Map<String, Object> makeCookies(Map<String, Object> headers) {
-        final Object cookie = headers.get("Cookie");
-        if (cookie == null) {
-            return new HashMap<>();
-        }
-        return HttpUtils.parseParameters((String) cookie, COOKIE_PATTERN);
-    }
-
-    private String readLine(BufferedReader br) {
-        String line;
-        try {
-            line = br.readLine();
-        } catch (IOException e) {
-            throw new IllegalArgumentException(VALIDATION_MESSAGE, e);
-        }
-        return line;
-    }
-
-    private void validate(String line) {
-        if (line == null) {
-            throw new IllegalArgumentException(VALIDATION_MESSAGE);
-        }
-    }
-
-    private Map<String, Object> makeAttributes(BufferedReader br) {
-        if (requestLine.isGet()) {
-            return new HashMap<>();
-        }
-
-        try {
-            final int contentLength = getContentLength();
-            final String payload = IOUtils.readData(br, contentLength);
-            return HttpUtils.parseParameters(payload, ATTRIBUTE_PATTERN);
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -154,5 +100,59 @@ public class HttpRequest {
 
     public boolean isPost() {
         return requestLine.isPost();
+    }
+
+    private RequestLine makeRequestLine(BufferedReader br) {
+        final String line = readLine(br);
+        validate(line);
+        return new RequestLine(line);
+    }
+
+    private Map<String, Object> makeHeaders(BufferedReader br) {
+        Map<String, Object> headers = new HashMap<>();
+        String line;
+        while (!"".equals(line = readLine(br))) {
+            final String[] splitLine = HEADER_DELIMITER.split(line);
+            headers.put(splitLine[0], splitLine[1]);
+        }
+        return headers;
+    }
+
+    private Map<String, Object> makeCookies(Map<String, Object> headers) {
+        final Object cookie = headers.get("Cookie");
+        if (cookie == null) {
+            return new HashMap<>();
+        }
+        return HttpUtils.parseParameters((String) cookie, COOKIE_PATTERN);
+    }
+
+    private String readLine(BufferedReader br) {
+        String line;
+        try {
+            line = br.readLine();
+        } catch (IOException e) {
+            throw new IllegalArgumentException(VALIDATION_MESSAGE, e);
+        }
+        return line;
+    }
+
+    private void validate(String line) {
+        if (line == null) {
+            throw new IllegalArgumentException(VALIDATION_MESSAGE);
+        }
+    }
+
+    private Map<String, Object> makeAttributes(BufferedReader br) {
+        if (requestLine.isGet()) {
+            return new HashMap<>();
+        }
+
+        try {
+            final int contentLength = getContentLength();
+            final String payload = IOUtils.readData(br, contentLength);
+            return HttpUtils.parseParameters(payload, ATTRIBUTE_PATTERN);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }

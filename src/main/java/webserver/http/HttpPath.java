@@ -28,13 +28,6 @@ public class HttpPath {
         this.queryStrings = queryStrings;
     }
 
-    private Map<String, Object> makeQueryStrings(String[] splitPathSpec) {
-        if (splitPathSpec.length == CORRECT_LENGTH) {
-            return HttpUtils.parseParameters(splitPathSpec[1], QUERY_STRING_PATTERN);
-        }
-        return new HashMap<>();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,5 +63,12 @@ public class HttpPath {
 
     public String getQueryString(String key) {
         return getQueryString(key, String.class);
+    }
+
+    private Map<String, Object> makeQueryStrings(String[] splitPathSpec) {
+        if (splitPathSpec.length == CORRECT_LENGTH) {
+            return HttpUtils.parseParameters(splitPathSpec[1], QUERY_STRING_PATTERN);
+        }
+        return new HashMap<>();
     }
 }

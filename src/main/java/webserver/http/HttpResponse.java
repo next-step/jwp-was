@@ -47,6 +47,11 @@ public class HttpResponse {
         writeForward(payload);
     }
 
+    public void redirect(String path) {
+        addHeader("Location", path);
+        write(HttpStatus.FOUND);
+    }
+
     private void writeForward(byte[] payload) {
         addHeader("Content-Length", payload.length);
         write(payload, HttpStatus.OK);
@@ -76,11 +81,6 @@ public class HttpResponse {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    public void redirect(String path) {
-        addHeader("Location", path);
-        write(HttpStatus.FOUND);
     }
 
     private Template compileTemplate(String path) {

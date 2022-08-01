@@ -26,12 +26,6 @@ public class RequestLine {
         this.httpProtocol = httpProtocol;
     }
 
-    private void validate(String[] requestSpecs) {
-        if (requestSpecs.length != CORRECT_LENGTH) {
-            throw new IllegalArgumentException(VALIDATION_MESSAGE);
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -66,11 +60,17 @@ public class RequestLine {
         return httpProtocol;
     }
 
-    boolean isGet() {
+    public boolean isGet() {
         return httpMethod == HttpMethod.GET;
     }
 
     public boolean isPost() {
         return httpMethod == HttpMethod.POST;
+    }
+
+    private void validate(String[] requestSpecs) {
+        if (requestSpecs.length != CORRECT_LENGTH) {
+            throw new IllegalArgumentException(VALIDATION_MESSAGE);
+        }
     }
 }

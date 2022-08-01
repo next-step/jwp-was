@@ -18,12 +18,6 @@ public class HttpProtocol {
         this.version = splitProtocolSpec[1];
     }
 
-    private void validate(String[] splitProtocolSpec) {
-        if (splitProtocolSpec.length != CORRECT_LENGTH) {
-            throw new IllegalArgumentException(VALIDATION_MESSAGE);
-        }
-    }
-
     public String getProtocol() {
         return protocol;
     }
@@ -51,5 +45,11 @@ public class HttpProtocol {
                 "protocol='" + protocol + '\'' +
                 ", version='" + version + '\'' +
                 '}';
+    }
+
+    private void validate(String[] splitProtocolSpec) {
+        if (splitProtocolSpec.length != CORRECT_LENGTH) {
+            throw new IllegalArgumentException(VALIDATION_MESSAGE);
+        }
     }
 }
