@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import controller.HomeController;
 import controller.SignUpController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,14 +47,17 @@ public class RequestHandler implements Runnable {
 
             HttpResponse httpResponse = route(httpRequest);
 
-            final Optional<ResponseBody> responseBody = httpResponse.getResponseBody();
-            final byte[] body = FileIoUtils.loadFileFromClasspath(responseBody.get().getView().getFilePath());
-
             final DataOutputStream dos = new DataOutputStream(out);
             writeResponseLine(dos, httpResponse.getResponseLine());
+
+            final Optional<ResponseBody> responseBody = httpResponse.getResponseBody();
+            if (responseBody.isEmpty()) {
+                writeResponseHeader(dos, 0, httpResponse.getResponseHeader());
+                return;
+            }
+            final byte[] body = FileIoUtils.loadFileFromClasspath(responseBody.get().getView().getFilePath());
             writeResponseHeader(dos, body.length, httpResponse.getResponseHeader());
             writeResponseBody(dos, body);
-            System.out.println("bye!");
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
@@ -92,6 +96,9 @@ public class RequestHandler implements Runnable {
         if (path.equals(SignUpController.path)) {
             SignUpController signUpController = new SignUpController();
             return signUpController.run(httpRequest);
+        } else if (path.equals(HomeController.path)) {
+            HomeController homeController = new HomeController();
+            return homeController.run(httpRequest);
         }
 
         return null; // TODO: server error 로 변경하기
@@ -109,6 +116,7 @@ public class RequestHandler implements Runnable {
         responseHeader.setContentLength(Integer.toString(lengthOfBodyContent));
         List<String> headersToPrint = responseHeader.toPrint();
 
+        System.out.println(headersToPrint);
         headersToPrint.forEach(header -> {
             try {
                 dos.writeBytes(header);

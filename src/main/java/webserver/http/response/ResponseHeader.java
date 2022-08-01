@@ -46,8 +46,6 @@ public class ResponseHeader {
 
     public void setContentLength(String value) {
         this.headers.put(CONTENT_LENGTH, value);
-        System.out.println("why??");
-        System.out.println("why??");
     }
 
     public List<String> toPrint() {
