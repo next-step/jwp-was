@@ -13,11 +13,12 @@ public class HttpRequestHeaders {
 	protected static final int INDEX_VALUE = 1;
 	public static final String CONTENT_LENGTH = "Content-Length";
 	public static final String COOKIE = "Cookie";
-
 	private final Map<String, String> headers;
+	private final HttpCookies httpCookies;
 
 	private HttpRequestHeaders(Map<String, String> headers) {
 		this.headers = headers;
+		this.httpCookies = new HttpCookies(headers.get(COOKIE));
 	}
 
 	public static HttpRequestHeaders of(List<String> lines) {
@@ -33,6 +34,10 @@ public class HttpRequestHeaders {
 		return new HttpRequestHeaders(headers);
 	}
 
+	public HttpCookies getCookies() {
+		return httpCookies;
+	}
+
 	public Boolean hasContentLength() {
 		return headers.containsKey(CONTENT_LENGTH);
 	}
@@ -43,10 +48,6 @@ public class HttpRequestHeaders {
 
 	public int getContentLength() {
 		return Integer.parseInt(headers.get(CONTENT_LENGTH));
-	}
-
-	public HttpCookies getCookies() {
-		return HttpCookies.of(headers.get(COOKIE));
 	}
 
 	@Override
