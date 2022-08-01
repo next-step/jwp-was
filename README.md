@@ -24,6 +24,7 @@
         - [x] HttpHeaderParser는
             - [x] 입력으로 들어온 Header 리스트들을 HttpHeader 객체로 변환 할 수 있다.
 
+
 - 기능 요구사항 2
 
 - [x] “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다.
@@ -45,9 +46,20 @@
 - [x] POST method로 데이터를 전달할 경우 전달하는 데이터는 HTTP Body에 담긴다.
     - [x] HttpRequestHeader에 RequestBody 필드를 추가한다.
 
+
 - 기능 요구사항 4
 - [x] “회원가입”을 완료하면 /index.html 페이지로 이동해야함
     - [x] redirect 방식으로 브라우저의 URL이 /index.html로 변경되도록 만든다.
     - [x] HTTP 응답 헤더의 status code를 200이 아니라 302 code 사용
-      - [x] Handler들의 Handle 메소드 호출시, HttpResponseHeader가 반환된다.
-      - [x] HttpResponseHeader로 모든 response 종류를 처리할 수 있다.
+        - [x] Handler들의 Handle 메소드 호출시, HttpResponseHeader가 반환된다.
+        - [x] HttpResponseHeader로 모든 response 종류를 처리할 수 있다.
+
+
+- 기능 요구사항 5
+- [ ] “로그인” 메뉴를 클릭하면 http://localhost:8080/user/login.html 으로 이동해 앞에서 회원가입한 사용자로 로그인
+    - [ ] 로그인이 성공하면 index.html로 이동
+        - [ ] 로그인이 성공하면 cookie를 활용해 로그인 상태를 유지할 수 있어야 한다.
+        - [ ] 로그인이 성공할 경우 요청 header의 Cookie header 값이 logined=true로 전달
+    - [ ] 로그인이 실패하면 /user/login_failed.html로 이동
+        - [ ] 로그인이 실패하면 Cookie header 값이 logined=false로 전달
+    - [ ] 응답 header에 Set-Cookie값을 설정한 후 요청 header에 Cookie이 전달되는지 확인한다. 
