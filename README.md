@@ -62,4 +62,10 @@
         - [x] 로그인이 성공할 경우 요청 header의 Cookie header 값이 logined=true로 전달
     - [x] 로그인이 실패하면 /user/login_failed.html로 이동
         - [x] 로그인이 실패하면 Cookie header 값이 logined=false로 전달
-    - [x] 응답 header에 Set-Cookie값을 설정한 후 요청 header에 Cookie이 전달되는지 확인한다. 
+    - [x] 응답 header에 Set-Cookie값을 설정한 후 요청 header에 Cookie이 전달되는지 확인한다.
+
+
+- 기능 요구사항 6
+- [ ] “로그인” 상태일 경우(Cookie 값이 logined=true) 경우 http://localhost:8080/user/list 로 접근했을 때 사용자 목록을 출력한다.
+    - [ ] 동적으로 html을 생성하기 위해 handlebars.java template engine을 활용한다.
+- [ ] 로그인하지 않은 상태라면 로그인 페이지(login.html)로 이동한다.
