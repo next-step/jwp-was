@@ -1,5 +1,6 @@
 package controller;
 
+import db.DataBase;
 import model.User;
 import webserver.http.HttpMethod;
 import webserver.http.request.HttpRequest;
@@ -57,6 +58,8 @@ public class SignUpController {
                 .name(name)
                 .email(email)
                 .build();
+
+        DataBase.addUser(user);
 
         return HttpResponse.redirect(redirectPath);
     }
