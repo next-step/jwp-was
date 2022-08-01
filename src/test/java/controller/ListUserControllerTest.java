@@ -1,8 +1,10 @@
 package controller;
 
+import model.User;
 import org.junit.jupiter.api.Test;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -18,6 +20,9 @@ class ListUserControllerTest {
     @Test
     void 회원목록조회테스트_로그인상태() throws Exception {
         HttpRequest request = new HttpRequest(createInputStream("HTTP_LIST_LOGIN.txt"));
+        HttpSession session = request.getSession();
+        session.setAttribute("user", new User("hjjang87", "1234", "Hyungju", "dacapolife87@gmail.com"));
+
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         HttpResponse httpResponse = new HttpResponse(byteArrayOutputStream);
 
