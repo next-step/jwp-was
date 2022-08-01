@@ -1,15 +1,33 @@
 package webserver.response;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static webserver.supporter.SupportTemplates.PATH_TEMPLATES;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import org.junit.jupiter.api.Test;
+import webserver.enums.HttpStatus;
 
 class HttpResponseTest {
 
     private String testDirectory = "./src/test/resources/";
+
+    @Test
+    void responseMethodNotAllowed() {
+        HttpResponse response = new HttpResponse();
+        response.methodNotAllowed();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @Test
+    void responseNotFound() {
+        HttpResponse response = new HttpResponse();
+        response.notFound();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
 
     @Test
     void responseForward() throws Exception {

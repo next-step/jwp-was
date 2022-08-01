@@ -12,11 +12,20 @@ public interface Controller {
             return;
         }
 
-        doGet(httpRequest, httpResponse);
+        if (httpRequest.getMethod() == HttpMethod.GET) {
+            doGet(httpRequest, httpResponse);
+            return;
+        }
+
+        httpResponse.methodNotAllowed();
     }
 
-    void doPost(HttpRequest httpRequest, HttpResponse httpResponse);
+    default void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+        throw new UnsupportedOperationException();
+    }
 
-    void doGet(HttpRequest httpRequest, HttpResponse httpResponse);
+    default void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
+        throw new UnsupportedOperationException();
+    }
 
 }

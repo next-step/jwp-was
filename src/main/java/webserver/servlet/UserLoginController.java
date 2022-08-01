@@ -22,17 +22,12 @@ public class UserLoginController implements Controller {
 
         if (userFound.fitPassword(password)) {
             httpResponse.addHeader(HttpHeader.SET_COOKIE, "logined=true; Path=/");
-            httpResponse.sendRedirect("http://localhost:8080/index.html");
+            httpResponse.sendRedirect("/index.html");
             return;
         }
 
         httpResponse.addHeader(HttpHeader.SET_COOKIE, "logined=false; Path=/");
-        httpResponse.sendRedirect("http://localhost:8080/user/login_failed.html");
-    }
-
-    @Override
-    public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-
+        httpResponse.sendRedirect("/user/login_failed.html");
     }
 
     private void validate(String userId, String password) {

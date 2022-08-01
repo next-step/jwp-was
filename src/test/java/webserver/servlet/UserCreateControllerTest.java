@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import db.DataBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import webserver.enums.StatusCode;
+import webserver.enums.HttpStatus;
 import webserver.request.HttpRequestBody;
 import webserver.request.HttpRequestHeader;
 import webserver.request.HttpRequest;
@@ -39,7 +39,7 @@ class UserCreateControllerTest {
 
         controller.service(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatus()).isEqualTo(StatusCode.FOUND);
+        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(DataBase.findUserById("javajigi")).isNotNull();
     }
 

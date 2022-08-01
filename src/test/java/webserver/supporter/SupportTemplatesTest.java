@@ -2,15 +2,10 @@ package webserver.supporter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import webserver.enums.StatusCode;
+import webserver.enums.HttpStatus;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
@@ -27,7 +22,7 @@ class SupportTemplatesTest {
         HttpResponse httpResponse = new HttpResponse();
         SupportTemplates.execute(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatus()).isEqualTo(StatusCode.OK);
+        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.OK);
     }
 
     @DisplayName("지원하지 않는 경로의 리소스파일은 찾을 수 없다 (Not Found)")
@@ -39,7 +34,7 @@ class SupportTemplatesTest {
         HttpResponse httpResponse = new HttpResponse();
         SupportTemplates.execute(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatus()).isEqualTo(StatusCode.NOT_FOUND);
+        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
 }

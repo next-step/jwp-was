@@ -1,29 +1,29 @@
 package webserver.response;
 
 import webserver.enums.Protocol;
-import webserver.enums.StatusCode;
+import webserver.enums.HttpStatus;
 
 public class StatusLine {
 
     private final Protocol protocol;
-    private final StatusCode statusCode;
+    private final HttpStatus httpStatus;
 
-    public StatusLine(Protocol protocol, StatusCode statusCode) {
+    public StatusLine(Protocol protocol, HttpStatus httpStatus) {
         this.protocol = protocol;
-        this.statusCode = statusCode;
+        this.httpStatus = httpStatus;
     }
 
     public Protocol getProtocol() {
         return this.protocol;
     }
 
-    public StatusCode getStatusCode() {
-        return this.statusCode;
+    public HttpStatus getStatusCode() {
+        return this.httpStatus;
     }
 
     @Override
     public String toString() {
-        return protocol.protocol() + "/" + protocol.version() + " " + statusCode.getStatusCode() + " " + statusCode.getMessage();
+        return protocol.protocol() + "/" + protocol.version() + " " + httpStatus.getStatusCode() + " " + httpStatus.getMessage();
     }
 
 }

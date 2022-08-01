@@ -8,7 +8,7 @@ import db.DataBase;
 import model.UserTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import webserver.enums.StatusCode;
+import webserver.enums.HttpStatus;
 import webserver.request.HttpRequestBody;
 import webserver.request.HttpRequestHeader;
 import webserver.request.HttpRequest;
@@ -42,8 +42,8 @@ class UserLoginControllerTest {
 
         controller.service(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatus()).isEqualTo(StatusCode.FOUND);
-        assertThat(httpResponse.getHeader().getHeader("Location")).isEqualTo("http://localhost:8080/user/login_failed.html");
+        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
+        assertThat(httpResponse.getHeader().getHeader("Location")).isEqualTo("/user/login_failed.html");
     }
 
     @Test
@@ -62,7 +62,7 @@ class UserLoginControllerTest {
 
         controller.service(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatus()).isEqualTo(StatusCode.FOUND);
+        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(httpResponse.getHeader().getHeader("Set-Cookie")).isEqualTo("logined=true; Path=/");
         assertThat(httpResponse.getHeader().getHeader("Location")).contains("index.html");
     }

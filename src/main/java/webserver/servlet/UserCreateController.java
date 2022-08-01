@@ -17,12 +17,7 @@ public class UserCreateController implements Controller {
         );
         DataBase.addUser(user);
 
-        httpResponse.sendRedirect("http://localhost:8080/index.html");
-    }
-
-    @Override
-    public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-
+        httpResponse.sendRedirect("/index.html");
     }
 
 }
