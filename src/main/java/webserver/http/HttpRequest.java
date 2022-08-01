@@ -2,7 +2,6 @@ package webserver.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.CastingUtils;
 import utils.HttpUtils;
 import utils.IOUtils;
 
@@ -17,20 +16,20 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class HttpRequest {
-    public static final String VALIDATION_MESSAGE = "잘못된 HTTP 요청입니다.";
+    public static final String VALIDATION_MESSAGE = "잘못된 요청입니다.";
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequest.class);
     private static final Pattern HEADER_DELIMITER = Pattern.compile(": ");
     private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("&?([^=&]+)=([^=&]+)");
 
     private final RequestLine requestLine;
     private final Headers headers;
-    private final Map<String, Object> attributes;
+    private final Attributes attributes;
 
     public HttpRequest(InputStream in) {
         final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         this.requestLine = makeRequestLine(br);
         this.headers = new Headers(makeHeaders(br));
-        this.attributes = makeAttributes(br);
+        this.attributes = new Attributes(makeAttributes(br));
         LOGGER.debug(requestLine.toString());
     }
 
@@ -39,12 +38,12 @@ public class HttpRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HttpRequest that = (HttpRequest) o;
-        return Objects.equals(requestLine, that.requestLine) && Objects.equals(headers, that.headers) && Objects.equals(attributes, that.attributes);
+        return Objects.equals(requestLine, that.requestLine) && Objects.equals(headers, that.headers) && Objects.equals(attributes.getAttributes(), that.attributes.getAttributes());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestLine, headers, attributes);
+        return Objects.hash(requestLine, headers, attributes.getAttributes());
     }
 
     public RequestLine getRequestLine() {
@@ -76,15 +75,11 @@ public class HttpRequest {
     }
 
     public Map<String, Object> getAttributes() {
-        return attributes;
-    }
-
-    public <T> T getAttribute(String key, Class<T> returnType) {
-        return CastingUtils.cast(attributes.get(key), returnType);
+        return attributes.getAttributes();
     }
 
     public String getAttribute(String key) {
-        return getAttribute(key, String.class);
+        return attributes.getAttribute(key);
     }
 
     public boolean getCookie(String key, Class<Boolean> returnType) {
