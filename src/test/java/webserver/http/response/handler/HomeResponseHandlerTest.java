@@ -17,7 +17,7 @@ class HomeResponseHandlerTest {
         HomeResponseHandler homeResponseHandler = new HomeResponseHandler();
 
         // when
-        String actual = homeResponseHandler.run(RequestHeader.create("GET /index.html HTTP/1.1"), 0);
+        String actual = homeResponseHandler.run(RequestHeader.create("GET /index.html HTTP/1.1"), "", new byte[0]);
 
         // then
         assertThat(actual).isEqualTo(

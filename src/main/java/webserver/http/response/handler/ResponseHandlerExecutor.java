@@ -4,17 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import webserver.http.request.handler.HomeRequestHandler;
+import webserver.http.request.handler.UserCreateRequestHandler;
+import webserver.http.request.handler.UserFormRequestHandler;
 import webserver.http.request.header.RequestHeader;
 
 public class ResponseHandlerExecutor {
-    private static final Map<String, ResponseHandler> RESPONSE_HANDLER_MAP = new HashMap<>();
+    private static final Map<String, ResponseHandler> RESPONSE = new HashMap<>();
 
     static {
-        RESPONSE_HANDLER_MAP.put(HomeRequestHandler.requestIndex(), new HomeResponseHandler());
+        RESPONSE.put(HomeRequestHandler.requestIndex(), new HomeResponseHandler());
+        RESPONSE.put(UserFormRequestHandler.requestIndex(), new UserFormResponseHandler());
+        RESPONSE.put(UserCreateRequestHandler.requestIndex(), new UserCreateResponseHandler());
     }
 
-    public String run(RequestHeader requestHeader, int lengthOfBodyContent) {
-        ResponseHandler responseHandler = RESPONSE_HANDLER_MAP.getOrDefault(requestHeader.index(), new DefaultResponseHandler());
-        return responseHandler.run(requestHeader, lengthOfBodyContent);
+    public String run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
+        ResponseHandler responseHandler = RESPONSE.getOrDefault(requestHeader.index(), new DefaultResponseHandler());
+        return responseHandler.run(requestHeader, requestBody, responseBody);
     }
 }

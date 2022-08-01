@@ -17,7 +17,7 @@ class DefaultResponseHandlerTest {
         DefaultResponseHandler defaultResponseHandler = new DefaultResponseHandler();
 
         // when
-        String actual = defaultResponseHandler.run(RequestHeader.create("GET /test.html HTTP/1.1"), 0);
+        String actual = defaultResponseHandler.run(RequestHeader.create("GET /test.html HTTP/1.1"), "", new byte[0]);
 
         // then
         assertThat(actual).isEqualTo(

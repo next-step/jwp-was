@@ -16,7 +16,7 @@ class ResponseHandlerExecutorTest {
         ResponseHandlerExecutor responseHandlerExecutor = new ResponseHandlerExecutor();
 
         // when
-        String actual = responseHandlerExecutor.run(RequestHeader.create("GET /test.html HTTP/1.1"), 0);
+        String actual = responseHandlerExecutor.run(RequestHeader.create("GET /test.html HTTP/1.1"), "", new byte[0]);
 
         // then
         assertThat(actual).isEqualTo(

@@ -17,6 +17,7 @@ public class RequestHandlerExecutor {
 
     static {
         REQUEST.put(HomeRequestHandler.REQUEST_INDEX, new HomeRequestHandler());
+        REQUEST.put(UserFormRequestHandler.REQUEST_INDEX, new UserFormRequestHandler());
     }
 
     public byte[] run(RequestHeader requestHeader) {

@@ -12,9 +12,9 @@ import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import utils.IOUtils;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.header.RequestHeader;
-import webserver.http.request.method.HttpMethod;
 import webserver.http.response.HttpResponse;
 
 public class HttpServerHandler implements Runnable {
@@ -47,14 +47,15 @@ public class HttpServerHandler implements Runnable {
             }
 
             RequestHeader requestHeader = RequestHeader.create(requestContents.toString());
+            String requestBody = IOUtils.readData(br, requestHeader.contentLength());
 
             HttpRequest httpRequest = new HttpRequest();
-            byte[] body = httpRequest.run(requestHeader);
+            byte[] responseBody = httpRequest.run(requestHeader);
 
             HttpResponse httpResponse = new HttpResponse();
-            String responseHeader = httpResponse.run(requestHeader, body.length);
+            String responseHeader = httpResponse.run(requestHeader, requestBody, responseBody);
 
-            writeAndFlush(responseHeader, body, dos);
+            writeAndFlush(responseHeader, responseBody, dos);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
