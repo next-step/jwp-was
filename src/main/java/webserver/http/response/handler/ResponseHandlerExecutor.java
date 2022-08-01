@@ -6,6 +6,7 @@ import java.util.Map;
 import webserver.http.request.handler.HomeRequestHandler;
 import webserver.http.request.handler.UserCreateRequestHandler;
 import webserver.http.request.handler.UserFormRequestHandler;
+import webserver.http.request.handler.UserListRequestHandler;
 import webserver.http.request.handler.UserLoginRequestHandler;
 import webserver.http.request.header.RequestHeader;
 
@@ -17,6 +18,7 @@ public class ResponseHandlerExecutor {
         RESPONSE.put(UserFormRequestHandler.requestIndex(), new UserFormResponseHandler());
         RESPONSE.put(UserCreateRequestHandler.requestIndex(), new UserCreateResponseHandler());
         RESPONSE.put(UserLoginRequestHandler.requestIndex(), new UserLoginResponseHandler());
+        RESPONSE.put(UserListRequestHandler.requestIndex(), new UserListResponseHandler());
     }
 
     public String run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
