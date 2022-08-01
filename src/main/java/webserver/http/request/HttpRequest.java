@@ -4,20 +4,20 @@ import java.util.Objects;
 import java.util.Optional;
 
 import webserver.http.HttpMethod;
+import webserver.http.HttpSession;
+import webserver.http.HttpSessionStorage;
 
 public class HttpRequest {
-	private HttpRequestLine httpRequestLine;
-	private HttpRequestHeaders httpRequestHeaders;
-	private HttpRequestBody httpRequestBody;
+	private final HttpRequestLine httpRequestLine;
+	private final HttpRequestHeaders httpRequestHeaders;
+	private final HttpRequestBody httpRequestBody;
+	private final HttpSession httpSession;
 
 	public HttpRequest(HttpRequestLine httpRequestLine, HttpRequestHeaders httpRequestHeaders, HttpRequestBody httpRequestBody) {
 		this.httpRequestLine = httpRequestLine;
 		this.httpRequestHeaders = httpRequestHeaders;
 		this.httpRequestBody = httpRequestBody;
-	}
-
-	public boolean isLogin() {
-		return httpRequestHeaders.isLogin();
+		this.httpSession = HttpSessionStorage.getInstance().getSession(httpRequestHeaders.getCookies());
 	}
 
 	public String getHeader(String attribute) {
@@ -27,6 +27,10 @@ public class HttpRequest {
 	public String getParameter(String attribute) {
 		return Optional.ofNullable(httpRequestLine.getParameters().getValue(attribute))
 					   .orElse(httpRequestBody.getAttribute(attribute));
+	}
+
+	public HttpRequestHeaders getHeaders() {
+		return httpRequestHeaders;
 	}
 
 	public String getPath() {
@@ -43,6 +47,10 @@ public class HttpRequest {
 
 	public HttpRequestBody getHttpBody() {
 		return httpRequestBody;
+	}
+
+	public HttpSession getHttpSession() {
+		return httpSession;
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 import webserver.http.ContentType;
+import webserver.http.HttpCookie;
 import webserver.http.request.HttpProtocol;
 
 public class HttpResponse {
@@ -31,6 +32,10 @@ public class HttpResponse {
 
 	public void addHeader(String attribute, String value) {
 		headers.addAttribute(attribute, value);
+	}
+
+	public void addCookie(HttpCookie httpCookie) {
+		headers.addCookie(httpCookie);
 	}
 
 	public void forward(String uri) {

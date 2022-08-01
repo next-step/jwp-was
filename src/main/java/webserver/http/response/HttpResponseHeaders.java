@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import webserver.http.ContentType;
+import webserver.http.HttpCookie;
+import webserver.http.HttpCookies;
 
 public class HttpResponseHeaders {
 	private static final String CONTENT_TYPE = "Content-Type";
@@ -16,6 +18,7 @@ public class HttpResponseHeaders {
 	private static final String NEW_LINE = "\r\n";
 
 	private final Map<String, String> headers = new HashMap<>();
+	private final HttpCookies cookies = new HttpCookies();
 
 	public void addContentType(ContentType contentType) {
 		headers.put(CONTENT_TYPE, contentType.getMime());
@@ -31,6 +34,7 @@ public class HttpResponseHeaders {
 
 	public String getResponseHeaders() {
 		StringBuilder stringBuilder = new StringBuilder();
+
 		for (Map.Entry<String, String> entry : headers.entrySet()) {
 			stringBuilder.append(entry.getKey())
 						 .append(HEADER_DELIMITER)
@@ -47,5 +51,10 @@ public class HttpResponseHeaders {
 
 	public void write(OutputStream outputStream) throws IOException {
 		outputStream.write(getResponseHeaders().getBytes(StandardCharsets.UTF_8));
+		cookies.write(outputStream);
+	}
+
+	public void addCookie(HttpCookie httpCookie) {
+		cookies.addCookie(httpCookie);
 	}
 }

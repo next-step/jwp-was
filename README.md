@@ -80,4 +80,22 @@
 - HTTP에서 POST 방식으로 데이터를 전달할 때 body를 통한 데이터 전달뿐만 아니라 Query String을 활용한 데이터 전달도 지원
 
 
+## STEP 4. 세션 구현하기
+- 서블릿에서 지원하는 HttpSession API의 일부를 지원해야 함
+  - String getId(): 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환 
+  - void setAttribute(String name, Object value): 현재 세션에 value 인자로 전달되는 객체를 name 인자 이름으로 저장 
+  - Object getAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환 
+  - void removeAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제 
+  - void invalidate(): 현재 세션에 저장되어 있는 모든 값을 삭제
+
+
+
+
+
+
+
+
+
+
+
 
