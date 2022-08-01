@@ -4,15 +4,21 @@ import db.DataBase;
 import model.User;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
 
 public class LoginController extends AbstractController {
     @Override
     public void doPost(HttpRequest request, HttpResponse response) throws Exception {
         User user = DataBase.findUserById(request.getParameter("userId"));
         boolean isLoginSuccess = login(user, request.getParameter("password"));
-        String location = afterRedirect(isLoginSuccess);
+
+        if (isLoginSuccess) {
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
+        }
+
         response.addHeader("Set-Cookie", "logined=" + isLoginSuccess + "; Path=/");
-        response.sendRedirect(location);
+        response.sendRedirect(afterRedirect(isLoginSuccess));
     }
 
     private boolean login(User user, String userPassword) {
