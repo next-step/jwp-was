@@ -13,15 +13,10 @@ import static java.util.stream.Collectors.toMap;
 public class CookiesParser {
     public static final String EACH_COOKIE_DELIMITER_REGEX = "; ";
     public static final String COOKIE_KEY_VALUE_DELIMITER = "=";
-    private final KeyValuePairParser keyValuePairParser;
-
-    public CookiesParser(KeyValuePairParser keyValuePairParser) {
-        this.keyValuePairParser = keyValuePairParser;
-    }
 
     public Cookies parse(String message) {
         return Arrays.stream(message.split(EACH_COOKIE_DELIMITER_REGEX))
-                .map(cookie -> keyValuePairParser.parse(cookie, COOKIE_KEY_VALUE_DELIMITER, false))
+                .map(cookie -> KeyValuePair.from(cookie, COOKIE_KEY_VALUE_DELIMITER, false))
                 .collect(collectingAndThen(
                                 toMap(
                                         KeyValuePair::getKey, pair ->

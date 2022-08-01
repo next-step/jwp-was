@@ -1,16 +1,21 @@
 package webserver.http.domain;
 
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import webserver.http.domain.Headers;
+import webserver.http.domain.exception.BadRequestException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class HeadersTest {
@@ -128,5 +133,42 @@ class HeadersTest {
                         )
                 )
         );
+    }
+
+    @DisplayName("Header 문자열이 {key}: {value} 형식으로 이뤄지지 않은 경우, 예외 발생")
+    @Test
+    void parse_fail() {
+        List<String> messages = Lists.list(
+                "Host: localhost:8080",
+                "Connection"
+        );
+
+        assertThatThrownBy(() -> Headers.from(messages))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("'key=value' 방식의 값이 아닙니다.");
+    }
+
+    @DisplayName("Header 문자열이 {key}: {value} 형식으로 이뤄진 경우, Headers 객체 생성")
+    @Test
+    void parse() {
+        List<String> messages = Lists.list(
+                "Host: localhost:8080",
+                "Connection: keep-alive",
+                "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
+                "Content-Length: 23"
+        );
+
+        Headers actual = Headers.from(messages);
+        assertThat(actual).usingRecursiveComparison()
+                .isEqualTo(fixtureHeader());
+    }
+
+    private Headers fixtureHeader() {
+        HashMap<String, String> keyValues = new HashMap<>();
+        keyValues.put("Host", "localhost:8080");
+        keyValues.put("Connection", "keep-alive");
+        keyValues.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36");
+        keyValues.put("Content-Length", "23");
+        return new Headers(keyValues);
     }
 }

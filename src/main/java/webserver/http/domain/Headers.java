@@ -1,9 +1,16 @@
 package webserver.http.domain;
 
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toMap;
+
 public class Headers {
+    private static final String KEY_VALUE_DELIMITER = ": ";
+
     private final Map<String, String> keyValues;
 
     public Headers(Map<String, String> keyValues) {
@@ -51,6 +58,20 @@ public class Headers {
 
     public Set<String> getAllKeys() {
         return keyValues.keySet();
+    }
+
+    public static Headers from(List<String> messages) {
+        return messages.stream()
+                .map(message -> KeyValuePair.from(message, KEY_VALUE_DELIMITER))
+                .collect(collectingAndThen(
+                        toMap(
+                                KeyValuePair::getKey,
+                                KeyValuePair::getValue,
+                                (oldValue, newValue) -> newValue,
+                                LinkedHashMap::new
+                        ),
+                        Headers::new
+                ));
     }
 
     @Override

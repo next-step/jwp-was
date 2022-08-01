@@ -14,7 +14,7 @@ class CookiesParserTest {
     @DisplayName("key1=value1; key2=value2; ... 형식으로 이뤄진 문자열을 Cookies 객체로 파싱한다.")
     @Test
     void parse() {
-        CookiesParser cookiesParser = new CookiesParser(new KeyValuePairParser());
+        CookiesParser cookiesParser = new CookiesParser();
         String message = "Idea=7d39d793-8ebb-45b8-9e1e-7c66b1449982; logined=true; other=";
         Cookies actual = cookiesParser.parse(message);
 

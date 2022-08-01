@@ -6,17 +6,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.domain.Cookie;
 import webserver.http.domain.Cookies;
-import webserver.http.view.CookiesParser;
 import webserver.http.domain.Headers;
-import webserver.http.view.HeadersParser;
 import webserver.http.domain.Protocol;
 import webserver.http.domain.request.Method;
 import webserver.http.domain.request.Parameters;
 import webserver.http.domain.request.Request;
 import webserver.http.domain.request.RequestLine;
 import webserver.http.domain.request.URI;
-import webserver.http.view.KeyValuePairParser;
-import webserver.http.view.ProtocolParser;
+import webserver.http.view.CookiesParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,15 +27,8 @@ class RequestReaderTest {
 
     @BeforeEach
     void setUp() {
-        KeyValuePairParser keyValuePairParser = new KeyValuePairParser();
-        ParametersParser parametersParser = new ParametersParser(keyValuePairParser);
-        URIParser uriParser = new URIParser(keyValuePairParser, parametersParser);
-
         requestReader = new RequestReader(
-                new RequestLineParser(uriParser, new ProtocolParser()),
-                new HeadersParser(keyValuePairParser),
-                parametersParser,
-                new CookiesParser(keyValuePairParser)
+                new CookiesParser()
         );
     }
 

@@ -1,28 +1,27 @@
-package webserver.http.view;
+package webserver.http.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import webserver.http.domain.KeyValuePair;
 import webserver.http.domain.exception.BadRequestException;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class KeyValuePairParserTest {
-    private final KeyValuePairParser keyValuePairParser = new KeyValuePairParser();
+class KeyValuePairTest {
 
     @DisplayName("빈 문자열 파싱시, 예외발생")
     @Test
     void parse_blank_fail() {
         String delimiter = "=";
         String message = "";
-        assertThatThrownBy(() -> keyValuePairParser.parse(message, delimiter, false))
+        assertThatThrownBy(() -> KeyValuePair.from(message, delimiter, false))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("key, value 파싱을 위한 메시지가 공백이 될수 없습니다.");
     }
@@ -49,7 +48,7 @@ class KeyValuePairParserTest {
         String delimiter = "=";
         String message = "=value";
 
-        assertThatThrownBy(() -> keyValuePairParser.parse(message, delimiter, false))
+        assertThatThrownBy(() -> KeyValuePair.from(message, delimiter, false))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("메시지에 key가 반드시 존재해야 합니다.");
     }
@@ -57,25 +56,25 @@ class KeyValuePairParserTest {
     @DisplayName("입력받은 메시지를 구분자를 기준으로 key, value를 갖는 KeyValuePair 객체 생성")
     @ParameterizedTest
     @MethodSource("provideForParse")
-    void parse_contains_multiple_delimiter(String delimiter, String message, boolean isValueRequired, KeyValuePair<String, String> expected) {
-        KeyValuePair<String, String> actual = keyValuePairParser.parse(message, delimiter, isValueRequired);
+    void parse_contains_multiple_delimiter(String delimiter, String message, boolean isValueRequired, KeyValuePair expected) {
+        KeyValuePair actual = KeyValuePair.from(message, delimiter, isValueRequired);
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(expected);
     }
 
     private static Stream<Arguments> provideForParse() {
         return Stream.of(
-                arguments("=", "key=", false, new KeyValuePair<>("key", "")),
-                arguments("=", "key=value", true, new KeyValuePair<>("key", "value")),
-                arguments("=", "key=value", false, new KeyValuePair<>("key", "value")),
-                arguments("=", "key", false, new KeyValuePair<>("key", "")),
-                arguments("?", "/path?", false, new KeyValuePair<>("/path", "")),
-                arguments("?", "/path?query=string", true, new KeyValuePair<>("/path", "query=string")),
-                arguments("?", "/path?query=string", false, new KeyValuePair<>("/path", "query=string")),
-                arguments("?", "/path/query/string", false, new KeyValuePair<>("/path/query/string", "")),
-                arguments("=", "key=value=", true, new KeyValuePair<>("key", "value")),
-                arguments("=", "key=value=", false, new KeyValuePair<>("key", "value")),
-                arguments("=", "key==", false, new KeyValuePair<>("key", ""))
+                arguments("=", "key=", false, new KeyValuePair("key", "")),
+                arguments("=", "key=value", true, new KeyValuePair("key", "value")),
+                arguments("=", "key=value", false, new KeyValuePair("key", "value")),
+                arguments("=", "key", false, new KeyValuePair("key", "")),
+                arguments("?", "/path?", false, new KeyValuePair("/path", "")),
+                arguments("?", "/path?query=string", true, new KeyValuePair("/path", "query=string")),
+                arguments("?", "/path?query=string", false, new KeyValuePair("/path", "query=string")),
+                arguments("?", "/path/query/string", false, new KeyValuePair("/path/query/string", "")),
+                arguments("=", "key=value=", true, new KeyValuePair("key", "value")),
+                arguments("=", "key=value=", false, new KeyValuePair("key", "value")),
+                arguments("=", "key==", false, new KeyValuePair("key", ""))
         );
     }
 }
