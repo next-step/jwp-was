@@ -2,7 +2,11 @@ package controller;
 
 import model.HttpRequest;
 import model.HttpResponse;
+import model.HttpStatusCode;
+import model.ResponseHeader;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Set;
 
 public class DispatchController {
@@ -10,7 +14,8 @@ public class DispatchController {
 
     static {
         controllers = Set.of(
-                new CreateUserController()
+                new CreateUserController(),
+                new ResourceController()
         );
     }
 
@@ -18,9 +23,20 @@ public class DispatchController {
         HttpResponse httpResponse = controllers.stream()
                 .filter(controller -> controller.matchHttpMethodAndPath(request))
                 .findAny()
-                .map(controller -> controller.execute(request))
+                .map(controller -> execute(controller, request))
                 .orElseGet(() -> HttpResponse.notFound());
         return httpResponse;
 
+    }
+
+    private HttpResponse execute(Controller controller, HttpRequest request) {
+        HttpResponse response;
+        try {
+            response = controller.execute(request);
+        } catch (IOException | URISyntaxException e) {
+            return HttpResponse.of(HttpStatusCode.INTERNAL_SERVER_ERROR, ResponseHeader.empty());
+        }
+
+        return response;
     }
 }

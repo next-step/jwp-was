@@ -74,4 +74,8 @@ public class HttpRequest {
     public String getBodyValue(String userId) {
         return body.getValue(userId);
     }
+
+    public boolean isMatchMethod(HttpMethod httpMethod) {
+        return getHttpMethod().equals(httpMethod);
+    }
 }

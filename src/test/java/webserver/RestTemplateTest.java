@@ -1,7 +1,6 @@
 package webserver;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -24,10 +23,11 @@ public class RestTemplateTest {
     }
 
     @Test
-    void post() {
+    void create() {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response =
-                restTemplate.postForEntity("http://localhost:8080/index.html", "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net", String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+                restTemplate.postForEntity("http://localhost:8080/user/create", "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
     }
+
 }

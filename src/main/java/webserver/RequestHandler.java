@@ -19,7 +19,6 @@ import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final String TEMPLATE_PATH = "./templates";
 
     private Socket connection;
     private DispatchController dispatchController = new DispatchController();
@@ -59,14 +58,7 @@ public class RequestHandler implements Runnable {
 
 
 
-
-        String path = addTemplatePath(request.getPath());
-        byte[] bytes = FileIoUtils.loadFileFromClasspath(path);
-        return HttpResponse.ok(HttpStatusCode.OK, ResponseHeader.textHtml(bytes.length), bytes);
-    }
-
-    private String addTemplatePath(String path) {
-        return TEMPLATE_PATH + path;
+        return httpResponse;
     }
 
     private void writeHttpResponse(HttpResponse httpResponse, DataOutputStream dos) throws IOException {

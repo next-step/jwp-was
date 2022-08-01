@@ -26,6 +26,10 @@ public class HttpResponse {
         return new HttpResponse(httpStatusCode, responseHeader, body);
     }
 
+    public static HttpResponse of(HttpStatusCode httpStatusCode, ResponseHeader responseHeader) {
+        return new HttpResponse(httpStatusCode, responseHeader, new byte[0]);
+    }
+
     public String getHttpResponseCode() {
         return code.getHttpResponseCode();
     }

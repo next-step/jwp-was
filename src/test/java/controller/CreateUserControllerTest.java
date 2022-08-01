@@ -1,6 +1,5 @@
 package controller;
 
-import db.DataBase;
 import model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,13 +21,13 @@ class CreateUserControllerTest {
     void setUp() {
         createUserController = new CreateUserController();
         request = HttpRequest.of(
-                RequestLine.of(HttpMethod.POST, Path.of("/user/create"), new String[]{"HTTP","1.1"}),
+                RequestLine.of(HttpMethod.POST, Path.of("/user/create"), new String[]{"HTTP", "1.1"}),
                 HttpRequestHeader.of(List.of("Host: www.nowhere123.com", "Accept: image/gif, image/jpeg, */*", "Accept-Language: en-us")),
                 HttpRequestBody.of("userId=javajigi&password=password&name=JaeSung&email=koola976@gmail.com")
         );
     }
 
-    @DisplayName("path 가 일치하면 true 리턴한다.")
+    @DisplayName("method,path 가 일치하면 true 리턴한다.")
     @Test
     void matchTrue() {
         boolean result = createUserController.matchHttpMethodAndPath(request);
@@ -42,7 +41,7 @@ class CreateUserControllerTest {
         assertAll(
                 () -> assertThat(response.getHttpResponseCode()).isEqualTo("302 FOUND"),
                 () -> assertThat(response.getHeaders()).contains(
-                        Map.entry("Location","/index.html")
+                        Map.entry("Location", "/index.html")
                 )
         );
 
