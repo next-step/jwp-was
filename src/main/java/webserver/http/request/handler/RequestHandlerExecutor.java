@@ -8,8 +8,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import webserver.http.request.handler.exception.InvalidRequestException;
 import webserver.http.request.header.RequestHeader;
-import webserver.http.service.exception.InvalidRequestException;
 
 public class RequestHandlerExecutor {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandlerExecutor.class);

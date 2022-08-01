@@ -2,6 +2,7 @@ package webserver.http.response.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +11,11 @@ import model.User;
 import webserver.http.request.header.RequestHeader;
 
 class UserLoginResponseHandlerTest {
+
+    @BeforeEach
+    void setup() {
+        DataBase.clear();
+    }
 
     @DisplayName("로그인 유저 응답")
     @Test

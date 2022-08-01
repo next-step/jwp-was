@@ -1,4 +1,4 @@
-package webserver.http.response.get;
+package model;
 
 import java.io.IOException;
 import java.util.Collections;
