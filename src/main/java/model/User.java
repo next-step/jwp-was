@@ -1,12 +1,6 @@
 package model;
 
 public class User {
-    public static final String FIELD_USER_ID = "userId";
-    public static final String FIELD_PASSWORD = "password";
-    public static final String FIELD_NAME = "name";
-    public static final String FIELD_EMAIL = "email";
-    public static final String DEFAULT_VALUE = "";
-
     private final String userId;
     private final String password;
     private final String name;
