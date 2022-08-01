@@ -3,8 +3,13 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.Map;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
@@ -12,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 import webserver.request.domain.request.*;
 import webserver.request.domain.response.HttpResponse;
+
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -36,6 +42,7 @@ public class RequestHandler implements Runnable {
                 DataOutputStream dos = new DataOutputStream(out);
 
                 httpResponse = new HttpResponse(dos);
+
                 matchResponse(httpRequest);
             }
 
@@ -61,6 +68,22 @@ public class RequestHandler implements Runnable {
                 httpResponse.loginRedirect("/index.html", "logined=true");
             } else {
                 httpResponse.loginRedirect("/user/login_failed.html", "logined=true");
+            }
+        } else if (path.equals("/user/list")) {
+            String headerValue = httpRequest.getHeader("Cookie");
+            if (headerValue == null) {
+                httpResponse.redirect("/index.html");
+            }
+            else if (headerValue.equals("logined=true")) {
+                TemplateLoader loader = new ClassPathTemplateLoader();
+                loader.setPrefix("/templates");
+                loader.setSuffix(".html");
+                Handlebars handlers = new Handlebars(loader);
+
+                Template template = handlers.compile("user/list");
+
+                Collection<User> users = DataBase.findAll();
+                httpResponse.forward(template.apply(users));
             }
         } else {
             if (path.endsWith("html")) {

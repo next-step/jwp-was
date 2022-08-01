@@ -70,7 +70,10 @@ public class HttpRequest {
     }
 
     public String getMethod() {
-        return method.name();
+        if(method != null) {
+            return method.name();
+        }
+        return null;
     }
 
     public String getPath() {
