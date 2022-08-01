@@ -1,6 +1,8 @@
 package model;
 
 public class WebProtocol {
+    private static final String WEB_PROTOCOL_SEPARATOR = "/";
+
     private String type;
     private String version;
 
@@ -15,5 +17,9 @@ public class WebProtocol {
 
     public String getVersion() {
         return version;
+    }
+
+    public String getWebProtocol() {
+        return type + WEB_PROTOCOL_SEPARATOR + version;
     }
 }
