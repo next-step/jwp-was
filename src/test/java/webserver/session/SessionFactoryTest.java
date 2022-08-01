@@ -22,11 +22,10 @@ public class SessionFactoryTest {
     @Test
     @DisplayName("sessionFactory 값 세팅이 잘 되는지 확인")
     void sessionFactorySetTest() {
-        HttpSessionFactory sessionFactory = new HttpSessionFactory();
         UUID uuid = UUID.randomUUID();
 
-        sessionFactory.makeSession(uuid.toString(), session);
+        HttpSessionFactory.makeSession(uuid.toString(), session);
 
-        assertThat(sessionFactory.getSession(uuid.toString())).isEqualTo(session);
+        assertThat(HttpSessionFactory.getSession(uuid.toString())).isEqualTo(session);
     }
 }

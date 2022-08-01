@@ -6,6 +6,8 @@ import java.util.Map;
 public class HttpSessionFactory {
     private static Map<String, HttpSession> sessionMap = Maps.newHashMap();
 
+    private HttpSessionFactory(){}
+
     public static void makeSession(String id, HttpSession session) {
         sessionMap.put(id, session);
     }
