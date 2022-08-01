@@ -17,7 +17,7 @@ public class HttpRequest {
 		this.httpRequestLine = httpRequestLine;
 		this.httpRequestHeaders = httpRequestHeaders;
 		this.httpRequestBody = httpRequestBody;
-		this.httpSession = HttpSessionStorage.getInstance().getSession(httpRequestHeaders.getCookies().getCookie("SessionId"));
+		this.httpSession = HttpSessionStorage.getInstance().getSession(httpRequestHeaders.getCookies());
 	}
 
 	public String getHeader(String attribute) {
@@ -27,6 +27,10 @@ public class HttpRequest {
 	public String getParameter(String attribute) {
 		return Optional.ofNullable(httpRequestLine.getParameters().getValue(attribute))
 					   .orElse(httpRequestBody.getAttribute(attribute));
+	}
+
+	public HttpRequestHeaders getHeaders() {
+		return httpRequestHeaders;
 	}
 
 	public String getPath() {
