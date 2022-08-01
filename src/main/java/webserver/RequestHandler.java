@@ -13,6 +13,7 @@ import webserver.http.exception.NotImplementedException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.UUID;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -38,6 +39,10 @@ public class RequestHandler implements Runnable {
         HttpResponse response = new HttpResponse(out);
         try {
             HttpRequest request = new HttpRequest(in);
+
+            if(request.getCookies().getCookie("JSESSIONID") == null) {
+                response.addHeader("Set-Cookie", "JSESSIONID=" + UUID.randomUUID());
+            }
 
             Controller controller = RequestMapping.getController(request.getPath());
             controller.service(request, response);
