@@ -9,9 +9,7 @@ import webserver.supporter.SupportApis;
 import webserver.supporter.SupportResources;
 
 /**
- * handlerMapping
- * handlerAdapting
- * viewResolving
+ * handlerMapping handlerAdapting viewResolving
  */
 public enum DispatcherServlet {
     INSTANCE;

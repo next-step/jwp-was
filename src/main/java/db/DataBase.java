@@ -2,18 +2,18 @@ package db;
 
 import static exception.ExceptionStrings.DUPLICATED_USER_ID;
 
+import com.google.common.collect.Maps;
 import java.util.Collection;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
-
 import java.util.Optional;
 import model.User;
 
 public final class DataBase {
+
     private static Map<String, User> users = Maps.newLinkedHashMap();
 
-    private DataBase() { }
+    private DataBase() {
+    }
 
     public static void addUser(User user) {
         if (users.containsKey(user.getUserId())) {

@@ -6,9 +6,9 @@ import db.DataBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import webserver.enums.HttpStatus;
+import webserver.request.HttpRequest;
 import webserver.request.HttpRequestBody;
 import webserver.request.HttpRequestHeader;
-import webserver.request.HttpRequest;
 import webserver.request.RequestLine;
 import webserver.response.HttpResponse;
 

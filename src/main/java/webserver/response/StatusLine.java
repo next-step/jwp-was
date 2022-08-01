@@ -1,7 +1,7 @@
 package webserver.response;
 
-import webserver.enums.Protocol;
 import webserver.enums.HttpStatus;
+import webserver.enums.Protocol;
 
 public class StatusLine {
 

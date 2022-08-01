@@ -4,6 +4,7 @@ import java.util.Objects;
 import utils.NullChecker;
 
 public class User {
+
     private String userId;
     private String password;
     private String name;

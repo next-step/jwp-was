@@ -9,13 +9,14 @@ import model.UserTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import webserver.enums.HttpStatus;
+import webserver.request.HttpRequest;
 import webserver.request.HttpRequestBody;
 import webserver.request.HttpRequestHeader;
-import webserver.request.HttpRequest;
 import webserver.request.RequestLine;
 import webserver.response.HttpResponse;
 
 class UserLoginControllerTest {
+
     private Controller controller;
 
     @BeforeEach
@@ -35,7 +36,7 @@ class UserLoginControllerTest {
         httpHeader.putHeader("Content-Length", "33");
         httpHeader.putHeader("Content-Type", "application/x-www-form-urlencoded");
         httpHeader.putHeader("Accept", "*/*");
-        HttpRequestBody httpBody = HttpRequestBody.of("userId="+TEST_ID+"&password=invalidPassword");
+        HttpRequestBody httpBody = HttpRequestBody.of("userId=" + TEST_ID + "&password=invalidPassword");
 
         HttpRequest httpRequest = new HttpRequest(requestLine, httpHeader, httpBody);
         HttpResponse httpResponse = new HttpResponse();
@@ -55,7 +56,7 @@ class UserLoginControllerTest {
         httpHeader.putHeader("Content-Length", "33");
         httpHeader.putHeader("Content-Type", "application/x-www-form-urlencoded");
         httpHeader.putHeader("Accept", "*/*");
-        HttpRequestBody httpBody = HttpRequestBody.of("userId="+TEST_ID+"&password="+TEST_PW);
+        HttpRequestBody httpBody = HttpRequestBody.of("userId=" + TEST_ID + "&password=" + TEST_PW);
 
         HttpRequest httpRequest = new HttpRequest(requestLine, httpHeader, httpBody);
         HttpResponse httpResponse = new HttpResponse();

@@ -12,12 +12,14 @@ import java.util.Set;
 import webserver.domain.HttpHeader;
 
 public class HttpRequestHeader {
+
     private static final String HEADER_DELIMITER = ": ";
     private static final int HEADER_LINE_COUNT = 2;
 
     private Map<String, String> headers = Maps.newHashMap();
 
-    private HttpRequestHeader() { }
+    private HttpRequestHeader() {
+    }
 
     public HttpRequestHeader(BufferedReader br) throws IOException {
         String line = br.readLine();

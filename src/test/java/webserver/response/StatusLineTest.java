@@ -3,8 +3,8 @@ package webserver.response;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
-import webserver.enums.Protocol;
 import webserver.enums.HttpStatus;
+import webserver.enums.Protocol;
 
 class StatusLineTest {
 

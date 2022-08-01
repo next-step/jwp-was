@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static webserver.request.RequestLineTest.TEST_GET_REQUEST_LINE;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import org.junit.jupiter.api.BeforeEach;

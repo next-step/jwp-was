@@ -8,9 +8,12 @@ import webserver.servlet.UserListController;
 import webserver.servlet.UserLoginController;
 
 public class SupportApis {
-    private SupportApis() { }
+
+    private SupportApis() {
+    }
 
     static Map<String, Controller> apiMap;
+
     static {
         apiMap = new HashMap<>();
         apiMap.put("/user/create", new UserCreateController());

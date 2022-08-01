@@ -8,9 +8,11 @@ import java.util.Map;
 import java.util.Set;
 
 public class HttpResponseHeader {
+
     private Map<String, String> headers = Maps.newHashMap();
 
-    private HttpResponseHeader() { }
+    private HttpResponseHeader() {
+    }
 
     public static HttpResponseHeader createEmpty() {
         return new HttpResponseHeader();

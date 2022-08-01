@@ -12,6 +12,7 @@ import webserver.enums.Protocol;
 import webserver.utils.Uri;
 
 class RequestLineTest {
+
     public static final String TEST_GET_REQUEST_LINE = "GET /users HTTP/1.1";
     public static final String TEST_POST_REQUEST_LINE = "POST /users HTTP/1.1";
 

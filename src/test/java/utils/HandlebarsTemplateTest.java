@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 class HandlebarsTemplateTest {
+
     private static final Logger log = LoggerFactory.getLogger(HandlebarsTemplateTest.class);
 
     @DisplayName("user/profile 페이지를 Handlebars template 써서 로드에 성공한다.")

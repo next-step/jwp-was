@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class QueryStrings {
+
     private static final String QUERY_STRING_SPLIT_REGEX = "=";
     private static final String QUERIES_SPLIT_REGEX = "&";
     private static final String EMPTY_VALUE = "";
