@@ -6,8 +6,6 @@ import org.springframework.util.ObjectUtils;
 
 import db.DataBase;
 import model.User;
-import webserver.exception.InvalidPasswordException;
-import webserver.exception.NotFoundUserException;
 import webserver.exception.RegisterDuplicateException;
 import webserver.http.request.HttpRequestBody;
 
@@ -38,22 +36,6 @@ public class UserService {
 		if (!ObjectUtils.isEmpty(userById)) {
 			throw new RegisterDuplicateException();
 		}
-	}
-
-	public User login(HttpRequestBody httpRequestBody) {
-		String userId = httpRequestBody.getAttribute(USERID);
-		String password = httpRequestBody.getAttribute(PASSWORD);
-
-		User user = DataBase.findUserById(userId);
-		if (ObjectUtils.isEmpty(user)) {
-			throw new NotFoundUserException();
-		}
-
-		if (!user.getPassword().equals(password)) {
-			throw new InvalidPasswordException();
-		}
-
-		return user;
 	}
 
 	public Collection<User> findAll() {
