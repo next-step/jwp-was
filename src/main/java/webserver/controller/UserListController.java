@@ -2,14 +2,15 @@ package webserver.controller;
 
 import com.github.jknack.handlebars.Handlebars;
 import db.DataBase;
-import webserver.HttpHeaders;
 import webserver.exception.ApiException;
-import webserver.request.HttpMethod;
-import webserver.request.HttpRequest;
-import webserver.request.Path;
-import webserver.response.HttpResponse;
-import webserver.response.HttpStatusCode;
-import webserver.response.ResponseHeader;
+import webserver.http.HttpHeaders;
+import webserver.http.HttpSession;
+import webserver.http.request.HttpMethod;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.Path;
+import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpStatusCode;
+import webserver.http.response.ResponseHeader;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -30,8 +31,8 @@ public class UserListController implements Controller {
     }
 
     @Override
-    public HttpResponse execute(HttpRequest request) throws IOException {
-        validateLoggedIn(request);
+    public HttpResponse execute(HttpRequest request, HttpSession session) throws IOException {
+        validateLoggedIn(session);
         return HttpResponse.of(
                 HttpStatusCode.OK,
                 ResponseHeader.from(Collections.singletonMap(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8")),
@@ -39,14 +40,14 @@ public class UserListController implements Controller {
         );
     }
 
-    private void validateLoggedIn(HttpRequest request) {
-        if (isNotLoggedIn(request)) {
+    private void validateLoggedIn(HttpSession session) {
+        if (isNotLoggedIn(session)) {
             throw new ApiException(HttpStatusCode.FOUND, ResponseHeader.from(Collections.singletonMap(HttpHeaders.LOCATION, "/user/login.html")));
         }
     }
 
-    private boolean isNotLoggedIn(HttpRequest request) {
-        return !request.cookie().contains("logined=true");
+    private boolean isNotLoggedIn(HttpSession session) {
+        return session.doesNotContainAttribute("user");
     }
 
     private String userListBody() throws IOException {

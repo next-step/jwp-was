@@ -1,7 +1,7 @@
 package webserver.exception;
 
-import webserver.response.HttpStatusCode;
-import webserver.response.ResponseHeader;
+import webserver.http.response.HttpStatusCode;
+import webserver.http.response.ResponseHeader;
 
 public final class ApiException extends RuntimeException {
 

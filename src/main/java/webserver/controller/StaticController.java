@@ -1,12 +1,13 @@
 package webserver.controller;
 
 import utils.FileIoUtils;
-import webserver.HttpHeaders;
-import webserver.request.HttpMethod;
-import webserver.request.HttpRequest;
-import webserver.response.HttpResponse;
-import webserver.response.HttpStatusCode;
-import webserver.response.ResponseHeader;
+import webserver.http.HttpHeaders;
+import webserver.http.HttpSession;
+import webserver.http.request.HttpMethod;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpStatusCode;
+import webserver.http.response.ResponseHeader;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -23,7 +24,7 @@ public class StaticController implements Controller {
     }
 
     @Override
-    public HttpResponse execute(HttpRequest request) throws IOException, URISyntaxException {
+    public HttpResponse execute(HttpRequest request, HttpSession session) throws IOException, URISyntaxException {
         return HttpResponse.of(
                 HttpStatusCode.OK,
                 ResponseHeader.from(Collections.singletonMap(HttpHeaders.CONTENT_TYPE, String.format("text/%s;charset=utf-8", fileExtension(request)))),

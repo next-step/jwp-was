@@ -13,9 +13,10 @@ import webserver.controller.UserCreateController;
 import webserver.controller.UserListController;
 import webserver.controller.UserLoginController;
 import webserver.exception.ApiException;
-import webserver.request.HttpRequest;
-import webserver.request.RequestBody;
-import webserver.response.HttpResponse;
+import webserver.http.HttpSessionInterceptor;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestBody;
+import webserver.http.response.HttpResponse;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -64,7 +65,7 @@ public class RequestHandler implements Runnable {
     }
 
     private HttpRequest httpRequest(BufferedReader br) throws IOException {
-        HttpRequest request = HttpRequest.from(IOUtils.readLines(br));
+        HttpRequest request = HttpRequest.of(IOUtils.readLines(br));
         if (request.contentLength() > 0) {
             return request.withBody(RequestBody.from(IOUtils.readData(br, request.contentLength())));
         }
@@ -81,7 +82,7 @@ public class RequestHandler implements Runnable {
 
     private HttpResponse executeSafety(Controller controller, HttpRequest request) {
         try {
-            return controller.execute(request);
+            return new HttpSessionInterceptor(controller).execute(request);
         } catch (ApiException e) {
             return HttpResponse.of(e.getCode(), e.getHeader());
         } catch (Exception e) {
@@ -102,7 +103,7 @@ public class RequestHandler implements Runnable {
     }
 
     private void writeHeaders(HttpResponse response, DataOutputStream dos) throws IOException {
-        for (Map.Entry<String, String> entry : response.headerEntries()) {
+        for (Map.Entry<String, Object> entry : response.headerEntries()) {
             dos.writeBytes(String.format("%s: %s\r%n", entry.getKey(), entry.getValue()));
         }
     }

@@ -2,16 +2,18 @@ package webserver.controller;
 
 import db.DataBase;
 import model.User;
-import webserver.HttpHeaders;
 import webserver.exception.ApiException;
-import webserver.request.HttpMethod;
-import webserver.request.HttpRequest;
-import webserver.request.Path;
-import webserver.response.HttpResponse;
-import webserver.response.HttpStatusCode;
-import webserver.response.ResponseHeader;
+import webserver.http.HttpHeaders;
+import webserver.http.HttpSession;
+import webserver.http.SessionAttribute;
+import webserver.http.request.HttpMethod;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.Path;
+import webserver.http.response.HttpResponse;
+import webserver.http.response.HttpStatusCode;
+import webserver.http.response.ResponseCookie;
+import webserver.http.response.ResponseHeader;
 
-import java.util.Collections;
 import java.util.Map;
 
 public class UserLoginController implements Controller {
@@ -24,24 +26,23 @@ public class UserLoginController implements Controller {
     }
 
     @Override
-    public HttpResponse execute(HttpRequest request) {
+    public HttpResponse execute(HttpRequest request, HttpSession session) {
         return login(request);
     }
 
     private HttpResponse login(HttpRequest request) {
-        validateUser(request);
-        return HttpResponse.sendRedirect("/index.html",
-                ResponseHeader.from(Collections.singletonMap(HttpHeaders.SET_COOKIE, "logined=true; Path=/")));
+        User user = DataBase.findUserById(extractRequiredBody(request, "userId"));
+        validateUser(request, user);
+        return HttpResponse.sendRedirect("/index.html", SessionAttribute.from(Map.of("user", user)));
     }
 
-    private void validateUser(HttpRequest request) {
-        User user = DataBase.findUserById(extractRequiredBody(request, "userId"));
+    private void validateUser(HttpRequest request, User user) {
         if (user == null || isNotMatchPassword(request, user)) {
             throw new ApiException(
                     HttpStatusCode.FOUND,
                     ResponseHeader.from(Map.of(
                             HttpHeaders.LOCATION, "/user/login_failed.html",
-                            HttpHeaders.SET_COOKIE, "logined=false; Path=/"
+                            HttpHeaders.SET_COOKIE, ResponseCookie.of("logined", "false")
                     ))
             );
         }
