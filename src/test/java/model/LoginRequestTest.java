@@ -13,7 +13,7 @@ class LoginRequestTest {
         assertThatThrownBy(() -> new LoginRequest(
                 "",
                 "password"
-        ));
+        )).isInstanceOf(UserException.class);
     }
 
     @DisplayName("password 값은 빈 값이 될 수 없다.")
@@ -22,6 +22,6 @@ class LoginRequestTest {
         assertThatThrownBy(() -> new LoginRequest(
                 "userId",
                 ""
-        ));
+        )).isInstanceOf(UserException.class);
     }
 }
