@@ -1,10 +1,11 @@
 package dummy;
 
 import model.HttpHeader;
-import model.HttpRequestHeader;
-import model.RequestLine;
+import model.request.HttpRequestHeader;
+import model.request.RequestLine;
 import model.WebProtocol;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class HttpRequestHeaderDummy {
@@ -50,10 +51,21 @@ public class HttpRequestHeaderDummy {
                 "name", "JaeSung"
             ),
             new WebProtocol("HTTP", "1.1")),
-        new HttpHeader(Map.of("Host", "localhost:8080")
+        new HttpHeader(new LinkedHashMap() {{
+            put("Host", "localhost:8080");
+        }}
         ));
 
     public static HttpRequestHeader GET_INDEX_HTTP_REQUEST_DUMMY
-        = HttpRequestHeader.getRequestHeaderOf(new RequestLine("GET", "/index.html", new WebProtocol("HTTP", "1.1")), new HttpHeader(Map.of("Host", "localhost:8080")));
+        = HttpRequestHeader.getRequestHeaderOf(
+        new RequestLine(
+            "GET",
+            "/index.html",
+            new WebProtocol("HTTP", "1.1")
+        ),
+        new HttpHeader(
+            new LinkedHashMap() {{
+                put("Host", "localhost:8080");
+            }}));
 
 }
