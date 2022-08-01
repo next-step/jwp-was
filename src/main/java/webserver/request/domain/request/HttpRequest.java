@@ -15,7 +15,7 @@ public class HttpRequest {
     private Method method;
     private String path;
     private QueryString queryString;
-    private RequestHeader requestHeader = new RequestHeader();
+    private Header header = new Header();
     private RequestBody requestBody;
 
     public HttpRequest(InputStream is) throws IOException {
@@ -33,14 +33,14 @@ public class HttpRequest {
         while (!line.equals("")) {
             line = br.readLine();
             System.out.println(line);
-            requestHeader.addHeaderProperty(line);
+            header.addHeaderProperty(line);
         }
 
         //parseHeaders(br, line);
 
         if(method.equals(Method.POST)) {
             //line = br.readLine();
-            int readNums = Integer.parseInt(requestHeader.getHeader("Content-Length"));
+            int readNums = Integer.parseInt(header.getHeader("Content-Length"));
             String body = IOUtils.readData(br, readNums);
             System.out.println(body);
             requestBody = new RequestBody(body);
@@ -78,7 +78,7 @@ public class HttpRequest {
     }
 
     public String getHeader(String header) {
-        return requestHeader.getHeader(header);
+        return this.header.getHeader(header);
     }
 
     public String getParameter(String parameter) {

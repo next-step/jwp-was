@@ -5,23 +5,21 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import com.google.common.base.Charsets;
+import db.DataBase;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
-import webserver.request.domain.model.User;
 import webserver.request.domain.request.*;
+import webserver.request.domain.response.HttpResponse;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
 
-    private User user;
-
     private HttpRequest httpRequest;
     private HttpResponse httpResponse;
-//    private RequestLine requestLine;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -32,8 +30,6 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-
             if (in != null) {
                 httpRequest = new HttpRequest(in);
 
@@ -60,6 +56,12 @@ public class RequestHandler implements Runnable {
                 RequestBody requestBody = httpRequest.getBody();
                 httpResponse.redirect(parseBody(path, requestBody));
             }
+        } else if (path.equals("/user/login")) {
+            if (isLogin()) {
+                httpResponse.loginRedirect("/index.html", "logined=true");
+            } else {
+                httpResponse.loginRedirect("/user/login_failed.html", "logined=true");
+            }
         } else {
             if (path.endsWith("html")) {
                 httpResponse.forward(IOUtils.loadFileFromClasspath(path));
@@ -67,12 +69,21 @@ public class RequestHandler implements Runnable {
         }
     }
 
+    private boolean isLogin() {
+        String userId = httpRequest.getBody().getParameter("userId");
+        User user = DataBase.findUserById(userId);
+
+        String pw = httpRequest.getBody().getParameter("password");
+
+        return user.getPassword().equals(pw);
+    }
+
     private String parseQueryString(String parsePath, QueryString queryString) {
         if (queryString != null) {
             String[] str = parsePath.split("/");
             if (str.length > 2) {
                 if (str[1].equals("user")) {
-                    userController(queryString.getDataPairs(), str);
+                    userService(queryString.getDataPairs(), str);
                 }
             }
         }
@@ -84,16 +95,17 @@ public class RequestHandler implements Runnable {
         String[] str = parsePath.split("/");
         if (str.length > 2) {
             if (str[1].equals("user")) {
-                userController(requestBody.getDataPairs(), str);
+                userService(requestBody.getDataPairs(), str);
             }
         }
 
         return "/index.html";
     }
 
-    private void userController(Map<String, String> map, String[] str) {
+    private void userService(Map<String, String> map, String[] str) {
         if (str[2].equals("create")) {
-            this.user = User.create(map);
+            User user = new User(map.get("userId"), map.get("password"), map.get("name"), map.get("email"));
+            DataBase.addUser(user);
         }
     }
 }
