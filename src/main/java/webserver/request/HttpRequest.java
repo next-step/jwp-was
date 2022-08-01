@@ -3,14 +3,12 @@ package webserver.request;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import utils.HttpMethod;
 import webserver.Cookie;
 import webserver.Header;
-
+import webserver.session.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Collections;
 
 public class HttpRequest {
 
@@ -19,12 +17,14 @@ public class HttpRequest {
     private Header header;
     private RequestBody requestBody;
     private Cookie cookie;
+    private HttpSession session;
 
     public HttpRequest(RequestLine requestLine, Header header, RequestBody requestBody) {
         this.requestLine = requestLine;
         this.header = header;
         this.requestBody = requestBody;
         this.cookie = header.parseCookie();
+        this.session = new HttpSession();
     }
 
     public static HttpRequest parsing(BufferedReader br) throws IOException {
@@ -66,8 +66,8 @@ public class HttpRequest {
         return requestLine;
     }
 
-    public boolean getCookie(String isLogined) {
-        return Boolean.parseBoolean(cookie.getCookie(isLogined));
+    public String getCookie(String key) {
+        return cookie.getCookie(key);
     }
 
     public String getHeader(String key) {
@@ -76,5 +76,9 @@ public class HttpRequest {
 
     public String getParameter(String key) {
         return requestBody.getBody().get(key);
+    }
+
+    public HttpSession getSession() {
+        return session;
     }
 }
