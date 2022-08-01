@@ -1,6 +1,6 @@
 package utils.parser;
 
-import model.HttpRequestHeader;
+import model.request.HttpRequestHeader;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

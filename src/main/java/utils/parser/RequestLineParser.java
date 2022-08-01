@@ -1,6 +1,6 @@
 package utils.parser;
 
-import model.RequestLine;
+import model.request.RequestLine;
 import model.WebProtocol;
 
 import java.util.Map;

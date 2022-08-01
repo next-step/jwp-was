@@ -1,7 +1,7 @@
 package utils.parser;
 
 import enums.HttpMethod;
-import model.RequestLine;
+import model.request.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

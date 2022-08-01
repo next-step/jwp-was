@@ -1,6 +1,6 @@
 package handler;
 
-import model.HttpRequestHeader;
+import model.request.HttpRequestHeader;
 import service.UserService;
 import utils.FileIoUtils;
 

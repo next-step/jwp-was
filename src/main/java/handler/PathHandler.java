@@ -1,6 +1,6 @@
 package handler;
 
-import model.HttpRequestHeader;
+import model.request.HttpRequestHeader;
 
 public interface PathHandler {
     String RESOURCE_SEPARATOR = "/";

@@ -2,7 +2,7 @@ package webserver;
 
 import handler.Handler;
 import handler.PathHandler;
-import model.HttpRequestHeader;
+import model.request.HttpRequestHeader;
 
 import java.util.List;
 

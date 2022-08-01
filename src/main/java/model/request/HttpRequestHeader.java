@@ -1,5 +1,7 @@
-package model;
+package model.request;
 
+
+import model.HttpHeader;
 
 import java.util.Map;
 

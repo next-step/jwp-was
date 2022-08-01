@@ -1,6 +1,7 @@
-package model;
+package model.request;
 
 import enums.HttpMethod;
+import model.WebProtocol;
 
 import java.util.Map;
 

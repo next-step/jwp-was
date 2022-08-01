@@ -1,6 +1,6 @@
 package handler;
 
-import model.HttpRequestHeader;
+import model.request.HttpRequestHeader;
 import utils.FileIoUtils;
 
 public class IndexHandler implements PathHandler {

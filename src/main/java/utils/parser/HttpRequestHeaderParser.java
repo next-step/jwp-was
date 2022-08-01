@@ -2,8 +2,8 @@ package utils.parser;
 
 import enums.HttpMethod;
 import model.HttpHeader;
-import model.HttpRequestHeader;
-import model.RequestLine;
+import model.request.HttpRequestHeader;
+import model.request.RequestLine;
 import utils.BufferedReaderUtils;
 import utils.IOUtils;
 
@@ -15,8 +15,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
-import static model.HttpRequestHeader.getRequestHeaderOf;
-import static model.HttpRequestHeader.postRequestHeaderWithBody;
+import static model.request.HttpRequestHeader.getRequestHeaderOf;
+import static model.request.HttpRequestHeader.postRequestHeaderWithBody;
 
 public class HttpRequestHeaderParser {
     private static final int REQUEST_LINE_INDEX = 0;
