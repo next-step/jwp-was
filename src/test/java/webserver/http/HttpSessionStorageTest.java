@@ -26,4 +26,17 @@ public class HttpSessionStorageTest {
 
 		Assertions.assertThrows(IllegalArgumentException.class, () -> storage.save(httpSession.getId(), null));
 	}
+
+	@Test
+	@DisplayName("세션 가져오기 테스트")
+	public void getSession() {
+		HttpSession httpSession = new HttpSession();
+		HttpCookies httpCookies = new HttpCookies();
+		httpCookies.addCookie(new HttpCookie(HttpSessionStorage.SESSION_ID, httpSession.getId()));
+		storage.save(httpSession.getId(), httpSession);
+
+		HttpSession session = HttpSessionStorage.getInstance().getSession(httpCookies);
+
+		assertThat(session).isEqualTo(httpSession);
+	}
 }

@@ -9,6 +9,9 @@ public class HttpSessionStorage {
 
 	private static final String INVALID_SESSION_INFO = "유효하지 않은 세션 정보입니다.";
 
+	public static final String SESSION_ID = "SessionId";
+	public static final String SESSION_LOGIN = "logined";
+
 	private static final Map<String, HttpSession> storage = new HashMap<>();
 
 	private HttpSessionStorage() {
@@ -16,6 +19,15 @@ public class HttpSessionStorage {
 
 	public static HttpSessionStorage getInstance() {
 		return new HttpSessionStorage();
+	}
+
+
+	public HttpSession getSession(HttpCookies cookies) {
+		HttpCookie cookie = cookies.find(SESSION_ID);
+		if (Objects.isNull(cookie)) {
+			return new HttpSession();
+		}
+		return getSession(cookie.getValue());
 	}
 
 	public HttpSession getSession(String id) {
