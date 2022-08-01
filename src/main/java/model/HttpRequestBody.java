@@ -12,11 +12,15 @@ public class HttpRequestBody {
         this.body = body;
     }
 
-    public static HttpRequestBody from(String readData) {
+    public static HttpRequestBody of(String readData) {
         return new HttpRequestBody(RequestUtils.createRequestDataMap(readData));
     }
 
     public static HttpRequestBody empty() {
         return new HttpRequestBody(Collections.emptyMap());
+    }
+
+    public String getValue(String userId) {
+        return body.get(userId);
     }
 }

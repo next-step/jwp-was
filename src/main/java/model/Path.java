@@ -38,4 +38,8 @@ public class Path {
     public Map<String, String> getParameters() {
         return parameters;
     }
+
+    public boolean equalPath(Path path) {
+        return this.path.equals(path.getPath());
+    }
 }

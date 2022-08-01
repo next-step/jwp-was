@@ -16,6 +16,7 @@ public class HttpRequest {
     private HttpRequest(RequestLine requestLine, HttpRequestHeader header, HttpRequestBody body) {
         Assert.notNull(requestLine, "requestLine is not null");
         Assert.notNull(header, "header is not null");
+        Assert.notNull(body, "body is not null");
 
         this.requestLine = requestLine;
         this.header = header;
@@ -28,6 +29,10 @@ public class HttpRequest {
                 HttpRequestHeader.of(requestLines.subList(REQUEST_HEADER_START, requestLines.size())),
                 HttpRequestBody.empty()
         );
+    }
+
+    public static HttpRequest of(RequestLine requestLine, HttpRequestHeader header, HttpRequestBody body) {
+        return new HttpRequest(requestLine, header, body);
     }
 
     public Map<String, String> getHeader() {
@@ -56,5 +61,17 @@ public class HttpRequest {
 
     private HttpRequest of(HttpRequest httpRequest, HttpRequestBody body) {
         return new HttpRequest(httpRequest.requestLine, httpRequest.header, body);
+    }
+
+    public boolean isMatch(HttpMethod method, Path path) {
+        return requestLine.isMatchHttpMethod(method, path);
+    }
+
+    public HttpRequestBody getBody() {
+        return body;
+    }
+
+    public String getBodyValue(String userId) {
+        return body.getValue(userId);
     }
 }

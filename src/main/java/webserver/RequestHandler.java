@@ -1,5 +1,6 @@
 package webserver;
 
+import controller.DispatchController;
 import exception.ResourceNotFoundException;
 import model.*;
 import org.slf4j.Logger;
@@ -7,7 +8,10 @@ import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import utils.IOUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -18,6 +22,7 @@ public class RequestHandler implements Runnable {
     private static final String TEMPLATE_PATH = "./templates";
 
     private Socket connection;
+    private DispatchController dispatchController = new DispatchController();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -29,7 +34,7 @@ public class RequestHandler implements Runnable {
 
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
              DataOutputStream dos = new DataOutputStream(connection.getOutputStream())) {
-             HttpRequest request = createHttpRequest(bufferedReader);
+            HttpRequest request = createHttpRequest(bufferedReader);
 
             HttpResponse httpResponse = handle(request);
 
@@ -43,12 +48,18 @@ public class RequestHandler implements Runnable {
         List<String> lines = IOUtils.readLines(bufferedReader);
         HttpRequest request = HttpRequest.of(lines);
         if (request.hasContent()) {
-            return request.writeBody(HttpRequestBody.from(IOUtils.readData(bufferedReader,request.getContentLength())));
+            return request.writeBody(HttpRequestBody.of(IOUtils.readData(bufferedReader, request.getContentLength())));
         }
         return request;
     }
 
-    private HttpResponse handle(HttpRequest request) throws IOException, URISyntaxException{
+    private HttpResponse handle(HttpRequest request) throws IOException, URISyntaxException {
+
+        HttpResponse httpResponse = dispatchController.handleRequest(request);
+
+
+
+
         String path = addTemplatePath(request.getPath());
         byte[] bytes = FileIoUtils.loadFileFromClasspath(path);
         return HttpResponse.ok(HttpStatusCode.OK, ResponseHeader.textHtml(bytes.length), bytes);
@@ -58,7 +69,7 @@ public class RequestHandler implements Runnable {
         return TEMPLATE_PATH + path;
     }
 
-    private void writeHttpResponse(HttpResponse httpResponse, DataOutputStream dos)  throws IOException {
+    private void writeHttpResponse(HttpResponse httpResponse, DataOutputStream dos) throws IOException {
         writeHttpHeaders(httpResponse, dos);
         dos.writeBytes("\r\n");
         writeBody(dos, httpResponse.getBody());
@@ -71,7 +82,7 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void writeBody(DataOutputStream dos, byte[] body) throws IOException{
+    private void writeBody(DataOutputStream dos, byte[] body) throws IOException {
         dos.write(body, 0, body.length);
         dos.flush();
     }

@@ -3,7 +3,9 @@ package model;
 public enum HttpStatusCode {
     OK(200, "OK"),
     CREATED(201,"CREATED"),
-    INTERNAL_SERVER_ERROR(500,"INTERNAL SERVER ERROR")
+    FOUND(302,"FOUND"),
+    INTERNAL_SERVER_ERROR(500,"INTERNAL SERVER ERROR"),
+    NOT_FOUND(404, "NOT FOUND URL")
     ;
 
     private int code;

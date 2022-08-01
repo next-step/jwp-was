@@ -18,6 +18,14 @@ public class HttpResponse {
         return new HttpResponse(httpStatusCode, responseHeader, bytes);
     }
 
+    public static HttpResponse notFound() {
+        return new HttpResponse(HttpStatusCode.NOT_FOUND, ResponseHeader.empty(), new byte[0]);
+    }
+
+    public static HttpResponse of(HttpStatusCode httpStatusCode, ResponseHeader responseHeader, byte[] body) {
+        return new HttpResponse(httpStatusCode, responseHeader, body);
+    }
+
     public String getHttpResponseCode() {
         return code.getHttpResponseCode();
     }

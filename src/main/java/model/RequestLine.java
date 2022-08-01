@@ -38,4 +38,8 @@ public class RequestLine {
     public Map<String, String> getParameters() {
         return path.getParameters();
     }
+
+    public boolean isMatchHttpMethod(HttpMethod method, Path path) {
+        return this.method.equals(method) && this.path.equalPath(path);
+    }
 }
