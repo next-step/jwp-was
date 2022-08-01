@@ -11,6 +11,7 @@ public abstract class AbstractController implements Controller {
     public static final String INDEX_URl = "index.html";
     public static final String LOGIN_FAIL_URl = "/user/login_failed.html";
     public static final String LOGINED_KEY = "logined";
+    public static final String SESSION_ID = "sessionId";
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
