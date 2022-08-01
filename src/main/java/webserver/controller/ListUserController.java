@@ -20,7 +20,7 @@ public class ListUserController extends AbstractController {
     public void doGet(HttpRequest request, HttpResponse response) {
         Model model = new Model();
         UserService requestService = new UserService(request);
-        String sessionId = request.getCookie(SESSION_ID);
+        String sessionId = request.getCookie(HttpSession.SESSION_ID);
         HttpSession session = HttpSessionFactory.getSession(sessionId);
         boolean isLogin = (boolean) session.getAttribute(LOGINED_KEY);
         if (isLogin) {
