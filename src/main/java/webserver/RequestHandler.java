@@ -1,14 +1,16 @@
 package webserver;
 
-import model.RequestLine;
+import model.ClientResponse;
+import model.HttpRequestMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-import utils.HttpParser;
+import service.RequestService;
+import service.ResponseService;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.net.URISyntaxException;
 import java.util.List;
 
 public class RequestHandler implements Runnable {
@@ -21,49 +23,25 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
+        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
-        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+        try (InputStream inputStream = connection.getInputStream(); OutputStream outputStream = connection.getOutputStream()) {
 
-            InputStreamReader inputStreamReader = new InputStreamReader(in);
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            boolean end = false;
-            List<String> requestMessageHeader = new ArrayList<>();
-            while (!end) {
-                String line = bufferedReader.readLine();
-                end = (!StringUtils.hasText(line));
-                requestMessageHeader.add(line);
-            }
-            RequestLine requestLine = HttpParser.parseRequestLine(requestMessageHeader.get(0));
+            List<String> httpMessageData = RequestService.getHttpMessageData(bufferedReader);
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMessageData, bufferedReader);
 
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-        } catch (IOException e) {
+            ClientResponse clientResponse = RequestService.getClientResponse(httpRequestMessage);
+
+            DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+            ResponseService.makeResponseHeader(dataOutputStream, clientResponse);
+            ResponseService.makeResponseBody(dataOutputStream, clientResponse);
+        } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
 }

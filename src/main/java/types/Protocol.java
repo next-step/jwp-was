@@ -39,4 +39,9 @@ public enum Protocol {
                 .findAny()
                 .orElseThrow(ProtocolNotFoundException::new);
     }
+
+    public String getInfo() {
+        return this.name + PROTOCOL_VERSION_SEPARATOR + this.version;
+    }
+
 }
