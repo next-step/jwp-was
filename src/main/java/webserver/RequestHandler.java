@@ -20,19 +20,18 @@ import java.util.regex.Pattern;
 public class RequestHandler implements Runnable {
     public static final Pattern TEMPLATES_PATTERN = Pattern.compile("(.+).(htm|html)");
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Map<String, Controller> requestMapping = new HashMap<>();
 
     private final Socket connection;
-    private final Map<String, Controller> requestMapping = new HashMap<>();
 
-    public RequestHandler(Socket connectionSocket) {
-        this.connection = connectionSocket;
-        initRequestMapping();
-    }
-
-    private void initRequestMapping() {
+    static {
         requestMapping.put("/user/create", new UserCreateController());
         requestMapping.put("/user/login", new UserLoginController());
         requestMapping.put("/user/list", new UserListController());
+    }
+
+    public RequestHandler(Socket connectionSocket) {
+        this.connection = connectionSocket;
     }
 
     public void run() {
