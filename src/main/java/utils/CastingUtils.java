@@ -14,7 +14,6 @@ public class CastingUtils {
         if (returnType.isInstance(obj)) {
             return returnType.cast(obj);
         }
-
         return castStringToReturnType((String) obj, returnType);
     }
 
@@ -23,6 +22,9 @@ public class CastingUtils {
         try {
             if (returnType == Boolean.class) {
                 return (T) Boolean.valueOf(obj);
+            }
+            if (returnType == Integer.class) {
+                return (T) Integer.valueOf(obj);
             }
         } catch(ClassCastException e) {
             LOGGER.error(e.getMessage());

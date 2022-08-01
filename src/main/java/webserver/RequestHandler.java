@@ -7,6 +7,7 @@ import controller.UserLoginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.HttpRequest;
+import webserver.http.HttpRequestParser;
 import webserver.http.HttpResponse;
 
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            final HttpRequest httpRequest = new HttpRequest(in);
+            final HttpRequest httpRequest = HttpRequestParser.parse(in);
             final HttpResponse httpResponse = new HttpResponse(out, httpRequest);
             handle(httpRequest, httpResponse);
         } catch (IOException e) {

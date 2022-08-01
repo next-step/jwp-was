@@ -19,8 +19,16 @@ public class Headers {
         this.cookies = makeCookies(headers);
     }
 
-    public Object getHeader(String key) {
-        return headers.get(key);
+    public <T> T getHeader(String key, Class<T> returnType) {
+        return CastingUtils.cast(headers.get(key), returnType);
+    }
+
+    public String getHeader(String key) {
+        return getHeader(key, String.class);
+    }
+
+    public boolean hasHeader(String key) {
+        return headers.containsKey(key);
     }
 
     public <T> T getCookie(String key, Class<T> returnType) {
