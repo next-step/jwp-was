@@ -26,3 +26,11 @@
 
 ### 기능 요구사항 3
 - RequestBody 구현
+
+### 기능 요구사항 4
+- HttpResponse 클래스 구현
+- redirect, forward 구현
+
+### 기능 요구사항 5
+- /user/login 분기 구현
+- reponse 에 set-cookie 헤더 추가
