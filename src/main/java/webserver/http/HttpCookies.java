@@ -24,14 +24,17 @@ public class HttpCookies {
 		if (Objects.isNull(stringCookies)) {
 			return;
 		}
+
 		String[] flatCookie = stringCookies.split(SEMICOLON);
-		if (flatCookie.length > 1) {
-			for (String cookie : flatCookie) {
-				String[] data = cookie.split(EQUAL);
-				if (data.length == MIN_LENGTH_COOKIE) {
-					httpCookies.add(new HttpCookie(data[INDEX_KEY].trim(), data[INDEX_VALUE].trim()));
-				}
-			}
+		for (String cookie : flatCookie) {
+			addStringCookie(cookie);
+		}
+	}
+
+	private void addStringCookie(String flatCookie) {
+		String[] data = flatCookie.split(EQUAL);
+		if (data.length == MIN_LENGTH_COOKIE) {
+			httpCookies.add(new HttpCookie(data[INDEX_KEY].trim(), data[INDEX_VALUE].trim()));
 		}
 	}
 
