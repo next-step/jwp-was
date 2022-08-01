@@ -5,14 +5,15 @@ import org.junit.jupiter.api.Test;
 import webserver.http.domain.Cookie;
 import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
-import webserver.http.domain.response.Response;
-import webserver.http.domain.response.Status;
-import webserver.http.domain.response.StatusCode;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static webserver.http.domain.ContentType.JSON;
+import static webserver.http.domain.Headers.CONTENT_LENGTH;
+import static webserver.http.domain.Headers.CONTENT_TYPE;
+import static webserver.http.domain.Headers.LOCATION;
 
 class ResponseTest {
 
@@ -36,7 +37,7 @@ class ResponseTest {
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(new Response(
                         Status.found(),
-                        new Headers(Map.of("Location", "/index.html")),
+                        new Headers(Map.of(LOCATION, "/index.html")),
                         new Cookies(Map.of()),
                         null)
                 );
@@ -64,11 +65,11 @@ class ResponseTest {
                 new Cookies(Map.of()),
                 null);
 
-        response.addHeader("Content-Type", "application/json");
+        response.addHeader(CONTENT_TYPE, JSON.getHeader());
         assertThat(response).usingRecursiveComparison()
                 .isEqualTo(new Response(
                         Status.ok(),
-                        new Headers(Map.of("Content-Type", "application/json")),
+                        new Headers(Map.of(CONTENT_TYPE, JSON.getHeader())),
                         new Cookies(Map.of()),
                         null)
                 );
@@ -88,7 +89,7 @@ class ResponseTest {
         assertThat(response).usingRecursiveComparison()
                 .isEqualTo(new Response(
                         Status.ok(),
-                        new Headers(Map.of("Content-Length", "4")),
+                        new Headers(Map.of(CONTENT_LENGTH, "4")),
                         new Cookies(Map.of()),
                         new byte[]{98, 111, 100, 121})
                 );
@@ -108,7 +109,7 @@ class ResponseTest {
         assertThat(response).usingRecursiveComparison()
                 .isEqualTo(new Response(
                         Status.ok(),
-                        new Headers(Map.of("Content-Length", "4")),
+                        new Headers(Map.of(CONTENT_LENGTH, "4")),
                         new Cookies(Map.of()),
                         new byte[]{98, 111, 100, 121})
                 );

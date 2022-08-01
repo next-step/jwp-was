@@ -22,6 +22,9 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static webserver.http.domain.ContentType.HTML;
+import static webserver.http.domain.Headers.CONTENT_LENGTH;
+import static webserver.http.domain.Headers.CONTENT_TYPE;
 import static webserver.http.domain.request.Method.GET;
 import static webserver.http.domain.request.Method.POST;
 
@@ -65,8 +68,8 @@ class RootControllerTest {
                 .isEqualTo(new Response(
                         Status.ok(),
                         new Headers(Map.of(
-                                "Content-Type", "text/html",
-                                "Content-Length", String.valueOf(body.length)
+                                CONTENT_TYPE, HTML.getHeader(),
+                                CONTENT_LENGTH, String.valueOf(body.length)
                         )),
                         new Cookies(Map.of()),
                         body

@@ -16,6 +16,8 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static webserver.http.domain.Headers.CONTENT_LENGTH;
+import static webserver.http.domain.Headers.CONTENT_TYPE;
 
 class RequestTest {
 
@@ -29,7 +31,7 @@ class RequestTest {
 
     public static Stream<Arguments> provideForHasContents() {
         HashMap<String, String> keyValues = new HashMap<>();
-        keyValues.put("Content-Length", "13");
+        keyValues.put(CONTENT_LENGTH, "13");
 
         Request requestWithContentLength = new Request(
                 new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), Protocol.HTTP_1_1),
@@ -37,7 +39,7 @@ class RequestTest {
         );
 
         HashMap<String, String> keyValues2 = new HashMap<>();
-        keyValues2.put("Content-Length", "-13");
+        keyValues2.put(CONTENT_LENGTH, "-13");
 
         Request requestWithContentLengthNegative = new Request(
                 new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), Protocol.HTTP_1_1),
@@ -66,7 +68,7 @@ class RequestTest {
 
     public static Stream<Arguments> provideForGetContentLength() {
         HashMap<String, String> keyValues = new HashMap<>();
-        keyValues.put("Content-Length", "13");
+        keyValues.put(CONTENT_LENGTH, "13");
 
         Request requestWithContentLength = new Request(
                 new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), Protocol.HTTP_1_1),
@@ -74,7 +76,7 @@ class RequestTest {
         );
 
         HashMap<String, String> keyValues2 = new HashMap<>();
-        keyValues2.put("Content-Length", "-13");
+        keyValues2.put(CONTENT_LENGTH, "-13");
 
         Request requestWithContentLengthNegative = new Request(
                 new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), Protocol.HTTP_1_1),
@@ -234,8 +236,8 @@ class RequestTest {
 
     public static Stream<Arguments> provideForHasContentType() {
         return Stream.of(
-                arguments(new Headers(Map.of("Content-Type", "application/json")), "application/json", true),
-                arguments(new Headers(Map.of("Content-Type", "application/json")), "text/html", false),
+                arguments(new Headers(Map.of(CONTENT_TYPE, "application/json")), "application/json", true),
+                arguments(new Headers(Map.of(CONTENT_TYPE, "application/json")), "text/html", false),
                 arguments(new Headers(Map.of()), "text/html", false)
         );
     }

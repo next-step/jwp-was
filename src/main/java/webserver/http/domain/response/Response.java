@@ -8,6 +8,9 @@ import webserver.http.domain.Protocol;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
+import static webserver.http.domain.Headers.CONTENT_LENGTH;
+import static webserver.http.domain.Headers.LOCATION;
+
 public class Response {
     private final Status status;
     private final Headers headers;
@@ -37,7 +40,7 @@ public class Response {
 
     public static Response sendRedirect(String location) {
         Response response = new Response(new Status(Protocol.HTTP_1_1, StatusCode.FOUND));
-        response.headers.add("Location", location);
+        response.headers.add(LOCATION, location);
         return response;
     }
 
@@ -55,7 +58,7 @@ public class Response {
 
     public void addBody(byte[] body) {
         this.body = body;
-        this.headers.add("Content-Length", String.valueOf(body.length));
+        this.headers.add(CONTENT_LENGTH, String.valueOf(body.length));
     }
 
     public void addCookie(Cookie cookie) {

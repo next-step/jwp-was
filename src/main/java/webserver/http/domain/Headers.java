@@ -11,6 +11,14 @@ import static java.util.stream.Collectors.toMap;
 public class Headers {
     private static final String KEY_VALUE_DELIMITER = ": ";
 
+    public static final String LOCATION = "Location";
+    public static final String ACCEPT = "Accept";
+    public static final String HOST = "Host";
+    public static final String CONTENT_LENGTH = "Content-Length";
+    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String SET_COOKIE = "Set-Cookie";
+    public static final String COOKIE = "Cookie";
+
     private final Map<String, String> keyValues;
 
     public Headers(Map<String, String> keyValues) {
@@ -32,15 +40,15 @@ public class Headers {
     }
 
     private boolean containsContentLengthKey() {
-        return keyValues.containsKey("Content-Length");
+        return keyValues.containsKey(CONTENT_LENGTH);
     }
 
     private int getContentLengthValue() {
-        return Integer.parseInt(keyValues.get("Content-Length"));
+        return Integer.parseInt(keyValues.get(CONTENT_LENGTH));
     }
 
     public boolean hasContentType(String contentType) {
-        String value = keyValues.get("Content-Type");
+        String value = keyValues.get(CONTENT_TYPE);
         return contentType.equals(value);
     }
 

@@ -17,6 +17,11 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static webserver.http.domain.ContentType.HTML;
+import static webserver.http.domain.ContentType.JSON;
+import static webserver.http.domain.Headers.ACCEPT;
+import static webserver.http.domain.Headers.CONTENT_LENGTH;
+import static webserver.http.domain.Headers.CONTENT_TYPE;
 
 class HeadersTest {
 
@@ -30,7 +35,7 @@ class HeadersTest {
 
     public static Stream<Arguments> provideForContainsContentLength() {
         HashMap<String, String> keyValues = new HashMap<>();
-        keyValues.put("Content-Length", "13");
+        keyValues.put(CONTENT_LENGTH, "13");
         return Stream.of(
                 arguments(new Headers(new HashMap<>()), false),
                 arguments(new Headers(keyValues), true)
@@ -47,7 +52,7 @@ class HeadersTest {
 
     public static Stream<Arguments> provideForGetContentLength() {
         HashMap<String, String> keyValues = new HashMap<>();
-        keyValues.put("Content-Length", "13");
+        keyValues.put(CONTENT_LENGTH, "13");
         return Stream.of(
                 arguments(new Headers(new HashMap<>()), 0),
                 arguments(new Headers(keyValues), 13)
@@ -64,9 +69,9 @@ class HeadersTest {
 
     public static Stream<Arguments> provideForHasContentType() {
         return Stream.of(
-                arguments(new Headers(Map.of("Content-Type", "application/json")), "application/json", true),
-                arguments(new Headers(Map.of("Content-Type", "application/json")), "text/html", false),
-                arguments(new Headers(Map.of()), "text/html", false)
+                arguments(new Headers(Map.of(CONTENT_TYPE, JSON.getHeader())), JSON.getHeader(), true),
+                arguments(new Headers(Map.of(CONTENT_TYPE, JSON.getHeader())), HTML.getHeader(), false),
+                arguments(new Headers(Map.of()), HTML.getHeader(), false)
         );
     }
 
@@ -80,9 +85,9 @@ class HeadersTest {
 
     public static Stream<Arguments> provideForGetValue() {
         return Stream.of(
-                arguments(new Headers(Map.of("Content-Type", "application/json")), "Content-Type", "application/json"),
-                arguments(new Headers(Map.of("Accept", "application/json")), "Accept", "application/json"),
-                arguments(new Headers(Map.of()), "Content-Type", null)
+                arguments(new Headers(Map.of(CONTENT_TYPE, JSON.getHeader())), CONTENT_TYPE, JSON.getHeader()),
+                arguments(new Headers(Map.of(ACCEPT, JSON.getHeader())), ACCEPT, JSON.getHeader()),
+                arguments(new Headers(Map.of()), CONTENT_TYPE, null)
         );
     }
 
@@ -96,9 +101,9 @@ class HeadersTest {
 
     public static Stream<Arguments> provideForContains() {
         return Stream.of(
-                arguments(new Headers(Map.of("Content-Type", "application/json")), "Content-Type", true),
-                arguments(new Headers(Map.of("Accept", "application/json")), "Content-Type", false),
-                arguments(new Headers(Map.of()), "Content-Type", false)
+                arguments(new Headers(Map.of(CONTENT_TYPE, JSON.getHeader())), CONTENT_TYPE, true),
+                arguments(new Headers(Map.of(ACCEPT, JSON.getHeader())), CONTENT_TYPE, false),
+                arguments(new Headers(Map.of()), CONTENT_TYPE, false)
         );
     }
 
@@ -108,7 +113,7 @@ class HeadersTest {
     void add(String name, String value, Headers expected) {
         Headers headers = new Headers(
                 new HashMap<>(
-                        Map.of("Content-Type", "application/json")
+                        Map.of(CONTENT_TYPE, JSON.getHeader())
                 )
         );
         headers.add(name, value);
@@ -119,17 +124,17 @@ class HeadersTest {
 
     public static Stream<Arguments> provideForAdd() {
         return Stream.of(
-                arguments("Content-Length", "26",
+                arguments(CONTENT_LENGTH, "26",
                         new Headers(
                                 Map.of(
-                                        "Content-Type", "application/json",
-                                        "Content-Length", "26"
+                                        CONTENT_TYPE, JSON.getHeader(),
+                                        CONTENT_LENGTH, "26"
                                 )
                         )
                 ),
-                arguments("Content-Type", "text/html",
+                arguments(CONTENT_TYPE, HTML.getHeader(),
                         new Headers(
-                                Map.of("Content-Type", "text/html")
+                                Map.of(CONTENT_TYPE, HTML.getHeader())
                         )
                 )
         );
@@ -168,7 +173,7 @@ class HeadersTest {
         keyValues.put("Host", "localhost:8080");
         keyValues.put("Connection", "keep-alive");
         keyValues.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36");
-        keyValues.put("Content-Length", "23");
+        keyValues.put(CONTENT_LENGTH, "23");
         return new Headers(keyValues);
     }
 }

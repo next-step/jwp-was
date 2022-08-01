@@ -21,6 +21,11 @@ import java.io.StringReader;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static webserver.http.domain.Headers.ACCEPT;
+import static webserver.http.domain.Headers.CONTENT_LENGTH;
+import static webserver.http.domain.Headers.CONTENT_TYPE;
+import static webserver.http.domain.Headers.COOKIE;
+import static webserver.http.domain.Headers.HOST;
 
 class RequestReaderTest {
     private RequestReader requestReader;
@@ -63,8 +68,8 @@ class RequestReaderTest {
                 ),
                 new Headers(
                         Map.of(
-                        "Host", "localhost:8080",
-                        "Accept", "application/json"
+                        HOST, "localhost:8080",
+                        ACCEPT, "application/json"
                         )
                 )
         );
@@ -103,9 +108,9 @@ class RequestReaderTest {
                 ),
                 new Headers(
                         Map.of(
-                                "Host", "localhost:8080",
-                                "Accept", "application/json",
-                                "Cookie", "logined=true; item=; type=intellij"
+                                HOST, "localhost:8080",
+                                ACCEPT, "application/json",
+                                COOKIE, "logined=true; item=; type=intellij"
                         )
                 ),
                 new Cookies(
@@ -152,10 +157,10 @@ class RequestReaderTest {
                 ),
                 new Headers(
                         Map.of(
-                                "Host", "localhost:8080",
-                                "Accept", "application/json",
-                                "Content-Length", "17",
-                                "Content-Type", "application/x-www-form-urlencoded"
+                                HOST, "localhost:8080",
+                                ACCEPT, "application/json",
+                                CONTENT_LENGTH, "17",
+                                CONTENT_TYPE, "application/x-www-form-urlencoded"
                         )
                 )
         );

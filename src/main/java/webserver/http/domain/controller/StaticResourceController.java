@@ -1,10 +1,12 @@
 package webserver.http.domain.controller;
 
-import webserver.utils.FileIoUtils;
 import webserver.http.domain.ContentType;
 import webserver.http.domain.request.Method;
 import webserver.http.domain.request.Request;
 import webserver.http.domain.response.Response;
+import webserver.utils.FileIoUtils;
+
+import static webserver.http.domain.Headers.CONTENT_TYPE;
 
 public class StaticResourceController implements Controller{
     private static final String STATIC_RESOURCE_DEFAULT_DIRECTORY = "./static";
@@ -20,7 +22,7 @@ public class StaticResourceController implements Controller{
         byte[] bytes = FileIoUtils.loadFileFromClasspath(STATIC_RESOURCE_DEFAULT_DIRECTORY + resourcePath);
         Response response = Response.ok();
         ContentType contentType = ContentType.from(resourcePath);
-        response.addHeader("Content-Type", contentType.getHeader());
+        response.addHeader(CONTENT_TYPE, contentType.getHeader());
         response.addBody(bytes);
         return response;
     }

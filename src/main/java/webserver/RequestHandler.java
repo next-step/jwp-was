@@ -3,7 +3,6 @@ package webserver;
 import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import webserver.http.domain.controller.RequestProcessor;
 import webserver.http.domain.exception.BadRequestException;
 import webserver.http.domain.exception.NullRequestException;
@@ -18,6 +17,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+
+import static webserver.http.domain.ContentType.HTML;
+import static webserver.http.domain.Headers.CONTENT_TYPE;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -68,9 +70,9 @@ public class RequestHandler implements Runnable {
     }
 
     private Response getResponse(StatusCode statusCode, String text) {
-        Response resourceNotFound = Response.from(statusCode);
-        resourceNotFound.addHeader("Content-Type", "text/html");
-        resourceNotFound.addBody("<h1><meta charset=\"UTF-8\">" + text + "</h1>");
-        return resourceNotFound;
+        Response response = Response.from(statusCode);
+        response.addHeader(CONTENT_TYPE, HTML.getHeader());
+        response.addBody("<h1><meta charset=\"UTF-8\">" + text + "</h1>");
+        return response;
     }
 }

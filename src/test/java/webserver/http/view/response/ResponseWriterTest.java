@@ -10,6 +10,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static webserver.http.domain.ContentType.JSON;
+import static webserver.http.domain.Headers.CONTENT_TYPE;
 
 class ResponseWriterTest {
 
@@ -39,7 +41,7 @@ class ResponseWriterTest {
     private Response setupResponseWithBody() {
         Response response = Response.ok();
 
-        response.addHeader("Content-Type", "application/json");
+        response.addHeader(CONTENT_TYPE, JSON.getHeader());
         response.addCookie(new Cookie("logined", "true", "/user/only"));
         response.addCookie(new Cookie("WST", "234e11gnc", "/"));
 

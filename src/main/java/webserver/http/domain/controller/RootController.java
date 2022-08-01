@@ -1,9 +1,11 @@
 package webserver.http.domain.controller;
 
-import webserver.utils.FileIoUtils;
 import webserver.http.domain.request.Request;
 import webserver.http.domain.response.Response;
+import webserver.utils.FileIoUtils;
 
+import static webserver.http.domain.ContentType.HTML;
+import static webserver.http.domain.Headers.CONTENT_TYPE;
 import static webserver.http.domain.request.Method.GET;
 
 public class RootController implements Controller {
@@ -22,7 +24,7 @@ public class RootController implements Controller {
     public Response handle(Request request) {
         byte[] bytes = FileIoUtils.loadFileFromClasspath(DEFAULT_RESOURCE_PULL_PATH);
         Response response = Response.ok();
-        response.addHeader("Content-Type", "text/html");
+        response.addHeader(CONTENT_TYPE, HTML.getHeader());
         response.addBody(bytes);
         return response;
     }
