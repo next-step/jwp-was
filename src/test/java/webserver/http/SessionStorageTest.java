@@ -27,7 +27,7 @@ class SessionStorageTest {
     @DisplayName("세션 조회")
     void find() {
         //given
-        HttpSession emptySession = HttpSession.of("id", Collections.emptyMap());
+        HttpSession emptySession = HttpSession.of("id", SessionAttribute.empty());
         SessionStorage sessionStorageWithEmptySession = SessionStorage.from(List.of(emptySession));
         //when, then
         assertThat(sessionStorageWithEmptySession.find("id")).isEqualTo(Optional.of(emptySession));

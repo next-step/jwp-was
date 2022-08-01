@@ -2,6 +2,7 @@ package webserver.http.response;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.SessionAttribute;
 
 import java.nio.charset.StandardCharsets;
 
@@ -20,7 +21,7 @@ class HttpResponseTest {
                 () -> assertThatNoException().isThrownBy(() -> HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty(), new byte[0])),
                 () -> assertThatNoException().isThrownBy(() -> HttpResponse.of(HttpStatusCode.OK, ResponseHeader.empty(), "body")),
                 () -> assertThatNoException().isThrownBy(() -> HttpResponse.sendRedirect("path.html")),
-                () -> assertThatNoException().isThrownBy(() -> HttpResponse.sendRedirect("path.html", ResponseHeader.empty())),
+                () -> assertThatNoException().isThrownBy(() -> HttpResponse.sendRedirect("path.html", SessionAttribute.empty())),
                 () -> assertThatNoException().isThrownBy(HttpResponse::notFound),
                 () -> assertThatNoException().isThrownBy(HttpResponse::internalServerError)
         );

@@ -4,7 +4,8 @@ import db.DataBase;
 import model.User;
 import webserver.exception.ApiException;
 import webserver.http.HttpHeaders;
-import webserver.http.SessionConfig;
+import webserver.http.HttpSession;
+import webserver.http.SessionAttribute;
 import webserver.http.request.HttpMethod;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.Path;
@@ -25,19 +26,14 @@ public class UserLoginController implements Controller {
     }
 
     @Override
-    public HttpResponse execute(HttpRequest request) {
+    public HttpResponse execute(HttpRequest request, HttpSession session) {
         return login(request);
     }
 
     private HttpResponse login(HttpRequest request) {
         User user = DataBase.findUserById(extractRequiredBody(request, "userId"));
         validateUser(request, user);
-        request.setSessionAttribute("user", user);
-        return HttpResponse.sendRedirect("/index.html",
-                ResponseHeader.from(Map.of(
-                        HttpHeaders.SET_COOKIE, ResponseCookie.of(SessionConfig.sessionCookieName(), request.sessionId())
-                ))
-        );
+        return HttpResponse.sendRedirect("/index.html", SessionAttribute.from(Map.of("user", user)));
     }
 
     private void validateUser(HttpRequest request, User user) {

@@ -13,7 +13,7 @@ import webserver.controller.UserCreateController;
 import webserver.controller.UserListController;
 import webserver.controller.UserLoginController;
 import webserver.exception.ApiException;
-import webserver.http.SessionStorage;
+import webserver.http.HttpSessionInterceptor;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.response.HttpResponse;
@@ -30,7 +30,6 @@ import java.util.Set;
 public class RequestHandler implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
-    private static final SessionStorage SESSION_STORAGE = SessionStorage.empty();
     private static final Set<Controller> CONTROLLERS;
 
     static {
@@ -66,7 +65,7 @@ public class RequestHandler implements Runnable {
     }
 
     private HttpRequest httpRequest(BufferedReader br) throws IOException {
-        HttpRequest request = HttpRequest.of(SESSION_STORAGE, IOUtils.readLines(br));
+        HttpRequest request = HttpRequest.of(IOUtils.readLines(br));
         if (request.contentLength() > 0) {
             return request.withBody(RequestBody.from(IOUtils.readData(br, request.contentLength())));
         }
@@ -83,7 +82,7 @@ public class RequestHandler implements Runnable {
 
     private HttpResponse executeSafety(Controller controller, HttpRequest request) {
         try {
-            return controller.execute(request);
+            return new HttpSessionInterceptor(controller).execute(request);
         } catch (ApiException e) {
             return HttpResponse.of(e.getCode(), e.getHeader());
         } catch (Exception e) {

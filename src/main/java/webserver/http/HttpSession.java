@@ -3,91 +3,79 @@ package webserver.http;
 import utils.Assert;
 
 import java.time.Instant;
-import java.util.Collections;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
-public final class HttpSession implements Session {
+public final class HttpSession {
 
     private final String id;
-    private final Map<String, Object> attributes;
+    private final SessionAttribute attribute;
     private final Instant createdAt = Instant.now();
     private Instant lastAccessedAt = createdAt;
 
-    private HttpSession(String id, Map<String, Object> attributes) {
+    private HttpSession(String id, SessionAttribute attribute) {
         Assert.hasText(id, "'id' must not be empty");
-        Assert.notNull(attributes, "'attributes' must not be null");
+        Assert.notNull(attribute, "'attribute' must not be null");
         this.id = id;
-        this.attributes = new ConcurrentHashMap<>(attributes);
+        this.attribute = attribute;
     }
 
-    public static HttpSession of(String id, Map<String, Object> attributes) {
+    public static HttpSession of(String id, SessionAttribute attributes) {
         return new HttpSession(id, attributes);
     }
 
-    public static HttpSession from(Map<String, Object> attributes) {
+    public static HttpSession from(SessionAttribute attributes) {
         return of(generateId(), attributes);
     }
 
     public static HttpSession empty() {
-        return from(Collections.emptyMap());
+        return from(SessionAttribute.empty());
     }
 
     private static String generateId() {
         return UUID.randomUUID().toString();
     }
 
-    @Override
     public String getId() {
         return id;
     }
 
-    @Override
+    public boolean isEmpty() {
+        return attribute.isEmpty();
+    }
+
     public void setAttribute(String name, Object value) {
-        Assert.hasText(name, "'name' for attribute must not be empty");
-        Assert.notNull(value, "'value' for attribute must not be null");
-        attributes.put(name, value);
+        attribute.set(name, value);
     }
 
-    @Override
-    public boolean containsAttribute(String name) {
-        return attributes.containsKey(name);
+    public boolean doesNotContainAttribute(String name) {
+        return attribute.doesNotContain(name);
     }
 
-    @Override
     public Object getAttribute(String name) {
-        if (!containsAttribute(name)) {
-            throw new IllegalStateException(String.format("attribute(%s) is not exists", name));
-        }
-        return attributes.get(name);
+        return attribute.get(name);
     }
 
-    @Override
     public void removeAttribute(String name) {
-        if (name == null) {
-            return;
-        }
-        attributes.remove(name);
+        attribute.remove(name);
     }
 
-    @Override
     public void invalidate() {
-        attributes.clear();
+        attribute.invalidate();
     }
 
-    @Override
     public void access() {
         this.lastAccessedAt = Instant.now();
     }
 
-    @Override
     public Instant createdAt() {
         return createdAt;
     }
 
-    @Override
     public Instant lastAccessedAt() {
         return lastAccessedAt;
+    }
+
+    public void addAll(SessionAttribute attribute) {
+        this.attribute.addAll(attribute);
     }
 }
