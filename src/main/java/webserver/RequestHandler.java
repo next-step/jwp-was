@@ -53,8 +53,8 @@ public class RequestHandler implements Runnable {
                 HttpResponseWriter.response302Header(dos, "/index.html");
             } else if ("/user/login".equals(url)) {
                 String body = IOUtils.readData(br, contentLength);
-                QueryStringParser QSParser = new QueryStringParser(body);
-                Map<String, String> params = QSParser.getQueryParameters();
+                QueryStringParser queryStringParser = new QueryStringParser(body);
+                Map<String, String> params = queryStringParser.getQueryParameters();
                 User user = DataBase.findUserById(params.get("userId"));
                 DataOutputStream dos = new DataOutputStream(out);
                 if (user != null) {
