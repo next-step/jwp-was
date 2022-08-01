@@ -20,7 +20,7 @@ class CookiesTest {
         String cookieHeader = "";
         Cookies cookies = new Cookies(cookieHeader);
 
-        assertThat(cookies.getCookie("logined")).isEqualTo("");
+        assertThat(cookies.getCookie("logined")).isNull();
     }
 
 }
