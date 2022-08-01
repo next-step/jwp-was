@@ -26,8 +26,8 @@ public class ResponseHeader {
         this.headers = headers;
     }
 
-    public static ResponseHeader baseResponseHeader(){
-        return new ResponseHeader(BASE_HEADERS);
+    private static ResponseHeader baseResponseHeader(){
+        return new ResponseHeader(Maps.newHashMap(BASE_HEADERS));
     }
 
     public static ResponseHeader of302(String redirectUrl){
@@ -36,12 +36,18 @@ public class ResponseHeader {
         return new ResponseHeader(responseHeader);
     }
 
+    public static ResponseHeader of200() {
+        return baseResponseHeader();
+    }
+
     public String getLocation(){
         return headers.get(LOCATION);
     }
 
     public void setContentLength(String value) {
         this.headers.put(CONTENT_LENGTH, value);
+        System.out.println("why??");
+        System.out.println("why??");
     }
 
     public List<String> toPrint() {

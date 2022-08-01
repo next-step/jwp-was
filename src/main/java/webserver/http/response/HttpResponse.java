@@ -14,6 +14,14 @@ public class HttpResponse {
         this.responseBody = responseBody;
     }
 
+    public static HttpResponse getView(final String viewPath) {
+        return new HttpResponse(
+                ResponseLine.of200(),
+                ResponseHeader.of200(),
+                Optional.of(ResponseBody.of200(viewPath))
+        );
+    }
+
     public static HttpResponse redirect(final String redirectUrl){
         return new HttpResponse(
                 ResponseLine.of302(),

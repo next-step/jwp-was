@@ -46,14 +46,14 @@ public class RequestHandler implements Runnable {
 
             HttpResponse httpResponse = route(httpRequest);
 
-//                body = FileIoUtils.loadFileFromClasspath("/user/form.html");
-            final DataOutputStream dos = new DataOutputStream(out);
             final Optional<ResponseBody> responseBody = httpResponse.getResponseBody();
-
             final byte[] body = FileIoUtils.loadFileFromClasspath(responseBody.get().getView().getFilePath());
+
+            final DataOutputStream dos = new DataOutputStream(out);
             writeResponseLine(dos, httpResponse.getResponseLine());
             writeResponseHeader(dos, body.length, httpResponse.getResponseHeader());
             writeResponseBody(dos, body);
+            System.out.println("bye!");
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }

@@ -13,22 +13,21 @@ public class SignUpController {
 
     public static final String path = "/user/create";
     private static final String viewPath = "/user/form.html";
+    private static final String redirectPath = "/index.html";
 
     public HttpResponse run(HttpRequest httpRequest) {
         final HttpMethod httpMethod = httpRequest.getRequestLine().getMethod();
 
         if (httpMethod.equals(HttpMethod.GET)) {
-            doGet(httpRequest.getRequestLine().getUrl().getQueryParameter());
-            return HttpResponse.redirect("blblblb"); // TODO: 임시
+            return doGet(httpRequest.getRequestLine().getUrl().getQueryParameter());
         } else if (httpMethod.equals(httpMethod.POST)) {
-            doPost(httpRequest.getRequestBody());
-            return HttpResponse.redirect("blblblb"); // TODO: 임시
+            return doPost(httpRequest.getRequestBody());
         } else {
             throw new IllegalArgumentException();
         }
     }
 
-    private void doGet(QueryParameter queryParameter) {
+    private HttpResponse doGet(QueryParameter queryParameter) {
         Map<String, String> parameters = queryParameter.getParameters();
         String userId = parameters.get("userId");
         String password = parameters.get("password");
@@ -41,9 +40,11 @@ public class SignUpController {
                 .name(name)
                 .email(email)
                 .build();
+
+        return HttpResponse.getView(viewPath);
     }
 
-    private void doPost(RequestBody requestBody) {
+    private HttpResponse doPost(RequestBody requestBody) {
         Map<String, String> body = requestBody.getContents();
         String userId = body.get("userId");
         String password = body.get("password");
@@ -56,5 +57,7 @@ public class SignUpController {
                 .name(name)
                 .email(email)
                 .build();
+
+        return HttpResponse.redirect(redirectPath);
     }
 }
