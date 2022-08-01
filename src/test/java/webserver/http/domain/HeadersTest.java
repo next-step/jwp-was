@@ -5,8 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import webserver.http.domain.Headers;
 import webserver.http.domain.exception.BadRequestException;
 
 import java.util.HashMap;
@@ -22,6 +22,7 @@ import static webserver.http.domain.ContentType.JSON;
 import static webserver.http.domain.Headers.ACCEPT;
 import static webserver.http.domain.Headers.CONTENT_LENGTH;
 import static webserver.http.domain.Headers.CONTENT_TYPE;
+import static webserver.http.domain.Headers.COOKIE;
 
 class HeadersTest {
 
@@ -175,5 +176,20 @@ class HeadersTest {
         keyValues.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36");
         keyValues.put(CONTENT_LENGTH, "23");
         return new Headers(keyValues);
+    }
+
+    @DisplayName("Cookie 헤터에 인자로 넘어온 이름과 값의 쿠키의 존재여부 반환 ")
+    @ParameterizedTest
+    @CsvSource(value = {"logined, true, true", "logined, false, false", "other, true, false"})
+    void existsCookies(String name, String value, boolean expected) {
+        Headers headers = new Headers(
+                Map.of(
+                        COOKIE, "logined=true; yes=no"
+                )
+        );
+
+        boolean actual = headers.existsCookie(name, value);
+
+        assertThat(actual).isEqualTo(expected);
     }
 }

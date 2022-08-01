@@ -2,29 +2,45 @@ package webserver.http.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CookiesTest {
 
-    @DisplayName("새로운 쿠키를 추가한다. 동일한 name의 쿠키 저장시, 새로 추가한 쿠키로 대체된다.")
+    @DisplayName("key1=value1; key2=value2; ... 형식으로 이뤄진 문자열을 Cookies 객체로 파싱한다.")
     @Test
-    void addCookie() {
-        Cookies cookies = new Cookies(new LinkedHashMap<>());
-        cookies.addCookie(new Cookie("key1", "value1"));
-        cookies.addCookie(new Cookie("key2", "value2"));
-        cookies.addCookie(new Cookie("key1", "newValue1"));
+    void from() {
+        String message = "Idea=7d39d793-8ebb-45b8-9e1e-7c66b1449982; logined=true; other=";
+        Cookies actual = Cookies.from(message);
 
-        assertThat(cookies).usingRecursiveComparison()
+        assertThat(actual).usingRecursiveComparison()
                 .ignoringCollectionOrder()
                 .isEqualTo(new Cookies(
                         Map.of(
-                                "key1", new Cookie("key1", "newValue1"),
-                                "key2", new Cookie("key2", "value2")
+                                "Idea", new Cookie("Idea", "7d39d793-8ebb-45b8-9e1e-7c66b1449982"),
+                                "logined", new Cookie("logined", "true"),
+                                "other", new Cookie("other", "")
                         )
                 ));
+    }
+
+    @DisplayName("nam, valuee가 일치하는 쿠키의 존재여부를 반환")
+    @ParameterizedTest
+    @CsvSource(value = {"logined, true, true", "invalid, value, false", "logined, false, false"})
+    void existsCookie(String name, String value, boolean expected) {
+        Cookies cookies = new Cookies(
+                Map.of(
+                        "Idea", new Cookie("Idea", "7d39d793-8ebb-45b8-9e1e-7c66b1449982"),
+                        "logined", new Cookie("logined", "true"),
+                        "other", new Cookie("other", "")
+                )
+        );
+
+        boolean actual = cookies.existsCookie(name, value);
+        assertThat(actual).isEqualTo(expected);
     }
 }

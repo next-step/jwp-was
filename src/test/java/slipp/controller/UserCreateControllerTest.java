@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import slipp.db.DataBase;
 import slipp.model.User;
-import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
 import webserver.http.domain.request.Method;
@@ -28,11 +27,12 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static webserver.http.domain.Headers.LOCATION;
 import static webserver.http.domain.request.Method.GET;
 import static webserver.http.domain.request.Method.POST;
 
 class UserCreateControllerTest {
-    private UserCreateController userCreateController = new UserCreateController();
+    private final UserCreateController userCreateController = new UserCreateController();
 
     @AfterEach
     void tearDown() {
@@ -83,9 +83,8 @@ class UserCreateControllerTest {
                 .isEqualTo(new Response(
                         Status.found(),
                         new Headers(Map.of(
-                                "Location", "/index.html"
+                                LOCATION, "/index.html"
                         )),
-                        new Cookies(Map.of()),
                         null
                 ));
 

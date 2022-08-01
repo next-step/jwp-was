@@ -1,11 +1,8 @@
 package webserver.http.view.request;
 
 import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.domain.Cookie;
-import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
 import webserver.http.domain.request.Method;
@@ -13,7 +10,6 @@ import webserver.http.domain.request.Parameters;
 import webserver.http.domain.request.Request;
 import webserver.http.domain.request.RequestLine;
 import webserver.http.domain.request.URI;
-import webserver.http.view.CookiesParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,14 +24,7 @@ import static webserver.http.domain.Headers.COOKIE;
 import static webserver.http.domain.Headers.HOST;
 
 class RequestReaderTest {
-    private RequestReader requestReader;
-
-    @BeforeEach
-    void setUp() {
-        requestReader = new RequestReader(
-                new CookiesParser()
-        );
-    }
+    private final RequestReader requestReader = new RequestReader();
 
     @DisplayName("Content-Length 헤더가 없거나, Content-Type이 application/x-www-form-urlencoded이 아닌 경우, request line과 header 만 포함된 request 객체 생성")
     @Test
@@ -111,13 +100,6 @@ class RequestReaderTest {
                                 HOST, "localhost:8080",
                                 ACCEPT, "application/json",
                                 COOKIE, "logined=true; item=; type=intellij"
-                        )
-                ),
-                new Cookies(
-                        Map.of(
-                                "logined", new Cookie("logined", "true"),
-                                "item", new Cookie("item", ""),
-                                "type", new Cookie("type", "intellij")
                         )
                 )
         );

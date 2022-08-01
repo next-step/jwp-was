@@ -10,8 +10,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import slipp.db.DataBase;
 import slipp.model.User;
-import webserver.http.domain.Cookie;
-import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
 import webserver.http.domain.controller.template.TemplateCompiler;
@@ -27,6 +25,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static webserver.http.domain.Headers.COOKIE;
 import static webserver.http.domain.request.Method.GET;
 import static webserver.http.domain.request.Method.POST;
 
@@ -92,8 +91,11 @@ class UserListControllerTest {
         );
         Request request = new Request(
                 requestLine,
-                new Headers(new LinkedHashMap<>()),
-                new Cookies(Map.of("logined", new Cookie("logined","false")))
+                new Headers(
+                        Map.of(
+                                COOKIE, "logined=false; item=; type=intellij"
+                        )
+                )
         );
 
         Response actual = userListController.handle(request);
@@ -113,8 +115,11 @@ class UserListControllerTest {
         );
         Request request = new Request(
                 requestLine,
-                new Headers(new LinkedHashMap<>()),
-                new Cookies(Map.of("logined", new Cookie("logined","true")))
+                new Headers(
+                        Map.of(
+                                COOKIE, "logined=true; item=; type=intellij"
+                        )
+                )
         );
 
         Response actual = userListController.handle(request);

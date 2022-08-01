@@ -6,8 +6,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import slipp.db.DataBase;
 import slipp.model.User;
-import webserver.http.domain.Cookie;
-import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
 import webserver.http.domain.request.Method;
@@ -27,11 +25,13 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static webserver.http.domain.Headers.LOCATION;
+import static webserver.http.domain.Headers.SET_COOKIE;
 import static webserver.http.domain.request.Method.GET;
 import static webserver.http.domain.request.Method.POST;
 
 class LoginControllerTest {
-    private LoginController loginController = new LoginController();
+    private final LoginController loginController = new LoginController();
 
     @DisplayName("POST 요청이고 /user/login path 요청인 경우, true 반환")
     @ParameterizedTest
@@ -85,9 +85,9 @@ class LoginControllerTest {
                 .isEqualTo(new Response(
                         Status.found(),
                         new Headers(Map.of(
-                                "Location", expectedRedirectUrl
+                                LOCATION, expectedRedirectUrl,
+                                SET_COOKIE, "logined=" + expectedLoginCookieValue + "; path=/"
                         )),
-                        new Cookies(Map.of("logined", new Cookie("logined",expectedLoginCookieValue))),
                         null
                 ));
     }

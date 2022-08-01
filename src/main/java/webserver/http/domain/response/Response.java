@@ -1,7 +1,6 @@
 package webserver.http.domain.response;
 
 import webserver.http.domain.Cookie;
-import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
 
@@ -14,17 +13,15 @@ import static webserver.http.domain.Headers.LOCATION;
 public class Response {
     private final Status status;
     private final Headers headers;
-    private final Cookies addedCookies;
     private byte[] body;
 
     public Response(Status status) {
-        this(status, new Headers(new LinkedHashMap<>()), new Cookies(new LinkedHashMap<>()), null);
+        this(status, new Headers(new LinkedHashMap<>()), null);
     }
 
-    public Response(Status status, Headers headers, Cookies addedCookies, byte[] body) {
+    public Response(Status status, Headers headers, byte[] body) {
         this.status = status;
         this.headers = headers;
-        this.addedCookies = addedCookies;
         this.body = body;
     }
 
@@ -62,7 +59,7 @@ public class Response {
     }
 
     public void addCookie(Cookie cookie) {
-        addedCookies.addCookie(cookie);
+        headers.addCookie(cookie);
     }
 
     public Status getStatus() {
@@ -71,10 +68,6 @@ public class Response {
 
     public Headers getHeaders() {
         return headers;
-    }
-
-    public Cookies getAddedCookies() {
-        return addedCookies;
     }
 
     public byte[] getBody() {
@@ -86,7 +79,6 @@ public class Response {
         return "Response{" +
                 "status=" + status +
                 ", headers=" + headers +
-                ", addedCookies=" + addedCookies +
                 ", body=" + Arrays.toString(body) +
                 '}';
     }

@@ -3,7 +3,6 @@ package webserver.http.domain.response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.domain.Cookie;
-import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
 
 import java.util.HashMap;
@@ -14,6 +13,7 @@ import static webserver.http.domain.ContentType.JSON;
 import static webserver.http.domain.Headers.CONTENT_LENGTH;
 import static webserver.http.domain.Headers.CONTENT_TYPE;
 import static webserver.http.domain.Headers.LOCATION;
+import static webserver.http.domain.Headers.SET_COOKIE;
 
 class ResponseTest {
 
@@ -25,7 +25,6 @@ class ResponseTest {
                 .isEqualTo(new Response(
                         Status.ok(),
                         new Headers(Map.of()),
-                        new Cookies(Map.of()),
                         null)
                 );
     }
@@ -38,7 +37,6 @@ class ResponseTest {
                 .isEqualTo(new Response(
                         Status.found(),
                         new Headers(Map.of(LOCATION, "/index.html")),
-                        new Cookies(Map.of()),
                         null)
                 );
     }
@@ -51,7 +49,6 @@ class ResponseTest {
                 .isEqualTo(new Response(
                         Status.badRequest(),
                         new Headers(Map.of()),
-                        new Cookies(Map.of()),
                         null)
                 );
     }
@@ -62,7 +59,6 @@ class ResponseTest {
         Response response = new Response(
                 Status.ok(),
                 new Headers(new HashMap<>()),
-                new Cookies(Map.of()),
                 null);
 
         response.addHeader(CONTENT_TYPE, JSON.getHeader());
@@ -70,7 +66,6 @@ class ResponseTest {
                 .isEqualTo(new Response(
                         Status.ok(),
                         new Headers(Map.of(CONTENT_TYPE, JSON.getHeader())),
-                        new Cookies(Map.of()),
                         null)
                 );
     }
@@ -81,7 +76,6 @@ class ResponseTest {
         Response response = new Response(
                 Status.ok(),
                 new Headers(new HashMap<>()),
-                new Cookies(Map.of()),
                 null);
 
         response.addBody("body");
@@ -90,7 +84,6 @@ class ResponseTest {
                 .isEqualTo(new Response(
                         Status.ok(),
                         new Headers(Map.of(CONTENT_LENGTH, "4")),
-                        new Cookies(Map.of()),
                         new byte[]{98, 111, 100, 121})
                 );
     }
@@ -101,7 +94,6 @@ class ResponseTest {
         Response response = new Response(
                 Status.ok(),
                 new Headers(new HashMap<>()),
-                new Cookies(Map.of()),
                 null);
 
         response.addBody(new byte[]{98, 111, 100, 121});
@@ -110,7 +102,6 @@ class ResponseTest {
                 .isEqualTo(new Response(
                         Status.ok(),
                         new Headers(Map.of(CONTENT_LENGTH, "4")),
-                        new Cookies(Map.of()),
                         new byte[]{98, 111, 100, 121})
                 );
     }
@@ -120,8 +111,7 @@ class ResponseTest {
     void addCookie() {
         Response response = new Response(
                 Status.ok(),
-                new Headers(Map.of()),
-                new Cookies(new HashMap<>()),
+                new Headers(new HashMap<>()),
                 null);
 
         response.addCookie(new Cookie("logined", "true", "/"));
@@ -129,8 +119,9 @@ class ResponseTest {
         assertThat(response).usingRecursiveComparison()
                 .isEqualTo(new Response(
                         Status.ok(),
-                        new Headers(Map.of()),
-                        new Cookies(Map.of("logined", new Cookie("logined", "true", "/"))),
+                        new Headers(Map.of(
+                                SET_COOKIE, "logined=true; path=/"
+                        )),
                         null)
                 );
     }

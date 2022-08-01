@@ -1,12 +1,10 @@
 package webserver.http.view.request;
 
-import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
 import webserver.http.domain.exception.NullRequestException;
 import webserver.http.domain.request.Parameters;
 import webserver.http.domain.request.Request;
 import webserver.http.domain.request.RequestLine;
-import webserver.http.view.CookiesParser;
 import webserver.utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -15,11 +13,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class RequestReader {
-    private final CookiesParser cookiesParser;
-
-    public RequestReader(CookiesParser cookiesParser) {
-        this.cookiesParser = cookiesParser;
-    }
 
     public Request read(BufferedReader bufferedReader) throws IOException {
         String requestLineMessage = bufferedReader.readLine();
@@ -31,7 +24,7 @@ public class RequestReader {
 
         RequestLine requestLine = RequestLine.from(requestLineMessage);
         Headers requestHeaders = Headers.from(headerMessages);
-        Request request = parseRequestExcludeBody(requestLine, requestHeaders);
+        Request request = new Request(requestLine, requestHeaders);
 
         if (request.hasContents() && request.hasContentType("application/x-www-form-urlencoded")) {
             String requestBody = IOUtils.readData(bufferedReader, request.getContentLength());
@@ -40,14 +33,5 @@ public class RequestReader {
         }
 
         return request;
-    }
-
-    private Request parseRequestExcludeBody(RequestLine requestLine, Headers requestHeaders) {
-        if (requestHeaders.contains("Cookie")) {
-            String cookieMessage = requestHeaders.getValue("Cookie");
-            Cookies cookies = cookiesParser.parse(cookieMessage);
-            return new Request(requestLine, requestHeaders, cookies);
-        }
-        return new Request(requestLine, requestHeaders);
     }
 }

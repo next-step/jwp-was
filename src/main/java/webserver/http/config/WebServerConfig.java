@@ -4,7 +4,6 @@ import webserver.http.domain.controller.Controller;
 import webserver.http.domain.controller.RequestProcessor;
 import webserver.http.domain.controller.RootController;
 import webserver.http.domain.controller.StaticResourceController;
-import webserver.http.view.CookiesParser;
 import webserver.http.view.request.RequestReader;
 import webserver.http.view.response.ResponseWriter;
 
@@ -13,11 +12,7 @@ import java.util.List;
 
 public class WebServerConfig {
     public static RequestReader requestReader() {
-        CookiesParser cookiesParser = new CookiesParser();
-
-        return new RequestReader(
-                cookiesParser
-        );
+        return new RequestReader();
     }
 
     public static ResponseWriter responseWriter() {

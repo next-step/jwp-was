@@ -22,9 +22,7 @@ public class UserListController implements Controller {
 
     @Override
     public Response handle(Request request) {
-        boolean isLogin = request.getCookie("logined")
-                .map(cookie -> cookie.hasValue("true"))
-                .orElse(false);
+        boolean isLogin = request.existsCookie("logined", "true");
 
         if (!isLogin) {
             return Response.sendRedirect("/user/login.html");

@@ -71,7 +71,6 @@ class RootControllerTest {
                                 CONTENT_TYPE, HTML.getHeader(),
                                 CONTENT_LENGTH, String.valueOf(body.length)
                         )),
-                        new Cookies(Map.of()),
                         body
                 ));
     }

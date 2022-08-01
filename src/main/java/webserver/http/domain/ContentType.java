@@ -8,7 +8,7 @@ import java.util.Objects;
 public enum ContentType {
     CSS("css", "text/css"),
     JAVASCRIPT("js", "text/javascript"),
-    JSON("js", "text/json"),
+    JSON("js", "application/json"),
     HTML("html", "text/html"),
     PNG("png", "image/png"),
     ICO("ico", "image/vnd.microsoft.icon"),

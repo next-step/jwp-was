@@ -68,6 +68,24 @@ public class Headers {
         return keyValues.keySet();
     }
 
+    public boolean existsCookie(String name, String value) {
+        return getCookies().existsCookie(name, value);
+    }
+
+    private Cookies getCookies() {
+        return Cookies.from(keyValues.get(COOKIE));
+    }
+
+    public void addCookie(Cookie cookie) {
+        keyValues.put(SET_COOKIE,
+                String.format("%s=%s; path=%s",
+                        cookie.getName(),
+                        cookie.getValue(),
+                        cookie.getPath()
+                )
+        );
+    }
+
     public static Headers from(List<String> messages) {
         return messages.stream()
                 .map(message -> KeyValuePair.from(message, KEY_VALUE_DELIMITER))
