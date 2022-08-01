@@ -10,8 +10,8 @@ public class ResponseHeader {
         this.headers = header;
     }
 
-    public void add(Map<String, String> headers) {
-        this.headers.putAll(headers);
+    public void add(String name, String value) {
+        this.headers.put(name, value);
     }
 
     @Override

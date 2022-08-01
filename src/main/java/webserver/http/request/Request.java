@@ -17,11 +17,11 @@ import static utils.IOUtils.readData;
 import static utils.IOUtils.readLines;
 
 public class Request {
+
     private static final Logger logger = LoggerFactory.getLogger(Request.class);
 
     public static final String ROOT_PATH = "/";
     public static final String ROOT_FILE = "/index.html";
-
 
     private final RequestLine requestLine;
     private final RequestHeader header;
@@ -62,8 +62,16 @@ public class Request {
         return requestLine.getHttpMethod();
     }
 
-    public Map<String, String> getRequestBody() {
-        return requestBody.getRequestBodyMap();
+    public boolean isPost() {
+        return getHttpMethod() == HttpMethod.POST;
+    }
+
+    public boolean isGet() {
+        return getHttpMethod() == HttpMethod.GET;
+    }
+
+    public String getParameter(String key) {
+        return requestBody.getRequestBodyMap().get(key);
     }
 
     @Override
@@ -78,4 +86,5 @@ public class Request {
     public int hashCode() {
         return Objects.hash(requestLine, header);
     }
+    
 }

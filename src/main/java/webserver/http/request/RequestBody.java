@@ -46,7 +46,7 @@ public class RequestBody {
                 .collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
     }
 
-    public Map<String, String> getRequestBodyMap() {
+    protected Map<String, String> getRequestBodyMap() {
         return requestBodyMap;
     }
 

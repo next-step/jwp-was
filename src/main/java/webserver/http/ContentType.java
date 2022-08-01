@@ -1,5 +1,7 @@
 package webserver.http;
 
+import java.util.Arrays;
+
 public enum ContentType {
     HTML("html", "text/html"),
     CSS("css", "text/css"),
@@ -19,6 +21,12 @@ public enum ContentType {
     ContentType(String extension, String value) {
         this.extension = extension;
         this.value = value;
+    }
+
+    public static boolean isFileExtension(String text) {
+        return Arrays.stream(values())
+                .map(ContentType::getExtension)
+                .anyMatch(extension -> extension.equals(text));
     }
 
     public String getExtension() {

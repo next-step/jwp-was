@@ -67,4 +67,5 @@ public class RequestLine {
     public int hashCode() {
         return Objects.hash(httpMethod, path, protocol);
     }
+
 }
