@@ -2,32 +2,30 @@ package webserver.service;
 
 import db.DataBase;
 import model.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.Cookie;
-import webserver.controller.AbstractController;
 import webserver.request.HelpData;
 import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class LoginServiceTest {
     LoginService loginService;
     HttpRequest request;
-
+    HttpResponse response;
 
     @BeforeEach
     void setup() throws IOException {
         DataBase.clear();
         BufferedReader br = HelpData.postHelpData();
         request = HttpRequest.parsing(br);
-        loginService = new LoginService(request);
+        response = new HttpResponse();
+        loginService = new LoginService(request, response);
 
         DataBase.addUser(new User("java", "password", "name", "java@java.com"));
     }
@@ -37,16 +35,20 @@ class LoginServiceTest {
     void check_id_password_cookie_true() {
         User requestUser = new User("java", "password", "name", "email");
 
-        Cookie cookie = loginService.checkIdAndPassword(requestUser);
-        assertThat(cookie.getCookie("logined")).isEqualTo("true");
+        loginService.checkIdAndPassword(requestUser);
+
+        assertThat(request.getSession().size()).isEqualTo(1);
+        assertThat((String) request.getSession().getAttribute("logined")).isEqualTo("true");
+        assertThat(response.getCookie().getCookie("sessionId")).isNotNull();
     }
 
     @Test
     @DisplayName("인증된 유저가 로그인 시 index.html로 리다이렉트 된다.")
     void authorized_user() {
-        Cookie cookie = new Cookie();
-        cookie.setCookie(AbstractController.LOGINED_KEY, "true");
+        User requestUser = new User("java", "password", "name", "email");
 
-        assertThat(loginService.getRedirectUrl(cookie)).isEqualTo(AbstractController.INDEX_URl);
+        loginService.checkIdAndPassword(requestUser);
+        String locationPath = response.getLocationPath();
+        assertThat(locationPath).isEqualTo("index.html");
     }
 }
