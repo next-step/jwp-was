@@ -38,6 +38,10 @@ public class User {
         return email;
     }
 
+    public boolean login(String userId, String password) {
+        return this.userId.equals(userId) && this.password.equals(password);
+    }
+
     @Override
     public String toString() {
         return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";

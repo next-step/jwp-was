@@ -56,10 +56,10 @@
 
 
 - 기능 요구사항 5
-- [ ] “로그인” 메뉴를 클릭하면 http://localhost:8080/user/login.html 으로 이동해 앞에서 회원가입한 사용자로 로그인
-    - [ ] 로그인이 성공하면 index.html로 이동
-        - [ ] 로그인이 성공하면 cookie를 활용해 로그인 상태를 유지할 수 있어야 한다.
-        - [ ] 로그인이 성공할 경우 요청 header의 Cookie header 값이 logined=true로 전달
-    - [ ] 로그인이 실패하면 /user/login_failed.html로 이동
-        - [ ] 로그인이 실패하면 Cookie header 값이 logined=false로 전달
-    - [ ] 응답 header에 Set-Cookie값을 설정한 후 요청 header에 Cookie이 전달되는지 확인한다. 
+- [x] “로그인” 메뉴를 클릭하면 http://localhost:8080/user/login.html 으로 이동해 앞에서 회원가입한 사용자로 로그인
+    - [x] 로그인이 성공하면 index.html로 이동
+        - [x] 로그인이 성공하면 cookie를 활용해 로그인 상태를 유지할 수 있어야 한다.
+        - [x] 로그인이 성공할 경우 요청 header의 Cookie header 값이 logined=true로 전달
+    - [x] 로그인이 실패하면 /user/login_failed.html로 이동
+        - [x] 로그인이 실패하면 Cookie header 값이 logined=false로 전달
+    - [x] 응답 header에 Set-Cookie값을 설정한 후 요청 header에 Cookie이 전달되는지 확인한다. 

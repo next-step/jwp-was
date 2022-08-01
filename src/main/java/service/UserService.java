@@ -15,4 +15,8 @@ public class UserService {
 
         return findUserById(user.getUserId());
     }
+
+    public User findById(String id) {
+        return findUserById(id);
+    }
 }
