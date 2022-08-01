@@ -82,11 +82,11 @@ public class TestWebConfig {
     }
 
     public UserController userController() {
-        return new UserController(userService(), sessionManager());
+        return new UserController(userService());
     }
 
     public SessionManager sessionManager() {
-        return new SessionManager();
+        return SessionManager.getInstance();
     }
 
     public UserService userService() {

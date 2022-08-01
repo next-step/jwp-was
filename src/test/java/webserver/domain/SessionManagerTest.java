@@ -12,7 +12,8 @@ class SessionManagerTest {
 
     @BeforeEach
     void setUp() {
-        sessionManager = new SessionManager();
+        sessionManager = SessionManager.getInstance();
+        sessionManager.clear();
     }
 
 

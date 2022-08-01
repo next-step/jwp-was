@@ -85,11 +85,11 @@ public class WebConfig {
     }
 
     private Controller userController() {
-        return new UserController(userService(), sessionManager());
+        return new UserController(userService());
     }
 
     private SessionManager sessionManager() {
-        return new SessionManager();
+        return SessionManager.getInstance();
     }
 
     private UserService userService() {

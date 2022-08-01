@@ -55,9 +55,4 @@ public class DefaultHttpSession implements HttpSession {
         manager.removeSession(getId());
         manager = null;
     }
-
-    @Override
-    public Cookie getCookie() {
-        return new Cookie(SESSION_COOKIE_NAME, getId());
-    }
 }

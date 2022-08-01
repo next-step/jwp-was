@@ -5,7 +5,6 @@ import model.dto.UserSaveRequest;
 import org.springframework.http.HttpMethod;
 import webserver.application.UserService;
 import webserver.domain.Cookie;
-import webserver.domain.DefaultHttpSession;
 import webserver.domain.DefaultView;
 import webserver.domain.HttpHeaders;
 import webserver.domain.HttpRequest;
@@ -20,17 +19,17 @@ import webserver.domain.TemplateView;
 import java.util.Collections;
 import java.util.Objects;
 
+import static webserver.domain.HttpSession.SESSION_COOKIE_NAME;
+
 /**
  * 유저 정보 컨트롤러
  */
 public class UserController implements Controller {
     public static final String LOGINED = "logined";
     private final UserService userService;
-    private final SessionManager sessionManager;
 
-    public UserController(UserService userService, SessionManager sessionManager) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.sessionManager = sessionManager;
     }
 
     @RequestMapping(value = "/users", method = {HttpMethod.GET, HttpMethod.POST})
@@ -84,16 +83,17 @@ public class UserController implements Controller {
         RequestBody requestBody = httpRequest.getRequestBody();
         boolean loginResult = userService.login(UserLoginRequest.from(requestBody));
 
-        HttpSession httpSession = sessionManager.createSession();
-        httpSession.setAttribute(LOGINED, loginResult);
-        Cookie createdCookie = httpSession.getCookie();
-        createdCookie.setPath("/");
+        HttpSession session = httpRequest.getSession();
+        session.setAttribute(LOGINED, loginResult);
+
+        Cookie cookie = new Cookie(SESSION_COOKIE_NAME, session.getId());
+        cookie.setPath("/");
 
         if (loginResult) {
-            return ResponseEntity.found("/index.html").cookie(createdCookie).build();
+            return ResponseEntity.found("/index.html").cookie(cookie).build();
         }
 
-        return ResponseEntity.found("/user/login_failed.html").cookie(createdCookie).build();
+        return ResponseEntity.found("/user/login_failed.html").cookie(cookie).build();
     }
 
     @RequestMapping(value = "/user/list.html", method = HttpMethod.GET)
@@ -114,6 +114,8 @@ public class UserController implements Controller {
         }
         Cookie cookie = httpRequest.getCookie();
         String sessionId = cookie.getValue();
+
+        SessionManager sessionManager = SessionManager.getInstance();
         HttpSession session = sessionManager.findBySessionId(sessionId);
 
         return Objects.nonNull(session) && (boolean) session.getAttribute(LOGINED);

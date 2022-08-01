@@ -4,7 +4,15 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionManager {
+    private static final SessionManager instance = new SessionManager();
+
     private final Map<String, HttpSession> sessionStore = new ConcurrentHashMap<>();
+
+    private SessionManager(){}
+
+    public static SessionManager getInstance() {
+        return instance;
+    }
 
     public HttpSession createSession() {
         HttpSession session = DefaultHttpSession.newInstance(this);
@@ -27,5 +35,9 @@ public class SessionManager {
 
     public int size() {
         return sessionStore.size();
+    }
+
+    public void clear() {
+        sessionStore.clear();
     }
 }

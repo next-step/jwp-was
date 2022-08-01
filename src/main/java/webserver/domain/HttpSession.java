@@ -13,5 +13,4 @@ public interface HttpSession {
 
     void invalidate();
 
-    Cookie getCookie();
 }
