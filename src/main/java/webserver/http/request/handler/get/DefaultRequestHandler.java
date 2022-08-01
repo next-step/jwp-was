@@ -1,4 +1,4 @@
-package webserver.http.request.handler;
+package webserver.http.request.handler.get;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

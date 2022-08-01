@@ -1,11 +1,12 @@
-package webserver.http.response.handler;
+package webserver.http.response.handler.get;
 
 import webserver.http.request.header.RequestHeader;
 import webserver.http.response.HttpResponseStatus;
+import webserver.http.response.handler.ResponseHandler;
 import webserver.http.response.header.ContentType;
 import webserver.http.response.header.ResponseHeader;
 
-public class HomeResponseHandler implements ResponseHandler{
+public class HomeResponseHandler implements ResponseHandler {
     private static final String LOCATION = "/index.html";
 
     @Override

@@ -1,7 +1,9 @@
-package webserver.http.request.handler;
+package webserver.http.request.handler.post;
+
+import webserver.http.request.handler.RequestHandler;
 
 public class UserLoginRequestHandler implements RequestHandler {
-    static final String REQUEST_INDEX = "/user/login";
+    private static final String REQUEST_INDEX = "/user/login";
 
     public static String requestIndex() {
         return REQUEST_INDEX;

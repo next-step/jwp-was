@@ -1,4 +1,4 @@
-package webserver.http.response.handler;
+package webserver.http.response.handler.post;
 
 import db.DataBase;
 import model.LoginRequest;
@@ -6,6 +6,7 @@ import model.LoginUser;
 import utils.UserParser;
 import webserver.http.request.header.RequestHeader;
 import webserver.http.response.HttpResponseStatus;
+import webserver.http.response.handler.ResponseHandler;
 import webserver.http.response.header.ContentType;
 import webserver.http.response.header.ResponseHeader;
 

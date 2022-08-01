@@ -8,10 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import webserver.http.request.header.Protocol;
-import webserver.http.request.header.RequestHeader;
-import webserver.http.request.header.RequestLine;
-import webserver.http.request.method.HttpMethod;
+import webserver.http.HttpMethod;
 
 class RequestHeaderTest {
 

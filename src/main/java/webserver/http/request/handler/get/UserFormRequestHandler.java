@@ -1,13 +1,14 @@
-package webserver.http.request.handler;
+package webserver.http.request.handler.get;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 import utils.FileIoUtils;
+import webserver.http.request.handler.RequestHandler;
 import webserver.http.response.header.ContentType;
 
-public class UserFormRequestHandler implements RequestHandler{
-    static final String REQUEST_INDEX = "/user/form.html";
+public class UserFormRequestHandler implements RequestHandler {
+    private static final String REQUEST_INDEX = "/user/form.html";
 
     public static String requestIndex() {
         return REQUEST_INDEX;

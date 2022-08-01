@@ -3,7 +3,7 @@ package webserver.http.response.handler;
 import java.util.Map;
 
 import webserver.http.request.header.RequestHeader;
-import webserver.http.request.method.HttpMethod;
+import webserver.http.HttpMethod;
 
 public class ResponseHandlerExecutor {
     private final Map<HttpMethod, ResponseGroup> responseMap = Map.ofEntries(

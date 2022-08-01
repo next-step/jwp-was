@@ -1,4 +1,4 @@
-package webserver.http.response.handler;
+package webserver.http.response.handler.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import db.DataBase;
 import model.User;
 import webserver.http.request.header.RequestHeader;
+import webserver.http.response.handler.post.UserLoginResponseHandler;
 
 class UserLoginResponseHandlerTest {
 

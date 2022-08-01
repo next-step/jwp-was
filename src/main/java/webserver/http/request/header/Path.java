@@ -5,8 +5,8 @@ import java.util.Map;
 import webserver.http.request.header.exception.InvalidPathException;
 
 public class Path {
-    public static final String PARAM_DELIMITER = "\\?";
-    public static final int URI_REQUEST_PARAMS_SIZE = 2;
+    private static final String PARAM_DELIMITER = "\\?";
+    private static final int URI_REQUEST_PARAMS_SIZE = 2;
     private final Index index;
     private final RequestParams requestParams;
 

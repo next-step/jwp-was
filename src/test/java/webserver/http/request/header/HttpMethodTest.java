@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import webserver.http.request.method.HttpMethod;
+import webserver.http.HttpMethod;
 import webserver.http.request.method.exception.InvalidHttpMethodException;
 
 class HttpMethodTest {

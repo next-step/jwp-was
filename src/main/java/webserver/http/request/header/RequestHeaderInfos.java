@@ -10,8 +10,8 @@ public class RequestHeaderInfos {
     private static final String HOST = "Host";
     private static final String CONTENT_LENGTH = "Content-Length";
     private static final String DEFAULT_LENGTH = "0";
-    public static final String DEFAULT_VALUE = "";
-    public static final String COOKIE = "Cookie";
+    private static final String DEFAULT_VALUE = "";
+    private static final String COOKIE = "Cookie";
     private final Map<String, String> infos;
 
     RequestHeaderInfos(String[] infos) {

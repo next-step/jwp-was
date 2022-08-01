@@ -1,4 +1,4 @@
-package webserver.http.response.handler;
+package webserver.http.response.handler.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import db.DataBase;
 import webserver.http.request.header.RequestHeader;
+import webserver.http.response.handler.post.UserCreatePostResponseHandler;
 
 @DisplayName("UserCreateResponseHandler 테스트")
 class UserCreatePostResponseHandlerTest {

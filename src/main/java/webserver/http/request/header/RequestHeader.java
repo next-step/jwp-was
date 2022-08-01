@@ -1,6 +1,6 @@
 package webserver.http.request.header;
 
-import webserver.http.request.method.HttpMethod;
+import webserver.http.HttpMethod;
 
 public class RequestHeader {
     private final RequestLine requestLine;

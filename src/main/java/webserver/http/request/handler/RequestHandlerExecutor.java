@@ -9,6 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import webserver.http.request.handler.exception.InvalidRequestException;
+import webserver.http.request.handler.get.DefaultRequestHandler;
+import webserver.http.request.handler.get.HomeRequestHandler;
+import webserver.http.request.handler.get.UserFormRequestHandler;
+import webserver.http.request.handler.get.UserListRequestHandler;
 import webserver.http.request.header.RequestHeader;
 
 public class RequestHandlerExecutor {
@@ -16,9 +20,9 @@ public class RequestHandlerExecutor {
     private static final Map<String, RequestHandler> REQUEST = new HashMap<>();
 
     static {
-        REQUEST.put(HomeRequestHandler.REQUEST_INDEX, new HomeRequestHandler());
-        REQUEST.put(UserFormRequestHandler.REQUEST_INDEX, new UserFormRequestHandler());
-        REQUEST.put(UserListRequestHandler.REQUEST_INDEX, new UserListRequestHandler());
+        REQUEST.put(HomeRequestHandler.requestIndex(), new HomeRequestHandler());
+        REQUEST.put(UserFormRequestHandler.requestIndex(), new UserFormRequestHandler());
+        REQUEST.put(UserListRequestHandler.requestIndex(), new UserListRequestHandler());
     }
 
     public byte[] run(RequestHeader requestHeader) {

@@ -1,4 +1,4 @@
-package webserver.http.response.handler;
+package webserver.http.response.handler.get;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import webserver.http.request.header.RequestHeader;
+import webserver.http.response.handler.get.HomeResponseHandler;
 
 @DisplayName("HomeResponseHandler 테스트")
 class HomeResponseHandlerTest {

@@ -8,9 +8,8 @@ import java.util.stream.Collectors;
 import webserver.http.request.header.exception.InvalidRequestParamsException;
 
 public class RequestParams {
-    public static final String PARAM_DELIMITER = "&";
-    public static final String KEY_VALUE_DELIMITER = "=";
-
+    private static final String PARAM_DELIMITER = "&";
+    private static final String KEY_VALUE_DELIMITER = "=";
     private final Map<String, String> params;
 
     RequestParams() {
