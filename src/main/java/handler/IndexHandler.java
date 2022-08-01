@@ -1,7 +1,13 @@
 package handler;
 
+import model.HttpHeader;
 import model.request.HttpRequestHeader;
+import model.response.HttpResponseHeader;
+import model.response.ResponseLine;
 import utils.FileIoUtils;
+import utils.parser.HttpHeaderParser;
+
+import java.util.Arrays;
 
 public class IndexHandler implements PathHandler {
     @Override
@@ -16,12 +22,18 @@ public class IndexHandler implements PathHandler {
     }
 
     @Override
-    public byte[] Handle(HttpRequestHeader httpRequestHeader) {
+    public HttpResponseHeader Handle(HttpRequestHeader httpRequestHeader) {
         if (hasTemplateIdentifier(httpRequestHeader)) {
+            byte[] body = FileIoUtils.loadFileFromClasspath(httpRequestHeader.getPath());
+            HttpHeader httpOkHeader = HttpHeaderParser.parseHeader(
+                Arrays.asList(
+                    "Content-Type: text/html;charset=utf-8",
+                    "Content-Length: " + body.length
+                ));
 
-            return FileIoUtils.loadFileFromClasspath(httpRequestHeader.getPath());
+            return new HttpResponseHeader(ResponseLine.httpOk(), httpOkHeader, body);
         }
 
-        return new byte[0];
+        return new HttpResponseHeader(ResponseLine.httpBadRequest(), null, new byte[0]);
     }
 }

@@ -1,8 +1,15 @@
 package handler;
 
+import model.HttpHeader;
 import model.request.HttpRequestHeader;
+import model.response.HttpResponseHeader;
+import model.response.ResponseLine;
 import service.UserService;
 import utils.FileIoUtils;
+import utils.parser.HttpHeaderParser;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class UserHandler implements PathHandler {
     private static final String USER_PATH = "user";
@@ -21,16 +28,27 @@ public class UserHandler implements PathHandler {
     }
 
     @Override
-    public byte[] Handle(HttpRequestHeader httpRequestHeader) {
+    public HttpResponseHeader Handle(HttpRequestHeader httpRequestHeader) {
         if (hasTemplateIdentifier(httpRequestHeader)) {
+            byte[] body = FileIoUtils.loadFileFromClasspath(httpRequestHeader.getPath());
+            HttpHeader httpOkHeader = HttpHeaderParser.parseHeader(
+                Arrays.asList(
+                    "Content-Type: text/html;charset=utf-8",
+                    "Content-Length: " + body.length
+                ));
 
-            return FileIoUtils.loadFileFromClasspath(httpRequestHeader.getPath());
+            return new HttpResponseHeader(ResponseLine.httpOk(), httpOkHeader, body);
+
         }
 
         if (httpRequestHeader.isEqualPath(CREATE_REQUEST_PATH)) {
             userService.createUser(httpRequestHeader.getRequestBody());
+
+            HttpHeader httpFoundHeader = HttpHeaderParser.parseHeader(List.of("Location: http://localhost:8080/index.html"));
+
+            return new HttpResponseHeader(ResponseLine.httpFound(), httpFoundHeader, new byte[0]);
         }
 
-        return new byte[0];
+        return new HttpResponseHeader(ResponseLine.httpBadRequest(), null, new byte[0]);
     }
 }

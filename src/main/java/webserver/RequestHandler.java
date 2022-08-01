@@ -7,7 +7,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import handler.PathHandler;
-import model.HttpRequestHeader;
+import model.request.HttpRequestHeader;
+import model.response.HttpResponseHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.parser.HttpRequestHeaderParser;
@@ -31,25 +32,22 @@ public class RequestHandler implements Runnable {
 
             HandlerSelector handlerSelector = new HandlerSelector();
             PathHandler pathHandler = handlerSelector.selectAvailableHandler(httpRequestHeader);
+            HttpResponseHeader httpResponseHeader = pathHandler.Handle(httpRequestHeader);
 
-            byte[] body = pathHandler.Handle(httpRequestHeader);
-
-            response200Header(dataOutputStream, body.length);
-            responseBody(dataOutputStream, body);
+            responseHeader(dataOutputStream, httpResponseHeader);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+    private void responseHeader(DataOutputStream dos, HttpResponseHeader httpResponseHeader) throws IOException {
+        dos.writeBytes(httpResponseHeader.getResponseLine() + "\r\n");
+        for (String header : httpResponseHeader.getHttpHeaders()) {
+            dos.writeBytes(header + "\n");
         }
+        dos.writeBytes("\r\n");
+
+        responseBody(dos, httpResponseHeader.getBody());
     }
 
     private void responseBody(DataOutputStream dos, byte[] body) {

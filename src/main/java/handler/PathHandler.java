@@ -1,6 +1,7 @@
 package handler;
 
 import model.request.HttpRequestHeader;
+import model.response.HttpResponseHeader;
 
 public interface PathHandler {
     String RESOURCE_SEPARATOR = "/";
@@ -9,7 +10,7 @@ public interface PathHandler {
 
     Boolean canHandling(HttpRequestHeader httpRequestHeader);
 
-    byte[] Handle(HttpRequestHeader httpRequestHeader);
+    HttpResponseHeader Handle(HttpRequestHeader httpRequestHeader);
 
     default Boolean hasTemplateIdentifier(HttpRequestHeader httpRequestHeader) {
 

@@ -46,8 +46,8 @@
     - [x] HttpRequestHeader에 RequestBody 필드를 추가한다.
 
 - 기능 요구사항 4
-- [ ] “회원가입”을 완료하면 /index.html 페이지로 이동해야함
-    - [ ] redirect 방식으로 브라우저의 URL이 /index.html로 변경되도록 만든다.
-    - [ ] HTTP 응답 헤더의 status code를 200이 아니라 302 code 사용
-      - [ ] Handler들의 Handle 메소드 호출시, HttpResponseHeader가 반환된다.
-      - [ ] HttpResponseHeader로 모든 response 종류를 처리할 수 있다.
+- [x] “회원가입”을 완료하면 /index.html 페이지로 이동해야함
+    - [x] redirect 방식으로 브라우저의 URL이 /index.html로 변경되도록 만든다.
+    - [x] HTTP 응답 헤더의 status code를 200이 아니라 302 code 사용
+      - [x] Handler들의 Handle 메소드 호출시, HttpResponseHeader가 반환된다.
+      - [x] HttpResponseHeader로 모든 response 종류를 처리할 수 있다.
