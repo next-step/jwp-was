@@ -33,4 +33,8 @@
 
 ### 기능 요구사항 5
 - /user/login 분기 구현
-- reponse 에 set-cookie 헤더 추가
+- response 에 set-cookie 헤더 추가
+
+### 기능 요구사항 6
+- /user/list 분기에서 로그인 상태이면 동적으로 html 생성 후 이동
+- 비로그인 상태라면 index.html 로 이동
