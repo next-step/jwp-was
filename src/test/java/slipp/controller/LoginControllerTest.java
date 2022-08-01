@@ -1,7 +1,6 @@
 package slipp.controller;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -38,7 +37,7 @@ class LoginControllerTest {
     @ParameterizedTest
     @MethodSource("provideForRequires")
     void requires(Method method, String path, boolean expected) {
-        RequestLine requestLine = new RequestLine(method, new URI(path), Protocol.http1Point1());
+        RequestLine requestLine = new RequestLine(method, new URI(path), Protocol.HTTP_1_1);
         Request request = new Request(requestLine, new Headers(new LinkedHashMap<>()));
 
         boolean actual = loginController.requires(request);
@@ -76,7 +75,7 @@ class LoginControllerTest {
                                 "password", new ArrayList<>(List.of(password))
                         )))
                 ),
-                Protocol.http1Point1());
+                Protocol.HTTP_1_1);
         Request request = new Request(requestLine, new Headers(new LinkedHashMap<>()));
 
         Response actual = loginController.handle(request);

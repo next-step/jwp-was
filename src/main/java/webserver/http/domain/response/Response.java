@@ -26,7 +26,7 @@ public class Response {
     }
 
     public static Response ok() {
-        return new Response(new Status(Protocol.http1Point1(), StatusCode.OK));
+        return new Response(new Status(Protocol.HTTP_1_1, StatusCode.OK));
     }
 
     public static Response okWithBody(String body) {
@@ -36,13 +36,13 @@ public class Response {
     }
 
     public static Response sendRedirect(String location) {
-        Response response = new Response(new Status(Protocol.http1Point1(), StatusCode.FOUND));
+        Response response = new Response(new Status(Protocol.HTTP_1_1, StatusCode.FOUND));
         response.headers.add("Location", location);
         return response;
     }
 
     public static Response from(StatusCode statusCode) {
-        return new Response(new Status(Protocol.http1Point1(), statusCode));
+        return new Response(new Status(Protocol.HTTP_1_1, statusCode));
     }
 
     public void addHeader(String name, String value) {

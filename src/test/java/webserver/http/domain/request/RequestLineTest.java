@@ -8,10 +8,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import webserver.http.domain.Protocol;
 import webserver.http.domain.exception.BadRequestException;
-import webserver.http.domain.request.Method;
-import webserver.http.domain.request.Parameters;
-import webserver.http.domain.request.RequestLine;
-import webserver.http.domain.request.URI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +24,7 @@ class RequestLineTest {
     @ParameterizedTest
     @MethodSource("provideForIsGet")
     void isGetMethod(Method method, boolean expected) {
-        RequestLine requestLine = new RequestLine(method, new URI("/path"), new Protocol("HTTP", "1.1"));
+        RequestLine requestLine = new RequestLine(method, new URI("/path"), Protocol.HTTP_1_1);
         boolean actual = requestLine.hasMethod(Method.GET);
         assertThat(actual).isEqualTo(expected);
     }
@@ -43,7 +39,7 @@ class RequestLineTest {
     @DisplayName("URI path를 반환")
     @Test
     void getPath() {
-        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path"), new Protocol("HTTP", "1.1"));
+        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path"), Protocol.HTTP_1_1);
         String actual = requestLine.getPath();
         assertThat(actual).isEqualTo("/path");
     }
@@ -53,7 +49,7 @@ class RequestLineTest {
     @MethodSource("ProvideForGetParameter")
     void getParameter(Parameters parameters, String expected) {
         URI uri = new URI("/path", parameters);
-        RequestLine requestLine = new RequestLine(Method.GET, uri, new Protocol("HTTP", "1.1"));
+        RequestLine requestLine = new RequestLine(Method.GET, uri, Protocol.HTTP_1_1);
 
         String actual = requestLine.getParameter("key");
         assertThat(actual).isEqualTo(expected);
@@ -105,7 +101,7 @@ class RequestLineTest {
                     )
                 )
         );
-        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path", originalParameters), new Protocol("HTTP", "1.1"));
+        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path", originalParameters), Protocol.HTTP_1_1);
 
         Parameters target = new Parameters(Map.of(
                 "name", Lists.list("jordy"),
@@ -128,7 +124,7 @@ class RequestLineTest {
         return new RequestLine(
                 Method.GET,
                 new URI("/path", addedParameters),
-                new Protocol("HTTP", "1.1")
+                Protocol.HTTP_1_1
         );
     }
 
@@ -152,7 +148,7 @@ class RequestLineTest {
                 .isEqualTo(new RequestLine(
                         Method.GET,
                         fixtureWithQueryParameters("/uri", "name", "jordy"),
-                        new Protocol("HTTP", "1.1")
+                        Protocol.HTTP_1_1
                 ));
     }
 }

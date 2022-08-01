@@ -9,11 +9,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
-import webserver.http.domain.request.Method;
-import webserver.http.domain.request.Parameters;
-import webserver.http.domain.request.Request;
-import webserver.http.domain.request.RequestLine;
-import webserver.http.domain.request.URI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +32,7 @@ class RequestTest {
         keyValues.put("Content-Length", "13");
 
         Request requestWithContentLength = new Request(
-                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), new Protocol("HTTP", "1.1")),
+                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), Protocol.HTTP_1_1),
                 new Headers(keyValues)
         );
 
@@ -45,12 +40,12 @@ class RequestTest {
         keyValues2.put("Content-Length", "-13");
 
         Request requestWithContentLengthNegative = new Request(
-                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), new Protocol("HTTP", "1.1")),
+                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), Protocol.HTTP_1_1),
                 new Headers(keyValues2)
         );
 
         Request requestWithoutContentLength = new Request(
-                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), new Protocol("HTTP", "1.1")),
+                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), Protocol.HTTP_1_1),
                 new Headers(new HashMap<>())
         );
 
@@ -74,7 +69,7 @@ class RequestTest {
         keyValues.put("Content-Length", "13");
 
         Request requestWithContentLength = new Request(
-                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), new Protocol("HTTP", "1.1")),
+                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), Protocol.HTTP_1_1),
                 new Headers(keyValues)
         );
 
@@ -82,12 +77,12 @@ class RequestTest {
         keyValues2.put("Content-Length", "-13");
 
         Request requestWithContentLengthNegative = new Request(
-                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), new Protocol("HTTP", "1.1")),
+                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), Protocol.HTTP_1_1),
                 new Headers(keyValues2)
         );
 
         Request requestWithoutContentLength = new Request(
-                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), new Protocol("HTTP", "1.1")),
+                new RequestLine(Method.GET, new URI("/path", new Parameters(new HashMap<>())), Protocol.HTTP_1_1),
                 new Headers(new HashMap<>())
         );
 
@@ -110,7 +105,7 @@ class RequestTest {
         );
 
         Request request = new Request(
-                new RequestLine(Method.GET, new URI("/path", originalParameters), new Protocol("HTTP", "1.1")),
+                new RequestLine(Method.GET, new URI("/path", originalParameters), Protocol.HTTP_1_1),
                 new Headers(new HashMap<>())
         );
 
@@ -133,7 +128,7 @@ class RequestTest {
         ));
 
         return new Request(
-                new RequestLine(Method.GET, new URI("/path", addedParameters), new Protocol("HTTP", "1.1")),
+                new RequestLine(Method.GET, new URI("/path", addedParameters), Protocol.HTTP_1_1),
                 new Headers(new HashMap<>())
         );
     }
@@ -142,7 +137,7 @@ class RequestTest {
     @ParameterizedTest
     @MethodSource("provideForIsGet")
     void isGetMethod(Method method, boolean expected) {
-        RequestLine requestLine = new RequestLine(method, new URI("/path"), new Protocol("HTTP", "1.1"));
+        RequestLine requestLine = new RequestLine(method, new URI("/path"), Protocol.HTTP_1_1);
         Request request = new Request(requestLine, new Headers(new HashMap<>()));
 
         boolean actual = request.hasMethod(Method.GET);
@@ -159,7 +154,7 @@ class RequestTest {
     @DisplayName("URI path를 반환")
     @Test
     void getPath() {
-        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path"), new Protocol("HTTP", "1.1"));
+        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path"), Protocol.HTTP_1_1);
         Request request = new Request(requestLine, new Headers(new HashMap<>()));
 
         String actual = request.getPath();
@@ -170,7 +165,7 @@ class RequestTest {
     @ParameterizedTest
     @CsvSource(value = {"/path, true", "/request, false"})
     void hasPath(String path, boolean expected) {
-        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path"), new Protocol("HTTP", "1.1"));
+        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path"), Protocol.HTTP_1_1);
         Request request = new Request(requestLine, new Headers(new HashMap<>()));
 
         boolean actual = request.hasPath(path);
@@ -182,7 +177,7 @@ class RequestTest {
     @MethodSource("ProvideForGetParameter")
     void getParameter(Parameters parameters, String expected) {
         URI uri = new URI("/path", parameters);
-        RequestLine requestLine = new RequestLine(Method.GET, uri, new Protocol("HTTP", "1.1"));
+        RequestLine requestLine = new RequestLine(Method.GET, uri, Protocol.HTTP_1_1);
         Request request = new Request(requestLine, new Headers(new HashMap<>()));
 
 
@@ -230,7 +225,7 @@ class RequestTest {
     @ParameterizedTest
     @MethodSource("provideForHasContentType")
     void hasContentType(Headers headers, String contentType, boolean expected) {
-        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path"), new Protocol("HTTP", "1.1"));
+        RequestLine requestLine = new RequestLine(Method.GET, new URI("/path"), Protocol.HTTP_1_1);
         Request request = new Request(requestLine, headers);
 
         boolean actual = request.hasContentType(contentType);

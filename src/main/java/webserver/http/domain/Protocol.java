@@ -2,32 +2,38 @@ package webserver.http.domain;
 
 import webserver.http.domain.exception.BadRequestException;
 
-public class Protocol {
+import java.util.Arrays;
+
+public enum Protocol {
+    HTTP_1_1("HTTP", "1.1");
+
     private static final String PROTOCOL_DELIMITER_REGEX = "/";
 
     private static final int PROTOCOL_SPLIT_SIZE = 2;
 
+
     private final String type;
     private final String version;
 
-    public Protocol(String type, String version) {
+    Protocol(String type, String version) {
         this.type = type;
         this.version = version;
-    }
-    
-    public static Protocol http1Point1() {
-        return new Protocol("HTTP", "1.1");
     }
 
     public static Protocol from(String message) {
         String[] splitProtocol = message.split(PROTOCOL_DELIMITER_REGEX);
         if (splitProtocol.length != PROTOCOL_SPLIT_SIZE) {
-            throw new BadRequestException(String.format("'[타입]/[버전]' 형식의 HTTP 프로토콜 메시지가 아닙니다. {message=%s}", message));
+            throw new BadRequestException("지원하지 않는 프로토콜 방식입니다.");
         }
 
         String type = splitProtocol[0];
         String version = splitProtocol[1];
-        return new Protocol(type, version);
+
+        return Arrays.stream(values())
+                .filter(protocol -> protocol.type.equals(type) &&
+                        protocol.version.equals(version))
+                .findAny()
+                .orElseThrow(() -> new BadRequestException("지원하지 않는 프로토콜 방식입니다."));
     }
 
     public String getType() {

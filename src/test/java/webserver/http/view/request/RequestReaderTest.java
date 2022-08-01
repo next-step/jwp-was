@@ -59,7 +59,7 @@ class RequestReaderTest {
                                     )
                             )
                         ),
-                        new Protocol("HTTP", "1.1")
+                        Protocol.HTTP_1_1
                 ),
                 new Headers(
                         Map.of(
@@ -99,7 +99,7 @@ class RequestReaderTest {
                                         )
                                 )
                         ),
-                        new Protocol("HTTP", "1.1")
+                        Protocol.HTTP_1_1
                 ),
                 new Headers(
                         Map.of(
@@ -148,7 +148,7 @@ class RequestReaderTest {
                                         )
                                 )
                         ),
-                        new Protocol("HTTP", "1.1")
+                        Protocol.HTTP_1_1
                 ),
                 new Headers(
                         Map.of(

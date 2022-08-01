@@ -66,7 +66,7 @@ class UserListControllerTest {
     @ParameterizedTest
     @MethodSource("provideForRequires")
     void requires(Method method, String path, boolean expected) {
-        RequestLine requestLine = new RequestLine(method, new URI(path), Protocol.http1Point1());
+        RequestLine requestLine = new RequestLine(method, new URI(path), Protocol.HTTP_1_1);
         Request request = new Request(requestLine, new Headers(new LinkedHashMap<>()));
 
         boolean actual = userListController.requires(request);
@@ -88,7 +88,7 @@ class UserListControllerTest {
         RequestLine requestLine = new RequestLine(
                 GET,
                 new URI("/user/list"),
-                Protocol.http1Point1()
+                Protocol.HTTP_1_1
         );
         Request request = new Request(
                 requestLine,
@@ -109,7 +109,7 @@ class UserListControllerTest {
         RequestLine requestLine = new RequestLine(
                 GET,
                 new URI("/user/list"),
-                Protocol.http1Point1()
+                Protocol.HTTP_1_1
         );
         Request request = new Request(
                 requestLine,

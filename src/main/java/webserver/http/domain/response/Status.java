@@ -12,23 +12,23 @@ public class Status {
     }
 
     public static Status ok() {
-        return new Status(Protocol.http1Point1(), StatusCode.OK);
+        return new Status(Protocol.HTTP_1_1, StatusCode.OK);
     }
 
     public static Status found() {
-        return new Status(Protocol.http1Point1(), StatusCode.FOUND);
+        return new Status(Protocol.HTTP_1_1, StatusCode.FOUND);
     }
 
     public static Status badRequest() {
-        return new Status(Protocol.http1Point1(), StatusCode.BAD_REQUEST);
+        return new Status(Protocol.HTTP_1_1, StatusCode.BAD_REQUEST);
     }
 
     public static Status notFound() {
-        return new Status(Protocol.http1Point1(), StatusCode.NOT_FOUND);
+        return new Status(Protocol.HTTP_1_1, StatusCode.NOT_FOUND);
     }
 
     public static Status internalError() {
-        return new Status(Protocol.http1Point1(), StatusCode.INTERNAL_ERROR);
+        return new Status(Protocol.HTTP_1_1, StatusCode.INTERNAL_ERROR);
     }
 
     public Protocol getProtocol() {
