@@ -1,6 +1,7 @@
 package http.request;
 
 import java.io.BufferedReader;
+import java.util.Map;
 import java.util.Optional;
 
 import utils.IOUtils;
@@ -42,8 +43,11 @@ public class HttpRequest {
         return requestLine.getMethod();
     }
 
-    public String getBody() {
-        return body.getValue();
+    public Map<String, String> getParameters() {
+        if (getMethod().isGet()) {
+            return requestLine.getQueryParams();
+        }
+        return body.getParameters();
     }
 
     public Optional<String> getCookie(String key) {

@@ -1,7 +1,5 @@
 package webserver;
 
-import static http.request.HttpMethod.*;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -25,9 +23,9 @@ public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private static final Map<ControllerIdentity, Controller> CONTROLLERS = Map.of(
-        new ControllerIdentity("/user/create", POST), new UserCreateController(),
-        new ControllerIdentity("/user/login", POST), new LoginController(),
-        new ControllerIdentity("/user/list", GET), new UserListController());
+        new ControllerIdentity("/user/create"), new UserCreateController(),
+        new ControllerIdentity("/user/login"), new LoginController(),
+        new ControllerIdentity("/user/list"), new UserListController());
 
     private final Socket connection;
 
@@ -57,7 +55,7 @@ public class RequestHandler implements Runnable {
             return HttpResponse.parseStaticFile(httpRequest.getUrl(), httpRequest.getFileExtension());
         }
 
-        var controller = CONTROLLERS.get(new ControllerIdentity(httpRequest.getUrl(), httpRequest.getMethod()));
-        return controller.run(httpRequest);
+        var controller = CONTROLLERS.get(new ControllerIdentity(httpRequest.getUrl()));
+        return controller.service(httpRequest);
     }
 }

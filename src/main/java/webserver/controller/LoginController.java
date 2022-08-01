@@ -1,8 +1,5 @@
 package webserver.controller;
 
-import static java.util.stream.Collectors.*;
-
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,15 +9,11 @@ import http.HttpStatus;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 
-public class LoginController implements Controller {
+public class LoginController extends AbstractController {
 
     @Override
-    public HttpResponse run(HttpRequest request) {
-        var body = request.getBody();
-        var params = Arrays.stream(body.split("&"))
-            .map(it -> it.split("="))
-            .map(it -> Map.entry(it[0], it[1]))
-            .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+    public HttpResponse doPost(HttpRequest request) {
+        var params = request.getParameters();
 
         var userId = params.get("userId");
 
