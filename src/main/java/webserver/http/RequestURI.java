@@ -1,8 +1,8 @@
-package webserver;
+package webserver.http;
 
 import java.util.Objects;
 
-public class RequestPath {
+class RequestURI {
 
     private static final int LENGTH_CONTAINING_QUERY_STR = 2;
 
@@ -14,12 +14,16 @@ public class RequestPath {
 
     private final String path;
 
-    RequestPath(String path) {
+    RequestURI(String path) {
         validatePath(path);
         this.path = path;
     }
-    QueryString parseQueryString() {
-        return QueryString.parseOf(getQueryString());
+    RequestParameters parseQueryString() {
+        return RequestParameters.parseOf(getQueryString());
+    }
+
+    String getPath() {
+        return path;
     }
 
     private void validatePath(String path) {
@@ -43,12 +47,17 @@ public class RequestPath {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RequestPath that = (RequestPath) o;
+        RequestURI that = (RequestURI) o;
         return Objects.equals(path, that.path);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(path);
+    }
+
+    @Override
+    public String toString() {
+        return path;
     }
 }

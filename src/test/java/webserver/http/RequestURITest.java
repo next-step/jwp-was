@@ -1,19 +1,17 @@
-package webserver;
+package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class RequestPathTest {
+class RequestURITest {
 
     @DisplayName("RequestPath 는 '/' 으로 시작해야 한다.")
     @Test
     void validateRequestPathTest() {
-        assertThatThrownBy(() -> new RequestPath("user"))
+        assertThatThrownBy(() -> new RequestURI("user"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("유효한 RequestPath 가 아님");
     }
@@ -22,15 +20,15 @@ class RequestPathTest {
     @Test
     void parseQueryStringTest() {
         // given
-        RequestPath requestPath = new RequestPath("/users?userId=javajigi&password=password");
+        RequestURI requestUri = new RequestURI("/users?userId=javajigi&password=password");
 
         // when
-        QueryString queryString = requestPath.parseQueryString();
+        RequestParameters requestParameters = requestUri.parseQueryString();
 
         // then
-        assertThat(queryString.getValue("userId")).isEqualTo("javajigi");
-        assertThat(queryString.getValue("password")).isEqualTo("password");
-        assertThat(queryString.getValue("password2")).isNull();
+        assertThat(requestParameters.getValue("userId")).isEqualTo("javajigi");
+        assertThat(requestParameters.getValue("password")).isEqualTo("password");
+        assertThat(requestParameters.getValue("password2")).isNull();
     }
 
 }

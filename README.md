@@ -15,5 +15,30 @@
 * POST 요청 파싱
 * Query String 파싱
 
+### 2단계
+* http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
+* http://localhost:8080/user/form.html 로 이동후 GET 방식으로 회원가입이 가능하게 한다.
+```
+GET /user/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Accept: */*
+```
+* http://localhost:8080/user/form.html 로 이동후 POST 방식으로 회원가입이 가능하게 한다.
+```
+POST /user/create HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 59
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net
+```
+* 회원가입 후 성공/실패 유무에 따라 특정 페이지로 리다이렉트 할 수 있어야 한다.
+* 회원가입 후 로그인 할 수 있어야 한다. 로그인 후 쿠키를 통해 로그인 유지를 할 수 있어야 한다. 
+* http://localhost:8080/user/list 에 접속시 로그인 유무에 따라 다른 처리를 할 수 있어야 한다.
+* stylesheet 파일을 지원할 수 있어야 한다.
+
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
