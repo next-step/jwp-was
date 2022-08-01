@@ -20,19 +20,16 @@ public class HttpRequest {
     public static final String VALIDATION_MESSAGE = "잘못된 HTTP 요청입니다.";
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequest.class);
     private static final Pattern HEADER_DELIMITER = Pattern.compile(": ");
-    private static final Pattern COOKIE_PATTERN = Pattern.compile("(?:; )?([^;]+)=([^;]+)");
     private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("&?([^=&]+)=([^=&]+)");
 
     private final RequestLine requestLine;
-    private final Map<String, Object> headers;
-    private final Map<String, Object> cookies;
+    private final Headers headers;
     private final Map<String, Object> attributes;
 
     public HttpRequest(InputStream in) {
         final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         this.requestLine = makeRequestLine(br);
-        this.headers = makeHeaders(br);
-        this.cookies = makeCookies(headers);
+        this.headers = new Headers(makeHeaders(br));
         this.attributes = makeAttributes(br);
         LOGGER.debug(requestLine.toString());
     }
@@ -54,6 +51,14 @@ public class HttpRequest {
         return requestLine;
     }
 
+    public boolean isGet() {
+        return requestLine.isGet();
+    }
+
+    public boolean isPost() {
+        return requestLine.isPost();
+    }
+
     public String getPath() {
         return requestLine.getPath();
     }
@@ -62,13 +67,9 @@ public class HttpRequest {
         return requestLine.getHttpProtocol();
     }
 
-    public Object getHeader(String key) {
-        return headers.get(key);
-    }
-
     public int getContentLength() {
         try {
-            return Integer.parseInt((String) getHeader("Content-Length"));
+            return Integer.parseInt((String) headers.getHeader("Content-Length"));
         } catch (Exception e) {
             return 0;
         }
@@ -86,20 +87,8 @@ public class HttpRequest {
         return getAttribute(key, String.class);
     }
 
-    public <T> T getCookie(String key, Class<T> returnType) {
-        return CastingUtils.cast(cookies.get(key), returnType);
-    }
-
-    public String getCookie(String key) {
-        return getCookie(key, String.class);
-    }
-
-    public boolean isGet() {
-        return requestLine.isGet();
-    }
-
-    public boolean isPost() {
-        return requestLine.isPost();
+    public boolean getCookie(String key, Class<Boolean> returnType) {
+        return headers.getCookie(key, returnType);
     }
 
     private RequestLine makeRequestLine(BufferedReader br) {
@@ -116,14 +105,6 @@ public class HttpRequest {
             headers.put(splitLine[0], splitLine[1]);
         }
         return headers;
-    }
-
-    private Map<String, Object> makeCookies(Map<String, Object> headers) {
-        final Object cookie = headers.get("Cookie");
-        if (cookie == null) {
-            return new HashMap<>();
-        }
-        return HttpUtils.parseParameters((String) cookie, COOKIE_PATTERN);
     }
 
     private String readLine(BufferedReader br) {
