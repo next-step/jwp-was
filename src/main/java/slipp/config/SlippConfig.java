@@ -12,7 +12,7 @@ import webserver.http.domain.controller.template.TemplateCompiler;
 import java.util.List;
 
 public class SlippConfig {
-    public static List<Controller> controllers() {
+    private static List<Controller> controllers() {
         return List.of(
                 new LoginController(),
                 new UserCreateController(),

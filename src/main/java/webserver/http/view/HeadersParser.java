@@ -10,7 +10,7 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toMap;
 
 public class HeadersParser {
-    public static final String KEY_VALUE_DELIMITER = ": ";
+    private static final String KEY_VALUE_DELIMITER = ": ";
 
     private final KeyValuePairParser keyValuePairParser;
 

@@ -35,9 +35,9 @@ public class RequestProcessor {
     }
 
     private Response getResponse(StatusCode statusCode, String text) {
-        Response resourceNotFound = Response.from(statusCode);
-        resourceNotFound.addHeader("Content-Type", "text/html");
-        resourceNotFound.addBody("<h1><meta charset=\"UTF-8\">" + text + "</h1>");
-        return resourceNotFound;
+        Response response = Response.from(statusCode);
+        response.addHeader("Content-Type", "text/html");
+        response.addBody("<h1><meta charset=\"UTF-8\">" + text + "</h1>");
+        return response;
     }
 }
