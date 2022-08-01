@@ -1,6 +1,6 @@
 package webserver.http.request.handler;
 
-public class UserCreateRequestHandler implements RequestHandler{
+public class UserCreateGetRequestHandler implements RequestHandler{
     static final String REQUEST_INDEX = "/user/create";
 
     public static String requestIndex() {

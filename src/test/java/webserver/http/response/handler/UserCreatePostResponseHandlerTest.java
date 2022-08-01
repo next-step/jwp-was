@@ -9,13 +9,13 @@ import db.DataBase;
 import webserver.http.request.header.RequestHeader;
 
 @DisplayName("UserCreateResponseHandler 테스트")
-class UserCreateResponseHandlerTest {
+class UserCreatePostResponseHandlerTest {
 
     @DisplayName("유저 생성 요청")
     @Test
     void createUser() {
         // given
-        UserCreateResponseHandler handler = new UserCreateResponseHandler();
+        UserCreatePostResponseHandler handler = new UserCreatePostResponseHandler();
 
         // when
         String actual = handler.run(

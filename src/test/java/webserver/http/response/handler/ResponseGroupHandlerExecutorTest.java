@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import webserver.http.request.header.RequestHeader;
 
-class ResponseHandlerExecutorTest {
+class ResponseGroupHandlerExecutorTest {
 
     @DisplayName("요청 index가 존재하지 않다면 /index.html의 Location으로 생성되어야 한다.")
     @Test

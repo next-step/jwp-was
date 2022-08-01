@@ -1,28 +1,19 @@
 package webserver.http.response.handler;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import webserver.http.request.handler.HomeRequestHandler;
-import webserver.http.request.handler.UserCreateRequestHandler;
-import webserver.http.request.handler.UserFormRequestHandler;
-import webserver.http.request.handler.UserListRequestHandler;
-import webserver.http.request.handler.UserLoginRequestHandler;
 import webserver.http.request.header.RequestHeader;
+import webserver.http.request.method.HttpMethod;
 
 public class ResponseHandlerExecutor {
-    private static final Map<String, ResponseHandler> RESPONSE = new HashMap<>();
-
-    static {
-        RESPONSE.put(HomeRequestHandler.requestIndex(), new HomeResponseHandler());
-        RESPONSE.put(UserFormRequestHandler.requestIndex(), new UserFormResponseHandler());
-        RESPONSE.put(UserCreateRequestHandler.requestIndex(), new UserCreateResponseHandler());
-        RESPONSE.put(UserLoginRequestHandler.requestIndex(), new UserLoginResponseHandler());
-        RESPONSE.put(UserListRequestHandler.requestIndex(), new UserListResponseHandler());
-    }
+    private final Map<HttpMethod, ResponseGroup> responseMap = Map.ofEntries(
+            Map.entry(HttpMethod.GET, new GetResponseGroup()),
+            Map.entry(HttpMethod.POST, new PostResponseGroup())
+    );
 
     public String run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
-        ResponseHandler responseHandler = RESPONSE.getOrDefault(requestHeader.index(), new DefaultResponseHandler());
-        return responseHandler.run(requestHeader, requestBody, responseBody);
+        ResponseGroup responseGroup = responseMap.get(requestHeader.httpMethod());
+        ResponseHandler handler = responseGroup.getResponse(requestHeader.index());
+        return handler.run(requestHeader, requestBody, responseBody);
     }
 }

@@ -1,5 +1,7 @@
 package webserver.http.request.header;
 
+import webserver.http.request.method.HttpMethod;
+
 public class RequestHeader {
     private final RequestLine requestLine;
     private final RequestHeaderInfos headerInfo;
@@ -18,7 +20,7 @@ public class RequestHeader {
         );
     }
 
-    public String httpMethod() {
+    public HttpMethod httpMethod() {
         return requestLine.httpMethod();
     }
 

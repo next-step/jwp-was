@@ -50,7 +50,7 @@ class RequestHeaderTest {
         RequestLine actual = RequestLine.create(requestLine);
 
         // then
-        assertThat(actual.httpMethod()).isEqualTo(HttpMethod.GET.name());
+        assertThat(actual.httpMethod()).isEqualTo(HttpMethod.GET);
         assertThat(actual.index()).isEqualTo("/docs/index.html");
         assertThat(actual.requestParams()).isEmpty();
         assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name());
@@ -67,7 +67,7 @@ class RequestHeaderTest {
         RequestLine actual = RequestLine.create(requestLine);
 
         // then
-        assertThat(actual.httpMethod()).isEqualTo(HttpMethod.GET.name());
+        assertThat(actual.httpMethod()).isEqualTo(HttpMethod.GET);
         assertThat(actual.index()).isEqualTo("/user");
         assertThat(actual.requestParams()).containsKey("name").containsValue("test");
         assertThat(actual.requestParams()).containsKey("age").containsValue("20");
@@ -85,7 +85,7 @@ class RequestHeaderTest {
         RequestLine actual = RequestLine.create(requestLine);
 
         // then
-        assertThat(actual.httpMethod()).isEqualTo(HttpMethod.POST.name());
+        assertThat(actual.httpMethod()).isEqualTo(HttpMethod.POST);
         assertThat(actual.index()).isEqualTo("/docs/index.html");
         assertThat(actual.requestParams()).isEmpty();
         assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name());
@@ -102,7 +102,7 @@ class RequestHeaderTest {
         RequestLine actual = RequestLine.create(requestLine);
 
         // then
-        assertThat(actual.httpMethod()).isEqualTo(HttpMethod.POST.name());
+        assertThat(actual.httpMethod()).isEqualTo(HttpMethod.POST);
         assertThat(actual.index()).isEqualTo("/user");
         assertThat(actual.requestParams()).containsKey("name").containsValue("test");
         assertThat(actual.requestParams()).containsKey("age").containsValue("20");

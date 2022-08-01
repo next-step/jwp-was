@@ -7,11 +7,11 @@ import java.util.stream.Collectors;
 import webserver.http.response.HttpResponseStatus;
 
 public class ResponseHeader {
-    public static final String BLANK = " ";
-    public static final String PROTOCOL_STATUS = "protocolStatus";
-    public static final String INFO_DELIMITER = ": ";
+    private static final String BLANK = " ";
+    private static final String PROTOCOL_STATUS = "protocolStatus";
+    private static final String INFO_DELIMITER = ": ";
     private static final String SET_COOKIE = "Set-Cookie";
-    public static final String ROOT_PATH = "Path=/";
+    private static final String ROOT_PATH = "Path=/";
 
     private static final String CONTENT_LENGTH = "Content-Length";
     private static final String CONTENT_TYPE = "Content-Type";

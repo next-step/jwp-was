@@ -9,7 +9,7 @@ import webserver.http.response.HttpResponseStatus;
 import webserver.http.response.header.ContentType;
 import webserver.http.response.header.ResponseHeader;
 
-class ResponseHeaderTest {
+class ResponseGroupHeaderTest {
 
     @DisplayName("응답 헤더 생성 테스트")
     @Test

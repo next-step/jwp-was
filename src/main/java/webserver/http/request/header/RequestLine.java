@@ -38,8 +38,8 @@ public class RequestLine {
         );
     }
 
-    String httpMethod() {
-        return httpMethod.name();
+    HttpMethod httpMethod() {
+        return httpMethod;
     }
 
     String index() {

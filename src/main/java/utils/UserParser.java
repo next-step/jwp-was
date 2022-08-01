@@ -8,16 +8,20 @@ import model.User;
 import utils.exception.UserParserException;
 
 public class UserParser {
-    private static final String FIELD_USER_ID = "userId";
-    private static final String FIELD_PASSWORD = "password";
-    private static final String FIELD_NAME = "name";
-    private static final String FIELD_EMAIL = "email";
+    public static final String FIELD_USER_ID = "userId";
+    public static final String FIELD_PASSWORD = "password";
+    public static final String FIELD_NAME = "name";
+    public static final String FIELD_EMAIL = "email";
     private static final String DEFAULT_VALUE = "";
     private static final int KEY_VALUE_LENGTH = 2;
     private static final String REQUEST_BODY_DELIMITER = "&";
     private static final String KEY_VALUE_DELIMITER = "=";
 
     private UserParser() {}
+
+    public static User createUser(String userId, String password, String name, String email) {
+        return new User(userId, password, name, email);
+    }
 
     public static User createUser(String requestBody) {
         String[] userInfo = requestBody.split(REQUEST_BODY_DELIMITER);
