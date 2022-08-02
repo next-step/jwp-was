@@ -22,7 +22,7 @@ public class ResponseHeader {
         return new ResponseHeader(Collections.emptyMap());
     }
 
-    public static ResponseHeader of(Map<String,Object> map) {
+    public static ResponseHeader of(Map<String, Object> map) {
         return new ResponseHeader(map);
     }
 

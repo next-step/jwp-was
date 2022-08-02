@@ -2,10 +2,11 @@ package webserver;
 
 import controller.DispatchController;
 import exception.ResourceNotFoundException;
-import model.*;
+import model.HttpRequest;
+import model.HttpRequestBody;
+import model.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -34,9 +35,7 @@ public class RequestHandler implements Runnable {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
              DataOutputStream dos = new DataOutputStream(connection.getOutputStream())) {
             HttpRequest request = createHttpRequest(bufferedReader);
-
             HttpResponse httpResponse = handle(request);
-
             writeHttpResponse(httpResponse, dos);
         } catch (IOException | URISyntaxException | ResourceNotFoundException e) {
             logger.error(e.getMessage());
@@ -53,12 +52,7 @@ public class RequestHandler implements Runnable {
     }
 
     private HttpResponse handle(HttpRequest request) throws IOException, URISyntaxException {
-
-        HttpResponse httpResponse = dispatchController.handleRequest(request);
-
-
-
-        return httpResponse;
+        return dispatchController.handleRequest(request);
     }
 
     private void writeHttpResponse(HttpResponse httpResponse, DataOutputStream dos) throws IOException {
