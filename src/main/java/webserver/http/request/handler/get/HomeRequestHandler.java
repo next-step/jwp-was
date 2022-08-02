@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 
 import utils.FileIoUtils;
 import webserver.http.request.handler.RequestHandler;
+import webserver.http.request.header.RequestHeader;
 import webserver.http.response.header.ContentType;
 
 public class HomeRequestHandler implements RequestHandler {
@@ -15,7 +16,7 @@ public class HomeRequestHandler implements RequestHandler {
     }
 
     @Override
-    public byte[] execute() throws IOException, URISyntaxException {
-        return FileIoUtils.loadFileFromClasspath(ContentType.filePath(REQUEST_URI));
+    public byte[] execute(RequestHeader requestHeader) throws IOException, URISyntaxException {
+        return FileIoUtils.loadFileFromClasspath(ContentType.filePath(requestHeader.uri()));
     }
 }
