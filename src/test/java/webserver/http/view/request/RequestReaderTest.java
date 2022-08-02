@@ -25,6 +25,7 @@ import static webserver.http.domain.Headers.CONTENT_LENGTH;
 import static webserver.http.domain.Headers.CONTENT_TYPE;
 import static webserver.http.domain.Headers.COOKIE;
 import static webserver.http.domain.Headers.HOST;
+import static webserver.http.domain.request.Method.GET;
 import static webserver.http.domain.request.Method.POST;
 
 class RequestReaderTest {
@@ -150,6 +151,19 @@ class RequestReaderTest {
                         )
                 )
         );
+    }
+
+    @Test
+    public void request_GET() throws Exception {
+        String testDirectory = "./src/test/resources/";
+        InputStream in = new FileInputStream(testDirectory + "Http_GET.txt");
+        RequestReader requestReader = new RequestReader();
+        Request request = requestReader.read(new BufferedReader(new InputStreamReader(in)));
+
+        assertThat(request.getMethod()).isEqualTo(GET);
+        assertThat(request.getPath()).isEqualTo("/user/create");
+        assertThat(request.getHeader("Connection")).isEqualTo("keep-alive");
+        assertThat(request.getParameter("userId")).isEqualTo("javajigi");
     }
 
     @Test

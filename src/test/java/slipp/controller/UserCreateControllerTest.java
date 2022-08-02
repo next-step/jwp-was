@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import slipp.db.DataBase;
 import slipp.model.User;
+import slipp.service.UserCreateService;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
 import webserver.http.domain.request.Method;
@@ -33,7 +34,7 @@ import static webserver.http.domain.request.Method.GET;
 import static webserver.http.domain.request.Method.POST;
 
 class UserCreateControllerTest {
-    private final UserCreateController userCreateController = new UserCreateController();
+    private final UserCreateController userCreateController = new UserCreateController(new UserCreateService());
 
     @AfterEach
     void tearDown() {
@@ -60,7 +61,7 @@ class UserCreateControllerTest {
         );
     }
 
-    @DisplayName("parameter로 정보를 받아 회원가입처리 후 302 Response를 응답한다..")
+    @DisplayName("parameter로 정보를 받아 회원가입처리 후 302 Response를 응답한다.")
     @Test
     void handle() {
         RequestLine requestLine = new RequestLine(
@@ -99,5 +100,43 @@ class UserCreateControllerTest {
                         "email"
                 )
         );
+    }
+
+    @DisplayName("중복된 아이디로 회원가입을 시도하는 경우, 재로그인 페이지로 302 Response를 응답한다.")
+    @Test
+    void handle_duplication_user_id() {
+        DataBase.addUser(new User(
+                        "someId",
+                        "123",
+                        "이름",
+                        "email@emart"
+                )
+        );
+
+        RequestLine requestLine = new RequestLine(
+                POST,
+                new URI(
+                        "/user/create",
+                        new Parameters(new HashMap<>(Map.of(
+                                "userId", new ArrayList<>(List.of("someId")),
+                                "password", new ArrayList<>(List.of("password")),
+                                "name", new ArrayList<>(List.of("name")),
+                                "email", new ArrayList<>(List.of("email"))
+                        )))
+                ),
+                Protocol.HTTP_1_1);
+        Request request = new Request(requestLine, new Headers(new LinkedHashMap<>()));
+
+        Response actual = userCreateController.handle(request);
+
+        assertThat(actual).usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .isEqualTo(new Response(
+                        Status.found(),
+                        new Headers(Map.of(
+                                LOCATION, "/user/form_failed.html"
+                        )),
+                        null
+                ));
     }
 }
