@@ -89,8 +89,22 @@
   - void invalidate(): 현재 세션에 저장되어 있는 모든 값을 삭제
 
 
+## STEP 5. Thread Pool 적용
+### 요구사항 1
+- 현재 구현되어 있는 웹 애플리케이션 서버(이하 WAS)는 사용자 요청이 있을 때마다 Thread를 생성해 사용자 요청을 처리
+- WAS가 이와 같이 처리할 경우 다음과 같은 문제가 발생할 가능성이 존재
+  - 사용자 요청이 있을 때마다 Thread를 생성해야 하기 때문 
+  - Thread 생성 비용이 발생해 성능이 떨어짐
+  - 동시 접속자가 많아질 경우 WAS가 메모리 자원의 한계, Context Switching 비용의 증가로 다운될 가능성이 높음
+- WAS는 많은 동시 접속자를 처리하는 것도 중요하지만 동시 접속자가 많더라도 다운되지 않으면서 안정적으로 서비스하는 것이 더 중요
+- WAS에 Thread Pool을 적용해 안정적인 서비스가 가능하도록 해야함
+- Java에서 기본으로 제공하는 ThreadPoolExecutor를 활용해 ThreadPool 기능을 추가
+- 최대 ThradPool의 크기는 250, 모든 Thread가 사용 중인(Busy) 상태이면 100명까지 대기 상태가 되도록 구현
 
-
+### 요구사항 2
+- src/test/java의 webserver.ExecutorsTest는 100개의 Thread가 동시에 실행하도록 구현한 테스트 코드
+- Spring에서 제공하는 RestTemplate을 활용해 서버의 ThreadPool 수보다 많은 요청을 동시에 보내도록 함
+- 예를 들어 서버의 최대 Thread Pool 수를 5로 설정하고, ExecutorsTest의 Executors.newFixedThreadPool(10)과 같이 설정해 동시에 10개의 요청이 발생하도록 구현
 
 
 
