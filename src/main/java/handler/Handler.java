@@ -6,7 +6,8 @@ import java.util.stream.Collectors;
 
 public enum Handler {
     INDEX_HANDLER(new IndexHandler()),
-    USER_HANDLER(new UserHandler());
+    USER_HANDLER(new UserHandler()),
+    RESOURCE_HANDLER(new StaticResourceHandler());
 
     private final PathHandler pathHandler;
 

@@ -18,12 +18,12 @@ public class IndexHandler implements PathHandler {
             return false;
         }
 
-        return resources[ROOT_RESOURCE_INDEX].contains(TEMPLATE_IDENTIFIER);
+        return hasResourceIdentifier(resources[ROOT_RESOURCE_INDEX]);
     }
 
     @Override
     public HttpResponseHeader Handle(HttpRequestHeader httpRequestHeader) {
-        if (hasTemplateIdentifier(httpRequestHeader)) {
+        if (hasResourceIdentifier(httpRequestHeader.getPath())) {
             byte[] body = FileIoUtils.loadFileFromClasspath(httpRequestHeader.getPath());
             HttpHeader httpOkHeader = HttpHeaderParser.parseHeader(
                 Arrays.asList(

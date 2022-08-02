@@ -70,3 +70,9 @@
     - [x] cookie를 체크하는 로직을 추가한다.
     - [x] 동적으로 html을 생성하기 위해 handlebars.java template engine을 활용한다.
 - [x] 로그인하지 않은 상태라면 로그인 페이지(login.html)로 이동한다.
+
+
+- 기능 요구사항 7
+- [x] Stylesheet 파일을 지원하도록 구현
+  - [x] 응답 헤더의 Content-Type을 text/css로 전송한다.
+  - [x] resources Handler를 추가한다.

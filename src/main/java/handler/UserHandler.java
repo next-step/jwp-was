@@ -17,7 +17,8 @@ public class UserHandler implements PathHandler {
     private static final String USER_PATH = "user";
     private static final String CREATE_REQUEST_PATH = "/user/create";
     private static final String LOGIN = "/user/login";
-    private static final String FIND_ALL = "/user/list";
+    private static final String FIND_ALL_PATH = "/user/list.html";
+    private static final String FIND_ALL_TEMPLATE = "/user/list";
     private static final String LOGIN_PASSED = "logined=true";
     private static final UserService userService = new UserService();
 
@@ -34,12 +35,6 @@ public class UserHandler implements PathHandler {
 
     @Override
     public HttpResponseHeader Handle(HttpRequestHeader httpRequestHeader) {
-        if (hasTemplateIdentifier(httpRequestHeader)) {
-            byte[] body = FileIoUtils.loadFileFromClasspath(httpRequestHeader.getPath());
-
-            return new HttpResponseHeader(ResponseLine.httpOk(), createOkTemplateHttpHeader(body), body);
-        }
-
         if (httpRequestHeader.isEqualPath(CREATE_REQUEST_PATH)) {
             userService.createUser(httpRequestHeader.getRequestBody());
 
@@ -52,8 +47,14 @@ public class UserHandler implements PathHandler {
             return login(httpRequestHeader.getRequestBody());
         }
 
-        if (httpRequestHeader.isEqualPath(FIND_ALL)) {
+        if (httpRequestHeader.isEqualPath(FIND_ALL_PATH)) {
             return findAll(httpRequestHeader);
+        }
+
+        if (hasResourceIdentifier(httpRequestHeader.getPath())) {
+            byte[] body = FileIoUtils.loadFileFromClasspath(httpRequestHeader.getPath());
+
+            return new HttpResponseHeader(ResponseLine.httpOk(), createOkTemplateHttpHeader(body), body);
         }
 
         return new HttpResponseHeader(ResponseLine.httpBadRequest(), null, new byte[0]);
@@ -128,6 +129,6 @@ public class UserHandler implements PathHandler {
     private byte[] createUserProfileBody() {
         Collection<User> users = DataBase.findAll();
 
-        return HandleBarCompiler.compile(FIND_ALL, users).getBytes();
+        return HandleBarCompiler.compile(FIND_ALL_TEMPLATE, users).getBytes();
     }
 }
