@@ -18,6 +18,9 @@ public class RequestHeader {
     private static final String CONNECTION = "Connection";
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String CONTENT_LENGTH = "Content-Length";
+    private static final String COOKIE = "Cookie";
+
+    private static final String EMPTY_VALUE = "";
 
     private Map<String, String> headers = new HashMap<>();
 
@@ -65,5 +68,12 @@ public class RequestHeader {
 
     public String getContentType() {
         return headers.get(CONTENT_TYPE);
+    }
+
+    public String getCookie() {
+        if(!headers.containsKey(COOKIE)) {
+            return EMPTY_VALUE;
+        }
+        return headers.get(COOKIE);
     }
 }
