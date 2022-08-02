@@ -6,10 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import webserver.http.request.header.Index;
 import webserver.http.request.header.exception.InvalidUriException;
 
-class IndexTest {
+class UriTest {
 
     @DisplayName("path는 / 로 시작되어야 한다.")
     @Test
@@ -17,9 +16,9 @@ class IndexTest {
         // given
         // when
         // then
-        assertThatThrownBy(() -> new Index("user"))
+        assertThatThrownBy(() -> new Uri("user"))
                 .isInstanceOf(InvalidUriException.class)
-                .hasMessage("유효한 index가 아닙니다.");
+                .hasMessage("유효한 uri가 아닙니다.");
     }
 
     @DisplayName("생성")
@@ -29,7 +28,7 @@ class IndexTest {
         String path = "/user";
 
         // when
-        Index actual = new Index(path);
+        Uri actual = new Uri(path);
 
         // then
         assertThat(actual.toString()).isEqualTo(path);

@@ -10,14 +10,14 @@ import webserver.http.response.handler.post.UserLoginResponseHandler;
 
 public class PostResponseGroup implements ResponseGroup {
     private final Map<String, ResponseHandler> handlerMap = Map.ofEntries(
-            Map.entry(UserCreateByBodyRequestHandler.requestIndex(), new UserCreatePostResponseHandler()),
-            Map.entry(UserLoginRequestHandler.requestIndex(), new UserLoginResponseHandler())
+            Map.entry(UserCreateByBodyRequestHandler.requestUri(), new UserCreatePostResponseHandler()),
+            Map.entry(UserLoginRequestHandler.requestUri(), new UserLoginResponseHandler())
     );
 
     @Override
-    public ResponseHandler getResponse(String index) {
-        if (handlerMap.containsKey(index)) {
-            return handlerMap.get(index);
+    public ResponseHandler getResponse(String uri) {
+        if (handlerMap.containsKey(uri)) {
+            return handlerMap.get(uri);
         }
         throw new InvalidRequestException("지원되지 않는 요청입니다.");
     }

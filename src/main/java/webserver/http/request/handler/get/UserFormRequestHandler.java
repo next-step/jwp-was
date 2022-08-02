@@ -8,14 +8,14 @@ import webserver.http.request.handler.RequestHandler;
 import webserver.http.response.header.ContentType;
 
 public class UserFormRequestHandler implements RequestHandler {
-    private static final String REQUEST_INDEX = "/user/form.html";
+    private static final String REQUEST_URI = "/user/form.html";
 
-    public static String requestIndex() {
-        return REQUEST_INDEX;
+    public static String requestUri() {
+        return REQUEST_URI;
     }
 
     @Override
     public byte[] execute() throws IOException, URISyntaxException {
-        return FileIoUtils.loadFileFromClasspath(ContentType.filePath(REQUEST_INDEX));
+        return FileIoUtils.loadFileFromClasspath(ContentType.filePath(REQUEST_URI));
     }
 }

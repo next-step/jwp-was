@@ -6,10 +6,10 @@ import model.UserList;
 import webserver.http.request.handler.RequestHandler;
 
 public class UserListRequestHandler implements RequestHandler {
-    private static final String REQUEST_INDEX = "/user/list";
+    private static final String REQUEST_URI = "/user/list";
 
-    public static String requestIndex() {
-        return REQUEST_INDEX;
+    public static String requestUri() {
+        return REQUEST_URI;
     }
 
     @Override

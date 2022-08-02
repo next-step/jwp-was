@@ -2,10 +2,10 @@ package webserver.http.request.header;
 
 import webserver.http.request.header.exception.InvalidUriException;
 
-public class Index {
+public class Uri {
     private final String contents;
 
-    Index(String contents) {
+    Uri(String contents) {
         validate(contents);
         this.contents = contents;
     }
@@ -15,9 +15,9 @@ public class Index {
         return contents;
     }
 
-    private void validate(String index) {
-        if (!index.startsWith("/")) {
-            throw new InvalidUriException("유효한 index가 아닙니다.");
+    private void validate(String uri) {
+        if (!uri.startsWith("/")) {
+            throw new InvalidUriException("유효한 uri가 아닙니다.");
         }
     }
 }

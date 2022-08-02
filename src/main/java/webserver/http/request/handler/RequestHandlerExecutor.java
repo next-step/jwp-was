@@ -20,13 +20,13 @@ public class RequestHandlerExecutor {
     private static final Map<String, RequestHandler> REQUEST = new HashMap<>();
 
     static {
-        REQUEST.put(HomeRequestHandler.requestIndex(), new HomeRequestHandler());
-        REQUEST.put(UserFormRequestHandler.requestIndex(), new UserFormRequestHandler());
-        REQUEST.put(UserListRequestHandler.requestIndex(), new UserListRequestHandler());
+        REQUEST.put(HomeRequestHandler.requestUri(), new HomeRequestHandler());
+        REQUEST.put(UserFormRequestHandler.requestUri(), new UserFormRequestHandler());
+        REQUEST.put(UserListRequestHandler.requestUri(), new UserListRequestHandler());
     }
 
     public byte[] run(RequestHeader requestHeader) {
-        RequestHandler requestHandler = REQUEST.get(requestHeader.index());
+        RequestHandler requestHandler = REQUEST.get(requestHeader.uri());
         try {
             if (null != requestHandler) {
                 return requestHandler.execute();
@@ -34,7 +34,7 @@ public class RequestHandlerExecutor {
             DefaultRequestHandler defaultRequestHandler = new DefaultRequestHandler();
             return defaultRequestHandler.execute(requestHeader);
         } catch (IOException | URISyntaxException e) {
-            logger.error("http request error index={}", requestHeader.index(), e);
+            logger.error("http request error uri={}", requestHeader.uri(), e);
         }
         throw new InvalidRequestException("지원하지 않는 요청입니다.");
     }

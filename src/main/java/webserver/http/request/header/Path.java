@@ -7,11 +7,11 @@ import webserver.http.request.header.exception.InvalidPathException;
 public class Path {
     private static final String PARAM_DELIMITER = "\\?";
     private static final int URI_REQUEST_PARAMS_SIZE = 2;
-    private final Index index;
+    private final Uri uri;
     private final RequestParams requestParams;
 
-    private Path(Index index, RequestParams requestParams) {
-        this.index = index;
+    private Path(Uri uri, RequestParams requestParams) {
+        this.uri = uri;
         this.requestParams = requestParams;
     }
 
@@ -21,8 +21,8 @@ public class Path {
         return createPath(pathQueryParams);
     }
 
-    String index() {
-        return index.toString();
+    String uri() {
+        return uri.toString();
     }
 
     Map<String, String> requestParams() {
@@ -31,9 +31,9 @@ public class Path {
 
     private static Path createPath(String[] path) {
         if (hasQueryParams(path)) {
-            return new Path(new Index(path[0]), new RequestParams(path[1]));
+            return new Path(new Uri(path[0]), new RequestParams(path[1]));
         }
-        return new Path(new Index(path[0]), new RequestParams());
+        return new Path(new Uri(path[0]), new RequestParams());
     }
 
     private static boolean hasQueryParams(String[] path) {

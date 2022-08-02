@@ -24,8 +24,8 @@ public class RequestHeader {
         return requestLine.httpMethod();
     }
 
-    public String index() {
-        return requestLine.index();
+    public String uri() {
+        return requestLine.uri();
     }
     public String requestParams(String key) {
         return requestLine.requestParams().getOrDefault(key, "");

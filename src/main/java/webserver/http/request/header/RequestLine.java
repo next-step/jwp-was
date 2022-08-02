@@ -42,11 +42,11 @@ public class RequestLine {
         return httpMethod;
     }
 
-    String index() {
-        if (path.index().equals(EMPTY_PATH)) {
+    String uri() {
+        if (path.uri().equals(EMPTY_PATH)) {
             return DEFAULT_HTML;
         }
-        return path.index();
+        return path.uri();
     }
 
     Map<String, String> requestParams() {

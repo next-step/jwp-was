@@ -12,7 +12,7 @@ public class HomeResponseHandler implements ResponseHandler {
     @Override
     public String run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
         return new ResponseHeader(requestHeader.protocolVersion(), HttpResponseStatus.OK)
-                .addContentType(ContentType.response(requestHeader.index()))
+                .addContentType(ContentType.response(requestHeader.uri()))
                 .addContentLength(responseBody.length)
                 .addLocation(LOCATION)
                 .toString();

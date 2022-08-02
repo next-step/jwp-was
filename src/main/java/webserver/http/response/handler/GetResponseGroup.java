@@ -14,14 +14,14 @@ import webserver.http.response.handler.get.UserListResponseHandler;
 
 public class GetResponseGroup implements ResponseGroup {
     private final Map<String, ResponseHandler> handlerMap = Map.ofEntries(
-            Map.entry(HomeRequestHandler.requestIndex(), new HomeResponseHandler()),
-            Map.entry(UserFormRequestHandler.requestIndex(), new UserFormResponseHandler()),
-            Map.entry(UserListRequestHandler.requestIndex(), new UserListResponseHandler()),
-            Map.entry(UserCreateByQueryParamRequestHandler.requestIndex(), new UserCreateGetResponseHandler())
+            Map.entry(HomeRequestHandler.requestUri(), new HomeResponseHandler()),
+            Map.entry(UserFormRequestHandler.requestUri(), new UserFormResponseHandler()),
+            Map.entry(UserListRequestHandler.requestUri(), new UserListResponseHandler()),
+            Map.entry(UserCreateByQueryParamRequestHandler.requestUri(), new UserCreateGetResponseHandler())
     );
 
     @Override
-    public ResponseHandler getResponse(String index) {
-        return handlerMap.getOrDefault(index, new DefaultResponseHandler());
+    public ResponseHandler getResponse(String uri) {
+        return handlerMap.getOrDefault(uri, new DefaultResponseHandler());
     }
 }

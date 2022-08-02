@@ -18,15 +18,15 @@ public enum ContentType {
         this.filePath = filePath;
     }
 
-    public static ContentType response(String index) {
+    public static ContentType response(String uri) {
         return Arrays.stream(values())
-                .filter(contentType -> index.endsWith(contentType.fileExtension))
+                .filter(contentType -> uri.endsWith(contentType.fileExtension))
                 .findAny()
                 .orElse(HTML);
     }
 
-    public static String filePath(String index) {
-        return response(index).filePath + index;
+    public static String filePath(String uri) {
+        return response(uri).filePath + uri;
     }
 
     public String getContent() {

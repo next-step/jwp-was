@@ -50,7 +50,7 @@ class RequestHeaderTest {
         // then
         assertAll(
                 () -> assertThat(actual.httpMethod()).isEqualTo(HttpMethod.GET),
-                () -> assertThat(actual.index()).isEqualTo("/docs/index.html"),
+                () -> assertThat(actual.uri()).isEqualTo("/docs/index.html"),
                 () -> assertThat(actual.requestParams()).isEmpty(),
                 () -> assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name()),
                 () -> assertThat(actual.version()).isEqualTo("1.1")
@@ -69,7 +69,7 @@ class RequestHeaderTest {
         // then
         assertAll(
                 () -> assertThat(actual.httpMethod()).isEqualTo(HttpMethod.GET),
-                () -> assertThat(actual.index()).isEqualTo("/user"),
+                () -> assertThat(actual.uri()).isEqualTo("/user"),
                 () -> assertThat(actual.requestParams()).containsKey("name").containsValue("test"),
                 () -> assertThat(actual.requestParams()).containsKey("age").containsValue("20"),
                 () -> assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name()),
@@ -89,7 +89,7 @@ class RequestHeaderTest {
         // then
         assertAll(
                 () -> assertThat(actual.httpMethod()).isEqualTo(HttpMethod.POST),
-                () -> assertThat(actual.index()).isEqualTo("/docs/index.html"),
+                () -> assertThat(actual.uri()).isEqualTo("/docs/index.html"),
                 () -> assertThat(actual.requestParams()).isEmpty(),
                 () -> assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name()),
                 () -> assertThat(actual.version()).isEqualTo("1.1")
@@ -108,7 +108,7 @@ class RequestHeaderTest {
         // then
         assertAll(
                 () -> assertThat(actual.httpMethod()).isEqualTo(HttpMethod.POST),
-                () -> assertThat(actual.index()).isEqualTo("/user"),
+                () -> assertThat(actual.uri()).isEqualTo("/user"),
                 () -> assertThat(actual.requestParams()).containsKey("name").containsValue("test"),
                 () -> assertThat(actual.requestParams()).containsKey("age").containsValue("20"),
                 () -> assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name()),

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import webserver.http.request.header.exception.InvalidPathException;
-import webserver.http.request.header.Path;
 
 class PathTest {
 
@@ -32,7 +31,7 @@ class PathTest {
         Path queryString = Path.create(path);
 
         // then
-        assertThat(queryString.index()).isEqualTo(path);
+        assertThat(queryString.uri()).isEqualTo(path);
         assertThat(queryString.requestParams()).isEmpty();
     }
 
@@ -46,7 +45,7 @@ class PathTest {
         Path queryString = Path.create(path);
 
         // then
-        assertThat(queryString.index()).isEqualTo("/user");
+        assertThat(queryString.uri()).isEqualTo("/user");
         assertThat(queryString.requestParams()).hasSize(2);
         assertThat(queryString.requestParams()).containsKey("name").containsValue("test");
         assertThat(queryString.requestParams()).containsKey("age").containsValue("20");

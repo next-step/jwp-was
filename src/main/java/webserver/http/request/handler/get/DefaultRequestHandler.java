@@ -10,6 +10,6 @@ import webserver.http.response.header.ContentType;
 public class DefaultRequestHandler{
 
     public byte[] execute(RequestHeader requestHeader) throws IOException, URISyntaxException {
-        return FileIoUtils.loadFileFromClasspath(ContentType.filePath(requestHeader.index()));
+        return FileIoUtils.loadFileFromClasspath(ContentType.filePath(requestHeader.uri()));
     }
 }
