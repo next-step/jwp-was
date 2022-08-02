@@ -1,16 +1,22 @@
 package webserver.http;
 
 public enum HttpStatus {
-    OK(200),
-    FOUND(302);
+    OK(200, "Ok"),
+    FOUND(302, "Found");
 
     private final int code;
+    private final String reasonPhrase;
 
-    HttpStatus(int code) {
+    HttpStatus(int code, String reasonPhrase) {
         this.code = code;
+        this.reasonPhrase = reasonPhrase;
     }
 
     public int getCode() {
         return code;
+    }
+
+    public String getReasonPhrase() {
+        return reasonPhrase;
     }
 }

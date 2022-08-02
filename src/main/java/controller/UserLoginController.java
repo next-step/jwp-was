@@ -6,24 +6,23 @@ import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
 public class UserLoginController extends Controller {
+    private static final String LOGINED_KEY = "logined";
+
     @Override
-    public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public HttpResponse doPost(HttpRequest httpRequest) {
         final User user = DataBase.findUserById(httpRequest.getAttribute("userId"));
         if (loginFailed(user, httpRequest.getAttribute("password"))) {
-            setLoginCookie(httpResponse, false);
-            httpResponse.redirect("/user/login_failed.html");
-            return;
+            final HttpResponse httpResponse = HttpResponse.sendRedirect("/user/login_failed.html");
+            httpResponse.setCookie("logined", false);
+            return httpResponse;
         }
 
-        setLoginCookie(httpResponse, true);
-        httpResponse.redirect("/index.html");
+        final HttpResponse httpResponse = HttpResponse.sendRedirect("/index.html");
+        httpResponse.setCookie(LOGINED_KEY, true);
+        return httpResponse;
     }
 
     private boolean loginFailed(User user, String password) {
         return user == null || !user.equalsPassword(password);
-    }
-
-    private void setLoginCookie(HttpResponse httpResponse, boolean login) {
-        httpResponse.addHeader("Set-Cookie", "logined=" + login + "; Path=/");
     }
 }

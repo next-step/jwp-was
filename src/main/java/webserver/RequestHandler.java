@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import webserver.http.HttpRequest;
 import webserver.http.HttpRequestParser;
 import webserver.http.HttpResponse;
+import webserver.http.HttpResponseWriter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +17,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class RequestHandler implements Runnable {
-    public static final Pattern TEMPLATES_PATTERN = Pattern.compile("(.+).(htm|html)");
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
     private static final Map<String, Controller> requestMapping = new HashMap<>();
 
@@ -41,32 +40,23 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             final HttpRequest httpRequest = HttpRequestParser.parse(in);
-            final HttpResponse httpResponse = new HttpResponse(out, httpRequest);
-            handle(httpRequest, httpResponse);
+            final HttpResponse httpResponse = handle(httpRequest);
+            new HttpResponseWriter(out).write(httpResponse);
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
     }
 
-    private void handle(HttpRequest httpRequest, HttpResponse httpResponse) {
+    private HttpResponse handle(HttpRequest httpRequest) {
         if (requestMapping.containsKey(httpRequest.getPath())) {
             final Controller controller = requestMapping.get(httpRequest.getPath());
             if (httpRequest.isGet()) {
-                controller.doGet(httpRequest, httpResponse);
+                return controller.doGet(httpRequest);
             }
             if (httpRequest.isPost()) {
-                controller.doPost(httpRequest, httpResponse);
+                return controller.doPost(httpRequest);
             }
-            return;
         }
-        forwardNotMapped(httpRequest, httpResponse);
-    }
-
-    private void forwardNotMapped(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (TEMPLATES_PATTERN.matcher(httpRequest.getPath()).matches()) {
-            httpResponse.forwardTemplate(httpRequest.getPath());
-            return;
-        }
-        httpResponse.forwardStatic(httpRequest.getPath());
+        return HttpResponse.forward(httpRequest.getPath());
     }
 }

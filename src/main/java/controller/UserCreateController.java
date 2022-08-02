@@ -11,7 +11,7 @@ public class UserCreateController extends Controller {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserCreateController.class);
 
     @Override
-    public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public HttpResponse doPost(HttpRequest httpRequest) {
         final User user = new User(
                 httpRequest.getAttribute("userId"),
                 httpRequest.getAttribute("password"),
@@ -21,6 +21,6 @@ public class UserCreateController extends Controller {
 
         DataBase.addUser(user);
 
-        httpResponse.redirect("/index.html");
+        return HttpResponse.sendRedirect("/index.html");
     }
 }

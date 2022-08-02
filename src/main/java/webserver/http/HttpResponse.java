@@ -1,142 +1,87 @@
 package webserver.http;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
 public class HttpResponse {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpResponse.class);
 
-    private final DataOutputStream dos;
-    private final HttpProtocol httpProtocol;
-    private final Map<String, Object> headers = new HashMap<>();
+    private final StatusLine statusLine;
+    private final Headers headers = new Headers();
+    private final String path;
+    private final Object content;
 
-    public HttpResponse(OutputStream out, HttpRequest httpRequest) {
-        this.dos = new DataOutputStream(out);
-        this.httpProtocol = httpRequest.getHttpProtocol();
+    private HttpResponse(HttpStatus httpStatus, String path) {
+        this.statusLine = new StatusLine(httpStatus);
+        this.path = path;
+        this.content = null;
+    }
+
+    private HttpResponse(HttpStatus httpStatus, String path, Object content) {
+        this.statusLine = new StatusLine(httpStatus);
+        this.path = path;
+        this.content = content;
+    }
+
+    public static HttpResponse forward(String path) {
+        return new HttpResponse(HttpStatus.OK, path);
+    }
+
+    public static HttpResponse forward(String path, Object context) {
+        return new HttpResponse(HttpStatus.OK, path, context);
+    }
+
+    public static HttpResponse sendRedirect(String path) {
+        final HttpResponse httpResponse = new HttpResponse(HttpStatus.FOUND, path);
+        httpResponse.addHeader("Location", path);
+        return httpResponse;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HttpResponse that = (HttpResponse) o;
+        return Objects.equals(statusLine, that.statusLine) && Objects.equals(headers, that.headers) && Objects.equals(path, that.path);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(statusLine, headers, path);
+    }
+
+    public StatusLine getStatusLine() {
+        return statusLine;
+    }
+
+    public Headers getHeaders() {
+        return headers;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public Object getContent() {
+        return content;
     }
 
     public void addHeader(String key, Object value) {
-        headers.put(key, value);
+        headers.setHeader(key, value);
     }
 
-    public void forwardTemplate(String path) {
-        final byte[] payload = getTemplate(path);
-        writeForward(payload);
+    public void setContentLength(int length) {
+        addHeader("Content-Length", length);
     }
 
-    public void forwardStatic(String path) {
-        final byte[] payload = getStatic(path);
-        writeForward(payload);
+    public boolean isDynamic() {
+        return !path.contains(".");
     }
 
-    public void forward(String path, Object context) {
-        final byte[] payload = getPayload(path, context);
-        writeForward(payload);
-    }
-
-    public void redirect(String path) {
-        addHeader("Location", path);
-        write(HttpStatus.FOUND);
-    }
-
-    private void writeForward(byte[] payload) {
-        addHeader("Content-Length", payload.length);
-        write(payload, HttpStatus.OK);
-    }
-
-    private byte[] getTemplate(String path) {
-        try {
-            return FileIoUtils.loadFileFromClasspath("./templates" + path);
-        } catch (IOException | URISyntaxException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private byte[] getStatic(String path) {
-        try {
-            return FileIoUtils.loadFileFromClasspath("./static" + path);
-        } catch (IOException | URISyntaxException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private byte[] getPayload(String path, Object context) {
-        try {
-            Template template = compileTemplate(path);
-            final String html = template.apply(context);
-            return html.getBytes(StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private Template compileTemplate(String path) {
-        Template template;
-        try {
-            template = getHandlebars().compile(path);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-        return template;
-    }
-
-    private Handlebars getHandlebars() {
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".html");
-        return new Handlebars(loader);
-    }
-
-    private void write(HttpStatus httpStatus) {
-        try {
-            writeResponseLine(httpStatus);
-            writeHeaders();
-            dos.flush();
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private void write(byte[] payload, HttpStatus httpStatus) {
-        try {
-            writeResponseLine(httpStatus);
-            writeHeaders();
-            writePayload(payload);
-            dos.flush();
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private void writeResponseLine(HttpStatus httpStatus) throws IOException {
-        dos.writeBytes(String.format("%s/%s %d %s\r\n", httpProtocol.getProtocol(), httpProtocol.getVersion(), httpStatus.getCode(), httpStatus.name()));
-    }
-
-    private void writeHeaders() {
-        headers.forEach((key, value) -> {
-            try {
-                dos.writeBytes(String.format("%s: %s\r\n", key, value));
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
-        });
-    }
-
-    private void writePayload(byte[] payload) throws IOException {
-        dos.writeBytes("\r\n");
-        dos.write(payload, 0, payload.length);
+    public void setCookie(String key, Object value) {
+        headers.setHeader("Set-Cookie", String.format("%s=%s; Path=/", key, value));
+        headers.setCookie(key, value);
     }
 }
