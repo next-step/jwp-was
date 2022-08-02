@@ -45,29 +45,6 @@ public class RequestHandler implements Runnable {
 //                } else {
 //                    HttpResponseWriter.response302CookieHeader(dos,"logined=false","/user/login_failed.html");
 //                }
-//            } else if ("/user/list".equals(url)) {
-//                if (!logined) {
-//                    HttpResponseWriter.responseResource(out, "/user/login.html");
-//                }
-//                Collection<User> users = DataBase.findAll();
-//                String userList = HandleBarTemplateLoader.load("user/list", users);
-//                HttpResponseWriter.responseUserListResource(out, userList);
-//            } else if (url.endsWith(".css")) {
-//                HttpResponseWriter.responseStaticResource(out, url, "css");
-//            } else if (url.endsWith(".js")) {
-//                HttpResponseWriter.responseStaticResource(out, url, "js");
-//            } else if (url.endsWith(".ttf")) {
-//                HttpResponseWriter.responseStaticResource(out, url, "fonts");
-//            } else if (url.endsWith(".woff")) {
-//                HttpResponseWriter.responseStaticResource(out, url, "fonts");
-//            } else if (url.endsWith(".svg")) {
-//                HttpResponseWriter.responseStaticResource(out, url, "fonts");
-//            }else if (url.endsWith(".png")) {
-//                HttpResponseWriter.responseStaticResource(out, url, "images");
-//            } else if (url.endsWith(".ico")) {
-//                HttpResponseWriter.responseResource(out, url);
-//            } else {
-//                HttpResponseWriter.responseResource(out, url);
 //            }
         } catch (IOException e) {
             throw new RuntimeException(e);
