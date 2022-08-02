@@ -12,8 +12,8 @@ import java.util.Map;
 
 public class SignUpController {
 
-    public static final String url = "/user/create";
-    public static final String viewPath = "/user/form.html";
+    public static final String URL = "/user/create";
+    public static final String VIEW_PATH = "/user/form.html";
     private static final String redirectPath = "/index.html";
 
     public HttpResponse run(HttpRequest httpRequest) {
@@ -42,7 +42,7 @@ public class SignUpController {
                 .email(email)
                 .build();
 
-        return HttpResponse.getView(viewPath);
+        return HttpResponse.getView(VIEW_PATH);
     }
 
     private HttpResponse doPost(RequestBody requestBody) {

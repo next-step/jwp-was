@@ -15,6 +15,7 @@ import java.util.Optional;
 import controller.HomeController;
 import controller.LogInController;
 import controller.SignUpController;
+import controller.UserListController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -94,18 +95,21 @@ public class RequestHandler implements Runnable {
     private HttpResponse route(final HttpRequest httpRequest){
         final String path = httpRequest.getRequestLine().getUrl().getPath();
 
-        if (path.equals(SignUpController.url) || path.equals(SignUpController.viewPath)) {
+        if (path.equals(SignUpController.URL) || path.equals(SignUpController.VIEW_PATH)) {
             SignUpController signUpController = new SignUpController();
             return signUpController.run(httpRequest);
-        } else if (path.equals(HomeController.url) || path.equals(HomeController.viewPath)) {
+        } else if (path.equals(HomeController.URL) || path.equals(HomeController.VIEW_PATH)) {
             HomeController homeController = new HomeController();
             return homeController.run(httpRequest);
-        } else if (path.equals(LogInController.url) || path.equals(LogInController.viewPath)) {
+        } else if (path.equals(LogInController.URL) || path.equals(LogInController.VIEW_PATH)) {
             LogInController logInController = new LogInController();
             return logInController.run(httpRequest);
+        } else if (path.equals(UserListController.URL) || path.equals(UserListController.VIEW_PATH)) {
+            UserListController userListController = new UserListController();
+            return userListController.run(httpRequest);
         }
 
-        return null; // TODO: server error 로 변경하기
+        return null; // TODO: 404 Error 로 변경하기
     }
 
     private void writeResponseLine(final DataOutputStream dos, final ResponseLine responseLine) {

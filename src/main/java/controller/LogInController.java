@@ -11,8 +11,8 @@ import java.util.Map;
 
 public class LogInController {
 
-    public static final String url = "/user/login";
-    public static final String viewPath = "/user/login.html";
+    public static final String URL = "/user/login";
+    public static final String VIEW_PATH = "/user/login.html";
     public static final String successRedirectPath = "/index.html";
     public static final String failRedirectPath = "/user/login_failed.html";
 
@@ -32,7 +32,7 @@ public class LogInController {
     }
 
     private HttpResponse doGet() {
-        return HttpResponse.getView(viewPath);
+        return HttpResponse.getView(VIEW_PATH);
     }
 
     private HttpResponse doPost(RequestBody requestBody) {
