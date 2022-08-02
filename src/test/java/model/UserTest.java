@@ -19,7 +19,7 @@ class UserTest {
                 "email@email"
         );
 
-        boolean actual = user.hasPassword(password);
+        boolean actual = user.equalsPassword(password);
 
         assertThat(actual).isEqualTo(expected);
     }

@@ -19,6 +19,10 @@ public class Cookie {
         this.path = path;
     }
 
+    public static Cookie of(String name, boolean value) {
+        return new Cookie(name, String.valueOf(value), DEFAULT_PATH);
+    }
+
     public boolean hasValue(String value) {
         return Objects.equals(value, this.value);
     }

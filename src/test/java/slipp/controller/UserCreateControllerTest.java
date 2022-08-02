@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -88,7 +89,9 @@ class UserCreateControllerTest {
                         null
                 ));
 
-        assertThat(DataBase.findUserById("someId")).usingRecursiveComparison()
+        Optional<User> someId = DataBase.findUserById("someId");
+        assertThat(someId.isPresent()).isTrue();
+        assertThat(someId.get()).usingRecursiveComparison()
                 .isEqualTo(new User(
                         "someId",
                         "password",
