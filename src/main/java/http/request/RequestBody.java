@@ -11,7 +11,15 @@ public class RequestBody {
     private final Map<String, String> value;
 
     public RequestBody(String body) {
-        this.value = Arrays.stream(body.split("&"))
+        this.value = parse(body);
+    }
+
+    private Map<String, String> parse(String body) {
+        if (body == null || body.isEmpty()) {
+            return Map.of();
+        }
+
+        return Arrays.stream(body.split("&"))
             .map(it -> it.split("="))
             .map(it -> Map.entry(it[0], it[1]))
             .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
