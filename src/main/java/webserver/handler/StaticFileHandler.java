@@ -5,7 +5,7 @@ import webserver.Handler;
 import webserver.LoadFileException;
 import webserver.ModelAndView;
 import webserver.StaticLocationProvider;
-import webserver.http.Request;
+import webserver.http.HttpRequest;
 import webserver.http.Response;
 
 import java.io.IOException;
@@ -28,8 +28,8 @@ public class StaticFileHandler implements Handler {
         this.staticLocationProvider = staticLocationProvider;
     }
 
-    public ModelAndView handle(Request request, Response response) {
-        String path = request.getPath();
+    public ModelAndView handle(HttpRequest httpRequest, Response response) {
+        String path = httpRequest.getPath();
 
         byte[] bytes = loadFile(path);
 

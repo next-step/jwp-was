@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import webserver.handler.CreateMemberHandler;
 import webserver.handler.LoginMemberHandler;
 import webserver.http.HttpMethod;
-import webserver.http.Request;
+import webserver.http.HttpRequest;
 import webserver.http.RequestLine;
 
 import java.util.List;
@@ -23,9 +23,9 @@ class HandlerMappingTest {
                 new RequestMappingInfo("/user/login", HttpMethod.POST), new LoginMemberHandler())
         );
         RequestLine requestLine = RequestLine.parseOf("POST /user/create HTTP/1.1");
-        Request request = new Request(requestLine);
+        HttpRequest httpRequest = new HttpRequest(requestLine);
 
-        Handler handler = handlerMapping.getHandler(request);
+        Handler handler = handlerMapping.getHandler(httpRequest);
 
         Assertions.assertThat(handler).isInstanceOf(CreateMemberHandler.class);
     }

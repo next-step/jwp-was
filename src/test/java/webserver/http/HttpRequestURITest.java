@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class RequestURITest {
+class HttpRequestURITest {
 
     @DisplayName("RequestPath 는 '/' 으로 시작해야 한다.")
     @Test

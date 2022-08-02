@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.ModelAndView;
 import webserver.http.Headers;
-import webserver.http.Request;
+import webserver.http.HttpRequest;
 import webserver.http.RequestLine;
 import webserver.http.Response;
 
@@ -29,11 +29,11 @@ class LoginMemberHandlerTest {
     void loginSuccessTest() {
         // given
         DataBase.addUser(new User("testUser", "testPw", "test", "test@test.com"));
-        Request request = createLoginRequest("userId=testUser&password=testPw");
+        HttpRequest httpRequest = createLoginRequest("userId=testUser&password=testPw");
         Response response = new Response();
 
         // when
-        ModelAndView modelAndView = loginMemberHandler.handle(request, response);
+        ModelAndView modelAndView = loginMemberHandler.handle(httpRequest, response);
 
         // then
         Assertions.assertThat(modelAndView.getView()).isEqualTo("redirect:/index.html");
@@ -44,11 +44,11 @@ class LoginMemberHandlerTest {
     @Test
     void loginFailTest() {
         // given
-        Request request = createLoginRequest("userId=testUser&password=testPw");
+        HttpRequest httpRequest = createLoginRequest("userId=testUser&password=testPw");
         Response response = new Response();
 
         // when
-        ModelAndView modelAndView = loginMemberHandler.handle(request, response);
+        ModelAndView modelAndView = loginMemberHandler.handle(httpRequest, response);
 
         // then
         Assertions.assertThat(modelAndView.getView()).isEqualTo("redirect:/user/login_failed.html");
@@ -56,8 +56,8 @@ class LoginMemberHandlerTest {
     }
 
 
-    private Request createLoginRequest(String body) {
-        return new Request(
+    private HttpRequest createLoginRequest(String body) {
+        return new HttpRequest(
                 RequestLine.parseOf("POST /user/login HTTP/1.1"),
                 Headers.parseOf(new ArrayList<>()),
                 body

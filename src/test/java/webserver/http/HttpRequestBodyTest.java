@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RequestBodyTest {
+class HttpRequestBodyTest {
 
     @DisplayName("content-type 이 application/x-www-form-urlencoded 인 request body 를 만들 수 있다.")
     @Test

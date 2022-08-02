@@ -7,7 +7,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RequestTest {
+class HttpRequestTest {
 
     @DisplayName("Http Request 는 Request Line, Header, Body 로 이루어진다.")
     @Test
@@ -25,12 +25,12 @@ class RequestTest {
         String body = "userId=javajigi&password=password&name=박재성&email=javajigi@slipp.net";
 
         // when
-        Request request = new Request(requestLine, headers, body);
+        HttpRequest httpRequest = new HttpRequest(requestLine, headers, body);
 
         // then
 
-        assertThat(request.getRequestLine()).isEqualTo(requestLine);
-        assertThat(request.getHeaders()).isEqualTo(headers);
-        assertThat(request.getBody()).isEqualTo(new RequestBody(body));
+        assertThat(httpRequest.getRequestLine()).isEqualTo(requestLine);
+        assertThat(httpRequest.getHeaders()).isEqualTo(headers);
+        assertThat(httpRequest.getBody()).isEqualTo(new RequestBody(body));
     }
 }

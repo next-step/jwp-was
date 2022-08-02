@@ -1,7 +1,7 @@
 package webserver;
 
 import webserver.http.HttpMethod;
-import webserver.http.Request;
+import webserver.http.HttpRequest;
 
 import java.util.Objects;
 
@@ -16,14 +16,14 @@ public class RequestMappingInfo {
         this.method = method;
     }
 
-    public boolean matchRequest(Request request) {
-        RequestMappingInfo requestMappingInfo = new RequestMappingInfo(request.getPath(), request.getMethod());
+    public boolean matchRequest(HttpRequest httpRequest) {
+        RequestMappingInfo requestMappingInfo = new RequestMappingInfo(httpRequest.getPath(), httpRequest.getMethod());
 
         if (this.equals(requestMappingInfo)) {
             return true;
         }
 
-        return request.getPath().matches(this.path) && this.method.equals(request.getMethod());
+        return httpRequest.getPath().matches(this.path) && this.method.equals(httpRequest.getMethod());
     }
 
     @Override

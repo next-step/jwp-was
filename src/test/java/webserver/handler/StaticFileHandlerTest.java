@@ -26,11 +26,11 @@ class StaticFileHandlerTest {
     @ParameterizedTest
     void contentTypeTest(String filePath, String contentType) {
         // given
-        Request request = createRequest(filePath);
+        HttpRequest httpRequest = createRequest(filePath);
         Response response = new Response();
 
         // when
-        staticFileHandler.handle(request, response);
+        staticFileHandler.handle(httpRequest, response);
 
         // then
         Headers headers = response.getHeaders();
@@ -38,10 +38,10 @@ class StaticFileHandlerTest {
         Assertions.assertThat(contentTypeHeader).isEqualTo(contentType);
     }
 
-    private Request createRequest(String path) {
+    private HttpRequest createRequest(String path) {
         RequestLine requestLine = RequestLine.parseOf("GET " + path + " HTTP/1.1");
         Headers headers = Headers.of(new Header("Accept", "*/*"));
-        return new Request(requestLine, headers);
+        return new HttpRequest(requestLine, headers);
     }
 
 }

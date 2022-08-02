@@ -4,7 +4,7 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
-public class Request {
+public class HttpRequest {
 
     private final RequestLine requestLine;
 
@@ -14,18 +14,18 @@ public class Request {
 
     private final List<Cookie> cookies;
 
-    public Request(RequestLine requestLine, Headers headers, String body) {
+    public HttpRequest(RequestLine requestLine, Headers headers, String body) {
         this.requestLine = requireNonNull(requestLine, "");
         this.headers = requireNonNull(headers, "");
         this.body = new RequestBody(body);
         this.cookies = Cookie.listOf(this.headers.getValue("cookie"));
     }
 
-    public Request(RequestLine requestLine, Headers headers) {
+    public HttpRequest(RequestLine requestLine, Headers headers) {
         this(requestLine, headers, "");
     }
 
-    public Request(RequestLine requestLine) {
+    public HttpRequest(RequestLine requestLine) {
         this(requestLine, new Headers());
     }
 

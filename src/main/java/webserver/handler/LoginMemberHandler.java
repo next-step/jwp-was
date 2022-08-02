@@ -5,15 +5,15 @@ import model.User;
 import webserver.Handler;
 import webserver.ModelAndView;
 import webserver.http.Cookie;
-import webserver.http.Request;
+import webserver.http.HttpRequest;
 import webserver.http.Response;
 
 public class LoginMemberHandler implements Handler {
 
     @Override
-    public ModelAndView handle(Request request, Response response) {
-        String userId = request.getBodyValue("userId");
-        String password = request.getBodyValue("password");
+    public ModelAndView handle(HttpRequest httpRequest, Response response) {
+        String userId = httpRequest.getBodyValue("userId");
+        String password = httpRequest.getBodyValue("password");
         User userById = DataBase.findUserById(userId);
 
         if (userById != null && userById.matchPassword(password)) {

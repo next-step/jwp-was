@@ -45,11 +45,11 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            Request request = readRequest(new BufferedReader(new InputStreamReader(in)));
-            logger.debug("request:{} ", request);
+            HttpRequest httpRequest = readRequest(new BufferedReader(new InputStreamReader(in)));
+            logger.debug("request:{} ", httpRequest);
 
             Response response = new Response();
-            handleRequest(request, response);
+            handleRequest(httpRequest, response);
             logger.debug("response:{} ", response);
 
             writeResponse(out, response);
@@ -58,10 +58,10 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void handleRequest(Request request, Response response) {
-        Handler handler = handlerMapping.getHandler(request);
+    private void handleRequest(HttpRequest httpRequest, Response response) {
+        Handler handler = handlerMapping.getHandler(httpRequest);
 
-        ModelAndView modelAndView = handler.handle(request, response);
+        ModelAndView modelAndView = handler.handle(httpRequest, response);
 
         if (modelAndView == null) {
             return;
@@ -88,14 +88,14 @@ public class RequestHandler implements Runnable {
         dos.flush();
     }
 
-    private Request readRequest(BufferedReader reader) throws IOException {
+    private HttpRequest readRequest(BufferedReader reader) throws IOException {
         RequestLine requestLine = RequestLine.parseOf(reader.readLine());
 
         Headers headers = readHeaders(reader);
 
         String requestBody = readRequestBody(reader, headers);
 
-        return new Request(requestLine, headers, requestBody);
+        return new HttpRequest(requestLine, headers, requestBody);
     }
 
     private Headers readHeaders(BufferedReader reader) throws IOException {

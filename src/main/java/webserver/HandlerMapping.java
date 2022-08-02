@@ -1,6 +1,6 @@
 package webserver;
 
-import webserver.http.Request;
+import webserver.http.HttpRequest;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,8 +36,8 @@ class HandlerMapping {
         }
     }
 
-    Handler getHandler(Request request) {
-        Handler handler = handlerRegistry.get(new RequestMappingInfo(request.getPath(), request.getMethod()));
+    Handler getHandler(HttpRequest httpRequest) {
+        Handler handler = handlerRegistry.get(new RequestMappingInfo(httpRequest.getPath(), httpRequest.getMethod()));
 
         if (handler != null) {
             return handler;
@@ -45,7 +45,7 @@ class HandlerMapping {
 
         return handlerRegistry.keySet()
                 .stream()
-                .filter(requestMappingInfo -> requestMappingInfo.matchRequest(request))
+                .filter(requestMappingInfo -> requestMappingInfo.matchRequest(httpRequest))
                 .map(handlerRegistry::get)
                 .findAny()
                 .orElseThrow();
