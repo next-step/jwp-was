@@ -16,10 +16,7 @@ public class RequestLine {
     }
 
     private Path createPath(String values) {
-        if (method.isPost()) {
-            return Path.createWithPost(values);
-        }
-        return Path.createWithGetMethod(values);
+        return Path.from(values);
     }
 
     private String[] split(String requestLine) {

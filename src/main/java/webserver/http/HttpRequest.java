@@ -46,4 +46,12 @@ public class HttpRequest {
     public HttpBody getHttpBody() {
         return httpBody;
     }
+
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
+    }
+
+    public Path getPath() {
+        return requestLine.getPath();
+    }
 }

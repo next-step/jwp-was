@@ -21,8 +21,8 @@ public class Contents {
         this.contents = Contents;
     }
 
-    public static Contents from(String queryString) {
-        return parseContents(queryString);
+    public static Contents from(String values) {
+        return parseContents(values);
     }
 
     public static Contents from(Map<String, String> Contents) {
@@ -44,7 +44,7 @@ public class Contents {
                 .collect(Collectors.toMap(KeyValue::getKey, KeyValue::getValue)));
     }
 
-    public String getContent(String userId) {
-        return contents.get(userId);
+    public String getContent(String key) {
+        return contents.get(key);
     }
 }

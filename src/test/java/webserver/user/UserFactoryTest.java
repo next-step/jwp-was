@@ -2,29 +2,48 @@ package webserver.user;
 
 import model.User;
 import org.junit.jupiter.api.Test;
-import webserver.http.Path;
+import webserver.http.HttpRequest;
+import webserver.util.HttpRequestUtil;
 
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 class UserFactoryTest {
 
     @Test
-    void create() {
-        Map<String, String> map = Map.of(
-                "userId", "foo",
-                "password", "pass",
-                "name", "foo",
-                "email", "test@test.com"
-        );
-        final Path path = Path.createWithGetMethod("/user/create?userId=foo&password=pass&name=foo&email=test@test.com");
+    void create_with_valid_http_post_request() throws UnsupportedEncodingException {
+        String stringPath = "/user/create";
+        String stringBody = "userId=javajigi&password=password&name=javajigi&email=javajigi@slipp.net";
+        HttpRequest httpRequest = HttpRequestUtil.create_with_post_request(stringPath, stringBody);
 
-        User actual = UserFactory.from(path);
+        User actual = UserFactory.from(httpRequest);
 
-        assertThat(actual.getUserId()).isEqualTo("foo");
-        assertThat(actual.getPassword()).isEqualTo("pass");
-        assertThat(actual.getName()).isEqualTo("foo");
-        assertThat(actual.getEmail()).isEqualTo("test@test.com");
+        assertThat(actual.getUserId()).isEqualTo("javajigi");
+        assertThat(actual.getPassword()).isEqualTo("password");
+        assertThat(actual.getName()).isEqualTo("javajigi");
+        assertThat(actual.getEmail()).isEqualTo("javajigi@slipp.net");
+    }
+
+    @Test
+    void create_with_valid_http_get_request() throws UnsupportedEncodingException {
+        String stringPath = "/user/create?userId=javajigi&password=password&name=javajigi&email=javajigi@slipp.net";
+        HttpRequest httpRequest = HttpRequestUtil.create_with_get_request(stringPath);
+
+        User actual = UserFactory.from(httpRequest);
+
+        assertThat(actual.getUserId()).isEqualTo("javajigi");
+        assertThat(actual.getPassword()).isEqualTo("password");
+        assertThat(actual.getName()).isEqualTo("javajigi");
+        assertThat(actual.getEmail()).isEqualTo("javajigi@slipp.net");
+    }
+
+    @Test
+    void create_with_null_http_request() {
+        final HttpRequest httpRequest = null;
+
+        assertThatCode(() -> UserFactory.from(httpRequest))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }
