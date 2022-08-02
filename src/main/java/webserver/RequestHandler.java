@@ -1,6 +1,6 @@
 package webserver;
 
-import model.ClientResponse;
+import model.HttpResponseMessage;
 import model.HttpRequestMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +32,11 @@ public class RequestHandler implements Runnable {
             List<String> httpMessageData = RequestService.getHttpMessageData(bufferedReader);
             HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMessageData, bufferedReader);
 
-            ClientResponse clientResponse = RequestService.getClientResponse(httpRequestMessage);
+            HttpResponseMessage httpResponseMessage = RequestService.getClientResponse(httpRequestMessage);
 
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-            ResponseService.makeResponseHeader(dataOutputStream, clientResponse);
-            ResponseService.makeResponseBody(dataOutputStream, clientResponse);
+            ResponseService.makeResponseHeader(dataOutputStream, httpResponseMessage);
+            ResponseService.makeResponseBody(dataOutputStream, httpResponseMessage);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         } catch (InvocationTargetException | IllegalAccessException e) {

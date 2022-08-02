@@ -7,21 +7,21 @@ import utils.FileIoUtils;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class ClientResponse {
+public class HttpResponseMessage {
     private final HttpStatus responseHttpStatus;
     private HttpHeaders responseHeaders;
     private byte[] bytesBody;
 
-    public ClientResponse(HttpStatus responseHttpStatus) {
+    public HttpResponseMessage(HttpStatus responseHttpStatus) {
         this.responseHttpStatus = responseHttpStatus;
     }
 
-    public ClientResponse(HttpStatus responseHttpStatus, HttpHeaders responseHeaders) {
+    public HttpResponseMessage(HttpStatus responseHttpStatus, HttpHeaders responseHeaders) {
         this.responseHttpStatus = responseHttpStatus;
         this.responseHeaders = responseHeaders;
     }
 
-    public ClientResponse(HttpStatus responseHttpStatus, HttpHeaders responseHeaders, Object body) throws IOException {
+    public HttpResponseMessage(HttpStatus responseHttpStatus, HttpHeaders responseHeaders, Object body) throws IOException {
         this.responseHttpStatus = responseHttpStatus;
         this.responseHeaders = responseHeaders;
         this.bytesBody = RequestService.bodyToBytes(body);

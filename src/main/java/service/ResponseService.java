@@ -1,6 +1,6 @@
 package service;
 
-import model.ClientResponse;
+import model.HttpResponseMessage;
 import model.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,15 +12,15 @@ import java.io.IOException;
 public class ResponseService {
     private static final Logger logger = LoggerFactory.getLogger(ResponseService.class);
 
-    public static void makeResponseHeader(DataOutputStream dataOutputStream, ClientResponse clientResponse) throws IOException {
-        if (clientResponse == null) {
+    public static void makeResponseHeader(DataOutputStream dataOutputStream, HttpResponseMessage httpResponseMessage) throws IOException {
+        if (httpResponseMessage == null) {
             return;
         }
 
-        byte[] body = clientResponse.getBytesBody();
+        byte[] body = httpResponseMessage.getBytesBody();
 
-        HttpStatus responseHttpStatus = clientResponse.getResponseHttpStatus();
-        HttpHeaders responseHeaders = clientResponse.getResponseHeaders();
+        HttpStatus responseHttpStatus = httpResponseMessage.getResponseHttpStatus();
+        HttpHeaders responseHeaders = httpResponseMessage.getResponseHeaders();
 
         dataOutputStream.writeBytes(String.format("HTTP/1.1 %s %s\r\n", responseHttpStatus.getCode(), responseHttpStatus.name()));
         if (body != null) {
@@ -41,13 +41,13 @@ public class ResponseService {
         dataOutputStream.writeBytes("\r\n");
     }
 
-    public static void makeResponseBody(DataOutputStream dataOutputStream, ClientResponse clientResponse) throws IOException {
-        if (clientResponse == null) {
+    public static void makeResponseBody(DataOutputStream dataOutputStream, HttpResponseMessage httpResponseMessage) throws IOException {
+        if (httpResponseMessage == null) {
             dataOutputStream.flush();
             return;
         }
 
-        byte[] body = clientResponse.getBytesBody();
+        byte[] body = httpResponseMessage.getBytesBody();
         if (body == null) {
             dataOutputStream.flush();
             return;

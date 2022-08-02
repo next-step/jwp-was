@@ -33,7 +33,7 @@ public class RequestService {
         return data;
     }
 
-    public static ClientResponse getClientResponse(HttpRequestMessage httpRequestMessage) throws IOException, URISyntaxException, InvocationTargetException, IllegalAccessException {
+    public static HttpResponseMessage getClientResponse(HttpRequestMessage httpRequestMessage) throws IOException, URISyntaxException, InvocationTargetException, IllegalAccessException {
 
         RequestLine requestLine = httpRequestMessage.getRequestLine();
         if (isRequestForFileResource(requestLine)) {
@@ -41,25 +41,25 @@ public class RequestService {
             httpHeaders.setContentType(MediaType.TEXT_CSS);
 
             UrlPath urlPath = requestLine.getUrlPath();
-            ClientResponse clientResponse = new ClientResponse(HttpStatus.OK, httpHeaders);
-            clientResponse.setFileBody(urlPath, false);
-            return clientResponse;
+            HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatus.OK, httpHeaders);
+            httpResponseMessage.setFileBody(urlPath, false);
+            return httpResponseMessage;
         }
 
         if (requestLine.getUrlPath().getPath().contains(HTML_EXTENSION)) {
             UrlPath urlPath = requestLine.getUrlPath();
-            ClientResponse clientResponse = new ClientResponse(HttpStatus.OK, null);
-            clientResponse.setFileBody(urlPath, true);
-            return clientResponse;
+            HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatus.OK, null);
+            httpResponseMessage.setFileBody(urlPath, true);
+            return httpResponseMessage;
         }
 
         logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpRequestMessage.toStringHttpMessage());
         AuthService.getInstance().setUserCredential(httpRequestMessage.getRequestHeaders().getRequestHeaders());
-        ClientResponse clientResponse = HandlerAdapter.getInstance().invoke(httpRequestMessage);
+        HttpResponseMessage httpResponseMessage = HandlerAdapter.getInstance().invoke(httpRequestMessage);
 
         AuthService.getInstance().removeUserCredential();
 
-        return clientResponse;
+        return httpResponseMessage;
     }
 
     public static byte[] bodyToBytes(Object body) throws IOException {

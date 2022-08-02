@@ -1,6 +1,6 @@
 package utils;
 
-import model.ClientResponse;
+import model.HttpResponseMessage;
 import model.HttpRequestMessage;
 import model.User;
 import org.assertj.core.api.Assertions;
@@ -20,9 +20,9 @@ class HandlerAdapterTest {
         List<String> httpMessageData = List.of("GET /user HTTP/1.1");
         HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMessageData);
 
-        ClientResponse clientResponse = HandlerAdapter.getInstance().invoke(httpRequestMessage);
+        HttpResponseMessage httpResponseMessage = HandlerAdapter.getInstance().invoke(httpRequestMessage);
 
-        Assertions.assertThat(clientResponse.getBytesBody()).isEqualTo(RequestService.bodyToBytes("getUserTest"));
+        Assertions.assertThat(httpResponseMessage.getBytesBody()).isEqualTo(RequestService.bodyToBytes("getUserTest"));
     }
 
     @DisplayName("요청 실려온 queryParameter를 handler의 parameter로 컨버팅 하는지 검증")
