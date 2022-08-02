@@ -7,6 +7,8 @@ import java.util.stream.Stream;
 
 public class RequestParameters {
 
+    static final RequestParameters EMPTY = new RequestParameters(Collections.emptyMap());
+
     private static final String ENTRY_DELIMITER = "&";
 
     private static final String KEY_VALUE_DELIMITER = "=";

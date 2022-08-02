@@ -3,6 +3,8 @@ package webserver.http;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,15 +24,31 @@ class HttpRequestTest {
                 "Content-Type: application/x-www-form-urlencoded",
                 "Accept: */*"));
 
-        String body = "userId=javajigi&password=password&name=박재성&email=javajigi@slipp.net";
+        RequestBody body = new RequestBody("userId=javajigi&password=password&name=박재성&email=javajigi@slipp.net");
 
         // when
         HttpRequest httpRequest = new HttpRequest(requestLine, headers, body);
 
         // then
-
         assertThat(httpRequest.getRequestLine()).isEqualTo(requestLine);
         assertThat(httpRequest.getHeaders()).isEqualTo(headers);
-        assertThat(httpRequest.getBody()).isEqualTo(new RequestBody(body));
+        assertThat(httpRequest.getBody()).isEqualTo(body);
+    }
+
+    @DisplayName("InputStream 을 이용해 HttpRequest 를 생성할 수 있다.")
+    @Test
+    void createWithInputStream() throws Exception {
+        // given
+        InputStream in = new FileInputStream("./src/test/resources/http_GET.txt");
+
+        // when
+        HttpRequest httpRequest = HttpRequest.create(in);
+
+        // then
+        assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
+        assertThat(httpRequest.getPath()).isEqualTo("/user/create");
+        assertThat(httpRequest.getHeaders().getValue("Connection")).isEqualTo("keep-alive");
+        assertThat(httpRequest.getParameter("name")).isEqualTo("JaeSung");
+        assertThat(httpRequest.getParameter("password")).isEqualTo("password");
     }
 }

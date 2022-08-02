@@ -22,13 +22,10 @@ class HttpRequestURITest {
         // given
         RequestURI requestUri = new RequestURI("/users?userId=javajigi&password=password");
 
-        // when
-        RequestParameters requestParameters = requestUri.parseQueryString();
-
-        // then
-        assertThat(requestParameters.getValue("userId")).isEqualTo("javajigi");
-        assertThat(requestParameters.getValue("password")).isEqualTo("password");
-        assertThat(requestParameters.getValue("password2")).isNull();
+        // when then
+        assertThat(requestUri.getParameter("userId")).isEqualTo("javajigi");
+        assertThat(requestUri.getParameter("password")).isEqualTo("password");
+        assertThat(requestUri.getParameter("password2")).isNull();
     }
 
 }

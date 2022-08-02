@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 class RequestBody {
 
+    static final RequestBody EMPTY = new RequestBody("");
+
     private final Map<String, String> body;
 
     RequestBody(String body) {

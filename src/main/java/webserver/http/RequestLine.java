@@ -51,6 +51,10 @@ public class RequestLine {
         return requestUri;
     }
 
+    String getParameter(String name) {
+        return requestUri.getParameter(name);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

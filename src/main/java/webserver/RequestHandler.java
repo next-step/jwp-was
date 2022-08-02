@@ -2,18 +2,21 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.IOUtils;
 import webserver.handler.CreateMemberHandler;
 import webserver.handler.ListMemberHandler;
 import webserver.handler.LoginMemberHandler;
 import webserver.handler.StaticFileHandler;
-import webserver.http.*;
+import webserver.http.HttpMethod;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 import webserver.view.View;
 import webserver.view.ViewResolver;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 
 ;
@@ -45,7 +48,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            HttpRequest httpRequest = readRequest(new BufferedReader(new InputStreamReader(in)));
+            HttpRequest httpRequest = HttpRequest.create(in);
             logger.debug("request:{} ", httpRequest);
 
             HttpResponse httpResponse = new HttpResponse();
@@ -88,38 +91,38 @@ public class RequestHandler implements Runnable {
         dos.flush();
     }
 
-    private HttpRequest readRequest(BufferedReader reader) throws IOException {
-        RequestLine requestLine = RequestLine.parseOf(reader.readLine());
-
-        Headers headers = readHeaders(reader);
-
-        String requestBody = readRequestBody(reader, headers);
-
-        return new HttpRequest(requestLine, headers, requestBody);
-    }
-
-    private Headers readHeaders(BufferedReader reader) throws IOException {
-        List<String> headerLines = new ArrayList<>();
-
-        String line = reader.readLine();
-        headerLines.add(line);
-
-        while (line != null && !"".equals(line)) {
-            line = reader.readLine();
-            headerLines.add(line);
-        }
-
-        return Headers.parseOf(headerLines);
-    }
-
-    private String readRequestBody(BufferedReader reader, Headers headers) throws IOException {
-        String value = headers.getValue("Content-Length");
-
-        if (value != null && !value.equals("")) {
-            return IOUtils.readData(reader, Integer.parseInt(value));
-        }
-
-        return "";
-    }
+//    private HttpRequest readRequest(BufferedReader reader) throws IOException {
+//        RequestLine requestLine = RequestLine.parseOf(reader.readLine());
+//
+//        Headers headers = readHeaders(reader);
+//
+//        String requestBody = readRequestBody(reader, headers);
+//
+//        return new HttpRequest(requestLine, headers, requestBody);
+//    }
+//
+//    private Headers readHeaders(BufferedReader reader) throws IOException {
+//        List<String> headerLines = new ArrayList<>();
+//
+//        String line = reader.readLine();
+//        headerLines.add(line);
+//
+//        while (line != null && !"".equals(line)) {
+//            line = reader.readLine();
+//            headerLines.add(line);
+//        }
+//
+//        return Headers.parseOf(headerLines);
+//    }
+//
+//    private String readRequestBody(BufferedReader reader, Headers headers) throws IOException {
+//        String value = headers.getValue("Content-Length");
+//
+//        if (value != null && !value.equals("")) {
+//            return IOUtils.readData(reader, Integer.parseInt(value));
+//        }
+//
+//        return "";
+//    }
 
 }
