@@ -1,7 +1,7 @@
 package webserver;
 
-import model.HttpResponseMessage;
 import model.HttpRequestMessage;
+import model.HttpResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.RequestService;
@@ -27,21 +27,30 @@ public class RequestHandler implements Runnable {
 
         try (InputStream inputStream = connection.getInputStream(); OutputStream outputStream = connection.getOutputStream()) {
 
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            List<String> httpMessageData = RequestService.getHttpMessageData(bufferedReader);
-            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMessageData, bufferedReader);
-
+            HttpRequestMessage httpRequestMessage = this.getHttpRequestMessage(inputStream, outputStream);
             HttpResponseMessage httpResponseMessage = RequestService.getClientResponse(httpRequestMessage);
 
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-            ResponseService.makeResponseHeader(dataOutputStream, httpResponseMessage);
-            ResponseService.makeResponseBody(dataOutputStream, httpResponseMessage);
+            this.sendResponse(dataOutputStream, httpResponseMessage);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    private HttpRequestMessage getHttpRequestMessage(InputStream inputStream, OutputStream outputStream) throws IOException {
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+        List<String> httpMessageData = RequestService.getHttpMessageData(bufferedReader);
+        return new HttpRequestMessage(httpMessageData, bufferedReader);
+    }
+
+    private void sendResponse(OutputStream outputStream, HttpResponseMessage httpResponseMessage) throws IOException {
+        DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+        ResponseService.makeResponseHeader(dataOutputStream, httpResponseMessage);
+        ResponseService.makeResponseBody(dataOutputStream, httpResponseMessage);
     }
 
 }

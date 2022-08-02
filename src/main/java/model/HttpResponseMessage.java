@@ -1,8 +1,8 @@
 package model;
 
-import service.RequestService;
 import types.HttpStatus;
 import utils.FileIoUtils;
+import utils.IOUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -24,7 +24,7 @@ public class HttpResponseMessage {
     public HttpResponseMessage(HttpStatus responseHttpStatus, HttpHeaders responseHeaders, Object body) throws IOException {
         this.responseHttpStatus = responseHttpStatus;
         this.responseHeaders = responseHeaders;
-        this.bytesBody = RequestService.bodyToBytes(body);
+        this.bytesBody = IOUtils.bodyToBytes(body);
     }
 
     public HttpStatus getResponseHttpStatus() {

@@ -45,13 +45,23 @@ public class HttpRequestMessage {
             return null;
         }
 
-        String contentLengthValue = requestHeaders.getRequestHeaders().get(CONTENT_LENGTH_KEY);
-        int contentLength = 0;
-        if (contentLengthValue != null) {
-            contentLength = Integer.parseInt(contentLengthValue);
+        String contentLengthValue = requestHeaders
+                .getRequestHeaders()
+                .get(CONTENT_LENGTH_KEY);
+        int contentLength = this.getContentLength(contentLengthValue);
+        if (contentLength == 0) {
+            return null;
         }
 
         return IOUtils.readData(bufferedReader, contentLength);
+    }
+
+    private int getContentLength(String contentLengthValue) {
+        if (contentLengthValue != null) {
+            return Integer.parseInt(contentLengthValue);
+        }
+
+        return 0;
     }
 
     public RequestLine getRequestLine() {
