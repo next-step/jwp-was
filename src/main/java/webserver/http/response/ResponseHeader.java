@@ -27,22 +27,22 @@ public class ResponseHeader {
         this.headers = headers;
     }
 
-    private static ResponseHeader baseResponseHeader(){
+    public static ResponseHeader baseResponseHeader(){
         return new ResponseHeader(Maps.newHashMap(BASE_HEADERS));
     }
 
-    public static ResponseHeader of302(String redirectUrl){
-        HashMap<String, String> responseHeader = Maps.newHashMap(BASE_HEADERS);
-        responseHeader.put(LOCATION, "http://localhost:8888" + redirectUrl);
-        return new ResponseHeader(responseHeader);
-    }
-
-    public static ResponseHeader of200() {
-        return baseResponseHeader();
-    }
+//    public static ResponseHeader of302(String redirectUrl){
+//        HashMap<String, String> responseHeader = Maps.newHashMap(BASE_HEADERS);
+//        responseHeader.put(LOCATION, "http://localhost:8888" + redirectUrl);
+//        return new ResponseHeader(responseHeader);
+//    }
 
     public String getLocation(){
         return headers.get(LOCATION);
+    }
+
+    public void setLocation(String redirectUrl) {
+        this.headers.put(LOCATION, "http://localhost:8888" + redirectUrl);
     }
 
     public void setContentLength(String value) {

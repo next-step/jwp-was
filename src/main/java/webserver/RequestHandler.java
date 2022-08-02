@@ -57,10 +57,11 @@ public class RequestHandler implements Runnable {
                 writeResponseHeader(dos, 0, httpResponse.getResponseHeader());
                 return;
             }
-            final byte[] body = FileIoUtils.loadFileFromClasspath(responseBody.get().getView().getFilePath());
+
+            final byte[] body = responseBody.get().getBody();
             writeResponseHeader(dos, body.length, httpResponse.getResponseHeader());
             writeResponseBody(dos, body);
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }

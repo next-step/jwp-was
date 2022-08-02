@@ -18,7 +18,7 @@ public class HandlebarsUtils {
     private static final String HTML_EXTENSION = ".html";
     private static final String ERROR_TEMPLATE = "ERROR";
 
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(HandlebarsUtils.class);
 
     private static Handlebars getHandlebars() throws IOException {
         TemplateLoader loader = new ClassPathTemplateLoader();

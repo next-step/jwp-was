@@ -1,5 +1,6 @@
 package webserver.http.response;
 
+
 import java.util.Optional;
 
 public class HttpResponse {
@@ -17,15 +18,26 @@ public class HttpResponse {
     public static HttpResponse getView(final String viewPath) {
         return new HttpResponse(
                 ResponseLine.of200(),
-                ResponseHeader.of200(),
-                Optional.of(ResponseBody.of200(viewPath))
+                ResponseHeader.baseResponseHeader(),
+                Optional.of(ResponseBody.fromView(viewPath))
+        );
+    }
+
+    public static HttpResponse getDynamicView(final String template){
+        return new HttpResponse(
+                ResponseLine.of200(),
+                ResponseHeader.baseResponseHeader(),
+                Optional.of(ResponseBody.fromDynamicView(template))
         );
     }
 
     public static HttpResponse redirect(final String redirectUrl){
+        ResponseHeader responseHeader = ResponseHeader.baseResponseHeader();
+        responseHeader.setLocation(redirectUrl);
+
         return new HttpResponse(
                 ResponseLine.of302(),
-                ResponseHeader.of302(redirectUrl),
+                responseHeader,
                 Optional.empty()
         );
     }
