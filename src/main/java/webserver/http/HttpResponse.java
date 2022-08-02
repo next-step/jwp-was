@@ -2,12 +2,10 @@ package webserver.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.util.Set;
 
 public class HttpResponse {
@@ -16,6 +14,7 @@ public class HttpResponse {
     private DataOutputStream dos;
 
     private Headers headers = new Headers();
+
 
     public HttpResponse(OutputStream out) {
         dos = new DataOutputStream(out);
@@ -26,29 +25,9 @@ public class HttpResponse {
     }
 
     public void forward(String url) {
-        try {
-            byte[] body = null;
-
-            if (url.endsWith(".css")) {
-                body = FileIoUtils.loadFileFromClasspath("./static" + url);
-                headers.put("Content-Type", "text/css");
-            }
-            if (url.endsWith(".js")) {
-                body = FileIoUtils.loadFileFromClasspath("./static" + url);
-                headers.put("Content-Type", "application/javascript");
-            }
-            if (url.startsWith("/fonts")) {
-                body = FileIoUtils.loadFileFromClasspath("./static" + url);
-            }
-            if (url.endsWith("html") || url.endsWith("ico")) {
-                body = FileIoUtils.loadFileFromClasspath("./templates" + url);
-            }
-
-            response200Header();
-            responseBody(body);
-        } catch (IOException | URISyntaxException e) {
-            logger.error(e.getMessage());
-        }
+        byte[] body = ResourceHandler.handle(url, headers);
+        response200Header();
+        responseBody(body);
     }
 
     public void forwardBody(String body) {
