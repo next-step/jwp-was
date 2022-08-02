@@ -23,7 +23,7 @@ public class Cookie {
         return new Cookie(name, String.valueOf(value), DEFAULT_PATH);
     }
 
-    public boolean hasValue(String value) {
+    public boolean equalsValue(String value) {
         return Objects.equals(value, this.value);
     }
 
