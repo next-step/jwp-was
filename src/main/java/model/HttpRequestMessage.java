@@ -12,7 +12,7 @@ public class HttpRequestMessage {
 
     private static final String CONTENT_LENGTH_KEY = "Content-Length";
 
-    private RequestLine requestLine;
+    private final RequestLine requestLine;
 
     private RequestHeaders requestHeaders;
 
