@@ -2,31 +2,26 @@ package webserver.request.domain.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.request.domain.request.Header;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class HeaderTest {
 
     @Test
-    @DisplayName("header 비교 테스트")
+    @DisplayName("Header 생성 테스트")
     public void createRequestHeader () {
-        List<String> list = new ArrayList<>();
-        list.add("Host: localhost:8080");
-        list.add("Connection: keep-alive");
-        list.add("Accept: */*");
-        Header header1 = new Header(list);
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("Host", "localhost:8080");
+        headerMap.put("Connection", "keep-alive");
+        headerMap.put("Accept", "*/*");
+        Header header = new Header(headerMap);
 
-        Header header2 = new Header();
-        header2.addHeaderProperty("Host: localhost:8080");
-        header2.addHeaderProperty("Connection: keep-alive");
-        header2.addHeaderProperty("Accept: */*");
-
-        assertThat(header1).isEqualTo(header2);
+        assertThat(header.getHeader("Host")).isEqualTo("localhost:8080");
+        assertThat(header.getHeader("Connection")).isEqualTo("keep-alive");
+        assertThat(header.getHeader("Accept")).isEqualTo("*/*");
     }
 
 }

@@ -44,9 +44,6 @@ public class Path {
 
     public String getPath() {
         return path;
-//        if(!StringUtils.hasText(path))
-//            return path;
-//        return "";
     }
 
     @Override

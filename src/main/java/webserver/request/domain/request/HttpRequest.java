@@ -28,10 +28,7 @@ public class HttpRequest {
     }
 
     public Method getMethod() {
-        //if(requestLine.getMethod() != null) {
-            return requestLine.getMethod();
-        //}
-        //return null;
+        return requestLine.getMethod();
     }
 
     public String getPath() {
