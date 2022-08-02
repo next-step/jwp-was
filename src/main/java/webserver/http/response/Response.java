@@ -1,8 +1,8 @@
 package webserver.http.response;
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
 import webserver.http.ContentType;
 import webserver.http.Cookie;
 import webserver.http.HttpStatus;
@@ -10,9 +10,7 @@ import webserver.http.HttpStatus;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URISyntaxException;
 import java.util.stream.Stream;
 
 import static model.Constant.*;
@@ -20,26 +18,39 @@ import static model.Constant.*;
 public class Response {
     private static final Logger logger = LoggerFactory.getLogger(Response.class);
 
+    private static final String RESOURCES_TEMPLATES = "./templates";
+    private static final String RESOURCES_STATIC = "./static";
+    public final static String EXTENSION_SPERATOR = ".";
+
     private final DataOutputStream out;
-    private ResponseHeader headers;
-    private byte[] body;
+    private final ResponseHeader responseHeader;
 
     public Response(OutputStream out) {
         this.out = new DataOutputStream(out);
+        this.responseHeader = new ResponseHeader();
     }
 
-    private Map<String, String> getContentType(String path) {
-        return new HashMap<>(Stream.of(ContentType.values())
+    private String getContentType(String path) {
+        return Stream.of(ContentType.values())
                 .filter(type -> path.endsWith(type.getExtension()))
-                .map(type -> Map.of("Content-Type", type.getValue()))
+                .map(type -> type.getValue())
                 .findFirst()
-                .orElse(Collections.emptyMap()));
+                .orElse(null);
+    }
+
+    public void forward(String path) throws IOException, URISyntaxException {
+        String prefixConcatPath = getPrefix(path).concat(path);
+        byte[] body = FileIoUtils.loadFileFromClasspath(prefixConcatPath);
+        logger.debug("ContentType : {}", getContentType(path));
+        responseHeader.add(CONTENT_LENGTH, String.valueOf(body.length));
+        responseHeader.add(CONTENT_TYPE, getContentType(path));
+        responseOk();
+        setBody(body);
     }
 
     public void responseOk() {
         try {
             this.out.writeBytes(PROTOCOL_VERSION_ONE_ONE + getStatus(HttpStatus.OK) + LINE_SEPARATOR);
-            this.out.writeBytes(StringUtils.join(this.getHeaders(), HEADER_KEY_VALUE_SEPARATOR));
             this.out.writeBytes(LINE_SEPARATOR);
             this.out.flush();
         } catch (IOException e) {
@@ -60,20 +71,28 @@ public class Response {
 
     public void setCookie(Cookie cookie) {
         String convertCookieAsString = cookie.getName() + "=" + cookie.getValue() + "; Path=" + cookie.getPath();
-        headers.add(SET_COOKIE, convertCookieAsString);
+        responseHeader.add(SET_COOKIE, convertCookieAsString);
     }
 
-    public void setBody(byte[] loadData) {
-        this.body = loadData;
-        headers.add(CONTENT_LENGTH, String.valueOf(this.body.length));
+    public void setBody(byte[] body) {
+        try {
+            this.out.write(body, 0, body.length);
+            this.out.flush();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private String getPrefix(String path) {
+        String extension = path.substring(path.lastIndexOf(EXTENSION_SPERATOR) + 1);
+        if (!ContentType.isStaticExtension(extension)) {
+            return RESOURCES_TEMPLATES;
+        }
+        return RESOURCES_STATIC;
     }
 
     public DataOutputStream getResponse() {
         return out;
-    }
-
-    public ResponseHeader getHeaders() {
-        return headers;
     }
 
     private String getStatus(HttpStatus httpStatus) {

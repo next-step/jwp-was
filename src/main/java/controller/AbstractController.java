@@ -4,10 +4,11 @@ import webserver.http.request.Request;
 import webserver.http.response.Response;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public abstract class AbstractController implements Controller {
     @Override
-    public void service(Request request, Response response) throws IOException {
+    public void service(Request request, Response response) throws IOException, URISyntaxException {
         if (request.isPost()) {
             doPost(request, response);
         }
@@ -19,5 +20,5 @@ public abstract class AbstractController implements Controller {
 
     public abstract void doPost(Request request, Response response);
 
-    public abstract void doGet(Request request, Response response) throws IOException;
+    public abstract void doGet(Request request, Response response) throws IOException, URISyntaxException;
 }

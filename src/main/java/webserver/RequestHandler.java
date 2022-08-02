@@ -1,15 +1,16 @@
 package webserver;
 
+import controller.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.Request;
+import webserver.http.request.RequestMapping;
 import webserver.http.response.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -28,12 +29,9 @@ public class RequestHandler implements Runnable {
             Request request = new Request(in);
             Response response = new Response(out);
 
+            Controller controller = RequestMapping.mapping(request.getRequestPath());
+            controller.service(request, response);
 
-            response.setBody("".getBytes(StandardCharsets.UTF_8));
-            response.responseOk();
-
-//            response200Header(response, body.length);
-//            responseBody(response, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (Exception e) {

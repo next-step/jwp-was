@@ -2,8 +2,6 @@ package webserver.http.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import exception.InvalidRequestException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,8 +11,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class RequestBody {
-    private static final Logger logger = LoggerFactory.getLogger(RequestBody.class);
-
     public final static String MAP_KEY_VALUE_SEPARATOR = "=";
     public final static String REQUEST_BODY_SEPARATOR = "&";
 
@@ -22,7 +18,6 @@ public class RequestBody {
 
     public RequestBody(String value) {
         this.requestBodyMap = StringUtils.isEmpty(value) ? Collections.emptyMap() : parse(value);
-        logger.debug("requestBody : {}", this.requestBodyMap);
     }
 
     public RequestBody(String... values) {

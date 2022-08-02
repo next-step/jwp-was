@@ -1,10 +1,15 @@
 package webserver.http.response;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class ResponseHeader {
     private final Map<String, String> headers;
+
+    public ResponseHeader() {
+        this.headers = new HashMap<>();
+    }
 
     public ResponseHeader(Map<String, String> header) {
         this.headers = header;
