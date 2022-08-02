@@ -8,11 +8,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import http.request.HttpRequest;
+import http.request.session.MemorySessionStore;
 import http.response.HttpResponse;
 import webserver.controller.Controller;
 import webserver.controller.LoginController;
@@ -27,6 +29,8 @@ public class RequestHandler implements Runnable {
         new ControllerIdentity("/user/login"), new LoginController(),
         new ControllerIdentity("/user/list"), new UserListController());
 
+    public static final MemorySessionStore STORE = new MemorySessionStore(new ConcurrentHashMap<>());
+
     private final Socket connection;
 
     public RequestHandler(Socket connection) {
@@ -39,9 +43,12 @@ public class RequestHandler implements Runnable {
 
         try (InputStream inputStream = connection.getInputStream(); OutputStream out = connection.getOutputStream(); var bufferedReader = new BufferedReader(
             new InputStreamReader(inputStream))) {
-            var httpRequest = HttpRequest.parse(bufferedReader);
+            var httpRequest = HttpRequest.parse(bufferedReader, STORE);
 
             var response = createHttpResponse(httpRequest);
+            if (response.isMarkdown()) {
+                response.putCookie(HttpRequest.SESSION_KEY, httpRequest.currentClientUserId());
+            }
 
             var dataOutputStream = new DataOutputStream(out);
             response.write(dataOutputStream);

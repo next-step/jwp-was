@@ -138,6 +138,6 @@ public class HttpResponse {
     }
 
     public boolean isMarkdown() {
-        return httpResponseHeaders.isTextType();
+        return httpResponseHeaders.isMarkDown();
     }
 }

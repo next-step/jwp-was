@@ -31,4 +31,13 @@ public class HttpResponseHeaders {
     public Map<String, String> getHeaders() {
         return new HashMap<>(values);
     }
+
+    public boolean isMarkDown() {
+        if (!values.containsKey(CONTENT_TYPE)) {
+            return false;
+        }
+
+        return values.get(CONTENT_TYPE)
+            .startsWith("text/html");
+    }
 }
