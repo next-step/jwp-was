@@ -59,4 +59,5 @@ public class HttpHeader {
     // Optional
     public static final String COOKIE = "Cookie";
     public static final String SET_COOKIE = "Set-Cookie";
+    public static final String JSESSIONID = "JSESSIONID";
 }

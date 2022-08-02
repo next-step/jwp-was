@@ -8,12 +8,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.domain.Cookies;
 import webserver.domain.HttpHeader;
 import webserver.enums.HttpMethod;
 import webserver.enums.Protocol;
 
 public class HttpRequest {
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
 
     private RequestLine requestLine;
     private HttpRequestHeader header;
@@ -71,13 +75,6 @@ public class HttpRequest {
         return header.getHeader(key);
     }
 
-    public Cookies getCookies() {
-        if (!this.header.contains(HttpHeader.COOKIE)) {
-            return Cookies.empty();
-        }
-        return Cookies.of(this.header.getHeader(HttpHeader.COOKIE));
-    }
-
     public String getParameter(String key) {
         String param = requestLine.getParameter(key);
         if (param.isEmpty()) {
@@ -89,5 +86,10 @@ public class HttpRequest {
         }
 
         return param;
+    }
+
+    public String getSessionId() {
+        return Cookies.of(getHeader(HttpHeader.COOKIE))
+            .getSessionId();
     }
 }

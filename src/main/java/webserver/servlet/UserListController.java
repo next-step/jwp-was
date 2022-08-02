@@ -1,25 +1,29 @@
 package webserver.servlet;
 
+import com.google.common.base.Strings;
 import db.DataBase;
 import java.io.IOException;
 import java.util.Collections;
+import javax.servlet.http.HttpSession;
 import utils.HandlebarsTemplate;
 import webserver.domain.ContentType;
-import webserver.domain.Cookies;
 import webserver.domain.HttpHeader;
+import webserver.domain.Sessions;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
 public class UserListController implements Controller {
 
-    private static final String COOKIE_NAME_LOGINED = "logined";
+    public static final String KEY_LOGINED = "logined";
 
     @Override
     public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-        Cookies cookies = httpRequest.getCookies();
-        String loginCookie = cookies.get(COOKIE_NAME_LOGINED);
+        String sessionId = httpRequest.getSessionId();
+        HttpSession session = Sessions.INSTANCE.get(sessionId);
 
-        if (loginCookie.isEmpty() || !Boolean.parseBoolean(loginCookie)) {
+        String sessionLogined = (String) session.getAttribute(KEY_LOGINED);
+
+        if (Strings.isNullOrEmpty(sessionLogined) || !Boolean.parseBoolean(sessionLogined)) {
             handleNotLoginUser(httpResponse);
             return;
         }

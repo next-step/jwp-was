@@ -1,42 +1,37 @@
 package webserver.domain;
 
-import static exception.ExceptionStrings.INVALID_COOKIE_KEY;
-
-import com.google.common.base.Strings;
-import com.google.common.collect.Maps;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Cookies {
 
     private static final String COOKIE_STRING_SPLIT_REGEX = ";";
-    private static final String COOKIE_KEY_VALUE_SPLIT_REGEX = "=";
+    private List<String> cookies;
 
-    private Map<String, String> map;
-
-    private Cookies(Map<String, String> map) {
-        this.map = map;
+    public Cookies(List<String> cookies) {
+        this.cookies = cookies;
     }
 
     public static Cookies of(String cookieString) {
-        Map<String, String> map = Maps.newHashMap();
-
-        String[] cookieStrings = cookieString.split(COOKIE_STRING_SPLIT_REGEX);
-        for (String cookieKeyVal : cookieStrings) {
-            String[] keyVal = cookieKeyVal.trim().split(COOKIE_KEY_VALUE_SPLIT_REGEX);
-            map.put(keyVal[0].trim(), keyVal[1].trim());
-        }
-
-        return new Cookies(map);
+        return new Cookies(Arrays.stream(cookieString.split(COOKIE_STRING_SPLIT_REGEX))
+            .map(String::trim)
+            .collect(Collectors.toUnmodifiableList()));
     }
 
     public static Cookies empty() {
-        return new Cookies(Maps.newHashMap());
+        return new Cookies(Collections.emptyList());
     }
 
-    public String get(String key) {
-        if (Strings.isNullOrEmpty(key)) {
-            throw new IllegalArgumentException(INVALID_COOKIE_KEY);
-        }
-        return map.getOrDefault(key, "");
+    public int size() {
+        return cookies.size();
+    }
+
+    public String getSessionId() {
+        return cookies.stream()
+            .filter(s -> s.startsWith(HttpHeader.JSESSIONID))
+            .map(s -> s.split("=")[1])
+            .collect(Collectors.joining());
     }
 }
