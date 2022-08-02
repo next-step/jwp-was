@@ -88,7 +88,7 @@ public class HttpRequest {
         return requestLine.getMethod();
     }
 
-    public String getBodyValue(String name) {
+    public String getBody(String name) {
         return body.getValue(name);
     }
 

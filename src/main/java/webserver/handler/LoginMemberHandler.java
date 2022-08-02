@@ -12,8 +12,8 @@ public class LoginMemberHandler implements Handler {
 
     @Override
     public ModelAndView handle(HttpRequest httpRequest, HttpResponse httpResponse) {
-        String userId = httpRequest.getBodyValue("userId");
-        String password = httpRequest.getBodyValue("password");
+        String userId = httpRequest.getBody("userId");
+        String password = httpRequest.getBody("password");
         User userById = DataBase.findUserById(userId);
 
         if (userById != null && userById.matchPassword(password)) {

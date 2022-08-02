@@ -36,19 +36,40 @@ class HttpRequestTest {
     }
 
     @DisplayName("InputStream 을 이용해 HttpRequest 를 생성할 수 있다.")
-    @Test
-    void createWithInputStream() throws Exception {
-        // given
-        InputStream in = new FileInputStream("./src/test/resources/http_GET.txt");
+    static class CreateWithInputStreamTest {
 
-        // when
-        HttpRequest httpRequest = HttpRequest.create(in);
+        public static final String SRC_TEST_RESOURCES = "./src/test/resources";
 
-        // then
-        assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(httpRequest.getPath()).isEqualTo("/user/create");
-        assertThat(httpRequest.getHeaders().getValue("Connection")).isEqualTo("keep-alive");
-        assertThat(httpRequest.getParameter("name")).isEqualTo("JaeSung");
-        assertThat(httpRequest.getParameter("password")).isEqualTo("password");
+        @Test
+        void createGetRequestTest() throws Exception {
+            // given
+            InputStream in = new FileInputStream(SRC_TEST_RESOURCES + "/http_GET.txt");
+
+            // when
+            HttpRequest httpRequest = HttpRequest.create(in);
+
+            // then
+            assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
+            assertThat(httpRequest.getPath()).isEqualTo("/user/create");
+            assertThat(httpRequest.getHeaders().getValue("Connection")).isEqualTo("keep-alive");
+            assertThat(httpRequest.getParameter("name")).isEqualTo("JaeSung");
+            assertThat(httpRequest.getParameter("password")).isEqualTo("password");
+        }
+
+        @Test
+        void createPostRequestTest() throws Exception {
+            // given
+            InputStream in = new FileInputStream(SRC_TEST_RESOURCES + "/http_POST.txt");
+
+            // when
+            HttpRequest httpRequest = HttpRequest.create(in);
+
+            // then
+            assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.POST);
+            assertThat(httpRequest.getPath()).isEqualTo("/user/create");
+            assertThat(httpRequest.getHeaders().getValue("Content-Type")).isEqualTo("application/x-www-form-urlencoded");
+            assertThat(httpRequest.getBody("userId")).isEqualTo("javajigi");
+            assertThat(httpRequest.getBody("name")).isEqualTo("JaeSung");
+        }
     }
 }
