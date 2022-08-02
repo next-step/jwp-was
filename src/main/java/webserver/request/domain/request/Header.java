@@ -1,5 +1,7 @@
 package webserver.request.domain.request;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,12 +21,23 @@ public class Header {
                 .forEach(arr -> headerMap.put(arr[0], arr[1]));
     };
 
-    public void addHeaderProperty(String header) {
-        String[] headerMap = header.split(DELIMITER);
+    public Header(Map<String, String> headerMap) {
+        this.headerMap = headerMap;
+    }
 
-        if(headerMap.length == 2) {
-            this.headerMap.put(headerMap[0], headerMap[1]);
+    public static Header from(BufferedReader br) throws IOException {
+        String line = br.readLine();
+        Map<String, String> headerMap = new HashMap<>();
+        while (!line.equals("")) {
+            line = br.readLine();
+            System.out.println(line);
+            String[] values = line.split(DELIMITER);
+
+            if (values.length == 2) {
+                headerMap.put(values[0], values[1]);
+            }
         }
+        return new Header(headerMap);
     }
 
     public String getHeader(String header) {

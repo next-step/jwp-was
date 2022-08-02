@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 import webserver.request.domain.request.*;
-import webserver.request.domain.response.HttpResponse;
+import webserver.response.HttpResponse;
 
 
 public class RequestHandler implements Runnable {
@@ -26,6 +26,7 @@ public class RequestHandler implements Runnable {
 
     private HttpRequest httpRequest;
     private HttpResponse httpResponse;
+    //private AbstractController controller = new AbstractController();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -38,10 +39,7 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             if (in != null) {
                 httpRequest = new HttpRequest(in);
-
-                DataOutputStream dos = new DataOutputStream(out);
-
-                httpResponse = new HttpResponse(dos);
+                httpResponse = new HttpResponse(out);
 
                 matchResponse(httpRequest);
             }

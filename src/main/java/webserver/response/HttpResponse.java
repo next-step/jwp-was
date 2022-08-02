@@ -1,4 +1,4 @@
-package webserver.request.domain.response;
+package webserver.response;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

@@ -12,10 +12,14 @@ public class RequestLine {
     private ProtocolInfo protocolInfo;
 
     private RequestLine(String[] values) {
-        init(values);
+        method = Method.valueOf(values[0]);
+        path = Path.parse(values[1]);
+        protocolInfo = ProtocolInfo.parse(values[2]);
     }
 
     public static RequestLine parse(String requestLine) {
+        System.out.println(requestLine);
+
         validateRequestline(requestLine);
 
         String[] values = requestLine.split(DELIMITER);
@@ -29,13 +33,7 @@ public class RequestLine {
         }
     }
 
-    private void init(String[] values) {
-        method = Method.valueOf(values[0]);
-        path = Path.parse(values[1]);
-        protocolInfo = ProtocolInfo.parse(values[2]);
-    }
-
-    public String parseMethod() {
+    public String getMethod() {
         return String.valueOf(method);
     }
 
@@ -46,7 +44,7 @@ public class RequestLine {
         return "";
     }
 
-    public QueryString parseQueryString() {
+    public QueryString getQueryString() {
         return path.getQueryString();
     }
 
