@@ -13,6 +13,7 @@ import http.HttpStatus;
 import http.request.Headers;
 import http.request.HttpRequest;
 import http.request.RequestLine;
+import http.request.session.MemorySessionStore;
 
 class UserCreateControllerTest {
 
@@ -27,8 +28,7 @@ class UserCreateControllerTest {
         var httpRequest = new HttpRequest(
             new RequestLine("POST /user/create HTTP/1.1"),
             new Headers(List.of("Content-Length: " + body.length())),
-            body
-        );
+            body, new MemorySessionStore());
 
         var controller = new UserCreateController();
         var response = controller.service(httpRequest);
