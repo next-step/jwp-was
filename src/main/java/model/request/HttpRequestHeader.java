@@ -40,11 +40,11 @@ public class HttpRequestHeader {
         return requestLine.getPath().equals(path);
     }
 
-    public Map<String, String> getQueryString() {
-        return requestLine.getQueryString();
-    }
-
     public Map<String, String> getRequestBody() {
         return requestBody;
+    }
+
+    public boolean hasCookie(String cookie) {
+        return httpHeader.hasCookie(cookie);
     }
 }
