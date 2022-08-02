@@ -1,13 +1,13 @@
-package webserver;
+package webserver.request;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class HttpHeader {
+public class RequestHeader {
     private final Map<String, String> headers = new HashMap<>();
 
-    public HttpHeader(String line) {
+    public RequestHeader(String line) {
         String headerKey = line.split(":")[0];
         if (headerKey.isEmpty()) {
             return;
@@ -15,7 +15,7 @@ public class HttpHeader {
         String headerValue = line.split(":")[1].trim();
 
         if (Objects.equals(headerKey, "Cookie")) {
-            String logined = HttpHeaderParser.isLogin(headerValue);
+            String logined = RequestHeaderParser.isLogin(headerValue);
             headers.put("logined", logined);
         }
 

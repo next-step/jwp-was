@@ -116,4 +116,10 @@ Set-Cookie: logined=true; Path=/
 - [X] HttpMethod enum 클래스 생성
 - [X] RequestLine 클래스 이름 변경
 - [X] userList 화면 수정
-- [ ] 
+
+## HTTP 웹 서버 리팩토링
+### WAS 요구사항
+- [ ] 각각의 역할을 분리해 재사용 가능하도록 개선한다.
+  - WAS 기능, HTTP 요청/응답 처리 기능은 애플리케이션 개발자가 신경쓰지 않아도 재사용이 가능한 구조가 되도록 한다.
+- [ ] HTTP 요청 Header/Body 처리, 응답 Header/Body 처리만을 담당하는 역할을 분리해 재사용 가능하도록 한다.
+### 코드 리팩토링 

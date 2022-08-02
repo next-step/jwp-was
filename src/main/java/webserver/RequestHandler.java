@@ -11,7 +11,13 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.HandleBarTemplateLoader;
 import utils.IOUtils;
+import webserver.request.QueryStringParser;
+import webserver.request.RequestHeader;
+import webserver.request.RequestLine;
+import webserver.request.UserCreate;
+import webserver.response.HttpResponseWriter;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -29,16 +35,14 @@ public class RequestHandler implements Runnable {
             if (line == null) {
                 return;
             }
-            // Request Line
             RequestLine requestLineParser = new RequestLine(line);
             String url = requestLineParser.getUri().getPath();
-            // Request Header
             int contentLength = 0;
             boolean logined = false;
             while (!line.equals("")) {
                 line = br.readLine();
                 logger.debug("header: {}", line);
-                HttpHeader httpHeader = new HttpHeader(line);
+                RequestHeader httpHeader = new RequestHeader(line);
                 if (line.contains("Content-Length")){
                     contentLength = httpHeader.getContentLength();
                 }
