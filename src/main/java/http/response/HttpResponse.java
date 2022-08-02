@@ -3,6 +3,8 @@ package http.response;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -35,11 +37,11 @@ public class HttpResponse {
     }
 
     public HttpResponse(HttpStatus status, Map<String, String> headers) {
-        this(Protocol.of("HTTP/1.1"), status, headers, "", Set.of());
+        this(Protocol.of("HTTP/1.1"), status, headers, "", new HashSet<>());
     }
 
     public HttpResponse(HttpStatus status, Map<String, String> headers, Cookie cookie) {
-        this(Protocol.of("HTTP/1.1"), status, headers, "", Set.of(cookie));
+        this(Protocol.of("HTTP/1.1"), status, headers, "", new HashSet<>(Arrays.asList(cookie)));
     }
 
     public static HttpResponse found(String location) {
@@ -47,7 +49,7 @@ public class HttpResponse {
     }
 
     public static HttpResponse ok(String body) {
-        return new HttpResponse(Protocol.of("HTTP/1.1"), HttpStatus.OK, Map.of(), body, Set.of());
+        return new HttpResponse(Protocol.of("HTTP/1.1"), HttpStatus.OK, Map.of(), body, new HashSet<>());
     }
 
     public static HttpResponse parseStaticFile(String url, String fileExtension) {
@@ -61,7 +63,7 @@ public class HttpResponse {
             HttpStatus.OK,
             Map.of("Content-Type", contentType.getMessage()),
             new String(bytes, StandardCharsets.UTF_8),
-            Set.of()
+            new HashSet<>()
         );
     }
 
@@ -84,6 +86,10 @@ public class HttpResponse {
     public void write(DataOutputStream dataOutputStream) {
         writeHeader(dataOutputStream);
         writeBody(dataOutputStream);
+    }
+
+    public void putCookie(String key, String value) {
+        cookies.putCookie(key, value);
     }
 
     private void writeHeader(DataOutputStream dos) {
@@ -129,5 +135,9 @@ public class HttpResponse {
 
     public Map<String, String> getHeaders() {
         return httpResponseHeaders.getHeaders();
+    }
+
+    public boolean isMarkdown() {
+        return httpResponseHeaders.isTextType();
     }
 }
