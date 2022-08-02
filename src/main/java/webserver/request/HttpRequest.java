@@ -3,22 +3,26 @@ package webserver.request;
 import enums.HttpMethod;
 import java.util.List;
 import java.util.Map;
+import webserver.Cookie;
 import webserver.HttpHeader;
 
 public class HttpRequest {
     private final RequestLine requestLine;
     private final HttpHeader headers;
+    private final Map<String, Cookie> cookies;
     private RequestBody body;
 
-    public HttpRequest(RequestLine requestLine, HttpHeader headers, RequestBody body) {
+    public HttpRequest(RequestLine requestLine, HttpHeader headers, Map<String, Cookie> cookies, RequestBody body) {
         this.requestLine = requestLine;
         this.headers = headers;
+        this.cookies = cookies;
         this.body = body;
     }
 
     public HttpRequest(List<String> request) {
         this.requestLine = new RequestLine(request.get(0));
         this.headers = new HttpHeader(request.subList(1, request.size()));
+        this.cookies = Cookie.fromHeaders(headers);
         this.body = null;
     }
 
@@ -52,5 +56,13 @@ public class HttpRequest {
 
     public Map<String, String> getHeaders() {
         return headers.getHeaders();
+    }
+
+    public Map<String, Cookie> getCookies() {
+        return cookies;
+    }
+
+    public Cookie getCookie(String key) {
+        return cookies.get(key);
     }
 }

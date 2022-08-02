@@ -2,7 +2,6 @@ package webserver.controller;
 
 import enums.HttpStatusCode;
 import utils.FileIoUtils;
-import webserver.HttpHeader;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 

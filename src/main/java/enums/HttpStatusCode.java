@@ -3,6 +3,7 @@ package enums;
 public enum HttpStatusCode {
     OK(200, "OK"),
     FOUND(302, "Found"),
+    UNAUTHORIZED(401, "Unauthorized"),
     NOT_FOUND(404, "Not Found");
 
     private final int code;

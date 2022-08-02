@@ -8,10 +8,8 @@ import org.junit.jupiter.api.Test;
 import utils.JsonUtils;
 import webserver.request.HttpRequest;
 import webserver.request.RequestBody;
-import webserver.request.RequestBodyTest;
 import webserver.response.HttpResponse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HandlerMapperTest {
     @Test

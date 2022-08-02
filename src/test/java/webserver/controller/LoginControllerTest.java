@@ -17,7 +17,7 @@ public class LoginControllerTest {
     void loginSuccessTest() throws Exception {
         User user = new User("id", "password", "name", "email");
         DataBase.addUser(user);
-        HttpRequest request = Fixtures.createHttpRequest();
+        HttpRequest request = Fixtures.createHttpRequest("logined=true");
         request.setBody(Fixtures.createRequestBody("userId=id&password=password&name=name&email=email"));
 
         HttpResponse result = new LoginController().execute(request);
@@ -30,7 +30,7 @@ public class LoginControllerTest {
     @Test
     @DisplayName("존재하는 유저가 로그인하면 logined=false 로 쿠키가 생성된다.")
     void loginFailTest() throws Exception {
-        HttpRequest request = Fixtures.createHttpRequest();
+        HttpRequest request = Fixtures.createHttpRequest("logined=false");
         request.setBody(Fixtures.createRequestBody("userId=id&password=password&name=name&email=email"));
 
         HttpResponse result = new LoginController().execute(request);

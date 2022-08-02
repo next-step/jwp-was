@@ -14,6 +14,7 @@ public class HttpRequestTest {
         List<String> request = List.of(("GET /index.html HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
+                "Cookie: logined=true\n" +
                 "Accept: */*").split("\n"));
 
         HttpRequest result = new HttpRequest(request);
@@ -25,7 +26,9 @@ public class HttpRequestTest {
         assertEquals(result.getHeaders(), Map.of(
                 "Host", "localhost:8080",
                 "Connection", "keep-alive",
-                "Accept", "*/*"
+                "Accept", "*/*",
+                "Cookie", "logined=true"
         ));
+        assertEquals(result.getCookie("logined").getValue(), "true");
     }
 }

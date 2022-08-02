@@ -9,7 +9,7 @@ public class HandlerMapper {
     private static final String USER_CONTROLLER_PATH = "/user/create";
 
     public HttpResponse handle(HttpRequest httpRequest) throws Exception {
-        List<Controller> controllerList = List.of(new ViewController(), new UserCreateController(), new LoginController());
+        List<Controller> controllerList = List.of(new ViewController(), new UserCreateController(), new LoginController(), new UserListController());
 
         for (Controller controller : controllerList) {
             if (controller.canExecute(httpRequest)) {
