@@ -13,6 +13,10 @@ public class QueryString {
 
     private Map<String, String> queryStrings;
 
+    public QueryString() {
+        this(new HashMap<>());
+    }
+
     QueryString(Map<String, String> queryStrings) {
         this.queryStrings = queryStrings;
     }
