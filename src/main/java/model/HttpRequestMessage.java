@@ -32,7 +32,7 @@ public class HttpRequestMessage {
         }
 
         this.requestLine = HttpParser.parseRequestLine(httpMessageData.remove(0));
-        if (httpMessageData.size() == 1) {
+        if (httpMessageData.isEmpty()) {
             return;
         }
 
