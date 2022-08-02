@@ -2,7 +2,7 @@ package study;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLDecoder;
 
 import static org.assertj.core.api.Assertions.assertThat;

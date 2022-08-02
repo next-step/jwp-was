@@ -12,9 +12,9 @@ public class RequestPathTest {
 
         final RequestPath requestPath = new RequestPath(request);
 
-        assertThat(requestPath.getParams().get("userId").get(0)).isEqualTo("javajigi");
-        assertThat(requestPath.getParams().get("password").get(0)).isEqualTo("password");
-        assertThat(requestPath.getParams().get("name").get(0)).isEqualTo("JaeSung");
+        assertThat(requestPath.getParams().getOneValue("userId")).isEqualTo("javajigi");
+        assertThat(requestPath.getParams().getOneValue("password")).isEqualTo("password");
+        assertThat(requestPath.getParams().getOneValue("name")).isEqualTo("JaeSung");
     }
 
     @Test

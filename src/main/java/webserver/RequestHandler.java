@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
 
+import model.HttpHeader;
+import model.HttpRequest;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +27,27 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
-            RequestLine requestLine = new RequestLine(IOUtils.readRequestData(in));
             DataOutputStream dos = new DataOutputStream(out);
 
-//            if (requestLine.isCreateUserPath()) {
-//                new User(requestLine.getRequestPath());
-//            }
-            byte[] body = FileIoUtils.loadFileFromClasspath(requestLine.getRequestPath());
-//            byte[] body = "Hello World".getBytes();
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+
+            final HttpHeader httpHeader = new HttpHeader(IOUtils.readHeaderData(br));
+            final RequestLine requestLine = new RequestLine(httpHeader.getRequestLine());
+            final String requestBody = IOUtils.readData(br, httpHeader.getContentLength());
+
+            final HttpRequest httpRequest = new HttpRequest(requestLine, requestBody);
+
+
+            if (requestLine.isCreateUserPath()) {
+                final User user = User.createUser(httpRequest.getBody());
+            }
+            byte[] body = null;
+            if (requestLine.getRequestPath() != null && !requestLine.getRequestPath().equals("")) {
+                body = FileIoUtils.loadFileFromClasspath(requestLine.getRequestPath());
+            }
+            else {
+                body = "Hello World".getBytes();
+            }
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {

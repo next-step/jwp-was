@@ -2,14 +2,13 @@ package webserver;
 
 import model.HttpMethod;
 
-import java.util.List;
-
 public class RequestLine {
 
     public static final int METHOD_INDEX = 0;
     public static final int PATH_INDEX = 1;
     public static final int PROTOCOL_AND_VERSION_INDEX = 2;
     public static final String REGEX_BLANK = " ";
+    public static final String CREATE_PATH = "/user/create";
 
     private HttpMethod method;
     private RequestPath request;
@@ -55,6 +54,6 @@ public class RequestLine {
     }
 
     public boolean isCreateUserPath() {
-        return request.getPath().equals("/create");
+        return request.getPath().equals(CREATE_PATH);
     }
 }

@@ -51,7 +51,7 @@ public class RequestLineTest {
 
     @Test
     void 회원가입_경로_확인() {
-        final String request = "GET /create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net/ HTTP/1.1";
+        final String request = "GET /user/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net/ HTTP/1.1";
 
         final RequestLine requestLine = new RequestLine(request);
 

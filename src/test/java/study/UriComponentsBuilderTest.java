@@ -26,4 +26,18 @@ public class UriComponentsBuilderTest {
         assertThat(param2.size()).isEqualTo(2);
         assertThat(param1.size()).isEqualTo(1);
     }
+
+    @Test
+    void requestBody_를_쿼리맵으로변환() {
+        String requestBody = "?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
+
+        MultiValueMap<String, String> parameters =
+                UriComponentsBuilder.fromUriString(requestBody).build().getQueryParams();
+
+        List<String> param1 = parameters.get("userId");
+        List<String> param2 = parameters.get("password");
+
+        assertThat(param1.contains("javajigi")).isTrue();
+        assertThat(param2.contains("password")).isTrue();
+    }
 }

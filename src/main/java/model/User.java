@@ -1,7 +1,9 @@
 package model;
 
-import org.springframework.util.MultiValueMap;
 import webserver.RequestParams;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 public class User {
     private String userId;
@@ -16,8 +18,8 @@ public class User {
         this.email = email;
     }
 
-    public static User createUser(RequestParams params) {
-        return new User(params.getOneValue("userId"), params.getOneValue("password"), params.getOneValue("name"), params.getOneValue("email"));
+    public static User createUser(Body body) throws UnsupportedEncodingException {
+        return new User(body.getOneValue("userId"), body.getOneValue("password"), body.getOneValue("name"), body.getOneValue("email"));
     }
 
     public String getUserId() {

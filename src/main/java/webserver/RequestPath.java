@@ -1,6 +1,5 @@
 package webserver;
 
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public class RequestPath {
@@ -16,7 +15,7 @@ public class RequestPath {
 
         this.path = requests[PATH_INDEX];
 
-        if (requests.length < 1) {
+        if (requests.length <= 1) {
             return;
         }
         this.params = new RequestParams(UriComponentsBuilder.fromUriString(request).build().getQueryParams());
