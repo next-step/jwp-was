@@ -28,11 +28,15 @@
   - [X] POST `/user/create` 요청 처리하기
     - [X] RequestBody 생성하기
     - [X] HttpRequest 정의하여 추상화하기
-    - [X] SignUpController 정의하여 추상화하기
+    - [X] SignUpController 구현하기
 - 요구사항 4
   - [X] 회원가입 후 `/index.html`로 리다이렉트하기
     - [X] route 기능 만들기
     - [X] HttpResonse 요소마다 분리하여 write하기
     - [X] HttpResponse에 redirect, getView 정의하기
     - [X] HttpStatus 에 알맞게 HttpHeader 생성하기
-    - [X] HomeController 정의하여 추상화하기
+    - [X] HomeController 구현하기
+- 요구사항 5
+  - [X] 로그인 시 쿠키 전달하기
+    - [X] 쿠키 헤더 구현하기
+    - [X] LogInController 구현하기
