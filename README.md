@@ -133,3 +133,10 @@
   - 세션 관리를 위한 자료구조
     - ex: Map<String, HttpSession> 
     - SpringContextHolder 개념도 차용해볼만하다.
+
+## Step 5 - Thread Pool 적용
+- 요구사항
+  - [x] Java에서 기본으로 제공하는 ThreadPoolExecutor를 활용해 ThreadPool 기능을 추가한다.
+  - [x] 최대 ThradPool의 크기는 250, 모든 Thread가 사용 중인(Busy) 상태이면 100명까지 대기 상태가 되도록 구현한다.
+  - [x] Spring에서 제공하는 RestTemplate을 활용해 서버의 ThreadPool 수보다 많은 요청을 동시에 보내본다.
+    - [x] 서버의 최대 Thread Pool 수를 5로 설정하고, ExecutorsTest의 Executors.newFixedThreadPool(10)과 같이 설정해 동시에 10개의 요청이 발생하도록 구현
