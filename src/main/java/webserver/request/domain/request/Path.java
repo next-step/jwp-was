@@ -7,10 +7,8 @@ import webserver.exception.StringEmptyException;
 
 import java.util.Objects;
 
-@Getter
 public class Path {
 
-    private static final int PATH_PLACE_IDX = 1;
     private static final String DELIMITER = "\\?";
 
     private String path;
@@ -42,6 +40,13 @@ public class Path {
 
     public QueryString getQueryString() {
         return this.queryString;
+    }
+
+    public String getPath() {
+        return path;
+//        if(!StringUtils.hasText(path))
+//            return path;
+//        return "";
     }
 
     @Override

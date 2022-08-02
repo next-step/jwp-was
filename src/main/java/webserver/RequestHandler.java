@@ -26,7 +26,6 @@ public class RequestHandler implements Runnable {
 
     private HttpRequest httpRequest;
     private HttpResponse httpResponse;
-    //private AbstractController controller = new AbstractController();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -51,10 +50,10 @@ public class RequestHandler implements Runnable {
 
     private void matchResponse(HttpRequest httpRequest) throws IOException, URISyntaxException {
         String path = httpRequest.getPath();
-        String method = httpRequest.getMethod();
+        Method method = httpRequest.getMethod();
 
         if (path.equals("/user/create")) {
-            if (method.equals("GET")) {
+            if (method.isGet()) {
                 QueryString queryString = httpRequest.getQueryString();
                 httpResponse.redirect(parseQueryString(path, queryString));
             } else {

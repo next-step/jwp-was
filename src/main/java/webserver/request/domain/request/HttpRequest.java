@@ -9,37 +9,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class HttpRequest {
-    private static final String DELIMITER1 = " ";
-    private static final String DELIMITER2 = "\\?";
-
-    private Method method;
-    private String path;
-    private QueryString queryString;
-    private Header header = new Header();
+    private RequestLine requestLine;
+    private Header header;
     private RequestBody requestBody;
 
     public HttpRequest(InputStream is) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
-        String line = br.readLine();
 
-        System.out.println(line);
+        requestLine = RequestLine.parse(br.readLine());
+        header = Header.from(br);
 
-        if (line == null) {
-            return;
-        }
-
-        parseRequestLine(line);
-
-        while (!line.equals("")) {
-            line = br.readLine();
-            System.out.println(line);
-            header.addHeaderProperty(line);
-        }
-
-        //parseHeaders(br, line);
-
-        if(method.equals(Method.POST)) {
-            //line = br.readLine();
+        if(requestLine.getMethod().isPost()) {
             int readNums = Integer.parseInt(header.getHeader("Content-Length"));
             String body = IOUtils.readData(br, readNums);
             System.out.println(body);
@@ -47,37 +27,15 @@ public class HttpRequest {
         }
     }
 
-    private void parseRequestLine(String line) {
-        String[] arrays = line.split(DELIMITER1);
-        method = Method.valueOf(arrays[0]);
-
-        if (method.toString().equals("GET")) {
-            parseUrl(arrays[1]);
-            return;
-        }
-
-        path = arrays[1];
-    }
-
-    private void parseUrl(String url) {
-        String[] arrays = url.split(DELIMITER2);
-
-        path = arrays[0];
-
-        if(arrays.length == 2) {
-            queryString = new QueryString(arrays[1]);
-        }
-    }
-
-    public String getMethod() {
-        if(method != null) {
-            return method.name();
-        }
-        return null;
+    public Method getMethod() {
+        //if(requestLine.getMethod() != null) {
+            return requestLine.getMethod();
+        //}
+        //return null;
     }
 
     public String getPath() {
-        return path;
+        return requestLine.getPath();
     }
 
     public String getHeader(String header) {
@@ -85,13 +43,14 @@ public class HttpRequest {
     }
 
     public String getParameter(String parameter) {
-        if(method.equals(Method.GET))
-            return queryString.getParameter(parameter);
+        Method method = requestLine.getMethod();
+        if(method.isGet())
+            return requestLine.getQueryString().getParameter(parameter);
         return requestBody.getParameter(parameter);
     }
 
     public QueryString getQueryString() {
-        return queryString;
+        return requestLine.getQueryString();
     }
 
     public RequestBody getBody() {

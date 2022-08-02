@@ -27,6 +27,7 @@ public class Header {
 
     public static Header from(BufferedReader br) throws IOException {
         String line = br.readLine();
+
         Map<String, String> headerMap = new HashMap<>();
         while (!line.equals("")) {
             line = br.readLine();
@@ -37,6 +38,7 @@ public class Header {
                 headerMap.put(values[0], values[1]);
             }
         }
+
         return new Header(headerMap);
     }
 

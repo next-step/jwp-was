@@ -1,6 +1,5 @@
 package webserver.request.domain.request;
 
-import org.springframework.util.StringUtils;
 import webserver.exception.StringEmptyException;
 
 public class RequestLine {
@@ -12,7 +11,7 @@ public class RequestLine {
     private ProtocolInfo protocolInfo;
 
     private RequestLine(String[] values) {
-        method = Method.valueOf(values[0]);
+        method = Method.from(values[0]);
         path = Path.parse(values[1]);
         protocolInfo = ProtocolInfo.parse(values[2]);
     }
@@ -20,28 +19,25 @@ public class RequestLine {
     public static RequestLine parse(String requestLine) {
         System.out.println(requestLine);
 
-        validateRequestline(requestLine);
+        validateRequestLine(requestLine);
 
         String[] values = requestLine.split(DELIMITER);
 
         return new RequestLine(values);
     }
 
-    private static void validateRequestline(String requestLine) {
-        if(requestLine.isBlank()) {
+    private static void validateRequestLine(String requestLine) {
+        if (requestLine.isBlank()) {
             throw new StringEmptyException("requestLine is empty");
         }
     }
 
-    public String getMethod() {
-        return String.valueOf(method);
+    public Method getMethod() {
+        return method;
     }
 
-    public String parsePath() {
-        if (StringUtils.hasText(path.getPath())) {
-            return path.getPath();
-        }
-        return "";
+    public String getPath() {
+        return path.getPath();
     }
 
     public QueryString getQueryString() {
