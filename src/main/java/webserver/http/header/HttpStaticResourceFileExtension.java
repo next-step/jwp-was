@@ -1,4 +1,4 @@
-package endpoint;
+package webserver.http.header;
 
 import java.util.Arrays;
 
@@ -8,7 +8,7 @@ public enum HttpStaticResourceFileExtension {
     NONE(""),
     NOTHING("nothing");
 
-    private String extensionName;
+    private final String extensionName;
 
     HttpStaticResourceFileExtension(String extensionName) {
         this.extensionName = extensionName;

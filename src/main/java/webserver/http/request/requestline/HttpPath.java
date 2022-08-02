@@ -1,7 +1,7 @@
 package webserver.http.request.requestline;
 
 import com.google.common.io.Files;
-import endpoint.HttpStaticResourceFileExtension;
+import webserver.http.header.HttpStaticResourceFileExtension;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -26,10 +26,10 @@ public class HttpPath {
             throw new IllegalArgumentException("잘못된 HTTP Path 입니다.");
         }
 
-        String fullPath = httpPathSchemas[HTTP_PATH_SCHEMAS_PATH_INDEX];
+        String fullPathInSchema = httpPathSchemas[HTTP_PATH_SCHEMAS_PATH_INDEX];
 
-        this.pathComponents = HttpPathComponentsBuilder.validateAndBuild(fullPath);
-        this.fullPath = fullPath;
+        this.pathComponents = HttpPathComponentsBuilder.validateAndBuild(fullPathInSchema);
+        this.fullPath = fullPathInSchema;
         this.httpQueryStrings = toQueryStrings(httpPathSchemas);
     }
 

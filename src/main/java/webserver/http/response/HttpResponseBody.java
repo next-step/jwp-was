@@ -1,10 +1,10 @@
 package webserver.http.response;
 
-import endpoint.HttpStaticResourceFileExtension;
 import endpoint.TemplateResource;
+import webserver.http.header.HttpStaticResourceFileExtension;
 
 public class HttpResponseBody {
-    private byte[] bodyBytes;
+    private final byte[] bodyBytes;
 
     private HttpStaticResourceFileExtension httpStaticResourceFileExtension = HttpStaticResourceFileExtension.NOTHING;
 

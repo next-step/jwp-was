@@ -1,21 +1,21 @@
 package webserver.http.response;
 
-import endpoint.HttpStaticResourceFileExtension;
 import endpoint.TemplateResource;
 import utils.StaticResourceLoader;
 import utils.TemplatePageLoader;
+import webserver.http.header.HttpStaticResourceFileExtension;
 
 import java.util.Map;
 
 import static utils.TemplatePageLoader.EMPTY_TEMPLATE_BYTES;
-import static webserver.http.header.HttpHeaderConstants.*;
+import static webserver.http.header.HttpHeaderConstants.CONTENT_TYPE;
 
 public class HttpResponseMessage {
     public static final String RESPONSE_END_OF_LINE_MARKER = "\r\n";
 
-    private HttpResponseStatusLine httpResponseStatusLine;
-    private HttpResponseBody httpResponseBody;
-    private HttpResponseHeaders httpResponseHeaders;
+    private final HttpResponseStatusLine httpResponseStatusLine;
+    private final HttpResponseBody httpResponseBody;
+    private final HttpResponseHeaders httpResponseHeaders;
 
 
     public HttpResponseMessage(HttpResponseStatusLine httpResponseStatusLine, HttpResponseBody httpResponseBody, HttpResponseHeaders httpResponseHeaders) {
@@ -30,16 +30,12 @@ public class HttpResponseMessage {
 
         HttpStaticResourceFileExtension httpStaticResourceFileExtension = httpResponseBody.getHttpStaticResourceFileExtension();
 
-        switch (httpStaticResourceFileExtension) {
-            case HTML:
-                httpResponseHeaders.addHeader(CONTENT_TYPE, TEXT_HTML_CHARSET_UTF_8);
-                break;
-            case CSS:
-                httpResponseHeaders.addHeader(CONTENT_TYPE, TEXT_CSS_CHARSET_UTF_8);
-                break;
-            default:
-                break;
+        HttpContentTypeHeader httpContentTypeHeader = HttpContentTypeHeader.of(httpStaticResourceFileExtension);
+
+        if (httpContentTypeHeader.isNotNoneContentType()) {
+            httpResponseHeaders.addHeader(CONTENT_TYPE, httpContentTypeHeader.getContentType());
         }
+
         httpResponseHeaders.addContentLengthHeader(httpResponseBody.getBodyBytesLength());
     }
 
