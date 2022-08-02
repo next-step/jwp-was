@@ -191,3 +191,18 @@ Connection: keep-alive
 - `void invalidate()`
   - 현재 세션에 저장되어 있는 모든 값을 삭제
 
+
+## 5단계 - Thread Pool 적용
+
+### 요구사항 1
+
+- 최대 ThradPool의 크기는 250 
+- 모든 Thread가 사용 중인(Busy) 상태면 100명까지 대기 상태
+
+
+### 요구사항 2
+
+- 서버의 ThreadPool 수보다 많은 요청을 동시에 보내는 테스트 작성
+
+> 예를 들어 서버의 최대 Thread Pool 수를 5로 설정  
+> ExecutorsTest의 Executors.newFixedThreadPool(10)과 같이 설정해 동시에 10개의 요청
