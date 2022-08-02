@@ -15,7 +15,8 @@ public class DispatchController {
     static {
         controllers = Set.of(
                 new CreateUserController(),
-                new ResourceController()
+                new ResourceController(),
+                new LoginController()
         );
     }
 
