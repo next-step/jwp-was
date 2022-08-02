@@ -10,7 +10,6 @@ import java.util.List;
 
 public class HttpPath {
     public static final String PRIMARY_QUERY_STRING_SYMBOL = "\\?";
-
     private static final int HTTP_PATH_SCHEMAS_PATH_INDEX = 0;
     private static final int HTTP_PATH_SCHEMAS_QUERY_STRING_INDEX = 1;
     private static final int HTTP_PATH_SCHEMAS_MINIMUM_LENGTH = 1;

@@ -13,8 +13,8 @@ public class TemplatePageLoader {
     public static final byte[] EMPTY_TEMPLATE_BYTES = new byte[]{};
     private static final String TEMPLATES_BASE_PATH = "./templates";
     private static final String NOT_FOUND_PAGE_FILE_PATH = "/nof_found.html";
-    public static final String TEMPLATE_FILE_EXTENSION = ".html";
-    public static final String PAGE_PATH_DELIMITER = "/";
+    private static final String TEMPLATE_FILE_EXTENSION = ".html";
+    private static final String PAGE_PATH_DELIMITER = "/";
 
     public static TemplateResource notFoundPage() {
         return getTemplatePage(NOT_FOUND_PAGE_FILE_PATH);

@@ -9,7 +9,7 @@ public class CreateUserService {
     private static final Logger logger = LoggerFactory.getLogger(CreateUserService.class);
 
     public static void createUser(CreateUserCommand createUserCommand) {
-        User user = createUserCommand.toUser();
+        User user = createUserCommand.convertToUser();
 
         DataBase.addUser(user);
 
