@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public class HttpRequest {
+    private static final String EMPTY_STRING = "";
     private RequestLine requestLine;
     private HttpHeader header = new HttpHeader();
     private QueryString body = new QueryString();
@@ -42,15 +43,21 @@ public class HttpRequest {
     }
 
     private static void initRequestLine(BufferedReader br, HttpRequest httpRequest) throws IOException {
-        httpRequest.requestLine = RequestLine.parse(br.readLine());
+        String line = br.readLine();
+        if (line == null) { // 요청 line 이 null 일 경우 parse 하지 않음.
+            return;
+        }
+        httpRequest.requestLine = RequestLine.parse(line);
     }
 
     private static void initHeader(BufferedReader br, HttpRequest httpRequest) throws IOException {
         String line = br.readLine();
-        while (!line.equals("")) {
-            httpRequest.header.setField(line);
+        HttpHeader header = httpRequest.header;
+        while (!line.equals(EMPTY_STRING)) {
+            header.setField(line);
             line = br.readLine();
         }
+        header.setCookie(header.getCookieValue());
     }
 
     public boolean isMethodEqual(Method method) {
@@ -67,6 +74,10 @@ public class HttpRequest {
 
     public String getParam(String key) {
         return this.body.getValue(key);
+    }
+
+    public boolean isLogin() {
+        return this.header.isLogin();
     }
 
     @Override

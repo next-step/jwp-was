@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -22,5 +23,13 @@ class HttpHeaderTest {
     void throw_exception_set_http_header_null_or_empty(String headerString) {
         HttpHeader header = new HttpHeader();
         assertThatThrownBy(() -> header.setField(headerString)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @DisplayName("Cookie 셋팅 요청 값이 null 일 경우 예외가 발생한다.")
+    void throw_exception_setCookie_null(String cookieString) {
+        HttpHeader header = new HttpHeader();
+        assertThatThrownBy(() -> header.setCookie(cookieString)).isInstanceOf(IllegalArgumentException.class);
     }
 }

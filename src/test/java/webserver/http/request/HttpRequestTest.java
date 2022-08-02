@@ -2,6 +2,7 @@ package webserver.http.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.request.header.Cookie;
 import webserver.http.request.header.HttpHeader;
 import webserver.http.request.requestline.QueryString;
 import webserver.http.request.requestline.RequestLine;
@@ -27,7 +28,7 @@ class HttpRequestTest {
                 "Content-Length", "71",
                 "Content-Type", "application/x-www-form-urlencoded",
                 "Accept", "*/*"
-        ));
+        ), new Cookie());
         QueryString body = QueryString.parse("userId=javajigi&password=password&name=JaeSung&email=javajigi@slipp.net");
         HttpRequest expectedHttpRequest = new HttpRequest(requestLine, header, body);
 

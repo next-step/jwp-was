@@ -1,20 +1,26 @@
 package webserver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.Socket;
-import java.net.URISyntaxException;
-
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.http.request.HttpRequest;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -29,10 +35,34 @@ public class RequestHandler implements Runnable {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
+        TemplateLoader loader = new ClassPathTemplateLoader();
+        loader.setPrefix("/templates");
+        loader.setSuffix(".html");
+        Handlebars handlebars = new Handlebars(loader);
+
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             HttpRequest httpRequest = HttpRequest.of(br);
             byte[] body = {};
+            boolean isLogin = false;
+
+            if (httpRequest.isLogin()) {
+                isLogin = true;
+            }
+
+            if (httpRequest.getPath().equals("/user/list")) {
+                DataOutputStream dos = new DataOutputStream(out);
+                if (isLogin) {
+                    Template template = handlebars.compile("user/list");
+                    Collection<User> users = DataBase.findAll();
+                    body = template.apply(Map.of("users", users)).getBytes();
+                    response200Header(dos, body.length);
+                    responseBody(dos, body);
+                    return;
+                }
+                responseIsNotLoginHeader(dos);
+                return;
+            }
 
             if (httpRequest.getPath().equals("/user/create")) {
                 User user = new User(
@@ -125,6 +155,16 @@ public class RequestHandler implements Runnable {
         try {
             byte[] body = FileIoUtils.loadFileFromClasspath("./templates/user/login_failed.html");
             response200LoginFailHeader(dos, body.length);
+            responseBody(dos, body);
+        } catch (IOException | URISyntaxException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void responseIsNotLoginHeader(DataOutputStream dos) {
+        try {
+            byte[] body = FileIoUtils.loadFileFromClasspath("./templates/user/login.html");
+            response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
