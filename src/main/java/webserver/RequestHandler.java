@@ -55,7 +55,6 @@ public class RequestHandler implements Runnable {
         }
 
         HttpRequest httpRequest = new HttpRequest(request);
-        // refactoring 필요
         String contentLength = httpRequest.getHeaders().get("Content-Length");
 
         if (contentLength != null) {
@@ -72,10 +71,8 @@ public class RequestHandler implements Runnable {
 
         try {
             dos.writeBytes(String.format("HTTP/1.1 %s \r\n", response.getStatusCode()));
-            responseHeader(dos, response.getHeaders());
+            responseHeader(dos, response.getHeaders(), body.length);
             responseCookie(dos, response.getCookies());
-//            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes(String.format("Content-Length: %s \r\n", body.length));
             dos.writeBytes("\r\n");
             responseBody(dos, body);
         } catch (IOException e) {
@@ -83,10 +80,11 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void responseHeader(DataOutputStream dos, HttpHeader headers) throws IOException {
+    private void responseHeader(DataOutputStream dos, HttpHeader headers, Integer bodyLength) throws IOException {
         for (Map.Entry<String, String> header : headers.getHeaders().entrySet()) {
             dos.writeBytes(String.format("%s: %s \r\n", header.getKey(), header.getValue()));
         }
+        dos.writeBytes(String.format("Content-Length: %s \r\n", bodyLength));
     }
 
     private void responseCookie(DataOutputStream dos, Map<String, Cookie> cookies) throws IOException {
