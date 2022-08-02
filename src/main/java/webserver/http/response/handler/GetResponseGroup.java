@@ -3,7 +3,7 @@ package webserver.http.response.handler;
 import java.util.Map;
 
 import webserver.http.request.handler.get.HomeRequestHandler;
-import webserver.http.request.handler.get.UserCreateGetRequestHandler;
+import webserver.http.request.handler.get.UserCreateByQueryParamRequestHandler;
 import webserver.http.request.handler.get.UserFormRequestHandler;
 import webserver.http.request.handler.get.UserListRequestHandler;
 import webserver.http.response.handler.get.DefaultResponseHandler;
@@ -17,7 +17,7 @@ public class GetResponseGroup implements ResponseGroup {
             Map.entry(HomeRequestHandler.requestIndex(), new HomeResponseHandler()),
             Map.entry(UserFormRequestHandler.requestIndex(), new UserFormResponseHandler()),
             Map.entry(UserListRequestHandler.requestIndex(), new UserListResponseHandler()),
-            Map.entry(UserCreateGetRequestHandler.requestIndex(), new UserCreateGetResponseHandler())
+            Map.entry(UserCreateByQueryParamRequestHandler.requestIndex(), new UserCreateGetResponseHandler())
     );
 
     @Override

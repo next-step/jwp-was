@@ -1,8 +1,8 @@
-package webserver.http.request.handler.get;
+package webserver.http.request.handler.post;
 
 import webserver.http.request.handler.RequestHandler;
 
-public class UserCreateGetRequestHandler implements RequestHandler {
+public class UserCreateByBodyRequestHandler implements RequestHandler {
     private static final String REQUEST_INDEX = "/user/create";
 
     public static String requestIndex() {
