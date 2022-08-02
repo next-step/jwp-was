@@ -20,7 +20,8 @@ public class LoginUserController extends AbstractController {
             return;
         }
         if (isSamePassword(user, contents)) {
-            response.responseLoginSuccess();
+            response.addHeader("Set-Cookie", "logined=true");
+            response.sendRedirect("/");
             return;
         }
         response.sendRedirect("/user/login_failed.html");

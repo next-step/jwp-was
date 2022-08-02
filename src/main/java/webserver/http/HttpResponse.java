@@ -44,7 +44,7 @@ public class HttpResponse {
                 body = FileIoUtils.loadFileFromClasspath("./templates" + url);
             }
 
-            response200Header(body.length);
+            response200Header();
             responseBody(body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
@@ -55,11 +55,11 @@ public class HttpResponse {
         byte[] contents = body.getBytes();
         headers.put("Content-Type", "text/html;charset=utf-8");
         headers.put("Content-Length", contents.length + "");
-        response200Header(contents.length);
+        response200Header();
         responseBody(contents);
     }
 
-    private void response200Header(int lengthOfBodyContent) {
+    private void response200Header() {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             processHeaders();
@@ -84,17 +84,6 @@ public class HttpResponse {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
             processHeaders();
             dos.writeBytes("Location: " + redirectUrl + " \r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    public void responseLoginSuccess() {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
-            dos.writeBytes("Set-Cookie: logined=true \r\n");
-            dos.writeBytes("Location: / \r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
