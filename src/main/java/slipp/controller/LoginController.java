@@ -18,7 +18,6 @@ public class LoginController implements Controller {
 
     @Override
     public Response handle(Request request) {
-        request.decodeCharacter(Charsets.UTF_8);
         String userId = request.getParameter("userId");
         String password = request.getParameter("password");
 

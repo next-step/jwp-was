@@ -91,37 +91,6 @@ class ParametersTest {
         );
     }
 
-    @DisplayName("Parameter value 들을 인자로 받은 Charset으로 URLDecode 한다.")
-    @Test
-    void decodeCharacter() {
-        Parameters parameters = new Parameters(
-                new HashMap<>(
-                    Map.of(
-                            "userId", Lists.list("%ED%9A%8C%EC%9B%90"),
-                            "password", Lists.list("123123"),
-                            "name", Lists.list("%EA%B9%80%ED%8F%AC%EB%B9%84", "email%40email")
-                    )
-                )
-        );
-
-        parameters.decodeCharacter(StandardCharsets.UTF_8);
-
-        assertThat(parameters).usingRecursiveComparison()
-                .isEqualTo(expectedDecodedParameters());
-    }
-
-    private Parameters expectedDecodedParameters() {
-        return new Parameters(
-                new HashMap<>(
-                        Map.of(
-                                "userId", Lists.list("회원"),
-                                "password", Lists.list("123123"),
-                                "name", Lists.list("김포비", "email@email")
-                        )
-                )
-        );
-    }
-
     @DisplayName("key1=value1&key2=value2 형식의 메시지로 요청이 온 경우, key, value 를 Map으로 갖는 QueryParameters 객체를 생성")
     @ParameterizedTest
     @MethodSource("provideForParse")

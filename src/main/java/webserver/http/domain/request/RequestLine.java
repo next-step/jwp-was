@@ -3,8 +3,6 @@ package webserver.http.domain.request;
 import webserver.http.domain.Protocol;
 import webserver.http.domain.exception.BadRequestException;
 
-import java.nio.charset.Charset;
-
 public class RequestLine {
 
     private static final String REQUEST_LINE_DELIMITER_REGEX = " ";
@@ -34,10 +32,6 @@ public class RequestLine {
 
     public void addParameters(Parameters parameters) {
         uri.addParameters(parameters);
-    }
-
-    public void decodeCharacter(Charset charset) {
-        uri.decodeCharacter(charset);
     }
 
     public static RequestLine from(String message) {

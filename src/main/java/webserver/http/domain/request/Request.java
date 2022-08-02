@@ -1,9 +1,7 @@
 package webserver.http.domain.request;
 
-import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
 
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,10 +46,6 @@ public class Request {
 
     public boolean hasContentType(String contentType) {
         return headers.hasContentType(contentType);
-    }
-
-    public void decodeCharacter(Charset charset) {
-        requestLine.decodeCharacter(charset);
     }
 
     public void setAttribute(String name, Object value) {
