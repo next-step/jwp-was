@@ -27,7 +27,8 @@
                 <div class="input-group" style="max-width:470px;">
                     <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
                     <div class="input-group-btn">
-                        <button class="btn btn-default btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        <button class="btn btn-default btn-primary" type="submit"><i
+                                class="glyphicon glyphicon-search"></i></button>
                     </div>
                 </div>
             </form>
@@ -47,23 +48,27 @@
 <div class="navbar navbar-default" id="subnav">
     <div class="col-md-12">
         <div class="navbar-header">
-            <a href="#" style="margin-left:15px;" class="navbar-btn btn btn-default btn-plus dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-home" style="color:#dd1111;"></i> Home <small><i class="glyphicon glyphicon-chevron-down"></i></small></a>
+            <a href="#" style="margin-left:15px;" class="navbar-btn btn btn-default btn-plus dropdown-toggle"
+               data-toggle="dropdown"><i class="glyphicon glyphicon-home" style="color:#dd1111;"></i> Home <small><i
+                    class="glyphicon glyphicon-chevron-down"></i></small></a>
             <ul class="nav dropdown-menu">
-                <li><a href="../user/profile.html"><i class="glyphicon glyphicon-user" style="color:#1111dd;"></i> Profile</a></li>
+                <li><a href="../user/profile.html"><i class="glyphicon glyphicon-user" style="color:#1111dd;"></i>
+                    Profile</a></li>
                 <li class="nav-divider"></li>
                 <li><a href="#"><i class="glyphicon glyphicon-cog" style="color:#dd1111;"></i> Settings</a></li>
             </ul>
-            
+
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse2">
-            	<span class="sr-only">Toggle navigation</span>
-            	<span class="icon-bar"></span>
-            	<span class="icon-bar"></span>
-            	<span class="icon-bar"></span>
-            </button>            
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse2">
             <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="../index.html">Posts</a></li>>
+                <li class="active"><a href="../index.html">Posts</a></li>
+                >
                 <li><a href="../user/login.html" role="button">로그인</a></li>
                 <li><a href="../user/form.html" role="button">회원가입</a></li>
                 <li><a href="#" role="button">로그아웃</a></li>
@@ -84,9 +89,10 @@
                             <img class="media-object" src="../images/80-text.png">
                         </a>
                         <div class="media-body">
-                            <h4 class="media-heading">자바지기</h4>
+                            <h4 class="media-heading">{{name}}</h4>
                             <p>
-                                <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-envelope"></span>&nbsp;javajigi@slipp.net</a>
+                                <a href="#" class="btn btn-xs btn-default"><span
+                                        class="glyphicon glyphicon-envelope"></span>{{email}}</a>
                             </p>
                         </div>
                     </div>
@@ -100,5 +106,5 @@
 <script src="../js/jquery-2.2.0.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/scripts.js"></script>
-	</body>
+</body>
 </html>
