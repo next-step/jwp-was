@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import webserver.ModelAndView;
 import webserver.http.Headers;
 import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 import webserver.http.RequestLine;
-import webserver.http.Response;
 
 import java.util.ArrayList;
 
@@ -30,14 +30,14 @@ class LoginMemberHandlerTest {
         // given
         DataBase.addUser(new User("testUser", "testPw", "test", "test@test.com"));
         HttpRequest httpRequest = createLoginRequest("userId=testUser&password=testPw");
-        Response response = new Response();
+        HttpResponse httpResponse = new HttpResponse();
 
         // when
-        ModelAndView modelAndView = loginMemberHandler.handle(httpRequest, response);
+        ModelAndView modelAndView = loginMemberHandler.handle(httpRequest, httpResponse);
 
         // then
         Assertions.assertThat(modelAndView.getView()).isEqualTo("redirect:/index.html");
-        Assertions.assertThat(response.getHeaders().getValue("Set-Cookie")).isEqualTo("logined=true; Path=/");
+        Assertions.assertThat(httpResponse.getHeaders().getValue("Set-Cookie")).isEqualTo("logined=true; Path=/");
     }
 
     @DisplayName("로그인 실패 시 로그인 실패 쿠키가 생성 되고 /user/login_failed.html 로 이동해야 한다.")
@@ -45,14 +45,14 @@ class LoginMemberHandlerTest {
     void loginFailTest() {
         // given
         HttpRequest httpRequest = createLoginRequest("userId=testUser&password=testPw");
-        Response response = new Response();
+        HttpResponse httpResponse = new HttpResponse();
 
         // when
-        ModelAndView modelAndView = loginMemberHandler.handle(httpRequest, response);
+        ModelAndView modelAndView = loginMemberHandler.handle(httpRequest, httpResponse);
 
         // then
         Assertions.assertThat(modelAndView.getView()).isEqualTo("redirect:/user/login_failed.html");
-        Assertions.assertThat(response.getHeaders().getValue("Set-Cookie")).isEqualTo("logined=false; Path=/");
+        Assertions.assertThat(httpResponse.getHeaders().getValue("Set-Cookie")).isEqualTo("logined=false; Path=/");
     }
 
 

@@ -29,10 +29,10 @@ class ListMemberHandlerTest {
     void redirectLoginPageTest() {
         // given
         HttpRequest httpRequest = new HttpRequest(RequestLine.parseOf("GET /user/list HTTP/1.1"));
-        Response response = new Response();
+        HttpResponse httpResponse = new HttpResponse();
 
         // when
-        ModelAndView modelAndView = listMemberHandler.handle(httpRequest, response);
+        ModelAndView modelAndView = listMemberHandler.handle(httpRequest, httpResponse);
 
         // then
         Assertions.assertThat(modelAndView.getView()).isEqualTo("redirect:/user/login.html");
@@ -44,11 +44,11 @@ class ListMemberHandlerTest {
         // given
         Header cookieHeader = new Header("cookie", "logined=true");
         HttpRequest httpRequest = new HttpRequest(RequestLine.parseOf("GET /user/list HTTP/1.1"), Headers.of(cookieHeader));
-        Response response = new Response();
+        HttpResponse httpResponse = new HttpResponse();
         List<User> currentUsers = addUsers();
 
         // when
-        ModelAndView modelAndView = listMemberHandler.handle(httpRequest, response);
+        ModelAndView modelAndView = listMemberHandler.handle(httpRequest, httpResponse);
 
         // then
         Assertions.assertThat(modelAndView.getView()).isEqualTo("/user/list");

@@ -3,7 +3,7 @@ package webserver.view;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import webserver.http.Response;
+import webserver.http.HttpResponse;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -20,12 +20,12 @@ class HandleBarView implements View {
         this.handlebars = new Handlebars(new ClassPathTemplateLoader(prefix, suffix));
     }
 
-    public void render(Map<String, ?> models, Response response) {
+    public void render(Map<String, ?> models, HttpResponse httpResponse) {
         try {
             Template template = handlebars.compile(url);
 
             byte[] templateBody = template.apply(models).getBytes(StandardCharsets.UTF_8);
-            response.setBody(templateBody);
+            httpResponse.setBody(templateBody);
         } catch (IOException e) {
             throw new RuntimeException();
         }

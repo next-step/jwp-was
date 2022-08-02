@@ -48,20 +48,20 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = readRequest(new BufferedReader(new InputStreamReader(in)));
             logger.debug("request:{} ", httpRequest);
 
-            Response response = new Response();
-            handleRequest(httpRequest, response);
-            logger.debug("response:{} ", response);
+            HttpResponse httpResponse = new HttpResponse();
+            handleRequest(httpRequest, httpResponse);
+            logger.debug("response:{} ", httpResponse);
 
-            writeResponse(out, response);
+            writeResponse(out, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void handleRequest(HttpRequest httpRequest, Response response) {
+    private void handleRequest(HttpRequest httpRequest, HttpResponse httpResponse) {
         Handler handler = handlerMapping.getHandler(httpRequest);
 
-        ModelAndView modelAndView = handler.handle(httpRequest, response);
+        ModelAndView modelAndView = handler.handle(httpRequest, httpResponse);
 
         if (modelAndView == null) {
             return;
@@ -69,20 +69,20 @@ public class RequestHandler implements Runnable {
 
         View view = viewResolver.resolveView(modelAndView.getView());
 
-        view.render(modelAndView.getModel(), response);
+        view.render(modelAndView.getModel(), httpResponse);
     }
 
-    private void writeResponse(OutputStream out, Response response) throws IOException {
+    private void writeResponse(OutputStream out, HttpResponse httpResponse) throws IOException {
         DataOutputStream dos = new DataOutputStream(out);
 
-        for (String message : response.getMessages()) {
+        for (String message : httpResponse.getMessages()) {
             dos.writeBytes(message + "\r\n");
         }
 
         dos.writeBytes("\r\n");
 
-        if (response.hasBody()) {
-            dos.write(response.getBody(), 0, response.getBody().length);
+        if (httpResponse.hasBody()) {
+            dos.write(httpResponse.getBody(), 0, httpResponse.getBody().length);
         }
 
         dos.flush();

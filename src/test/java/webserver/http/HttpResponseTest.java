@@ -5,20 +5,20 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ResponseTest {
+class HttpResponseTest {
 
     @DisplayName("응답 객체에 쿠키를 추가할 수 있다.")
     @Test
     void addCookieTest() {
         // given
         Cookie loginCookie = new Cookie("logined", "true", "/");
-        Response response = new Response();
+        HttpResponse httpResponse = new HttpResponse();
 
         // when
-        response.addCookie(loginCookie);
+        httpResponse.addCookie(loginCookie);
 
         // then
-        assertThat(response.getHeaders().getValue("Set-Cookie")).isEqualTo("logined=true; Path=/");
+        assertThat(httpResponse.getHeaders().getValue("Set-Cookie")).isEqualTo("logined=true; Path=/");
     }
 
 }

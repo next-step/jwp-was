@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import webserver.ModelAndView;
 import webserver.http.Headers;
 import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 import webserver.http.RequestLine;
-import webserver.http.Response;
 
 import java.util.ArrayList;
 
@@ -31,10 +31,10 @@ class CreateMemberHandlerTest {
     void handleTest() {
         // given
         HttpRequest httpRequest = createUserCreateRequest("userId", "passwrod", "name", "email");
-        Response response = new Response();
+        HttpResponse httpResponse = new HttpResponse();
 
         // when
-        ModelAndView modelAndView = createMemberHandler.handle(httpRequest, response);
+        ModelAndView modelAndView = createMemberHandler.handle(httpRequest, httpResponse);
 
         // then
         assertThat(modelAndView.getView()).isEqualTo("redirect:/index.html");
@@ -45,10 +45,10 @@ class CreateMemberHandlerTest {
     void createMemberTest() {
         // given
         HttpRequest httpRequest = createUserCreateRequest("userId", "password", "name", "email");
-        Response response = new Response();
+        HttpResponse httpResponse = new HttpResponse();
 
         // when
-        createMemberHandler.handle(httpRequest, response);
+        createMemberHandler.handle(httpRequest, httpResponse);
 
         // then
         User user = DataBase.findUserById("userId");

@@ -6,7 +6,7 @@ import webserver.LoadFileException;
 import webserver.ModelAndView;
 import webserver.StaticLocationProvider;
 import webserver.http.HttpRequest;
-import webserver.http.Response;
+import webserver.http.HttpResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -28,13 +28,13 @@ public class StaticFileHandler implements Handler {
         this.staticLocationProvider = staticLocationProvider;
     }
 
-    public ModelAndView handle(HttpRequest httpRequest, Response response) {
+    public ModelAndView handle(HttpRequest httpRequest, HttpResponse httpResponse) {
         String path = httpRequest.getPath();
 
         byte[] bytes = loadFile(path);
 
-        response.setBody(bytes);
-        response.setContentType(CONTENT_TYPE_BY_EXTENSION.get(getExtension(path)));
+        httpResponse.setBody(bytes);
+        httpResponse.setContentType(CONTENT_TYPE_BY_EXTENSION.get(getExtension(path)));
         return null;
     }
 

@@ -1,11 +1,9 @@
 package webserver.http;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-public class Response {
+public class HttpResponse {
 
     private StatusLine statusLine;
 
@@ -13,15 +11,15 @@ public class Response {
 
     private byte[] body;
 
-    public Response() {
+    public HttpResponse() {
         this(new StatusLine(Status.OK), new Headers(), new byte[]{});
     }
 
-    public Response(byte[] bytes) {
+    public HttpResponse(byte[] bytes) {
         this(new StatusLine(Status.OK), new Headers(), bytes);
     }
 
-    private Response(StatusLine statusLine, Headers headers, byte[] body) {
+    private HttpResponse(StatusLine statusLine, Headers headers, byte[] body) {
         this.statusLine = statusLine;
         this.headers = headers;
         this.body = body;

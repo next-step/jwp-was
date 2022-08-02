@@ -5,12 +5,12 @@ import model.User;
 import webserver.Handler;
 import webserver.ModelAndView;
 import webserver.http.HttpRequest;
-import webserver.http.Response;
+import webserver.http.HttpResponse;
 
 public class CreateMemberHandler implements Handler {
 
     @Override
-    public ModelAndView handle(HttpRequest httpRequest, Response response) {
+    public ModelAndView handle(HttpRequest httpRequest, HttpResponse httpResponse) {
         String userId = httpRequest.getBodyValue("userId");
         String password = httpRequest.getBodyValue("password");
         String name = httpRequest.getBodyValue("name");
