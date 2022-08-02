@@ -13,8 +13,8 @@ public class RequestLine {
 
     static {
         String httpMethodGroupRegex = "(" + String.join("|", HttpMethod.getValues()) + ")";
-        String keyValueRegex = ".*" + Queries.KEY_VALUE_DELIMITER + ".*";
-        String queryStringGroupRegex = "((?:" + keyValueRegex + ")(?:" + Queries.QUERY_STRING_DELIMITER + keyValueRegex + ")*)";
+        String keyValueRegex = ".*" + Parameters.KEY_VALUE_DELIMITER + ".*";
+        String queryStringGroupRegex = "((?:" + keyValueRegex + ")(?:" + Parameters.QUERY_STRING_DELIMITER + keyValueRegex + ")*)";
         String pathGroupRegex = Path.PATH_DELIMITER + "(" + "[^?]*)\\??" + queryStringGroupRegex + "?";
         String protocolGroupRegex = "(\\w+)/([\\d.]+)";
         REQUEST_LINE_PATTERN = Pattern.compile(String.join(REQUEST_LINE_DELIMITER, List.of(httpMethodGroupRegex, pathGroupRegex, protocolGroupRegex)));
@@ -42,7 +42,7 @@ public class RequestLine {
     public static RequestLine from(String requestLine) {
         List<String> parsed = parse(requestLine);
         boolean hasQueryString = parsed.size() >= MAXIMUM_PARSED_SIZE;
-        return new RequestLine(HttpMethod.from(parsed.get(0)), new Path(parsed.get(1), Queries.from(hasQueryString ? parsed.get(2) : null)), new Protocol(parsed.get(hasQueryString ? 3 : 2), new Version(parsed.get(hasQueryString ? 4 : 3))));
+        return new RequestLine(HttpMethod.from(parsed.get(0)), new Path(parsed.get(1), Parameters.from(hasQueryString ? parsed.get(2) : null)), new Protocol(parsed.get(hasQueryString ? 3 : 2), new Version(parsed.get(hasQueryString ? 4 : 3))));
     }
 
     public HttpMethod getMethod() {

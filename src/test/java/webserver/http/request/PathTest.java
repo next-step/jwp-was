@@ -17,7 +17,7 @@ class PathTest {
     @BeforeEach
     void setUp() {
         nodes = List.of("first", "second", "third");
-        path = new Path(String.join(Path.PATH_DELIMITER, nodes), Queries.from(""));
+        path = new Path(String.join(Path.PATH_DELIMITER, nodes), Parameters.from(""));
     }
 
     @Test

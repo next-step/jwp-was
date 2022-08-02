@@ -62,20 +62,20 @@ public class RequestHandler implements Runnable {
                 requestBody = IOUtils.readData(br, contentLength);
             }
 
-            Queries queries = HttpMethod.GET.equals(method) ? path.getQueries() : Queries.from(requestBody);
+            Parameters parameters = HttpMethod.GET.equals(method) ? path.getQueries() : Parameters.from(requestBody);
 
             DataOutputStream dos = new DataOutputStream(out);
             String pathString = path.toString();
             switch (pathString) {
                 case "user/create":
-                    User user = new User(queries.get("userId").get(), queries.get("password").get(), queries.get("name").get(), queries.get("email").get());
+                    User user = new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"), parameters.get("email"));
                     DataBase.addUser(user);
 
                     response302Header(dos, "index.html");
                     break;
                 case "user/login":
-                    User loginUser = DataBase.findUserById(queries.get("userId").get());
-                    boolean isLogin = !Objects.isNull(loginUser) && loginUser.checkPassword(queries.get("password").get());
+                    User loginUser = DataBase.findUserById(parameters.get("userId"));
+                    boolean isLogin = !Objects.isNull(loginUser) && loginUser.checkPassword(parameters.get("password"));
                     cookie.set("logined", String.valueOf(isLogin));
 
                     response302Header(dos, isLogin ? "index.html" : "user/login_failed.html");

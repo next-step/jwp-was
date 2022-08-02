@@ -6,11 +6,11 @@ import java.util.Optional;
 public class Path {
     public static final String PATH_DELIMITER = "/";
     private final List<String> subPaths;
-    private final Queries queries;
+    private final Parameters queryParams;
 
-    public Path(String path, Queries queries) {
+    public Path(String path, Parameters queryParams) {
         this.subPaths = List.of(path.split(PATH_DELIMITER));
-        this.queries = queries;
+        this.queryParams = queryParams;
     }
 
     public int getDepth() {
@@ -29,8 +29,8 @@ public class Path {
         return depth;
     }
 
-    public Queries getQueries() {
-        return queries;
+    public Parameters getQueries() {
+        return queryParams;
     }
 
     @Override

@@ -44,10 +44,10 @@ class RequestLineTest {
     void 쿼리스트링_파싱() {
         RequestLine requestLine = RequestLine.from("GET /path?key=value&id=test HTTP/2");
 
-        Queries queries = requestLine.getPath().getQueries();
+        Parameters parameters = requestLine.getPath().getQueries();
 
-        assertThat(queries.get("key").get()).isEqualTo("value");
-        assertThat(queries.get("id").get()).isEqualTo("test");
+        assertThat(parameters.get("key")).isEqualTo("value");
+        assertThat(parameters.get("id")).isEqualTo("test");
     }
 
     @Test
