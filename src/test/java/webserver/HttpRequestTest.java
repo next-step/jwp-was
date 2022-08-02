@@ -16,6 +16,7 @@ import webserver.step.TemplateAcceptanceStep;
 import webserver.step.UserAcceptanceStep;
 
 import java.util.Collections;
+import java.util.stream.IntStream;
 
 @DisplayName("http 요청 인수 테스트")
 class HttpRequestTest {
@@ -23,7 +24,7 @@ class HttpRequestTest {
     private static final String RANDOM_PORT = RandomStringUtils.randomNumeric(4);
     private static final Thread WAS = new Thread(() -> {
         try {
-            WebApplicationServer.main(new String[]{RANDOM_PORT});
+            WebApplicationServer.main(new String[]{RANDOM_PORT, "5", "10"});
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -52,6 +53,15 @@ class HttpRequestTest {
         ExtractableResponse<Response> indexPageResponse = TemplateAcceptanceStep.requestTemplatePage("/index.html");
         //then
         TemplateAcceptanceStep.renderPage(indexPageResponse);
+    }
+
+    @Test
+    @DisplayName("설정된 스레드 풀보다 많은 index.html 파일 요청에도 정상 동작")
+    void tenRequestIndexHtmlAtTheSameTime() {
+        IntStream.range(0, 10)
+                .parallel()
+                .mapToObj(i -> TemplateAcceptanceStep.requestTemplatePage("/index.html"))
+                .forEach(TemplateAcceptanceStep::renderPage);
     }
 
     @Test
