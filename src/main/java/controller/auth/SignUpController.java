@@ -1,4 +1,4 @@
-package controller;
+package controller.auth;
 
 import db.DataBase;
 import model.User;

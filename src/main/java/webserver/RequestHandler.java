@@ -12,10 +12,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import controller.HomeController;
-import controller.LogInController;
-import controller.SignUpController;
-import controller.UserListController;
+import controller.home.HomeController;
+import controller.auth.LogInController;
+import controller.auth.SignUpController;
+import controller.user.UserListController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
