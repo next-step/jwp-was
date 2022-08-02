@@ -8,19 +8,20 @@ import db.DataBase;
 import model.UserTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import webserver.enums.StatusCode;
+import webserver.enums.HttpStatus;
+import webserver.request.HttpRequest;
 import webserver.request.HttpRequestBody;
 import webserver.request.HttpRequestHeader;
-import webserver.request.HttpRequest;
 import webserver.request.RequestLine;
 import webserver.response.HttpResponse;
 
-class UserLoginServletTest {
-    private Servlet servlet;
+class UserLoginControllerTest {
+
+    private Controller controller;
 
     @BeforeEach
     void setUp() {
-        servlet = new UserLoginServlet();
+        controller = new UserLoginController();
 
         DataBase.deleteAll();
         DataBase.addUser(UserTest.TEST_USER);
@@ -35,15 +36,15 @@ class UserLoginServletTest {
         httpHeader.putHeader("Content-Length", "33");
         httpHeader.putHeader("Content-Type", "application/x-www-form-urlencoded");
         httpHeader.putHeader("Accept", "*/*");
-        HttpRequestBody httpBody = HttpRequestBody.of("userId="+TEST_ID+"&password=invalidPassword");
+        HttpRequestBody httpBody = HttpRequestBody.of("userId=" + TEST_ID + "&password=invalidPassword");
 
         HttpRequest httpRequest = new HttpRequest(requestLine, httpHeader, httpBody);
         HttpResponse httpResponse = new HttpResponse();
 
-        servlet.serve(httpRequest, httpResponse);
+        controller.service(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatus()).isEqualTo(StatusCode.FOUND);
-        assertThat(httpResponse.getHeader().getHeader("Location")).isEqualTo("http://localhost:8080/user/login_failed.html");
+        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
+        assertThat(httpResponse.getHeader().getHeader("Location")).isEqualTo("/user/login_failed.html");
     }
 
     @Test
@@ -55,14 +56,14 @@ class UserLoginServletTest {
         httpHeader.putHeader("Content-Length", "33");
         httpHeader.putHeader("Content-Type", "application/x-www-form-urlencoded");
         httpHeader.putHeader("Accept", "*/*");
-        HttpRequestBody httpBody = HttpRequestBody.of("userId="+TEST_ID+"&password="+TEST_PW);
+        HttpRequestBody httpBody = HttpRequestBody.of("userId=" + TEST_ID + "&password=" + TEST_PW);
 
         HttpRequest httpRequest = new HttpRequest(requestLine, httpHeader, httpBody);
         HttpResponse httpResponse = new HttpResponse();
 
-        servlet.serve(httpRequest, httpResponse);
+        controller.service(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatus()).isEqualTo(StatusCode.FOUND);
+        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(httpResponse.getHeader().getHeader("Set-Cookie")).isEqualTo("logined=true; Path=/");
         assertThat(httpResponse.getHeader().getHeader("Location")).contains("index.html");
     }

@@ -5,20 +5,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import db.DataBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import webserver.enums.StatusCode;
+import webserver.enums.HttpStatus;
+import webserver.request.HttpRequest;
 import webserver.request.HttpRequestBody;
 import webserver.request.HttpRequestHeader;
-import webserver.request.HttpRequest;
 import webserver.request.RequestLine;
 import webserver.response.HttpResponse;
 
-class UserCreateServletTest {
+class UserCreateControllerTest {
 
-    private Servlet servlet;
+    private Controller controller;
 
     @BeforeEach
     void setUp() {
-        servlet = new UserCreateServlet();
+        controller = new UserCreateController();
 
         DataBase.deleteAll();
     }
@@ -37,9 +37,9 @@ class UserCreateServletTest {
         HttpRequest httpRequest = new HttpRequest(requestLine, httpHeader, httpBody);
         HttpResponse httpResponse = new HttpResponse();
 
-        servlet.serve(httpRequest, httpResponse);
+        controller.service(httpRequest, httpResponse);
 
-        assertThat(httpResponse.getStatus()).isEqualTo(StatusCode.FOUND);
+        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
         assertThat(DataBase.findUserById("javajigi")).isNotNull();
     }
 

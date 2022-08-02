@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class HttpStatusResponse {
+
     private static final Logger logger = LoggerFactory.getLogger(HttpStatusResponse.class);
 
     public static HttpResponse responseBadRequest400() {

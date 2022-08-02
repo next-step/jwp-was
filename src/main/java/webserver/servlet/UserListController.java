@@ -2,20 +2,20 @@ package webserver.servlet;
 
 import db.DataBase;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import utils.HandlebarsTemplate;
 import webserver.domain.ContentType;
 import webserver.domain.Cookies;
+import webserver.domain.HttpHeader;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
-public class UserListServlet implements Servlet {
+public class UserListController implements Controller {
 
     private static final String COOKIE_NAME_LOGINED = "logined";
 
     @Override
-    public void serve(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
         Cookies cookies = httpRequest.getCookies();
         String loginCookie = cookies.get(COOKIE_NAME_LOGINED);
 
@@ -31,15 +31,15 @@ public class UserListServlet implements Servlet {
         try {
             String page = HandlebarsTemplate.create("/templates", ".html", "user/list")
                 .apply(Collections.singletonMap("users", DataBase.findAll()));
-            byte[] body = page.getBytes(StandardCharsets.UTF_8);
-            httpResponse.okWithBody(body, ContentType.HTML.type());
+            httpResponse.addHeader(HttpHeader.CONTENT_TYPE, ContentType.HTML.type());
+            httpResponse.forwardBody(page);
         } catch (IOException e) {
             throw new IllegalStateException("Handlebars template error");
         }
     }
 
     private void handleNotLoginUser(HttpResponse httpResponse) {
-        httpResponse.found("http://localhost:8080/user/login.html");
+        httpResponse.sendRedirect("/user/login.html");
     }
 
 }

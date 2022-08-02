@@ -2,11 +2,10 @@ package webserver.utils;
 
 import static exception.ExceptionStrings.INVALID_REQUEST_PATH;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.Objects;
 
 public class Uri {
+
     private static final int PATH_COMPONENT_COUNT = 2;
     private static final String PATH_SPLIT_REGEX = "\\?";
 
@@ -49,11 +48,11 @@ public class Uri {
         return queryStrings.isEmpty();
     }
 
-    public int sizeOfQueries() {
+    public int sizeOfParams() {
         return queryStrings.size();
     }
 
-    public String getQuery(String key) {
+    public String getParameter(String key) {
         return queryStrings.get(key);
     }
 

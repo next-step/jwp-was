@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import webserver.servlet.Servlet;
-import webserver.servlet.UserCreateServlet;
+import webserver.servlet.Controller;
+import webserver.servlet.UserCreateController;
 
 class SupportApisTest {
 
@@ -24,10 +24,10 @@ class SupportApisTest {
 
     @Test
     void getServletTest() {
-        Servlet servlet = SupportApis.getServlet("/user/create");
+        Controller controller = SupportApis.getServlet("/user/create");
 
-        assertThat(servlet)
-            .isInstanceOf(UserCreateServlet.class);
+        assertThat(controller)
+            .isInstanceOf(UserCreateController.class);
     }
 
 }

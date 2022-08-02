@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class HttpResponseHeaderTest {
+
     private HttpResponseHeader responseHeader;
 
     @BeforeEach

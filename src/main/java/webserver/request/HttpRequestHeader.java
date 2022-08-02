@@ -12,16 +12,18 @@ import java.util.Set;
 import webserver.domain.HttpHeader;
 
 public class HttpRequestHeader {
+
     private static final String HEADER_DELIMITER = ": ";
     private static final int HEADER_LINE_COUNT = 2;
 
     private Map<String, String> headers = Maps.newHashMap();
 
-    private HttpRequestHeader() { }
+    private HttpRequestHeader() {
+    }
 
     public HttpRequestHeader(BufferedReader br) throws IOException {
         String line = br.readLine();
-        while (!line.isEmpty()) {
+        while (line != null && !line.isEmpty()) {
             addHeader(line);
             line = br.readLine();
         }
@@ -71,7 +73,8 @@ public class HttpRequestHeader {
     }
 
     public boolean hasContent() {
-        return headers.containsKey(HttpHeader.CONTENT_LENGTH);
+        return headers.containsKey(HttpHeader.CONTENT_LENGTH)
+            && Integer.parseInt(headers.get(CONTENT_LENGTH)) > 0;
     }
 
 }

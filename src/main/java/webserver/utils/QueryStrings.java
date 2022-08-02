@@ -9,8 +9,10 @@ import java.util.Map;
 import java.util.Objects;
 
 public class QueryStrings {
+
     private static final String QUERY_STRING_SPLIT_REGEX = "=";
     private static final String QUERIES_SPLIT_REGEX = "&";
+    private static final String EMPTY_VALUE = "";
     private final Map<String, String> map;
 
     private QueryStrings(Map<String, String> queryStringMap) {
@@ -70,7 +72,7 @@ public class QueryStrings {
     }
 
     public String get(String key) {
-        return map.get(key);
+        return map.getOrDefault(key, EMPTY_VALUE);
     }
 
     @Override

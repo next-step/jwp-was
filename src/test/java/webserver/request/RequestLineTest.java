@@ -12,6 +12,7 @@ import webserver.enums.Protocol;
 import webserver.utils.Uri;
 
 class RequestLineTest {
+
     public static final String TEST_GET_REQUEST_LINE = "GET /users HTTP/1.1";
     public static final String TEST_POST_REQUEST_LINE = "POST /users HTTP/1.1";
 
@@ -82,9 +83,9 @@ class RequestLineTest {
         Uri uri = Uri.of(testPath + "?" + testQueryStrings);
 
         assertThat(uri.getPath()).isEqualTo(testPath);
-        assertThat(uri.sizeOfQueries()).isEqualTo(2);
-        assertThat(uri.getQuery("this")).isEqualTo("이것");
-        assertThat(uri.getQuery("that")).isEqualTo("저것");
+        assertThat(uri.sizeOfParams()).isEqualTo(2);
+        assertThat(uri.getParameter("this")).isEqualTo("이것");
+        assertThat(uri.getParameter("that")).isEqualTo("저것");
     }
 
     @DisplayName("null Path 입력 시 Path / QueryStrings 파싱은 실패한다.")

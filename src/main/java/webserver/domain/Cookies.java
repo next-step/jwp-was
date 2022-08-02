@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import java.util.Map;
 
 public class Cookies {
+
     private static final String COOKIE_STRING_SPLIT_REGEX = ";";
     private static final String COOKIE_KEY_VALUE_SPLIT_REGEX = "=";
 
