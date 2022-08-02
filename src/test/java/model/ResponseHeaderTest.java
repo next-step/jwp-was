@@ -17,7 +17,7 @@ class ResponseHeaderTest {
         String contents = "contents";
         byte[] contentsBytes = contents.getBytes(StandardCharsets.UTF_8);
 
-        ResponseHeader responseHeader = ResponseHeader.textHtml(contentsBytes.length);
+        ResponseHeader responseHeader = ResponseHeader.text(contentsBytes.length, "/index.html");
 
         assertThat(responseHeader.getHeaders()).contains(
                 Map.entry("Content-Type", "text/html;charset=utf-8"),

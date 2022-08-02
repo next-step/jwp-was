@@ -20,7 +20,7 @@ class HttpResponseTest {
 
         HttpResponse response = HttpResponse.of(
                 HttpStatusCode.OK,
-                ResponseHeader.textHtml(contentsBytes.length),
+                ResponseHeader.text(contentsBytes.length, "/index.html"),
                 contentsBytes
         );
 

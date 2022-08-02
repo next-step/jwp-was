@@ -11,9 +11,9 @@ public class ResponseHeader {
         this.headers = headers;
     }
 
-    public static ResponseHeader textHtml(int length) {
+    public static ResponseHeader text(int length, String path) {
         Map<String, Object> map = new HashMap<>();
-        map.put(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8");
+        map.put(HttpHeaders.CONTENT_TYPE, String.format("text/%s;charset=utf-8", fileExtension(path)));
         map.put(HttpHeaders.CONTENT_LENGTH, length);
         return new ResponseHeader(map);
     }
@@ -28,5 +28,9 @@ public class ResponseHeader {
 
     public Map<String, Object> getHeaders() {
         return headers;
+    }
+
+    private static String fileExtension(String path) {
+        return path.substring(path.lastIndexOf('.') + 1);
     }
 }

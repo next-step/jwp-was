@@ -18,9 +18,10 @@ public class DispatchController {
     static {
         controllers = Set.of(
                 new CreateUserController(),
-                new ResourceController(),
+                new TemplateController(),
                 new LoginController(),
-                new UserListController(handlebars())
+                new UserListController(handlebars()),
+                new StaticController()
         );
     }
 
