@@ -1,8 +1,7 @@
-package webserver.request;
+package webserver.http;
 
 import db.DataBase;
 import model.User;
-import webserver.request.QueryStringParser;
 
 import java.util.Map;
 

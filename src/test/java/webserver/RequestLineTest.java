@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
-import webserver.request.RequestLine;
+import webserver.http.RequestLine;
 
 public class RequestLineTest {
     @Test
