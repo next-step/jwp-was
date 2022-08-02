@@ -2,6 +2,7 @@ package webserver.http.request.header;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,11 +48,13 @@ class RequestHeaderTest {
         RequestLine actual = RequestLine.create(requestLine);
 
         // then
-        assertThat(actual.httpMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(actual.index()).isEqualTo("/docs/index.html");
-        assertThat(actual.requestParams()).isEmpty();
-        assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name());
-        assertThat(actual.version()).isEqualTo("1.1");
+        assertAll(
+                () -> assertThat(actual.httpMethod()).isEqualTo(HttpMethod.GET),
+                () -> assertThat(actual.index()).isEqualTo("/docs/index.html"),
+                () -> assertThat(actual.requestParams()).isEmpty(),
+                () -> assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name()),
+                () -> assertThat(actual.version()).isEqualTo("1.1")
+        );
     }
 
     @DisplayName("requestLine QueryString이 있는 GET 요청 생성")
@@ -64,12 +67,14 @@ class RequestHeaderTest {
         RequestLine actual = RequestLine.create(requestLine);
 
         // then
-        assertThat(actual.httpMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(actual.index()).isEqualTo("/user");
-        assertThat(actual.requestParams()).containsKey("name").containsValue("test");
-        assertThat(actual.requestParams()).containsKey("age").containsValue("20");
-        assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name());
-        assertThat(actual.version()).isEqualTo("1.1");
+        assertAll(
+                () -> assertThat(actual.httpMethod()).isEqualTo(HttpMethod.GET),
+                () -> assertThat(actual.index()).isEqualTo("/user"),
+                () -> assertThat(actual.requestParams()).containsKey("name").containsValue("test"),
+                () -> assertThat(actual.requestParams()).containsKey("age").containsValue("20"),
+                () -> assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name()),
+                () -> assertThat(actual.version()).isEqualTo("1.1")
+        );
     }
 
     @DisplayName("requestLine POST 요청 생성")
@@ -82,11 +87,13 @@ class RequestHeaderTest {
         RequestLine actual = RequestLine.create(requestLine);
 
         // then
-        assertThat(actual.httpMethod()).isEqualTo(HttpMethod.POST);
-        assertThat(actual.index()).isEqualTo("/docs/index.html");
-        assertThat(actual.requestParams()).isEmpty();
-        assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name());
-        assertThat(actual.version()).isEqualTo("1.1");
+        assertAll(
+                () -> assertThat(actual.httpMethod()).isEqualTo(HttpMethod.POST),
+                () -> assertThat(actual.index()).isEqualTo("/docs/index.html"),
+                () -> assertThat(actual.requestParams()).isEmpty(),
+                () -> assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name()),
+                () -> assertThat(actual.version()).isEqualTo("1.1")
+        );
     }
 
     @DisplayName("requestLine QueryString이 있는 POST 요청 생성")
@@ -99,11 +106,13 @@ class RequestHeaderTest {
         RequestLine actual = RequestLine.create(requestLine);
 
         // then
-        assertThat(actual.httpMethod()).isEqualTo(HttpMethod.POST);
-        assertThat(actual.index()).isEqualTo("/user");
-        assertThat(actual.requestParams()).containsKey("name").containsValue("test");
-        assertThat(actual.requestParams()).containsKey("age").containsValue("20");
-        assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name());
-        assertThat(actual.version()).isEqualTo("1.1");
+        assertAll(
+                () -> assertThat(actual.httpMethod()).isEqualTo(HttpMethod.POST),
+                () -> assertThat(actual.index()).isEqualTo("/user"),
+                () -> assertThat(actual.requestParams()).containsKey("name").containsValue("test"),
+                () -> assertThat(actual.requestParams()).containsKey("age").containsValue("20"),
+                () -> assertThat(actual.protocol()).isEqualTo(Protocol.HTTP.name()),
+                () -> assertThat(actual.version()).isEqualTo("1.1")
+        );
     }
 }
