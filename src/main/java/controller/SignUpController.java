@@ -12,8 +12,8 @@ import java.util.Map;
 
 public class SignUpController {
 
-    public static final String path = "/user/create";
-    private static final String viewPath = "/user/form.html";
+    public static final String url = "/user/create";
+    public static final String viewPath = "/user/form.html";
     private static final String redirectPath = "/index.html";
 
     public HttpResponse run(HttpRequest httpRequest) {

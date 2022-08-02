@@ -6,8 +6,8 @@ import webserver.http.response.HttpResponse;
 
 public class HomeController {
 
-    public static final String path = "/index.html";
-    private static final String viewPath = "/index.html";
+    public static final String url = "/index.html";
+    public static final String viewPath = "/index.html";
 
     public HttpResponse run(HttpRequest httpRequest) {
         final HttpMethod httpMethod = httpRequest.getRequestLine().getMethod();

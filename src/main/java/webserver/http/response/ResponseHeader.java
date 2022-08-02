@@ -13,6 +13,7 @@ public class ResponseHeader {
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String LOCATION = "location";
     private static final String CONTENT_LENGTH = "Content-Length";
+    private static final String SET_COOKIE = "Set-Cookie";
     private static final Map<String, String> BASE_HEADERS = Map.of(
             CONNECTION, "Keep-Alive",
             CONTENT_TYPE, "text/html; charset=utf-8"
@@ -46,6 +47,10 @@ public class ResponseHeader {
 
     public void setContentLength(String value) {
         this.headers.put(CONTENT_LENGTH, value);
+    }
+
+    public void setCookie(String cookie) {
+        this.headers.put(SET_COOKIE, cookie);
     }
 
     public List<String> toPrint() {

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import controller.HomeController;
+import controller.LogInController;
 import controller.SignUpController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,12 +94,15 @@ public class RequestHandler implements Runnable {
     private HttpResponse route(final HttpRequest httpRequest){
         final String path = httpRequest.getRequestLine().getUrl().getPath();
 
-        if (path.equals(SignUpController.path)) {
+        if (path.equals(SignUpController.url) || path.equals(SignUpController.viewPath)) {
             SignUpController signUpController = new SignUpController();
             return signUpController.run(httpRequest);
-        } else if (path.equals(HomeController.path)) {
+        } else if (path.equals(HomeController.url) || path.equals(HomeController.viewPath)) {
             HomeController homeController = new HomeController();
             return homeController.run(httpRequest);
+        } else if (path.equals(LogInController.url) || path.equals(LogInController.viewPath)) {
+            LogInController logInController = new LogInController();
+            return logInController.run(httpRequest);
         }
 
         return null; // TODO: server error 로 변경하기
