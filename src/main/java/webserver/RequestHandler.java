@@ -87,7 +87,10 @@ public class RequestHandler implements Runnable {
             }
         } else {
             if (path.endsWith("html")) {
-                httpResponse.forward(IOUtils.loadFileFromClasspath(path));
+                httpResponse.forward(IOUtils.loadFileFromClasspath("./templates", path));
+            }
+            else if(path.endsWith("css")) {
+                httpResponse.forwardCSS(IOUtils.loadFileFromClasspath("./static", path));
             }
         }
     }

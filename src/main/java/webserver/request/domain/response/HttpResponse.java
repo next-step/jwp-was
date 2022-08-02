@@ -23,6 +23,17 @@ public class HttpResponse {
         responseBody(path.getBytes());
     }
 
+    public void forwardCSS(String path) throws IOException {
+        int lengthOfBodyContent = path.length();
+
+        dos.writeBytes("HTTP/1.1 200 OK \r\n");
+        dos.writeBytes("Content-Type: text/css\r\n");
+        dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+        dos.writeBytes("\r\n");
+
+        responseBody(path.getBytes());
+    }
+
     public void redirect(String path) throws IOException {
         dos.writeBytes("HTTP/1.1 302 Found \r\n");
         dos.writeBytes("Location: " + path + "\r\n");
