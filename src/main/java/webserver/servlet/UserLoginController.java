@@ -32,7 +32,6 @@ public class UserLoginController implements Controller {
         HttpCustomSession session = Sessions.INSTANCE.create();
         session.setAttribute(KEY_LOGINED, Boolean.TRUE.toString());
         httpResponse.addHeader(HttpHeader.SET_COOKIE, HttpHeader.JSESSIONID + "=" + session.getId());
-//        httpResponse.addHeader(HttpHeader.SET_COOKIE, KEY_LOGINED + "=" + true + "; " + "Path=/");
         httpResponse.sendRedirect("/index.html");
     }
 
