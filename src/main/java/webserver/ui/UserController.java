@@ -112,13 +112,7 @@ public class UserController implements Controller {
         if (Objects.isNull(httpRequest) || !httpRequest.hasCookie()) {
             return false;
         }
-        Cookie cookie = httpRequest.getCookie();
-        String sessionId = cookie.getValue();
-
-        SessionManager sessionManager = SessionManager.getInstance();
-        HttpSession session = sessionManager.findBySessionId(sessionId);
-
-        return Objects.nonNull(session) && (boolean) session.getAttribute(LOGINED);
+        return (boolean) httpRequest.getSession().getAttribute(LOGINED);
     }
 
 
