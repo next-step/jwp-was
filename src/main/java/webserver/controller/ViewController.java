@@ -1,10 +1,8 @@
 package webserver.controller;
 
 import enums.HttpStatusCode;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import utils.FileIoUtils;
-import webserver.request.HttpHeader;
+import webserver.HttpHeader;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
@@ -20,7 +18,6 @@ public class ViewController implements Controller {
     public HttpResponse execute(HttpRequest httpRequest) throws Exception {
         return new HttpResponse(
                 HttpStatusCode.OK,
-                new HttpHeader(),
                 FileIoUtils.loadFileFromClasspath(VIEW_PATH + httpRequest.getPath())
         );
     }

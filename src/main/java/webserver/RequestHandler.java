@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 import webserver.controller.HandlerMapper;
-import webserver.request.HttpHeader;
 import webserver.request.HttpRequest;
 import webserver.request.RequestBody;
 import webserver.response.HttpResponse;
@@ -74,6 +73,7 @@ public class RequestHandler implements Runnable {
         try {
             dos.writeBytes(String.format("HTTP/1.1 %s \r\n", response.getStatusCode()));
             responseHeader(dos, response.getHeaders());
+            responseCookie(dos, response.getCookies());
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes(String.format("Content-Length: %s \r\n", body.length));
             dos.writeBytes("\r\n");
@@ -85,8 +85,13 @@ public class RequestHandler implements Runnable {
 
     private void responseHeader(DataOutputStream dos, HttpHeader headers) throws IOException {
         for (Map.Entry<String, String> header : headers.getHeaders().entrySet()) {
-            System.out.printf("%s: %s \r\n%n", header.getKey(), header.getValue());
             dos.writeBytes(String.format("%s: %s \r\n", header.getKey(), header.getValue()));
+        }
+    }
+
+    private void responseCookie(DataOutputStream dos, Map<String, Cookie> cookies) throws IOException {
+        for (Map.Entry<String, Cookie> cookie : cookies.entrySet()) {
+            dos.writeBytes(String.format("Set-Cookie: %s \r\n", cookie.getValue()));
         }
     }
 

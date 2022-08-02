@@ -3,6 +3,7 @@ package webserver.request;
 import enums.HttpMethod;
 import java.util.List;
 import java.util.Map;
+import webserver.HttpHeader;
 
 public class HttpRequest {
     private final RequestLine requestLine;

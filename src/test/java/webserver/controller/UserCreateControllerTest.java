@@ -13,7 +13,7 @@ import webserver.response.HttpResponse;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UserControllerTest {
+public class UserCreateControllerTest {
     @Test
     @DisplayName("/user/create 요청이 들어오면 body를 잘 파싱해 user에 저장하고 /index.html로 redirect한다.")
     void createUserTest() throws Exception {
@@ -28,7 +28,7 @@ public class UserControllerTest {
         httpRequest.setBody(new RequestBody("userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net"));
 
         User user = new User("javajigi", "password", "박재성", "javajigi@slipp.net");
-        HttpResponse result = new UserController().execute(httpRequest);
+        HttpResponse result = new UserCreateController().execute(httpRequest);
 
         assertEquals(result.getStatusCode(), HttpStatusCode.FOUND);
         assertEquals(result.getHeaders().getHeader("Location"), "/index.html");

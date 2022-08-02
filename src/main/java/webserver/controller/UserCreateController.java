@@ -1,21 +1,22 @@
 package webserver.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import db.DataBase;
+import enums.HttpMethod;
 import enums.HttpStatusCode;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import model.User;
-import webserver.request.HttpHeader;
+import webserver.HttpHeader;
 import webserver.request.HttpRequest;
-import webserver.request.QueryString;
 import webserver.request.RequestBody;
 import webserver.response.HttpResponse;
 
-public class UserController implements Controller {
+public class UserCreateController implements Controller {
+    static final String EXECUTABLE_PATH = "/user/create";
+    static final HttpMethod EXECUTABLE_METHOD = HttpMethod.POST;
+
     @Override
     public Boolean canExecute(HttpRequest httpRequest) {
-        return httpRequest.getPath().startsWith("/user/create");
+        return httpRequest.getPath().equals(EXECUTABLE_PATH) &&
+                httpRequest.getMethod().equals(EXECUTABLE_METHOD);
     }
 
     @Override
@@ -27,6 +28,7 @@ public class UserController implements Controller {
                 body.getValue("name"),
                 body.getValue("email")
         );
+        DataBase.addUser(user);
 
         HttpHeader headers = new HttpHeader();
         headers.setHeader("Location", "/index.html");

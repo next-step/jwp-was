@@ -1,4 +1,4 @@
-package webserver.request;
+package webserver;
 
 import java.util.*;
 
