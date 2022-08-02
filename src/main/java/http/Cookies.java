@@ -24,4 +24,9 @@ public class Cookies {
 
             .findAny();
     }
+
+    public void putCookie(String key, String value) {
+        var cookie = new Cookie(key, value);
+        values.add(cookie);
+    }
 }
