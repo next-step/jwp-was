@@ -32,7 +32,7 @@ class ResponseTest {
     @DisplayName("Found 상태코드를 갖는 헤더, 쿠키, 바디 모두 빈 응답객체를 생성한다.")
     @Test
     void sendRedirect() {
-        Response actual = Response.sendRedirect("/index.html");
+        Response actual = Response.redirect("/index.html");
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(new Response(
                         Status.found(),

@@ -25,7 +25,7 @@ public class LoginController implements Controller {
     }
 
     private Response loginResultResponse(String location, boolean isSuccess) {
-        Response response = Response.sendRedirect(location);
+        Response response = Response.redirect(location);
         response.addCookie(Cookie.of("logined", isSuccess));
         return response;
     }

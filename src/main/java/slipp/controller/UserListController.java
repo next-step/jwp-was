@@ -25,7 +25,7 @@ public class UserListController implements Controller {
         boolean isLogin = request.existsCookie("logined", "true");
 
         if (!isLogin) {
-            return Response.sendRedirect("/user/login.html");
+            return Response.redirect("/user/login.html");
         }
 
         request.setAttribute("users", DataBase.findAll());

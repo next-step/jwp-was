@@ -55,7 +55,7 @@ class ResponseWriterTest {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(outputStream);
-        Response response = Response.sendRedirect("/index.html");
+        Response response = Response.redirect("/index.html");
 
         responseWriter.write(dos, response);
 

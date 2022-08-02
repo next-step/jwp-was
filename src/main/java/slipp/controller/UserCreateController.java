@@ -1,6 +1,5 @@
 package slipp.controller;
 
-import com.google.common.base.Charsets;
 import slipp.db.DataBase;
 import slipp.model.User;
 import webserver.http.domain.controller.Controller;
@@ -24,6 +23,6 @@ public class UserCreateController implements Controller {
         User newUser = new User(userId, password, name, email);
         DataBase.addUser(newUser);
 
-        return Response.sendRedirect("/index.html");
+        return Response.redirect("/index.html");
     }
 }

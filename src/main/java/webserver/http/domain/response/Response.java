@@ -35,7 +35,7 @@ public class Response {
         return response;
     }
 
-    public static Response sendRedirect(String location) {
+    public static Response redirect(String location) {
         Response response = new Response(new Status(Protocol.HTTP_1_1, StatusCode.FOUND));
         response.headers.add(LOCATION, location);
         return response;
