@@ -2,9 +2,7 @@ package webserver.response;
 
 import enums.HttpStatusCode;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import utils.JsonUtils;
 import webserver.Cookie;
@@ -14,8 +12,7 @@ public class HttpResponse {
     private final HttpStatusCode code;
     private final HttpHeader headers;
     private final byte[] body;
-    // 이게 들어오면서 생성자에 문제가 생긴듯....
-    private Map<String, Cookie> cookies;
+    private final Map<String, Cookie> cookies;
 
     public HttpResponse(HttpStatusCode code, HttpHeader headers, byte[] body, Map<String, Cookie> cookies) {
         this.code = code;

@@ -53,6 +53,6 @@ public class UserListController implements Controller {
         loader.setSuffix(VIEW_EXTENSION);
         Handlebars handlebars = new Handlebars(loader);
 
-        return handlebars.compile("user/list");
+        return handlebars.compile(EXECUTABLE_PATH);
     }
 }

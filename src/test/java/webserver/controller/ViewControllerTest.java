@@ -16,15 +16,24 @@ public class ViewControllerTest {
     @Test
     @DisplayName("HTTP Request가 들어왔을 때 원하는 파일을 잘 가져온다.")
     void handleHttpRequestTest() throws Exception {
-        HttpRequest httpRequest = new HttpRequest(
+        HttpRequest htmlRequest = new HttpRequest(
                 List.of(("GET /index.html HTTP/1.1\n" +
                         "Host: localhost:8080\n" +
                         "Connection: keep-alive\n" +
                         "Accept: */*").split("\n"))
         );
 
-        HttpResponse result = new ViewController().execute(httpRequest);
+        HttpRequest cssRequest = new HttpRequest(
+                List.of(("GET /css/styles.css HTTP/1.1\n" +
+                        "Host: localhost:8080\n" +
+                        "Connection: keep-alive\n" +
+                        "Accept: text/css,*/*;q=0.1").split("\n"))
+        );
 
-        assertArrayEquals(result.getBody(), FileIoUtils.loadFileFromClasspath("./templates/index.html"));
+        HttpResponse htmlResult = new ViewController().execute(htmlRequest);
+        HttpResponse cssResult = new ViewController().execute(cssRequest);
+
+        assertArrayEquals(htmlResult.getBody(), FileIoUtils.loadFileFromClasspath("./templates/index.html"));
+        assertArrayEquals(cssResult.getBody(), FileIoUtils.loadFileFromClasspath("./static/css/styles.css"));
     }
 }
