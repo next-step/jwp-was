@@ -22,7 +22,7 @@ public class ResourceController implements Controller {
     public HttpResponse execute(HttpRequest request) throws IOException, URISyntaxException {
         String path = addTemplatePath(request.getPath());
         byte[] bytes = FileIoUtils.loadFileFromClasspath(path);
-        return HttpResponse.ok(HttpStatusCode.OK, ResponseHeader.textHtml(bytes.length), bytes);
+        return HttpResponse.of(HttpStatusCode.OK, ResponseHeader.textHtml(bytes.length), bytes);
     }
 
     private String addTemplatePath(String path) {

@@ -1,5 +1,8 @@
 package controller;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import model.HttpRequest;
 import model.HttpResponse;
 import model.HttpStatusCode;
@@ -16,8 +19,16 @@ public class DispatchController {
         controllers = Set.of(
                 new CreateUserController(),
                 new ResourceController(),
-                new LoginController()
+                new LoginController(),
+                new UserListController(handlebars())
         );
+    }
+
+    private static Handlebars handlebars() {
+        TemplateLoader loader = new ClassPathTemplateLoader();
+        loader.setPrefix("/templates");
+        loader.setSuffix(".html");
+        return new Handlebars(loader);
     }
 
     public HttpResponse handleRequest(HttpRequest request) {

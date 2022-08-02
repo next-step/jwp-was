@@ -29,4 +29,9 @@ public class HttpRequestHeader {
     public int getContentLength() {
         return Integer.parseInt(headers.getOrDefault(HttpHeaders.CONTENT_LENGTH, DEFAULT_CONTENT_LENGTH));
     }
+
+    public boolean containsLoginCookie() {
+        String cookie = headers.get(HttpHeaders.SET_COOKIE);
+        return cookie != null && cookie.contains("logined=true");
+    }
 }

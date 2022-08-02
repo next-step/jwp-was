@@ -18,7 +18,7 @@ class HttpResponseTest {
         String contents = "contents";
         byte[] contentsBytes = contents.getBytes(StandardCharsets.UTF_8);
 
-        HttpResponse response = HttpResponse.ok(
+        HttpResponse response = HttpResponse.of(
                 HttpStatusCode.OK,
                 ResponseHeader.textHtml(contentsBytes.length),
                 contentsBytes

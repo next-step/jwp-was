@@ -1,5 +1,6 @@
 package model;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,16 +15,16 @@ public class HttpResponse {
         this.body = body;
     }
 
-    public static HttpResponse ok(HttpStatusCode httpStatusCode, ResponseHeader responseHeader, byte[] bytes) {
-        return new HttpResponse(httpStatusCode, responseHeader, bytes);
-    }
-
     public static HttpResponse notFound() {
         return new HttpResponse(HttpStatusCode.NOT_FOUND, ResponseHeader.empty(), new byte[0]);
     }
 
     public static HttpResponse of(HttpStatusCode httpStatusCode, ResponseHeader responseHeader, byte[] body) {
         return new HttpResponse(httpStatusCode, responseHeader, body);
+    }
+
+    public static HttpResponse of(HttpStatusCode httpStatusCode, ResponseHeader responseHeader, String body) {
+        return new HttpResponse(httpStatusCode, responseHeader, body.getBytes(StandardCharsets.UTF_8));
     }
 
     public static HttpResponse of(HttpStatusCode httpStatusCode, ResponseHeader responseHeader) {

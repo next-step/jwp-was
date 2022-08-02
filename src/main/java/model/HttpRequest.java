@@ -78,4 +78,8 @@ public class HttpRequest {
     public boolean isMatchMethod(HttpMethod httpMethod) {
         return getHttpMethod().equals(httpMethod);
     }
+
+    public boolean isLogin() {
+        return header.containsLoginCookie();
+    }
 }
