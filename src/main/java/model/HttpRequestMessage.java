@@ -14,7 +14,7 @@ public class HttpRequestMessage {
 
     private final RequestLine requestLine;
 
-    private RequestHeaders requestHeaders;
+    private HttpHeaders requestHeaders;
 
     private String body;
 
@@ -36,17 +36,17 @@ public class HttpRequestMessage {
             return;
         }
 
-        this.requestHeaders = new RequestHeaders(httpMessageData);
+        this.requestHeaders = new HttpHeaders(httpMessageData);
         this.body = this.parseBody(bufferedReader, requestHeaders);
     }
 
-    private String parseBody(BufferedReader bufferedReader, RequestHeaders requestHeaders) throws IOException {
+    private String parseBody(BufferedReader bufferedReader, HttpHeaders requestHeaders) throws IOException {
         if (bufferedReader == null) {
             return null;
         }
 
         String contentLengthValue = requestHeaders
-                .getRequestHeaders()
+                .getHeaders()
                 .get(CONTENT_LENGTH_KEY);
         int contentLength = this.getContentLength(contentLengthValue);
         if (contentLength == 0) {
@@ -68,7 +68,7 @@ public class HttpRequestMessage {
         return requestLine;
     }
 
-    public RequestHeaders getRequestHeaders() {
+    public HttpHeaders getRequestHeaders() {
         return requestHeaders;
     }
 

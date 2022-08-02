@@ -15,7 +15,7 @@ class RequestHeadersTest {
     @ParameterizedTest
     @ValueSource(strings = {"Connection:keep-alive", "Connectionkeep-alive", "Connection :keep-alive"})
     void validateTest(String wrongHeader) {
-        Assertions.assertThatThrownBy(() -> new RequestHeaders(List.of(wrongHeader))).isInstanceOf(IllegalArgumentException.class);
+        Assertions.assertThatThrownBy(() -> new HttpHeaders(List.of(wrongHeader))).isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("requestHeaders 생성 검증")
@@ -24,8 +24,8 @@ class RequestHeadersTest {
         List<String> httpMessageData = List.of("Host: localhost:8080", "Connection: keep-alive", "Accept: */*");
         Map<String, String> headers = Map.of("Host", "localhost:8080", "Connection", "keep-alive", "Accept", "*/*");
 
-        RequestHeaders requestHeaders = new RequestHeaders(httpMessageData);
-        for (Map.Entry<String, String> entry : requestHeaders.getRequestHeaders().entrySet()) {
+        HttpHeaders requestHeaders = new HttpHeaders(httpMessageData);
+        for (Map.Entry<String, String> entry : requestHeaders.getHeaders().entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
 
