@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 
 public class HttpRequestUtil {
 
-    public static HttpRequest create_with_post_request(String path, String requestBody) throws UnsupportedEncodingException {
+    public static HttpRequest createWithPostRequest(String path, String requestBody) throws UnsupportedEncodingException {
         String headerString = "POST " + path + " HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
@@ -21,7 +21,7 @@ public class HttpRequestUtil {
         return new HttpRequest(inputStream);
     }
 
-    public static HttpRequest create_with_get_request(String path) throws UnsupportedEncodingException {
+    public static HttpRequest createWithGetRequest(String path) throws UnsupportedEncodingException {
         String headerString = "GET " + path + " HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
