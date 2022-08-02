@@ -23,8 +23,8 @@ public class RequestLineTest {
         RequestLine requestLine = RequestLine.parse("GET /users HTTP/1.1");
 
         assertAll(
-                () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseMethod()).isEqualTo("GET"),
-                () -> org.assertj.core.api.Assertions.assertThat(requestLine.parsePath()).isEqualTo("/users"),
+                () -> org.assertj.core.api.Assertions.assertThat(requestLine.getMethod().isGet()).isTrue(),
+                () -> org.assertj.core.api.Assertions.assertThat(requestLine.getPath()).isEqualTo("/users"),
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseProtocol()).isEqualTo("HTTP"),
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseProtocolVersion()).isEqualTo("1.1")
         );
@@ -36,8 +36,8 @@ public class RequestLineTest {
         RequestLine requestLine = RequestLine.parse("POST /users HTTP/1.1");
 
         assertAll(
-                () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseMethod()).isEqualTo("POST"),
-                () -> org.assertj.core.api.Assertions.assertThat(requestLine.parsePath()).isEqualTo("/users"),
+                () -> org.assertj.core.api.Assertions.assertThat(requestLine.getMethod().isPost()).isTrue(),
+                () -> org.assertj.core.api.Assertions.assertThat(requestLine.getPath()).isEqualTo("/users"),
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseProtocol()).isEqualTo("HTTP"),
                 () -> org.assertj.core.api.Assertions.assertThat(requestLine.parseProtocolVersion()).isEqualTo("1.1")
         );

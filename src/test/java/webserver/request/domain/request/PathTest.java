@@ -4,8 +4,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.exception.StringEmptyException;
-import webserver.request.domain.request.Path;
-import webserver.request.domain.request.QueryString;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
