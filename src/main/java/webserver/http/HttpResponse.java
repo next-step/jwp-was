@@ -1,5 +1,8 @@
 package webserver.http;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,35 +14,30 @@ public class HttpResponse {
 
     private byte[] body;
 
+    private final OutputStream outputStream;
+
+    private boolean isCommitted;
+
+    public HttpResponse(OutputStream outputStream) {
+        this(new StatusLine(Status.OK), new Headers(), outputStream);
+    }
+
     public HttpResponse() {
-        this(new StatusLine(Status.OK), new Headers(), new byte[]{});
+        this(null);
     }
 
-    public HttpResponse(byte[] bytes) {
-        this(new StatusLine(Status.OK), new Headers(), bytes);
-    }
-
-    private HttpResponse(StatusLine statusLine, Headers headers, byte[] body) {
+    private HttpResponse(StatusLine statusLine,
+                         Headers headers,
+                         OutputStream outputStream) {
         this.statusLine = statusLine;
         this.headers = headers;
-        this.body = body;
-        setContentLength(String.valueOf(body.length));
+        this.outputStream = outputStream;
     }
 
     public void sendRedirect(String location) {
         this.statusLine = new StatusLine(ProtocolVersion.HTTP11, Status.FOUND);
         this.headers.setHeader("Location", location);
-    }
-
-    public StatusLine getStatusLine() {
-        return statusLine;
-    }
-
-    public List<String> getMessages() {
-        List<String> messages = new ArrayList<>();
-        messages.add(statusLine.getMessage());
-        messages.addAll(headers.getMessages());
-        return messages;
+        commit();
     }
 
     public void setBody(byte[] body) {
@@ -59,8 +57,17 @@ public class HttpResponse {
         return body;
     }
 
-    public boolean hasBody() {
-        return body != null;
+    public void commit() {
+        if (isCommitted) {
+            return;
+        }
+        try {
+            writeAndFlush();
+        } catch (IOException e) {
+            throw new RuntimeException();
+        } finally {
+            isCommitted = true;
+        }
     }
 
     public void setContentType(String contentType) {
@@ -71,8 +78,35 @@ public class HttpResponse {
         this.headers.setHeader("Content-Length", contentLength);
     }
 
+    private void writeAndFlush() throws IOException {
+        DataOutputStream dos = new DataOutputStream(this.outputStream);
+
+        for (String message : this.getMessages()) {
+            dos.writeBytes(message + "\r\n");
+        }
+
+        dos.writeBytes("\r\n");
+
+        if (this.hasBody()) {
+            dos.write(body, 0, body.length);
+        }
+
+        dos.flush();
+    }
+
+    private List<String> getMessages() {
+        List<String> messages = new ArrayList<>();
+        messages.add(statusLine.getMessage());
+        messages.addAll(headers.getMessages());
+        return messages;
+    }
+
+    private boolean hasBody() {
+        return body != null;
+    }
+
     @Override
     public String toString() {
-        return statusLine + " " + headers + " " + body.length;
+        return statusLine + " " + headers;
     }
 }

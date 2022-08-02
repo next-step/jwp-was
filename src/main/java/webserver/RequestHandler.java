@@ -12,8 +12,6 @@ import webserver.http.HttpResponse;
 import webserver.view.View;
 import webserver.view.ViewResolver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -49,14 +47,13 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = HttpRequest.create(in);
-            logger.debug("request:{} ", httpRequest);
 
-            HttpResponse httpResponse = new HttpResponse();
+            HttpResponse httpResponse = new HttpResponse(out);
+
             handleRequest(httpRequest, httpResponse);
-            logger.debug("response:{} ", httpResponse);
 
-            writeResponse(out, httpResponse);
-        } catch (IOException e) {
+            httpResponse.commit();
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
@@ -74,55 +71,4 @@ public class RequestHandler implements Runnable {
 
         view.render(modelAndView.getModel(), httpResponse);
     }
-
-    private void writeResponse(OutputStream out, HttpResponse httpResponse) throws IOException {
-        DataOutputStream dos = new DataOutputStream(out);
-
-        for (String message : httpResponse.getMessages()) {
-            dos.writeBytes(message + "\r\n");
-        }
-
-        dos.writeBytes("\r\n");
-
-        if (httpResponse.hasBody()) {
-            dos.write(httpResponse.getBody(), 0, httpResponse.getBody().length);
-        }
-
-        dos.flush();
-    }
-
-//    private HttpRequest readRequest(BufferedReader reader) throws IOException {
-//        RequestLine requestLine = RequestLine.parseOf(reader.readLine());
-//
-//        Headers headers = readHeaders(reader);
-//
-//        String requestBody = readRequestBody(reader, headers);
-//
-//        return new HttpRequest(requestLine, headers, requestBody);
-//    }
-//
-//    private Headers readHeaders(BufferedReader reader) throws IOException {
-//        List<String> headerLines = new ArrayList<>();
-//
-//        String line = reader.readLine();
-//        headerLines.add(line);
-//
-//        while (line != null && !"".equals(line)) {
-//            line = reader.readLine();
-//            headerLines.add(line);
-//        }
-//
-//        return Headers.parseOf(headerLines);
-//    }
-//
-//    private String readRequestBody(BufferedReader reader, Headers headers) throws IOException {
-//        String value = headers.getValue("Content-Length");
-//
-//        if (value != null && !value.equals("")) {
-//            return IOUtils.readData(reader, Integer.parseInt(value));
-//        }
-//
-//        return "";
-//    }
-
 }

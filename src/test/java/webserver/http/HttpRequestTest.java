@@ -38,7 +38,7 @@ class HttpRequestTest {
     @DisplayName("InputStream 을 이용해 HttpRequest 를 생성할 수 있다.")
     static class CreateWithInputStreamTest {
 
-        public static final String SRC_TEST_RESOURCES = "./src/test/resources";
+        private static final String SRC_TEST_RESOURCES = "./src/test/resources";
 
         @Test
         void createGetRequestTest() throws Exception {
