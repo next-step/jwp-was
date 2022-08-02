@@ -177,5 +177,7 @@ class RequestReaderTest {
         assertThat(request.getHeader("Connection")).isEqualTo("keep-alive");
         assertThat(request.getParameter("userId")).isEqualTo("javajigi");
         assertThat(request.getParameter("id")).isEqualTo("1");
+        assertThat(request.getParameter("id")).isEqualTo("1");
+        assertThat(request.getParameterAsInt("id")).isEqualTo(1);
     }
 }

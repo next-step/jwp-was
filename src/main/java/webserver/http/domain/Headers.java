@@ -45,7 +45,7 @@ public class Headers {
     }
 
     private int getContentLengthValue() {
-        return Integer.parseInt(keyValues.get(CONTENT_LENGTH));
+        return getValueAsInt(CONTENT_LENGTH);
     }
 
     public boolean hasContentType(String contentType) {
@@ -55,6 +55,14 @@ public class Headers {
 
     public String getValue(String name) {
         return keyValues.get(name);
+    }
+
+    public int getValueAsInt(String name) {
+        try {
+            return Integer.parseInt(keyValues.get(name));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("숫자방식이 아닌 리터럴 값은 인자로 들어갈 수 없습니다.", e);
+        }
     }
 
     public boolean contains(String name) {

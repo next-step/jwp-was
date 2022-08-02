@@ -32,6 +32,10 @@ public class Request {
         return headers.getValue(name);
     }
 
+    public int getHeaderAsInt(String name) {
+        return headers.getValueAsInt(name);
+    }
+
     public Method getMethod() {
         return requestLine.getMethod();
     }
@@ -50,6 +54,14 @@ public class Request {
 
     public String getParameter(String key) {
         return requestLine.getParameter(key);
+    }
+
+    public int getParameterAsInt(String key) {
+        try {
+            return Integer.parseInt(getParameter(key));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("숫자방식이 아닌 리터럴 값은 인자로 들어갈 수 없습니다.", e);
+        }
     }
 
     public boolean hasContentType(String contentType) {

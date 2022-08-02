@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static webserver.http.domain.Headers.CONTENT_LENGTH;
 import static webserver.http.domain.Headers.CONTENT_TYPE;
@@ -272,5 +273,31 @@ class RequestTest {
         );
 
         assertThat(request.getMethod()).isEqualTo(POST);
+    }
+
+    @DisplayName("Parameter 값이 숫자형인 경우, int 형을 반환")
+    @Test
+    void getParameterAsInt() {
+        Request request = new Request(
+                RequestLine.from("POST /path?name=jordy&age=20 HTTP/1.1"),
+                Headers.from(List.of())
+        );
+
+        int actual = request.getParameterAsInt("age");
+        assertThat(actual).isEqualTo(20);
+    }
+
+    @DisplayName("Parameter 값이 숫자형이 아닌 경우, 예외 발생")
+    @Test
+    void getParameterAsInt_fail() {
+        Request request = new Request(
+                RequestLine.from("POST /path?name=jordy&age=20 HTTP/1.1"),
+                Headers.from(List.of())
+        );
+
+        assertThatThrownBy(() -> request.getParameterAsInt("name"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("숫자방식이 아닌 리터럴 값은 인자로 들어갈 수 없습니다.");
+
     }
 }

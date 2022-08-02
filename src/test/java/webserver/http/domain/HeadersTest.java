@@ -7,7 +7,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import webserver.http.domain.exception.BadRequestException;
+import webserver.http.domain.request.Request;
+import webserver.http.domain.request.RequestLine;
 
 import java.util.HashMap;
 import java.util.List;
@@ -191,5 +194,30 @@ class HeadersTest {
         boolean actual = headers.existsCookie(name, value);
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @DisplayName("header의 값이 숫자형인 경우, int 형을 반환")
+    @Test
+    void getValueAsInt() {
+        Headers headers = Headers.from(List.of(
+                "Content-Length: 10"
+        ));
+
+        int actual = headers.getValueAsInt("Content-Length");
+        assertThat(actual).isEqualTo(10);
+    }
+
+    @DisplayName("header의 값이 숫자형이 아닌 경우, 예외 발생")
+    @ParameterizedTest
+    @ValueSource(strings = {"Accept", "INVALID"})
+    void getValueAsInt_fail(String name) {
+        Headers headers = Headers.from(List.of(
+                "Content-Length: 10",
+                "Accept: */*"
+        ));
+
+        assertThatThrownBy(() -> headers.getValueAsInt(name))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("숫자방식이 아닌 리터럴 값은 인자로 들어갈 수 없습니다.");
     }
 }
