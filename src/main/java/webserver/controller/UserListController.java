@@ -12,7 +12,10 @@ public class UserListController extends AbstractController {
 
     @Override
     public HttpResponse doGet(HttpRequest request) {
-        Optional<String> cookie = request.getCookie("isLogined");
+        Optional<String> cookie = request.getHttpSession()
+            .getAttribute("isLogined")
+            .map(Object::toString);
+
         if (cookie.isEmpty() || cookie.get().equals("false")) {
             return HttpResponse.found("/user/login.html");
         }
