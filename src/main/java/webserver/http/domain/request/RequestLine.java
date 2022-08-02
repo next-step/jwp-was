@@ -34,6 +34,10 @@ public class RequestLine {
         uri.addParameters(parameters);
     }
 
+    public Method getMethod() {
+        return method;
+    }
+
     public static RequestLine from(String message) {
         String[] splitMessage = message.split(REQUEST_LINE_DELIMITER_REGEX);
         if (splitMessage.length != REQUEST_LINE_SPLIT_SIZE) {

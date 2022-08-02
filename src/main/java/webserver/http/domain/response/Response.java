@@ -48,6 +48,9 @@ public class Response {
     public void addHeader(String name, String value) {
         headers.add(name, value);
     }
+    public void addHeader(String name, int value) {
+        this.addHeader(name, String.valueOf(value));
+    }
 
     public void addBody(String body) {
         this.addBody(body.getBytes());
@@ -55,7 +58,7 @@ public class Response {
 
     public void addBody(byte[] body) {
         this.body = body;
-        this.headers.add(CONTENT_LENGTH, String.valueOf(body.length));
+        addHeader(CONTENT_LENGTH, body.length);
     }
 
     public void addCookie(Cookie cookie) {

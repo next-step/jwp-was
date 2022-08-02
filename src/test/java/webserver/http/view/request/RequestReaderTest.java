@@ -12,7 +12,10 @@ import webserver.http.domain.request.RequestLine;
 import webserver.http.domain.request.URI;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.Map;
 
@@ -22,6 +25,7 @@ import static webserver.http.domain.Headers.CONTENT_LENGTH;
 import static webserver.http.domain.Headers.CONTENT_TYPE;
 import static webserver.http.domain.Headers.COOKIE;
 import static webserver.http.domain.Headers.HOST;
+import static webserver.http.domain.request.Method.POST;
 
 class RequestReaderTest {
     private final RequestReader requestReader = new RequestReader();
@@ -46,19 +50,19 @@ class RequestReaderTest {
                 new RequestLine(
                         Method.GET,
                         new URI("/path",
-                            new Parameters(
-                                    Map.of(
-                                    "name", Lists.list("jordy"),
-                                    "age", Lists.list("20")
-                                    )
-                            )
+                                new Parameters(
+                                        Map.of(
+                                                "name", Lists.list("jordy"),
+                                                "age", Lists.list("20")
+                                        )
+                                )
                         ),
                         Protocol.HTTP_1_1
                 ),
                 new Headers(
                         Map.of(
-                        HOST, "localhost:8080",
-                        ACCEPT, "application/json"
+                                HOST, "localhost:8080",
+                                ACCEPT, "application/json"
                         )
                 )
         );
@@ -126,7 +130,7 @@ class RequestReaderTest {
     private Request getRequestWithBody() {
         return new Request(
                 new RequestLine(
-                        Method.POST,
+                        POST,
                         new URI("/path",
                                 new Parameters(
                                         Map.of(
@@ -146,5 +150,32 @@ class RequestReaderTest {
                         )
                 )
         );
+    }
+
+    @Test
+    public void request_POST() throws Exception {
+        String testDirectory = "./src/test/resources/";
+        InputStream in = new FileInputStream(testDirectory + "Http_POST.txt");
+        RequestReader requestReader = new RequestReader();
+        Request request = requestReader.read(new BufferedReader(new InputStreamReader(in)));
+
+        assertThat(request.getMethod()).isEqualTo(POST);
+        assertThat(request.getPath()).isEqualTo("/user/create");
+        assertThat(request.getHeader("Connection")).isEqualTo("keep-alive");
+        assertThat(request.getParameter("userId")).isEqualTo("javajigi");
+    }
+
+    @Test
+    public void request_POST2() throws Exception {
+        String testDirectory = "./src/test/resources/";
+        InputStream in = new FileInputStream(testDirectory + "Http_POST2.txt");
+        RequestReader requestReader = new RequestReader();
+        Request request = requestReader.read(new BufferedReader(new InputStreamReader(in)));
+
+        assertThat(request.getMethod()).isEqualTo(POST);
+        assertThat(request.getPath()).isEqualTo("/user/create");
+        assertThat(request.getHeader("Connection")).isEqualTo("keep-alive");
+        assertThat(request.getParameter("userId")).isEqualTo("javajigi");
+        assertThat(request.getParameter("id")).isEqualTo("1");
     }
 }

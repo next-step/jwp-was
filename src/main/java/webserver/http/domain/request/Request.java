@@ -28,6 +28,14 @@ public class Request {
         requestLine.addParameters(parameters);
     }
 
+    public String getHeader(String name) {
+        return headers.getValue(name);
+    }
+
+    public Method getMethod() {
+        return requestLine.getMethod();
+    }
+
     public boolean hasMethod(Method method) {
         return requestLine.hasMethod(method);
     }

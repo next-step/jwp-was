@@ -11,6 +11,7 @@ import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static webserver.http.domain.Headers.CONTENT_LENGTH;
 import static webserver.http.domain.Headers.CONTENT_TYPE;
+import static webserver.http.domain.request.Method.POST;
 
 class RequestTest {
 
@@ -149,7 +151,7 @@ class RequestTest {
     private static Stream<Arguments> provideForIsGet() {
         return Stream.of(
                 arguments(Method.GET, true),
-                arguments(Method.POST, false)
+                arguments(POST, false)
         );
     }
 
@@ -240,5 +242,35 @@ class RequestTest {
                 arguments(new Headers(Map.of(CONTENT_TYPE, "application/json")), "text/html", false),
                 arguments(new Headers(Map.of()), "text/html", false)
         );
+    }
+
+    @DisplayName("name에 해당하는 header 값을 반환한다. 만약 name에 해당하는 header가 없는 경우, null을 반환한다.")
+    @Test
+    void getHeader() {
+        Request request = new Request(
+                RequestLine.from("POST /path HTTP/1.1"),
+                Headers.from(List.of(
+                        "Connection: Keep-Alive",
+                        "Cookie: jsessionId=5jgiw2341fhg"
+                ))
+        );
+
+        assertThat(request.getHeader("Connection")).isEqualTo("Keep-Alive");
+        assertThat(request.getHeader("Cookie")).isEqualTo("jsessionId=5jgiw2341fhg");
+        assertThat(request.getHeader("invalid")).isEqualTo(null);
+    }
+
+    @DisplayName("Http 요청 데이터의 Method 반환")
+    @Test
+    void getMethod() {
+        Request request = new Request(
+                RequestLine.from("POST /path HTTP/1.1"),
+                Headers.from(List.of(
+                        "Connection: Keep-Alive",
+                        "Cookie: jsessionId=5jgiw2341fhg"
+                ))
+        );
+
+        assertThat(request.getMethod()).isEqualTo(POST);
     }
 }

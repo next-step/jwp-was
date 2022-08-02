@@ -20,7 +20,6 @@ public class RequestReader {
             throw new NullRequestException("요청값이 null로 들어왔습니다. 해당 요청은 무시합니다.");
         }
         List<String> headerMessages = IOUtils.readWhileEmptyLine(bufferedReader);
-        headerMessages.forEach(System.out::println);
 
         RequestLine requestLine = RequestLine.from(requestLineMessage);
         Headers requestHeaders = Headers.from(headerMessages);

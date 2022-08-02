@@ -3,6 +3,7 @@ package webserver.http.domain;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import static java.util.stream.Collectors.collectingAndThen;
@@ -49,7 +50,7 @@ public class Headers {
 
     public boolean hasContentType(String contentType) {
         String value = keyValues.get(CONTENT_TYPE);
-        return contentType.equals(value);
+        return Objects.equals(contentType, value);
     }
 
     public String getValue(String name) {
