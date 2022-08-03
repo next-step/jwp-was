@@ -82,7 +82,7 @@ public class Response {
         return "Response{" +
                 "status=" + status +
                 ", headers=" + headers +
-                ", body=" + Arrays.toString(body) +
+                ", body=" + new String(body) +
                 '}';
     }
 }

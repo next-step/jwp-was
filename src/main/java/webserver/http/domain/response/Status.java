@@ -38,4 +38,13 @@ public class Status {
     public StatusCode getStatusCode() {
         return statusCode;
     }
+
+    @Override
+    public String toString() {
+        return "Status{" +
+                "protocol=" + protocol +
+                ", statusCode=" + statusCode +
+                '}';
+    }
 }
+

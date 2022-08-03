@@ -36,7 +36,7 @@ public class Parameters {
     }
 
     public static Parameters from(String message) {
-        if (message.isBlank()) {
+        if (Objects.isNull(message) || message.isBlank()) {
             return new Parameters(new HashMap<>());
         }
 

@@ -3,6 +3,8 @@ package webserver.http.domain.request;
 import webserver.http.domain.Protocol;
 import webserver.http.domain.exception.BadRequestException;
 
+import java.util.Objects;
+
 public class RequestLine {
 
     private static final String REQUEST_LINE_DELIMITER_REGEX = " ";
@@ -39,6 +41,9 @@ public class RequestLine {
     }
 
     public static RequestLine from(String message) {
+        if (Objects.isNull(message) || message.isBlank()) {
+            throw new BadRequestException("Request Line은 빈값 혹은 null이 될 수 없습니다.");
+        }
         String[] splitMessage = message.split(REQUEST_LINE_DELIMITER_REGEX);
         if (splitMessage.length != REQUEST_LINE_SPLIT_SIZE) {
             throw new BadRequestException(String.format("'[Method] [URI] [Protocol]' 형식의 requestLine 메시지가 아닙니다. {message=%s}", message));

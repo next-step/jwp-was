@@ -5,11 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.MethodSource;
-import webserver.http.domain.request.Request;
-import webserver.http.domain.request.RequestLine;
+import org.junit.jupiter.params.provider.NullSource;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -33,6 +32,20 @@ class CookiesTest {
                                 "logined", new Cookie("logined", "true"),
                                 "other", new Cookie("other", "")
                         )
+                ));
+    }
+
+    @DisplayName("null 혹은 빈문자열은 빈 Cookies 객체로 파싱한다.")
+    @ParameterizedTest
+    @EmptySource
+    @NullSource
+    void from_null(String message) {
+        Cookies actual = Cookies.from(message);
+
+        assertThat(actual).usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .isEqualTo(new Cookies(
+                        Map.of()
                 ));
     }
 

@@ -48,6 +48,7 @@ public class RequestHandler implements Runnable {
              DataOutputStream dos = new DataOutputStream(connection.getOutputStream())
         ) {
             Response response = processRequest(bufferedReader);
+            logger.info("[response] = {}", response);
             responseWriter.write(dos, response);
         } catch (NullRequestException e) {
             logger.warn(e.getMessage(), e);
@@ -59,7 +60,10 @@ public class RequestHandler implements Runnable {
     private Response processRequest(BufferedReader bufferedReader) throws IOException {
         try {
             Request request = requestReader.read(bufferedReader);
+            logger.info("[request] = {}", request);
             return requestProcessor.process(request);
+        } catch (NullRequestException e) {
+            throw e;
         } catch (BadRequestException e) {
             logger.warn("[bad request] = {}", e.getMessage(), e);
             return getResponse(StatusCode.BAD_REQUEST, "잘못된 요청입니다. ;(");
