@@ -17,7 +17,7 @@ class PathTest {
     @BeforeEach
     void setUp() {
         nodes = List.of("first", "second", "third");
-        path = new Path(String.join(Path.PATH_DELIMITER, nodes), Queries.from(""));
+        path = new Path(String.join(Path.PATH_DELIMITER, nodes), Parameters.from(""));
     }
 
     @Test
@@ -28,23 +28,28 @@ class PathTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2})
     void N번째_부분_경로_확인(int depth) {
-        assertThat(path.getPartByDepth(depth).isPresent()).isTrue();
-        assertThat(path.getPartByDepth(depth).get()).isEqualTo(nodes.get(depth));
+        assertThat(path.getSubPathByDepth(depth).isPresent()).isTrue();
+        assertThat(path.getSubPathByDepth(depth).get()).isEqualTo(nodes.get(depth));
     }
 
     @Test
     void 계층_외_부분_경로_확인_시_빈_옵셔널_반환() {
-        assertThat(path.getPartByDepth(nodes.size()).isPresent()).isFalse();
+        assertThat(path.getSubPathByDepth(nodes.size()).isPresent()).isFalse();
     }
 
     @Test
     void 부분_경로_계층_확인() {
-        nodes.forEach(node -> assertThat(path.getDepthOfPart(node)).isEqualTo(nodes.indexOf(node)));
+        nodes.forEach(node -> assertThat(path.getDepthOfSubPath(node)).isEqualTo(nodes.indexOf(node)));
     }
 
     @Test
     void 경로_외_부분_경로_계층_확인() {
-        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> path.getDepthOfPart("forth"))
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> path.getDepthOfSubPath("forth"))
                 .withMessage("잘못된 부분 경로입니다.");
+    }
+
+    @Test
+    void 전체_경로_확인() {
+        assertThat(path.toString()).isEqualTo(String.join(Path.PATH_DELIMITER, nodes));
     }
 }

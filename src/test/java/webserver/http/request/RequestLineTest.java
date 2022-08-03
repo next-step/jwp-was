@@ -37,17 +37,17 @@ class RequestLineTest {
         Path path = requestLine.getPath();
 
         assertThat(path.getDepth()).isEqualTo(1);
-        assertThat(path.getPartByDepth(0).get()).isEqualTo("path");
+        assertThat(path.getSubPathByDepth(0).get()).isEqualTo("path");
     }
 
     @Test
     void 쿼리스트링_파싱() {
         RequestLine requestLine = RequestLine.from("GET /path?key=value&id=test HTTP/2");
 
-        Queries queries = requestLine.getPath().getQueries();
+        Parameters parameters = requestLine.getPath().getQueries();
 
-        assertThat(queries.get("key").get()).isEqualTo("value");
-        assertThat(queries.get("id").get()).isEqualTo("test");
+        assertThat(parameters.get("key")).isEqualTo("value");
+        assertThat(parameters.get("id")).isEqualTo("test");
     }
 
     @Test
