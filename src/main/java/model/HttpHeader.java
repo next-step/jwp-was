@@ -10,6 +10,8 @@ public class HttpHeader {
     public static final int NO_CONTENT = 0;
     public static final String CONTENT_LENGTH = "Content-Length";
     public static final int REQUEST_LINE_INDEX = 0;
+    public static final String COOKIE = "Cookie";
+    public static final String NO_COOKIE = null;
 
     private List<String> headers;
 
@@ -28,5 +30,14 @@ public class HttpHeader {
 
     public String getRequestLine() {
         return headers.get(REQUEST_LINE_INDEX);
+    }
+
+    public String getCookie() {
+        return headers.stream()
+                .map(header -> header.split(DELIMITER))
+                .filter(header -> header[NAME_INDEX].equals(COOKIE))
+                .map(header -> header[VALUE_INDEX].strip())
+                .findFirst()
+                .orElse(NO_COOKIE);
     }
 }

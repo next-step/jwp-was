@@ -3,15 +3,16 @@ package model;
 import webserver.RequestLine;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 
 public class HttpRequest {
 
     private RequestLine requestLine;
     private RequestBody body;
+    private Cookie cookie;
 
-    public HttpRequest(RequestLine requestLine, String body) throws UnsupportedEncodingException {
-        this.requestLine = requestLine;
+    public HttpRequest(HttpHeader header, String body) throws UnsupportedEncodingException {
+        this.requestLine = new RequestLine(header.getRequestLine());
+        this.cookie = new Cookie(header.getCookie(), requestLine.getRequestPath());
         this.body = new RequestBody(body);
     }
 
@@ -21,5 +22,9 @@ public class HttpRequest {
 
     public RequestBody getBody() {
         return body;
+    }
+
+    public Cookie getCookie() {
+        return cookie;
     }
 }

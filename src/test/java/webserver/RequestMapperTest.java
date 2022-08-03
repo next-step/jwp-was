@@ -1,9 +1,6 @@
 package webserver;
 
-import controller.Controller;
-import controller.LoginControllerTest;
-import controller.UserCreateController;
-import controller.ViewController;
+import controller.*;
 import model.HttpMethod;
 import model.RequestMappingInfo;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,5 +40,14 @@ public class RequestMapperTest {
         Controller controller = requestMapper.mapping(requestMappingInfo);
 
         assertThat(controller.getClass()).isEqualTo(LoginController.class);
+    }
+    @Test
+    void 유저목록_컨트롤러_가져오기() {
+        final String path = "/user/list";
+        final RequestMappingInfo requestMappingInfo = new RequestMappingInfo(HttpMethod.GET, path);
+
+        Controller controller = requestMapper.mapping(requestMappingInfo);
+
+        assertThat(controller.getClass()).isEqualTo(UserListController.class);
     }
 }

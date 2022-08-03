@@ -10,14 +10,7 @@ import java.net.URISyntaxException;
 public class UserCreateController implements Controller{
 
 
-    public static final String PATH = "/user/create";
     public static final String REDIRECT_PATH = "/index.html";
-    private RequestMappingInfo mappingInfo = new RequestMappingInfo(HttpMethod.POST, PATH);
-
-    @Override
-    public boolean isPath(RequestMappingInfo info) {
-        return mappingInfo.equals(info);
-    }
 
     @Override
     public HttpResponse process(HttpRequest request) throws IOException, URISyntaxException {

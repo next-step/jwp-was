@@ -1,5 +1,6 @@
 package controller;
 
+import model.HttpHeader;
 import model.HttpRequest;
 import model.HttpResponse;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,8 @@ import webserver.RequestLine;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,9 +23,6 @@ public class ViewControllerTest {
         final HttpRequest httpRequest = createHttpRequest();
         final HttpResponse response = controller.process(httpRequest);
 
-        for (String s : response.getMessages()) {
-            System.out.println(s);
-        }
         assertThat(response.getMessages().get(0)).isEqualTo("HTTP/1.1 200 OK \r\n");
     }
 
@@ -32,6 +32,16 @@ public class ViewControllerTest {
                 "Connection: keep-alive\n" +
                 "Accept: */*";
 
-        return new HttpRequest(new RequestLine(data), "");
+        return new HttpRequest(new HttpHeader(headers()), "");
     }
+
+    private List<String> headers() {
+        return Arrays.asList("GET /index.html HTTP/1.1",
+                "Host: localhost:8080",
+                "Connection: keep-alive",
+                "Content-Length: 59",
+                "Content-Type: application/x-www-form-urlencoded",
+                "Accept: */*");
+    }
+
 }

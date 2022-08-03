@@ -36,7 +36,7 @@ public class RequestHandler implements Runnable {
             final HttpHeader httpHeader = new HttpHeader(IOUtils.readHeaderData(br));
             final RequestLine requestLine = new RequestLine(httpHeader.getRequestLine());
             final String requestBody = IOUtils.readData(br, httpHeader.getContentLength());
-            final HttpRequest httpRequest = new HttpRequest(requestLine, requestBody);
+            final HttpRequest httpRequest = new HttpRequest(httpHeader, requestBody);
 
             Controller controller = mapper.mapping(new RequestMappingInfo(requestLine.getMethod(), requestLine.getRequestPath()));
             HttpResponse response = controller.process(httpRequest);
@@ -44,6 +44,8 @@ public class RequestHandler implements Runnable {
 
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
