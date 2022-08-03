@@ -71,12 +71,12 @@
 
 ### 4단계
 #### 기능 요구사항 1.
-- [ ] 서블릿에서 지원하는 HttpSession API의 일부를 지원해야 한다.
-  - [ ] String getId(): 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환
-  - [ ] void setAttribute(String name, Object value): 현재 세션에 value 인자로 전달되는 객체를 name 인자 이름으로 저장
-  - [ ] Object getAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환
-  - [ ] void removeAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
-  - [ ] void invalidate(): 현재 세션에 저장되어 있는 모든 값을 삭제
+- [x] 서블릿에서 지원하는 HttpSession API의 일부를 지원해야 한다.
+  - [x] String getId(): 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환
+  - [x] void setAttribute(String name, Object value): 현재 세션에 value 인자로 전달되는 객체를 name 인자 이름으로 저장
+  - [x] Object getAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환
+  - [x] void removeAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
+  - [x] void invalidate(): 현재 세션에 저장되어 있는 모든 값을 삭제
 - [ ] 쿠키를 통해 고유 아이디로 session을 불러 오도록 한다.
 - [ ] 세션 스토리지를 구현한다.
 
