@@ -13,6 +13,16 @@ import static org.assertj.core.api.Assertions.*;
 @DisplayName("URL Parser 유틸 테스트")
 class QueryUrlParserTest {
 
+    @DisplayName("쿼리 파싱 성공 테스트")
+    @Test
+    void parseUrl() {
+        assertThat(QueryUrlParser.toMap("userId=javajigi&password=password&name=JaeSung"))
+                .isEqualTo(Map.of(
+                        "userId", "javajigi",
+                        "password", "password",
+                        "name", "JaeSung"));
+    }
+
     @DisplayName("키만 존재할 경우 빈 문자열로 추가")
     @Test
     void emptyValueToEmptyString() {
