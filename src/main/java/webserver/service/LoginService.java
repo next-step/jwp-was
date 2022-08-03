@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static webserver.controller.AbstractController.*;
+import static webserver.session.HttpSession.SESSION_ID;
 
 public class LoginService {
     private static final Logger logger = LoggerFactory.getLogger(LoginService.class);
