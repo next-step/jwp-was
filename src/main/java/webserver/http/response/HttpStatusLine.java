@@ -17,7 +17,7 @@ public class HttpStatusLine {
 	}
 
 	public String getHttpStatusLine(HttpStatus httpStatus) {
-		return String.format(FORMAT_STATUS_LINE, httpProtocol.getProtocol(), httpStatus.getCode(), httpStatus.getMessage());
+		return String.format(FORMAT_STATUS_LINE, httpProtocol.getProtocolVersion(), httpStatus.getCode(), httpStatus.getMessage());
 	}
 
 	public void write(HttpStatus httpStatus, OutputStream outputStream) throws IOException {

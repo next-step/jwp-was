@@ -29,5 +29,6 @@ public class HttpProtocolTest {
 		// then
 		assertThat(httpProtocol.getProtocol()).isEqualTo("HTTP");
 		assertThat(httpProtocol.getVersion()).isEqualTo("1.1");
+		assertThat(httpProtocol.getProtocolVersion()).isEqualTo("HTTP/1.1");
 	}
 }
