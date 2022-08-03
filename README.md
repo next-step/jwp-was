@@ -68,3 +68,16 @@
 #### 기능 요구사항 2.
 - [x] 클라이언트 요청 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpRequest)
   - [x] 클라이언트 응답 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpResponse) -> 1번에서 활용한 다형성으로 응답을 각각의 역할로 분리시키자.
+
+### 4단계
+#### 기능 요구사항 1.
+- [ ] 서블릿에서 지원하는 HttpSession API의 일부를 지원해야 한다.
+  - [ ] String getId(): 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환
+  - [ ] void setAttribute(String name, Object value): 현재 세션에 value 인자로 전달되는 객체를 name 인자 이름으로 저장
+  - [ ] Object getAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환
+  - [ ] void removeAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
+  - [ ] void invalidate(): 현재 세션에 저장되어 있는 모든 값을 삭제
+- [ ] 쿠키를 통해 고유 아이디로 session을 불러 오도록 한다.
+- [ ] 세션 스토리지를 구현한다.
+
+
