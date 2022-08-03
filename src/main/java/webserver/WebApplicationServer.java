@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.config.WebServerConfig;
 import webserver.http.domain.controller.Controller;
-import webserver.http.domain.controller.RequestProcessor;
+import webserver.http.domain.controller.HttpRequestProcessor;
 import webserver.http.view.request.RequestReader;
 import webserver.http.view.response.ResponseWriter;
 
@@ -32,7 +32,7 @@ public class WebApplicationServer {
             Socket connection;
             RequestReader requestReader = WebServerConfig.requestReader();
             ResponseWriter responseWriter = WebServerConfig.responseWriter();
-            RequestProcessor requestProcessor = WebServerConfig.requestProcessor(controllers);
+            HttpRequestProcessor requestProcessor = WebServerConfig.requestProcessor(controllers);
 
             while ((connection = listenSocket.accept()) != null) {
                 Thread thread = new Thread(

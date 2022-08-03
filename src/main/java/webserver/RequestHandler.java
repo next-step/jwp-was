@@ -3,7 +3,7 @@ package webserver;
 import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.domain.controller.RequestProcessor;
+import webserver.http.domain.controller.HttpRequestProcessor;
 import webserver.http.domain.exception.BadRequestException;
 import webserver.http.domain.exception.NullRequestException;
 import webserver.http.domain.exception.ResourceNotFoundException;
@@ -28,12 +28,12 @@ public class RequestHandler implements Runnable {
     private final Socket connection;
     private final RequestReader requestReader;
     private final ResponseWriter responseWriter;
-    private final RequestProcessor requestProcessor;
+    private final HttpRequestProcessor requestProcessor;
 
     public RequestHandler(Socket connectionSocket,
                           RequestReader requestReader,
                           ResponseWriter responseWriter,
-                          RequestProcessor requestProcessor) {
+                          HttpRequestProcessor requestProcessor) {
         this.connection = connectionSocket;
         this.requestReader = requestReader;
         this.responseWriter = responseWriter;
