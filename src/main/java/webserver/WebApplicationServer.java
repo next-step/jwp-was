@@ -36,8 +36,6 @@ public class WebApplicationServer {
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
                 executorService.execute(new RequestHandler(connection));
-//                Thread thread = new Thread();
-//                thread.start();
             }
         }
     }
