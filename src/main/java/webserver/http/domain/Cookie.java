@@ -23,6 +23,10 @@ public class Cookie {
         return new Cookie(name, String.valueOf(value), DEFAULT_PATH);
     }
 
+    public static Cookie of(String name, String value) {
+        return new Cookie(name, value, DEFAULT_PATH);
+    }
+
     public boolean equalsValue(String value) {
         return Objects.equals(value, this.value);
     }

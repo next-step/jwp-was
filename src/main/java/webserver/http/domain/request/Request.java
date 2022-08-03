@@ -1,16 +1,19 @@
 package webserver.http.domain.request;
 
+import webserver.http.domain.Cookie;
 import webserver.http.domain.Headers;
+import webserver.http.domain.session.Session;
+import webserver.http.domain.session.SessionContextHolder;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class Request {
     private final RequestLine requestLine;
     private final Headers headers;
 
     private final Map<String, Object> attributes = new HashMap<>();
-
     public Request(RequestLine requestLine, Headers headers) {
         this.requestLine = requestLine;
         this.headers = headers;
@@ -80,11 +83,19 @@ public class Request {
         return headers.existsCookie(name, value);
     }
 
+    public Session getSession() {
+        return SessionContextHolder.getCurrentSession();
+    }
+
     @Override
     public String toString() {
         return "Request{" +
                 "requestLine=" + requestLine +
                 ", headers=" + headers +
                 '}';
+    }
+
+    public Optional<Cookie> getCookie(String name) {
+        return headers.getCookie(name);
     }
 }

@@ -3,6 +3,7 @@ package webserver.http.domain;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toMap;
@@ -24,6 +25,10 @@ public class Cookies {
             return cookie.equalsValue(value);
         }
         return false;
+    }
+
+    public Optional<Cookie> getCookie(String name) {
+        return Optional.ofNullable(cookies.get(name));
     }
 
     public static Cookies from(String message) {

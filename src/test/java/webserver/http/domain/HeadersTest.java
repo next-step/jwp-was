@@ -15,6 +15,7 @@ import webserver.http.domain.request.RequestLine;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -219,5 +220,52 @@ class HeadersTest {
         assertThatThrownBy(() -> headers.getValueAsInt(name))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("숫자방식이 아닌 리터럴 값은 인자로 들어갈 수 없습니다.");
+    }
+
+    @DisplayName("헤더에서 쿠키 목록을 추출한다.")
+    @Test
+    void getCookies() {
+        Headers headers = Headers.from(
+                List.of(
+                        "Cookie: name1=value1; name2=value2"
+                )
+        );
+
+        Cookies actual = headers.getCookies();
+
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .isEqualTo(
+                        new Cookies(
+                                Map.of(
+                                        "name1", Cookie.of("name1", "value1"),
+                                        "name2", Cookie.of("name2", "value2")
+                                )
+                        )
+                );
+    }
+
+    @DisplayName("Request에 해당이름의 쿠키값을 Optional로 반환")
+    @ParameterizedTest
+    @MethodSource("provideForGetCookie")
+    void getCookie(String name, Optional<Cookie> expected) {
+        Headers headers = Headers.from(
+                List.of(
+                        "Cookie: name1=value1; name2=value2"
+                )
+        );
+
+        Optional<Cookie> actual = headers.getCookie(name);
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
+    public static Stream<Arguments> provideForGetCookie() {
+        return Stream.of(
+                arguments("name1", Optional.of(Cookie.of("name1", "value1"))),
+                arguments("name2", Optional.of(Cookie.of("name2", "value2"))),
+                arguments("name3", Optional.empty())
+        );
     }
 }

@@ -7,12 +7,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import webserver.http.domain.Cookie;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
+import webserver.http.domain.session.Session;
+import webserver.http.domain.session.SessionContextHolder;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -299,5 +303,47 @@ class RequestTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("숫자방식이 아닌 리터럴 값은 인자로 들어갈 수 없습니다.");
 
+    }
+
+    @DisplayName("Request에 해당이름의 쿠키값을 Optional로 반환")
+    @ParameterizedTest
+    @MethodSource("provideForGetCookie")
+    void getCookie(String name, Optional<Cookie> expected) {
+        Request request = new Request(
+                RequestLine.from("POST /path?name=jordy&age=20 HTTP/1.1"),
+                Headers.from(List.of(
+                        "Cookie: name1=value1; name2=value2"
+                ))
+        );
+
+        Optional<Cookie> actual = request.getCookie(name);
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
+    public static Stream<Arguments> provideForGetCookie() {
+        return Stream.of(
+                arguments("name1", Optional.of(Cookie.of("name1", "value1"))),
+                arguments("name2", Optional.of(Cookie.of("name2", "value2"))),
+                arguments("name3", Optional.empty())
+        );
+    }
+
+    @DisplayName("현재 컨텍스트에 저장된 세션을 가져온다.")
+    @Test
+    void getSession() {
+        Session session = Session.from("12345");
+        SessionContextHolder.saveSession(session);
+        Request request = new Request(
+                RequestLine.from("POST /path?name=jordy&age=20 HTTP/1.1"),
+                Headers.from(List.of(
+                        "Cookie: name1=value1; name2=value2"
+                ))
+        );
+
+        Session actual = request.getSession();
+
+        assertThat(actual).isEqualTo(session);
     }
 }
