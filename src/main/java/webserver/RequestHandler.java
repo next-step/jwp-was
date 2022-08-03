@@ -35,11 +35,6 @@ public class RequestHandler implements Runnable {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".html");
-        Handlebars handlebars = new Handlebars(loader);
-
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             HttpRequest httpRequest = HttpRequest.of(br);
@@ -52,6 +47,11 @@ public class RequestHandler implements Runnable {
 
             if (httpRequest.getPath().equals("/user/list")) {
                 DataOutputStream dos = new DataOutputStream(out);
+                TemplateLoader loader = new ClassPathTemplateLoader();
+                loader.setPrefix("/templates");
+                loader.setSuffix(".html");
+                Handlebars handlebars = new Handlebars(loader);
+
                 if (isLogin) {
                     Template template = handlebars.compile("user/list");
                     Collection<User> users = DataBase.findAll();
@@ -62,6 +62,13 @@ public class RequestHandler implements Runnable {
                 }
                 responseIsNotLoginHeader(dos);
                 return;
+            }
+
+            if (httpRequest.getPath().endsWith(".css")) {
+                DataOutputStream dos = new DataOutputStream(out);
+                body = FileIoUtils.loadFileFromClasspath("./static" + httpRequest.getPath());
+                response200CssHeader(dos, body.length);
+                responseBody(dos, body);
             }
 
             if (httpRequest.getPath().equals("/user/create")) {
@@ -110,6 +117,17 @@ public class RequestHandler implements Runnable {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response200CssHeader(DataOutputStream dos, int lengthOfBodyContent) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {

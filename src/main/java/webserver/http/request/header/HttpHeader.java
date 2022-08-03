@@ -34,7 +34,9 @@ public class HttpHeader {
     public void setCookie(String cookieString) {
         validateCookieString(cookieString);
         String[] cookieElements = cookieString.split(COOKIE_DELIMITER);
-        this.cookie = new Cookie(cookieElements[KEY_INDEX], cookieElements[VALUE_INDEX]);
+        if (!cookieString.isEmpty()) {
+            this.cookie = new Cookie(cookieElements[KEY_INDEX], cookieElements[VALUE_INDEX]);
+        }
     }
 
     public int getContentLength() {
