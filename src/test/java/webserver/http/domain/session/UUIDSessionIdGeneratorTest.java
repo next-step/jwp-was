@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SessionIdGeneratorTest {
+class UUIDSessionIdGeneratorTest {
 
     @Test
     void generate() {
-        SessionIdGenerator sessionIdGenerator = new SessionIdGenerator();
-        String generate = sessionIdGenerator.generate();
+        UUIDSessionIdGenerator UUIDSessionIdGenerator = new UUIDSessionIdGenerator();
+        String generate = UUIDSessionIdGenerator.generate();
         assertThat(generate.length()).isEqualTo(32);
     }
 }
