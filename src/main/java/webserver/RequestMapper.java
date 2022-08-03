@@ -11,7 +11,7 @@ import java.util.List;
 
 public class RequestMapper {
 
-    private List<Controller> controllers = Arrays.asList(new UserCreateController(), new ViewController());
+    private List<Controller> controllers = Arrays.asList(new UserCreateController(), new ViewController(), new LoginController());
 
     public Controller mapping(RequestMappingInfo info) {
 

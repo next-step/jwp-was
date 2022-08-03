@@ -13,19 +13,28 @@ public class HttpResponse {
         this.body = body;
     }
 
-    public static HttpResponse redirect(byte[] body, String location) {
+    public HttpResponse(List<String> messages) {
+        this.messages = messages;
+    }
+
+    public static HttpResponse redirect(String location) {
         return new HttpResponse(Arrays.asList("HTTP/1.1 302 OK \r\n",
                 "Location: http://localhost:8080" + location + "\r\n",
+                "\r\n"));
+    }
+
+    public static HttpResponse success(byte[] body) {
+        return new HttpResponse(Arrays.asList("HTTP/1.1 200 OK \r\n",
                 "Content-Type: text/html;charset=utf-8\r\n",
                 "Content-Length: " + body.length + "\r\n",
                 "\r\n"), body);
     }
 
-    public static HttpResponse ok(byte[] body) {
-        return new HttpResponse(Arrays.asList("HTTP/1.1 200 OK \r\n",
-                "Content-Type: text/html;charset=utf-8\r\n",
-                "Content-Length: " + body.length + "\r\n",
-                "\r\n"), body);
+    public static HttpResponse loginRedirect(String location, boolean login) {
+        return new HttpResponse(Arrays.asList("HTTP/1.1 302 OK \r\n",
+                "Location: http://localhost:8080" + location + "\r\n",
+                "Set-Cookie: logined=" + login + "; Path=/\r\n",
+                "\r\n"));
     }
 
     public List<String> getMessages() {

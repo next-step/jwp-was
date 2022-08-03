@@ -1,5 +1,6 @@
 package controller;
 
+import db.DataBase;
 import model.*;
 import utils.FileIoUtils;
 
@@ -20,9 +21,8 @@ public class UserCreateController implements Controller{
 
     @Override
     public HttpResponse process(HttpRequest request) throws IOException, URISyntaxException {
-        User.createUser(request.getBody());
-        final byte[] responseBody = FileIoUtils.loadFileFromClasspath(REDIRECT_PATH);
+        DataBase.addUser(User.createUser(request.getBody()));
 
-        return HttpResponse.redirect(responseBody, REDIRECT_PATH);
+        return HttpResponse.redirect(REDIRECT_PATH);
     }
 }

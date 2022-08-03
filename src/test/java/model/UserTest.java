@@ -17,7 +17,5 @@ class UserTest {
 
         assertThat(user.getUserId()).isEqualTo("javajigi");
         assertThat(user.getEmail()).isEqualTo("javajigi@slipp.net");
-
     }
-
 }

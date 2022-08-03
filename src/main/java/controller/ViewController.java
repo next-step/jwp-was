@@ -22,6 +22,6 @@ public class ViewController implements Controller{
     @Override
     public HttpResponse process(HttpRequest request) throws IOException, URISyntaxException {
         final byte[] body = FileIoUtils.loadFileFromClasspath(request.getRequestLine().getRequestPath());
-        return HttpResponse.ok(body);
+        return HttpResponse.success(body);
     }
 }
