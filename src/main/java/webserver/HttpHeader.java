@@ -23,6 +23,7 @@ public class HttpHeader {
     private HttpHeader(Map<String, String> headers) {
         Assert.notNull(headers, "헤더는 null이어선 안됩니다.");
         this.headers = Collections.unmodifiableMap(headers);
+        this.cookies = Cookies.from(Collections.emptyMap());
     }
 
     public static HttpHeader empty() {
@@ -78,9 +79,6 @@ public class HttpHeader {
     }
 
     public Set<Map.Entry<String, String>> getCookies() {
-        if (cookies == null) {
-            return Collections.emptySet();
-        }
         return cookies.getCookies();
     }
 }

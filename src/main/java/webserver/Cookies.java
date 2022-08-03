@@ -39,9 +39,6 @@ public class Cookies {
     }
 
     public Set<Map.Entry<String, String>> getCookies() {
-        if (cookies == null) {
-            return Collections.emptySet();
-        }
         return cookies.entrySet();
     }
 }
