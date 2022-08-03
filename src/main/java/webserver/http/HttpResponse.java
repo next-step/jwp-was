@@ -27,9 +27,10 @@ public class HttpResponse {
 
     public void forward(String url) {
         try {
-            byte[] body;
+            byte[] body = new byte[0];
             if (url.endsWith("html") || url.endsWith("ico")) {
                 body = FileIoUtils.loadFileFromClasspath("./templates" + url);
+
             }
             if (url.endsWith(".css")) {
                 body = FileIoUtils.loadFileFromClasspath("./static" + url);
@@ -42,6 +43,8 @@ public class HttpResponse {
             if (url.startsWith("/fonts")) {
                 body = FileIoUtils.loadFileFromClasspath("./static" + url);
             }
+            response200Header(body.length);
+            responseBody(body);
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }

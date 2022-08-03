@@ -2,13 +2,12 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Map;
 
-import db.DataBase;
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.IOUtils;
+import webserver.controller.CreateUserController;
+import webserver.controller.ListUserController;
+import webserver.controller.LoginController;
 import webserver.http.*;
 
 public class RequestHandler implements Runnable {
@@ -25,27 +24,16 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = new HttpRequest(in);
             HttpResponse httpResponse = new HttpResponse(out);
 
-//            String url = httpRequest.getPath();
-//            if (url.startsWith("/user/create")) {
-//                new UserCreate(IOUtils.readData(br, contentLength));
-//                DataOutputStream dos = new DataOutputStream(out);
-//                HttpResponseWriter.response302Header(dos, "/index.html");
-//            } else if ("/user/login".equals(url)) {
-//                String body = IOUtils.readData(br, contentLength);
-//                QueryStringParser queryStringParser = new QueryStringParser(body);
-//                Map<String, String> params = queryStringParser.getQueryParameters();
-//                User user = DataBase.findUserById(params.get("userId"));
-//                DataOutputStream dos = new DataOutputStream(out);
-//                if (user != null) {
-//                    if (user.getPassword().equals(params.get("password"))) {
-//                        HttpResponseWriter.response302CookieHeader(dos, "logined=true", "/index.html");
-//                    } else {
-//                        HttpResponseWriter.response302CookieHeader(dos,"logined=false","/user/login_failed.html");
-//                    }
-//                } else {
-//                    HttpResponseWriter.response302CookieHeader(dos,"logined=false","/user/login_failed.html");
-//                }
-//            }
+            String url = httpRequest.getPath();
+            if ("/user/create".equals(url)) {
+                new CreateUserController().doPost(httpRequest, httpResponse);
+            } else if ("/user/login".equals(url)) {
+                new LoginController().doPost(httpRequest, httpResponse);
+            } else if("/user/list".equals(url)) {
+                new ListUserController().doGet(httpRequest, httpResponse);
+            } else {
+                httpResponse.forward(url);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

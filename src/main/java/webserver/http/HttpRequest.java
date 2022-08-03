@@ -38,11 +38,13 @@ public class HttpRequest {
             HeaderParser httpHeader = new HeaderParser(line);
             headers.put(httpHeader.getHeaderName(), httpHeader.getHeaderValue());
         }
-        System.out.println(headers);
         this.header = headers;
 
         if (method == HttpMethod.GET) {
-            this.parameter = requestLine.getUri().getQueryString().getQueryParameters();
+            String queryString = requestLine.getUri().getQueryString();
+            if (queryString != null){
+                this.parameter = new QueryStringParser(queryString).getQueryParameters();
+            }
         }
         if (method == HttpMethod.POST) {
             int contentLength = Integer.parseInt(headers.get("Content-Length"));

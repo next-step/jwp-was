@@ -1,6 +1,7 @@
 package webserver.http;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class QueryStringParser {
     private HashMap<String, String> QueryParameters = new HashMap<String, String>();
@@ -16,7 +17,7 @@ public class QueryStringParser {
         this.QueryParameters = querySet;
     }
 
-    public HashMap<String, String> getQueryParameters() {
+    public Map<String, String> getQueryParameters() {
         return QueryParameters;
     }
 }
