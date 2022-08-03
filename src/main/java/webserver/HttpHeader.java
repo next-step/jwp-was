@@ -1,19 +1,26 @@
 package webserver;
 
 import exception.Assert;
+import exception.NotFoundException;
+import webserver.response.HttpStatusCode;
 
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class HttpHeader {
 
-    private final static String DELIMITER = ":";
-    private final static String COOKIE = "Cookie";
-    private final static String DEFAULT_VALUE = "";
+    public static final String LOCATION = "Location";
+    public static final String SET_COOKIE = "Set-Cookie";
+    public static final String CONTENT_TYPE = "Content-Type";
 
+
+    private static final String DELIMITER = ":";
+
+    private Cookies cookies;
     private Map<String, String> headers;
 
-    public HttpHeader(Map<String, String> headers) {
+    private HttpHeader(Map<String, String> headers) {
         Assert.notNull(headers, "헤더는 null이어선 안됩니다.");
         this.headers = Collections.unmodifiableMap(headers);
     }
@@ -30,25 +37,23 @@ public class HttpHeader {
     }
 
     public static HttpHeader from(Map<String, String> header) {
-        return new HttpHeader(
-                Objects.requireNonNullElse(header, Collections.emptyMap())
-        );
+        if (header.containsKey("Cookie")) {
+            Cookies.from(header.get("Cookie"));
+            return new HttpHeader(Collections.emptyMap());
+        }
+        return new HttpHeader(Objects.requireNonNullElse(header, Collections.emptyMap()));
     }
 
     public static HttpHeader from(List<String> headers) {
         if (headers.isEmpty()) {
             return empty();
         }
-        Optional<HttpHeader> optionalHttpHeader = Optional.of(from(
-                headers.stream().filter(
-                                header -> header.contains(DELIMITER))
-                        .map(HttpHeader::parseToEntry)
-                        .collect(Collectors.toUnmodifiableMap(
-                                Map.Entry::getKey,
-                                Map.Entry::getValue))
-        ));
-        return optionalHttpHeader.orElseThrow(
-                () -> new IllegalArgumentException("Http 헤더는 key-value 형태여야 합니다.")
+        return from(headers.stream()
+                .filter(header -> header.contains(DELIMITER))
+                .map(HttpHeader::parseToEntry)
+                .collect(Collectors.toUnmodifiableMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue))
         );
     }
 
@@ -67,7 +72,15 @@ public class HttpHeader {
         return headers.entrySet();
     }
 
-    public String cookie() {
-        return headers.getOrDefault(COOKIE, DEFAULT_VALUE);
+    public String getCookieValue(String key) {
+        return cookies.getCookieValue(key)
+                .orElseThrow(() -> new NotFoundException(HttpStatusCode.BAD_REQUEST));
+    }
+
+    public Set<Map.Entry<String, String>> getCookies() {
+        if (cookies == null) {
+            return Collections.emptySet();
+        }
+        return cookies.getCookies();
     }
 }

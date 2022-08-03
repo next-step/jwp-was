@@ -55,6 +55,7 @@ public class RequestHandler implements Runnable {
         try {
             dos.writeBytes(String.format("HTTP/1.1 %s \r%n", response.getHttpStatusCode()));
             writeHeaders(response, dos);
+            writeCookies(response, dos);
             dos.writeBytes("\r\n");
             dos.write(response.body(), 0, response.getContentLength());
             dos.flush();
@@ -66,6 +67,16 @@ public class RequestHandler implements Runnable {
     private void writeHeaders(HttpResponse response, DataOutputStream dos) throws IOException {
         for (Map.Entry<String, String> entry : response.headerEntries()) {
             dos.writeBytes(String.format("%s: %s\r%n", entry.getKey(), entry.getValue()));
+        }
+    }
+
+    private void writeCookies(HttpResponse response, DataOutputStream dos) throws IOException {
+        if (response.cookieEntries().isEmpty()) {
+            return;
+        }
+        for (Map.Entry<String, String> entry : response.cookieEntries()) {
+            String cookieValue = entry.getKey() + "=" + entry.getValue();
+            dos.writeBytes(String.format("%s: %s\r%n", HttpHeader.SET_COOKIE, cookieValue));
         }
     }
 }

@@ -55,11 +55,6 @@ public class HttpRequest {
         return requestLine.getPath();
     }
 
-    public String getStringRequestLine() {
-        return requestLine.getHttpMethod() + " " + requestLine.getPath() + " " +
-                requestLine.getProtocolType() + "/" + requestLine.getVersion().toString();
-    }
-
     public String getRequestHeader(String key) {
         return requestHeader.get(key);
     }
@@ -80,7 +75,7 @@ public class HttpRequest {
         return requestBody.get(key);
     }
 
-    public String cookie() {
-        return requestHeader.cookie();
+    public String getCookieValue(String key) {
+        return requestHeader.getCookieValue(key);
     }
 }

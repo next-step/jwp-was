@@ -52,7 +52,15 @@ public class HttpResponse {
         return responseBody.getContentLength();
     }
 
+    public String getResponseHeader(String key) {
+        return responseHeader.get(key);
+    }
+
     public Set<Map.Entry<String, String>> headerEntries() {
         return responseHeader.entries();
+    }
+
+    public Set<Map.Entry<String, String>> cookieEntries() {
+        return responseHeader.getCookies();
     }
 }

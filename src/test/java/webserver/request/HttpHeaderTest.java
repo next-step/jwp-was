@@ -24,14 +24,6 @@ class HttpHeaderTest {
         );
     }
 
-    @DisplayName("요청 헤더는 key-value 형태여야 한다")
-    @Test
-    void createHeader_Fail() {
-        assertThrows(IllegalArgumentException.class,
-                () -> HttpHeader.from(Collections.singletonList("Connection keep-alive"))
-        );
-    }
-
     @DisplayName("요청 헤더는 비어있을 수 있다.")
     @Test
     void headerCanBeEmpty() {
