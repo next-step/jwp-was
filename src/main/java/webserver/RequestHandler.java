@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import webserver.http.domain.controller.RequestProcessor;
 import webserver.http.domain.exception.BadRequestException;
 import webserver.http.domain.exception.NullRequestException;
+import webserver.http.domain.exception.ResourceNotFoundException;
 import webserver.http.domain.request.Request;
 import webserver.http.domain.response.Response;
 import webserver.http.domain.response.StatusCode;
@@ -58,11 +59,12 @@ public class RequestHandler implements Runnable {
     private Response processRequest(BufferedReader bufferedReader) throws IOException {
         try {
             Request request = requestReader.read(bufferedReader);
-            logger.info("[request] = {}", request);
             return requestProcessor.process(request);
         } catch (BadRequestException e) {
             logger.warn("[bad request] = {}", e.getMessage(), e);
             return getResponse(StatusCode.BAD_REQUEST, "잘못된 요청입니다. ;(");
+        } catch (ResourceNotFoundException e) {
+            return getResponse(StatusCode.NOT_FOUND, "요청하신 리소스를 찾지 못했습니다. ;(");
         } catch (RuntimeException e) {
             logger.error("[internal error] - 요청값 처리중 에러 발생 = {}", e.getMessage(), e);
             return getResponse(StatusCode.INTERNAL_ERROR, "서버 내부에 오류가 발생했습니다. ;(");
