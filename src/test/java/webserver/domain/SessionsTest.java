@@ -2,7 +2,7 @@ package webserver.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import javax.servlet.http.HttpSession;
+import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,14 +15,14 @@ class SessionsTest {
 
     @BeforeEach
     void setUp() {
-        this.sessions1 = Sessions.INSTANCE.create();
-        this.sessions2 = Sessions.INSTANCE.create();
-        this.sessions3 = Sessions.INSTANCE.create();
+        this.sessions1 = Sessions.INSTANCE.get(Strings.EMPTY);
+        this.sessions2 = Sessions.INSTANCE.get(Strings.EMPTY);
+        this.sessions3 = Sessions.INSTANCE.get(Strings.EMPTY);
     }
 
     @Test
     void createSessionTest() {
-        HttpSession session = Sessions.INSTANCE.create();
+        HttpSession session = Sessions.INSTANCE.get(Strings.EMPTY);
 
         assertThat(session).isNotNull();
         assertThat(session.getId()).isNotEmpty();

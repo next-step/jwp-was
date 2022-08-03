@@ -18,6 +18,14 @@ class CookiesTest {
         assertThat(cookies.size()).isEqualTo(2);
     }
 
+    @DisplayName("빈문자열로 쿠키 만들면 비어있다.")
+    @Test
+    void createTest2() {
+        this.cookies = Cookies.of("");
+
+        assertThat(cookies.size()).isEqualTo(0);
+    }
+
     @DisplayName("JSESSIONID 정상로드한다.")
     @Test
     void getSessionIdTest1() {

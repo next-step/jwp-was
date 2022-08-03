@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class HttpCustomSessionTest {
+class HttpSessionTest {
 
     public static final String TEST_SESSION_ID_1 = "testSessionId1";
     public static final String TEST_SESSION_ID_2 = "testSessionId2";
@@ -15,11 +15,11 @@ class HttpCustomSessionTest {
     public static final String STRING_VALUE_2 = "String value2";
     public static final String STRING_VALUE_3 = "String value3";
 
-    private HttpCustomSession httpSession;
+    private HttpSession httpSession;
 
     @BeforeEach
     void setUp() {
-        this.httpSession = new HttpCustomSession();
+        this.httpSession = new HttpSession();
 
         this.httpSession.setAttribute(TEST_SESSION_ID_1, STRING_VALUE_1);
         this.httpSession.setAttribute(TEST_SESSION_ID_2, STRING_VALUE_2);
@@ -28,7 +28,7 @@ class HttpCustomSessionTest {
 
     @Test
     void createIdTest() {
-        HttpCustomSession httpSession = new HttpCustomSession();
+        HttpSession httpSession = new HttpSession();
 
         String id = httpSession.getId();
         assertThat(id).isNotEmpty();

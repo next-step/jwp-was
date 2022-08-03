@@ -1,14 +1,12 @@
 package webserver.servlet;
 
-import com.google.common.base.Strings;
 import db.DataBase;
 import java.io.IOException;
 import java.util.Collections;
-import javax.servlet.http.HttpSession;
 import utils.HandlebarsTemplate;
 import webserver.domain.ContentType;
 import webserver.domain.HttpHeader;
-import webserver.domain.Sessions;
+import webserver.domain.HttpSession;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
@@ -18,12 +16,9 @@ public class UserListController implements Controller {
 
     @Override
     public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-        String sessionId = httpRequest.getSessionId();
-        HttpSession session = Sessions.INSTANCE.get(sessionId);
+        HttpSession session = httpRequest.getSession();
 
-        String sessionLogined = (String) session.getAttribute(KEY_LOGINED);
-
-        if (Strings.isNullOrEmpty(sessionLogined) || !Boolean.parseBoolean(sessionLogined)) {
+        if (!session.isLogined()) {
             handleNotLoginUser(httpResponse);
             return;
         }

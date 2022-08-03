@@ -1,8 +1,9 @@
 package webserver.request;
 
-import static exception.ExceptionStrings.CANNOT_FIND_HEADER_KEY;
+import static exception.ExceptionStrings.INVALID_HEADER_KEY;
 import static webserver.domain.HttpHeader.CONTENT_LENGTH;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,8 +37,12 @@ public class HttpRequestHeader {
     }
 
     public String getHeader(String key) {
+        if (Strings.isNullOrEmpty(key)) {
+            throw new IllegalArgumentException(INVALID_HEADER_KEY);
+        }
+
         if (!headers.containsKey(key)) {
-            throw new IllegalArgumentException(CANNOT_FIND_HEADER_KEY);
+            return "";
         }
 
         return headers.get(key);
