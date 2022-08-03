@@ -1,7 +1,6 @@
 package model;
 
 import webserver.RequestLine;
-import webserver.RequestParams;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -9,18 +8,18 @@ import java.net.URLDecoder;
 public class HttpRequest {
 
     private RequestLine requestLine;
-    private Body body;
+    private RequestBody body;
 
     public HttpRequest(RequestLine requestLine, String body) throws UnsupportedEncodingException {
         this.requestLine = requestLine;
-        this.body = new Body(URLDecoder.decode(body, "UTF-8"));
+        this.body = new RequestBody(body);
     }
 
     public RequestLine getRequestLine() {
         return requestLine;
     }
 
-    public Body getBody() {
+    public RequestBody getBody() {
         return body;
     }
 }

@@ -1,9 +1,6 @@
 package model;
 
-import webserver.RequestParams;
-
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 
 public class User {
     private String userId;
@@ -18,7 +15,7 @@ public class User {
         this.email = email;
     }
 
-    public static User createUser(Body body) throws UnsupportedEncodingException {
+    public static User createUser(RequestBody body) throws UnsupportedEncodingException {
         return new User(body.getOneValue("userId"), body.getOneValue("password"), body.getOneValue("name"), body.getOneValue("email"));
     }
 

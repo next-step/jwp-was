@@ -7,13 +7,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-public class Body {
+public class RequestBody {
 
     public static final int ONE_VALUE = 0;
     public static final String DELIMITER = "?";
     private MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 
-    public Body(String body) {
+    public RequestBody(String body) throws UnsupportedEncodingException {
+        body = URLDecoder.decode(body, "UTF-8");
         this.body = UriComponentsBuilder.fromUriString(DELIMITER + body).build().getQueryParams();
     }
 
