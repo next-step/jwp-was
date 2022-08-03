@@ -1,7 +1,5 @@
 package webserver.request.domain.request;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import org.springframework.util.StringUtils;
 import webserver.exception.StringEmptyException;
 
@@ -12,13 +10,14 @@ public class Path {
     private static final String DELIMITER = "\\?";
 
     private String path;
-    private QueryString queryString = null;
+    // QueryString = RequestBody
+    private RequestBody queryString = null;
 
     public Path(String path) {
         this.path = path;
     }
 
-    public Path(String path, QueryString queryString) {
+    public Path(String path, RequestBody queryString) {
         this.path = path;
         this.queryString = queryString;
     }
@@ -26,11 +25,11 @@ public class Path {
     public static Path parse(String pathInfo) {
         validate(pathInfo);
 
-        String[] paths = pathInfo.split(DELIMITER);
-        if(paths.length >= 2) {
-            return new Path(paths[0], new QueryString(paths[1]));
+        String[] path = pathInfo.split(DELIMITER);
+        if(path.length >= 2) {
+            return new Path(path[0], new RequestBody(path[1]));
         }
-        return new Path(paths[0]);
+        return new Path(path[0]);
     }
 
     private static void validate(String pathInfo) {
@@ -38,7 +37,7 @@ public class Path {
             throw new StringEmptyException("pathinfo is empty");
     }
 
-    public QueryString getQueryString() {
+    public RequestBody getQueryString() {
         return this.queryString;
     }
 

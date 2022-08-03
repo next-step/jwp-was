@@ -40,7 +40,7 @@ public class RequestLine {
         return path.getPath();
     }
 
-    public QueryString getQueryString() {
+    public RequestBody getQueryString() {
         return path.getQueryString();
     }
 

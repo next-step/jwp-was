@@ -17,7 +17,6 @@ public class RequestBody {
 
     public RequestBody(String value) {
         if(StringUtils.hasText(value)) {
-
             splitBody(value);
         }
     }

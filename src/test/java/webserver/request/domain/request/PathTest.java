@@ -26,6 +26,6 @@ public class PathTest {
     @Test
     @DisplayName("querystring을 정상적으로 파싱했는지 테스트")
     void queryStringTest() {
-        Assertions.assertThat(Path.parse("/users?userId=javajigi&password=password&name=JaeSung")).isEqualTo(new Path("/users", new QueryString("userId=javajigi&password=password&name=JaeSung")));
+        Assertions.assertThat(Path.parse("/users?userId=javajigi&password=password&name=JaeSung")).isEqualTo(new Path("/users", new RequestBody("userId=javajigi&password=password&name=JaeSung")));
     }
 }

@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class HttpRequest {
+
     private RequestLine requestLine;
     private Header header;
     private RequestBody requestBody;
@@ -34,6 +35,7 @@ public class HttpRequest {
     public String getPath() {
         return requestLine.getPath();
     }
+
     public String getHeader(String header) {
         return this.header.getHeader(header);
     }
@@ -45,7 +47,7 @@ public class HttpRequest {
         return requestBody.getParameter(parameter);
     }
 
-    public QueryString getQueryString() {
+    public RequestBody getQueryString() {
         return requestLine.getQueryString();
     }
 
