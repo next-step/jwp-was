@@ -15,6 +15,14 @@ public class HttpResponse {
         this.body = body;
     }
 
+    public static HttpResponse found(String path) {
+        return new HttpResponse(
+                HttpStatusCode.FOUND,
+                ResponseHeader.of(Map.of(HttpHeaders.LOCATION, path)),
+                new byte[0]
+        );
+    }
+
     public static HttpResponse notFound() {
         return new HttpResponse(HttpStatusCode.NOT_FOUND, ResponseHeader.empty(), new byte[0]);
     }
@@ -29,6 +37,15 @@ public class HttpResponse {
 
     public static HttpResponse of(HttpStatusCode httpStatusCode, ResponseHeader responseHeader) {
         return new HttpResponse(httpStatusCode, responseHeader, new byte[0]);
+    }
+
+    public static HttpResponse found(String path, String cookie) {
+        return new HttpResponse(
+                HttpStatusCode.FOUND,
+                ResponseHeader.of(Map.of(
+                        HttpHeaders.LOCATION, path,
+                        HttpHeaders.SET_COOKIE, cookie)),
+                new byte[0]);
     }
 
     public String getHttpResponseCode() {

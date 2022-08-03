@@ -20,21 +20,18 @@ public class UserListController implements Controller {
     }
 
     @Override
-    public boolean matchHttpMethodAndPath(HttpRequest request) {
+    public boolean match(HttpRequest request) {
         return request.isMatch(HttpMethod.GET, path);
     }
 
     @Override
     public HttpResponse execute(HttpRequest request) throws IOException, URISyntaxException {
         if (!isLogin(request)) {
-            return HttpResponse.of(
-                    HttpStatusCode.FOUND,
-                    ResponseHeader.of(Map.of(
-                            HttpHeaders.LOCATION, "/user/login.html"))
-            );
+            return HttpResponse.found("/user/login.html");
         }
 
         Collection<User> users = DataBase.findAll();
+
         return HttpResponse.of(
                 HttpStatusCode.OK,
                 ResponseHeader.of(Map.of(

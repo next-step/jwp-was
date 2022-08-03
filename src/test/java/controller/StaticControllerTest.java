@@ -32,7 +32,7 @@ class StaticControllerTest {
     @DisplayName("method,path 가 일치하면 true 리턴한다.")
     @Test
     void matchTrue() {
-        boolean result = staticController.matchHttpMethodAndPath(request);
+        boolean result = staticController.match(request);
         assertThat(result).isTrue();
     }
 

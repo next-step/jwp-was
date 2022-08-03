@@ -20,7 +20,7 @@ public class HttpRequestBody {
         return new HttpRequestBody(Collections.emptyMap());
     }
 
-    public String getValue(String userId) {
-        return body.get(userId);
+    public String getValue(String value) {
+        return body.get(value);
     }
 }

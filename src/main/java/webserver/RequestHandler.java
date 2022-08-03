@@ -22,7 +22,7 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-    private DispatchController dispatchController = new DispatchController();
+    private final DispatchController dispatchController = new DispatchController();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;

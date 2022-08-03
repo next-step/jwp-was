@@ -30,7 +30,7 @@ class CreateUserControllerTest {
     @DisplayName("method,path 가 일치하면 true 리턴한다.")
     @Test
     void matchTrue() {
-        boolean result = createUserController.matchHttpMethodAndPath(request);
+        boolean result = createUserController.match(request);
         assertThat(result).isTrue();
     }
 

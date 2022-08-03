@@ -32,7 +32,7 @@ class TemplateControllerTest {
     @DisplayName("method,path 가 일치하면 true 리턴한다.")
     @Test
     void matchTrue() {
-        boolean result = templateController.matchHttpMethodAndPath(request);
+        boolean result = templateController.match(request);
         assertThat(result).isTrue();
     }
 

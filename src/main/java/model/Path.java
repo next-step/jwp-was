@@ -11,8 +11,8 @@ public class Path {
     private static final int PATH_INDEX = 0;
     private static final int PARAMETER_INDEX = 1;
 
-    private String path;
-    private Map<String, String> parameters;
+    private final String path;
+    private final Map<String, String> parameters;
 
     private Path(String path, Map<String, String> parameters) {
         this.path = path;

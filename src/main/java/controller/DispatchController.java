@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
 import java.util.Set;
 
 public class DispatchController {
-    private static Set<Controller> controllers;
+    private static final Set<Controller> controllers;
 
     static {
         controllers = Set.of(
@@ -33,13 +33,11 @@ public class DispatchController {
     }
 
     public HttpResponse handleRequest(HttpRequest request) {
-        HttpResponse httpResponse = controllers.stream()
-                .filter(controller -> controller.matchHttpMethodAndPath(request))
+        return controllers.stream()
+                .filter(controller -> controller.match(request))
                 .findAny()
                 .map(controller -> execute(controller, request))
-                .orElseGet(() -> HttpResponse.notFound());
-        return httpResponse;
-
+                .orElseGet(HttpResponse::notFound);
     }
 
     private HttpResponse execute(Controller controller, HttpRequest request) {
@@ -49,7 +47,6 @@ public class DispatchController {
         } catch (IOException | URISyntaxException e) {
             return HttpResponse.of(HttpStatusCode.INTERNAL_SERVER_ERROR, ResponseHeader.empty());
         }
-
         return response;
     }
 }

@@ -1,9 +1,8 @@
 package model;
 
-import org.springframework.util.Assert;
-
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class HttpRequest {
     private static final int REQUEST_LINE = 0;
@@ -14,9 +13,9 @@ public class HttpRequest {
     private final HttpRequestBody body;
 
     private HttpRequest(RequestLine requestLine, HttpRequestHeader header, HttpRequestBody body) {
-        Assert.notNull(requestLine, "requestLine is not null");
-        Assert.notNull(header, "header is not null");
-        Assert.notNull(body, "body is not null");
+        Objects.requireNonNull(requestLine, "requestLine is not null");
+        Objects.requireNonNull(header, "header is not null");
+        Objects.requireNonNull(body, "body is not null");
 
         this.requestLine = requestLine;
         this.header = header;
@@ -71,8 +70,8 @@ public class HttpRequest {
         return body;
     }
 
-    public String getBodyValue(String userId) {
-        return body.getValue(userId);
+    public String getBodyValue(String value) {
+        return body.getValue(value);
     }
 
     public boolean isMatchMethod(HttpMethod httpMethod) {

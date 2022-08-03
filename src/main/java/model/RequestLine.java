@@ -3,10 +3,10 @@ package model;
 import java.util.Map;
 
 public class RequestLine {
-    private HttpMethod method;
-    private Path path;
-    private String protocol;
-    private String version;
+    private final HttpMethod method;
+    private final Path path;
+    private final String protocol;
+    private final String version;
 
     private RequestLine(HttpMethod method, Path path, String protocol, String version) {
         this.method = method;

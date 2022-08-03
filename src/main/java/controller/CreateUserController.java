@@ -3,14 +3,12 @@ package controller;
 import db.DataBase;
 import model.*;
 
-import java.util.Map;
-
 public class CreateUserController implements Controller {
 
     private static final Path path = Path.of("/user/create");
 
     @Override
-    public boolean matchHttpMethodAndPath(HttpRequest request) {
+    public boolean match(HttpRequest request) {
         return request.isMatch(HttpMethod.POST, path);
     }
 
@@ -24,10 +22,6 @@ public class CreateUserController implements Controller {
         );
         DataBase.addUser(user);
 
-        return HttpResponse.of(
-                HttpStatusCode.FOUND,
-                ResponseHeader.of(Map.of(HttpHeaders.LOCATION, "/index.html")),
-                new byte[0]
-        );
+        return HttpResponse.found("/index.html");
     }
 }
