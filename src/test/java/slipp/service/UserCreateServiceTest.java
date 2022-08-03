@@ -1,5 +1,6 @@
 package slipp.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import slipp.db.DataBase;
@@ -14,6 +15,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class UserCreateServiceTest {
 
     private final UserCreateService userCreateService = new UserCreateService();
+
+    @AfterEach
+    void tearDown() {
+        DataBase.clearAll();
+    }
 
     @DisplayName("새로운 ID로 회원가입시 DB에 회원정보 저장")
     @Test
