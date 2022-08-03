@@ -21,19 +21,19 @@ public class Session {
         return sessionId;
     }
 
-    void setAttribute(String name, Object value) {
+    public void setAttribute(String name, Object value) {
         attributes.put(name, value);
     }
 
-    Object getAttribute(String name) {
+    public Object getAttribute(String name) {
         return attributes.get(name);
     }
 
-    void removeAttribute(String name) {
+    public void removeAttribute(String name) {
         attributes.remove(name);
     }
 
-    void invalidate() {
+    public void invalidate() {
         attributes.clear();
     }
 

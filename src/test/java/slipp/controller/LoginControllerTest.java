@@ -15,6 +15,8 @@ import webserver.http.domain.request.RequestLine;
 import webserver.http.domain.request.URI;
 import webserver.http.domain.response.Response;
 import webserver.http.domain.response.Status;
+import webserver.http.domain.session.Session;
+import webserver.http.domain.session.SessionContextHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +58,9 @@ class LoginControllerTest {
     @DisplayName("parameter로 정보를 받아 로그인 처리후 302 Response를 응답한다. id,pw가 일치하지 않으면 로그인 실패처리후 302 응답")
     @ParameterizedTest
     @MethodSource("provideForHandle")
-    void handle(String userId, String password, String expectedRedirectUrl, String expectedLoginCookieValue) {
+    void handle(String userId, String password, String expectedRedirectUrl, Session expectedSession) {
+        SessionContextHolder.saveSession(Session.from("12345"));
+
         DataBase.addUser(
                 new User(
                         "userId",
@@ -85,19 +89,43 @@ class LoginControllerTest {
                 .isEqualTo(new Response(
                         Status.found(),
                         new Headers(Map.of(
-                                LOCATION, expectedRedirectUrl,
-                                SET_COOKIE, "logined=" + expectedLoginCookieValue + "; path=/"
+                                LOCATION, expectedRedirectUrl
                         )),
                         null
                 ));
+
+        Session currentSession = SessionContextHolder.getCurrentSession();
+        assertThat(currentSession)
+                .usingRecursiveComparison()
+                .isEqualTo(expectedSession);
     }
 
     private static Stream<Arguments> provideForHandle() {
         return Stream.of(
-                arguments("userId", "password", "/index.html", "true"),
-                arguments("wrongId", "password", "/user/login_failed.html", "false"),
-                arguments("userId", "wrongPassword", "/user/login_failed.html", "false"),
-                arguments("wrongId", "wrongPassword", "/user/login_failed.html", "false")
+                arguments("userId", "password", "/index.html", new Session(
+                        "12345",
+                        Map.of(
+                                "user",
+                                new User(
+                                        "userId",
+                                        "password",
+                                        "name",
+                                        "email"
+                                )
+                        )
+                )),
+                arguments("wrongId", "password", "/user/login_failed.html", new Session(
+                        "12345",
+                        Map.of()
+                )),
+                arguments("userId", "wrongPassword", "/user/login_failed.html", new Session(
+                        "12345",
+                        Map.of()
+                )),
+                arguments("wrongId", "wrongPassword", "/user/login_failed.html", new Session(
+                        "12345",
+                        Map.of()
+                ))
         );
     }
 }
