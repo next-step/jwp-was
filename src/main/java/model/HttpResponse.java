@@ -37,6 +37,13 @@ public class HttpResponse {
                 "\r\n"));
     }
 
+    public static HttpResponse successView(byte[] body, String contentType) {
+        return new HttpResponse(Arrays.asList("HTTP/1.1 200 OK \r\n",
+                "Content-Type: " + contentType + ";charset=utf-8\r\n",
+                "Content-Length: " + body.length + "\r\n",
+                "\r\n"), body);
+    }
+
     public List<String> getMessages() {
         return messages;
     }

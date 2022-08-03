@@ -9,6 +9,8 @@ public class RequestLine {
     public static final int PROTOCOL_AND_VERSION_INDEX = 2;
     public static final String REGEX_BLANK = " ";
     public static final String CREATE_PATH = "/user/create";
+    public static final String EXTENSION_DELIMITER = "\\.";
+    public static final int EXTENTION_INDEX = 1;
 
     private HttpMethod method;
     private RequestPath request;
@@ -39,6 +41,10 @@ public class RequestLine {
 
     public String getRequestPath() {
         return request.getPath();
+    }
+
+    public String getExtension() {
+        return request.getPath().split(EXTENSION_DELIMITER)[EXTENTION_INDEX];
     }
 
     public RequestParams getRequestParams() {

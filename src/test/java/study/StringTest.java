@@ -13,4 +13,12 @@ public class StringTest {
 
         assertThat(s.matches(s2)).isTrue();
     }
+
+    @Test
+    void 확장자_가져오기() {
+        String s = "/css/asdfcsssa.css";
+        String s2 = s.split("\\.")[1];
+
+        assertThat(s.split("\\.")[1]).isEqualTo("css");
+    }
 }
