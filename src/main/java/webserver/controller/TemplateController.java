@@ -15,13 +15,12 @@ import java.util.Collections;
 public class TemplateController implements Controller {
 
     private final static String TEMPLATE_PATH = "./templates";
-    private final static String CONTENT_TYPE = "Content-Type";
 
     @Override
     public HttpResponse service(HttpRequest request) throws IOException, URISyntaxException {
         return HttpResponse.of(
                 StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.OK),
-                HttpHeader.from(Collections.singletonMap(CONTENT_TYPE, "text/html;charset=utf-8")),
+                HttpHeader.from(Collections.singletonMap(HttpHeader.CONTENT_TYPE, "text/html;charset=utf-8")),
                 FileIoUtils.loadFileFromClasspath(templatePath(request))
         );
     }

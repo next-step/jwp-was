@@ -15,14 +15,13 @@ import java.util.Collections;
 public class StaticController implements Controller {
 
     private final static String STATIC_PATH = "./static";
-    private final static String CONTENT_TYPE = "Content-Type";
 
     @Override
     public HttpResponse service(HttpRequest request) throws IOException, URISyntaxException {
         return HttpResponse.of(
                 StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.OK),
                 HttpHeader.from(Collections.singletonMap(
-                        CONTENT_TYPE, String.format("text/%s;charset=utf-8", fileExtension(request))
+                        HttpHeader.CONTENT_TYPE, String.format("text/%s;charset=utf-8", fileExtension(request))
                 )),
                 FileIoUtils.loadFileFromClasspath(staticPath(request))
         );

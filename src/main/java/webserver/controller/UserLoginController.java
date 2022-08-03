@@ -14,8 +14,6 @@ import java.util.Map;
 
 public class UserLoginController implements Controller {
 
-    private static final String LOCATION = "Location";
-    private static final String SET_COOKIE = "Set-Cookie";
     @Override
     public HttpResponse service(HttpRequest request) {
         return login(request);
@@ -25,13 +23,16 @@ public class UserLoginController implements Controller {
         if (isValidUserInfo(request)) {
             return HttpResponse.of(
                     StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.FOUND),
-                    HttpHeader.from(Map.of(LOCATION, "/index.html", SET_COOKIE, "logined=true; Path=/"))
+                    HttpHeader.from(Map.of(
+                            HttpHeader.LOCATION, "/index.html",
+                            HttpHeader.SET_COOKIE, "logined=true; Path=/"))
             );
         }
         return HttpResponse.of(
                 StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.FOUND),
-                HttpHeader.from(Map.of(LOCATION, "/user/login_failed.html",
-                        SET_COOKIE, "logined=false; Path=/"))
+                HttpHeader.from(Map.of(
+                        HttpHeader.LOCATION, "/user/login_failed.html",
+                        HttpHeader.SET_COOKIE, "logined=false; Path=/"))
         );
     }
 

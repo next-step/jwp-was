@@ -1,8 +1,6 @@
 package webserver.controller;
 
 import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import http.request.Protocol;
 import webserver.HttpHeader;
@@ -19,7 +17,6 @@ public class UserListController implements Controller {
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String LOCATION = "Location";
     private static final String USER_LIST_TEMPLATE = "user/list";
-    private static final TemplateLoader loader = new ClassPathTemplateLoader();
     private final Handlebars handlebars;
 
     public UserListController(Handlebars handlebars) {
@@ -28,20 +25,20 @@ public class UserListController implements Controller {
 
     @Override
     public HttpResponse service(HttpRequest request) throws IOException {
-        if (isNotLoggedIn(request)) {
+        if (isLogin(request)) {
             return HttpResponse.of(
-                    StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.FOUND),
-                    HttpHeader.from(Collections.singletonMap(LOCATION, "/user/login.html"))
-                    );
+                    StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.OK),
+                    HttpHeader.from(Collections.singletonMap(CONTENT_TYPE, "text/html;charset=utf-8")),
+                    handlebars.compile(USER_LIST_TEMPLATE).apply(Collections.singletonMap("users", DataBase.findAll()))
+            );
         }
         return HttpResponse.of(
-                StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.OK),
-                HttpHeader.from(Collections.singletonMap(CONTENT_TYPE, "text/html;charset=utf-8")),
-                handlebars.compile(USER_LIST_TEMPLATE).apply(Collections.singletonMap("users", DataBase.findAll()))
+                StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.FOUND),
+                HttpHeader.from(Collections.singletonMap(LOCATION, "/user/login.html"))
         );
     }
 
-    private boolean isNotLoggedIn(HttpRequest request) {
-        return !request.cookie().contains("logined=true");
+    private boolean isLogin(HttpRequest request) {
+        return request.getCookieValue("logined").equals("true");
     }
 }
