@@ -42,6 +42,10 @@ public class Response {
         String prefixConcatPath = getPrefix(path).concat(path);
         byte[] body = FileIoUtils.loadFileFromClasspath(prefixConcatPath);
         logger.debug("ContentType : {}", getContentType(path));
+        forward(path, body);
+    }
+
+    public void forward(String path, byte[] body) {
         responseHeader.add(CONTENT_LENGTH, String.valueOf(body.length));
         responseHeader.add(CONTENT_TYPE, getContentType(path));
         responseOk();

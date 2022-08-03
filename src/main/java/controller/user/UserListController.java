@@ -4,6 +4,8 @@ import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import controller.AbstractController;
 import db.DataBase;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.http.request.Request;
 import webserver.http.request.RequestHeader;
 import webserver.http.response.Response;
@@ -18,10 +20,10 @@ import static utils.HandlebarsUtils.loader;
 
 public class UserListController extends AbstractController {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserListController.class);
+
     private static final String USER_LIST_PATH = "/user/list.html";
-
-    public final static String EXTENSION_SPERATOR = ".";
-
+    public static final String ROOT_PATH = "/";
 
     @Override
     public void doPost(Request request, Response response) {
@@ -30,18 +32,19 @@ public class UserListController extends AbstractController {
 
     @Override
     public void doGet(Request request, Response response) throws IOException {
-        if (isLoginStatus(request.getHeader())) {
-            response.sendRedirect(USER_LIST_PATH);
+        if (!isLoginStatus(request.getHeader())) {
+            response.sendRedirect(ROOT_PATH);
             return;
         }
         Collection<User> users = DataBase.findAll();
-        String loadData = loader(users, USER_LIST_PATH.substring(0, USER_LIST_PATH.indexOf(EXTENSION_SPERATOR)));
+        String loadData = loader(users);
 
-        response.setBody(loadData.getBytes(StandardCharsets.UTF_8));
+        response.forward(USER_LIST_PATH, loadData.getBytes(StandardCharsets.UTF_8));
         response.responseOk();
     }
 
     private boolean isLoginStatus(RequestHeader requestHeader) {
+        logger.debug("Cookie : {}", requestHeader.getHeaders().get(COOKIE));
         return Stream.of(requestHeader.getHeaders().get(COOKIE))
                 .anyMatch(loginStatus -> StringUtils.equals(loginStatus, "logined=true"));
     }

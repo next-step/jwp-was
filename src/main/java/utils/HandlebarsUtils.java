@@ -11,13 +11,15 @@ import java.util.Collection;
 
 public class HandlebarsUtils {
 
-    public static String loader(Collection<User> users, String path) throws IOException {
+    private static final String USER_LIST_PATH = "/user/list";
+
+    public static String loader(Collection<User> users) throws IOException {
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix("/templates");
         loader.setSuffix(".html");
         Handlebars handlebars = new Handlebars(loader);
 
-        Template template = handlebars.compile(path);
+        Template template = handlebars.compile(USER_LIST_PATH);
 
         return template.apply(users);
     }

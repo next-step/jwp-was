@@ -18,7 +18,7 @@ public class LoginController extends AbstractController {
 
     @Override
     public void doPost(Request request, Response response) {
-        Boolean isLogin = Optional.of(DataBase.findUserById(request.getParameter("userId")))
+        Boolean isLogin = Optional.ofNullable(DataBase.findUserById(request.getParameter("userId")))
                 .map(user -> StringUtils.equals(user.getPassword(), request.getParameter("password")))
                 .orElse(false);
 
