@@ -1,12 +1,6 @@
 package model;
 
 public class User {
-    public static final String FIELD_USER_ID = "userId";
-    public static final String FIELD_PASSWORD = "password";
-    public static final String FIELD_NAME = "name";
-    public static final String FIELD_EMAIL = "email";
-    public static final String DEFAULT_VALUE = "";
-
     private final String userId;
     private final String password;
     private final String name;
@@ -37,17 +31,33 @@ public class User {
     }
 
     private void validate(String userId, String password, String name, String email) {
-        if (userId.isEmpty()) {
-            throw new UserException("userId가 빈 값 입니다.");
+        checkUserIdEmpty(userId);
+        checkPasswordEmpty(password);
+        checkNameEmpty(name);
+        checkEmailEmpty(email);
+    }
+
+    private void checkEmailEmpty(String email) {
+        if (email.isEmpty()) {
+            throw new UserException("email이 빈 값 입니다.");
         }
-        if (password.isEmpty()) {
-            throw new UserException("password가 빈 값 입니다.");
-        }
+    }
+
+    private void checkNameEmpty(String name) {
         if (name.isEmpty()) {
             throw new UserException("name이 빈 값 입니다.");
         }
-        if (email.isEmpty()) {
-            throw new UserException("email이 빈 값 입니다.");
+    }
+
+    private void checkPasswordEmpty(String password) {
+        if (password.isEmpty()) {
+            throw new UserException("password가 빈 값 입니다.");
+        }
+    }
+
+    private void checkUserIdEmpty(String userId) {
+        if (userId.isEmpty()) {
+            throw new UserException("userId가 빈 값 입니다.");
         }
     }
 
