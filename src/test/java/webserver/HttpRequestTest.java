@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StopWatch;
 import org.springframework.web.client.RestTemplate;
 import utils.FileIoUtils;
 import webserver.domain.HttpRequest;
@@ -20,7 +21,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -94,6 +106,65 @@ class HttpRequestTest {
         ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/index.html", String.class);
 
         assertThat(response.getBody()).isEqualTo(expectedBody);
+    }
+
+
+    @DisplayName("서버가 수용하는 최대 스레드풀 이하로 요청을 보내본다. ")
+    @Test
+    void requestUnderMaxThreadSize() throws ExecutionException, InterruptedException {
+        int maxRequestCount = 10;
+        CountDownLatch countDownLatch = new CountDownLatch(maxRequestCount);
+        ExecutorService executorService = Executors.newFixedThreadPool(maxRequestCount);
+        StopWatch stopWatch = new StopWatch();
+
+        stopWatch.start();
+        List<CompletableFuture<Void>> futures = IntStream.range(0, maxRequestCount)
+                .mapToObj(idx -> CompletableFuture.runAsync(() -> {
+                    RestTemplate restTemplate = new RestTemplate();
+                    ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080", String.class);
+                    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+                    countDownLatch.countDown();
+
+                }, executorService))
+                .collect(Collectors.toList());
+
+        CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new)).get();
+        boolean await = countDownLatch.await(1000, TimeUnit.MILLISECONDS);
+        stopWatch.stop();
+
+        System.out.println("stopWatch.getTotalTimeSeconds() = " + stopWatch.getTotalTimeSeconds());
+        assertThat(countDownLatch.getCount()).isZero();
+        assertThat(await).isTrue();
+        assertThat(stopWatch.getTotalTimeSeconds()).isLessThanOrEqualTo(1);
+    }
+
+    @DisplayName("서버가 수용하는 최대 스레드풀 이상으로 요청을 보내본다. ")
+    @Test
+    void requestOverMaxThreadSize() throws ExecutionException, InterruptedException {
+        int maxRequestCount = 50;
+        CountDownLatch countDownLatch = new CountDownLatch(maxRequestCount);
+        ExecutorService executorService = Executors.newFixedThreadPool(maxRequestCount);
+        StopWatch stopWatch = new StopWatch();
+
+        stopWatch.start();
+        List<CompletableFuture<Void>> futures = IntStream.range(0, maxRequestCount)
+                .mapToObj(idx -> CompletableFuture.runAsync(() -> {
+                    RestTemplate restTemplate = new RestTemplate();
+                    ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080", String.class);
+                    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+                    countDownLatch.countDown();
+
+                }, executorService))
+                .collect(Collectors.toList());
+
+        CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new)).get();
+        boolean await = countDownLatch.await(1000, TimeUnit.MILLISECONDS);
+        stopWatch.stop();
+
+        System.out.println("stopWatch.getTotalTimeSeconds() = " + stopWatch.getTotalTimeSeconds());
+        assertThat(countDownLatch.getCount()).isZero();
+        assertThat(await).isTrue();
+        assertThat(stopWatch.getTotalTimeSeconds()).isLessThanOrEqualTo(1);
     }
 
     private HttpRequest toHttpRequest(ResponseEntity<String> response) throws IOException {
