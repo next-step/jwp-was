@@ -19,8 +19,8 @@ public class IOUtils {
         return String.copyValueOf(body);
     }
 
-    public static String loadFileFromClasspath(String filePath, String path) throws IOException, URISyntaxException {
-        byte[] body = FileIoUtils.loadFileFromClasspath(filePath + path);
+    public static String loadFileFromClasspath(String path) throws IOException, URISyntaxException {
+        byte[] body = FileIoUtils.loadFileFromClasspath(path);
         return new String(body);
     }
 }

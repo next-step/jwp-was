@@ -19,7 +19,7 @@ public class HttpRequest {
         requestLine = RequestLine.parse(br.readLine());
         header = Header.from(br);
 
-        if(requestLine.getMethod().isPost()) {
+        if (requestLine.getMethod().isPost()) {
             int readNums = Integer.parseInt(header.getHeader("Content-Length"));
             String body = IOUtils.readData(br, readNums);
             System.out.println(body);
@@ -34,14 +34,13 @@ public class HttpRequest {
     public String getPath() {
         return requestLine.getPath();
     }
-
     public String getHeader(String header) {
         return this.header.getHeader(header);
     }
 
     public String getParameter(String parameter) {
         Method method = requestLine.getMethod();
-        if(method.isGet())
+        if (method.isGet())
             return requestLine.getQueryString().getParameter(parameter);
         return requestBody.getParameter(parameter);
     }

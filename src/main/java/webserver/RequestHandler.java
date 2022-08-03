@@ -24,9 +24,6 @@ public class RequestHandler implements Runnable {
 
     private Socket connection;
 
-    private HttpRequest httpRequest;
-    private HttpResponse httpResponse;
-
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
     }
@@ -37,10 +34,9 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             if (in != null) {
-                httpRequest = new HttpRequest(in);
-                httpResponse = new HttpResponse(out);
-
-                matchResponse(httpRequest);
+                HttpRequest httpRequest = new HttpRequest(in);
+                HttpResponse httpResponse = new HttpResponse(out);
+                matchResponse(httpRequest, httpResponse);
             }
 
         } catch (IOException | URISyntaxException e) {
@@ -48,30 +44,26 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void matchResponse(HttpRequest httpRequest) throws IOException, URISyntaxException {
+    private void matchResponse(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException, URISyntaxException {
         String path = httpRequest.getPath();
         Method method = httpRequest.getMethod();
 
         if (path.equals("/user/create")) {
-            if (method.isGet()) {
-                QueryString queryString = httpRequest.getQueryString();
-                httpResponse.redirect(parseQueryString(path, queryString));
-            } else {
+            if(method.isPost()) {
                 RequestBody requestBody = httpRequest.getBody();
                 httpResponse.redirect(parseBody(path, requestBody));
             }
         } else if (path.equals("/user/login")) {
-            if (isLogin()) {
-                httpResponse.loginRedirect("/index.html", "logined=true");
+            if (isLogin(httpRequest)) {
+                httpResponse.loginRedirect("/index.html", "logined=true Path=/");
             } else {
-                httpResponse.loginRedirect("/user/login_failed.html", "logined=true");
+                httpResponse.loginRedirect("/user/login_failed.html", "logined=false");
             }
         } else if (path.equals("/user/list")) {
             String headerValue = httpRequest.getHeader("Cookie");
             if (headerValue == null) {
-                httpResponse.redirect("/index.html");
-            }
-            else if (headerValue.equals("logined=true")) {
+                httpResponse.forward(IOUtils.loadFileFromClasspath("./templates/user/login.html"));
+            } else if (headerValue.equals("logined=true")) {
                 TemplateLoader loader = new ClassPathTemplateLoader();
                 loader.setPrefix("/templates");
                 loader.setSuffix(".html");
@@ -81,38 +73,43 @@ public class RequestHandler implements Runnable {
 
                 Collection<User> users = DataBase.findAll();
                 httpResponse.forward(template.apply(users));
+            } else if (headerValue.equals("logined=false")){
+                httpResponse.forward(IOUtils.loadFileFromClasspath("./templates/user/login.html"));
             }
         } else {
             if (path.endsWith("html")) {
-                httpResponse.forward(IOUtils.loadFileFromClasspath("./templates", path));
-            }
-            else if(path.endsWith("css")) {
-                httpResponse.forwardCSS(IOUtils.loadFileFromClasspath("./static", path));
+                httpResponse.forward(IOUtils.loadFileFromClasspath("./templates" + path));
+            } else if (path.endsWith("css")) {
+                httpResponse.forwardCSS(IOUtils.loadFileFromClasspath("./static" + path));
             }
         }
     }
 
-    private boolean isLogin() {
+    private boolean isLogin(HttpRequest httpRequest) {
         String userId = httpRequest.getBody().getParameter("userId");
         User user = DataBase.findUserById(userId);
+
+        if(user == null) {
+            return false;
+        }
 
         String pw = httpRequest.getBody().getParameter("password");
 
         return user.getPassword().equals(pw);
     }
 
-    private String parseQueryString(String parsePath, QueryString queryString) {
-        if (queryString != null) {
-            String[] str = parsePath.split("/");
-            if (str.length > 2) {
-                if (str[1].equals("user")) {
-                    userService(queryString.getDataPairs(), str);
-                }
-            }
-        }
-
-        return "/index.html";
-    }
+//    private String parseQueryString(String parsePath, QueryString queryString) {
+//        if (queryString != null) {
+//            String[] str = parsePath.split("/");
+//            if (str.length > 2) {
+//                if (str[1].equals("user")) {
+//                    userService(queryString.getDataPairs(), str);
+//                }
+//            }
+//        }
+//
+//        return "/index.html";
+//    }
 
     private String parseBody(String parsePath, RequestBody requestBody) {
         String[] str = parsePath.split("/");
