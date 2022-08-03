@@ -1,9 +1,9 @@
 package webserver.http.domain.request;
 
+import com.google.common.base.Charsets;
 import webserver.http.domain.KeyValuePair;
 
 import java.net.URLDecoder;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,14 +35,6 @@ public class Parameters {
         return strings.get(0);
     }
 
-    public void decodeCharacter(Charset charset) {
-        keyValues.forEach(
-                (key, values) ->
-                    values.replaceAll(value -> URLDecoder.decode(value, charset)
-                )
-        );
-    }
-
     public static Parameters from(String message) {
         if (message.isBlank()) {
             return new Parameters(new HashMap<>());
@@ -53,7 +45,7 @@ public class Parameters {
                 .collect(Collectors.toMap(KeyValuePair::getKey,
                         pair -> {
                             List<String> subList = new ArrayList<>();
-                            subList.add(pair.getValue());
+                            subList.add(getValueAndDecode(pair));
                             return subList;
                         },
                         (left, right) -> {
@@ -63,6 +55,10 @@ public class Parameters {
                 ));
 
         return new Parameters(keyValues);
+    }
+
+    private static String getValueAndDecode(KeyValuePair pair) {
+        return URLDecoder.decode(pair.getValue(), Charsets.UTF_8);
     }
 
     @Override

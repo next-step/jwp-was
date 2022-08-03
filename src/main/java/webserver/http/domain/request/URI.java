@@ -32,10 +32,6 @@ public class URI {
         queryParameters.add(parameters);
     }
 
-    public void decodeCharacter(Charset charset) {
-        queryParameters.decodeCharacter(charset);
-    }
-
     public static URI from(String message) {
         KeyValuePair pathQueryParamPair = KeyValuePair.from(message, QUERY_PARAMETER_DELIMITER, false);
         String path = pathQueryParamPair.getKey();

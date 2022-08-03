@@ -21,7 +21,7 @@ public class Cookies {
     public boolean existsCookie(String name, String value) {
         if (cookies.containsKey(name)) {
             Cookie cookie = cookies.get(name);
-            return cookie.hasValue(value);
+            return cookie.equalsValue(value);
         }
         return false;
     }

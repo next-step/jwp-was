@@ -1,9 +1,7 @@
 package webserver.http.domain.request;
 
-import webserver.http.domain.Cookies;
 import webserver.http.domain.Headers;
 
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +28,18 @@ public class Request {
         requestLine.addParameters(parameters);
     }
 
+    public String getHeader(String name) {
+        return headers.getValue(name);
+    }
+
+    public int getHeaderAsInt(String name) {
+        return headers.getValueAsInt(name);
+    }
+
+    public Method getMethod() {
+        return requestLine.getMethod();
+    }
+
     public boolean hasMethod(Method method) {
         return requestLine.hasMethod(method);
     }
@@ -46,12 +56,16 @@ public class Request {
         return requestLine.getParameter(key);
     }
 
-    public boolean hasContentType(String contentType) {
-        return headers.hasContentType(contentType);
+    public int getParameterAsInt(String key) {
+        try {
+            return Integer.parseInt(getParameter(key));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("숫자방식이 아닌 리터럴 값은 인자로 들어갈 수 없습니다.", e);
+        }
     }
 
-    public void decodeCharacter(Charset charset) {
-        requestLine.decodeCharacter(charset);
+    public boolean hasContentType(String contentType) {
+        return headers.hasContentType(contentType);
     }
 
     public void setAttribute(String name, Object value) {

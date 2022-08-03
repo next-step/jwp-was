@@ -102,7 +102,7 @@ class UserListControllerTest {
 
         assertThat(actual).usingRecursiveComparison()
                 .ignoringCollectionOrder()
-                .isEqualTo(Response.sendRedirect("/user/login.html"));
+                .isEqualTo(Response.redirect("/user/login.html"));
     }
 
     @DisplayName("logined Cookie 값이 true인 경우, 회원목록 결과와 함께 html 내려준다.")

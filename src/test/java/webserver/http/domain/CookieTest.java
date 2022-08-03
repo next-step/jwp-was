@@ -14,7 +14,7 @@ class CookieTest {
     void hasValue(String value, boolean expected) {
         Cookie cookie = new Cookie("logined", "true", "/path");
 
-        boolean actual = cookie.hasValue(value);
+        boolean actual = cookie.equalsValue(value);
         assertThat(actual).isEqualTo(expected);
     }
 }

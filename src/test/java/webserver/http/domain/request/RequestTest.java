@@ -11,13 +11,16 @@ import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static webserver.http.domain.Headers.CONTENT_LENGTH;
 import static webserver.http.domain.Headers.CONTENT_TYPE;
+import static webserver.http.domain.request.Method.POST;
 
 class RequestTest {
 
@@ -149,7 +152,7 @@ class RequestTest {
     private static Stream<Arguments> provideForIsGet() {
         return Stream.of(
                 arguments(Method.GET, true),
-                arguments(Method.POST, false)
+                arguments(POST, false)
         );
     }
 
@@ -240,5 +243,61 @@ class RequestTest {
                 arguments(new Headers(Map.of(CONTENT_TYPE, "application/json")), "text/html", false),
                 arguments(new Headers(Map.of()), "text/html", false)
         );
+    }
+
+    @DisplayName("name에 해당하는 header 값을 반환한다. 만약 name에 해당하는 header가 없는 경우, null을 반환한다.")
+    @Test
+    void getHeader() {
+        Request request = new Request(
+                RequestLine.from("POST /path HTTP/1.1"),
+                Headers.from(List.of(
+                        "Connection: Keep-Alive",
+                        "Cookie: jsessionId=5jgiw2341fhg"
+                ))
+        );
+
+        assertThat(request.getHeader("Connection")).isEqualTo("Keep-Alive");
+        assertThat(request.getHeader("Cookie")).isEqualTo("jsessionId=5jgiw2341fhg");
+        assertThat(request.getHeader("invalid")).isEqualTo(null);
+    }
+
+    @DisplayName("Http 요청 데이터의 Method 반환")
+    @Test
+    void getMethod() {
+        Request request = new Request(
+                RequestLine.from("POST /path HTTP/1.1"),
+                Headers.from(List.of(
+                        "Connection: Keep-Alive",
+                        "Cookie: jsessionId=5jgiw2341fhg"
+                ))
+        );
+
+        assertThat(request.getMethod()).isEqualTo(POST);
+    }
+
+    @DisplayName("Parameter 값이 숫자형인 경우, int 형을 반환")
+    @Test
+    void getParameterAsInt() {
+        Request request = new Request(
+                RequestLine.from("POST /path?name=jordy&age=20 HTTP/1.1"),
+                Headers.from(List.of())
+        );
+
+        int actual = request.getParameterAsInt("age");
+        assertThat(actual).isEqualTo(20);
+    }
+
+    @DisplayName("Parameter 값이 숫자형이 아닌 경우, 예외 발생")
+    @Test
+    void getParameterAsInt_fail() {
+        Request request = new Request(
+                RequestLine.from("POST /path?name=jordy&age=20 HTTP/1.1"),
+                Headers.from(List.of())
+        );
+
+        assertThatThrownBy(() -> request.getParameterAsInt("name"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("숫자방식이 아닌 리터럴 값은 인자로 들어갈 수 없습니다.");
+
     }
 }

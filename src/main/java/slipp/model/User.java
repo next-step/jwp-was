@@ -29,7 +29,7 @@ public class User {
         return email;
     }
 
-    public boolean hasPassword(String password) {
+    public boolean equalsPassword(String password) {
         return this.password.equals(password);
     }
 
