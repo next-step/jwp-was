@@ -68,6 +68,10 @@ public class RequestLine {
         return httpMethod == HttpMethod.POST;
     }
 
+    public String getQueryString(String key) {
+        return httpPath.getQueryString(key);
+    }
+
     private void validate(String[] requestSpecs) {
         if (requestSpecs.length != CORRECT_LENGTH) {
             throw new IllegalArgumentException(VALIDATION_MESSAGE);
