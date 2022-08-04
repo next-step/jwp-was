@@ -23,6 +23,10 @@ public class ResponseHeader {
         return headers.entrySet();
     }
 
+    public String getHeader(String key) {
+        return headers.get(key);
+    }
+
     public static ResponseHeader from(Map<String, String> headers) {
         return new ResponseHeader(headers);
     }
