@@ -3,6 +3,8 @@ package webserver.http.session;
 import java.util.UUID;
 
 public class HttpSession {
+    private static final String LOG_IN = "logined";
+
     private final UUID uuid;
     private final SessionAttribute attribute;
 
@@ -15,7 +17,15 @@ public class HttpSession {
         return uuid.toString();
     }
 
-    public void setAttribute(String name, Object value) {
+    public void setLogin(boolean isLogin) {
+        setAttribute(LOG_IN, isLogin);
+    }
+
+    public boolean getLogin() {
+        return (Boolean) getAttribute(LOG_IN);
+    }
+
+    private void setAttribute(String name, Object value) {
         attribute.setAttribute(name, value);
     }
 
