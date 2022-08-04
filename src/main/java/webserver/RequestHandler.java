@@ -7,8 +7,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import handler.PathHandler;
-import model.request.HttpRequestHeader;
-import model.response.HttpResponseHeader;
+import model.request.HttpRequestMessage;
+import model.response.HttpResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.parser.HttpRequestHeaderParser;
@@ -28,26 +28,26 @@ public class RequestHandler implements Runnable {
 
         try (InputStream inputStream = connection.getInputStream(); OutputStream outputStream = connection.getOutputStream()) {
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-            HttpRequestHeader httpRequestHeader = HttpRequestHeaderParser.parseHttpRequestHeaderParser(inputStream);
+            HttpRequestMessage httpRequestMessage = HttpRequestHeaderParser.parseHttpRequestHeaderParser(inputStream);
 
             HandlerSelector handlerSelector = new HandlerSelector();
-            PathHandler pathHandler = handlerSelector.selectAvailableHandler(httpRequestHeader);
-            HttpResponseHeader httpResponseHeader = pathHandler.Handle(httpRequestHeader);
+            PathHandler pathHandler = handlerSelector.selectAvailableHandler(httpRequestMessage);
+            HttpResponseMessage httpResponseMessage = pathHandler.Handle(httpRequestMessage);
 
-            responseHeader(dataOutputStream, httpResponseHeader);
+            responseHeader(dataOutputStream, httpResponseMessage);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void responseHeader(DataOutputStream dos, HttpResponseHeader httpResponseHeader) throws IOException {
-        dos.writeBytes(httpResponseHeader.getResponseLine() + "\r\n");
-        for (String header : httpResponseHeader.getHttpHeaders()) {
+    private void responseHeader(DataOutputStream dos, HttpResponseMessage httpResponseMessage) throws IOException {
+        dos.writeBytes(httpResponseMessage.getResponseLine() + "\r\n");
+        for (String header : httpResponseMessage.getHttpHeaders()) {
             dos.writeBytes(header + "\n");
         }
         dos.writeBytes("\r\n");
 
-        responseBody(dos, httpResponseHeader.getBody());
+        responseBody(dos, httpResponseMessage.getBody());
     }
 
     private void responseBody(DataOutputStream dos, byte[] body) {

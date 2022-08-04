@@ -1,7 +1,7 @@
 package dummy;
 
 import model.HttpHeader;
-import model.request.HttpRequestHeader;
+import model.request.HttpRequestMessage;
 import model.request.RequestLine;
 import model.WebProtocol;
 
@@ -40,8 +40,8 @@ public class HttpRequestHeaderDummy {
         "\n" +
         "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net\n";
 
-    public static HttpRequestHeader GET_USER_HTTP_REQUEST_DUMMY
-        = HttpRequestHeader.getRequestHeaderOf(
+    public static HttpRequestMessage GET_USER_HTTP_REQUEST_DUMMY
+        = HttpRequestMessage.getRequestHeaderOf(
         new RequestLine(
             "GET",
             "/user/something",
@@ -56,8 +56,8 @@ public class HttpRequestHeaderDummy {
         }}
         ));
 
-    public static HttpRequestHeader GET_INDEX_HTTP_REQUEST_DUMMY
-        = HttpRequestHeader.getRequestHeaderOf(
+    public static HttpRequestMessage GET_INDEX_HTTP_REQUEST_DUMMY
+        = HttpRequestMessage.getRequestHeaderOf(
         new RequestLine(
             "GET",
             "/index.html",

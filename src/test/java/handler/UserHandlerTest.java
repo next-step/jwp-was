@@ -1,6 +1,6 @@
 package handler;
 
-import model.request.HttpRequestHeader;
+import model.request.HttpRequestMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ class UserHandlerTest {
     @DisplayName("/user/ 경로의 path를 가진 HttpRequestHeader는 true를 반환한다.")
     void canHandleTest() {
         String userPath = "/user/something";
-        HttpRequestHeader getUserHttpRequest = GET_USER_HTTP_REQUEST_DUMMY;
+        HttpRequestMessage getUserHttpRequest = GET_USER_HTTP_REQUEST_DUMMY;
         UserHandler userHandler = new UserHandler();
 
         Boolean result = userHandler.canHandling(getUserHttpRequest);

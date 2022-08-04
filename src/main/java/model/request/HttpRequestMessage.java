@@ -5,23 +5,23 @@ import model.HttpHeader;
 
 import java.util.Map;
 
-public class HttpRequestHeader {
+public class HttpRequestMessage {
     private final RequestLine requestLine;
     private final HttpHeader httpHeader;
     private final Map<String, String> requestBody;
 
-    private HttpRequestHeader(RequestLine requestLine, HttpHeader httpHeader, Map<String, String> requestBody) {
+    private HttpRequestMessage(RequestLine requestLine, HttpHeader httpHeader, Map<String, String> requestBody) {
         this.requestLine = requestLine;
         this.httpHeader = httpHeader;
         this.requestBody = requestBody;
     }
 
-    public static HttpRequestHeader getRequestHeaderOf(RequestLine requestLine, HttpHeader httpHeader) {
-        return new HttpRequestHeader(requestLine, httpHeader, null);
+    public static HttpRequestMessage getRequestHeaderOf(RequestLine requestLine, HttpHeader httpHeader) {
+        return new HttpRequestMessage(requestLine, httpHeader, null);
     }
 
-    public static HttpRequestHeader postRequestHeaderWithBody(RequestLine requestLine, HttpHeader httpHeader, Map<String, String> requestBody) {
-        return new HttpRequestHeader(requestLine, httpHeader, requestBody);
+    public static HttpRequestMessage postRequestHeaderWithBody(RequestLine requestLine, HttpHeader httpHeader, Map<String, String> requestBody) {
+        return new HttpRequestMessage(requestLine, httpHeader, requestBody);
     }
 
     public RequestLine getRequestLine() {

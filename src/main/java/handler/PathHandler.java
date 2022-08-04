@@ -1,16 +1,16 @@
 package handler;
 
 import enums.ResourceIdentifier;
-import model.request.HttpRequestHeader;
-import model.response.HttpResponseHeader;
+import model.request.HttpRequestMessage;
+import model.response.HttpResponseMessage;
 
 public interface PathHandler {
     String RESOURCE_SEPARATOR = "/";
     int ROOT_RESOURCE_INDEX = 1;
 
-    Boolean canHandling(HttpRequestHeader httpRequestHeader);
+    Boolean canHandling(HttpRequestMessage httpRequestMessage);
 
-    HttpResponseHeader Handle(HttpRequestHeader httpRequestHeader);
+    HttpResponseMessage Handle(HttpRequestMessage httpRequestMessage);
 
     default Boolean hasResourceIdentifier(String path) {
 

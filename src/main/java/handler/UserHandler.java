@@ -3,8 +3,8 @@ package handler;
 import db.DataBase;
 import model.HttpHeader;
 import model.User;
-import model.request.HttpRequestHeader;
-import model.response.HttpResponseHeader;
+import model.request.HttpRequestMessage;
+import model.response.HttpResponseMessage;
 import model.response.ResponseLine;
 import service.UserService;
 import utils.FileIoUtils;
@@ -23,8 +23,8 @@ public class UserHandler implements PathHandler {
     private static final UserService userService = new UserService();
 
     @Override
-    public Boolean canHandling(HttpRequestHeader httpRequestHeader) {
-        String[] resources = httpRequestHeader.getPath().split(RESOURCE_SEPARATOR);
+    public Boolean canHandling(HttpRequestMessage httpRequestMessage) {
+        String[] resources = httpRequestMessage.getPath().split(RESOURCE_SEPARATOR);
 
         if (resources.length == 0) {
             return false;
@@ -34,30 +34,30 @@ public class UserHandler implements PathHandler {
     }
 
     @Override
-    public HttpResponseHeader Handle(HttpRequestHeader httpRequestHeader) {
-        if (httpRequestHeader.isEqualPath(CREATE_REQUEST_PATH)) {
-            userService.createUser(httpRequestHeader.getRequestBody());
+    public HttpResponseMessage Handle(HttpRequestMessage httpRequestMessage) {
+        if (httpRequestMessage.isEqualPath(CREATE_REQUEST_PATH)) {
+            userService.createUser(httpRequestMessage.getRequestBody());
 
             HttpHeader httpFoundHeader = HttpHeaderParser.parseHeader(List.of("Location: http://localhost:8080/index.html"));
 
-            return new HttpResponseHeader(ResponseLine.httpFound(), httpFoundHeader, new byte[0]);
+            return new HttpResponseMessage(ResponseLine.httpFound(), httpFoundHeader, new byte[0]);
         }
 
-        if (httpRequestHeader.isEqualPath(LOGIN)) {
-            return login(httpRequestHeader.getRequestBody());
+        if (httpRequestMessage.isEqualPath(LOGIN)) {
+            return login(httpRequestMessage.getRequestBody());
         }
 
-        if (httpRequestHeader.isEqualPath(FIND_ALL_PATH)) {
-            return findAll(httpRequestHeader);
+        if (httpRequestMessage.isEqualPath(FIND_ALL_PATH)) {
+            return findAll(httpRequestMessage);
         }
 
-        if (hasResourceIdentifier(httpRequestHeader.getPath())) {
-            byte[] body = FileIoUtils.loadFileFromClasspath(httpRequestHeader.getPath());
+        if (hasResourceIdentifier(httpRequestMessage.getPath())) {
+            byte[] body = FileIoUtils.loadFileFromClasspath(httpRequestMessage.getPath());
 
-            return new HttpResponseHeader(ResponseLine.httpOk(), createOkTemplateHttpHeader(body), body);
+            return new HttpResponseMessage(ResponseLine.httpOk(), createOkTemplateHttpHeader(body), body);
         }
 
-        return new HttpResponseHeader(ResponseLine.httpBadRequest(), null, new byte[0]);
+        return new HttpResponseMessage(ResponseLine.httpBadRequest(), null, new byte[0]);
     }
 
     private HttpHeader createOkTemplateHttpHeader(byte[] body) {
@@ -68,21 +68,21 @@ public class UserHandler implements PathHandler {
             ));
     }
 
-    private HttpResponseHeader login(Map<String, String> requestBody) {
+    private HttpResponseMessage login(Map<String, String> requestBody) {
         String userId = requestBody.get("userId");
         String password = requestBody.get("password");
 
         User user = userService.findById(userId);
 
         if (user == null) {
-            return new HttpResponseHeader(ResponseLine.httpFound(), createLoginFailHttpHeader(), new byte[0]);
+            return new HttpResponseMessage(ResponseLine.httpFound(), createLoginFailHttpHeader(), new byte[0]);
         }
 
         if (user.login(userId, password)) {
-            return new HttpResponseHeader(ResponseLine.httpFound(), createLoginSuccessHttpHeader(), new byte[0]);
+            return new HttpResponseMessage(ResponseLine.httpFound(), createLoginSuccessHttpHeader(), new byte[0]);
         }
 
-        return new HttpResponseHeader(ResponseLine.httpFound(), createLoginFailHttpHeader(), new byte[0]);
+        return new HttpResponseMessage(ResponseLine.httpFound(), createLoginFailHttpHeader(), new byte[0]);
     }
 
     private HttpHeader createLoginFailHttpHeader() {
@@ -103,18 +103,18 @@ public class UserHandler implements PathHandler {
             ));
     }
 
-    private HttpResponseHeader findAll(HttpRequestHeader httpRequestHeader) {
-        if ((!validateCookie(httpRequestHeader))) {
-            return new HttpResponseHeader(ResponseLine.httpFound(), createNoCookieHttpHeader(), new byte[0]);
+    private HttpResponseMessage findAll(HttpRequestMessage httpRequestMessage) {
+        if ((!validateCookie(httpRequestMessage))) {
+            return new HttpResponseMessage(ResponseLine.httpFound(), createNoCookieHttpHeader(), new byte[0]);
         }
 
         byte[] profileBody = createUserProfileBody();
 
-        return new HttpResponseHeader(ResponseLine.httpOk(), createOkTemplateHttpHeader(profileBody), profileBody);
+        return new HttpResponseMessage(ResponseLine.httpOk(), createOkTemplateHttpHeader(profileBody), profileBody);
     }
 
-    private boolean validateCookie(HttpRequestHeader httpRequestHeader) {
-        return httpRequestHeader.hasCookie(LOGIN_PASSED);
+    private boolean validateCookie(HttpRequestMessage httpRequestMessage) {
+        return httpRequestMessage.hasCookie(LOGIN_PASSED);
     }
 
     private HttpHeader createNoCookieHttpHeader() {

@@ -1,8 +1,8 @@
 package handler;
 
 import model.HttpHeader;
-import model.request.HttpRequestHeader;
-import model.response.HttpResponseHeader;
+import model.request.HttpRequestMessage;
+import model.response.HttpResponseMessage;
 import model.response.ResponseLine;
 import utils.FileIoUtils;
 import utils.parser.HttpHeaderParser;
@@ -11,8 +11,8 @@ import java.util.Arrays;
 
 public class IndexHandler implements PathHandler {
     @Override
-    public Boolean canHandling(HttpRequestHeader httpRequestHeader) {
-        String[] resources = httpRequestHeader.getPath().split(RESOURCE_SEPARATOR);
+    public Boolean canHandling(HttpRequestMessage httpRequestMessage) {
+        String[] resources = httpRequestMessage.getPath().split(RESOURCE_SEPARATOR);
 
         if (resources.length == 0) {
             return false;
@@ -22,18 +22,18 @@ public class IndexHandler implements PathHandler {
     }
 
     @Override
-    public HttpResponseHeader Handle(HttpRequestHeader httpRequestHeader) {
-        if (hasResourceIdentifier(httpRequestHeader.getPath())) {
-            byte[] body = FileIoUtils.loadFileFromClasspath(httpRequestHeader.getPath());
+    public HttpResponseMessage Handle(HttpRequestMessage httpRequestMessage) {
+        if (hasResourceIdentifier(httpRequestMessage.getPath())) {
+            byte[] body = FileIoUtils.loadFileFromClasspath(httpRequestMessage.getPath());
             HttpHeader httpOkHeader = HttpHeaderParser.parseHeader(
                 Arrays.asList(
                     "Content-Type: text/html;charset=utf-8",
                     "Content-Length: " + body.length
                 ));
 
-            return new HttpResponseHeader(ResponseLine.httpOk(), httpOkHeader, body);
+            return new HttpResponseMessage(ResponseLine.httpOk(), httpOkHeader, body);
         }
 
-        return new HttpResponseHeader(ResponseLine.httpBadRequest(), null, new byte[0]);
+        return new HttpResponseMessage(ResponseLine.httpBadRequest(), null, new byte[0]);
     }
 }

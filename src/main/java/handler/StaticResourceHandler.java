@@ -1,8 +1,8 @@
 package handler;
 
 import model.HttpHeader;
-import model.request.HttpRequestHeader;
-import model.response.HttpResponseHeader;
+import model.request.HttpRequestMessage;
+import model.response.HttpResponseMessage;
 import model.response.ResponseLine;
 import utils.FileIoUtils;
 import utils.parser.HttpHeaderParser;
@@ -16,8 +16,8 @@ public class StaticResourceHandler implements PathHandler {
     private static final String JS_PATH = "js";
 
     @Override
-    public Boolean canHandling(HttpRequestHeader httpRequestHeader) {
-        String[] resources = httpRequestHeader.getPath().split(RESOURCE_SEPARATOR);
+    public Boolean canHandling(HttpRequestMessage httpRequestMessage) {
+        String[] resources = httpRequestMessage.getPath().split(RESOURCE_SEPARATOR);
 
         if (resources.length == 0) {
             return false;
@@ -39,10 +39,10 @@ public class StaticResourceHandler implements PathHandler {
     }
 
     @Override
-    public HttpResponseHeader Handle(HttpRequestHeader httpRequestHeader) {
-        byte[] body = FileIoUtils.loadFileFromStaticFilePath(httpRequestHeader.getPath());
+    public HttpResponseMessage Handle(HttpRequestMessage httpRequestMessage) {
+        byte[] body = FileIoUtils.loadFileFromStaticFilePath(httpRequestMessage.getPath());
 
-        return new HttpResponseHeader(ResponseLine.httpOk(), createOkStyleSheetHttpHeader(body), body);
+        return new HttpResponseMessage(ResponseLine.httpOk(), createOkStyleSheetHttpHeader(body), body);
     }
 
     private HttpHeader createOkStyleSheetHttpHeader(byte[] body) {

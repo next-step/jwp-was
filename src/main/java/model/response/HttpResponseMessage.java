@@ -4,12 +4,12 @@ import model.HttpHeader;
 
 import java.util.List;
 
-public class HttpResponseHeader {
+public class HttpResponseMessage {
     private final ResponseLine responseLine;
     private final HttpHeader httpHeader;
     private final byte[] body;
 
-    public HttpResponseHeader(ResponseLine responseLine, HttpHeader httpHeader, byte[] body) {
+    public HttpResponseMessage(ResponseLine responseLine, HttpHeader httpHeader, byte[] body) {
         this.responseLine = responseLine;
         this.httpHeader = httpHeader;
         this.body = body;
