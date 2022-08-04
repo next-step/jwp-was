@@ -40,6 +40,13 @@ public class RequestHandler implements Runnable {
         if (controller != null) {
             return controller.service(httpRequest);
         }
-        return HttpResponse.forward(httpRequest.getPath());
+        return HttpResponse.forward(getPathOrDefaultPath(httpRequest));
+    }
+
+    private String getPathOrDefaultPath(HttpRequest httpRequest) {
+        if (httpRequest.getPath().equals("/")) {
+            return "/index.html";
+        }
+        return httpRequest.getPath();
     }
 }
