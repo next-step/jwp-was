@@ -1,6 +1,6 @@
 package utils.parser;
 
-import model.request.HttpRequestHeader;
+import model.request.HttpRequestMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ import static enums.HttpMethod.POST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class HttpRequestHeaderParserTest {
+public class HttpRequestMessageParserTest {
     @Test
     @DisplayName("InputSteam이 입력으로 주어지면 파싱이 완료된 HttpRequestHeader 객체를 반환한다.")
     void parseHttpRequestHeaderTest() throws IOException {
@@ -22,10 +22,10 @@ public class HttpRequestHeaderParserTest {
 
         InputStream inputStream = new ByteArrayInputStream(httpRequestHeaderStringDummy.getBytes());
 
-        HttpRequestHeader result = HttpRequestHeaderParser.parseHttpRequestHeaderParser(inputStream);
+        HttpRequestMessage result = HttpRequestHeaderParser.parseHttpRequestHeaderParser(inputStream);
 
         assertAll(
-            () -> assertThat(result.getClass()).isEqualTo(HttpRequestHeader.class),
+            () -> assertThat(result.getClass()).isEqualTo(HttpRequestMessage.class),
             () -> assertThat(result.getHttpHeader().getValueByKey("Host")).isEqualTo("localhost:8080"),
             () -> assertThat(result.getRequestLine().getHttpMethod()).isEqualTo(GET),
             () -> assertThat(result.getPath()).isEqualTo("/jason/test/"),
@@ -46,10 +46,10 @@ public class HttpRequestHeaderParserTest {
 
         InputStream inputStream = new ByteArrayInputStream(httpPostRequestHeaderStringDummy.getBytes());
 
-        HttpRequestHeader result = HttpRequestHeaderParser.parseHttpRequestHeaderParser(inputStream);
+        HttpRequestMessage result = HttpRequestHeaderParser.parseHttpRequestHeaderParser(inputStream);
 
         assertAll(
-            () -> assertThat(result.getClass()).isEqualTo(HttpRequestHeader.class),
+            () -> assertThat(result.getClass()).isEqualTo(HttpRequestMessage.class),
             () -> assertThat(result.getHttpHeader().getValueByKey("Host")).isEqualTo("localhost:8080"),
             () -> assertThat(result.getRequestLine().getHttpMethod()).isEqualTo(POST),
             () -> assertThat(result.getPath()).isEqualTo("/user/create"),

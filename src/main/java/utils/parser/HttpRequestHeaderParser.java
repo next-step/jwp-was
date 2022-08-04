@@ -2,7 +2,7 @@ package utils.parser;
 
 import enums.HttpMethod;
 import model.HttpHeader;
-import model.request.HttpRequestHeader;
+import model.request.HttpRequestMessage;
 import model.request.RequestLine;
 import utils.BufferedReaderUtils;
 import utils.IOUtils;
@@ -15,14 +15,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
-import static model.request.HttpRequestHeader.getRequestHeaderOf;
-import static model.request.HttpRequestHeader.postRequestHeaderWithBody;
+import static model.request.HttpRequestMessage.getRequestHeaderOf;
+import static model.request.HttpRequestMessage.postRequestHeaderWithBody;
 
 public class HttpRequestHeaderParser {
     private static final int REQUEST_LINE_INDEX = 0;
     private static final String END_OF_HTTP_REQUEST_HEADER = "";
 
-    public static HttpRequestHeader parseHttpRequestHeaderParser(InputStream inputStream) throws IOException {
+    public static HttpRequestMessage parseHttpRequestHeaderParser(InputStream inputStream) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         List<String> httpRequestHeaders = BufferedReaderUtils.lines(br);
 
@@ -39,7 +39,7 @@ public class HttpRequestHeaderParser {
         return httpRequestHeaderLines;
     }
 
-    private static HttpRequestHeader createHttpRequestHeader(RequestLine requestLine, HttpHeader httpHeader, BufferedReader br) throws IOException {
+    private static HttpRequestMessage createHttpRequestHeader(RequestLine requestLine, HttpHeader httpHeader, BufferedReader br) throws IOException {
         if (requestLine.getHttpMethod() == HttpMethod.GET) {
             return getRequestHeaderOf(requestLine, httpHeader);
         }
