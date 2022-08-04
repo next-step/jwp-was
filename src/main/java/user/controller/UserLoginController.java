@@ -1,12 +1,12 @@
 package user.controller;
 
-import controller.Controller;
 import db.DataBase;
 import user.model.User;
+import webserver.controller.AbstractController;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-public class UserLoginController extends Controller {
+public class UserLoginController extends AbstractController {
     private static final String LOGINED_KEY = "logined";
 
     @Override

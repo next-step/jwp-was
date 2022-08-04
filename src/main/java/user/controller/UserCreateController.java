@@ -1,14 +1,14 @@
 package user.controller;
 
-import controller.Controller;
 import db.DataBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import user.model.User;
+import webserver.controller.AbstractController;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
-public class UserCreateController extends Controller {
+public class UserCreateController extends AbstractController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserCreateController.class);
 
     @Override

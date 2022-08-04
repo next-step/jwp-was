@@ -1,14 +1,14 @@
 package user.controller;
 
-import controller.Controller;
 import db.DataBase;
 import user.model.User;
+import webserver.controller.AbstractController;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
 import java.util.Collection;
 
-public class UserListController extends Controller {
+public class UserListController extends AbstractController {
     @Override
     public HttpResponse doGet(HttpRequest httpRequest) {
         final boolean logined = httpRequest.getCookie("logined", Boolean.class);

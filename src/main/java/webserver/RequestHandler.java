@@ -1,11 +1,11 @@
 package webserver;
 
-import controller.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import user.controller.UserCreateController;
 import user.controller.UserListController;
 import user.controller.UserLoginController;
+import webserver.controller.Controller;
 import webserver.http.HttpRequest;
 import webserver.http.HttpRequestParser;
 import webserver.http.HttpResponse;
@@ -50,12 +50,7 @@ public class RequestHandler implements Runnable {
     private HttpResponse handle(HttpRequest httpRequest) {
         if (requestMapping.containsKey(httpRequest.getPath())) {
             final Controller controller = requestMapping.get(httpRequest.getPath());
-            if (httpRequest.isGet()) {
-                return controller.doGet(httpRequest);
-            }
-            if (httpRequest.isPost()) {
-                return controller.doPost(httpRequest);
-            }
+            return controller.service(httpRequest);
         }
         return HttpResponse.forward(httpRequest.getPath());
     }
