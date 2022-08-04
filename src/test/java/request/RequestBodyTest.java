@@ -33,7 +33,7 @@ public class RequestBodyTest {
         RequestBody requestBody = RequestBody.empty();
         requestBody.addBody(body);
 
-        assertThat(requestBody.getPameter("userId")).isEqualTo("java");
+        assertThat(requestBody.getParameter("userId")).isEqualTo("java");
     }
 
 }

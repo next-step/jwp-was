@@ -2,28 +2,32 @@ package controller;
 
 import db.DataBase;
 import dto.UserDto;
-import java.util.List;
-import java.util.stream.Collectors;
 import request.HttpRequest;
 import response.HttpResponse;
 import utils.HandlerUtils;
 
-public class UserListController extends Controller {
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class UserListController extends AbstractController {
     private static final String LOGIN_VIEW = "/user/login.html";
+    private static final String USER_LIST_VIEW = "user/list";
+    private static final String TRUE = "true";
 
     @Override
-    public HttpResponse doGet(HttpRequest request) throws Exception {
-        if(!request.getCoookie().getLogined().equals("true")) {
-            return HttpResponse.sendRedirect(LOGIN_VIEW);
+    public void doGet(HttpRequest request, HttpResponse response) throws Exception {
+        if (!request.getCoookie().getLogined().equals(TRUE)) {
+            response.sendRedirect(LOGIN_VIEW);
+            return;
         }
 
         List<UserDto> userDtoList = DataBase.findAll()
-            .stream()
-            .map(user -> new UserDto(user.getUserId(), user.getName(), user.getEmail()))
-            .collect(Collectors.toList());
+                .stream()
+                .map(user -> new UserDto(user.getUserId(), user.getName(), user.getEmail()))
+                .collect(Collectors.toList());
 
-        String contextPage = HandlerUtils.handle("user/list", userDtoList);
+        String contextPage = HandlerUtils.handle(USER_LIST_VIEW, userDtoList);
 
-        return HttpResponse.sendTemplate(contextPage);
+        response.forwardBody(contextPage);
     }
 }

@@ -71,3 +71,21 @@
 ### 기능 요구사항 7
 - [x] 지금까지 구현한 소스 코드는 stylesheet 파일을 지원하지 못하고 있다. Stylesheet 파일을 지원하도록 구현하도록 한다.
 - [x] 확장자마다 contentType를 반환합니다.
+
+
+## 🚀 3단계 - HTTP 웹 서버 리팩토링
+
+### 리팩토링 1
+- [x] RequestHandler 기능 분리하기
+  - [x] 리뷰에서 받은 HttpResponse에 response200Header 넣기
+
+### 리팩토링 2
+- [x] 클라이언트 요청 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpRequest)
+- [x] 클라이언트 응답 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpResponse)
+- [x] 다형성을 활용해 클라이언트 요청 URL에 대한 분기 처리를 제거한다.
+
+### 리팩토링 3
+- [x] Body및 query string 값을 가져올수 있게 getParameter 를 수정합니다.
+
+### 테스트 코드 작성
+- [x] GET, POST file을 읽고 Requst와 response를 확인합니다.

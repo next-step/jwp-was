@@ -1,17 +1,13 @@
 package webserver;
 
-import controller.Controller;
-import controller.DefaultController;
-import controller.LoginController;
-import controller.UserCreateController;
-import controller.UserListController;
+import controller.*;
 import java.util.HashMap;
 import java.util.Map;
 import request.HttpRequest;
 
 public class DispatcherServlet {
 
-    private static Map<String, Controller> controllerMap = new HashMap<>();
+    private static Map<String, AbstractController> controllerMap = new HashMap<>();
 
     static {
         controllerMap.put("/user/create", new UserCreateController());
@@ -19,7 +15,7 @@ public class DispatcherServlet {
         controllerMap.put("/user/list", new UserListController());
     }
 
-    public static Controller isMatcher(String path) {
+    public static AbstractController isMatcher(String path) {
         return controllerMap.getOrDefault(path, new DefaultController());
     }
 
