@@ -41,6 +41,8 @@ public class UserLoginController implements Controller {
 
         HttpSession session = httpRequest.getSession();
         httpResponse.addCookie(session.getLoginedCookie());
+//        HttpSession session = httpRequest.getSession();
+//        session.add(key, value);
         httpResponse.sendRedirect("/index.html");
     }
 

@@ -3,6 +3,7 @@ package webserver.domain;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import java.util.Map;
+import java.util.Optional;
 
 public enum Sessions {
     INSTANCE;
@@ -15,7 +16,8 @@ public enum Sessions {
             sessions.put(httpSession.getId(), httpSession);
             return httpSession;
         }
-        return this.sessions.get(sessionId);
+        return Optional.ofNullable(this.sessions.get(sessionId))
+            .orElse(HttpSession.empty());
     }
 
 }

@@ -22,7 +22,7 @@ public class Cookies {
         }
         return new Cookies(Arrays.stream(cookieString.split(COOKIE_STRING_SPLIT_REGEX))
             .map(String::trim)
-            .map(Cookie::new)
+            .map(Cookie::requestCookie)
             .collect(Collectors.toUnmodifiableList()));
     }
 
@@ -36,8 +36,8 @@ public class Cookies {
 
     public String getSessionId() {
         return cookies.stream()
-            .filter(s -> s.startsWith(HttpHeader.JSESSIONID))
-            .map(s -> s.split("=")[1])
+            .filter(s -> s.isSessionId(HttpHeader.JSESSIONID))
+            .map(Cookie::getValue)
             .collect(Collectors.joining());
     }
 }
