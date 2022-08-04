@@ -57,8 +57,6 @@ public class HttpRequestTest {
         assertEquals("javajigi", request.getParameter("userId"));
     }
 
-
-
     @Test
     @DisplayName("파라미터 값을 반환합니다.")
     void getParamterTest() {

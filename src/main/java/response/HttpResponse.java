@@ -3,7 +3,6 @@ package response;
 import constant.HttpContentType;
 import constant.HttpHeader;
 import constant.HttpStatusCode;
-import request.HttpRequest;
 import utils.FileIoUtils;
 
 import java.io.DataOutputStream;
@@ -11,10 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 public class HttpResponse {
 
@@ -36,7 +32,7 @@ public class HttpResponse {
 
     public void forward(String view) throws IOException, URISyntaxException {
         HttpContentType contentType = HttpContentType.of(view);
-
+        
         addBody(FileIoUtils.loadFileFromClasspath(contentType.getResourcePath() + view), contentType);
         response200Header(body.length);
     }

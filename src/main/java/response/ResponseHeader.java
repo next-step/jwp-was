@@ -1,10 +1,7 @@
 package response;
 
-import constant.HttpHeader;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 public class ResponseHeader {
@@ -31,7 +28,7 @@ public class ResponseHeader {
         return new ResponseHeader(headers);
     }
 
-    public static ResponseHeader  empty() {
+    public static ResponseHeader empty() {
         return new ResponseHeader(new HashMap<>());
     }
 

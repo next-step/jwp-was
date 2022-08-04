@@ -41,8 +41,8 @@ public class HttpRequest {
     }
 
     public String getParameter(String key) {
-        String value =  requestLine.getParameter(key);
-        if(value == null) {
+        String value = requestLine.getParameter(key);
+        if (value == null) {
             value = body.getParameter(key);
         }
         return value;
@@ -73,20 +73,12 @@ public class HttpRequest {
         return Integer.parseInt(header.getHeader(HttpHeader.CONTENT_LENGTH.getValue()));
     }
 
-    public RequestLine getRequestLine() {
-        return requestLine;
-    }
-
     public RequestHeader getHeader() {
         return header;
     }
 
     public RequestBody getBody() {
         return body;
-    }
-
-    public HttpMethod getHttpMethod() {
-        return requestLine.getHttpMethod();
     }
 
     public String getPath() {
@@ -103,15 +95,10 @@ public class HttpRequest {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        HttpRequest that = (HttpRequest) o;
-        return Objects.equals(requestLine, that.requestLine) && Objects.equals(
-                header, that.header) && Objects.equals(body, that.body);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HttpRequest request = (HttpRequest) o;
+        return Objects.equals(requestLine, request.requestLine) && Objects.equals(header, request.header) && Objects.equals(body, request.body);
     }
 
     @Override
