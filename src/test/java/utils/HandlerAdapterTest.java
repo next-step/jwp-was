@@ -1,12 +1,11 @@
 package utils;
 
-import model.ClientResponse;
 import model.HttpRequestMessage;
+import model.HttpResponseMessage;
 import model.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import service.RequestService;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -20,9 +19,9 @@ class HandlerAdapterTest {
         List<String> httpMessageData = List.of("GET /user HTTP/1.1");
         HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMessageData);
 
-        ClientResponse clientResponse = HandlerAdapter.getInstance().invoke(httpRequestMessage);
+        HttpResponseMessage httpResponseMessage = HandlerAdapter.getInstance().invoke(httpRequestMessage);
 
-        Assertions.assertThat(clientResponse.getBytesBody()).isEqualTo(RequestService.bodyToBytes("getUserTest"));
+        Assertions.assertThat(httpResponseMessage.getBytesBody()).isEqualTo(IOUtils.bodyToBytes("getUserTest"));
     }
 
     @DisplayName("요청 실려온 queryParameter를 handler의 parameter로 컨버팅 하는지 검증")
@@ -34,7 +33,7 @@ class HandlerAdapterTest {
         User actual = new User("fistkim101", "1234", "kim", "fistkim101%40gmail.com");
         byte[] expected = HandlerAdapter.getInstance().invoke(httpRequestMessage).getBytesBody();
 
-        Assertions.assertThat(RequestService.bodyToBytes(actual)).isEqualTo(expected);
+        Assertions.assertThat(IOUtils.bodyToBytes(actual)).isEqualTo(expected);
     }
 
 }

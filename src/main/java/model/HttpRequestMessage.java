@@ -1,7 +1,7 @@
 package model;
 
+import service.RequestService;
 import utils.HttpParser;
-import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,13 +10,15 @@ import java.util.List;
 
 public class HttpRequestMessage {
 
-    private static final String CONTENT_LENGTH_KEY = "Content-Length";
-
     private RequestLine requestLine;
 
-    private RequestHeaders requestHeaders;
+    private HttpHeaders requestHeaders;
 
-    private String body;
+    private HttpBody body;
+
+    public HttpRequestMessage(BufferedReader bufferedReader) throws IOException {
+        this(RequestService.getHttpMessageData(bufferedReader), bufferedReader);
+    }
 
     public HttpRequestMessage(List<String> httpMessageData) throws IOException {
         this(httpMessageData, null);
@@ -32,38 +34,24 @@ public class HttpRequestMessage {
         }
 
         this.requestLine = HttpParser.parseRequestLine(httpMessageData.remove(0));
-        if (httpMessageData.size() == 1) {
+        if (httpMessageData.isEmpty()) {
             return;
         }
 
-        this.requestHeaders = new RequestHeaders(httpMessageData);
-        this.body = this.parseBody(bufferedReader, requestHeaders);
-    }
-
-    private String parseBody(BufferedReader bufferedReader, RequestHeaders requestHeaders) throws IOException {
-        if (bufferedReader == null) {
-            return null;
-        }
-
-        String contentLengthValue = requestHeaders.getRequestHeaders().get(CONTENT_LENGTH_KEY);
-        int contentLength = 0;
-        if (contentLengthValue != null) {
-            contentLength = Integer.parseInt(contentLengthValue);
-        }
-
-        return IOUtils.readData(bufferedReader, contentLength);
+        this.requestHeaders = new HttpHeaders(httpMessageData);
+        this.body = new HttpBody(bufferedReader, requestHeaders);
     }
 
     public RequestLine getRequestLine() {
         return requestLine;
     }
 
-    public RequestHeaders getRequestHeaders() {
+    public HttpHeaders getRequestHeaders() {
         return requestHeaders;
     }
 
     public String getBody() {
-        return body;
+        return this.body.getContents();
     }
 
     public String toStringHttpMessage() {
@@ -72,7 +60,7 @@ public class HttpRequestMessage {
         value.append(this.requestLine.getInfo());
         value.append(this.requestHeaders.getInfo());
         value.append("\n");
-        value.append(body);
+        value.append(this.getBody());
         value.append("\n");
         value.append("]");
 

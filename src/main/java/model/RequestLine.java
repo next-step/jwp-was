@@ -3,9 +3,11 @@ package model;
 import types.HttpMethod;
 import types.Protocol;
 
+import java.util.List;
 import java.util.Objects;
 
 public class RequestLine {
+    private static final List<String> RESOURCE_FILE_EXTENSIONS = List.of(".css", ".js", ".ico", "ttf", "woff", "png");
     private final HttpMethod httpMethod;
     private final UrlPath urlPath;
     private final Protocol protocol;
@@ -46,6 +48,14 @@ public class RequestLine {
                 String.format("urlPath : %s \n", this.urlPath.getInfo()) +
                 String.format("Protocol : %s \n", this.protocol.getInfo());
         return value;
+    }
+
+    public boolean isRequestForHtml() {
+        return this.getUrlPath().isRequestForHtml();
+    }
+
+    public boolean isRequestForFileResource(RequestLine requestLine) {
+        return RESOURCE_FILE_EXTENSIONS.stream().anyMatch(requestLine.getUrlPath().getPath()::contains);
     }
 
 }

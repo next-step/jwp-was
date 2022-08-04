@@ -37,7 +37,7 @@ class HttpRequestMessageTest {
         );
         HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMessageData);
 
-        RequestHeaders actualRequestHeaders = httpRequestMessage.getRequestHeaders();
+        HttpHeaders actualRequestHeaders = httpRequestMessage.getRequestHeaders();
         Map<String, String> expectedRequestHeaders = Map.of(
                 "Host", "localhost:8080",
                 "Connection", "keep-alive",
@@ -45,7 +45,7 @@ class HttpRequestMessageTest {
                 "Content-Type", "application/x-www-form-urlencoded",
                 "Accept", "*/*"
         );
-        for (Map.Entry<String, String> entry : actualRequestHeaders.getRequestHeaders().entrySet()) {
+        for (Map.Entry<String, String> entry : actualRequestHeaders.getHeaders().entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
 

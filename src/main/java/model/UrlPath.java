@@ -7,6 +7,7 @@ public class UrlPath {
 
     private static final List<String> FILE_EXTENSIONS = List.of(".html");
 
+    private static final String HTML_EXTENSION = ".html";
     private final String path;
 
     private QueryParameter queryParameter;
@@ -55,6 +56,10 @@ public class UrlPath {
         }
 
         return value.toString();
+    }
+
+    public boolean isRequestForHtml() {
+        return this.path.contains(HTML_EXTENSION);
     }
 
 }
