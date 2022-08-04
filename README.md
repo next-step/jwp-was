@@ -142,4 +142,5 @@ Set-Cookie: logined=true; Path=/
 - [X] Controller 인터페이스를 구현하는 AbstractController 추상클래스를 추가해 중복을 제거하고, service() 메소드에서 GET과 POST HTTP 메소드에 따라 doGet(), doPost() 메소드를 호출하도록 한다.
 
 ### 3단계 피드백
-- [ ] 일급 컬렉션 적용
+- [X] 일급 컬렉션 적용
+- [X] HttpRequest POST방식 -> body 전달 + Query 전달

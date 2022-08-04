@@ -35,11 +35,9 @@ public class HttpRequest {
             header.loadHeader(line);
         }
 
-        if (method == HttpMethod.GET) {
-            String queryString = requestLine.getUri().getQueryString();
-            if (queryString != null){
-                parameter.loadParameters(queryString);
-            }
+        String queryString = requestLine.getUri().getQueryString();
+        if (queryString != null) {
+            parameter.loadParameters(queryString);
         }
         if (method == HttpMethod.POST) {
             int contentLength = Integer.parseInt(header.getHeaderValue("Content-Length"));
