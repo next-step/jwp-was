@@ -11,12 +11,12 @@ public class ResponseHeader {
         this.headers = new HashMap<>();
     }
 
-    public ResponseHeader(Map<String, String> header) {
-        this.headers = header;
-    }
-
     public void add(String name, String value) {
         this.headers.put(name, value);
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
     }
 
     @Override

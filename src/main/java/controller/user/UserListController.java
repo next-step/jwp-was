@@ -15,23 +15,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import static model.Constant.COOKIE;
 import static utils.HandlebarsUtils.loader;
 
 public class UserListController extends AbstractController {
-
     private static final Logger logger = LoggerFactory.getLogger(UserListController.class);
 
     private static final String USER_LIST_PATH = "/user/list.html";
     public static final String ROOT_PATH = "/";
+    public static final String COOKIE = "Cookie";
 
-    @Override
-    public void doPost(Request request, Response response) {
-
-    }
 
     @Override
     public void doGet(Request request, Response response) throws IOException {
+        logger.debug("UserListController : {}", request.getRequestPath());
+
         if (!isLoginStatus(request.getHeader())) {
             response.sendRedirect(ROOT_PATH);
             return;
@@ -40,11 +37,9 @@ public class UserListController extends AbstractController {
         String loadData = loader(users);
 
         response.forward(USER_LIST_PATH, loadData.getBytes(StandardCharsets.UTF_8));
-        response.responseOk();
     }
 
     private boolean isLoginStatus(RequestHeader requestHeader) {
-        logger.debug("Cookie : {}", requestHeader.getHeaders().get(COOKIE));
         return Stream.of(requestHeader.getHeaders().get(COOKIE))
                 .anyMatch(loginStatus -> StringUtils.equals(loginStatus, "logined=true"));
     }
