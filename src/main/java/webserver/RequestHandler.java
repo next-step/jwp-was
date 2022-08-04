@@ -11,7 +11,6 @@ import model.request.HttpRequestMessage;
 import model.response.HttpResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.parser.HttpRequestHeaderParser;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -28,7 +27,7 @@ public class RequestHandler implements Runnable {
 
         try (InputStream inputStream = connection.getInputStream(); OutputStream outputStream = connection.getOutputStream()) {
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-            HttpRequestMessage httpRequestMessage = HttpRequestHeaderParser.parseHttpRequestHeaderParser(inputStream);
+            HttpRequestMessage httpRequestMessage = HttpRequestMessage.from(inputStream);
 
             HandlerSelector handlerSelector = new HandlerSelector();
             PathHandler pathHandler = handlerSelector.selectAvailableHandler(httpRequestMessage);

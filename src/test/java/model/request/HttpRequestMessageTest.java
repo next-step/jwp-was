@@ -1,10 +1,11 @@
-package utils.parser;
+package model.request;
 
-import model.request.HttpRequestMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 import static dummy.HttpRequestHeaderDummy.HTTP_POST_REQUEST_HEADER_STRING_DUMMY;
@@ -12,17 +13,17 @@ import static dummy.HttpRequestHeaderDummy.HTTP_REQUEST_HEADER_STRING_DUMMY;
 import static enums.HttpMethod.GET;
 import static enums.HttpMethod.POST;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class HttpRequestMessageParserTest {
+class HttpRequestMessageTest {
     @Test
-    @DisplayName("InputSteam이 입력으로 주어지면 파싱이 완료된 HttpRequestHeader 객체를 반환한다.")
+    @DisplayName("InputSteam이 입력으로 주어지면 파싱이 완료된 HttpRequestMessage 객체를 반환한다.")
     void parseHttpRequestHeaderTest() throws IOException {
         String httpRequestHeaderStringDummy = HTTP_REQUEST_HEADER_STRING_DUMMY;
 
         InputStream inputStream = new ByteArrayInputStream(httpRequestHeaderStringDummy.getBytes());
 
-        HttpRequestMessage result = HttpRequestHeaderParser.parseHttpRequestHeaderParser(inputStream);
+        HttpRequestMessage result = HttpRequestMessage.from(inputStream);
 
         assertAll(
             () -> assertThat(result.getClass()).isEqualTo(HttpRequestMessage.class),
@@ -34,7 +35,7 @@ public class HttpRequestMessageParserTest {
     }
 
     @Test
-    @DisplayName("POST 형식의 InputSteam이 입력으로 주어지면 파싱이 완료된 HttpRequestHeader 객체를 반환한다.")
+    @DisplayName("POST 형식의 InputSteam이 입력으로 주어지면 파싱이 완료된 HttpRequestMessage 객체를 반환한다.")
     void parsePostHttpRequestHeaderTest() throws IOException {
         String httpPostRequestHeaderStringDummy = HTTP_POST_REQUEST_HEADER_STRING_DUMMY;
         Map<String, String> filedNameToValue = Map.of(
@@ -46,7 +47,7 @@ public class HttpRequestMessageParserTest {
 
         InputStream inputStream = new ByteArrayInputStream(httpPostRequestHeaderStringDummy.getBytes());
 
-        HttpRequestMessage result = HttpRequestHeaderParser.parseHttpRequestHeaderParser(inputStream);
+        HttpRequestMessage result = HttpRequestMessage.from(inputStream);
 
         assertAll(
             () -> assertThat(result.getClass()).isEqualTo(HttpRequestMessage.class),
