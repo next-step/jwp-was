@@ -30,7 +30,7 @@ class ResponseWriterTest {
         assertThat(writtenMessage).isEqualTo(
                 "HTTP/1.1 200 OK\r\n" +
                         "Content-Type: application/json\r\n" +
-                        "Set-Cookie: logined=true; path=/user/only\r\n" +
+                        "Set-Cookie: logined=true; Path=/user/only\r\n" +
                         "Content-Length: 61\r\n" +
                         "\r\n" +
                         "{\"name\": \"jordy\", \"age\": \"20\", \"comment\": \"반갑습니다.\"}"
@@ -41,7 +41,9 @@ class ResponseWriterTest {
         Response response = Response.ok();
 
         response.addHeader(CONTENT_TYPE, JSON.getHeader());
-        response.addCookie(new Cookie("logined", "true", "/user/only"));
+        Cookie cookie = new Cookie("logined", "true");
+        cookie.setPath("/user/only");
+        response.addCookie(cookie);
 
         String body = "{\"name\": \"jordy\", \"age\": \"20\", \"comment\": \"반갑습니다.\"}";
         response.addBody(body);

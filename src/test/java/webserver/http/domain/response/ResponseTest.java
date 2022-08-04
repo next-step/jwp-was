@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import webserver.http.domain.cookie.Cookie;
 import webserver.http.domain.Headers;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -114,13 +115,22 @@ class ResponseTest {
                 new Headers(new HashMap<>()),
                 null);
 
-        response.addCookie(new Cookie("logined", "true", "/"));
+        Cookie cookie = Cookie.builder("logined", "true")
+                .domain("localhost")
+                .path("/path")
+                .sameSite("Strict")
+                .maxAge(300)
+                .expires(new Date(1_500_000_000_000L))
+                .secure(true)
+                .build();
+
+        response.addCookie(cookie);
 
         assertThat(response).usingRecursiveComparison()
                 .isEqualTo(new Response(
                         Status.ok(),
                         new Headers(Map.of(
-                                SET_COOKIE, "logined=true; path=/"
+                                SET_COOKIE, "logined=true; Path=/path; Max-Age=300; Expires=Fri Jul 14 11:40:00 KST 2017; Domain=localhost; SameSite=Strict; Secure"
                         )),
                         null)
                 );

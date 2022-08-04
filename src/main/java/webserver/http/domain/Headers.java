@@ -94,13 +94,7 @@ public class Headers {
     }
 
     public void addCookie(Cookie cookie) {
-        keyValues.put(SET_COOKIE,
-                String.format("%s=%s; path=%s",
-                        cookie.getName(),
-                        cookie.getValue(),
-                        cookie.getPath()
-                )
-        );
+        keyValues.put(SET_COOKIE, cookie.getAsHeaderValue());
     }
 
     public static Headers from(List<String> messages) {

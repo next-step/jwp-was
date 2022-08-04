@@ -208,7 +208,7 @@ class SessionStorageTest {
                                 Status.ok(),
                                 Headers.from(
                                         List.of(
-                                                "Set-Cookie: JWP_SID=sessionId; path=/"
+                                                "Set-Cookie: JWP_SID=sessionId; Path=/"
                                         )
                                 ),
                                 null
