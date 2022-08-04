@@ -140,3 +140,6 @@ Set-Cookie: logined=true; Path=/
 - [X] 이렇게 생성한 Controller 구현체를 Map<String, Controller>에 저장한다. Map의 key에 해당하는 String은 요청 URL, value에 해당하는 Controller는 Controller 구현체이다.
 - [X] 클라이언트 요청 URL에 해당하는 Controller를 찾아 service() 메소드를 호출한다.
 - [X] Controller 인터페이스를 구현하는 AbstractController 추상클래스를 추가해 중복을 제거하고, service() 메소드에서 GET과 POST HTTP 메소드에 따라 doGet(), doPost() 메소드를 호출하도록 한다.
+
+### 3단계 피드백
+- [ ] 일급 컬렉션 적용
