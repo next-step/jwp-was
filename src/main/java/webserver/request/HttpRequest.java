@@ -8,8 +8,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import org.apache.logging.log4j.util.Strings;
 import webserver.domain.Cookies;
 import webserver.domain.HttpHeader;
+import webserver.domain.HttpSession;
+import webserver.domain.Sessions;
 import webserver.enums.HttpMethod;
 import webserver.enums.Protocol;
 
@@ -18,17 +21,20 @@ public class HttpRequest {
     private RequestLine requestLine;
     private HttpRequestHeader header;
     private HttpRequestBody body;
+    private Cookies cookies;
 
     public HttpRequest(String startLine) {
         this.requestLine = RequestLine.of(startLine);
         this.header = HttpRequestHeader.createEmpty();
         this.body = HttpRequestBody.createEmpty();
+        this.cookies = Cookies.empty();
     }
 
     public HttpRequest(RequestLine requestLine, HttpRequestHeader httpHeader, HttpRequestBody httpBody) {
         this.requestLine = requestLine;
         this.header = httpHeader;
         this.body = httpBody;
+        this.cookies = Cookies.of(httpHeader.getHeader(HttpHeader.COOKIE));
     }
 
     public static HttpRequest of(InputStream is) throws IOException {
@@ -71,13 +77,6 @@ public class HttpRequest {
         return header.getHeader(key);
     }
 
-    public Cookies getCookies() {
-        if (!this.header.contains(HttpHeader.COOKIE)) {
-            return Cookies.empty();
-        }
-        return Cookies.of(this.header.getHeader(HttpHeader.COOKIE));
-    }
-
     public String getParameter(String key) {
         String param = requestLine.getParameter(key);
         if (param.isEmpty()) {
@@ -89,5 +88,13 @@ public class HttpRequest {
         }
 
         return param;
+    }
+
+    public String getSessionId() {
+        return cookies.getSessionId();
+    }
+
+    public HttpSession getSession() {
+        return Sessions.INSTANCE.get(this.getSessionId());
     }
 }

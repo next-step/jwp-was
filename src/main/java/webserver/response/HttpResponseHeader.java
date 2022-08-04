@@ -1,6 +1,6 @@
 package webserver.response;
 
-import static exception.ExceptionStrings.CANNOT_FIND_HEADER_KEY;
+import static exception.ExceptionStrings.INVALID_HEADER_KEY;
 
 import com.google.common.collect.Maps;
 import java.util.Collections;
@@ -24,7 +24,7 @@ public class HttpResponseHeader {
 
     public String getHeader(String key) {
         if (!headers.containsKey(key)) {
-            throw new IllegalArgumentException(CANNOT_FIND_HEADER_KEY);
+            throw new IllegalArgumentException(INVALID_HEADER_KEY);
         }
 
         return headers.get(key);

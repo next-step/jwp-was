@@ -32,14 +32,12 @@ class HttpRequestHeaderTest {
         assertThat(requestHeader.getHeader("headerKey3")).isEqualTo("headerValue3");
     }
 
-    @DisplayName("헤더에 key 로 없는 것은 가져올 수 없다.")
+    @DisplayName("헤더에 key 로 없는 것은 가져오면 빈문자열이다.")
     @Test
     void headerMapFailTest() {
         requestHeader.putHeader("headerKey1", "headerKey1");
 
-        assertThatThrownBy(
-            () -> requestHeader.getHeader("invalidKey")
-        ).isInstanceOf(IllegalArgumentException.class);
+        assertThat(requestHeader.getHeader("invalidKey")).isEmpty();
     }
 
 }

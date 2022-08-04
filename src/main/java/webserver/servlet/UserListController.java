@@ -5,21 +5,20 @@ import java.io.IOException;
 import java.util.Collections;
 import utils.HandlebarsTemplate;
 import webserver.domain.ContentType;
-import webserver.domain.Cookies;
 import webserver.domain.HttpHeader;
+import webserver.domain.HttpSession;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
 public class UserListController implements Controller {
 
-    private static final String COOKIE_NAME_LOGINED = "logined";
+    public static final String KEY_LOGINED = "logined";
 
     @Override
     public void doGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-        Cookies cookies = httpRequest.getCookies();
-        String loginCookie = cookies.get(COOKIE_NAME_LOGINED);
+        HttpSession session = httpRequest.getSession();
 
-        if (loginCookie.isEmpty() || !Boolean.parseBoolean(loginCookie)) {
+        if (!session.isLogined()) {
             handleNotLoginUser(httpResponse);
             return;
         }
