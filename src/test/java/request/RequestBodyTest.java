@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +34,7 @@ public class RequestBodyTest {
         RequestBody requestBody = RequestBody.empty();
         requestBody.addBody(body);
 
-        assertThat(requestBody.getPameter("userId")).isEqualTo("java");
+        assertThat(requestBody.getParameter("userId")).isEqualTo("java");
     }
 
 }

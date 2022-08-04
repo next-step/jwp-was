@@ -1,8 +1,14 @@
 package request;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import constant.HttpMethod;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +18,46 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class HttpRequestTest {
+
+    private static final String testDirectory = "./src/test/resources/http/";
+
+    @Test
+    @DisplayName("GET 피일을 읽어 값을 확인합니다.")
+    public void request_GET() throws Exception {
+        InputStream in = new FileInputStream(new File(testDirectory + "Http_GET.txt"));
+        HttpRequest request = HttpRequest.parse(in);
+
+        assertEquals(HttpMethod.GET, request.getMethod());
+        assertEquals("/user/create", request.getPath());
+        assertEquals("keep-alive", request.getHeader("Connection"));
+        assertEquals("javajigi", request.getParameter("userId"));
+    }
+
+    @Test
+    @DisplayName("POST 파일을 읽어 값을 확인합니다.")
+    public void request_POST() throws Exception {
+        InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.txt"));
+        HttpRequest request = HttpRequest.parse(in);
+
+        assertEquals(HttpMethod.POST, request.getMethod());
+        assertEquals("/user/create", request.getPath());
+        assertEquals("keep-alive", request.getHeader("Connection"));
+        assertEquals("javajigi", request.getParameter("userId"));
+    }
+
+    @Test
+    public void request_POST2() throws Exception {
+        InputStream in = new FileInputStream(new File(testDirectory + "Http_POST2.txt"));
+        HttpRequest request = HttpRequest.parse(in);
+
+        assertEquals(HttpMethod.POST, request.getMethod());
+        assertEquals("/user/create", request.getPath());
+        assertEquals("keep-alive", request.getHeader("Connection"));
+        assertEquals("1", request.getParameter("id"));
+        assertEquals("javajigi", request.getParameter("userId"));
+    }
+
+
 
     @Test
     @DisplayName("파라미터 값을 반환합니다.")
