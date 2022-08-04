@@ -26,9 +26,9 @@ public class IOUtils {
     public static List<String> readLines(BufferedReader br) throws IOException {
         List<String> reuqestLine = new ArrayList<>();
         String line = br.readLine();
-        while(!line.equals("")) {
-            reuqestLine.add(line);
-            line = URLDecoder.decode(br.readLine(), "UTF-8");
+        while(line != null && !line.equals("")) {
+            reuqestLine.add(URLDecoder.decode(line, "UTF-8"));
+            line = br.readLine();
         }
 
         return reuqestLine;
