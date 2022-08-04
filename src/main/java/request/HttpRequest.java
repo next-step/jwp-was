@@ -2,8 +2,11 @@ package request;
 
 import constant.HttpHeader;
 import constant.HttpMethod;
+import utils.IOUtils;
+
 import java.io.BufferedReader;
-import java.util.Collections;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,32 +22,52 @@ public class HttpRequest {
         this.body = body;
     }
 
+    public static HttpRequest parse(InputStream in) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+        List<String> lines = IOUtils.readLines(br);
+
+        HttpRequest request = new HttpRequest(RequestLine.from(lines.get(0)),
+                RequestHeader.from(lines.subList(1, lines.size())),
+                RequestBody.empty());
+        request.addBody(IOUtils.readData(br, request.getContentLength()));
+
+        return request;
+    }
+
     public static HttpRequest from(List<String> lines) {
         return new HttpRequest(RequestLine.from(lines.get(0)),
-            RequestHeader.from(lines.subList(1, lines.size())),
-            RequestBody.empty());
+                RequestHeader.from(lines.subList(1, lines.size())),
+                RequestBody.empty());
     }
 
     public String getParameter(String key) {
-        return requestLine.getParameter(key);
+        String value =  requestLine.getParameter(key);
+        if(value == null) {
+            value = body.getParameter(key);
+        }
+        return value;
     }
 
     public String getHeader(String key) {
         return header.getHeader(key);
     }
 
+    public HttpMethod getMethod() {
+        return requestLine.getHttpMethod();
+    }
+
     public void addBody(String body) {
-        if(!body.equals("")) {
+        if (!body.equals("")) {
             this.body.addBody(body);
         }
     }
 
     public String getBodyParameter(String key) {
-        return body.getPameter(key);
+        return body.getParameter(key);
     }
 
     public int getContentLength() {
-        if(header.getHeader(HttpHeader.CONTENT_LENGTH.getValue()) == null) {
+        if (header.getHeader(HttpHeader.CONTENT_LENGTH.getValue()) == null) {
             return 0;
         }
         return Integer.parseInt(header.getHeader(HttpHeader.CONTENT_LENGTH.getValue()));
@@ -74,6 +97,10 @@ public class HttpRequest {
         return header.getCookie();
     }
 
+    public boolean isGetRequest() {
+        return requestLine.getHttpMethod().equals(HttpMethod.GET);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -84,7 +111,7 @@ public class HttpRequest {
         }
         HttpRequest that = (HttpRequest) o;
         return Objects.equals(requestLine, that.requestLine) && Objects.equals(
-            header, that.header) && Objects.equals(body, that.body);
+                header, that.header) && Objects.equals(body, that.body);
     }
 
     @Override
