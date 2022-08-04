@@ -1,6 +1,6 @@
 package webserver.http.domain.request;
 
-import webserver.http.domain.Cookie;
+import webserver.http.domain.cookie.Cookie;
 import webserver.http.domain.Headers;
 import webserver.http.domain.session.Session;
 import webserver.http.domain.session.SessionContextHolder;

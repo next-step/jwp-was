@@ -2,7 +2,7 @@ package slipp.controller;
 
 import slipp.db.DataBase;
 import slipp.model.User;
-import webserver.http.domain.controller.Controller;
+import webserver.http.controller.Controller;
 import webserver.http.domain.request.Method;
 import webserver.http.domain.request.Request;
 import webserver.http.domain.response.Response;

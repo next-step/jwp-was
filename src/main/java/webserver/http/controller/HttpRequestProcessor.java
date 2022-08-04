@@ -1,4 +1,4 @@
-package webserver.http.domain.controller;
+package webserver.http.controller;
 
 import webserver.http.domain.exception.ResourceNotFoundException;
 import webserver.http.domain.request.Request;

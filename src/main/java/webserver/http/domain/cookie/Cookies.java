@@ -1,4 +1,6 @@
-package webserver.http.domain;
+package webserver.http.domain.cookie;
+
+import webserver.http.domain.KeyValuePair;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;

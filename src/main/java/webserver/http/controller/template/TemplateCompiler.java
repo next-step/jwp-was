@@ -1,4 +1,4 @@
-package webserver.http.domain.controller.template;
+package webserver.http.controller.template;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;

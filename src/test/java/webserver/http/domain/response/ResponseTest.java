@@ -2,7 +2,7 @@ package webserver.http.domain.response;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.domain.Cookie;
+import webserver.http.domain.cookie.Cookie;
 import webserver.http.domain.Headers;
 
 import java.util.HashMap;

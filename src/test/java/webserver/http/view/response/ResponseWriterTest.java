@@ -3,7 +3,7 @@ package webserver.http.view.response;
 import com.google.common.base.Charsets;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.domain.Cookie;
+import webserver.http.domain.cookie.Cookie;
 import webserver.http.domain.response.Response;
 
 import java.io.ByteArrayOutputStream;

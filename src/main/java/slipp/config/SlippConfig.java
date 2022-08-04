@@ -7,8 +7,8 @@ import slipp.controller.UserCreateController;
 import slipp.controller.UserListController;
 import slipp.service.UserCreateService;
 import webserver.WebApplicationServer;
-import webserver.http.domain.controller.Controller;
-import webserver.http.domain.controller.template.TemplateCompiler;
+import webserver.http.controller.Controller;
+import webserver.http.controller.template.TemplateCompiler;
 
 import java.util.List;
 

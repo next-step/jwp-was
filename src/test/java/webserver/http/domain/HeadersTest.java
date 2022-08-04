@@ -8,9 +8,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import webserver.http.domain.cookie.Cookie;
+import webserver.http.domain.cookie.Cookies;
 import webserver.http.domain.exception.BadRequestException;
-import webserver.http.domain.request.Request;
-import webserver.http.domain.request.RequestLine;
 
 import java.util.HashMap;
 import java.util.List;

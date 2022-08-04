@@ -1,4 +1,4 @@
-package webserver.http.domain;
+package webserver.http.domain.cookie;
 
 import java.util.Objects;
 

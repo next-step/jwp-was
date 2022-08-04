@@ -3,7 +3,7 @@ package webserver;
 import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.domain.controller.RequestProcessor;
+import webserver.http.controller.RequestProcessor;
 import webserver.http.domain.exception.BadRequestException;
 import webserver.http.domain.exception.NullRequestException;
 import webserver.http.domain.exception.ResourceNotFoundException;

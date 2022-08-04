@@ -1,11 +1,11 @@
 package webserver.http.config;
 
-import webserver.http.domain.controller.Controller;
-import webserver.http.domain.controller.HttpRequestProcessor;
-import webserver.http.domain.controller.RequestProcessor;
-import webserver.http.domain.controller.RootController;
-import webserver.http.domain.controller.SessionCompositeRequestProcessor;
-import webserver.http.domain.controller.StaticResourceController;
+import webserver.http.controller.Controller;
+import webserver.http.controller.HttpRequestProcessor;
+import webserver.http.controller.RequestProcessor;
+import webserver.http.controller.RootController;
+import webserver.http.controller.SessionCompositeRequestProcessor;
+import webserver.http.controller.StaticResourceController;
 import webserver.http.domain.session.SessionStorage;
 import webserver.http.domain.session.UUIDSessionIdGenerator;
 import webserver.http.view.request.RequestReader;

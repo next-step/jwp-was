@@ -3,8 +3,8 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.config.WebServerConfig;
-import webserver.http.domain.controller.Controller;
-import webserver.http.domain.controller.RequestProcessor;
+import webserver.http.controller.Controller;
+import webserver.http.controller.RequestProcessor;
 import webserver.http.view.request.RequestReader;
 import webserver.http.view.response.ResponseWriter;
 

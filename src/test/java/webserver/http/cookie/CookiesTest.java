@@ -1,4 +1,4 @@
-package webserver.http.domain;
+package webserver.http.cookie;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,6 +8,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
+import webserver.http.domain.cookie.Cookie;
+import webserver.http.domain.cookie.Cookies;
 
 import java.util.Map;
 import java.util.Optional;

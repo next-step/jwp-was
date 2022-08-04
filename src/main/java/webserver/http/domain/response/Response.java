@@ -1,10 +1,9 @@
 package webserver.http.domain.response;
 
-import webserver.http.domain.Cookie;
+import webserver.http.domain.cookie.Cookie;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 import static webserver.http.domain.Headers.CONTENT_LENGTH;
@@ -82,7 +81,6 @@ public class Response {
         return "Response{" +
                 "status=" + status +
                 ", headers=" + headers +
-                ", body=" + new String(body) +
                 '}';
     }
 }

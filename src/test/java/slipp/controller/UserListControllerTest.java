@@ -12,7 +12,7 @@ import slipp.db.DataBase;
 import slipp.model.User;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
-import webserver.http.domain.controller.template.TemplateCompiler;
+import webserver.http.controller.template.TemplateCompiler;
 import webserver.http.domain.request.Method;
 import webserver.http.domain.request.Request;
 import webserver.http.domain.request.RequestLine;
