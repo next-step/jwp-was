@@ -17,7 +17,7 @@ class CreateUserCommandTest {
 
     @Test
     void toUser() {
-        User user = new CreateUserCommand("userId", "password", "name", "email").toUser();
+        User user = new CreateUserCommand("userId", "password", "name", "email").convertToUser();
 
         assertThat(user.getUserId()).isEqualTo("userId");
         assertThat(user.getPassword()).isEqualTo("password");

@@ -11,6 +11,10 @@ public class Endpoint {
         this.endpointPath = endpointPath;
     }
 
+    public boolean isEmptyPath() {
+        return endpointPath == null || endpointPath.equals("");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,7 +1,7 @@
 package webserver.http.request.requestline;
 
 import com.google.common.io.Files;
-import endpoint.HttpStaticResourceFileExtension;
+import webserver.http.header.HttpStaticResourceFileExtension;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -10,7 +10,6 @@ import java.util.List;
 
 public class HttpPath {
     public static final String PRIMARY_QUERY_STRING_SYMBOL = "\\?";
-
     private static final int HTTP_PATH_SCHEMAS_PATH_INDEX = 0;
     private static final int HTTP_PATH_SCHEMAS_QUERY_STRING_INDEX = 1;
     private static final int HTTP_PATH_SCHEMAS_MINIMUM_LENGTH = 1;
@@ -27,10 +26,10 @@ public class HttpPath {
             throw new IllegalArgumentException("잘못된 HTTP Path 입니다.");
         }
 
-        String fullPath = httpPathSchemas[HTTP_PATH_SCHEMAS_PATH_INDEX];
+        String fullPathInSchema = httpPathSchemas[HTTP_PATH_SCHEMAS_PATH_INDEX];
 
-        this.pathComponents = HttpPathComponentsBuilder.validateAndBuild(fullPath);
-        this.fullPath = fullPath;
+        this.pathComponents = HttpPathComponentsBuilder.validateAndBuild(fullPathInSchema);
+        this.fullPath = fullPathInSchema;
         this.httpQueryStrings = toQueryStrings(httpPathSchemas);
     }
 

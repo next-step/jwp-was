@@ -9,25 +9,25 @@ public class CreateUserCommand {
     private String email;
 
     public CreateUserCommand(String userId, String password, String name, String email) {
-        this.userId = userId;
-        validateUserId();
+        validateUserId(userId);
 
+        this.userId = userId;
         this.password = password;
         this.name = name;
         this.email = email;
     }
 
-    private void validateUserId() {
-        if (isNotExistsUser()) {
+    private void validateUserId(String userId) {
+        if (isNotExistsUser(userId)) {
             throw new IllegalArgumentException("유효하지 않은 유저 아이디입니다");
         }
     }
 
-    public boolean isNotExistsUser() {
+    private boolean isNotExistsUser(String userId) {
         return userId == null || userId.isEmpty();
     }
 
-    public User toUser() {
+    public User convertToUser() {
         return new User(userId, password, name, email);
     }
 }

@@ -1,7 +1,7 @@
 package webserver.http.request;
 
-import endpoint.HttpStaticResourceFileExtension;
 import webserver.http.header.HttpCookie;
+import webserver.http.header.HttpStaticResourceFileExtension;
 import webserver.http.request.body.HttpRequestBody;
 import webserver.http.request.header.HttpRequestHeaders;
 import webserver.http.request.requestline.HttpMethod;
@@ -9,8 +9,8 @@ import webserver.http.request.requestline.HttpQueryStrings;
 import webserver.http.request.requestline.HttpRequestLine;
 
 public class HttpRequestMessage {
-    private HttpRequestLine httpRequestLine;
-    private HttpRequestHeaders httpRequestHeaders;
+    private final HttpRequestLine httpRequestLine;
+    private final HttpRequestHeaders httpRequestHeaders;
     private HttpRequestBody httpRequestBody;
 
     public HttpRequestMessage(HttpRequestLine httpRequestLine, HttpRequestHeaders httpRequestHeaders) {

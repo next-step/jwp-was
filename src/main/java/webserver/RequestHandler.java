@@ -2,7 +2,7 @@ package webserver;
 
 import endpoint.Endpoint;
 import endpoint.HttpRequestHandler;
-import endpoint.RequestEndpointRegistry;
+import endpoint.RequestEndpointHandlerRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.HttpRequestMessage;
@@ -38,7 +38,7 @@ public class RequestHandler implements Runnable {
             String httpPath = httpRequestMessage.httpPath();
 
             Endpoint endpoint = new Endpoint(httpRequestMessage.httpMethod(), httpPath);
-            HttpRequestHandler httpRequestHandler = RequestEndpointRegistry.getEndpoint(endpoint);
+            HttpRequestHandler httpRequestHandler = RequestEndpointHandlerRegistry.getEndpointHandler(endpoint);
 
             HttpResponseMessage httpResponseMessage = httpRequestHandler.handle(httpRequestMessage);
             DataOutputStream dos = new DataOutputStream(out);
