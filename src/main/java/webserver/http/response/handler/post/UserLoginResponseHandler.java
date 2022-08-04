@@ -17,7 +17,6 @@ import webserver.http.session.HttpSessionStorage;
 public class UserLoginResponseHandler implements ResponseHandler {
     private static final String REDIRECT_INDEX_HTML = "/index.html";
     private static final String LOGIN_FAILED_HTML = "/user/login_failed.html";
-    private static final String COOKIE_SESSION_ID = "sessionId=";
 
     @Override
     public String run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
@@ -31,7 +30,7 @@ public class UserLoginResponseHandler implements ResponseHandler {
             return new ResponseHeader(protocolVersion, HttpResponseStatus.FOUND)
                     .addContentType(ContentType.HTML)
                     .addLocation(REDIRECT_INDEX_HTML)
-                    .addCookie(COOKIE_SESSION_ID + uuid)
+                    .addCookieSessionId(uuid)
                     .toString();
         }
 
@@ -39,7 +38,7 @@ public class UserLoginResponseHandler implements ResponseHandler {
         return new ResponseHeader(protocolVersion, HttpResponseStatus.FOUND)
                 .addContentType(ContentType.HTML)
                 .addLocation(LOGIN_FAILED_HTML)
-                .addCookie(COOKIE_SESSION_ID + uuid)
+                .addCookieSessionId(uuid)
                 .toString();
     }
 

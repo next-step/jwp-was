@@ -18,16 +18,16 @@ class HttpSessionTest {
         assertThat(httpSession.getId()).isEqualTo(uuid.toString());
     }
 
-        @DisplayName("세션 로그인 테스트")
-        @Test
-        void sessionLogin() {
-            UUID uuid = UUID.randomUUID();
-            HttpSession httpSession = new HttpSession(uuid);
+    @DisplayName("세션 로그인 테스트")
+    @Test
+    void sessionLogin() {
+        UUID uuid = UUID.randomUUID();
+        HttpSession httpSession = new HttpSession(uuid);
 
-            httpSession.setLogin(true);
-            assertThat(httpSession.getLogin()).isTrue();
+        httpSession.setLogin(true);
+        assertThat(httpSession.getLogin()).isTrue();
 
-            httpSession.setLogin(false);
-            assertThat(httpSession.getLogin()).isFalse();
-        }
+        httpSession.setLogin(false);
+        assertThat(httpSession.getLogin()).isFalse();
+    }
 }

@@ -3,7 +3,8 @@ package webserver.http.session;
 import java.util.UUID;
 
 public class HttpSession {
-    private static final String LOG_IN = "logined";
+    public static final String DEFAULT_UUID = "";
+    private static final String LOG_IN = "isLogin";
 
     private final UUID uuid;
     private final SessionAttribute attribute;

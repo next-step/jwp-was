@@ -6,8 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import webserver.http.response.HttpResponseStatus;
-import webserver.http.response.header.ContentType;
-import webserver.http.response.header.ResponseHeader;
 
 class ResponseGroupHeaderTest {
 
@@ -47,7 +45,7 @@ class ResponseGroupHeaderTest {
         );
 
         responseHeader.addContentType(ContentType.HTML)
-                .addCookie("logined=true")
+                .addCookieSessionId("123")
                 .addLocation("/index.html");
 
         // when
@@ -56,7 +54,7 @@ class ResponseGroupHeaderTest {
         // then
         assertThat(actual).isEqualTo(
                 "HTTP/1.1 302 Found\r\n" +
-                        "Set-Cookie: logined=true Path=/\r\n" +
+                        "Set-Cookie: sessionId=123 Path=/\r\n" +
                         "Content-Type: text/html;charset=utf-8\r\n" +
                         "Location: /index.html\r\n" +
                         "\r\n"
