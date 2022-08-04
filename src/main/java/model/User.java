@@ -1,10 +1,10 @@
 package model;
 
 public class User {
-    private String userId;
-    private String password;
-    private String name;
-    private String email;
+    private final String userId;
+    private final String password;
+    private final String name;
+    private final String email;
 
     public User(String userId, String password, String name, String email) {
         this.userId = userId;
@@ -25,8 +25,8 @@ public class User {
         return name;
     }
 
-    public String getEmail() {
-        return email;
+    public boolean equalsPassword(String password) {
+        return this.password.equals(password);
     }
 
     @Override
