@@ -5,7 +5,6 @@ import model.request.HttpRequestMessage;
 import model.response.HttpResponseMessage;
 import model.response.ResponseLine;
 import utils.FileIoUtils;
-import utils.parser.HttpHeaderParser;
 
 import java.util.Arrays;
 
@@ -25,7 +24,7 @@ public class IndexHandler implements PathHandler {
     public HttpResponseMessage Handle(HttpRequestMessage httpRequestMessage) {
         if (hasResourceIdentifier(httpRequestMessage.getPath())) {
             byte[] body = FileIoUtils.loadFileFromClasspath(httpRequestMessage.getPath());
-            HttpHeader httpOkHeader = HttpHeaderParser.parseHeader(
+            HttpHeader httpOkHeader = new HttpHeader(
                 Arrays.asList(
                     "Content-Type: text/html;charset=utf-8",
                     "Content-Length: " + body.length

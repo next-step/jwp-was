@@ -9,7 +9,6 @@ import model.response.ResponseLine;
 import service.UserService;
 import utils.FileIoUtils;
 import utils.HandleBarCompiler;
-import utils.parser.HttpHeaderParser;
 
 import java.util.*;
 
@@ -38,7 +37,7 @@ public class UserHandler implements PathHandler {
         if (httpRequestMessage.isEqualPath(CREATE_REQUEST_PATH)) {
             userService.createUser(httpRequestMessage.getRequestBody());
 
-            HttpHeader httpFoundHeader = HttpHeaderParser.parseHeader(List.of("Location: http://localhost:8080/index.html"));
+            HttpHeader httpFoundHeader = new HttpHeader(List.of("Location: http://localhost:8080/index.html"));
 
             return new HttpResponseMessage(ResponseLine.httpFound(), httpFoundHeader, new byte[0]);
         }
@@ -61,7 +60,7 @@ public class UserHandler implements PathHandler {
     }
 
     private HttpHeader createOkTemplateHttpHeader(byte[] body) {
-        return HttpHeaderParser.parseHeader(
+        return new HttpHeader(
             Arrays.asList(
                 "Content-Type: text/html;charset=utf-8",
                 "Content-Length: " + body.length
@@ -86,7 +85,7 @@ public class UserHandler implements PathHandler {
     }
 
     private HttpHeader createLoginFailHttpHeader() {
-        return HttpHeaderParser.parseHeader(
+        return new HttpHeader(
             Arrays.asList(
                 "Content-Type: text/html;charset=utf-8",
                 "Set-Cookie: logined=false;",
@@ -95,7 +94,7 @@ public class UserHandler implements PathHandler {
     }
 
     private HttpHeader createLoginSuccessHttpHeader() {
-        return HttpHeaderParser.parseHeader(
+        return new HttpHeader(
             Arrays.asList(
                 "Content-Type: text/html;charset=utf-8",
                 "Set-Cookie: logined=true; Path=/",
@@ -118,7 +117,7 @@ public class UserHandler implements PathHandler {
     }
 
     private HttpHeader createNoCookieHttpHeader() {
-        return HttpHeaderParser.parseHeader(
+        return new HttpHeader(
             Arrays.asList(
                 "Content-Type: text/html;charset=utf-8",
                 "Set-Cookie: logined=false;",

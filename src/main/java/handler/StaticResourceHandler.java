@@ -5,7 +5,6 @@ import model.request.HttpRequestMessage;
 import model.response.HttpResponseMessage;
 import model.response.ResponseLine;
 import utils.FileIoUtils;
-import utils.parser.HttpHeaderParser;
 
 import java.util.Arrays;
 
@@ -46,7 +45,7 @@ public class StaticResourceHandler implements PathHandler {
     }
 
     private HttpHeader createOkStyleSheetHttpHeader(byte[] body) {
-        return HttpHeaderParser.parseHeader(
+        return new HttpHeader(
             Arrays.asList(
                 "Content-Type: text/css;charset=utf-8",
                 "Content-Length: " + body.length

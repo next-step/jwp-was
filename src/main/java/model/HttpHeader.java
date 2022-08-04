@@ -8,10 +8,24 @@ import java.util.stream.Collectors;
 public class HttpHeader {
     public static final String HTTP_HEADER_SEPARATOR = ": ";
     private static final String COOKIE_SEPARATOR = "; ";
+    private static final Integer HEADER_INDEX = 0;
+    private static final Integer VALUE_INDEX = 1;
 
-    private LinkedHashMap<String, String> keyToValue;
+    private final LinkedHashMap<String, String> keyToValue;
 
     public HttpHeader(LinkedHashMap<String, String> keyToValue) {
+        this.keyToValue = keyToValue;
+    }
+
+    public HttpHeader(List<String> headers) {
+        LinkedHashMap<String, String> keyToValue = new LinkedHashMap();
+
+        for (String header : headers) {
+            String[] split = header.split(HTTP_HEADER_SEPARATOR);
+
+            keyToValue.put(split[HEADER_INDEX], split[VALUE_INDEX]);
+        }
+
         this.keyToValue = keyToValue;
     }
 
