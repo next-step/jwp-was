@@ -1,11 +1,12 @@
 package request;
 
+import utils.QueryParse;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import utils.QueryParse;
 
 public class RequestBody {
     private Map<String, String> body;
@@ -22,11 +23,11 @@ public class RequestBody {
         String[] splitArr = QueryParse.values(body);
 
         this.body = Arrays.stream(splitArr)
-            .map(QueryParse::parseToMap)
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .map(QueryParse::parseToMap)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public String getPameter(String key) {
+    public String getParameter(String key) {
         return body.get(key);
     }
 
