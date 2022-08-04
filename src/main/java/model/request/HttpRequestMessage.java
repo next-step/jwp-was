@@ -42,7 +42,9 @@ public class HttpRequestMessage {
         List<String> httpRequestHeaders = BufferedReaderUtils.lines(br);
 
         RequestLine requestLine = RequestLineParser.parse(httpRequestHeaders.get(REQUEST_LINE_INDEX));
-        HttpHeader httpHeader = new HttpHeader(extractHttpHeaders(httpRequestHeaders));
+        HttpHeader httpHeader = new HttpHeader.Builder()
+            .addHeaders(extractHttpHeaders(httpRequestHeaders))
+            .build();
 
         return createHttpRequestHeader(requestLine, httpHeader, br);
     }

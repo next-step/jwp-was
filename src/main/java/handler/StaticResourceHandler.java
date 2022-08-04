@@ -6,8 +6,6 @@ import model.response.HttpResponseMessage;
 import model.response.ResponseLine;
 import utils.FileIoUtils;
 
-import java.util.Arrays;
-
 public class StaticResourceHandler implements PathHandler {
     private static final String CSS_PATH = "css";
     private static final String IMAGES_PATH = "images";
@@ -45,10 +43,9 @@ public class StaticResourceHandler implements PathHandler {
     }
 
     private HttpHeader createOkStyleSheetHttpHeader(byte[] body) {
-        return new HttpHeader(
-            Arrays.asList(
-                "Content-Type: text/css;charset=utf-8",
-                "Content-Length: " + body.length
-            ));
+        return new HttpHeader.Builder()
+            .addHeader("Content-Type: text/css;charset=utf-8")
+            .addHeader("Content-Length: " + body.length)
+            .build();
     }
 }

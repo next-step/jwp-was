@@ -6,8 +6,6 @@ import model.response.HttpResponseMessage;
 import model.response.ResponseLine;
 import utils.FileIoUtils;
 
-import java.util.Arrays;
-
 public class IndexHandler implements PathHandler {
     @Override
     public Boolean canHandling(HttpRequestMessage httpRequestMessage) {
@@ -24,11 +22,11 @@ public class IndexHandler implements PathHandler {
     public HttpResponseMessage Handle(HttpRequestMessage httpRequestMessage) {
         if (hasResourceIdentifier(httpRequestMessage.getPath())) {
             byte[] body = FileIoUtils.loadFileFromClasspath(httpRequestMessage.getPath());
-            HttpHeader httpOkHeader = new HttpHeader(
-                Arrays.asList(
-                    "Content-Type: text/html;charset=utf-8",
-                    "Content-Length: " + body.length
-                ));
+            HttpHeader httpOkHeader =
+                new HttpHeader.Builder()
+                    .addHeader("Content-Type: text/html;charset=utf-8")
+                    .addHeader("Content-Length: " + body.length)
+                    .build();
 
             return new HttpResponseMessage(ResponseLine.httpOk(), httpOkHeader, body);
         }

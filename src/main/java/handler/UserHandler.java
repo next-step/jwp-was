@@ -37,7 +37,9 @@ public class UserHandler implements PathHandler {
         if (httpRequestMessage.isEqualPath(CREATE_REQUEST_PATH)) {
             userService.createUser(httpRequestMessage.getRequestBody());
 
-            HttpHeader httpFoundHeader = new HttpHeader(List.of("Location: http://localhost:8080/index.html"));
+            HttpHeader httpFoundHeader = new HttpHeader.Builder()
+                .addHeader("Location: http://localhost:8080/index.html")
+                .build();
 
             return new HttpResponseMessage(ResponseLine.httpFound(), httpFoundHeader, new byte[0]);
         }
@@ -60,11 +62,10 @@ public class UserHandler implements PathHandler {
     }
 
     private HttpHeader createOkTemplateHttpHeader(byte[] body) {
-        return new HttpHeader(
-            Arrays.asList(
-                "Content-Type: text/html;charset=utf-8",
-                "Content-Length: " + body.length
-            ));
+        return new HttpHeader.Builder()
+            .addHeader("Content-Type: text/html;charset=utf-8")
+            .addHeader("Content-Length: " + body.length)
+            .build();
     }
 
     private HttpResponseMessage login(Map<String, String> requestBody) {
@@ -85,21 +86,21 @@ public class UserHandler implements PathHandler {
     }
 
     private HttpHeader createLoginFailHttpHeader() {
-        return new HttpHeader(
-            Arrays.asList(
-                "Content-Type: text/html;charset=utf-8",
-                "Set-Cookie: logined=false;",
-                "Location: http://localhost:8080/user/login_failed.html"
-            ));
+
+        return new HttpHeader.Builder()
+            .addHeader("Content-Type: text/html;charset=utf-8")
+            .addHeader("Set-Cookie: logined=false;")
+            .addHeader("Location: http://localhost:8080/user/login_failed.html")
+            .build();
     }
 
     private HttpHeader createLoginSuccessHttpHeader() {
-        return new HttpHeader(
-            Arrays.asList(
-                "Content-Type: text/html;charset=utf-8",
-                "Set-Cookie: logined=true; Path=/",
-                "Location: http://localhost:8080/index.html"
-            ));
+
+        return new HttpHeader.Builder()
+            .addHeader("Content-Type: text/html;charset=utf-8")
+            .addHeader("Set-Cookie: logined=true; Path=/")
+            .addHeader("Location: http://localhost:8080/index.html")
+            .build();
     }
 
     private HttpResponseMessage findAll(HttpRequestMessage httpRequestMessage) {
@@ -117,12 +118,12 @@ public class UserHandler implements PathHandler {
     }
 
     private HttpHeader createNoCookieHttpHeader() {
-        return new HttpHeader(
-            Arrays.asList(
-                "Content-Type: text/html;charset=utf-8",
-                "Set-Cookie: logined=false;",
-                "Location: http://localhost:8080/user/login.html"
-            ));
+
+        return new HttpHeader.Builder()
+            .addHeader("Content-Type: text/html;charset=utf-8")
+            .addHeader("Set-Cookie: logined=false;")
+            .addHeader("Location: http://localhost:8080/user/login.html")
+            .build();
     }
 
     private byte[] createUserProfileBody() {

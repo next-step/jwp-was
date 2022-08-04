@@ -11,22 +11,40 @@ public class HttpHeader {
     private static final Integer HEADER_INDEX = 0;
     private static final Integer VALUE_INDEX = 1;
 
-    private final LinkedHashMap<String, String> keyToValue;
+    private LinkedHashMap<String, String> keyToValue;
 
-    public HttpHeader(LinkedHashMap<String, String> keyToValue) {
-        this.keyToValue = keyToValue;
+    private HttpHeader(Builder builder) {
+        this.keyToValue = builder.keyToValue;
     }
 
-    public HttpHeader(List<String> headers) {
-        LinkedHashMap<String, String> keyToValue = new LinkedHashMap();
+    public static class Builder {
+        private LinkedHashMap<String, String> keyToValue;
 
-        for (String header : headers) {
+        public Builder() {
+            this.keyToValue = new LinkedHashMap();
+        }
+
+        public Builder addHeader(String header) {
             String[] split = header.split(HTTP_HEADER_SEPARATOR);
 
             keyToValue.put(split[HEADER_INDEX], split[VALUE_INDEX]);
+
+            return this;
         }
 
-        this.keyToValue = keyToValue;
+        public Builder addHeaders(List<String> headers) {
+            for (String header : headers) {
+                String[] split = header.split(HTTP_HEADER_SEPARATOR);
+
+                this.keyToValue.put(split[HEADER_INDEX], split[VALUE_INDEX]);
+            }
+
+            return this;
+        }
+
+        public HttpHeader build() {
+            return new HttpHeader(this);
+        }
     }
 
     public String getValueByKey(String key) {

@@ -13,15 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HttpHeaderTest {
     @Test
-    @DisplayName("메소드 호출시, keyToValue가 header 구분자가 포함된 String으로 변환되어 반환된다.")
+    @DisplayName("Builder 메소드 호출시, keyToValue가 header 구분자가 포함된 String으로 변환되어 반환된다.")
     void getHttpHeadersTest() {
-        HttpHeader httpHeader = new HttpHeader(
-            new LinkedHashMap() {{
-                put("Host", "localhost:8080");
-                put("Connection", "keep-alive");
-                put("Accept", "*/*");
-            }}
-        );
+        HttpHeader httpHeader = new HttpHeader.Builder()
+            .addHeader("Host: localhost:8080")
+            .addHeader("Connection: keep-alive")
+            .addHeader("Accept: */*")
+            .build();
 
         List<String> result = httpHeader.getHttpHeaders();
 
@@ -33,11 +31,13 @@ class HttpHeaderTest {
     }
 
     @Test
-    @DisplayName("List 형태의 Header: Value가 입력으로 주어지면 Header 객체가 생성된다..")
+    @DisplayName("List 형태의 Header: Value가 입력으로 Builder에 주어지면 Header 객체가 생성된다..")
     void headerConstructorTest() {
         List<String> input = Arrays.asList("Host: localhost:8080", "Connection: keep-alive", "Accept: */*");
 
-        HttpHeader result = new HttpHeader(input);
+        HttpHeader result = new HttpHeader.Builder()
+            .addHeaders(input)
+            .build();
 
         assertAll(
             () -> AssertionsForClassTypes.assertThat(result.getClass()).isEqualTo(HttpHeader.class),
@@ -50,13 +50,10 @@ class HttpHeaderTest {
     @Test
     @DisplayName("cookie값을 입력하면 cookie 헤더에 해당 cookie값이 존재하는지 확인한다.")
     void hasCookieTest() {
-        HttpHeader httpHeader = new HttpHeader(
-            new LinkedHashMap() {{
-                put("Host", "localhost:8080");
-                put("Cookie", "keep-alive; logined=true; JSESSIONID=43E82F053892BB4D2F8E8E5DA90EFD00");
-
-            }}
-        );
+        HttpHeader httpHeader = new HttpHeader.Builder()
+            .addHeader("Host: localhost:8080")
+            .addHeader("Cookie: keep-alive; logined=true; JSESSIONID=43E82F053892BB4D2F8E8E5DA90EFD00")
+            .build();
 
         boolean result = httpHeader.hasCookie("logined=true");
 

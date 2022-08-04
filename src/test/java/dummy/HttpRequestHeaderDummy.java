@@ -51,10 +51,10 @@ public class HttpRequestHeaderDummy {
                 "name", "JaeSung"
             ),
             new WebProtocol("HTTP", "1.1")),
-        new HttpHeader(new LinkedHashMap() {{
-            put("Host", "localhost:8080");
-        }}
-        ));
+        new HttpHeader.Builder()
+            .addHeader("Host: localhost:8080")
+            .build()
+    );
 
     public static HttpRequestMessage GET_INDEX_HTTP_REQUEST_DUMMY
         = HttpRequestMessage.getRequestHeaderOf(
@@ -63,9 +63,8 @@ public class HttpRequestHeaderDummy {
             "/index.html",
             new WebProtocol("HTTP", "1.1")
         ),
-        new HttpHeader(
-            new LinkedHashMap() {{
-                put("Host", "localhost:8080");
-            }}));
-
+        new HttpHeader.Builder()
+            .addHeader("Host: localhost:8080")
+            .build()
+    );
 }
