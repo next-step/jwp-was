@@ -27,8 +27,8 @@ public class RequestHandlerExecutor {
 
     public byte[] run(RequestHeader requestHeader) {
         try {
-            RequestHandler requestHandler = REQUEST.getOrDefault(requestHeader.uri(), new DefaultRequestHandler());
-            return requestHandler.execute(requestHeader);
+            RequestHandler requestHandler = REQUEST.getOrDefault(requestHeader.uri(), new DefaultRequestHandler(requestHeader));
+            return requestHandler.execute();
         } catch (IOException | URISyntaxException e) {
             logger.error("http request error uri={}", requestHeader.uri(), e);
         }

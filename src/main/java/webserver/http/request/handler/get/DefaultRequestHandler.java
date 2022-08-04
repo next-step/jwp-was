@@ -9,9 +9,14 @@ import webserver.http.request.header.RequestHeader;
 import webserver.http.response.header.ContentType;
 
 public class DefaultRequestHandler implements RequestHandler {
+    private final RequestHeader requestHeader;
+
+    public DefaultRequestHandler(RequestHeader requestHeader) {
+        this.requestHeader = requestHeader;
+    }
 
     @Override
-    public byte[] execute(RequestHeader requestHeader) throws IOException, URISyntaxException {
+    public byte[] execute() throws IOException, URISyntaxException {
         return FileIoUtils.loadFileFromClasspath(ContentType.filePath(requestHeader.uri()));
     }
 }

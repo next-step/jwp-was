@@ -1,7 +1,6 @@
 package webserver.http.request.handler.get;
 
 import webserver.http.request.handler.RequestHandler;
-import webserver.http.request.header.RequestHeader;
 
 public class UserCreateByQueryParamRequestHandler implements RequestHandler {
     private static final String REQUEST_URI = "/user/create";
@@ -12,7 +11,7 @@ public class UserCreateByQueryParamRequestHandler implements RequestHandler {
     }
 
     @Override
-    public byte[] execute(RequestHeader requestHeader) {
+    public byte[] execute() {
         return EMPTY_BODY.getBytes();
     }
 }
