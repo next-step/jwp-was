@@ -27,7 +27,7 @@ public class HttpRequestHeaderParser {
         List<String> httpRequestHeaders = BufferedReaderUtils.lines(br);
 
         RequestLine requestLine = RequestLineParser.parse(httpRequestHeaders.get(REQUEST_LINE_INDEX));
-        HttpHeader httpHeader = HttpHeaderParser.parseHeader(extractHttpHeaders(httpRequestHeaders));
+        HttpHeader httpHeader = new HttpHeader(extractHttpHeaders(httpRequestHeaders));
 
         return createHttpRequestHeader(requestLine, httpHeader, br);
     }

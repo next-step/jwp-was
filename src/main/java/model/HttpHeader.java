@@ -11,7 +11,7 @@ public class HttpHeader {
     private static final Integer HEADER_INDEX = 0;
     private static final Integer VALUE_INDEX = 1;
 
-    private LinkedHashMap<String, String> keyToValue;
+    private final LinkedHashMap<String, String> keyToValue;
 
     private HttpHeader(Builder builder) {
         this.keyToValue = builder.keyToValue;
@@ -45,6 +45,18 @@ public class HttpHeader {
         public HttpHeader build() {
             return new HttpHeader(this);
         }
+    }
+
+    public HttpHeader(List<String> headers) {
+        LinkedHashMap<String, String> keyToValue = new LinkedHashMap();
+
+        for (String header : headers) {
+            String[] split = header.split(HTTP_HEADER_SEPARATOR);
+
+            keyToValue.put(split[HEADER_INDEX], split[VALUE_INDEX]);
+        }
+
+        this.keyToValue = keyToValue;
     }
 
     public String getValueByKey(String key) {
