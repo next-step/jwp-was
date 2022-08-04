@@ -8,6 +8,7 @@ import db.DataBase;
 import model.UserTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import webserver.domain.HttpHeader;
 import webserver.enums.HttpStatus;
 import webserver.request.HttpRequest;
 import webserver.request.HttpRequestBody;
@@ -64,8 +65,9 @@ class UserLoginControllerTest {
         controller.service(httpRequest, httpResponse);
 
         assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
-        assertThat(httpResponse.getHeader().getHeader("Set-Cookie")).isEqualTo("logined=true; Path=/");
-        assertThat(httpResponse.getHeader().getHeader("Location")).contains("index.html");
+        assertThat(httpResponse.getHeader().getHeader(HttpHeader.SET_COOKIE)).isNotEmpty();
+//        assertThat(httpResponse.getHeader().getHeader(HttpHeader.SET_COOKIE)).isEqualTo("logined=true; Path=/");
+        assertThat(httpResponse.getHeader().getHeader(HttpHeader.LOCATION)).contains("index.html");
     }
 
 }

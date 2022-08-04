@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.domain.ContentType;
+import webserver.domain.Cookie;
 import webserver.domain.HttpHeader;
 import webserver.enums.HttpStatus;
 import webserver.enums.Protocol;
@@ -160,4 +161,7 @@ public class HttpResponse {
         }
     }
 
+    public void addCookie(Cookie cookie) {
+        addHeader(HttpHeader.SET_COOKIE, cookie.string());
+    }
 }

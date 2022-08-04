@@ -1,5 +1,5 @@
 HTTP/1.1 302 Found 
-Set-Cookie: logined=true
+Set-Cookie: logined=true; Path=/
 Content-Length: 0
 Location: /index.html
 Content-Type: text/html;charset=utf-8
