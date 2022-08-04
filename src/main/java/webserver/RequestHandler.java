@@ -6,10 +6,6 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Map;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
@@ -17,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 import webserver.request.domain.request.*;
 import webserver.response.HttpResponse;
+import webserver.util.HandlebarsObject;
 
 
 public class RequestHandler implements Runnable {
@@ -63,16 +60,11 @@ public class RequestHandler implements Runnable {
             String headerValue = httpRequest.getHeader("Cookie");
             if (headerValue == null) {
                 httpResponse.forward(IOUtils.loadFileFromClasspath("./templates/user/login.html"));
-            } else if (headerValue.equals("logined=true")) {
-                TemplateLoader loader = new ClassPathTemplateLoader();
-                loader.setPrefix("/templates");
-                loader.setSuffix(".html");
-                Handlebars handlers = new Handlebars(loader);
-
-                Template template = handlers.compile("user/list");
+            } else if (headerValue.equals("logined=true Path=/")) {
+                HandlebarsObject handlebarObj = HandlebarsObject.createHandlebarObject("/templates", ".html");
 
                 Collection<User> users = DataBase.findAll();
-                httpResponse.forward(template.apply(users));
+                httpResponse.forward(handlebarObj.applyTemplate("user/list", users));
             } else if (headerValue.equals("logined=false")){
                 httpResponse.forward(IOUtils.loadFileFromClasspath("./templates/user/login.html"));
             }
