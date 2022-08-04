@@ -8,7 +8,6 @@ import java.util.Objects;
 
 public class RequestLine {
     private static final List<String> RESOURCE_FILE_EXTENSIONS = List.of(".css", ".js", ".ico", "ttf", "woff", "png");
-    private static final String HTML_EXTENSION = ".html";
     private final HttpMethod httpMethod;
     private final UrlPath urlPath;
     private final Protocol protocol;
@@ -52,7 +51,7 @@ public class RequestLine {
     }
 
     public boolean isRequestForHtml() {
-        return this.getUrlPath().getPath().contains(HTML_EXTENSION);
+        return this.getUrlPath().isRequestForHtml();
     }
 
     public boolean isRequestForFileResource(RequestLine requestLine) {
