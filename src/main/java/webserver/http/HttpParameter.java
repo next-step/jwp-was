@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpParameter {
-    private HashMap<String, String> parameters = new HashMap<String, String>();
+    private Map<String, String> parameters = new HashMap<String, String>();
 
     public HttpParameter() {
     }

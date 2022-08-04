@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 import webserver.constant.HttpMethod;
+import webserver.http.requestLine.RequestLine;
 
 import java.io.BufferedReader;
 import java.io.IOException;

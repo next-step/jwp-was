@@ -144,3 +144,4 @@ Set-Cookie: logined=true; Path=/
 ### 3단계 피드백
 - [X] 일급 컬렉션 적용
 - [X] HttpRequest POST방식 -> body 전달 + Query 전달
+- [X] Test 수정

@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.requestLine;
 
 import error.NotHttpMethodConstantException;
 import org.slf4j.Logger;
