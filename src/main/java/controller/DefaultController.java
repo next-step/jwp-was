@@ -3,10 +3,10 @@ package controller;
 import request.HttpRequest;
 import response.HttpResponse;
 
-public class DefaultController extends Controller{
+public class DefaultController extends AbstractController {
 
     @Override
-    public HttpResponse doGet(HttpRequest request) throws Exception {
-        return HttpResponse.forward(request.getPath());
+    public void doGet(HttpRequest request, HttpResponse response) throws Exception {
+        response.forward(request.getPath());
     }
 }
