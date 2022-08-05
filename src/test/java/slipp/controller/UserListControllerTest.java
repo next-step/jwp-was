@@ -12,12 +12,14 @@ import slipp.db.DataBase;
 import slipp.model.User;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
-import webserver.http.domain.controller.template.TemplateCompiler;
+import webserver.http.controller.template.TemplateCompiler;
 import webserver.http.domain.request.Method;
 import webserver.http.domain.request.Request;
 import webserver.http.domain.request.RequestLine;
 import webserver.http.domain.request.URI;
 import webserver.http.domain.response.Response;
+import webserver.http.domain.session.Session;
+import webserver.http.domain.session.SessionContextHolder;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,6 +36,8 @@ class UserListControllerTest {
 
     @BeforeEach
     void setUp() {
+        SessionContextHolder.saveSession(Session.from("12345"));
+
         userListController = new UserListController(
                 new TemplateCompiler(new ClassPathTemplateLoader("/templates", ".html"))
         );
@@ -59,6 +63,7 @@ class UserListControllerTest {
     @AfterEach
     void tearDown() {
         DataBase.clearAll();
+        SessionContextHolder.removeCurrentSession();
     }
 
     @DisplayName("GET 요청이고 /user/list path 요청인 경우, true 반환")
@@ -81,7 +86,7 @@ class UserListControllerTest {
         );
     }
 
-    @DisplayName("logined Cookie 값이 false인 경우, 로그인 페이지로 리다이렉션")
+    @DisplayName("세션에 회원정보가 없는 경우 (로그인이 안되어있는 경우, 로그인 페이지로 리다이렉션")
     @Test
     void handle() {
         RequestLine requestLine = new RequestLine(
@@ -105,9 +110,19 @@ class UserListControllerTest {
                 .isEqualTo(Response.redirect("/user/login.html"));
     }
 
-    @DisplayName("logined Cookie 값이 true인 경우, 회원목록 결과와 함께 html 내려준다.")
+    @DisplayName("세션에 회원정보 저장된 경우, (로그인이 되어있는 상태), 회원목록 결과와 함께 html 내려준다.")
     @Test
     void handle_login_true() {
+        Session currentSession = SessionContextHolder.getCurrentSession();
+        currentSession.setAttribute(
+                "user",
+                new User(
+                        "userId",
+                        "password",
+                        "name",
+                        "email"
+                ));
+
         RequestLine requestLine = new RequestLine(
                 GET,
                 new URI("/user/list"),
@@ -117,7 +132,7 @@ class UserListControllerTest {
                 requestLine,
                 new Headers(
                         Map.of(
-                                COOKIE, "logined=true; item=; type=intellij"
+                                COOKIE, "item=; type=intellij"
                         )
                 )
         );

@@ -3,9 +3,10 @@ package webserver;
 import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.domain.controller.RequestProcessor;
+import webserver.http.controller.RequestProcessor;
 import webserver.http.domain.exception.BadRequestException;
 import webserver.http.domain.exception.NullRequestException;
+import webserver.http.domain.exception.ResourceNotFoundException;
 import webserver.http.domain.request.Request;
 import webserver.http.domain.response.Response;
 import webserver.http.domain.response.StatusCode;
@@ -47,6 +48,7 @@ public class RequestHandler implements Runnable {
              DataOutputStream dos = new DataOutputStream(connection.getOutputStream())
         ) {
             Response response = processRequest(bufferedReader);
+            logger.info("[response] = {}", response);
             responseWriter.write(dos, response);
         } catch (NullRequestException e) {
             logger.warn(e.getMessage(), e);
@@ -60,9 +62,13 @@ public class RequestHandler implements Runnable {
             Request request = requestReader.read(bufferedReader);
             logger.info("[request] = {}", request);
             return requestProcessor.process(request);
+        } catch (NullRequestException e) {
+            throw e;
         } catch (BadRequestException e) {
             logger.warn("[bad request] = {}", e.getMessage(), e);
             return getResponse(StatusCode.BAD_REQUEST, "잘못된 요청입니다. ;(");
+        } catch (ResourceNotFoundException e) {
+            return getResponse(StatusCode.NOT_FOUND, "요청하신 리소스를 찾지 못했습니다. ;(");
         } catch (RuntimeException e) {
             logger.error("[internal error] - 요청값 처리중 에러 발생 = {}", e.getMessage(), e);
             return getResponse(StatusCode.INTERNAL_ERROR, "서버 내부에 오류가 발생했습니다. ;(");

@@ -1,9 +1,13 @@
 package webserver.http.domain;
 
+import webserver.http.domain.cookie.Cookie;
+import webserver.http.domain.cookie.Cookies;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.collectingAndThen;
@@ -81,18 +85,16 @@ public class Headers {
         return getCookies().existsCookie(name, value);
     }
 
-    private Cookies getCookies() {
+    public Cookies getCookies() {
         return Cookies.from(keyValues.get(COOKIE));
     }
 
+    public Optional<Cookie> getCookie(String name) {
+        return getCookies().getCookie(name);
+    }
+
     public void addCookie(Cookie cookie) {
-        keyValues.put(SET_COOKIE,
-                String.format("%s=%s; path=%s",
-                        cookie.getName(),
-                        cookie.getValue(),
-                        cookie.getPath()
-                )
-        );
+        keyValues.put(SET_COOKIE, cookie.getAsHeaderValue());
     }
 
     public static Headers from(List<String> messages) {

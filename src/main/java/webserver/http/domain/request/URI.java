@@ -1,9 +1,11 @@
 package webserver.http.domain.request;
 
 import webserver.http.domain.KeyValuePair;
+import webserver.http.domain.exception.BadRequestException;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class URI {
     private static final String QUERY_PARAMETER_DELIMITER = "?";
@@ -33,6 +35,9 @@ public class URI {
     }
 
     public static URI from(String message) {
+        if (Objects.isNull(message) || message.isBlank()) {
+            throw new BadRequestException("URI는 빈값 혹은 null이 될 수 없습니다.");
+        }
         KeyValuePair pathQueryParamPair = KeyValuePair.from(message, QUERY_PARAMETER_DELIMITER, false);
         String path = pathQueryParamPair.getKey();
         String queryParameters = pathQueryParamPair.getValue();
