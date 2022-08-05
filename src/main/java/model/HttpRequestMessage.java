@@ -2,6 +2,7 @@ package model;
 
 import service.RequestService;
 import utils.HttpParser;
+import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +11,9 @@ import java.util.List;
 
 public class HttpRequestMessage {
 
-    private RequestLine requestLine;
+    private final String CONTENT_LENGTH_KEY = "Content-Length";
+
+    private final RequestLine requestLine;
 
     private HttpHeaders requestHeaders;
 
@@ -39,7 +42,7 @@ public class HttpRequestMessage {
         }
 
         this.requestHeaders = new HttpHeaders(httpMessageData);
-        this.body = new HttpBody(bufferedReader, requestHeaders);
+        this.body = new HttpBody(parseBody(bufferedReader, requestHeaders));
     }
 
     public RequestLine getRequestLine() {
@@ -65,6 +68,30 @@ public class HttpRequestMessage {
         value.append("]");
 
         return value.toString();
+    }
+
+    private String parseBody(BufferedReader bufferedReader, HttpHeaders requestHeaders) throws IOException {
+        if (bufferedReader == null) {
+            return null;
+        }
+
+        String contentLengthValue = requestHeaders
+                .getHeaders()
+                .get(CONTENT_LENGTH_KEY);
+        int contentLength = this.getContentLength(contentLengthValue);
+        if (contentLength == 0) {
+            return null;
+        }
+
+        return IOUtils.readData(bufferedReader, contentLength);
+    }
+
+    private int getContentLength(String contentLengthValue) {
+        if (contentLengthValue != null) {
+            return Integer.parseInt(contentLengthValue);
+        }
+
+        return 0;
     }
 
 }

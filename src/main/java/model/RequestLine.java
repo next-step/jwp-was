@@ -51,7 +51,7 @@ public class RequestLine {
     }
 
     public boolean isRequestForHtml() {
-        return this.getUrlPath().isRequestForHtml();
+        return this.urlPath.isRequestForHtml();
     }
 
     public boolean isRequestForFileResource(RequestLine requestLine) {
