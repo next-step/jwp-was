@@ -30,24 +30,6 @@ class UserCreateControllerTest {
         response = controller.service(request);
     }
 
-    @DisplayName("회원 가입 테스트 - POST")
-    @Test
-    void createUser_POST() {
-        assertThat(DataBase.findUserById("javajigi")).isNotNull();
-    }
-
-    @DisplayName("회원 가입 정보 DB 테스트")
-    @Test
-    void userInfo() {
-        User user = DataBase.findUserById("javajigi");
-
-        assertAll(
-                () -> assertThat(user.getUserId()).isEqualTo("javajigi"),
-                () -> assertThat(user.getPassword()).isEqualTo("password"),
-                () -> assertThat(user.getName()).isEqualTo("JaeSung")
-        );
-    }
-
     @DisplayName("회원가입시 index.html로 리다이랙트")
     @Test
     void redirect() {
