@@ -18,6 +18,10 @@ public class HttpSession {
         this.attributes = Maps.newConcurrentMap();
     }
 
+    public static HttpSession empty() {
+        return new HttpSession();
+    }
+
     public String getId() {
         return this.sessionId;
     }
@@ -67,5 +71,9 @@ public class HttpSession {
 
     public Cookie getLoginedCookie() {
         return Cookie.jsseionId(getId());
+    }
+
+    public int size() {
+        return this.attributes.size();
     }
 }

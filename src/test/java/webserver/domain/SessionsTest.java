@@ -40,4 +40,12 @@ class SessionsTest {
         assertThat(getSession3).isEqualTo(this.sessions3);
     }
 
+    @DisplayName("세션을 가져오는데 없으면 빈 세션이 나온다.")
+    @Test
+    void getNullSessionTest() {
+        HttpSession emptySession = Sessions.INSTANCE.get("notFoundSessionId");
+
+        assertThat(emptySession.size()).isEqualTo(0);
+    }
+
 }

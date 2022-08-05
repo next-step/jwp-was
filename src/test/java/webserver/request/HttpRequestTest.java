@@ -5,11 +5,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static webserver.request.RequestLineTest.TEST_GET_REQUEST_LINE;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -17,6 +26,7 @@ import webserver.enums.HttpMethod;
 import webserver.enums.Protocol;
 
 class HttpRequestTest {
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequestTest.class);
 
     private HttpRequest httpRequest;
     private String testDirectory = "./src/test/resources/";
@@ -91,12 +101,39 @@ class HttpRequestTest {
         assertThat(httpRequestTest.getProtocol()).isEqualTo(Protocol.HTTP_1_1);
     }
 
+    private static final String TEST_PAGE = "http://localhost:8080/index.html";
+
     @Disabled("로컬 8080 요청/응답 테스트 (서버 동작 후 테스팅 가능)")
     @Test
     void request_resttemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(TEST_PAGE, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Disabled("로컬 8080 쓰레드풀 최대 개수 이상의 요청 테스트 (서버 동작 후 테스팅 가능)")
+    @Test
+    void request_resttemplate2() throws InterruptedException {
+        ExecutorService es = Executors.newFixedThreadPool(100);
+        final AtomicInteger counter = new AtomicInteger(0);
+        final AtomicInteger errorCount = new AtomicInteger(0);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        IntStream.range(0, 1000)
+            .parallel()
+            .forEach(i -> es.execute(() -> {
+                try {
+                    ResponseEntity<String> response = restTemplate.getForEntity(TEST_PAGE, String.class);
+                } catch (Exception e) {
+                    errorCount.addAndGet(1);
+                    logger.error(e.getMessage());
+                }
+            }));
+
+        es.shutdown();
+        es.awaitTermination(15, TimeUnit.SECONDS);
+
+        logger.info("Error count: " + errorCount);
     }
 
 }
