@@ -11,12 +11,13 @@ public class LoginController extends AbstractController{
         String userId = httpRequest.getParameter("userId");
         String password = httpRequest.getParameter("password");
         User user = DataBase.findUserById(userId);
-        if (user != null) {
+
+        if (user == null) {
             httpResponse.sendRedirect("/user/login_failed.html");
             return;
         }
         if (user.getPassword().equals(password)) {
-            httpResponse.addHeader("logined","true");
+            httpResponse.addHeader("Set-Cookie","logined=true");
             httpResponse.sendRedirect("/index.html");
         }
     }

@@ -25,7 +25,7 @@ public class ListUserController extends AbstractController {
     }
 
     public boolean isLogin(String cookieString) {
-        if (cookieString.isEmpty()) {
+        if (cookieString == null) {
             return false;
         }
         Map<String, String> cookies = new HashMap<>();

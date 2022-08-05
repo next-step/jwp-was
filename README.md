@@ -145,3 +145,5 @@ Set-Cookie: logined=true; Path=/
 - [X] 일급 컬렉션 적용
 - [X] HttpRequest POST방식 -> body 전달 + Query 전달
 - [X] Test 수정
+- [X] Response Cookie 설정 변경
+- [ ] Mapping Controller 클래스 생성

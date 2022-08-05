@@ -55,7 +55,6 @@ public class HttpRequest {
     }
 
     public String getHeader(String name) {
-        System.out.println(header);
         return header.getHeaderValue(name);
     }
 

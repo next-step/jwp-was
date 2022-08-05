@@ -30,7 +30,6 @@ public class HttpResponse {
             byte[] body = new byte[0];
             if (url.endsWith("html") || url.endsWith("ico")) {
                 body = FileIoUtils.loadFileFromClasspath("./templates" + url);
-
             }
             if (url.endsWith(".css")) {
                 body = FileIoUtils.loadFileFromClasspath("./static" + url);
