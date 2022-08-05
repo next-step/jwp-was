@@ -9,10 +9,10 @@
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
 
 ### 요구사항 1 - GET 요청
-- [] HTTP GET 요청에 대한 RequestLine을 파싱
+- [o] HTTP GET 요청에 대한 RequestLine을 파싱
 
 ### 요구사항 2 - POST 요청
-- [] HTTP POST 요청에 대한 RequestLine을 파싱
+- [o] HTTP POST 요청에 대한 RequestLine을 파싱
 
 ### 요구사항 3 - Query String 요청
 - [] HTTP 요청의 Query String 으로 전달되는 데이터 파싱
