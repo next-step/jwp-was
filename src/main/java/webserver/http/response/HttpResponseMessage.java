@@ -48,7 +48,7 @@ public class HttpResponseMessage {
 
         return new HttpResponseMessage(
                 HttpResponseStatusLine.fromOnePointOne(HttpStatus.OK),
-                new HttpResponseBody(StaticResourceLoader.getStaticResource(staticResourceFilename)),
+                new HttpResponseBody(templateResource),
                 new HttpResponseHeaders()
         );
     }
@@ -62,6 +62,12 @@ public class HttpResponseMessage {
     }
 
     public static HttpResponseMessage page(String pagePath) {
+        TemplateResource templateResource = TemplatePageLoader.getTemplatePage(pagePath);
+
+        if (templateResource.isEmpty()) {
+            return notFoundPage();
+        }
+
         return new HttpResponseMessage(
                 HttpResponseStatusLine.fromOnePointOne(HttpStatus.OK),
                 new HttpResponseBody(TemplatePageLoader.getTemplatePage(pagePath)),
@@ -70,6 +76,12 @@ public class HttpResponseMessage {
     }
 
     public static HttpResponseMessage dynamicPage(String pagePath, Map<String, ?> viewModelMap) {
+        TemplateResource templateResource = TemplatePageLoader.getDynamicTemplatePage(pagePath, viewModelMap);
+
+        if (templateResource.isEmpty()) {
+            return notFoundPage();
+        }
+
         return new HttpResponseMessage(
                 HttpResponseStatusLine.fromOnePointOne(HttpStatus.OK),
                 new HttpResponseBody(TemplatePageLoader.getDynamicTemplatePage(pagePath, viewModelMap)),
@@ -96,7 +108,7 @@ public class HttpResponseMessage {
     public static HttpResponseMessage notFoundPage() {
         return new HttpResponseMessage(
                 HttpResponseStatusLine.fromOnePointOne(HttpStatus.NOT_FOUND),
-                new HttpResponseBody(TemplateResource.NOT_FOUND_PAGE),
+                new HttpResponseBody(TemplatePageLoader.notFoundPage()),
                 new HttpResponseHeaders()
         );
     }

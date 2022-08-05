@@ -11,6 +11,9 @@ import java.util.Set;
 public class EndPointHandlerScanner {
     private static final String ENDPOINT_PACKAGE_NAME = "endpoint";
 
+    private EndPointHandlerScanner() {
+    }
+
     public static HttpRequestEndpointHandlers scan() {
 
         Reflections reflections = new Reflections(ENDPOINT_PACKAGE_NAME);

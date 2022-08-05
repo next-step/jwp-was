@@ -6,11 +6,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class RequestEndpointHandlerRegistry {
-    public static final Map<Endpoint, HttpRequestHandler> ENDPOINT_HTTP_REQUEST_HANDLER_MAP = new LinkedHashMap<>();
+    private static final Map<Endpoint, HttpRequestHandler> ENDPOINT_HTTP_REQUEST_HANDLER_MAP = new LinkedHashMap<>();
     private static final HttpRequestHandler STATIC_RESOURCE_REQUEST_HANDLER = new StaticResourceRequestHandler();
 
-    static {
-        initializeEndpointRegistry();
+    private RequestEndpointHandlerRegistry() {
     }
 
     public static void initializeEndpointRegistry() {
