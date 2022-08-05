@@ -1,4 +1,4 @@
-package model;
+package user.model;
 
 public class User {
     private final String userId;
@@ -39,7 +39,7 @@ public class User {
                 '}';
     }
 
-    public boolean isLogin(String password) {
+    public boolean equalsPassword(String password) {
         return this.password.equals(password);
     }
 }

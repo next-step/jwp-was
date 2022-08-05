@@ -3,6 +3,7 @@ package webserver.http;
 import java.util.Objects;
 
 public class HttpProtocol {
+    public static final HttpProtocol HTTP_1_1 = new HttpProtocol("HTTP/1.1");
     public static final String VALIDATION_MESSAGE = "프로토콜이 형식에 맞지 않습니다.";
     private static final String PROTOCOL_DELIMITER = "/";
     private static final int CORRECT_LENGTH = 2;
@@ -16,12 +17,6 @@ public class HttpProtocol {
 
         this.protocol = splitProtocolSpec[0];
         this.version = splitProtocolSpec[1];
-    }
-
-    private void validate(String[] splitProtocolSpec) {
-        if (splitProtocolSpec.length != CORRECT_LENGTH) {
-            throw new IllegalArgumentException(VALIDATION_MESSAGE);
-        }
     }
 
     public String getProtocol() {
@@ -51,5 +46,11 @@ public class HttpProtocol {
                 "protocol='" + protocol + '\'' +
                 ", version='" + version + '\'' +
                 '}';
+    }
+
+    private void validate(String[] splitProtocolSpec) {
+        if (splitProtocolSpec.length != CORRECT_LENGTH) {
+            throw new IllegalArgumentException(VALIDATION_MESSAGE);
+        }
     }
 }
