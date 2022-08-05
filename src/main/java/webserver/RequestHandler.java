@@ -2,6 +2,7 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
+import java.sql.Connection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,15 +24,21 @@ public class RequestHandler implements Runnable {
             HttpResponse httpResponse = new HttpResponse(out);
 
             String url = httpRequest.getPath();
+            RequestMapping requestMapping = new RequestMapping();
+            Controller controller = requestMapping.getController(url);
+            if (controller == null) {
+                httpResponse.forward(url);
+                return;
+            }
+
             if ("/user/create".equals(url)) {
                 new CreateUserController().doPost(httpRequest, httpResponse);
             } else if ("/user/login".equals(url)) {
                 new LoginController().doPost(httpRequest, httpResponse);
             } else if("/user/list".equals(url)) {
                 new ListUserController().doGet(httpRequest, httpResponse);
-            } else {
-                httpResponse.forward(url);
             }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
