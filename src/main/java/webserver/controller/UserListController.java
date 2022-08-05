@@ -8,7 +8,7 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import webserver.config.TemplateEngine;
 
-public class UserListController extends AbstractController {
+public class UserListController implements GetController {
 
     @Override
     public HttpResponse doGet(HttpRequest request) {

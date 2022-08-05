@@ -7,7 +7,7 @@ import http.HttpStatus;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 
-public class LoginController extends AbstractController {
+public class LoginController implements PostController {
 
     @Override
     public HttpResponse doPost(HttpRequest request) {
