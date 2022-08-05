@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Map;
+
 public class User {
     private String userId;
     private String password;
@@ -11,6 +13,13 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public User(Map<String, String> queryString) {
+        this.userId = queryString.get("userId");
+        this.password = queryString.get("password");
+        this.name = queryString.get("name");
+        this.email = queryString.get("email");
     }
 
     public String getUserId() {
@@ -27,6 +36,10 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public boolean login(String userId, String password) {
+        return this.userId.equals(userId) && this.password.equals(password);
     }
 
     @Override
