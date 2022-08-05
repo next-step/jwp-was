@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import http.Cookie;
 import http.Cookies;
@@ -101,18 +99,8 @@ public class HttpResponse {
                 httpStatus.getMessage())
             );
 
-            for (Map.Entry<String, String> entry : httpResponseHeaders.entrySet()) {
-                dos.writeBytes(String.format("%s: %s\r\n", entry.getKey(), entry.getValue()));
-            }
-
-            for (Cookie cookie : cookies.getValues()) {
-                var prefix = String.format("Set-Cookie: %s=%s", cookie.getKey(), cookie.getValue());
-
-                var cookieResponse = Stream.concat(Stream.of(prefix), cookie.getOptions().stream())
-                    .collect(Collectors.joining("; "));
-
-                dos.writeBytes(cookieResponse + "\r\n");
-            }
+            httpResponseHeaders.write(dos);
+            cookies.write(dos);
 
             dos.writeBytes("\r\n");
         } catch (IOException e) {

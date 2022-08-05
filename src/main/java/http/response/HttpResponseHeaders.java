@@ -1,5 +1,7 @@
 package http.response;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -39,5 +41,11 @@ public class HttpResponseHeaders {
 
         return values.get(CONTENT_TYPE)
             .startsWith("text/html");
+    }
+
+    public void write(DataOutputStream dos) throws IOException {
+        for (Map.Entry<String, String> entry : values.entrySet()) {
+            dos.writeBytes(String.format("%s: %s\r\n", entry.getKey(), entry.getValue()));
+        }
     }
 }
