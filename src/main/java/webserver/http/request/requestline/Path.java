@@ -2,6 +2,7 @@ package webserver.http.request.requestline;
 
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 
 public class Path {
     private static final int PATH_INDEX = 0;
@@ -9,13 +10,18 @@ public class Path {
     private static final String QUERY_DELIMITER = "?";
     private static final String QUERY_REGEX_DELIMITER = "\\?";
     private static final String HTML_FILE_EXTENSION = ".html";
+    private static final Set<String> STATIC_FILE_EXTENSION = Set.of(".css", ".eot", ".svg", "ttf", "woff", "woff2", ".png", ".js");
 
     private String path;
     private QueryString queryString;
 
-    Path(String path, QueryString queryString) {
+    public Path(String path, QueryString queryString) {
         this.path = path;
         this.queryString = queryString;
+    }
+
+    public Path(String path) {
+        this(path, new QueryString());
     }
 
     public static Path parse(String pathString) {
@@ -39,11 +45,20 @@ public class Path {
         }
     }
 
-    public boolean isFilePath() {
+    public boolean isHtmlFilePath() {
         if (this.path.endsWith(HTML_FILE_EXTENSION)) {
             return true;
         }
         return false;
+    }
+
+    public boolean isStaticFilePath() {
+        return STATIC_FILE_EXTENSION.stream().anyMatch(extension -> this.path.endsWith(extension));
+
+    }
+
+    public boolean isPathEqual(Path path) {
+        return this.path.equals(path.path);
     }
 
     public String getPath() {

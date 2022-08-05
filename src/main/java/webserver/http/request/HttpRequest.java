@@ -1,8 +1,9 @@
 package webserver.http.request;
 
 import utils.IOUtils;
-import webserver.http.request.header.HttpHeader;
+import webserver.http.Header;
 import webserver.http.request.requestline.Method;
+import webserver.http.request.requestline.Path;
 import webserver.http.request.requestline.QueryString;
 import webserver.http.request.requestline.RequestLine;
 
@@ -11,17 +12,43 @@ import java.io.IOException;
 
 public class HttpRequest {
     private static final String EMPTY_STRING = "";
+
     private RequestLine requestLine;
-    private HttpHeader header = new HttpHeader();
+    private Header header = new Header();
     private QueryString body = new QueryString();
 
-    public HttpRequest() {
+    HttpRequest() {
     }
 
-    public HttpRequest(RequestLine requestLine, HttpHeader header, QueryString body) {
+    public HttpRequest(RequestLine requestLine, Header header, QueryString body) {
+        validate(requestLine, header, body);
         this.requestLine = requestLine;
         this.header = header;
         this.body = body;
+    }
+
+    private void validate(RequestLine requestLine, Header header, QueryString body) {
+        validateRequestLine(requestLine);
+        validateHeader(header);
+        validateBody(body);
+    }
+
+    private void validateBody(QueryString body) {
+        if (body == null) {
+            throw new IllegalArgumentException("요청된 HTTP RequestBody 는 null 일 수 없습니다.");
+        }
+    }
+
+    private void validateHeader(Header header) {
+        if (header == null) {
+            throw new IllegalArgumentException("요청된 HTTP header 는 null 일 수 없습니다.");
+        }
+    }
+
+    private void validateRequestLine(RequestLine requestLine) {
+        if (requestLine == null) {
+            throw new IllegalArgumentException("요청된 HTTP RequestLine 은 null 일 수 없습니다.");
+        }
     }
 
     public static HttpRequest of(BufferedReader br) throws IOException {
@@ -29,9 +56,7 @@ public class HttpRequest {
 
         initRequestLine(br, httpRequest);
         initHeader(br, httpRequest);
-        if (httpRequest.isMethodEqual(Method.POST)) {
-            initBody(br, httpRequest);
-        }
+        initBody(br, httpRequest);
 
         return httpRequest;
     }
@@ -51,25 +76,40 @@ public class HttpRequest {
     }
 
     private static void initHeader(BufferedReader br, HttpRequest httpRequest) throws IOException {
-        String line = br.readLine();
-        HttpHeader header = httpRequest.header;
-        while (!line.equals(EMPTY_STRING)) {
-            header.setField(line);
-            line = br.readLine();
+        String line;
+        Header header = httpRequest.header;
+        while (!isEmpty(line = br.readLine())) {
+            header.addField(line);
         }
         header.setCookie(header.getCookieValue());
+    }
+
+    private static boolean isEmpty(String line) {
+        return line == null || line.equals(EMPTY_STRING);
     }
 
     public boolean isMethodEqual(Method method) {
         return this.requestLine.isMethodEqual(method);
     }
 
-    public boolean isFilePath() {
-        return this.requestLine.isFilePath();
+    public boolean isPathEqual(Path path) {
+        return this.requestLine.isPathEqual(path);
+    }
+
+    public boolean isHtmlFilePath() {
+        return this.requestLine.isHtmlFilePath();
+    }
+
+    public boolean isStaticFilePath() {
+        return this.requestLine.isStaticFilePath();
     }
 
     public String getPath() {
         return this.requestLine.getPath();
+    }
+
+    public Method getMethod() {
+        return this.requestLine.getMethod();
     }
 
     public String getParam(String key) {

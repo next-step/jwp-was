@@ -40,7 +40,6 @@ public class QueryString {
     private static void setQueryString(Map<String, String> queryStrings, String query) {
         String[] queryElements = query.split(QUERY_EQUAL_DELIMITER);
         if (queryElements.length == QUERY_EMPTY_VALUE_LENGTH) {
-            queryStrings.put(queryElements[QUERY_KEY_INDEX], EMPTY_STRING);
             return;
         }
         queryStrings.put(queryElements[QUERY_KEY_INDEX], queryElements[QUERY_VALUE_INDEX]);

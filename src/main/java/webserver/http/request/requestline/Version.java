@@ -19,4 +19,8 @@ public enum Version {
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException(String.format("전달받은 version 은 존재하지 않는 버전 입니다. 전달 받은 version = %f", version)));
     }
+
+    public double version() {
+        return this.version;
+    }
 }

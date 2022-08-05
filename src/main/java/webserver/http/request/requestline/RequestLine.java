@@ -11,7 +11,7 @@ public class RequestLine {
     private Path path;
     private Protocol protocol;
 
-    RequestLine(Method method, Path path, Protocol protocol) {
+    public RequestLine(Method method, Path path, Protocol protocol) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
@@ -45,16 +45,28 @@ public class RequestLine {
         return this.path.getPath();
     }
 
+    public Method getMethod() {
+        return this.method;
+    }
+
     public String getQueryStringValue(String key) {
         return this.path.getQueryStringValue(key);
     }
 
-    public boolean isFilePath() {
-        return this.path.isFilePath();
+    public boolean isHtmlFilePath() {
+        return this.path.isHtmlFilePath();
+    }
+
+    public boolean isStaticFilePath() {
+        return this.path.isStaticFilePath();
     }
 
     public boolean isMethodEqual(Method method) {
         return this.method.isMethodEqual(method);
+    }
+
+    public boolean isPathEqual(Path path) {
+        return this.path.isPathEqual(path);
     }
 
     @Override

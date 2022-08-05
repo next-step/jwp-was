@@ -10,7 +10,7 @@ public class Protocol {
     private String protocol;
     private Version version;
 
-    Protocol(String protocol, Version version) {
+    public Protocol(String protocol, Version version) {
         this.protocol = protocol;
         this.version = version;
     }
@@ -43,6 +43,10 @@ public class Protocol {
         if (length != PROTOCOL_AND_VERSION_PARSING_ELEMENT_NUMBER) {
             throw new IllegalArgumentException(String.format("[protocol/version] 을 '/'으로 파싱한 정보 갯수가 [protocol] + [version]로 총 2이여야 합니다. 현재 파싱된 정보 갯수 : %d", length));
         }
+    }
+
+    public String protocol() {
+        return this.protocol + SLASH_DELIMITER + this.version.version();
     }
 
     @Override

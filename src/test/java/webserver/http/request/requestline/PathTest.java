@@ -33,13 +33,26 @@ class PathTest {
     }
 
     @ParameterizedTest
-    @DisplayName("Path 가 파일인지 아닌지 구분한다.")
+    @DisplayName("Path 가 html 파일인지 아닌지 구분한다.")
     @CsvSource(value = {
             "/index.html, true",
+            "/style.css, false",
             "/users, false"
     })
-    void isFilePath(String pathString, boolean trueOrFalse) {
+    void isHtmlFilePath(String pathString, boolean trueOrFalse) {
         Path path = new Path(pathString, new QueryString(Collections.emptyMap()));
-        assertThat(path.isFilePath()).isEqualTo(trueOrFalse);
+        assertThat(path.isHtmlFilePath()).isEqualTo(trueOrFalse);
+    }
+
+    @ParameterizedTest
+    @DisplayName("Path 가 static 파일인지 아닌지 구분한다.")
+    @CsvSource(value = {
+            "/index.html, false",
+            "/style.css, true",
+            "/users, false"
+    })
+    void isStaticFilePath(String pathString, boolean trueOrFalse) {
+        Path path = new Path(pathString, new QueryString(Collections.emptyMap()));
+        assertThat(path.isStaticFilePath()).isEqualTo(trueOrFalse);
     }
 }

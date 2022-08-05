@@ -1,9 +1,9 @@
-package webserver.http.request.header;
+package webserver.http;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpHeader {
+public class Header {
     private static final String EMPTY_STRING = "";
     private static final String HEADER_FIELD_DELIMITER = ": ";
     private static final String COOKIE_DELIMITER = "=";
@@ -13,22 +13,32 @@ public class HttpHeader {
     private static final int KEY_INDEX = 0;
     private static final int VALUE_INDEX = 1;
 
-    private Map<String, String> field;
+    private Map<String, String> fields;
     private Cookie cookie;
 
-    public HttpHeader(Map<String, String> field, Cookie cookie) {
-        this.field = field;
+    public Header(Map<String, String> fields, Cookie cookie) {
+        this.fields = fields;
         this.cookie = cookie;
     }
 
-    public HttpHeader() {
-        this(new HashMap<>(), new Cookie());
+    public Header(Map<String, String> fields) {
+        this(fields, new Cookie());
     }
 
-    public void setField(String headerString) {
+    public Header() {
+        this(new HashMap<>());
+    }
+
+    public Header add(String key, String value) {
+        Map<String, String> fields = new HashMap<>(this.fields);
+        fields.put(key, value);
+        return new Header(fields);
+    }
+
+    public void addField(String headerString) {
         validateHeaderString(headerString);
         String[] fieldElements = headerString.split(HEADER_FIELD_DELIMITER);
-        field.put(fieldElements[KEY_INDEX], fieldElements[VALUE_INDEX]);
+        fields.put(fieldElements[KEY_INDEX], fieldElements[VALUE_INDEX]);
     }
 
     public void setCookie(String cookieString) {
@@ -40,15 +50,20 @@ public class HttpHeader {
     }
 
     public int getContentLength() {
-        return Integer.parseInt(this.field.getOrDefault(CONTENT_LENGTH_STRING, ZERO_STRING));
+        return Integer.parseInt(this.fields.getOrDefault(CONTENT_LENGTH_STRING, ZERO_STRING));
     }
 
     public String getCookieValue() {
-        return this.field.getOrDefault(COOKIE_STRING, EMPTY_STRING);
+        return this.fields.getOrDefault(COOKIE_STRING, EMPTY_STRING);
     }
 
     public boolean isLogin() {
         return Boolean.parseBoolean(this.cookie.getValue());
+    }
+
+    public boolean isHeaderValueEqual(String key, String value) {
+        // todo (validate key)
+        return this.fields.get(key).equals(value);
     }
 
     private void validateHeaderString(String headerString) {
@@ -63,20 +78,28 @@ public class HttpHeader {
         }
     }
 
+    public String header() {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> entry : this.fields.entrySet()) {
+            sb.append(String.format("%s: %s\r\n", entry.getKey(), entry.getValue()));
+        }
+        return sb.toString();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        HttpHeader header = (HttpHeader) o;
+        Header header = (Header) o;
 
-        if (!field.equals(header.field)) return false;
+        if (!fields.equals(header.fields)) return false;
         return cookie.equals(header.cookie);
     }
 
     @Override
     public int hashCode() {
-        int result = field.hashCode();
+        int result = fields.hashCode();
         result = 31 * result + cookie.hashCode();
         return result;
     }
