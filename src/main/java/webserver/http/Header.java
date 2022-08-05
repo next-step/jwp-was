@@ -2,6 +2,7 @@ package webserver.http;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class Header {
     private static final String EMPTY_STRING = "";
@@ -62,8 +63,7 @@ public class Header {
     }
 
     public boolean isHeaderValueEqual(String key, String value) {
-        // todo (validate key)
-        return this.fields.get(key).equals(value);
+        return Optional.ofNullable(this.fields.get(key)).map(headerValue -> headerValue.equals(value)).orElse(false);
     }
 
     private void validateHeaderString(String headerString) {
