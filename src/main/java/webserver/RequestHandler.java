@@ -15,19 +15,18 @@ import org.slf4j.LoggerFactory;
 
 import http.request.HttpRequest;
 import http.request.session.MemorySessionStore;
-import http.response.HttpResponse;
-import webserver.controller.Controller;
 import webserver.controller.LoginController;
+import webserver.controller.Router;
 import webserver.controller.UserCreateController;
 import webserver.controller.UserListController;
 
 public class RequestHandler implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final Map<ControllerIdentity, Controller> CONTROLLERS = Map.of(
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Router ROUTER = new Router(Map.of(
         new ControllerIdentity("/user/create"), new UserCreateController(),
         new ControllerIdentity("/user/login"), new LoginController(),
-        new ControllerIdentity("/user/list"), new UserListController());
+        new ControllerIdentity("/user/list"), new UserListController()));
 
     public static final MemorySessionStore STORE = new MemorySessionStore(new ConcurrentHashMap<>());
 
@@ -38,14 +37,14 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
+        LOGGER.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
             connection.getPort());
 
         try (InputStream inputStream = connection.getInputStream(); OutputStream out = connection.getOutputStream(); var bufferedReader = new BufferedReader(
             new InputStreamReader(inputStream))) {
             var httpRequest = HttpRequest.parse(bufferedReader, STORE);
 
-            var response = createHttpResponse(httpRequest);
+            var response = ROUTER.handle(httpRequest);
             if (response.isMarkdown()) {
                 response.putCookie(HttpRequest.SESSION_KEY, httpRequest.currentClientUserId());
             }
@@ -53,16 +52,7 @@ public class RequestHandler implements Runnable {
             var dataOutputStream = new DataOutputStream(out);
             response.write(dataOutputStream);
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
-    }
-
-    private HttpResponse createHttpResponse(HttpRequest httpRequest) {
-        if (httpRequest.isStaticFile()) {
-            return HttpResponse.parseStaticFile(httpRequest.getUrl(), httpRequest.getFileExtension());
-        }
-
-        var controller = CONTROLLERS.get(new ControllerIdentity(httpRequest.getUrl()));
-        return controller.service(httpRequest);
     }
 }
