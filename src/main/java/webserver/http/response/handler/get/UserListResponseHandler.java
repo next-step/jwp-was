@@ -1,7 +1,5 @@
 package webserver.http.response.handler.get;
 
-import java.util.Optional;
-
 import webserver.http.request.header.RequestHeader;
 import webserver.http.response.HttpResponseStatus;
 import webserver.http.response.handler.ResponseHandler;
@@ -15,9 +13,9 @@ public class UserListResponseHandler implements ResponseHandler {
 
     @Override
     public ResponseHeader run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
-        Optional<HttpSession> session = HttpSessionStorage.getSession(requestHeader.sessionId());
+        HttpSession session = HttpSessionStorage.getSession(requestHeader.sessionId());
 
-        if (session.isEmpty() || !session.get().getLogin()) {
+        if (!session.getLogin()) {
             return new ResponseHeader(requestHeader.protocolVersion(), HttpResponseStatus.FOUND)
                     .addContentType(ContentType.HTML)
                     .addLocation(LOGIN_FAIL);

@@ -11,6 +11,7 @@ public class HttpSession {
     public HttpSession(UUID uuid) {
         this.uuid = uuid;
         this.attribute = new SessionAttribute();
+        init();
     }
 
     public String getId() {
@@ -25,10 +26,6 @@ public class HttpSession {
         return (Boolean) getAttribute(LOG_IN);
     }
 
-    private void setAttribute(String name, Object value) {
-        attribute.setAttribute(name, value);
-    }
-
     public Object getAttribute(String name) {
         return attribute.getAttribute(name);
     }
@@ -39,5 +36,13 @@ public class HttpSession {
 
     public void invalidate() {
         attribute.clear();
+    }
+
+    private void init() {
+        setLogin(false);
+    }
+
+    private void setAttribute(String name, Object value) {
+        attribute.setAttribute(name, value);
     }
 }
