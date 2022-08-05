@@ -1,7 +1,5 @@
 package webserver.http.request.header;
 
-import static webserver.http.session.HttpSession.DEFAULT_UUID;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,8 +14,9 @@ public class RequestHeaderInfos {
     private static final String COOKIE = "Cookie";
     private static final String VALUE_DELIMITER = "=";
     private static final String SESSION_ID = "sessionId";
-    public static final int VALUE_INDEX = 1;
-    public static final int KEY_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+    private static final int KEY_INDEX = 0;
+    private static final String DEFAULT_UUID = "";
     private final Map<String, String> infos;
 
     RequestHeaderInfos(String[] infos) {
