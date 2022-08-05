@@ -10,11 +10,10 @@ public class HomeResponseHandler implements ResponseHandler {
     private static final String LOCATION = "/index.html";
 
     @Override
-    public String run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
+    public ResponseHeader run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
         return new ResponseHeader(requestHeader.protocolVersion(), HttpResponseStatus.OK)
                 .addContentType(ContentType.response(requestHeader.uri()))
                 .addContentLength(responseBody.length)
-                .addLocation(LOCATION)
-                .toString();
+                .addLocation(LOCATION);
     }
 }

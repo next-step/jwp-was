@@ -11,11 +11,10 @@ public class DefaultResponseHandler implements ResponseHandler {
     private static final String DEFAULT_INDEX = "/index.html";
 
     @Override
-    public String run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
+    public ResponseHeader run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
         return new ResponseHeader(requestHeader.protocolVersion(), HttpResponseStatus.OK)
                 .addContentType(ContentType.response(requestHeader.uri()))
                 .addContentLength(responseBody.length)
-                .addLocation(DEFAULT_INDEX)
-                .toString();
+                .addLocation(DEFAULT_INDEX);
     }
 }

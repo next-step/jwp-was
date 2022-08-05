@@ -14,6 +14,6 @@ public class ResponseHandlerExecutor {
     public String run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
         ResponseGroup responseGroup = responseMap.get(requestHeader.httpMethod());
         ResponseHandler handler = responseGroup.getResponse(requestHeader.uri());
-        return handler.run(requestHeader, requestBody, responseBody);
+        return handler.run(requestHeader, requestBody, responseBody).toString();
     }
 }

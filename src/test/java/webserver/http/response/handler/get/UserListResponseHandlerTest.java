@@ -36,7 +36,7 @@ class UserListResponseHandlerTest {
                 ),
                 "",
                 "".getBytes()
-        );
+        ).toString();
 
         // then
         assertThat(actual).isEqualTo(
@@ -63,7 +63,7 @@ class UserListResponseHandlerTest {
                 ),
                 "",
                 "".getBytes()
-        );
+        ).toString();
 
         // then
         assertThat(actual).isEqualTo(

@@ -13,7 +13,7 @@ public class UserCreatePostResponseHandler implements ResponseHandler {
     private static final String REDIRECT_INDEX_HTML = "/index.html";
 
     @Override
-    public String run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
+    public ResponseHeader run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
         User user = UserParser.createUser(requestBody);
 
         DataBase.addUser(user);
@@ -21,7 +21,6 @@ public class UserCreatePostResponseHandler implements ResponseHandler {
         return new ResponseHeader(requestHeader.protocolVersion(), HttpResponseStatus.FOUND)
                 .addContentType(ContentType.HTML)
                 .addContentLength(responseBody.length)
-                .addLocation(REDIRECT_INDEX_HTML)
-                .toString();
+                .addLocation(REDIRECT_INDEX_HTML);
     }
 }

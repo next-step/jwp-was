@@ -19,7 +19,7 @@ public class UserLoginResponseHandler implements ResponseHandler {
     private static final String LOGIN_FAILED_HTML = "/user/login_failed.html";
 
     @Override
-    public String run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
+    public ResponseHeader run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
         String protocolVersion = requestHeader.protocolVersion();
         LoginRequest request = loginRequest(requestBody);
         boolean isLogin = isLogin(request);
@@ -30,16 +30,14 @@ public class UserLoginResponseHandler implements ResponseHandler {
             return new ResponseHeader(protocolVersion, HttpResponseStatus.FOUND)
                     .addContentType(ContentType.HTML)
                     .addLocation(REDIRECT_INDEX_HTML)
-                    .addCookieSessionId(uuid)
-                    .toString();
+                    .addCookieSessionId(uuid);
         }
 
         String uuid = setLoginSession(false);
         return new ResponseHeader(protocolVersion, HttpResponseStatus.FOUND)
                 .addContentType(ContentType.HTML)
                 .addLocation(LOGIN_FAILED_HTML)
-                .addCookieSessionId(uuid)
-                .toString();
+                .addCookieSessionId(uuid);
     }
 
     private String setLoginSession(boolean isLogin) {
