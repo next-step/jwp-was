@@ -6,6 +6,7 @@ import webserver.http.Header;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
 import webserver.http.request.requestline.Protocol;
+import webserver.http.request.requestline.ProtocolType;
 import webserver.http.request.requestline.QueryString;
 import webserver.http.request.requestline.RequestLine;
 import webserver.http.request.requestline.Version;
@@ -51,8 +52,8 @@ class HttpRequestTest {
     void throw_exception_request_null() {
         assertAll(
                 () -> assertThatThrownBy(() -> new HttpRequest(null, new Header(), new QueryString())).isInstanceOf(IllegalArgumentException.class),
-                () -> assertThatThrownBy(() -> new HttpRequest(new RequestLine(Method.GET, new Path("HTTP", new QueryString()), new Protocol("HTTP", Version.ONE_ONE)), null, new QueryString())).isInstanceOf(IllegalArgumentException.class),
-                () -> assertThatThrownBy(() -> new HttpRequest(new RequestLine(Method.GET, new Path("HTTP", new QueryString()), new Protocol("HTTP", Version.ONE_ONE)), new Header(), null)).isInstanceOf(IllegalArgumentException.class)
+                () -> assertThatThrownBy(() -> new HttpRequest(new RequestLine(Method.GET, new Path("/index.html", new QueryString()), new Protocol(ProtocolType.HTTP, Version.ONE_ONE)), null, new QueryString())).isInstanceOf(IllegalArgumentException.class),
+                () -> assertThatThrownBy(() -> new HttpRequest(new RequestLine(Method.GET, new Path("/index.html", new QueryString()), new Protocol(ProtocolType.HTTP, Version.ONE_ONE)), new Header(), null)).isInstanceOf(IllegalArgumentException.class)
         );
     }
 }

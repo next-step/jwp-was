@@ -7,11 +7,11 @@ public class Protocol {
     private static final int PROTOCOL_INDEX = 0;
     private static final int VERSION_INDEX = 1;
 
-    private String protocol;
+    private ProtocolType protocolType;
     private Version version;
 
-    public Protocol(String protocol, Version version) {
-        this.protocol = protocol;
+    public Protocol(ProtocolType protocolType, Version version) {
+        this.protocolType = protocolType;
         this.version = version;
     }
 
@@ -24,7 +24,7 @@ public class Protocol {
         Version version = Version.valueOfVersion(protocolAndVersion[VERSION_INDEX]);
         validateProtocol(protocol);
 
-        return new Protocol(protocol, version);
+        return new Protocol(ProtocolType.valueOf(protocol), version);
     }
 
     private static void validateProtocolString(String protocolString) {
@@ -46,7 +46,7 @@ public class Protocol {
     }
 
     public String protocol() {
-        return this.protocol + SLASH_DELIMITER + this.version.version();
+        return this.protocolType + SLASH_DELIMITER + this.version.version();
     }
 
     @Override
@@ -56,13 +56,13 @@ public class Protocol {
 
         Protocol protocol1 = (Protocol) o;
 
-        if (!protocol.equals(protocol1.protocol)) return false;
+        if (!protocolType.equals(protocol1.protocolType)) return false;
         return version == protocol1.version;
     }
 
     @Override
     public int hashCode() {
-        int result = protocol.hashCode();
+        int result = protocolType.hashCode();
         result = 31 * result + version.hashCode();
         return result;
     }

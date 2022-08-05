@@ -3,6 +3,7 @@ package webserver.http.response.statusline;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.request.requestline.Protocol;
+import webserver.http.request.requestline.ProtocolType;
 import webserver.http.request.requestline.Version;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,7 +14,7 @@ class StatusLineTest {
     @Test
     @DisplayName("StatusLine 객체를 생성한다.")
     void create_StatusLine() {
-        StatusLine statusLine = new StatusLine(new Protocol("HTTP", Version.ONE_ONE), StatusCode.OK);
+        StatusLine statusLine = new StatusLine(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), StatusCode.OK);
         assertThat(statusLine).isNotNull().isInstanceOf(StatusLine.class);
     }
 
@@ -22,7 +23,7 @@ class StatusLineTest {
     void throw_exception_response_null() {
         assertAll(
                 () -> assertThatThrownBy(() -> new StatusLine(null, StatusCode.OK)).isInstanceOf(IllegalArgumentException.class),
-                () -> assertThatThrownBy(() -> new StatusLine(new Protocol("HTTP", Version.ONE_ONE), null)).isInstanceOf(IllegalArgumentException.class)
+                () -> assertThatThrownBy(() -> new StatusLine(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), null)).isInstanceOf(IllegalArgumentException.class)
         );
     }
 }

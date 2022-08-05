@@ -12,7 +12,7 @@ class ProtocolTest {
     @Test
     @DisplayName("Protocol 객체를 생성한다.")
     void create_Protocol() {
-        Protocol protocol = new Protocol("HTTP", Version.ONE_ONE);
+        Protocol protocol = new Protocol(ProtocolType.HTTP, Version.ONE_ONE);
         assertThat(protocol).isNotNull().isInstanceOf(Protocol.class);
     }
 

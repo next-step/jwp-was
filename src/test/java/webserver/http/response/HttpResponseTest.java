@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.Header;
 import webserver.http.request.requestline.Protocol;
+import webserver.http.request.requestline.ProtocolType;
 import webserver.http.request.requestline.Version;
 import webserver.http.response.statusline.StatusCode;
 import webserver.http.response.statusline.StatusLine;
@@ -16,7 +17,7 @@ class HttpResponseTest {
     @Test
     @DisplayName("HttpResponse 를 생성한다.")
     void create_HttpRequest() {
-        HttpResponse httpResponse = new HttpResponse(new StatusLine(new Protocol("HTTP", Version.ONE_ONE), StatusCode.OK), new Header(), new byte[0]);
+        HttpResponse httpResponse = new HttpResponse(new StatusLine(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), StatusCode.OK), new Header(), new byte[0]);
         assertThat(httpResponse).isNotNull().isInstanceOf(HttpResponse.class);
     }
 
@@ -25,7 +26,7 @@ class HttpResponseTest {
     void throw_exception_response_null() {
         assertAll(
                 () -> assertThatThrownBy(() -> new HttpResponse(null, new Header(), new byte[0])).isInstanceOf(IllegalArgumentException.class),
-                () -> assertThatThrownBy(() -> new HttpResponse(StatusLine.of(new Protocol("HTTP", Version.ONE_ONE), StatusCode.OK), null, new byte[0])).isInstanceOf(IllegalArgumentException.class)
+                () -> assertThatThrownBy(() -> new HttpResponse(StatusLine.of(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), StatusCode.OK), null, new byte[0])).isInstanceOf(IllegalArgumentException.class)
         );
     }
 }

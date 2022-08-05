@@ -2,6 +2,7 @@ package webserver.http.response;
 
 import webserver.http.Header;
 import webserver.http.request.requestline.Protocol;
+import webserver.http.request.requestline.ProtocolType;
 import webserver.http.request.requestline.Version;
 import webserver.http.response.statusline.StatusCode;
 import webserver.http.response.statusline.StatusLine;
@@ -30,19 +31,19 @@ public class HttpResponse {
     }
 
     public static HttpResponse ok(Header header, byte[] body) {
-        return new HttpResponse(StatusLine.of(new Protocol("HTTP", Version.ONE_ONE), StatusCode.OK), header, body);
+        return new HttpResponse(StatusLine.of(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), StatusCode.OK), header, body);
     }
 
     public static HttpResponse notFound() {
-        return new HttpResponse(StatusLine.of(new Protocol("HTTP", Version.ONE_ONE), StatusCode.NOT_FOUND), new Header(Map.of()), new byte[0]);
+        return new HttpResponse(StatusLine.of(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), StatusCode.NOT_FOUND), new Header(Map.of()), new byte[0]);
     }
 
     public static HttpResponse redirect(String path) {
-        return new HttpResponse(StatusLine.of(new Protocol("HTTP", Version.ONE_ONE), StatusCode.FOUND), new Header(Map.of("Location", path)), new byte[0]);
+        return new HttpResponse(StatusLine.of(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), StatusCode.FOUND), new Header(Map.of("Location", path)), new byte[0]);
     }
 
     public static HttpResponse redirect(String path, Header header) {
-        return new HttpResponse(StatusLine.of(new Protocol("HTTP", Version.ONE_ONE), StatusCode.FOUND), header.add("Location", path), new byte[0]);
+        return new HttpResponse(StatusLine.of(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), StatusCode.FOUND), header.add("Location", path), new byte[0]);
     }
 
     public String response() {

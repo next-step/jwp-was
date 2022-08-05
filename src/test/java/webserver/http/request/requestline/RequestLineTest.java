@@ -15,7 +15,7 @@ class RequestLineTest {
     @Test
     @DisplayName("RequestLine 객체를 생성한다.")
     void create_RequestLine() {
-        RequestLine requestLine = new RequestLine(Method.GET, new Path("/users", null), new Protocol("HTTP", Version.ONE_ONE));
+        RequestLine requestLine = new RequestLine(Method.GET, new Path("/users", null), new Protocol(ProtocolType.HTTP, Version.ONE_ONE));
         assertThat(requestLine).isNotNull().isInstanceOf(RequestLine.class);
     }
 
@@ -37,7 +37,7 @@ class RequestLineTest {
     void parse_GET_RequestLine() {
         String request = "GET /users HTTP/1.1";
         RequestLine requestLine = RequestLine.parse(request);
-        assertThat(requestLine).isEqualTo(new RequestLine(Method.GET, new Path("/users", new QueryString(Collections.emptyMap())), new Protocol("HTTP", Version.ONE_ONE)));
+        assertThat(requestLine).isEqualTo(new RequestLine(Method.GET, new Path("/users", new QueryString(Collections.emptyMap())), new Protocol(ProtocolType.HTTP, Version.ONE_ONE)));
     }
 
     @Test
@@ -45,7 +45,7 @@ class RequestLineTest {
     void parse_POST_RequestLine() {
         String request = "POST /users HTTP/1.1";
         RequestLine requestLine = RequestLine.parse(request);
-        assertThat(requestLine).isEqualTo(new RequestLine(Method.POST, new Path("/users", new QueryString(Collections.emptyMap())), new Protocol("HTTP", Version.ONE_ONE)));
+        assertThat(requestLine).isEqualTo(new RequestLine(Method.POST, new Path("/users", new QueryString(Collections.emptyMap())), new Protocol(ProtocolType.HTTP, Version.ONE_ONE)));
     }
 
     @Test
@@ -54,6 +54,6 @@ class RequestLineTest {
         String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
         RequestLine requestLine = RequestLine.parse(request);
         Map<String, String> queryStrings = Map.of("userId", "javajigi", "password", "password", "name", "JaeSung");
-        assertThat(requestLine).isEqualTo(new RequestLine(Method.GET, new Path("/users", new QueryString(queryStrings)), new Protocol("HTTP", Version.ONE_ONE)));
+        assertThat(requestLine).isEqualTo(new RequestLine(Method.GET, new Path("/users", new QueryString(queryStrings)), new Protocol(ProtocolType.HTTP, Version.ONE_ONE)));
     }
 }

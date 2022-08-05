@@ -10,6 +10,7 @@ import webserver.http.request.HttpRequest;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
 import webserver.http.request.requestline.Protocol;
+import webserver.http.request.requestline.ProtocolType;
 import webserver.http.request.requestline.QueryString;
 import webserver.http.request.requestline.RequestLine;
 import webserver.http.request.requestline.Version;
@@ -41,8 +42,8 @@ class StaticControllerTest {
 
         // then
         assertAll(
-                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.OK)).isEqualTo(true),
-                () -> assertThat(httpResponse.isHeaderValueEqual("Content-Type", "text/css;charset=utf-8")).isEqualTo(true)
+                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.OK)).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual("Content-Type", "text/css;charset=utf-8")).isTrue()
         );
     }
 
@@ -55,7 +56,7 @@ class StaticControllerTest {
             "POST, /style.csss, false",
     })
     void isMatchRequest(Method method, String path, boolean trueOrFalse) {
-        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path(path, new QueryString()), new Protocol("HTTP", Version.ONE_ONE)), new Header(), new QueryString());
+        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path(path, new QueryString()), new Protocol(ProtocolType.HTTP, Version.ONE_ONE)), new Header(), new QueryString());
         assertThat(controller.isMatchRequest(httpRequest)).isEqualTo(trueOrFalse);
     }
 }

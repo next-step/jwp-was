@@ -15,6 +15,7 @@ import webserver.http.request.HttpRequest;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
 import webserver.http.request.requestline.Protocol;
+import webserver.http.request.requestline.ProtocolType;
 import webserver.http.request.requestline.QueryString;
 import webserver.http.request.requestline.RequestLine;
 import webserver.http.request.requestline.Version;
@@ -25,7 +26,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class UserListControllerTest {
     private static Controller controller;
@@ -51,8 +52,8 @@ class UserListControllerTest {
 
         // then
         assertAll(
-                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.OK)).isEqualTo(true),
-                () -> assertThat(httpResponse.isHeaderValueEqual("Set-Cookie", "logined=true; Path=/")).isEqualTo(true),
+                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.OK)).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual("Set-Cookie", "logined=true; Path=/")).isTrue(),
                 () -> assertAll(
                         () -> assertThat(body.contains("test_id")),
                         () -> assertThat(body.contains("test_password")),
@@ -73,9 +74,9 @@ class UserListControllerTest {
 
         // then
         assertAll(
-                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isEqualTo(true),
-                () -> assertThat(httpResponse.isHeaderValueEqual("Set-Cookie", "logined=false; Path=/")).isEqualTo(true),
-                () -> assertThat(httpResponse.isHeaderValueEqual("Location", "/user/login.html")).isEqualTo(true)
+                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual("Set-Cookie", "logined=false; Path=/")).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual("Location", "/user/login.html")).isTrue()
         );
     }
 
@@ -88,7 +89,7 @@ class UserListControllerTest {
             "POST, /user/lists, false"
     })
     void isMatchRequest(Method method, String path, boolean trueOrFalse) {
-        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path(path, new QueryString()), new Protocol("HTTP", Version.ONE_ONE)), new Header(), new QueryString());
+        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path(path, new QueryString()), new Protocol(ProtocolType.HTTP, Version.ONE_ONE)), new Header(), new QueryString());
         assertThat(controller.isMatchRequest(httpRequest)).isEqualTo(trueOrFalse);
     }
 }

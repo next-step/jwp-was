@@ -12,6 +12,7 @@ import webserver.http.request.HttpRequest;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
 import webserver.http.request.requestline.Protocol;
+import webserver.http.request.requestline.ProtocolType;
 import webserver.http.request.requestline.QueryString;
 import webserver.http.request.requestline.RequestLine;
 import webserver.http.request.requestline.Version;
@@ -44,9 +45,9 @@ class UserLoginControllerTest {
 
         // then
         assertAll(
-                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isEqualTo(true),
-                () -> assertThat(httpResponse.isHeaderValueEqual("Set-Cookie", "logined=true; Path=/")).isEqualTo(true),
-                () -> assertThat(httpResponse.isHeaderValueEqual("Location", "/index.html")).isEqualTo(true)
+                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual("Set-Cookie", "logined=true; Path=/")).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual("Location", "/index.html")).isTrue()
         );
     }
 
@@ -62,8 +63,8 @@ class UserLoginControllerTest {
 
         // then
         assertAll(
-                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isEqualTo(true),
-                () -> assertThat(httpResponse.isHeaderValueEqual("Set-Cookie", "logined=false; Path=/")).isEqualTo(true)
+                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual("Set-Cookie", "logined=false; Path=/")).isTrue()
         );
     }
 
@@ -76,7 +77,7 @@ class UserLoginControllerTest {
             "POST, /user/logins, false"
     })
     void isMatchRequest(Method method, String path, boolean trueOrFalse) {
-        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path(path, new QueryString()), new Protocol("HTTP", Version.ONE_ONE)), new Header(), new QueryString());
+        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path(path, new QueryString()), new Protocol(ProtocolType.HTTP, Version.ONE_ONE)), new Header(), new QueryString());
         assertThat(controller.isMatchRequest(httpRequest)).isEqualTo(trueOrFalse);
     }
 }
