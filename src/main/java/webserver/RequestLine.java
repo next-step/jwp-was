@@ -10,10 +10,10 @@ public class RequestLine {
     private static final String REQUEST_LINE_SPACE = " ";
 
     private HttpMethod method;
-    private String path;
+    private Path path;
     private Protocol protocol;
 
-    public RequestLine(HttpMethod method, String path, Protocol protocol) {
+    public RequestLine(HttpMethod method, Path path, Protocol protocol) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
@@ -27,7 +27,7 @@ public class RequestLine {
 
         return new RequestLine(
                 HttpMethod.valueOf(splits[METHOD_IDX]),
-                splits[PATH_IDX],
+                Path.parse(splits[PATH_IDX]),
                 Protocol.parse(splits[PROTOCOL_IDX])
         );
     }
@@ -36,7 +36,7 @@ public class RequestLine {
         return method.name();
     }
 
-    public String getPath() {
+    public Path getPath() {
         return path;
     }
 
