@@ -82,5 +82,5 @@
 
 ### 5단계
 #### 기능 요구사항 1.
-- [ ] Java에서 기본으로 제공하는 ThreadPoolExecutor를 활용해 ThreadPool 기능을 추가한다.
+- [x] Java에서 기본으로 제공하는 ThreadPoolExecutor를 활용해 ThreadPool 기능을 추가한다.
 - [ ] Spring에서 제공하는 RestTemplate을 활용해 서버의 ThreadPool 수보다 많은 요청을 동시에 보내본다.
