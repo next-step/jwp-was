@@ -23,8 +23,10 @@
    1-2. 사용자 요청으로부터 path를 추출하여 index.html 파일을 읽어 응답한다.
 2. GET 방식 요청으로 회원가입을 한다.
    2-1. HttpRequest가 정적 리소스를 전달하는지, 동적 응답을 요청하는지 확인하고, 사용자 등록 호출시 queryString으로 넘어온 값으로 User 인스턴스를 생성한다.
-3. POST 방식 요청으로 회원가입을 한다.
-   3-1. HTTP Body를 가져와 User 클래스에 담는다.
+3. POST 방식 요청으로 회원가입을 한다. 
+   1. HTTP Body 데이터를 넣는다. 
+   2. handlerAdapter enum 클래스를 통해 controller를 구현한다.
+   3. POST 방식으로 user를 등록한다.
 4. 회원 가입 이후에 index.html 페이지로 이동 시킨다.
 5. 로그인 성공시 index.html, 실패시 login_failed.html로 이동한다. 로그인 성공시 cookie를 활용해 로그인 상태 유지
    5-1. 로그인 성공시 cookie header 값을 logined=true, 실패시 logined=false 로 전달

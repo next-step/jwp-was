@@ -20,4 +20,11 @@ class MethodTest {
     void construct_unExistEnum() {
         assertThatIllegalArgumentException().isThrownBy(() -> Method.of("UnExistMethod"));
     }
+
+    @DisplayName("POST Method 인지 확인")
+    @Test
+    void isPost() {
+        assertThat(Method.isPost("post")).isTrue();
+        assertThat(Method.isPost("get")).isFalse();
+    }
 }

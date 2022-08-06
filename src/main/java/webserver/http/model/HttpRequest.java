@@ -1,31 +1,59 @@
 package webserver.http.model;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HttpRequest {
 
     private final RequestLine requestLine;
     private final RequestHeaders requestHeaders;
+    private RequestBody requestBody;
+
+    public HttpRequest(BufferedReader bufferedReader) throws IOException {
+        String line = bufferedReader.readLine();
+        this.requestLine = new RequestLine(line);
+        this.requestHeaders = new RequestHeaders(bufferedReader, line);
+        this.requestBody = null;
+        if (Method.isPost(requestLine.getMethod())) { // FIXME getter 대신 메시지
+            this.requestBody = new RequestBody(bufferedReader, requestHeaders);
+        }
+//        new HttpRequest(requestLine, requestHeaders, requestBody); // TODO 왜 호출이 안될까?
+    }
 
     public HttpRequest(String httpRequestText) {
-        String[] texts = httpRequestText.split("\n");
+        List<String> textList = Arrays.asList(httpRequestText.split("\n"));
+        List<List<String>> requestInformation = requestHeaderAndBody(textList);
 
-        requestLine = new RequestLine(texts[0]);
-        requestHeaders = new RequestHeaders(Arrays.stream(texts).filter(text -> !text.equals(texts[0])).toArray(String[]::new));
+        this.requestLine = new RequestLine(textList.get(0));
+        this.requestHeaders = new RequestHeaders(requestInformation.get(0));
+        this.requestBody = null;
+        if (Method.isPost(requestLine.getMethod())) {
+            this.requestBody = new RequestBody(requestInformation.get(1));
+        }
     }
 
-    public HttpRequest(RequestLine requestLine, RequestHeaders requestHeaders) {
+    private List<List<String>> requestHeaderAndBody(List<String> textList) {
+        return new ArrayList<>(textList.stream().filter(text -> !text.equals(textList.get(0)))
+                .collect(Collectors.partitioningBy(line -> textList.indexOf(line) > textList.indexOf(""))).values());
+    }
+
+    public HttpRequest(RequestLine requestLine, RequestHeaders requestHeaders, RequestBody requestBody) {
         this.requestLine = requestLine;
         this.requestHeaders = requestHeaders;
-    }
-
-    public String responsePath() {
-        return requestLine.fullPath();
+        this.requestBody = requestBody;
     }
 
     public boolean isStaticResource() {
         return requestLine.isStaticResource();
+    }
+
+    public String responsePath() {
+        return requestLine.fullPath();
     }
 
     public QueryStrings getQueryStrings() {
@@ -38,5 +66,9 @@ public class HttpRequest {
 
     public Map<String, String> getRequestHeaders() {
         return requestHeaders.getRequestHeadersMap();
+    }
+
+    public Map<String, String> getRequestBody() {
+        return requestBody.getRequestBodyMap();
     }
 }

@@ -28,21 +28,7 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-
-            String line = bufferedReader.readLine();
-            RequestLine requestLine = new RequestLine(line);
-
-            StringBuilder stringBuilder = new StringBuilder();
-            while (!"".equals(line)) {
-                if (line == null) {
-                    break;
-                }
-                line = bufferedReader.readLine();
-                stringBuilder.append(line).append("\n");
-            }
-            RequestHeaders requestHeaders = new RequestHeaders(stringBuilder.toString());
-
-            HttpRequest httpRequest = new HttpRequest(requestLine, requestHeaders);
+            HttpRequest httpRequest = new HttpRequest(bufferedReader);
 
             if (httpRequest.isStaticResource()) {
                 DataOutputStream dos = new DataOutputStream(out);
