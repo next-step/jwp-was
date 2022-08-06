@@ -1,0 +1,4 @@
+HTTP/1.1 404 NOT_FOUND
+Content-Length: 18
+
+not found resource

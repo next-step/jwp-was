@@ -16,7 +16,7 @@ class RequestBody {
         this.body = Parser.parseBody(body);
     }
 
-    String getValue(String name) {
+    String getParameter(String name) {
         return body.get(name);
     }
 

@@ -14,11 +14,10 @@ class HttpRequestBodyTest {
         RequestBody requestBody = new RequestBody("userId=javajigi&password=password&name=재성&email=javajigi@slipp.net");
 
         // when // then
-        assertThat(requestBody.getValue("userId")).isEqualTo("javajigi");
-        assertThat(requestBody.getValue("password")).isEqualTo("password");
-        assertThat(requestBody.getValue("name")).isEqualTo("재성");
-        assertThat(requestBody.getValue("email")).isEqualTo("javajigi@slipp.net");
-
+        assertThat(requestBody.getParameter("userId")).isEqualTo("javajigi");
+        assertThat(requestBody.getParameter("password")).isEqualTo("password");
+        assertThat(requestBody.getParameter("name")).isEqualTo("재성");
+        assertThat(requestBody.getParameter("email")).isEqualTo("javajigi@slipp.net");
     }
 
 }

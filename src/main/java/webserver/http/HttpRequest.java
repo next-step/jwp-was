@@ -85,8 +85,8 @@ public class HttpRequest {
         return requestLine.getPath().getPath();
     }
 
-    public Headers getHeaders() {
-        return headers;
+    public String getHeader(String name) {
+        return headers.getValue(name);
     }
 
     public HttpMethod getMethod() {
@@ -94,7 +94,7 @@ public class HttpRequest {
     }
 
     public String getBody(String name) {
-        return body.getValue(name);
+        return body.getParameter(name);
     }
 
     public String getCookie(String name) {
@@ -103,6 +103,10 @@ public class HttpRequest {
                 .findAny()
                 .map(Cookie::getValue)
                 .orElse("");
+    }
+
+    Headers getHeaders() {
+        return headers;
     }
 
     RequestLine getRequestLine() {
@@ -114,7 +118,13 @@ public class HttpRequest {
     }
 
     String getParameter(String name) {
-        return requestLine.getParameter(name);
+        String parameter = requestLine.getParameter(name);
+
+        if (parameter != null) {
+            return parameter;
+        }
+
+        return body.getParameter(name);
     }
 
     @Override
