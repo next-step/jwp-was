@@ -11,9 +11,9 @@ public class RequestLine {
 
     private HttpMethod method;
     private String path;
-    private String protocol;
+    private Protocol protocol;
 
-    public RequestLine(HttpMethod method, String path, String protocol) {
+    public RequestLine(HttpMethod method, String path, Protocol protocol) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
@@ -28,7 +28,7 @@ public class RequestLine {
         return new RequestLine(
                 HttpMethod.valueOf(splits[METHOD_IDX]),
                 splits[PATH_IDX],
-                splits[PROTOCOL_IDX]
+                Protocol.parse(splits[PROTOCOL_IDX])
         );
     }
 
@@ -40,7 +40,7 @@ public class RequestLine {
         return path;
     }
 
-    public String getProtocol() {
+    public Protocol getProtocol() {
         return protocol;
     }
 }
