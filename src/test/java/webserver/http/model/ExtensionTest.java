@@ -1,11 +1,10 @@
-package model.http;
+package webserver.http.model;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ExtensionTest {
     @DisplayName("파일 확장자에 따라 해당 enum 추출")

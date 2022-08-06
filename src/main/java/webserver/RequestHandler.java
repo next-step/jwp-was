@@ -5,9 +5,9 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
-import model.http.HttpRequest;
-import model.http.RequestHeaders;
-import model.http.RequestLine;
+import webserver.http.model.HttpRequest;
+import webserver.http.model.RequestHeaders;
+import webserver.http.model.RequestLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;

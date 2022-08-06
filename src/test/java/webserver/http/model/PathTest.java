@@ -1,4 +1,4 @@
-package model.http;
+package webserver.http.model;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

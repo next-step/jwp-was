@@ -1,4 +1,4 @@
-package model.http;
+package webserver.http.model;
 
 public enum Method {
     GET,
