@@ -2,6 +2,8 @@ package request;
 
 import constant.HttpHeader;
 import constant.HttpMethod;
+import session.HttpSession;
+import session.SessionManager;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -25,13 +27,11 @@ public class HttpRequest {
     public static HttpRequest parse(InputStream in) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
         List<String> lines = IOUtils.readLines(br);
+        RequestHeader requestHeader = RequestHeader.from(lines.subList(1, lines.size()));
 
-        HttpRequest request = new HttpRequest(RequestLine.from(lines.get(0)),
+        return new HttpRequest(RequestLine.from(lines.get(0)),
                 RequestHeader.from(lines.subList(1, lines.size())),
-                RequestBody.empty());
-        request.addBody(IOUtils.readData(br, request.getContentLength()));
-
-        return request;
+                RequestBody.parse(IOUtils.readData(br, requestHeader.getContentLength())));
     }
 
     public static HttpRequest from(List<String> lines) {
@@ -56,21 +56,8 @@ public class HttpRequest {
         return requestLine.getHttpMethod();
     }
 
-    public void addBody(String body) {
-        if (!body.equals("")) {
-            this.body.addBody(body);
-        }
-    }
-
     public String getBodyParameter(String key) {
         return body.getParameter(key);
-    }
-
-    public int getContentLength() {
-        if (header.getHeader(HttpHeader.CONTENT_LENGTH.getValue()) == null) {
-            return 0;
-        }
-        return Integer.parseInt(header.getHeader(HttpHeader.CONTENT_LENGTH.getValue()));
     }
 
     public RequestHeader getHeader() {
@@ -85,12 +72,20 @@ public class HttpRequest {
         return requestLine.getPath();
     }
 
-    public Cookie getCoookie() {
+    public RequestCookie getCoookie() {
         return header.getCookie();
+    }
+
+    public boolean isLogined() {
+        return Objects.nonNull(getHttpSesion());
     }
 
     public boolean isGetRequest() {
         return requestLine.getHttpMethod().equals(HttpMethod.GET);
+    }
+
+    public HttpSession getHttpSesion() {
+        return SessionManager.findBySessionId(getCoookie().getSessionId());
     }
 
     @Override
