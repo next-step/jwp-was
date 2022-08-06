@@ -12,18 +12,19 @@ public class UserLoginController extends AbstractController {
     @Override
     public HttpResponse doPost(HttpRequest httpRequest) {
         final User user = DataBase.findUserById(httpRequest.getAttribute("userId"));
-        if (loginFailed(user, httpRequest.getAttribute("password"))) {
-            final HttpResponse httpResponse = HttpResponse.sendRedirect("/user/login_failed.html");
-            httpResponse.setCookie("logined", false);
+        final String password = httpRequest.getAttribute("password");
+        if (loginSucceed(user, password)) {
+            final HttpResponse httpResponse = HttpResponse.sendRedirect("/index.html");
+            httpResponse.setCookie(LOGINED_KEY, true);
             return httpResponse;
         }
 
-        final HttpResponse httpResponse = HttpResponse.sendRedirect("/index.html");
-        httpResponse.setCookie(LOGINED_KEY, true);
+        final HttpResponse httpResponse = HttpResponse.sendRedirect("/user/login_failed.html");
+        httpResponse.setCookie(LOGINED_KEY, false);
         return httpResponse;
     }
 
-    private boolean loginFailed(User user, String password) {
-        return user == null || !user.equalsPassword(password);
+    private boolean loginSucceed(User user, String password) {
+        return user != null && user.equalsPassword(password);
     }
 }
