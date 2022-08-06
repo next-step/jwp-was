@@ -64,11 +64,15 @@ public class HttpRequest {
         return requestLine;
     }
 
+    public Method getMethod() {
+        return requestLine.getMethod();
+    }
+
     public Map<String, String> getRequestHeaders() {
         return requestHeaders.getRequestHeadersMap();
     }
 
-    public Map<String, String> getRequestBody() {
-        return requestBody.getRequestBodyMap();
+    public RequestBody getRequestBody() {
+        return requestBody;
     }
 }

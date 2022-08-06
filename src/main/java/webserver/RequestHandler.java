@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 
 import model.User;
 import webserver.http.model.HttpRequest;
+import webserver.http.model.Method;
 import webserver.http.model.RequestHeaders;
 import webserver.http.model.RequestLine;
 import org.slf4j.Logger;
@@ -36,7 +37,12 @@ public class RequestHandler implements Runnable {
                 response200Header(dos, body.length);
                 responseBody(dos, body);
             } else {
-                User user = new User(httpRequest.getQueryStrings());
+                User user;
+                if (Method.isPost(httpRequest.getMethod())) {
+                    user = new User(httpRequest.getRequestBody());
+                } else {
+                    user = new User(httpRequest.getQueryStrings());
+                }
                 logger.info("user: {}", user);
             }
         } catch (IOException | URISyntaxException e) {

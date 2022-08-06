@@ -23,6 +23,5 @@ public class HttpRequestTest {
 
         assertThat(httpRequest.getRequestLine()).isNotNull();
         assertThat(httpRequest.getRequestHeaders()).hasSize(5);
-        assertThat(httpRequest.getRequestBody()).hasSize(1);
     }
 }
