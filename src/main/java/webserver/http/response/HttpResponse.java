@@ -42,6 +42,14 @@ public class HttpResponse {
         );
     }
 
+    public static HttpResponse notFound() {
+        return new HttpResponse(
+                ResponseLine.of404(),
+                ResponseHeader.baseResponseHeader(),
+                Optional.empty()
+        );
+    }
+
     public ResponseLine getResponseLine() {
         return responseLine;
     }

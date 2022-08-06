@@ -31,12 +31,6 @@ public class ResponseHeader {
         return new ResponseHeader(Maps.newHashMap(BASE_HEADERS));
     }
 
-//    public static ResponseHeader of302(String redirectUrl){
-//        HashMap<String, String> responseHeader = Maps.newHashMap(BASE_HEADERS);
-//        responseHeader.put(LOCATION, "http://localhost:8888" + redirectUrl);
-//        return new ResponseHeader(responseHeader);
-//    }
-
     public String getLocation(){
         return headers.get(LOCATION);
     }

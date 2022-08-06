@@ -17,6 +17,8 @@ public class ResponseLine {
         return new ResponseLine(StatusCode.FOUND);
     }
 
+    public static ResponseLine of404() { return new ResponseLine(StatusCode.NOT_FOUND); }
+
     public ProtocolVersion getProtocolVersion() {
         return protocolVersion;
     }

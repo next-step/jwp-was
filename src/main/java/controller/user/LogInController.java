@@ -1,15 +1,14 @@
 package controller.user;
 
+import controller.AbstractController;
 import db.DataBase;
 import model.User;
-import webserver.http.HttpMethod;
 import webserver.http.request.HttpRequest;
-import webserver.http.request.RequestBody;
 import webserver.http.response.HttpResponse;
 
 import java.util.Map;
 
-public class LogInController {
+public class LogInController extends AbstractController {
 
     public static final String URL = "/user/login";
     public static final String VIEW_PATH = "/user/login.html";
@@ -19,24 +18,14 @@ public class LogInController {
     public static final String LOGIN_SUCCESS_COOKIE = "logined=true; Path=/";
     public static final String LOGIN_FAIL_COOKIE = "logined=false; Path=/";
 
-    public HttpResponse run(HttpRequest httpRequest) {
-        final HttpMethod httpMethod = httpRequest.getRequestLine().getMethod();
-
-        if (httpMethod.equals(HttpMethod.GET)) {
-            return doGet();
-        } else if (httpMethod.equals(HttpMethod.POST)) {
-            return doPost(httpRequest.getRequestBody());
-        } else {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    private HttpResponse doGet() {
+    @Override
+    public HttpResponse doGet(HttpRequest httpRequest) {
         return HttpResponse.getView(VIEW_PATH);
     }
 
-    private HttpResponse doPost(RequestBody requestBody) {
-        Map<String, String> body = requestBody.getContents();
+    @Override
+    public HttpResponse doPost(HttpRequest httpRequest) {
+        Map<String, String> body = httpRequest.getRequestBody().getContents();
         String userId = body.get("userId");
         String password = body.get("password");
 

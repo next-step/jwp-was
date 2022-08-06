@@ -7,7 +7,6 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.RequestHandler;
 
 import java.io.IOException;
 import java.util.List;

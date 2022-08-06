@@ -14,4 +14,6 @@ public class FileIoUtils {
         final Path path = Paths.get(FileIoUtils.class.getClassLoader().getResource(FILE_DIR + filePath).toURI());
         return Files.readAllBytes(path);
     }
+
+//    public static string
 }
