@@ -1,0 +1,25 @@
+package model.http;
+
+import java.util.Arrays;
+import java.util.Map;
+
+public class HttpRequest {
+
+    private final RequestLine requestLine;
+    private final RequestHeaders requestHeaders;
+
+    public HttpRequest(String httpRequestText) {
+        String[] texts = httpRequestText.split("\n");
+
+        requestLine = new RequestLine(texts[0]);
+        requestHeaders = new RequestHeaders(Arrays.stream(texts).filter(text -> !text.equals(texts[0])).toArray(String[]::new));
+    }
+
+    public RequestLine getRequestLine() {
+        return requestLine;
+    }
+
+    public Map<String, String> getRequestHeaders() {
+        return requestHeaders.getRequestHeadersMap();
+    }
+}

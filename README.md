@@ -18,11 +18,9 @@
 
 ## step2 기능 요구사항
 * HTTP 웹 서버 구현
-0. step1 에서 개발한 RequestLine 에 대한 파싱 뿐만아니라, 전체 Http Request, Http Response 에 대해 파싱 추가
 1. webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
-   1-1. http header 파일을 읽어온다.
-   1-2. http header 전체를 출력한다.
-   1-3. path를 분리하여 index.html 파일을 응답한다.
+   1-1. httpRequest 문자열을 받아 HttpRequest 클래스에 파싱하여 넣는다.
+   1-2. 사용자 요청으로부터 path를 추출하여 index.html 파일을 읽어 응답한다.
 2. GET 방식 요청으로 회원가입을 한다.
    2-1. Request Header 를 호출하여, 응답을 User 클래스에 담는다.
 3. POST 방식 요청으로 회원가입을 한다.

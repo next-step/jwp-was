@@ -2,14 +2,14 @@ package model.http;
 
 import exception.IllegalHttpRequestException;
 
-public class Http {
+public class RequestLine {
     private static final int VALID_REQUEST_LINE_LENGTH = 3;
 
-    private Method method;
-    private PathInformation pathInformation;
-    private ProtocolVersion protocolVersion;
+    private final Method method;
+    private final PathInformation pathInformation;
+    private final ProtocolVersion protocolVersion;
 
-    public Http(String requestLine) {
+    public RequestLine(String requestLine) {
         String[] requestData = requestLine.split(" ");
 
         if (requestData.length != VALID_REQUEST_LINE_LENGTH) {
