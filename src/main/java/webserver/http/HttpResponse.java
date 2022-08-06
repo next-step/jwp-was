@@ -3,6 +3,7 @@ package webserver.http;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +35,15 @@ public class HttpResponse {
         this.outputStream = outputStream;
     }
 
-    public void sendRedirect(String location) {
+    public void sendRedirect(String location) throws IOException {
         this.statusLine = new StatusLine(ProtocolVersion.HTTP11, Status.FOUND);
         this.headers.setHeader("Location", location);
+        commit();
+    }
+
+    public void sendError(Status status, String message) throws IOException {
+        this.statusLine = new StatusLine(status);
+        setBody(message.getBytes(StandardCharsets.UTF_8));
         commit();
     }
 
@@ -57,17 +64,14 @@ public class HttpResponse {
         return body;
     }
 
-    public void commit() {
+    public void commit() throws IOException {
         if (isCommitted) {
             return;
         }
-        try {
-            writeAndFlush();
-        } catch (IOException e) {
-            throw new RuntimeException();
-        } finally {
-            isCommitted = true;
-        }
+
+        writeAndFlush();
+
+        isCommitted = true;
     }
 
     public void setContentType(String contentType) {

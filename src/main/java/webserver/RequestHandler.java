@@ -12,6 +12,7 @@ import webserver.http.HttpResponse;
 import webserver.view.View;
 import webserver.view.ViewResolver;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -24,16 +25,11 @@ public class RequestHandler implements Runnable {
 
     private final Socket connection;
 
-    private final StaticLocationProvider staticLocationProvider = new StaticLocationProvider(
-            List.of("./templates", "./static")
-    );
-
     private final HandlerMapping handlerMapping = new HandlerMapping(List.of(
             new RequestMappingRegistration("/user/create", HttpMethod.POST, new CreateMemberHandler()),
             new RequestMappingRegistration("/user/list", HttpMethod.GET, new ListMemberHandler()),
-            new RequestMappingRegistration("/user/login", HttpMethod.POST, new LoginMemberHandler()),
-            new RequestMappingRegistration("/.*", HttpMethod.GET, new StaticFileHandler(staticLocationProvider))
-    ));
+            new RequestMappingRegistration("/user/login", HttpMethod.POST, new LoginMemberHandler())),
+            new StaticFileHandler());
 
     private final ViewResolver viewResolver = new ViewResolver("/templates", ".html");
 
@@ -58,7 +54,7 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void handleRequest(HttpRequest httpRequest, HttpResponse httpResponse) {
+    private void handleRequest(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
         Handler handler = handlerMapping.getHandler(httpRequest);
 
         ModelAndView modelAndView = handler.handle(httpRequest, httpResponse);

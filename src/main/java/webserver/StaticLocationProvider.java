@@ -19,19 +19,20 @@ public class StaticLocationProvider {
         this(DEFAULT_STATIC_LOCATIONS);
     }
 
-    public String getStaticLocation(String path) {
+    public String getStaticResourcePath(String path) {
         return staticLocations
                 .stream()
-                .filter(staticLocation -> existsFromClassPath(staticLocation + path))
+                .map(staticLocation -> staticLocation + path)
+                .filter(this::existsFromClassPath)
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundResourceException("not found " + path));
     }
 
     private boolean existsFromClassPath(String path) {
         try {
             return FileIoUtils.existsFileFromClassPath(path);
         } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+            throw new NotFoundResourceException("not found " + path, e);
         }
     }
 

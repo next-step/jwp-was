@@ -1,7 +1,9 @@
 package webserver;
 
+import webserver.handler.StaticFileHandler;
 import webserver.http.HttpRequest;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,12 +12,15 @@ class HandlerMapping {
 
     private final Map<RequestMappingInfo, Handler> handlerRegistry;
 
-    HandlerMapping(Map<RequestMappingInfo, Handler> handlers) {
-        this.handlerRegistry = handlers;
+    private final Handler fallbackHandler;
+
+    HandlerMapping(RequestMappingRegistration... registrations) {
+        this(Arrays.asList(registrations), new StaticFileHandler());
     }
 
-    HandlerMapping(List<RequestMappingRegistration> registrations) {
+    HandlerMapping(List<RequestMappingRegistration> registrations, Handler fallbackHandler) {
         this.handlerRegistry = createHandlerRegistry(registrations);
+        this.fallbackHandler = fallbackHandler;
     }
 
     private Map<RequestMappingInfo, Handler> createHandlerRegistry(List<RequestMappingRegistration> registrations) {
@@ -37,17 +42,8 @@ class HandlerMapping {
     }
 
     Handler getHandler(HttpRequest httpRequest) {
-        Handler handler = handlerRegistry.get(new RequestMappingInfo(httpRequest.getPath(), httpRequest.getMethod()));
-
-        if (handler != null) {
-            return handler;
-        }
-
-        return handlerRegistry.keySet()
-                .stream()
-                .filter(requestMappingInfo -> requestMappingInfo.matchRequest(httpRequest))
-                .map(handlerRegistry::get)
-                .findAny()
-                .orElseThrow();
+        return handlerRegistry.getOrDefault(
+                new RequestMappingInfo(httpRequest.getPath(), httpRequest.getMethod()), fallbackHandler
+        );
     }
 }
