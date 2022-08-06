@@ -39,15 +39,11 @@ public class RequestHeader {
         return headerInfo.contentsLength();
     }
 
-    public String host() {
-        return headerInfo.host();
-    }
-
     public String protocolVersion() {
         return requestLine.protocol() + "/" + requestLine.version();
     }
 
-    public String cookie() {
-        return headerInfo.cookie();
+    public String sessionId() {
+        return headerInfo.sessionId();
     }
 }

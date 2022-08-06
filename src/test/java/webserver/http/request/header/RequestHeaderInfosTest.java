@@ -31,4 +31,17 @@ class RequestHeaderInfosTest {
 
         assertThat(requestHeaderInfos.contentsLength()).isZero();
     }
+
+    @DisplayName("세션 아이디 테스트")
+    @Test
+    void sessionIdTest() {
+        String header = "GET /user/list HTTP/1.1\n" +
+                "Host: localhost:8080\n" +
+                "Content-Length: 59\n" +
+                "Cookie: sessionId=123 Path=/\n";
+
+        RequestHeaderInfos requestHeaderInfos = new RequestHeaderInfos(header.split("\n"));
+
+        assertThat(requestHeaderInfos.sessionId()).isEqualTo("123");
+    }
 }

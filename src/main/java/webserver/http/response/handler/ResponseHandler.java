@@ -1,7 +1,8 @@
 package webserver.http.response.handler;
 
 import webserver.http.request.header.RequestHeader;
+import webserver.http.response.header.ResponseHeader;
 
 public interface ResponseHandler {
-    String run(RequestHeader requestHeader, String requestBody, byte[] responseBody);
+    ResponseHeader run(RequestHeader requestHeader, String requestBody, byte[] responseBody);
 }

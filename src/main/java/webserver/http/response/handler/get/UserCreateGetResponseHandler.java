@@ -13,7 +13,7 @@ public class UserCreateGetResponseHandler implements ResponseHandler {
     private static final String REDIRECT_INDEX_HTML = "/index.html";
 
     @Override
-    public String run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
+    public ResponseHeader run(RequestHeader requestHeader, String requestBody, byte[] responseBody) {
         User user = UserParser.createUser(
                 requestHeader.requestParams(UserParser.FIELD_USER_ID),
                 requestHeader.requestParams(UserParser.FIELD_PASSWORD),
@@ -26,7 +26,6 @@ public class UserCreateGetResponseHandler implements ResponseHandler {
         return new ResponseHeader(requestHeader.protocolVersion(), HttpResponseStatus.FOUND)
                 .addContentType(ContentType.HTML)
                 .addContentLength(responseBody.length)
-                .addLocation(REDIRECT_INDEX_HTML)
-                .toString();
+                .addLocation(REDIRECT_INDEX_HTML);
     }
 }

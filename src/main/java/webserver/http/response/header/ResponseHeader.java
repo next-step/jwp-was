@@ -16,6 +16,7 @@ public class ResponseHeader {
     private static final String CONTENT_LENGTH = "Content-Length";
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String LOCATION = "Location";
+    private static final String COOKIE_SESSION_ID = "sessionId=";
     private final Map<String, String> infos = new HashMap<>();
 
     public ResponseHeader(String protocolVersion, HttpResponseStatus httpResponseStatus) {
@@ -37,8 +38,8 @@ public class ResponseHeader {
         return this;
     }
 
-    public ResponseHeader addCookie(String cookie) {
-        infos.put(SET_COOKIE, cookie + BLANK + ROOT_PATH);
+    public ResponseHeader addCookieSessionId(String uuid) {
+        infos.put(SET_COOKIE, COOKIE_SESSION_ID + uuid + BLANK + ROOT_PATH);
         return this;
     }
 

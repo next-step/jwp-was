@@ -2,11 +2,15 @@ package webserver.http.response.handler.get;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import webserver.http.request.header.RequestHeader;
 import webserver.http.response.handler.get.UserListResponseHandler;
+import webserver.http.session.HttpSession;
+import webserver.http.session.HttpSessionStorage;
 
 class UserListResponseHandlerTest {
 
@@ -14,6 +18,11 @@ class UserListResponseHandlerTest {
     @Test
     void loginUserList() {
         // given
+        HttpSession httpSession = new HttpSession(UUID.randomUUID());
+        httpSession.setLogin(true);
+
+        HttpSessionStorage.setSession(httpSession.getId(), httpSession);
+
         UserListResponseHandler handler = new UserListResponseHandler();
 
         // when
@@ -23,11 +32,11 @@ class UserListResponseHandlerTest {
                                 "Host: localhost:8080\n" +
                                 "Connection: keep-alive\n" +
                                 "Accept: */*\n" +
-                                "Cookie: logined=true"
+                                "Cookie: sessionId=" + httpSession.getId()
                 ),
                 "",
                 "".getBytes()
-        );
+        ).toString();
 
         // then
         assertThat(actual).isEqualTo(
@@ -54,7 +63,7 @@ class UserListResponseHandlerTest {
                 ),
                 "",
                 "".getBytes()
-        );
+        ).toString();
 
         // then
         assertThat(actual).isEqualTo(
