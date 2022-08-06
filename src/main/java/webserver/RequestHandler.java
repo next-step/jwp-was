@@ -6,10 +6,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
 import model.User;
-import webserver.http.model.HttpRequest;
-import webserver.http.model.Method;
-import webserver.http.model.RequestHeaders;
-import webserver.http.model.RequestLine;
+import webserver.http.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -24,26 +21,20 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
+        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             HttpRequest httpRequest = new HttpRequest(bufferedReader);
 
+            DataOutputStream dos = new DataOutputStream(out);
             if (httpRequest.isStaticResource()) {
-                DataOutputStream dos = new DataOutputStream(out);
                 byte[] body = FileIoUtils.loadFileFromClasspath(httpRequest.responsePath());
                 response200Header(dos, body.length);
                 responseBody(dos, body);
             } else {
-                User user;
-                if (Method.isPost(httpRequest.getMethod())) {
-                    user = new User(httpRequest.getRequestBody());
-                } else {
-                    user = new User(httpRequest.getQueryStrings());
-                }
-                logger.info("user: {}", user);
+                Object handlerMapping = HandlerAdapter.handlerMapping(httpRequest);
+                response302Header(dos, String.valueOf(handlerMapping));
             }
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
@@ -55,6 +46,16 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(DataOutputStream dos, String redirectPath) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Location: " + redirectPath + " \r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());

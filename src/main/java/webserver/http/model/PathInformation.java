@@ -44,6 +44,10 @@ public class PathInformation {
         return queryStrings;
     }
 
+    public String path() {
+        return path.getPath();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

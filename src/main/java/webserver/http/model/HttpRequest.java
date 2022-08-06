@@ -19,10 +19,9 @@ public class HttpRequest {
         this.requestLine = new RequestLine(line);
         this.requestHeaders = new RequestHeaders(bufferedReader, line);
         this.requestBody = null;
-        if (Method.isPost(requestLine.getMethod())) { // FIXME getter 대신 메시지
+        if (Method.isPost(requestLine.getMethod())) {
             this.requestBody = new RequestBody(bufferedReader, requestHeaders);
         }
-//        new HttpRequest(requestLine, requestHeaders, requestBody); // TODO 왜 호출이 안될까?
     }
 
     public HttpRequest(String httpRequestText) {
@@ -54,6 +53,10 @@ public class HttpRequest {
 
     public String responsePath() {
         return requestLine.fullPath();
+    }
+
+    public String path() {
+        return requestLine.path();
     }
 
     public QueryStrings getQueryStrings() {

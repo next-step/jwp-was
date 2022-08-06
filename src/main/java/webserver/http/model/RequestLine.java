@@ -33,6 +33,10 @@ public class RequestLine {
         return pathInformation.getQueryStrings();
     }
 
+    public String path() {
+        return pathInformation.path();
+    }
+
     public Method getMethod() {
         return method;
     }
