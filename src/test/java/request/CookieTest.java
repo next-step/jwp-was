@@ -1,5 +1,7 @@
 package request;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -10,10 +12,13 @@ public class CookieTest {
     @Test
     @DisplayName("쿠킥 만들어 값 확인하기")
     void cookieTest() {
-        String header = "cookie=1413131; visited=123141341; logined=true";
+        String header = "visited=visited; logined=true";
 
-        Cookie cookie = Cookie.of(header);
-        Cookie 비교값 = new Cookie("true");
+        RequestCookie cookie = RequestCookie.of(header);
+        Map<String, String> cookies = new HashMap<>();
+        cookies.put("logined", "true");
+        cookies.put("visited", "visited");
+        RequestCookie 비교값 = new RequestCookie(cookies);
 
         assertThat(cookie).isEqualTo(비교값);
     }
