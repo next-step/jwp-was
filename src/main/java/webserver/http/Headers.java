@@ -15,8 +15,7 @@ public class Headers {
     private final Map<String, Object> cookies;
 
     public Headers() {
-        this.headers = new HashMap<>();
-        this.cookies = new HashMap<>();
+        this(new HashMap<>());
     }
 
     public Headers(Map<String, Object> headers) {
