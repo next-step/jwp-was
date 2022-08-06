@@ -9,6 +9,10 @@ public class QueryStringValue {
         this.queryStringValue = queryStringValue;
     }
 
+    public String getQueryStringValue() {
+        return queryStringValue;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

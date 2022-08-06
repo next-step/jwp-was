@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
+import model.User;
 import webserver.http.model.HttpRequest;
 import webserver.http.model.RequestHeaders;
 import webserver.http.model.RequestLine;
@@ -43,10 +44,15 @@ public class RequestHandler implements Runnable {
 
             HttpRequest httpRequest = new HttpRequest(requestLine, requestHeaders);
 
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = FileIoUtils.loadFileFromClasspath(httpRequest.responsePath());
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            if (httpRequest.isStaticResource()) {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = FileIoUtils.loadFileFromClasspath(httpRequest.responsePath());
+                response200Header(dos, body.length);
+                responseBody(dos, body);
+            } else {
+                User user = new User(httpRequest.getQueryStrings());
+                logger.info("user: {}", user);
+            }
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }

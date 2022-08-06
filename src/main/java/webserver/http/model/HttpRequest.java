@@ -24,6 +24,14 @@ public class HttpRequest {
         return requestLine.fullPath();
     }
 
+    public boolean isStaticResource() {
+        return requestLine.isStaticResource();
+    }
+
+    public QueryStrings getQueryStrings() {
+        return requestLine.getQueryStrings();
+    }
+
     public RequestLine getRequestLine() {
         return requestLine;
     }

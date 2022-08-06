@@ -21,8 +21,16 @@ public class RequestLine {
         this.protocolVersion = new ProtocolVersion(requestData[2]);
     }
 
+    public boolean isStaticResource() {
+        return pathInformation.isStaticResource();
+    }
+
     public String fullPath() {
         return pathInformation.fullPath();
+    }
+
+    public QueryStrings getQueryStrings() {
+        return pathInformation.getQueryStrings();
     }
 
     public Method getMethod() {

@@ -1,26 +1,29 @@
 package webserver.http.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class QueryStrings {
-    private List<QueryString> queryStringList;
+    private Map<QueryStringKey, QueryStringValue> queryStringMap;
 
     public QueryStrings(String queryStrings) {
         if (queryStrings.isBlank()) {
             return;
         }
 
-        queryStringList = new ArrayList<>();
+        queryStringMap = new LinkedHashMap<>();
         String[] queryStringArray = queryStrings.split("&");
         for (String queryString : queryStringArray) {
-            queryStringList.add(new QueryString(queryString));
+            QueryString queryStringObject = new QueryString(queryString);
+            queryStringMap.put(queryStringObject.getQueryStringKey(), queryStringObject.getQueryStringValue());
         }
     }
 
-    public List<QueryString> getQueryStringList() {
-        return queryStringList;
+    public String queryStringValue(String queryStringKey) {
+        return queryStringMap.get(new QueryStringKey(queryStringKey)).getQueryStringValue();
+    }
+
+    public Map<QueryStringKey, QueryStringValue> getQueryStringMap() {
+        return queryStringMap;
     }
 
     @Override
@@ -32,11 +35,11 @@ public class QueryStrings {
             return false;
         }
         QueryStrings that = (QueryStrings) o;
-        return Objects.equals(queryStringList, that.queryStringList);
+        return Objects.equals(queryStringMap, that.queryStringMap);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(queryStringList);
+        return Objects.hash(queryStringMap);
     }
 }

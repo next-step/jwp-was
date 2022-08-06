@@ -32,6 +32,10 @@ public class PathInformation {
         return path.resource();
     }
 
+    public boolean isStaticResource() {
+        return path.isStaticResource();
+    }
+
     public Path getPath() {
         return path;
     }

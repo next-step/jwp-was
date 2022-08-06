@@ -1,10 +1,17 @@
 package model;
 
+import webserver.http.model.QueryStrings;
+
 public class User {
     private String userId;
     private String password;
     private String name;
     private String email;
+
+    public User(QueryStrings queryStrings) {
+        this(queryStrings.queryStringValue("userId"), queryStrings.queryStringValue("password"),
+                queryStrings.queryStringValue("name"), queryStrings.queryStringValue("email"));
+    }
 
     public User(String userId, String password, String name, String email) {
         this.userId = userId;

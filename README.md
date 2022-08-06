@@ -22,7 +22,7 @@
    1-1. httpRequest 문자열을 받아 HttpRequest 클래스에 파싱하여 넣는다.
    1-2. 사용자 요청으로부터 path를 추출하여 index.html 파일을 읽어 응답한다.
 2. GET 방식 요청으로 회원가입을 한다.
-   2-1. Request Header 를 호출하여, 응답을 User 클래스에 담는다.
+   2-1. HttpRequest가 정적 리소스를 전달하는지, 동적 응답을 요청하는지 확인하고, 사용자 등록 호출시 queryString으로 넘어온 값으로 User 인스턴스를 생성한다.
 3. POST 방식 요청으로 회원가입을 한다.
    3-1. HTTP Body를 가져와 User 클래스에 담는다.
 4. 회원 가입 이후에 index.html 페이지로 이동 시킨다.
