@@ -16,7 +16,7 @@ public class UserListController extends AbstractController {
 
     @Override
     public void doGet(HttpRequest request, HttpResponse response) throws Exception {
-        if (!request.getCoookie().getLogined().equals(TRUE)) {
+        if (!request.isLogined()) {
             response.sendRedirect(LOGIN_VIEW);
             return;
         }
