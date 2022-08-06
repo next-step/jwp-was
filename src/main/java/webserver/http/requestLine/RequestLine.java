@@ -1,8 +1,9 @@
-package webserver;
+package webserver.http.requestLine;
 
 import error.NotHttpMethodConstantException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.constant.HttpMethod;
 
 import java.util.Objects;
 

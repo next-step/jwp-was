@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http.requestLine;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 public class Uri {
     private static final Logger log = LoggerFactory.getLogger(Uri.class);
     private final String path;
-    private final QueryStringParser queryString;
+    private final String queryString;
 
     public Uri(String uri) {
-        QueryStringParser queryString = null;
+        String queryString = null;
         if (uri.contains("?")) {
-            queryString = new QueryStringParser(uri.split("\\?")[1]);
+            queryString = uri.split("\\?")[1];
         }
         this.path = uri.split("\\?")[0];
         this.queryString = queryString;
@@ -21,7 +21,7 @@ public class Uri {
         return path;
     }
 
-    public QueryStringParser getQueryString() {
+    public String  getQueryString() {
         return queryString;
     }
 

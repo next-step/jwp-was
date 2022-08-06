@@ -7,7 +7,9 @@ import error.NotHttpMethodConstantException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpMethod;
+import webserver.constant.HttpMethod;
+import webserver.http.HttpParameter;
+import webserver.http.requestLine.RequestLine;
 
 public class RequestLineTest {
     @Test
@@ -42,11 +44,14 @@ public class RequestLineTest {
     @DisplayName("HTTP요청의 QueryString으로 전달되는 데이터를 파싱한다.")
     void HTTP요청_QueryString_파싱_테스트() {
         String requestLine = "POST /users?name1=value1&name2=value2 HTTP/1.1";
-        RequestLine requestLineParser = new RequestLine(requestLine);
+
+        String queryString = new RequestLine(requestLine).getUri().getQueryString();
+        HttpParameter httpParameter = new HttpParameter();
+        httpParameter.loadParameters(queryString);
 
         assertAll(
-                () -> assertThat(requestLineParser.getUri().getQueryString().getQueryParameters().get("name1")).isEqualTo("value1"),
-                () -> assertThat(requestLineParser.getUri().getQueryString().getQueryParameters().get("name2")).isEqualTo("value2")
+                () -> assertThat(httpParameter.getParameters("name1")).isEqualTo("value1"),
+                () -> assertThat(httpParameter.getParameters("name2")).isEqualTo("value2")
         );
     }
 

@@ -116,4 +116,34 @@ Set-Cookie: logined=true; Path=/
 - [X] HttpMethod enum 클래스 생성
 - [X] RequestLine 클래스 이름 변경
 - [X] userList 화면 수정
-- [ ] 
+
+## HTTP 웹 서버 리팩토링
+### WAS 요구사항
+- [X] 각각의 역할을 분리해 재사용 가능하도록 개선한다.
+  - WAS 기능, HTTP 요청/응답 처리 기능은 애플리케이션 개발자가 신경쓰지 않아도 재사용이 가능한 구조가 되도록 한다.
+- [X] HTTP 요청 Header/Body 처리, 응답 Header/Body 처리만을 담당하는 역할을 분리해 재사용 가능하도록 한다.
+### 코드 리팩토링 1단계
+- 메소드 분리 및 클래스 분리 (private 메소드 vs 메소드 클래스)
+  - [X] HttpRequest 클래스 만들기
+    - getMethod / getPath / getHeader / getParameter
+
+### 코드 리팩토링 2단계
+- 클라이언트 요청 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpRequest)
+  - [X] 클라이언트 요청 데이터를 담고 있는 InputStream을 생성자로 받아 HTTP 메소드, URL, 헤더, 본문을 분리하는 작업을 한다.
+  - [X] 헤더는 Map<String, String>에 저장해 관리하고 getHeader(“필드 이름”) 메소드를 통해 접근 가능하도록 구현한다.
+  - [X] GET과 POST 메소드에 따라 전달되는 인자를 Map<String, String>에 저장해 관리하고 getParameter(“인자 이름”) 메소드를 통해 접근 가능하도록 구현한다.
+- 클라이언트 응답 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpResponse)
+  - [X] 응답을 보낼 때 HTML, CSS, 자바스크립트 파일을 직접 읽어 응답으로 보내는 메소드는 forward(), 다른 URL로 리다이렉트하는 메소드는 sendRedirect() 메소드를 나누어 구현한다.
+ 
+### 다형성을 활용해 클라이언트 요청 URL에 대한 분기 처리를 제거한다.
+- [X] 각 분기문을 Controller 인터페이스를 구현하는(implements) 클래스를 만들어 분리한다.
+- [X] 이렇게 생성한 Controller 구현체를 Map<String, Controller>에 저장한다. Map의 key에 해당하는 String은 요청 URL, value에 해당하는 Controller는 Controller 구현체이다.
+- [X] 클라이언트 요청 URL에 해당하는 Controller를 찾아 service() 메소드를 호출한다.
+- [X] Controller 인터페이스를 구현하는 AbstractController 추상클래스를 추가해 중복을 제거하고, service() 메소드에서 GET과 POST HTTP 메소드에 따라 doGet(), doPost() 메소드를 호출하도록 한다.
+
+### 3단계 피드백
+- [X] 일급 컬렉션 적용
+- [X] HttpRequest POST방식 -> body 전달 + Query 전달
+- [X] Test 수정
+- [X] Response Cookie 설정 변경
+- [ ] Mapping Controller 클래스 생성

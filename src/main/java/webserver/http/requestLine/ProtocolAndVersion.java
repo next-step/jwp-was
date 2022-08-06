@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http.requestLine;
 
 public class ProtocolAndVersion {
     private final String protocol;
