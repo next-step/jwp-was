@@ -3,11 +3,11 @@ package http.response;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import http.Cookie;
 import http.Cookies;
@@ -35,11 +35,11 @@ public class HttpResponse {
     }
 
     public HttpResponse(HttpStatus status, Map<String, String> headers) {
-        this(Protocol.of("HTTP/1.1"), status, headers, "", Set.of());
+        this(Protocol.of("HTTP/1.1"), status, headers, "", new HashSet<>());
     }
 
     public HttpResponse(HttpStatus status, Map<String, String> headers, Cookie cookie) {
-        this(Protocol.of("HTTP/1.1"), status, headers, "", Set.of(cookie));
+        this(Protocol.of("HTTP/1.1"), status, headers, "", new HashSet<>(Arrays.asList(cookie)));
     }
 
     public static HttpResponse found(String location) {
@@ -47,7 +47,7 @@ public class HttpResponse {
     }
 
     public static HttpResponse ok(String body) {
-        return new HttpResponse(Protocol.of("HTTP/1.1"), HttpStatus.OK, Map.of(), body, Set.of());
+        return new HttpResponse(Protocol.of("HTTP/1.1"), HttpStatus.OK, Map.of(), body, new HashSet<>());
     }
 
     public static HttpResponse parseStaticFile(String url, String fileExtension) {
@@ -61,7 +61,7 @@ public class HttpResponse {
             HttpStatus.OK,
             Map.of("Content-Type", contentType.getMessage()),
             new String(bytes, StandardCharsets.UTF_8),
-            Set.of()
+            new HashSet<>()
         );
     }
 
@@ -86,6 +86,10 @@ public class HttpResponse {
         writeBody(dataOutputStream);
     }
 
+    public void putCookie(String key, String value) {
+        cookies.putCookie(key, value);
+    }
+
     private void writeHeader(DataOutputStream dos) {
         try {
             dos.writeBytes(String.format("%s/%s %d %s\r\n",
@@ -95,18 +99,8 @@ public class HttpResponse {
                 httpStatus.getMessage())
             );
 
-            for (Map.Entry<String, String> entry : httpResponseHeaders.entrySet()) {
-                dos.writeBytes(String.format("%s: %s\r\n", entry.getKey(), entry.getValue()));
-            }
-
-            for (Cookie cookie : cookies.getValues()) {
-                var prefix = String.format("Set-Cookie: %s=%s", cookie.getKey(), cookie.getValue());
-
-                var cookieResponse = Stream.concat(Stream.of(prefix), cookie.getOptions().stream())
-                    .collect(Collectors.joining("; "));
-
-                dos.writeBytes(cookieResponse + "\r\n");
-            }
+            httpResponseHeaders.write(dos);
+            cookies.write(dos);
 
             dos.writeBytes("\r\n");
         } catch (IOException e) {
@@ -129,5 +123,9 @@ public class HttpResponse {
 
     public Map<String, String> getHeaders() {
         return httpResponseHeaders.getHeaders();
+    }
+
+    public boolean isMarkdown() {
+        return httpResponseHeaders.isMarkDown();
     }
 }

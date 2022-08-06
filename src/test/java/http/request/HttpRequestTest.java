@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import http.exception.NotFoundExtensionException;
+import http.request.session.MemorySessionStore;
 
 class HttpRequestTest {
 
@@ -20,7 +21,7 @@ class HttpRequestTest {
     void isStaticFile() {
         var requestLine = new RequestLine("GET /users/index.html HTTP/1.1");
         var headers = new Headers(List.of());
-        var httpRequest = new HttpRequest(requestLine, headers, "");
+        var httpRequest = new HttpRequest(requestLine, headers, "", new MemorySessionStore());
 
         assertThat(httpRequest.isStaticFile()).isTrue();
     }
@@ -29,7 +30,7 @@ class HttpRequestTest {
     void getUrl() {
         var requestLine = new RequestLine("GET /users HTTP/1.1");
         var headers = new Headers(List.of());
-        var httpRequest = new HttpRequest(requestLine, headers, "");
+        var httpRequest = new HttpRequest(requestLine, headers, "", new MemorySessionStore());
 
         assertThat(httpRequest.getUrl()).isEqualTo("/users");
     }
@@ -38,7 +39,7 @@ class HttpRequestTest {
     void getMethod() {
         var requestLine = new RequestLine("GET /users HTTP/1.1");
         var headers = new Headers(List.of());
-        var httpRequest = new HttpRequest(requestLine, headers, "");
+        var httpRequest = new HttpRequest(requestLine, headers, "", new MemorySessionStore());
 
         assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
     }
@@ -47,7 +48,7 @@ class HttpRequestTest {
     void getCookie() {
         var requestLine = new RequestLine("GET /users HTTP/1.1");
         var headers = new Headers(List.of("Cookie: logined=true"));
-        var httpRequest = new HttpRequest(requestLine, headers, "");
+        var httpRequest = new HttpRequest(requestLine, headers, "", new MemorySessionStore());
 
         var actual = httpRequest.getCookie("logined")
             .get();
@@ -59,7 +60,7 @@ class HttpRequestTest {
     void getFileExtension() {
         var requestLine = new RequestLine("GET /users/index.html HTTP/1.1");
         var headers = new Headers(List.of());
-        var httpRequest = new HttpRequest(requestLine, headers, "");
+        var httpRequest = new HttpRequest(requestLine, headers, "", new MemorySessionStore());
 
         var fileExtension = httpRequest.getFileExtension();
 
@@ -71,7 +72,7 @@ class HttpRequestTest {
     void getFileExtensionError() {
         var requestLine = new RequestLine("GET /users/index HTTP/1.1");
         var headers = new Headers(List.of());
-        var httpRequest = new HttpRequest(requestLine, headers, "");
+        var httpRequest = new HttpRequest(requestLine, headers, "", new MemorySessionStore());
 
         assertThatThrownBy(httpRequest::getFileExtension)
             .isInstanceOf(NotFoundExtensionException.class)
@@ -87,7 +88,7 @@ class HttpRequestTest {
         var inputStream = new ByteArrayInputStream(request.getBytes(StandardCharsets.UTF_8));
         var bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-        var httpRequest = HttpRequest.parse(bufferedReader);
+        var httpRequest = HttpRequest.parse(bufferedReader, new MemorySessionStore());
 
         assertAll(
             () -> assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET),
@@ -108,7 +109,7 @@ class HttpRequestTest {
         var inputStream = new ByteArrayInputStream(request.getBytes(StandardCharsets.UTF_8));
         var bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-        var httpRequest = HttpRequest.parse(bufferedReader);
+        var httpRequest = HttpRequest.parse(bufferedReader, new MemorySessionStore());
 
         assertThat(httpRequest.getParameters().get("user")).isEqualTo("1");
     }
@@ -125,7 +126,7 @@ class HttpRequestTest {
         var inputStream = new ByteArrayInputStream(request.getBytes(StandardCharsets.UTF_8));
         var bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-        var httpRequest = HttpRequest.parse(bufferedReader);
+        var httpRequest = HttpRequest.parse(bufferedReader, new MemorySessionStore());
 
         assertThat(httpRequest.getParameters().get("user")).isEqualTo("2");
     }

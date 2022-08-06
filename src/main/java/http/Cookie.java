@@ -10,7 +10,7 @@ public class Cookie {
     private final Set<String> options;
 
     public Cookie(String key, String value) {
-        this(key, value, Set.of());
+        this(key, value, Set.of("Path=/"));
     }
 
     public Cookie(String key, String value, Set<String> options) {

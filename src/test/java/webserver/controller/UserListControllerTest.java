@@ -13,6 +13,7 @@ import http.HttpStatus;
 import http.request.Headers;
 import http.request.HttpRequest;
 import http.request.RequestLine;
+import http.request.session.MemorySessionStore;
 import model.User;
 
 class UserListControllerTest {
@@ -28,8 +29,11 @@ class UserListControllerTest {
         DataBase.addUser(new User("2", "1234", "hong", "test1@naver.com"));
         DataBase.addUser(new User("3", "1234", "bin", "test2@naver.com"));
 
+        var sessionStore = new MemorySessionStore();
+        sessionStore.fetch("key").setAttribute("isLogined", true);
+
         var httpRequest = new HttpRequest(new RequestLine("GET /user/list HTTP/1.1"),
-            new Headers(List.of("Content-type: text/html", "Cookie: isLogined=true")), "");
+            new Headers(List.of("Content-type: text/html", "Cookie: SESSION_ID=key")), "", sessionStore);
 
         var controller = new UserListController();
         var response = controller.service(httpRequest);

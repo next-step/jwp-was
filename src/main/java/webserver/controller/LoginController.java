@@ -1,15 +1,13 @@
 package webserver.controller;
 
 import java.util.Map;
-import java.util.Set;
 
 import db.DataBase;
-import http.Cookie;
 import http.HttpStatus;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 
-public class LoginController extends AbstractController {
+public class LoginController implements PostController {
 
     @Override
     public HttpResponse doPost(HttpRequest request) {
@@ -21,11 +19,12 @@ public class LoginController extends AbstractController {
             .filter(it -> it.canLogin(params.get("password")))
             .isPresent();
 
-        var cookie = new Cookie("isLogined", String.valueOf(isLogined), Set.of("Path=/"));
+        request.getHttpSession()
+            .setAttribute("isLogined", String.valueOf(isLogined));
 
         if (isLogined) {
-            return new HttpResponse(HttpStatus.FOUND, Map.of("Location", "/index.html"), cookie);
+            return new HttpResponse(HttpStatus.FOUND, Map.of("Location", "/index.html"));
         }
-        return new HttpResponse(HttpStatus.FOUND, Map.of("Location", "/user/login_failed.html"), cookie);
+        return new HttpResponse(HttpStatus.FOUND, Map.of("Location", "/user/login_failed.html"));
     }
 }

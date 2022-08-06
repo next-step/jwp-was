@@ -14,6 +14,7 @@ import http.HttpStatus;
 import http.request.Headers;
 import http.request.HttpRequest;
 import http.request.RequestLine;
+import http.request.session.MemorySessionStore;
 import model.User;
 
 class LoginControllerTest {
@@ -29,11 +30,11 @@ class LoginControllerTest {
         DataBase.addUser(new User("user", "1234", "testname", "email@naver.com"));
 
         var body = "userId=user&password=1234";
+        var sessionStore = new MemorySessionStore();
         var httpRequest = new HttpRequest(
             new RequestLine("POST /user/login HTTP/1.1"),
             new Headers(List.of("Content-Length: " + body.length())),
-            body
-        );
+            body, sessionStore);
 
         var controller = new LoginController();
         var response = controller.service(httpRequest);
@@ -41,7 +42,7 @@ class LoginControllerTest {
         assertAll(
             ()-> assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.FOUND),
             ()-> assertThat(response.getHeaders().get("Location")).isEqualTo("/index.html"),
-            ()-> assertThat(response.getCookie("isLogined").get()).isEqualTo("true")
+            ()-> assertThat(sessionStore.fetch(httpRequest.currentClientUserId()).getAttribute("isLogined").get()).isEqualTo("true")
         );
     }
 }

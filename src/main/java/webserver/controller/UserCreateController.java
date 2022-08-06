@@ -8,7 +8,7 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import model.User;
 
-public class UserCreateController extends AbstractController {
+public class UserCreateController implements PostController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserCreateController.class);
 
