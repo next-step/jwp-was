@@ -1,12 +1,14 @@
 package webserver.http.request;
 
 import webserver.http.header.HttpCookie;
-import webserver.http.header.HttpStaticResourceFileExtension;
 import webserver.http.request.body.HttpRequestBody;
 import webserver.http.request.header.HttpRequestHeaders;
 import webserver.http.request.requestline.HttpMethod;
 import webserver.http.request.requestline.HttpQueryStrings;
 import webserver.http.request.requestline.HttpRequestLine;
+import webserver.http.session.HttpSession;
+
+import static webserver.http.session.HttpSessionStore.SESSION_ID_KEY;
 
 public class HttpRequestMessage {
     private final HttpRequestLine httpRequestLine;
@@ -50,7 +52,11 @@ public class HttpRequestMessage {
         return httpRequestLine.getHttpPath().getHttpQueryStrings();
     }
 
-    public HttpStaticResourceFileExtension httpPathExtension() {
-        return httpRequestLine.getHttpPathExtension();
+    public HttpSession getSession() {
+        return httpRequestHeaders.getSession();
+    }
+
+    public boolean isNotExistSession() {
+        return getCookie(SESSION_ID_KEY).isNone();
     }
 }

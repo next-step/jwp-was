@@ -2,12 +2,16 @@ package webserver.http.request.header;
 
 import webserver.http.header.HttpCookie;
 import webserver.http.header.HttpCookies;
+import webserver.http.session.HttpSession;
+import webserver.http.session.HttpSessionId;
+import webserver.http.session.HttpSessionStore;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static webserver.http.header.HttpHeaderConstants.*;
+import static webserver.http.session.HttpSessionStore.SESSION_ID_KEY;
 
 public class HttpRequestHeaders {
     private static int HTTP_REQUEST_HEADER_SCHEMAS_MAXIMUM_SIZE = 2;
@@ -67,5 +71,15 @@ public class HttpRequestHeaders {
         }
 
         return Integer.parseInt(contentLengthHeader);
+    }
+
+    public HttpSession getSession() {
+        HttpCookie sessionIdCookie = getCookie(SESSION_ID_KEY);
+
+        if (sessionIdCookie.isNone()) {
+            return HttpSessionStore.getSession(HttpSessionId.create());
+        }
+
+        return HttpSessionStore.getSession(HttpSessionId.of(sessionIdCookie.getCookieValue()));
     }
 }

@@ -3,6 +3,7 @@ package webserver.http.response;
 import endpoint.TemplateResource;
 import utils.StaticResourceLoader;
 import utils.TemplatePageLoader;
+import webserver.http.header.HttpCookie;
 import webserver.http.header.HttpStaticResourceFileExtension;
 
 import java.util.Map;
@@ -123,5 +124,9 @@ public class HttpResponseMessage {
 
     public HttpResponseHeaders getHttpResponseHeaders() {
         return httpResponseHeaders;
+    }
+
+    public void addCookie(HttpCookie httpCookie) {
+        httpResponseHeaders.addCookie(httpCookie);
     }
 }

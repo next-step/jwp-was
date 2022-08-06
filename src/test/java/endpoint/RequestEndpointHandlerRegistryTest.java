@@ -3,6 +3,7 @@ package endpoint;
 import endpoint.api.CreateUserGetMethodEndpointHandler;
 import endpoint.api.CreateUserPostMethodEndpointHandler;
 import endpoint.api.LoginEndpointHandler;
+import endpoint.page.PreLoginValidationFromSessionProxyHandler;
 import endpoint.staticresource.StaticResourceRequestHandler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,15 @@ class RequestEndpointHandlerRegistryTest {
         HttpRequestHandler httpRequestHandler = RequestEndpointHandlerRegistry.getEndpointHandler(endpoint);
 
         assertThat(httpRequestHandler.getClass()).isEqualTo(StaticResourceRequestHandler.class);
+    }
+
+    @Test
+    void getEndpointHandler_intercepterHandler() {
+        Endpoint endpoint = new Endpoint(HttpMethod.GET, "/user/list.html");
+
+        HttpRequestHandler httpRequestHandler = RequestEndpointHandlerRegistry.getEndpointHandler(endpoint);
+
+        assertThat(httpRequestHandler.getClass()).isEqualTo(PreLoginValidationFromSessionProxyHandler.class);
     }
 
     private static class GetEndPointHandlerTestArguments implements ArgumentsProvider {
