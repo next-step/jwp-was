@@ -21,6 +21,10 @@ public class RequestLine {
         this.protocolVersion = new ProtocolVersion(requestData[2]);
     }
 
+    public String fullPath() {
+        return pathInformation.fullPath();
+    }
+
     public Method getMethod() {
         return method;
     }

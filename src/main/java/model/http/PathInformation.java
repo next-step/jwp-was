@@ -28,6 +28,9 @@ public class PathInformation {
         this.queryStrings = null;
     }
 
+    public String fullPath() {
+        return path.resource();
+    }
 
     public Path getPath() {
         return path;

@@ -15,6 +15,15 @@ public class HttpRequest {
         requestHeaders = new RequestHeaders(Arrays.stream(texts).filter(text -> !text.equals(texts[0])).toArray(String[]::new));
     }
 
+    public HttpRequest(RequestLine requestLine, RequestHeaders requestHeaders) {
+        this.requestLine = requestLine;
+        this.requestHeaders = requestHeaders;
+    }
+
+    public String responsePath() {
+        return requestLine.fullPath();
+    }
+
     public RequestLine getRequestLine() {
         return requestLine;
     }
