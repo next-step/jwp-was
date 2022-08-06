@@ -8,6 +8,7 @@ import java.util.Arrays;
 public enum HandlerAdapter {
     CREATE_USER_GET(Method.GET, "/user/create", UserController.of(), "createUserGet"),
     CREATE_USER_POST(Method.POST, "/user/create", UserController.of(), "createUserPost"),
+    LOGIN(Method.POST, "/user/login", new UserController(), "login"),
     INDEX(Method.GET, "/index.html", UserController.of(), "index");
 
     private final Method httpMethod;

@@ -29,10 +29,9 @@
 4. 회원 가입 이후에 index.html 페이지로 이동 시킨다.
    1. handlerAdapter enum 클래스를 통해 controller를 구현하고, user 등록시 index.html 페이지로 이동한다.
 5. 로그인 성공시 index.html, 실패시 login_failed.html로 이동한다. 로그인 성공시 cookie를 활용해 로그인 상태 유지
-   5-1. 로그인 성공시 cookie header 값을 logined=true, 실패시 logined=false 로 전달
-   5-2. cookie는 정상적으로 로그인 되었을 경우, 앞 단계에서 회원가입한 데이터를 유지해야 한다.
-   5-3. 응답 header의 Set-Cookie 값을 설정한다.
-   5-4. 응답 header에 set-Cookie 값을 설정한 경우 요청 header에 Cookie 값이 전달 되는지 확인한다.
+   1. 로그인 성공 시 성공시 index.html, 실패시 login_failed.html로 이동한다.
+   2. 로그인 성공시 cookie header 값을 logined=true, 실패시 logined=false 로 전달
+   3. 응답 header에 set-Cookie 값을 설정한 경우 요청 header에 Cookie 값이 전달 되는지 확인한다.
 6. 사용자가 로그인 상태라면 사용자 목록 페이지 이동, 로그인 하지 않은 상태라면 로그인 페이지로 이동
    6-1. classPath에 있는 template 파일을 읽어 동적으로 html 생성
    6-2. handlebars 라이브러리를 사용해서 User 객체를 동적으로 html 생성해서 전달한다.
