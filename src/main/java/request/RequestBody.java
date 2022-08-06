@@ -19,12 +19,13 @@ public class RequestBody {
         return new RequestBody(Collections.emptyMap());
     }
 
-    public void addBody(String body) {
-        String[] splitArr = QueryParse.values(body);
+    public static RequestBody parse(String body) {
+        if(body.equals("")) return RequestBody.empty();
 
-        this.body = Arrays.stream(splitArr)
-                .map(QueryParse::parseToMap)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        String[] splitArr = QueryParse.values(body);
+        return new RequestBody(Arrays.stream(splitArr)
+            .map(QueryParse::parseToMap)
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
     public String getParameter(String key) {

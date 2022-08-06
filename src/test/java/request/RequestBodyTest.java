@@ -14,8 +14,7 @@ public class RequestBodyTest {
     void addBodyTest() {
         String body = "userId=java&password=1111";
 
-        RequestBody requestBody = RequestBody.empty();
-        requestBody.addBody(body);
+        RequestBody requestBody = RequestBody.parse(body);
 
         Map<String, String> map = new HashMap<>();
         map.put("userId", "java");
@@ -30,9 +29,7 @@ public class RequestBodyTest {
     void getParameterTest() {
         String body = "userId=java&password=1111";
 
-        RequestBody requestBody = RequestBody.empty();
-        requestBody.addBody(body);
-
+        RequestBody requestBody = RequestBody.parse(body);
         assertThat(requestBody.getParameter("userId")).isEqualTo("java");
     }
 
