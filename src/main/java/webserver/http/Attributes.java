@@ -1,10 +1,12 @@
 package webserver.http;
 
-import utils.CastingUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Map;
 
 public class Attributes {
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     private final Map<String, Object> attributes;
 
     public Attributes(Map<String, Object> attributes) {
@@ -16,7 +18,7 @@ public class Attributes {
     }
 
     public <T> T getAttribute(String key, Class<T> returnType) {
-        return CastingUtils.cast(attributes.get(key), returnType);
+        return OBJECT_MAPPER.convertValue(attributes.get(key), returnType);
     }
 
     public String getAttribute(String key) {

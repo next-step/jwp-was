@@ -1,6 +1,6 @@
 package webserver.http;
 
-import utils.CastingUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import utils.HttpUtils;
 
 import java.util.HashMap;
@@ -13,6 +13,7 @@ public class HttpPath {
     private static final String PATH_DELIMITER = "\\?";
     private static final int CORRECT_LENGTH = 2;
     private static final Pattern QUERY_STRING_PATTERN = Pattern.compile("&?([^=&]+)=([^=&]+)");
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final String path;
     private final Map<String, Object> queryStrings;
@@ -58,7 +59,7 @@ public class HttpPath {
     }
 
     public <T> T getQueryString(String key, Class<T> returnType) {
-        return CastingUtils.cast(queryStrings.get(key), returnType);
+        return OBJECT_MAPPER.convertValue(queryStrings.get(key), returnType);
     }
 
     public String getQueryString(String key) {
