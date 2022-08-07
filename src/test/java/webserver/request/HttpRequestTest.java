@@ -40,7 +40,7 @@ public class HttpRequestTest {
     void checkContentLength() throws IOException {
         InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.txt"));
         HttpRequest request = HttpRequest.from(in);
-        assertThat(request.getContentLength()).isEqualTo(46);
+        assertThat(request.getContentLength()).isEqualTo(59);
     }
 
     @DisplayName("POST Http Request 생성")
@@ -52,7 +52,7 @@ public class HttpRequestTest {
                 () -> assertThat(request.getHttpMethod()).isEqualTo("POST"),
                 () -> assertThat(request.getPath()).isEqualTo("/user/create"),
                 () -> assertThat(request.getRequestHeader("Connection")).isEqualTo("keep-alive"),
-                () -> assertThat(request.getBody("userId")).isEqualTo("javajigi")
+                () -> assertThat(request.getBody("userId").get()).isEqualTo("javajigi")
         );
     }
 }

@@ -1,4 +1,4 @@
-package http.request;
+package http.request.path;
 
 public class Path {
 

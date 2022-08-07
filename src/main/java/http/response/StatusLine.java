@@ -1,6 +1,6 @@
-package webserver.response;
+package http.response;
 
-import http.request.Protocol;
+import http.request.protocol.Protocol;
 
 public class StatusLine {
 
@@ -18,6 +18,10 @@ public class StatusLine {
 
     public Protocol getProtocol() {
         return this.protocol;
+    }
+
+    public String getProtocolToString() {
+        return protocol.toString();
     }
 
     public HttpStatusCode getHttpStatusCode() {

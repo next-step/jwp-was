@@ -1,4 +1,4 @@
-package webserver;
+package http;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,6 +31,9 @@ public class Cookies {
 
     private static Map.Entry<String, String> parseToEntry(String pair) {
         String[] splitValues = pair.split(KEY_VALUE_DELIMITER);
+        if (splitValues.length == 1) {
+            throw new IllegalArgumentException("Value값이 존재하지 않습니다.");
+        }
         return Map.entry(splitValues[0].trim(), splitValues[1].trim());
     }
 
