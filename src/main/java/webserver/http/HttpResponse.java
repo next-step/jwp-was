@@ -31,6 +31,10 @@ public class HttpResponse {
         headers.updateStatus(status);
     }
 
+    public HttpStatus getStatus() {
+        return headers.getStatus();
+    }
+
     public void forward(String path) throws IOException, URISyntaxException {
         HttpContentType contentType = HttpContentType.of(getFileExtension(path));
         byte[] body = FileIoUtils.loadFileFromClasspath(contentType.getResourcePath() + path);
@@ -71,7 +75,7 @@ public class HttpResponse {
     }
 
     private void processStatusLine() throws IOException {
-        dos.writeBytes("HTTP/1.1 " + headers.getStatus() + " \r\n");
+        dos.writeBytes("HTTP/1.1 " + headers.getStatusMessage() + " \r\n");
     }
 
     public void responseBody(byte[] body) {

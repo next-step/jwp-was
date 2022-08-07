@@ -49,12 +49,6 @@ public class RequestHandler implements Runnable {
         } catch (NotFoundException e) {
             logger.error(e.getMessage());
             response.forwardError(HttpStatus.NOT_FOUND);
-        } catch (MethodNotAllowedException e) {
-            logger.error(e.getMessage());
-            response.forwardError(HttpStatus.METHOD_NOT_ALLOWED);
-        } catch (NotImplementedException e) {
-            logger.error(e.getMessage());
-            response.forwardError(HttpStatus.NOT_IMPLEMENTED);
         } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();

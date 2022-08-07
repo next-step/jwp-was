@@ -29,7 +29,11 @@ public class ResponseHeader {
         this.httpStatus = status;
     }
 
-    public String getStatus() {
+    public String getStatusMessage() {
         return httpStatus.toString();
+    }
+
+    public HttpStatus getStatus() {
+        return httpStatus;
     }
 }
