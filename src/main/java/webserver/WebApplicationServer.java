@@ -18,13 +18,16 @@ public class WebApplicationServer {
             port = Integer.parseInt(args[0]);
         }
 
+        WebApplicationConfig webApplicationConfig = new WebApplicationConfig(10);
+        var executorService = new ThreadPoolConfig(webApplicationConfig)
+            .create();
+
         try (ServerSocket listenSocket = new ServerSocket(port)) {
             logger.info("Web Application Server started {} port.", port);
 
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection));
-                thread.start();
+                executorService.execute(new RequestHandler(connection));
             }
         }
     }
