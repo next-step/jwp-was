@@ -1,5 +1,6 @@
-package http.request;
+package http;
 
+import http.request.path.QueryParameters;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

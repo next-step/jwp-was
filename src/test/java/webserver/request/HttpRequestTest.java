@@ -1,6 +1,6 @@
 package webserver.request;
 
-import org.junit.jupiter.api.BeforeEach;
+import http.request.HttpRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.io.*;
