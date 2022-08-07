@@ -14,9 +14,13 @@ public class ResponseHeader {
     private static final String LOCATION = "location";
     private static final String CONTENT_LENGTH = "Content-Length";
     private static final String SET_COOKIE = "Set-Cookie";
+
+    private static final String HEADER_DELIMITER = ";";
+    private static final String CHARSET = ";charset=utf-8";
+
     private static final Map<String, String> BASE_HEADERS = Map.of(
             CONNECTION, "Keep-Alive",
-            CONTENT_TYPE,  ContentType.HTML.type + "; charset=utf-8"
+            CONTENT_TYPE,  ContentType.HTML.type + HEADER_DELIMITER + CHARSET
     );
 
     private Map<String, String> headers = new HashMap<>();
@@ -48,7 +52,7 @@ public class ResponseHeader {
     }
 
     public void setContentType(ContentType contentType) {
-        this.headers.put(CONTENT_TYPE, contentType.type + "; charset=utf-8");
+        this.headers.put(CONTENT_TYPE, contentType.type +  HEADER_DELIMITER + CHARSET);
     }
 
     public List<String> toPrint() {
