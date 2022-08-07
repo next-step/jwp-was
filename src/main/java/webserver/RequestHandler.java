@@ -45,9 +45,6 @@ public class RequestHandler implements Runnable {
             var httpRequest = HttpRequest.parse(bufferedReader, STORE);
 
             var response = ROUTER.handle(httpRequest);
-            if (response.isMarkdown()) {
-                response.putCookie(HttpRequest.SESSION_KEY, httpRequest.currentClientUserId());
-            }
 
             var dataOutputStream = new DataOutputStream(out);
             response.write(dataOutputStream);

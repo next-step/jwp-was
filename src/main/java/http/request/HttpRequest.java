@@ -5,13 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import http.request.session.DefaultHttpSession;
 import http.request.session.HttpSession;
 import http.request.session.SessionStore;
 import utils.IOUtils;
 
 public class HttpRequest {
-
-    public static final String SESSION_KEY = "SESSION_ID";
 
     private final RequestLine requestLine;
     private final Headers headers;
@@ -70,7 +69,7 @@ public class HttpRequest {
     }
 
     public String currentClientUserId() {
-        return headers.getCookie(SESSION_KEY)
+        return headers.getCookie(DefaultHttpSession.SESSION_KEY)
             .orElse(UUID.randomUUID().toString());
     }
 }

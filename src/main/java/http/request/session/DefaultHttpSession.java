@@ -5,6 +5,8 @@ import java.util.Optional;
 
 public class DefaultHttpSession implements HttpSession {
 
+    public static final String SESSION_KEY = "SESSION_ID";
+
     private final Map<String, Object> values;
     private final String sessionId;
 
