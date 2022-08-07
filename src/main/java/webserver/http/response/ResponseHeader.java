@@ -16,7 +16,7 @@ public class ResponseHeader {
     private static final String SET_COOKIE = "Set-Cookie";
     private static final Map<String, String> BASE_HEADERS = Map.of(
             CONNECTION, "Keep-Alive",
-            CONTENT_TYPE, "text/html; charset=utf-8"
+            CONTENT_TYPE,  ContentType.HTML.type + "; charset=utf-8"
     );
 
     private Map<String, String> headers = new HashMap<>();
@@ -45,6 +45,10 @@ public class ResponseHeader {
 
     public void setCookie(String cookie) {
         this.headers.put(SET_COOKIE, cookie);
+    }
+
+    public void setContentType(ContentType contentType) {
+        this.headers.put(CONTENT_TYPE, contentType.type);
     }
 
     public List<String> toPrint() {

@@ -19,7 +19,8 @@ public class ResponseBody {
         this.body = body;
     }
 
-    public static ResponseBody fromView(String filePath) {
+
+    public static ResponseBody fromFile(String filePath) {
         byte[] body = {};
         try {
             body = FileIoUtils.loadFileFromClasspath(filePath);

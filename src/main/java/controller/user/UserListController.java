@@ -16,7 +16,6 @@ import java.util.List;
 public class UserListController extends AbstractController {
 
     public static final String URL = "/user/list";
-    public static final String VIEW_PATH = "/user/list.html";
     public static final String LOGIN_PAGE = "/user/login.html";
     public static final String LOGIN_TRUE = "true";
 

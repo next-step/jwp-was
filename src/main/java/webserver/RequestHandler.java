@@ -11,10 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import controller.home.HomeController;
-import controller.user.LogInController;
-import controller.user.SignUpController;
-import controller.user.UserListController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
@@ -33,9 +29,11 @@ public class RequestHandler implements Runnable {
     private static final String END_OF_LINE = "";
 
     private final Socket connection;
+    private final Router router;
 
-    public RequestHandler(Socket connectionSocket) {
+    public RequestHandler(Socket connectionSocket, Router router) {
         this.connection = connectionSocket;
+        this.router = router;
     }
 
     public void run() {
@@ -92,23 +90,7 @@ public class RequestHandler implements Runnable {
     }
 
     private HttpResponse route(final HttpRequest httpRequest){
-        final String path = httpRequest.getRequestLine().getUrl().getPath();
-
-        if (path.equals(SignUpController.URL) || path.equals(SignUpController.VIEW_PATH)) {
-            SignUpController signUpController = new SignUpController();
-            return signUpController.run(httpRequest);
-        } else if (path.equals(HomeController.URL) || path.equals(HomeController.VIEW_PATH)) {
-            HomeController homeController = new HomeController();
-            return homeController.run(httpRequest);
-        } else if (path.equals(LogInController.URL) || path.equals(LogInController.VIEW_PATH)) {
-            LogInController logInController = new LogInController();
-            return logInController.run(httpRequest);
-        } else if (path.equals(UserListController.URL) || path.equals(UserListController.VIEW_PATH)) {
-            UserListController userListController = new UserListController();
-            return userListController.run(httpRequest);
-        }
-
-        return null; // TODO: 404 Error 로 변경하기
+        return router.execute(httpRequest);
     }
 
     private void writeResponseLine(final DataOutputStream dos, final ResponseLine responseLine) {
@@ -123,7 +105,6 @@ public class RequestHandler implements Runnable {
         responseHeader.setContentLength(Integer.toString(lengthOfBodyContent));
         List<String> headersToPrint = responseHeader.toPrint();
 
-        System.out.println(headersToPrint);
         headersToPrint.forEach(header -> {
             try {
                 dos.writeBytes(header);

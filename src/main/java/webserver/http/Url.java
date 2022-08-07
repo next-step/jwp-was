@@ -4,6 +4,7 @@ import webserver.http.request.QueryParameter;
 
 public class Url {
     private static final String URL_DELIMITER = "\\?";
+    private static final String FILE_EXENSION_DELIMITER = "\\.";
     public static final int PATH_INDEX = 0;
     public static final int QUERY_PARAMETER_INDEX = 1;
 
@@ -22,6 +23,16 @@ public class Url {
                 splitUrl[Url.PATH_INDEX],
                 QueryParameter.parseFrom(splitUrl)
         );
+    }
+
+    public String getFileExtension() {
+        String[] split = this.path.split(FILE_EXENSION_DELIMITER);
+
+        if (split.length < 2) {
+            throw new IllegalArgumentException();
+        }
+
+        return split[split.length - 1];
     }
 
     public String getPath() {

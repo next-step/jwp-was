@@ -1,6 +1,8 @@
 package webserver.http.response;
 
 
+import webserver.http.Url;
+
 import java.util.Optional;
 
 public class HttpResponse {
@@ -15,11 +17,22 @@ public class HttpResponse {
         this.responseBody = responseBody;
     }
 
+    public static HttpResponse getStaticFile(final ContentType contentType, final String path) {
+        ResponseHeader responseHeader = ResponseHeader.baseResponseHeader();
+        responseHeader.setContentType(contentType);
+
+        return new HttpResponse(
+                ResponseLine.of200(),
+                responseHeader,
+                Optional.of(ResponseBody.fromFile(path))
+        );
+    }
+
     public static HttpResponse getView(final String viewPath) {
         return new HttpResponse(
                 ResponseLine.of200(),
                 ResponseHeader.baseResponseHeader(),
-                Optional.of(ResponseBody.fromView(viewPath))
+                Optional.of(ResponseBody.fromFile(viewPath))
         );
     }
 

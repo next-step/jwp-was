@@ -11,17 +11,11 @@ import java.util.Map;
 public class LogInController extends AbstractController {
 
     public static final String URL = "/user/login";
-    public static final String VIEW_PATH = "/user/login.html";
     public static final String successRedirectPath = "/index.html";
     public static final String failRedirectPath = "/user/login_failed.html";
 
     public static final String LOGIN_SUCCESS_COOKIE = "logined=true; Path=/";
     public static final String LOGIN_FAIL_COOKIE = "logined=false; Path=/";
-
-    @Override
-    public HttpResponse doGet(HttpRequest httpRequest) {
-        return HttpResponse.getView(VIEW_PATH);
-    }
 
     @Override
     public HttpResponse doPost(HttpRequest httpRequest) {
