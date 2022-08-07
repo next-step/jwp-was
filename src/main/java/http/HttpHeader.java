@@ -1,8 +1,8 @@
-package webserver;
+package http;
 
 import exception.Assert;
 import exception.NotFoundException;
-import webserver.response.HttpStatusCode;
+import http.response.HttpStatusCode;
 
 import java.util.*;
 import java.util.List;
@@ -80,5 +80,24 @@ public class HttpHeader {
 
     public Set<Map.Entry<String, String>> getCookies() {
         return cookies.getCookies();
+    }
+
+    public HttpHeader add(String header, String value) {
+        HashMap<String, String> newHeader = new HashMap<>(headers);
+        newHeader.put(header, value);
+        return from(newHeader);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HttpHeader that = (HttpHeader) o;
+        return Objects.equals(headers, that.headers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(headers);
     }
 }

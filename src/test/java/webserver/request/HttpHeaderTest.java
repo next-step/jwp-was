@@ -2,7 +2,7 @@ package webserver.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.HttpHeader;
+import http.HttpHeader;
 
 import java.util.Collections;
 import java.util.Map;
@@ -38,5 +38,14 @@ class HttpHeaderTest {
     void parseHeader() {
         HttpHeader header = HttpHeader.from(Map.of("Host", "localhost:8080"));
         assertThat(header.get("Host")).isEqualTo("localhost:8080");
+    }
+
+    @DisplayName("헤더 값 추가")
+    @Test
+    void addHeader() {
+        HttpHeader header = HttpHeader.empty();
+
+        assertThat(header.add("key", "value"))
+                .isEqualTo(HttpHeader.from(Map.of("key", "value")));
     }
 }
