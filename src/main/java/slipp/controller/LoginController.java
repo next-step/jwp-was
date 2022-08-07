@@ -7,9 +7,11 @@ import webserver.http.domain.request.Method;
 import webserver.http.domain.request.Request;
 import webserver.http.domain.response.Response;
 import webserver.http.domain.session.Session;
+import webserver.http.domain.session.SessionContextHolder;
 
 public class LoginController implements Controller {
     private static final String USER_ATTRIBUTE_NAME = "user";
+    
     private final AuthenticateService authenticateService;
 
     public LoginController(AuthenticateService authenticateService) {
@@ -28,7 +30,7 @@ public class LoginController implements Controller {
         try {
             User authenticatedUser = authenticateService.authenticate(userId, password);
 
-            Session session = request.getSession();
+            Session session = SessionContextHolder.getCurrentSession();
             session.setAttribute(USER_ATTRIBUTE_NAME, authenticatedUser);
             return Response.redirect("/index.html");
         } catch (RuntimeException e) {

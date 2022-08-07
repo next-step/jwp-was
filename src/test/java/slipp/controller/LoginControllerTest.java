@@ -29,7 +29,6 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static webserver.http.domain.Headers.LOCATION;
-import static webserver.http.domain.Headers.SET_COOKIE;
 import static webserver.http.domain.request.Method.GET;
 import static webserver.http.domain.request.Method.POST;
 
@@ -60,7 +59,7 @@ class LoginControllerTest {
     @ParameterizedTest
     @MethodSource("provideForHandle")
     void handle(String userId, String password, String expectedRedirectUrl, Session expectedSession) {
-        SessionContextHolder.saveSession(Session.from("12345"));
+        SessionContextHolder.saveCurrentSession(Session.from("12345"));
 
         DataBase.addUser(
                 new User(

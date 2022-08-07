@@ -2,6 +2,7 @@ package webserver.http.controller;
 
 import webserver.http.domain.request.Request;
 import webserver.http.domain.response.Response;
+import webserver.http.domain.session.Session;
 import webserver.http.domain.session.SessionContextHolder;
 import webserver.http.domain.session.SessionStorage;
 
@@ -16,7 +17,8 @@ public class SessionCompositeRequestProcessor implements RequestProcessor {
 
     public Response process(Request request) {
         try {
-            sessionStorage.setupBeforeProcess(request);
+            Session session = sessionStorage.getOrGenerateSession(request);
+            SessionContextHolder.saveCurrentSession(session);
             Response response = requestProcessor.process(request);
             sessionStorage.teardownAfterProcess(response);
             return response;

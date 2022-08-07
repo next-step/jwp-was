@@ -1,9 +1,7 @@
 package webserver.http.domain.request;
 
-import webserver.http.domain.cookie.Cookie;
 import webserver.http.domain.Headers;
-import webserver.http.domain.session.Session;
-import webserver.http.domain.session.SessionContextHolder;
+import webserver.http.domain.cookie.Cookie;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,10 +79,6 @@ public class Request {
 
     public boolean existsCookie(String name, String value) {
         return headers.existsCookie(name, value);
-    }
-
-    public Session getSession() {
-        return SessionContextHolder.getCurrentSession();
     }
 
     @Override
