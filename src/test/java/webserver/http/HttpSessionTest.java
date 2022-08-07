@@ -36,7 +36,7 @@ public class HttpSessionTest {
         assertThat(httpSession.getAttribute("name")).isEqualTo("value");
     }
 
-    @DisplayName("속성을 삭제한다.")
+    @DisplayName("name에 해당되는 속성을 삭제한다.")
     @Test
     void removeAttribute() {
         // given
@@ -48,5 +48,23 @@ public class HttpSessionTest {
 
         // then
         assertThat(httpSession.getAttribute("name")).isNull();
+    }
+
+    @DisplayName("모든 속성을 삭제한다.")
+    @Test
+    void invalidate() {
+        // given
+        HttpSession httpSession = new HttpSession();
+        httpSession.setAttribute("name1", "value1");
+        httpSession.setAttribute("name2", "value2");
+
+        // when
+        httpSession.invalidate();
+
+        // then
+        assertAll(
+                () -> assertThat(httpSession.getAttribute("name1")).isNull(),
+                () -> assertThat(httpSession.getAttribute("name2")).isNull()
+        );
     }
 }

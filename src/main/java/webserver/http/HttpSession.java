@@ -28,6 +28,10 @@ public class HttpSession {
         attributes.remove(name);
     }
 
+    public void invalidate() {
+        attributes.clear();
+    }
+
     private String generateId() {
         final UUID uuid = UUID.randomUUID();
         return uuid.toString();
