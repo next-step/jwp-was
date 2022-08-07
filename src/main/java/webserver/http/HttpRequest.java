@@ -37,6 +37,10 @@ public class HttpRequest {
         return requestLine;
     }
 
+    public HttpMethod getHttpMethod() {
+        return requestLine.getHttpMethod();
+    }
+
     public boolean isGet() {
         return requestLine.isGet();
     }
