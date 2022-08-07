@@ -69,6 +69,31 @@
 
 ## 2단계 - HTTP 웹 서버 구현
 
+### Domain
+
+* WebApplicationServer, RequestHandler
+  * URL 요청에 해당하는 Controller를 실행
+  * 클라이언트의 요청에 따라 `service()`메서드를 호출.
+  * `HttpRequest`, `HttpResponse` 객체 생성을 담당.
+
+* Controller
+  * 사용자의 요청을 처리하고 처리 결과에 따른 응답을 담당.
+  * WebApplicationServer에서 각 Controller의 인스턴스는 `하나`이며 모든 사용자 요청에 대해 하나의 Controller 인스턴스가 재사용된다.
+  * (WebApplicationServer는 멀티쓰레드로 동작.)
+
+* ControllerMatcher
+  * Http 요청 하나당 Controller 인스턴스를 생성해 URL과 매핑.
+
+* AbstractController
+  * `service()` 메서드는 요청이 GET인지 POST인지 구분하여 `doGet()`, `doPost()` 메서드를 호출.
+
+* HttpRequest
+  * `RequestLine`, `HttpHeader`, `RequestBody` 로 구성.
+  * 클라이언트의 요청을 파싱하여 `RequestLine`, `HttpHeader`, `RequestBody` 객체 생성.
+
+* HttpResponse
+  * `StatusLine`, `HttpStatusCode`, `HttpHeader`, `ResponseBody` 로 구성.
+
 ### 기능 요구사항
 
 * 정적 리소스를 읽어서 응답한다.
@@ -113,3 +138,40 @@
     Accept: text/css,*/*;q=0.1
     Connection: keep-alive
     ```
+
+## 3단계 - HTTP 웹 서버 리팩토링
+
+### 기능 요구사항
+
+* `HttpHeader`에서 `Cookies`를 별도의 객체로 분리한다.
+  * HttpRequest의 Cookie 값이 여러개인 경우:
+  ```shell
+  GET /sample_page.html HTTP/2.0
+  Host: www.example.org
+  Cookie: yummy_cookie=choco; tasty_cookie=strawberry
+  ```
+  * Cookie를 `=`와 `;`를 기준으로 파싱.
+  * `Map`에 key-value 형태로 파싱된 Cookie값 저장
+
+* `HttpResponse`만으로 응답 결과를 검증 할 수 있도록 HttpResponse 구조 수정
+  * `addHeader(String key, String value)`
+    * pair 값을 HttpHeader에 추가.
+  * `sendRedirect(String url)`
+    * 전달받은 url로 리다이렉트.
+    * 302 상태코드와 Location 헤더를 추가하여 구현.
+
+* Controller 인터페이스와 HttpResponse의 결합도를 낮추기 위해 수정.
+  * Controller가 HttpResponse를 생성, 반환하지 않고 HttpResponse를 사용만 할 수 있도록 변경.
+
+## 4단계 - 세션 구현
+
+### 기능 요구사항
+
+* `서블릿`에서 지원하는 HttpSession API의 일부를 지원.
+* 로그인 성공시 `HttpRequest` 객체에서 `HttpSession` 생성
+  * 세션이 이미 존재하면 기존 세션 반환, 없으면 신규 세션 생성.
+  * 렌덤한 `sessionId`를 생성후 로그인한 사용자 객체를 key-value 형태로 저장.
+  * `Cookie` 생성후 `JSSESSIONID=sessionId` 저장.
+* HttpSession은 
+* 세션에 `Key-Value` 형태로 로그인 회원 정보 보관
+  * `void setAttribute(String name, Object value)`
