@@ -20,16 +20,6 @@ import http.request.session.HttpSession;
 import utils.FileIoUtils;
 
 public class HttpResponse {
-    @Override
-    public String toString() {
-        return "HttpResponse{" +
-            "protocol=" + protocol +
-            ", httpStatus=" + httpStatus +
-            ", httpResponseHeaders=" + httpResponseHeaders +
-            ", body=" + body +
-            ", cookies=" + cookies +
-            '}';
-    }
 
     private final Protocol protocol;
     private final HttpStatus httpStatus;
