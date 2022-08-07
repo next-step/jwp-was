@@ -48,7 +48,7 @@ public class ResponseHeader {
     }
 
     public void setContentType(ContentType contentType) {
-        this.headers.put(CONTENT_TYPE, contentType.type);
+        this.headers.put(CONTENT_TYPE, contentType.type + "; charset=utf-8");
     }
 
     public List<String> toPrint() {
