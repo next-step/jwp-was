@@ -1,5 +1,7 @@
 package webserver.http;
 
+import org.springframework.http.HttpStatus;
+
 public class StatusLine {
     private final HttpProtocol httpProtocol;
     private final HttpStatus httpStatus;

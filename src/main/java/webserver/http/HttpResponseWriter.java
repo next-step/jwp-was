@@ -1,5 +1,6 @@
 package webserver.http;
 
+import org.springframework.http.HttpStatus;
 import utils.FileIoUtils;
 
 import java.io.DataOutputStream;
@@ -50,7 +51,7 @@ public class HttpResponseWriter {
         final HttpProtocol httpProtocol = statusLine.getHttpProtocol();
         final HttpStatus httpStatus = statusLine.getHttpStatus();
         dos.writeBytes(String.format("%s/%s %d %s\r\n",
-                httpProtocol.getProtocol(), httpProtocol.getVersion(), httpStatus.getCode(), httpStatus.getReasonPhrase()));
+                httpProtocol.getProtocol(), httpProtocol.getVersion(), httpStatus.value(), httpStatus.getReasonPhrase()));
     }
 
     private void writeHeaders(Headers headers) {
