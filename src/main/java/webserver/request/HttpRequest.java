@@ -54,4 +54,12 @@ public class HttpRequest {
     public RequestBody getBody() {
         return requestBody;
     }
+
+    public boolean isPost() {
+        return getMethod().isPost();
+    }
+
+    public boolean isGet() {
+        return getMethod().isGet();
+    }
 }

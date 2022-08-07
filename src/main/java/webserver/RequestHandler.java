@@ -11,6 +11,8 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
+import webserver.controller.Controller;
+import webserver.controller.RequestMapping;
 import webserver.request.HttpRequest;
 import webserver.request.Method;
 import webserver.request.RequestBody;
@@ -35,78 +37,21 @@ public class RequestHandler implements Runnable {
             if (in != null) {
                 HttpRequest httpRequest = new HttpRequest(in);
                 HttpResponse httpResponse = new HttpResponse(out);
-                matchResponse(httpRequest, httpResponse);
+                Controller controller = RequestMapping.getController(httpRequest.getPath());
+                if (controller != null) {
+                    controller.service(httpRequest, httpResponse);
+                } else {
+                    String path = httpRequest.getPath();
+                    if (path.endsWith("html")) {
+                        httpResponse.forward(IOUtils.loadFileFromClasspath("./templates" + path));
+                    } else if (path.endsWith("css")) {
+                        httpResponse.forwardCSS(IOUtils.loadFileFromClasspath("./static" + path));
+                    }
+                }
             }
 
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
-        }
-    }
-
-    private void matchResponse(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException, URISyntaxException {
-        String path = httpRequest.getPath();
-        Method method = httpRequest.getMethod();
-
-        if (path.equals("/user/create")) {
-            if(method.isPost()) {
-                RequestBody requestBody = httpRequest.getBody();
-                httpResponse.redirect(parseBody(path, requestBody));
-            }
-        } else if (path.equals("/user/login")) {
-            if (isLogin(httpRequest)) {
-                httpResponse.loginRedirect("/index.html", "logined=true Path=/");
-            } else {
-                httpResponse.loginRedirect("/user/login_failed.html", "logined=false");
-            }
-        } else if (path.equals("/user/list")) {
-            String headerValue = httpRequest.getHeader("Cookie");
-            if (headerValue == null) {
-                httpResponse.forward(IOUtils.loadFileFromClasspath("./templates/user/login.html"));
-            } else if (headerValue.equals("logined=true Path=/")) {
-                HandlebarsObject handlebarObj = HandlebarsObject.createHandlebarObject("/templates", ".html");
-
-                Collection<User> users = DataBase.findAll();
-                httpResponse.forward(handlebarObj.applyTemplate("user/list", users));
-            } else if (headerValue.equals("logined=false")){
-                httpResponse.forward(IOUtils.loadFileFromClasspath("./templates/user/login.html"));
-            }
-        } else {
-            if (path.endsWith("html")) {
-                httpResponse.forward(IOUtils.loadFileFromClasspath("./templates" + path));
-            } else if (path.endsWith("css")) {
-                httpResponse.forwardCSS(IOUtils.loadFileFromClasspath("./static" + path));
-            }
-        }
-    }
-
-    private boolean isLogin(HttpRequest httpRequest) {
-        String userId = httpRequest.getBody().getParameter("userId");
-        User user = DataBase.findUserById(userId);
-
-        if(user == null) {
-            return false;
-        }
-
-        String pw = httpRequest.getBody().getParameter("password");
-
-        return user.getPassword().equals(pw);
-    }
-
-    private String parseBody(String parsePath, RequestBody requestBody) {
-        String[] str = parsePath.split("/");
-        if (str.length > 2) {
-            if (str[1].equals("user")) {
-                userService(requestBody.getDataPairs(), str);
-            }
-        }
-
-        return "/index.html";
-    }
-
-    private void userService(Map<String, String> map, String[] str) {
-        if (str[2].equals("create")) {
-            User user = new User(map.get("userId"), map.get("password"), map.get("name"), map.get("email"));
-            DataBase.addUser(user);
         }
     }
 }
