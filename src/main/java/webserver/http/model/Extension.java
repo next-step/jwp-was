@@ -7,6 +7,12 @@ public enum Extension {
     ICO("ico", "./templates"),
     JS("js", "./static"),
     CSS("css", "./static"),
+
+    EOT("eot", "./static"),
+    SVG("svg", "./static"),
+    TTF("ttf", "./static"),
+    WOFF("woff", "./static"),
+    WOFF2("woff2", "./static"),
     NOT_STATIC_RESOURCE("", "");
 
     private final String extension;
@@ -28,7 +34,15 @@ public enum Extension {
                 .map(extensionEnum -> extensionEnum.parentPath).findFirst().orElse("");
     }
 
-    public static Extension getEnum(String extension) {
-        return Arrays.stream(values()).filter(extensionEnum -> extension.equals(extensionEnum.extension)).findFirst().orElse(NOT_STATIC_RESOURCE);
+    public static Extension getEnum(String path) {
+        return Arrays.stream(values()).filter(extensionEnum -> parseExtension(path).equals(extensionEnum.extension)).findFirst().orElse(NOT_STATIC_RESOURCE);
+    }
+
+    private static String parseExtension(String path) {
+        String[] splitPath = path.split("\\.");
+        if (splitPath.length > 1) {
+            return splitPath[splitPath.length - 1];
+        }
+        return splitPath[0];
     }
 }

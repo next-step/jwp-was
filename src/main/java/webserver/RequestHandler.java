@@ -28,11 +28,9 @@ public class RequestHandler implements Runnable {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            HttpRequest httpRequest = new HttpRequest(bufferedReader);
-
             DataOutputStream dos = new DataOutputStream(out);
-            movePage(httpRequest, dos);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+            movePage(new HttpRequest(bufferedReader), dos);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
@@ -41,12 +39,20 @@ public class RequestHandler implements Runnable {
     private void movePage(HttpRequest httpRequest, DataOutputStream dos) throws IOException, URISyntaxException {
         if (httpRequest.isStaticResource()) {
             byte[] body = FileIoUtils.loadFileFromClasspath(httpRequest.responsePath());
-            response200Header(dos, body.length);
+            responseHeader(httpRequest, dos, body);
             responseBody(dos, body);
             return;
         }
         Object handlerMapping = HandlerAdapter.handlerMapping(httpRequest);
         moveNotStaticResourcePage(dos, handlerMapping);
+    }
+
+    private void responseHeader(HttpRequest httpRequest, DataOutputStream dos, byte[] body) {
+        if (Extension.CSS == Extension.getEnum(httpRequest.path())) {
+            response200CssHeader(dos, body.length);
+            return;
+        }
+        response200Header(dos, body.length);
     }
 
     private void moveNotStaticResourcePage(DataOutputStream dos, Object handlerMapping) throws IOException {
@@ -83,6 +89,20 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            if (Cookie.exists()) {
+                dos.writeBytes(Cookie.getResponseCookie() + "\r\n");
+            }
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response200CssHeader(DataOutputStream dos, int lengthOfBodyContent) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n"); // Status Code
+            dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n"); // Response Header
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n"); // Response Header
             if (Cookie.exists()) {
                 dos.writeBytes(Cookie.getResponseCookie() + "\r\n");
             }
