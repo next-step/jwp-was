@@ -74,9 +74,8 @@
 
 - 기능 요구사항 7
 - [x] Stylesheet 파일을 지원하도록 구현
-  - [x] 응답 헤더의 Content-Type을 text/css로 전송한다.
-  - [x] resources Handler를 추가한다.
-
+    - [x] 응답 헤더의 Content-Type을 text/css로 전송한다.
+    - [x] resources Handler를 추가한다.
 
 ----
 ##3단계 리팩토링
@@ -84,8 +83,8 @@
 - [x] QueryString 객체 생성
 - [x] getHeader(“필드 이름”) 메소드를 통해 접근 가능하도록 구현한다.
 - [x] getParameter(“인자 이름”) 메소드를 통해 접근 가능하도록 구현한다.
-- [ ] 응답을 보낼 때 HTML, CSS, 자바스크립트 파일을 직접 읽어 응답으로 보내는 메소드는 forward(), 다른 URL로 리다이렉트하는 메소드는 sendRedirect() 메소드를 나누어 구현한다.
-  - [ ] Http_Forward.txt 결과는 응답 body에 index.html이 포함되어 있어야 한다.
-  - [ ] Http_Redirect.txt 결과는 응답 header에 Location 정보가 /index.html로 포함되어 있어야 한다.
-  - [ ] 
-- [ ] Controller 인터페이스를 구현하는 AbstractController 추상클래스를 추가해 중복을 제거하고, service() 메소드에서 GET과 POST HTTP 메소드에 따라 doGet(), doPost() 메소드를 호출하도록 한다.
+- [x] 응답을 보낼 때 HTML, CSS, 자바스크립트 파일을 직접 읽어 응답으로 보내는 메소드는 forward(), 다른 URL로 리다이렉트하는 메소드는 sendRedirect() 메소드를 나누어 구현한다.
+    - [x] Http_Forward.txt 결과는 응답 body에 index.html이 포함되어 있어야 한다.
+    - [x] Http_Redirect.txt 결과는 응답 header에 Location 정보가 /index.html로 포함되어 있어야 한다.
+- [ ] Controller 인터페이스를 구현하는 AbstractController 추상클래스를 추가해 중복을 제거하고, service() 메소드에서 GET과 POST HTTP 메소드에 따라 doGet(),
+  doPost() 메소드를 호출하도록 한다.

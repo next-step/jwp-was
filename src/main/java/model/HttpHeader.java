@@ -42,6 +42,12 @@ public class HttpHeader {
             return this;
         }
 
+        public Builder sendRedirect(String path) {
+            keyToValue.put("Location: ", "http://localhost:8080" + path);
+
+            return this;
+        }
+
         public HttpHeader build() {
             return new HttpHeader(this);
         }

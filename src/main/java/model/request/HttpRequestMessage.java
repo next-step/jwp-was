@@ -97,4 +97,8 @@ public class HttpRequestMessage {
     public String getParameter(String parameterKey) {
         return requestLine.getParameter(parameterKey);
     }
+
+    public HttpMethod getHttpMethod() {
+        return requestLine.getHttpMethod();
+    }
 }
