@@ -3,7 +3,6 @@ package controller;
 import org.junit.jupiter.api.Test;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
-import webserver.http.exception.MethodNotAllowedException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -11,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CreateUserControllerTest {
 
@@ -51,9 +49,12 @@ class CreateUserControllerTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         HttpResponse httpResponse = new HttpResponse(byteArrayOutputStream);
 
-        assertThatThrownBy(
-                () -> new CreateUserController().service(request, httpResponse)
-        ).isInstanceOf(MethodNotAllowedException.class);
+        new CreateUserController().service(request, httpResponse);
+
+        String response = byteArrayOutputStream.toString();
+        System.out.println(response);
+
+        assertThat(response).contains("HTTP/1.1 405 Method Not Allowed");
     }
 
     private InputStream createInputStream(String filename) throws FileNotFoundException {

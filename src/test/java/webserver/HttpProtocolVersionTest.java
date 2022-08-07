@@ -2,6 +2,7 @@ package webserver;
 
 import org.junit.jupiter.api.Test;
 import webserver.http.HttpProtocolVersion;
+import webserver.http.exception.VersionNotSupportException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -24,6 +25,6 @@ class HttpProtocolVersionTest {
 
         assertThatThrownBy(
                 () -> new HttpProtocolVersion(inputHttpProtocolVersion)
-        ).isInstanceOf(IllegalArgumentException.class);
+        ).isInstanceOf(VersionNotSupportException.class);
     }
 }
