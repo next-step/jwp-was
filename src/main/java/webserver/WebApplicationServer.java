@@ -12,10 +12,18 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
     private static final int DEFAULT_PORT = 8080;
+    private static final int CORE_POOL_SIZE = 250;
+    private static final int KEEP_ALIVE_TIME = 0;
+    private static final int CAPACITY = 100;
+
 
     private final List<Controller> controllers;
 
@@ -34,8 +42,16 @@ public class WebApplicationServer {
             ResponseWriter responseWriter = WebServerConfig.responseWriter();
             RequestProcessor requestProcessor = WebServerConfig.sessionCompositeRequestProcessor(controllers);
 
+            ExecutorService executorService = new ThreadPoolExecutor(
+                    CORE_POOL_SIZE,
+                    CORE_POOL_SIZE,
+                    KEEP_ALIVE_TIME,
+                    TimeUnit.MILLISECONDS,
+                    new LinkedBlockingQueue<>(CAPACITY)
+            );
+
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(
+                executorService.execute(
                         new RequestHandler(
                                 connection,
                                 requestReader,
@@ -43,8 +59,6 @@ public class WebApplicationServer {
                                 requestProcessor
                         )
                 );
-
-                thread.start();
             }
         } catch (IOException e) {
             logger.error("[Server Socket Error]: 소켓 입출력 에러 발생", e);
