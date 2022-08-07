@@ -13,7 +13,7 @@ class UserHandlerTest {
     void canHandleTest() {
         String userPath = "/user/something";
         HttpRequestMessage getUserHttpRequest = GET_USER_HTTP_REQUEST_DUMMY;
-        UserHandler userHandler = new UserHandler();
+        AbstractHandler userHandler = new UserHandler();
 
         Boolean result = userHandler.canHandling(getUserHttpRequest);
 
