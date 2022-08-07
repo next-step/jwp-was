@@ -146,4 +146,5 @@ Set-Cookie: logined=true; Path=/
 - [X] HttpRequest POST방식 -> body 전달 + Query 전달
 - [X] Test 수정
 - [X] Response Cookie 설정 변경
-- [ ] Mapping Controller 클래스 생성
+- [X] Mapping Controller 클래스 생성
+- [X] Controller의 service메소드 사용하여 연결

@@ -30,14 +30,7 @@ public class RequestHandler implements Runnable {
                 httpResponse.forward(url);
                 return;
             }
-
-            if ("/user/create".equals(url)) {
-                new CreateUserController().doPost(httpRequest, httpResponse);
-            } else if ("/user/login".equals(url)) {
-                new LoginController().doPost(httpRequest, httpResponse);
-            } else if("/user/list".equals(url)) {
-                new ListUserController().doGet(httpRequest, httpResponse);
-            }
+            controller.service(httpRequest, httpResponse);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
