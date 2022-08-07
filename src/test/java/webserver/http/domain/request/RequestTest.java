@@ -329,21 +329,4 @@ class RequestTest {
                 arguments("name3", Optional.empty())
         );
     }
-
-    @DisplayName("현재 컨텍스트에 저장된 세션을 가져온다.")
-    @Test
-    void getSession() {
-        Session session = Session.from("12345");
-        SessionContextHolder.saveSession(session);
-        Request request = new Request(
-                RequestLine.from("POST /path?name=jordy&age=20 HTTP/1.1"),
-                Headers.from(List.of(
-                        "Cookie: name1=value1; name2=value2"
-                ))
-        );
-
-        Session actual = request.getSession();
-
-        assertThat(actual).isEqualTo(session);
-    }
 }

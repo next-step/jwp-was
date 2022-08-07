@@ -18,13 +18,15 @@ public class SessionStorage {
         this.sessionIdGenerator = sessionIdGenerator;
     }
 
-    public void setupBeforeProcess(Request request) {
-        String sessionId = request.getCookie(COOKIE_NAME_OF_SESSION_ID)
+    public Session getOrGenerateSession(Request request) {
+        String sessionId = parseSessionIdOrGetNewId(request);
+        return saveIfAbsentAndGetSession(sessionId);
+    }
+
+    private String parseSessionIdOrGetNewId(Request request) {
+        return request.getCookie(COOKIE_NAME_OF_SESSION_ID)
                 .map(Cookie::getValue)
                 .orElseGet(sessionIdGenerator::generate);
-
-        Session savedSession = saveIfAbsentAndGetSession(sessionId);
-        SessionContextHolder.saveSession(savedSession);
     }
 
     private Session saveIfAbsentAndGetSession(String sessionId) {
@@ -35,12 +37,19 @@ public class SessionStorage {
     public void teardownAfterProcess(Response response) {
         Session currentSession = SessionContextHolder.getCurrentSession();
         String sessionId = currentSession.getId();
+        removeSessionIfAttributesEmpty(currentSession);
+        addSessionIdToResponseCookieIfPresent(response, sessionId);
+    }
 
-        if (currentSession.isEmptyAttributes()) {
-            sessions.remove(sessionId);
-            return;
+    private void removeSessionIfAttributesEmpty(Session session) {
+        if (session.isEmptyAttributes()) {
+            sessions.remove(session.getId());
         }
+    }
 
-        response.addCookie(Cookie.of(COOKIE_NAME_OF_SESSION_ID, sessionId));
+    private void addSessionIdToResponseCookieIfPresent(Response response, String sessionId) {
+        if (sessions.containsKey(sessionId)) {
+            response.addCookie(Cookie.of(COOKIE_NAME_OF_SESSION_ID, sessionId));
+        }
     }
 }

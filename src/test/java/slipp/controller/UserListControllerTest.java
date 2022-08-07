@@ -36,7 +36,7 @@ class UserListControllerTest {
 
     @BeforeEach
     void setUp() {
-        SessionContextHolder.saveSession(Session.from("12345"));
+        SessionContextHolder.saveCurrentSession(Session.from("12345"));
 
         userListController = new UserListController(
                 new TemplateCompiler(new ClassPathTemplateLoader("/templates", ".html"))

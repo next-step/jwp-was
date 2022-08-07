@@ -10,7 +10,7 @@ public class SessionContextHolder {
         return CONTEXT_HOLDER.get();
     }
 
-    public static void saveSession(Session session) {
+    public static void saveCurrentSession(Session session) {
         CONTEXT_HOLDER.set(session);
     }
 

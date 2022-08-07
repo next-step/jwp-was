@@ -8,6 +8,7 @@ import webserver.http.domain.request.Method;
 import webserver.http.domain.request.Request;
 import webserver.http.domain.response.Response;
 import webserver.http.domain.session.Session;
+import webserver.http.domain.session.SessionContextHolder;
 
 import java.util.Objects;
 
@@ -27,7 +28,7 @@ public class UserListController implements Controller {
 
     @Override
     public Response handle(Request request) {
-        Session session = request.getSession();
+        Session session = SessionContextHolder.getCurrentSession();
         User user = (User) session.getAttribute(USER_ATTRIBUTE_NAME);
         if (Objects.isNull(user)) {
             return Response.redirect("/user/login.html");

@@ -9,7 +9,7 @@ class SessionContextHolderTest {
     @Test
     void getCurrentSession() {
         Session session = Session.from("12345");
-        SessionContextHolder.saveSession(session);
+        SessionContextHolder.saveCurrentSession(session);
 
         Session savedSession = SessionContextHolder.getCurrentSession();
         assertThat(session).isEqualTo(savedSession);
