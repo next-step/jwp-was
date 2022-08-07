@@ -13,8 +13,6 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 public class UserLoginController implements Controller {
-    private static final String TEMPLATE_PATH = "./templates";
-
     @Override
     public HttpResponse process(HttpRequest httpRequest) throws IOException, URISyntaxException {
         User user = DataBase.findUserById(httpRequest.getParam("userId"));
