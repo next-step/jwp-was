@@ -23,7 +23,7 @@ public class HttpSessionTest {
         );
     }
 
-    @DisplayName("세션에 속성을 저장한다.")
+    @DisplayName("속성을 저장한다.")
     @Test
     void setAttribute() {
         // given
@@ -34,5 +34,19 @@ public class HttpSessionTest {
 
         // then
         assertThat(httpSession.getAttribute("name")).isEqualTo("value");
+    }
+
+    @DisplayName("속성을 삭제한다.")
+    @Test
+    void removeAttribute() {
+        // given
+        HttpSession httpSession = new HttpSession();
+        httpSession.setAttribute("name", "value");
+
+        // when
+        httpSession.removeAttribute("name");
+
+        // then
+        assertThat(httpSession.getAttribute("name")).isNull();
     }
 }
