@@ -1,6 +1,5 @@
 package model;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,16 +26,8 @@ public class HttpResponse {
         return new HttpResponse(HttpStatusCode.NOT_FOUND, ResponseHeader.empty(), new byte[0]);
     }
 
-    public static HttpResponse of(HttpStatusCode httpStatusCode, ResponseHeader responseHeader, byte[] body) {
-        return new HttpResponse(httpStatusCode, responseHeader, body);
-    }
-
-    public static HttpResponse of(HttpStatusCode httpStatusCode, ResponseHeader responseHeader, String body) {
-        return new HttpResponse(httpStatusCode, responseHeader, body.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public static HttpResponse of(HttpStatusCode httpStatusCode, ResponseHeader responseHeader) {
-        return new HttpResponse(httpStatusCode, responseHeader, new byte[0]);
+    public static HttpResponse ok(ResponseHeader responseHeader, byte[] body) {
+        return new HttpResponse(HttpStatusCode.OK, responseHeader, body);
     }
 
     public static HttpResponse found(String path, String cookie) {
@@ -46,6 +37,10 @@ public class HttpResponse {
                         HttpHeaders.LOCATION, path,
                         HttpHeaders.SET_COOKIE, cookie)),
                 new byte[0]);
+    }
+
+    public static HttpResponse error() {
+        return new HttpResponse(HttpStatusCode.INTERNAL_SERVER_ERROR, ResponseHeader.empty(), new byte[0]);
     }
 
     public String getHttpResponseCode() {

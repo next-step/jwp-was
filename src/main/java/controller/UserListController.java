@@ -6,6 +6,7 @@ import model.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 
@@ -32,12 +33,12 @@ public class UserListController implements Controller {
 
         Collection<User> users = DataBase.findAll();
 
-        return HttpResponse.of(
-                HttpStatusCode.OK,
+        return HttpResponse.ok(
                 ResponseHeader.of(Map.of(
                         HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8")),
                 handlebars.compile(USER_LIST_TEMPLATE)
                         .apply(Map.of("users", users))
+                        .getBytes(StandardCharsets.UTF_8)
         );
     }
 

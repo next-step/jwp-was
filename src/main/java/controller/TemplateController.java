@@ -18,7 +18,7 @@ public class TemplateController implements Controller {
     public HttpResponse execute(HttpRequest request) throws IOException, URISyntaxException {
         String path = addTemplatePath(request.getPath());
         byte[] bytes = FileIoUtils.loadFileFromClasspath(path);
-        return HttpResponse.of(HttpStatusCode.OK, ResponseHeader.text(bytes.length, request.getPath()), bytes);
+        return HttpResponse.ok(ResponseHeader.text(bytes.length, request.getPath()), bytes);
     }
 
     private String addTemplatePath(String path) {

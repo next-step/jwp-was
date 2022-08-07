@@ -45,7 +45,7 @@ public class DispatchController {
         try {
             response = controller.execute(request);
         } catch (IOException | URISyntaxException e) {
-            return HttpResponse.of(HttpStatusCode.INTERNAL_SERVER_ERROR, ResponseHeader.empty());
+            return HttpResponse.error();
         }
         return response;
     }
