@@ -32,7 +32,7 @@ class PathTest {
         Path path = Path.from(queryString);
         assertThat(path).isNotNull();
         assertThat(path.getPath()).isEqualTo("/users");
-        assertThat(path.getData()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
+        assertThat(path.getQueryString()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
     }
 
     @DisplayName("Query String으로 데이터를 전달하는 유효하지 않은 Path 생성 시 예외 발생 테스트")

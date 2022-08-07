@@ -10,16 +10,21 @@ public class RequestLine {
     private Path path;
     private Protocol protocol;
 
-    private RequestLine(HttpMethod method, Path path, Protocol protocol) {
+    public RequestLine(HttpMethod method, Path path, Protocol protocol) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
     }
 
-    public static RequestLine from(String httpRequest) {
-        String[] properties = httpRequest.split(PROPERTIES_DELIMITER);
-        validate(properties);
-        return new RequestLine(HttpMethod.from(properties[0]), Path.from(properties[1]), Protocol.from(properties[2]));
+    public static RequestLine from(String line) {
+        String[] tokens = validTokens(line);
+        return new RequestLine(HttpMethod.from(tokens[0]), Path.from(tokens[1]), Protocol.from(tokens[2]));
+    }
+
+    private static String[] validTokens(String httpRequest) {
+        String[] tokens = httpRequest.split(PROPERTIES_DELIMITER);
+        validate(tokens);
+        return tokens;
     }
 
     private static void validate(String[] properties) {
@@ -30,6 +35,14 @@ public class RequestLine {
 
     public HttpMethod getMethod() {
         return method;
+    }
+
+    public String path() {
+        return this.path.getPath();
+    }
+
+    public String query() {
+        return this.path.getQueryString();
     }
 
     public Protocol getProtocol() {

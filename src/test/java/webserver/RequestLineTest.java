@@ -9,6 +9,14 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 public class RequestLineTest {
     private static final Protocol HTTP_ONE_ONE_VERSION = Protocol.of("HTTP", "1.1");
 
+    @Test
+    void get_index() {
+        RequestLine requestLine = RequestLine.from("GET /index.html HTTP/1.1");
+        assertThat(requestLine).isNotNull();
+        assertThat(requestLine.path()).isEqualTo("/index.html");
+
+    }
+
     @DisplayName("유효한 GET 요청으로 RequestLine 파싱하는 테스트")
     @Test
     void from_get() {
