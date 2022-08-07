@@ -35,6 +35,9 @@ public class RequestMapping {
         );
     }
 
+    private RequestMapping() {
+    }
+
     public static HttpResponse process(HttpRequest httpRequest) {
         return CONTROLLERS.stream()
                 .filter(controller -> controller.isMatchRequest(httpRequest))
