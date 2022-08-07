@@ -11,7 +11,7 @@ import java.util.Map;
 public class SignUpController extends AbstractController {
 
     public static final String URL = "/user/create";
-    public static final String VIEW_PATH = "/user/form.html";
+    public static final String VIEW_PATH = "./templates/user/form.html";
     private static final String redirectPath = "/index.html";
 
     @Override

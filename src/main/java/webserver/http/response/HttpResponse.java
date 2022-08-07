@@ -1,8 +1,6 @@
 package webserver.http.response;
 
 
-import webserver.http.Url;
-
 import java.util.Optional;
 
 public class HttpResponse {

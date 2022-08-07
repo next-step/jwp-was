@@ -16,10 +16,10 @@ public class ResponseHeader {
     private static final String SET_COOKIE = "Set-Cookie";
 
     private static final String HEADER_DELIMITER = ";";
-    private static final String CHARSET = ";charset=utf-8";
+    private static final String CHARSET = "charset=UTF-8";
 
     private static final Map<String, String> BASE_HEADERS = Map.of(
-            CONNECTION, "Keep-Alive",
+//            CONNECTION, "Keep-Alive",
             CONTENT_TYPE,  ContentType.HTML.type + HEADER_DELIMITER + CHARSET
     );
 
@@ -38,6 +38,8 @@ public class ResponseHeader {
     public String getLocation(){
         return headers.get(LOCATION);
     }
+
+    public String getContentType() { return headers.get(CONTENT_TYPE); }
 
     public void setLocation(String redirectUrl) {
         this.headers.put(LOCATION, "http://localhost:8888" + redirectUrl);
