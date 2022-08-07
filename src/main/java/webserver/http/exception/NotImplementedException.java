@@ -1,8 +1,10 @@
 package webserver.http.exception;
 
-public class NotImplementedException extends RuntimeException {
+import webserver.http.HttpStatus;
+
+public class NotImplementedException extends RequestProcessException {
 
     public NotImplementedException(String message) {
-        super(message);
+        super(message, HttpStatus.NOT_IMPLEMENTED);
     }
 }
