@@ -1,7 +1,7 @@
 package slipp.controller;
 
-import slipp.db.DataBase;
 import slipp.model.User;
+import slipp.service.AuthenticateService;
 import webserver.http.controller.Controller;
 import webserver.http.domain.request.Method;
 import webserver.http.domain.request.Request;
@@ -10,6 +10,11 @@ import webserver.http.domain.session.Session;
 
 public class LoginController implements Controller {
     private static final String USER_ATTRIBUTE_NAME = "user";
+    private final AuthenticateService authenticateService;
+
+    public LoginController(AuthenticateService authenticateService) {
+        this.authenticateService = authenticateService;
+    }
 
     @Override
     public boolean requires(Request request) {
@@ -20,20 +25,15 @@ public class LoginController implements Controller {
     public Response handle(Request request) {
         String userId = request.getParameter("userId");
         String password = request.getParameter("password");
+        try {
+            User authenticatedUser = authenticateService.authenticate(userId, password);
 
-        return DataBase.findUserById(userId)
-                .filter(user -> user.equalsPassword(password))
-                .map(user -> loginSuccessResponse(user, request))
-                .orElseGet(() -> loginResultResponse("/user/login_failed.html"));
+            Session session = request.getSession();
+            session.setAttribute(USER_ATTRIBUTE_NAME, authenticatedUser);
+            return Response.redirect("/index.html");
+        } catch (RuntimeException e) {
+            return Response.redirect("/user/login_failed.html");
+        }
     }
 
-    private Response loginSuccessResponse(User user, Request request) {
-        Session session = request.getSession();
-        session.setAttribute(USER_ATTRIBUTE_NAME, user);
-        return loginResultResponse("/index.html");
-    }
-    private Response loginResultResponse(String location) {
-        Response response = Response.redirect(location);
-        return response;
-    }
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import slipp.db.DataBase;
 import slipp.model.User;
+import slipp.service.AuthenticateService;
 import webserver.http.domain.Headers;
 import webserver.http.domain.Protocol;
 import webserver.http.domain.request.Method;
@@ -33,7 +34,7 @@ import static webserver.http.domain.request.Method.GET;
 import static webserver.http.domain.request.Method.POST;
 
 class LoginControllerTest {
-    private final LoginController loginController = new LoginController();
+    private final LoginController loginController = new LoginController(new AuthenticateService());
 
     @DisplayName("POST 요청이고 /user/login path 요청인 경우, true 반환")
     @ParameterizedTest
