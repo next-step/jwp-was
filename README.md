@@ -40,5 +40,12 @@ userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajig
 * http://localhost:8080/user/list 에 접속시 로그인 유무에 따라 다른 처리를 할 수 있어야 한다.
 * stylesheet 파일을 지원할 수 있어야 한다.
 
+### 3단계
+
+>각각의 역할을 분리해 재사용 가능하도록 개선한다.
+>즉, WAS 기능, HTTP 요청/응답 처리 기능은 애플리케이션 개발자가 신경쓰지 않아도 재사용이 가능한 구조가 되도록 한다.
+> 
+> 
+
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)

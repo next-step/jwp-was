@@ -1,8 +1,8 @@
 package webserver;
 
-import webserver.http.Request;
-import webserver.http.Response;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 public interface Handler {
-    ModelAndView handle(Request request, Response response);
+    ModelAndView handle(HttpRequest httpRequest, HttpResponse httpResponse);
 }

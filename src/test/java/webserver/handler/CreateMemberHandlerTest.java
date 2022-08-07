@@ -7,9 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.ModelAndView;
 import webserver.http.Headers;
-import webserver.http.Request;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 import webserver.http.RequestLine;
-import webserver.http.Response;
 
 import java.util.ArrayList;
 
@@ -30,11 +30,11 @@ class CreateMemberHandlerTest {
     @Test
     void handleTest() {
         // given
-        Request request = createUserCreateRequest("userId", "passwrod", "name", "email");
-        Response response = new Response();
+        HttpRequest httpRequest = createUserCreateRequest("userId", "passwrod", "name", "email");
+        HttpResponse httpResponse = new HttpResponse();
 
         // when
-        ModelAndView modelAndView = createMemberHandler.handle(request, response);
+        ModelAndView modelAndView = createMemberHandler.handle(httpRequest, httpResponse);
 
         // then
         assertThat(modelAndView.getView()).isEqualTo("redirect:/index.html");
@@ -44,11 +44,11 @@ class CreateMemberHandlerTest {
     @Test
     void createMemberTest() {
         // given
-        Request request = createUserCreateRequest("userId", "password", "name", "email");
-        Response response = new Response();
+        HttpRequest httpRequest = createUserCreateRequest("userId", "password", "name", "email");
+        HttpResponse httpResponse = new HttpResponse();
 
         // when
-        createMemberHandler.handle(request, response);
+        createMemberHandler.handle(httpRequest, httpResponse);
 
         // then
         User user = DataBase.findUserById("userId");
@@ -58,8 +58,8 @@ class CreateMemberHandlerTest {
         assertThat(user.getEmail()).isEqualTo("email");
     }
 
-    private Request createUserCreateRequest(String userId, String password, String name, String email) {
-        return new Request(
+    private HttpRequest createUserCreateRequest(String userId, String password, String name, String email) {
+        return new HttpRequest(
                 RequestLine.parseOf("POST /user/create HTTP/1.1"),
                 Headers.parseOf(new ArrayList<>()),
                 String.format("userId=%s&password=%s&name=%s&email=%s", userId, password, name, email));

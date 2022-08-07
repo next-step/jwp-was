@@ -2,18 +2,20 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.IOUtils;
 import webserver.handler.CreateMemberHandler;
 import webserver.handler.ListMemberHandler;
 import webserver.handler.LoginMemberHandler;
 import webserver.handler.StaticFileHandler;
-import webserver.http.*;
+import webserver.http.HttpMethod;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 import webserver.view.View;
 import webserver.view.ViewResolver;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 
 ;
@@ -23,16 +25,11 @@ public class RequestHandler implements Runnable {
 
     private final Socket connection;
 
-    private final StaticLocationProvider staticLocationProvider = new StaticLocationProvider(
-            List.of("./templates", "./static")
-    );
-
     private final HandlerMapping handlerMapping = new HandlerMapping(List.of(
             new RequestMappingRegistration("/user/create", HttpMethod.POST, new CreateMemberHandler()),
             new RequestMappingRegistration("/user/list", HttpMethod.GET, new ListMemberHandler()),
-            new RequestMappingRegistration("/user/login", HttpMethod.POST, new LoginMemberHandler()),
-            new RequestMappingRegistration("/.*", HttpMethod.GET, new StaticFileHandler(staticLocationProvider))
-    ));
+            new RequestMappingRegistration("/user/login", HttpMethod.POST, new LoginMemberHandler())),
+            new StaticFileHandler());
 
     private final ViewResolver viewResolver = new ViewResolver("/templates", ".html");
 
@@ -45,23 +42,22 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            Request request = readRequest(new BufferedReader(new InputStreamReader(in)));
-            logger.debug("request:{} ", request);
+            HttpRequest httpRequest = HttpRequest.create(in);
 
-            Response response = new Response();
-            handleRequest(request, response);
-            logger.debug("response:{} ", response);
+            HttpResponse httpResponse = new HttpResponse(out);
 
-            writeResponse(out, response);
-        } catch (IOException e) {
+            handleRequest(httpRequest, httpResponse);
+
+            httpResponse.commit();
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void handleRequest(Request request, Response response) {
-        Handler handler = handlerMapping.getHandler(request);
+    private void handleRequest(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
+        Handler handler = handlerMapping.getHandler(httpRequest);
 
-        ModelAndView modelAndView = handler.handle(request, response);
+        ModelAndView modelAndView = handler.handle(httpRequest, httpResponse);
 
         if (modelAndView == null) {
             return;
@@ -69,57 +65,6 @@ public class RequestHandler implements Runnable {
 
         View view = viewResolver.resolveView(modelAndView.getView());
 
-        view.render(modelAndView.getModel(), response);
+        view.render(modelAndView.getModel(), httpResponse);
     }
-
-    private void writeResponse(OutputStream out, Response response) throws IOException {
-        DataOutputStream dos = new DataOutputStream(out);
-
-        for (String message : response.getMessages()) {
-            dos.writeBytes(message + "\r\n");
-        }
-
-        dos.writeBytes("\r\n");
-
-        if (response.hasBody()) {
-            dos.write(response.getBody(), 0, response.getBody().length);
-        }
-
-        dos.flush();
-    }
-
-    private Request readRequest(BufferedReader reader) throws IOException {
-        RequestLine requestLine = RequestLine.parseOf(reader.readLine());
-
-        Headers headers = readHeaders(reader);
-
-        String requestBody = readRequestBody(reader, headers);
-
-        return new Request(requestLine, headers, requestBody);
-    }
-
-    private Headers readHeaders(BufferedReader reader) throws IOException {
-        List<String> headerLines = new ArrayList<>();
-
-        String line = reader.readLine();
-        headerLines.add(line);
-
-        while (line != null && !"".equals(line)) {
-            line = reader.readLine();
-            headerLines.add(line);
-        }
-
-        return Headers.parseOf(headerLines);
-    }
-
-    private String readRequestBody(BufferedReader reader, Headers headers) throws IOException {
-        String value = headers.getValue("Content-Length");
-
-        if (value != null && !value.equals("")) {
-            return IOUtils.readData(reader, Integer.parseInt(value));
-        }
-
-        return "";
-    }
-
 }

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class RequestURITest {
+class HttpRequestURITest {
 
     @DisplayName("RequestPath 는 '/' 으로 시작해야 한다.")
     @Test
@@ -22,13 +22,10 @@ class RequestURITest {
         // given
         RequestURI requestUri = new RequestURI("/users?userId=javajigi&password=password");
 
-        // when
-        RequestParameters requestParameters = requestUri.parseQueryString();
-
-        // then
-        assertThat(requestParameters.getValue("userId")).isEqualTo("javajigi");
-        assertThat(requestParameters.getValue("password")).isEqualTo("password");
-        assertThat(requestParameters.getValue("password2")).isNull();
+        // when then
+        assertThat(requestUri.getParameter("userId")).isEqualTo("javajigi");
+        assertThat(requestUri.getParameter("password")).isEqualTo("password");
+        assertThat(requestUri.getParameter("password2")).isNull();
     }
 
 }

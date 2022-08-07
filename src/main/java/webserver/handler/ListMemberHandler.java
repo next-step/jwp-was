@@ -3,14 +3,14 @@ package webserver.handler;
 import db.DataBase;
 import webserver.Handler;
 import webserver.ModelAndView;
-import webserver.http.Request;
-import webserver.http.Response;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 public class ListMemberHandler implements Handler {
 
     @Override
-    public ModelAndView handle(Request request, Response response) {
-        String logined = request.getCookie("logined");
+    public ModelAndView handle(HttpRequest httpRequest, HttpResponse httpResponse) {
+        String logined = httpRequest.getCookie("logined");
 
         if (logined.equals("true")) {
             ModelAndView modelAndView = new ModelAndView("/user/list");

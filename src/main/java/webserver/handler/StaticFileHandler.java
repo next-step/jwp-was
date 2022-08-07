@@ -2,11 +2,12 @@ package webserver.handler;
 
 import utils.FileIoUtils;
 import webserver.Handler;
-import webserver.LoadFileException;
 import webserver.ModelAndView;
+import webserver.NotFoundResourceException;
 import webserver.StaticLocationProvider;
-import webserver.http.Request;
-import webserver.http.Response;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.Status;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -24,26 +25,47 @@ public class StaticFileHandler implements Handler {
 
     private final StaticLocationProvider staticLocationProvider;
 
+    public StaticFileHandler() {
+        this(new StaticLocationProvider());
+    }
+
     public StaticFileHandler(StaticLocationProvider staticLocationProvider) {
         this.staticLocationProvider = staticLocationProvider;
     }
 
-    public ModelAndView handle(Request request, Response response) {
-        String path = request.getPath();
+    public ModelAndView handle(HttpRequest httpRequest, HttpResponse httpResponse) {
+        try {
+            handlerStaticResource(httpRequest, httpResponse);
+        } catch (NotFoundResourceException | IOException e) {
+            sendError(httpResponse, Status.NOT_FOUND, "not found " + httpRequest.getPath());
+        } catch (URISyntaxException e) {
+            sendError(httpResponse, Status.INTERNAL_SERVER_ERROR, "error has occurred");
+        }
 
-        byte[] bytes = loadFile(path);
-
-        response.setBody(bytes);
-        response.setContentType(CONTENT_TYPE_BY_EXTENSION.get(getExtension(path)));
         return null;
     }
 
-    private byte[] loadFile(String path) {
+    private void handlerStaticResource(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException, URISyntaxException {
+        String staticResourcePath = staticLocationProvider.getStaticResourcePath(httpRequest.getPath());
+
+        byte[] bytes = FileIoUtils.loadFileFromClasspath(staticResourcePath);
+
+        httpResponse.setBody(bytes);
+
+        httpResponse.setContentType(getContentType(staticResourcePath));
+    }
+
+    private void sendError(HttpResponse httpResponse, Status status, String message) {
         try {
-            String staticLocation = staticLocationProvider.getStaticLocation(path);
-            return FileIoUtils.loadFileFromClasspath(staticLocation + path);
-        } catch (IOException | URISyntaxException e) {
-            throw new LoadFileException("[" + path + "] 파일 로드 실패", e);
+            httpResponse.sendError(status, message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    private String getContentType(String resourcePath) {
+        String extension = getExtension(resourcePath);
+
+        return CONTENT_TYPE_BY_EXTENSION.get(extension);
     }
 }
