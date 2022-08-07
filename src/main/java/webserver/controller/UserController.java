@@ -3,6 +3,7 @@ package webserver.controller;
 import cookie.Cookie;
 import db.DataBase;
 import model.User;
+import webserver.http.model.HandlerAdapter;
 import webserver.http.model.HttpRequest;
 
 public class UserController {
@@ -41,5 +42,12 @@ public class UserController {
         }
         cookie.setResponseLoginCookie(false);
         return "/user/login_failed.html";
+    }
+
+    public String retrieveUsers(HttpRequest httpRequest) {
+        if (HandlerAdapter.accessiblePagesAfterLogin(httpRequest) && "logined=true".equals(httpRequest.getRequestHeaders().get("Cookie"))) {
+            return "/user/list.html";
+        }
+        return "/user/login.html";
     }
 }

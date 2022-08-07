@@ -6,7 +6,6 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
 import cookie.Cookie;
-import model.User;
 import webserver.http.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

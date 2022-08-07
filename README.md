@@ -33,7 +33,7 @@
    2. 로그인 성공시 cookie header 값을 logined=true, 실패시 logined=false 로 전달
    3. 응답 header에 set-Cookie 값을 설정한 경우 요청 header에 Cookie 값이 전달 되는지 확인한다.
 6. 사용자가 로그인 상태라면 사용자 목록 페이지 이동, 로그인 하지 않은 상태라면 로그인 페이지로 이동
-   6-1. classPath에 있는 template 파일을 읽어 동적으로 html 생성
-   6-2. handlebars 라이브러리를 사용해서 User 객체를 동적으로 html 생성해서 전달한다.
+   1. 로그인 상태라면 사용자 목록 페이지 이동, 로그인 하지 않은 상태라면 로그인 페이지로 이동한다.
+   2. handlebars 라이브러리를 사용해서 User 객체를 동적으로 html 생성해서 전달한다.
 7. StyleSheet 파일 지원
    7-1. style.css 파일을 응답으로 전달 할 수 있도록 구현
