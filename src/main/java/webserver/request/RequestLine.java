@@ -1,4 +1,4 @@
-package webserver.request.domain.request;
+package webserver.request;
 
 import webserver.exception.StringEmptyException;
 

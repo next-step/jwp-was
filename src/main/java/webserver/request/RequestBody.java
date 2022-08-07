@@ -1,4 +1,4 @@
-package webserver.request.domain.request;
+package webserver.request;
 
 import lombok.EqualsAndHashCode;
 import org.springframework.util.StringUtils;

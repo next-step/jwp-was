@@ -46,7 +46,8 @@
     - Method enum 클래스내의 상태값 및 메소드 추가(o)
     - QueryString과 RequestBody를 따로 관리할 필요가 있을까? 그냥 Body 하나로 관리하는건 어떨까?(o)
 
-- Response 코드 리팩토링
+- HttpResponse 클래스 리팩토링
+  - HttpResponse클래스는 StatusLine, Header, RequestBody를 포함한다.
 
 - Controller 생성 및 RequestHandler 리팩토링
 

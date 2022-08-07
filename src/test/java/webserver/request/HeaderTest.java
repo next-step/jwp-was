@@ -1,7 +1,8 @@
-package webserver.request.domain.request;
+package webserver.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.request.Header;
 
 import java.util.HashMap;
 import java.util.Map;

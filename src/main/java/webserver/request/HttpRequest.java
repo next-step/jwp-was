@@ -1,4 +1,4 @@
-package webserver.request.domain.request;
+package webserver.request;
 
 import com.google.common.base.Charsets;
 import utils.IOUtils;

@@ -1,7 +1,8 @@
-package webserver.request.domain.request;
+package webserver.request;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import webserver.request.HttpRequest;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

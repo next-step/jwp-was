@@ -1,4 +1,4 @@
-package webserver.request.domain.request;
+package webserver.request;
 
 import org.springframework.util.StringUtils;
 import webserver.exception.StringEmptyException;

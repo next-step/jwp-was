@@ -11,7 +11,9 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
-import webserver.request.domain.request.*;
+import webserver.request.HttpRequest;
+import webserver.request.Method;
+import webserver.request.RequestBody;
 import webserver.response.HttpResponse;
 import webserver.util.HandlebarsObject;
 
@@ -89,19 +91,6 @@ public class RequestHandler implements Runnable {
 
         return user.getPassword().equals(pw);
     }
-
-//    private String parseQueryString(String parsePath, QueryString queryString) {
-//        if (queryString != null) {
-//            String[] str = parsePath.split("/");
-//            if (str.length > 2) {
-//                if (str[1].equals("user")) {
-//                    userService(queryString.getDataPairs(), str);
-//                }
-//            }
-//        }
-//
-//        return "/index.html";
-//    }
 
     private String parseBody(String parsePath, RequestBody requestBody) {
         String[] str = parsePath.split("/");
