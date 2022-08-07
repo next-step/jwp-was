@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StopWatch;
 import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import db.DataBase;
 import utils.FileIoUtils;
@@ -64,5 +66,26 @@ class HttpRequestTest {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(LOCALHOST, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @DisplayName("서버의 스레드수 보다 많은 요청을 보내본다.")
+    @Test
+    void manyRequest() {
+        int threadCount = 250;
+
+        ExecutorService es = Executors.newFixedThreadPool(threadCount);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            for (int i = 0; i < threadCount; i++) {
+                es.execute(() -> restTemplate.getForEntity(LOCALHOST, String.class));
+            }
+
+            es.shutdown();
+            es.awaitTermination(100, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

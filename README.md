@@ -80,4 +80,7 @@
 - [x] 쿠키를 통해 고유 아이디로 session을 불러 오도록 한다.
 - [x] 세션 스토리지를 구현한다.
 
-
+### 5단계
+#### 기능 요구사항 1.
+- [x] Java에서 기본으로 제공하는 ThreadPoolExecutor를 활용해 ThreadPool 기능을 추가한다.
+- [x] Spring에서 제공하는 RestTemplate을 활용해 서버의 ThreadPool 수보다 많은 요청을 동시에 보내본다.
