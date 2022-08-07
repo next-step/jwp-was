@@ -2,11 +2,9 @@ package request;
 
 import constant.HttpHeader;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RequestHeader {
@@ -34,8 +32,16 @@ public class RequestHeader {
         return headers.get(key);
     }
 
-    public Cookie getCookie() {
-        return Cookie.of(headers.get(HttpHeader.COOKIE.getValue()));
+    public RequestCookie getCookie() {
+        return RequestCookie.of(headers.get(HttpHeader.COOKIE.getValue()));
+    }
+
+    public int getContentLength() {
+        String contentLength = getHeader(HttpHeader.CONTENT_LENGTH.getValue());
+        if (Objects.isNull(contentLength)) {
+            return 0;
+        }
+        return Integer.parseInt(contentLength);
     }
 
 

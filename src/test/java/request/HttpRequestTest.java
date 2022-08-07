@@ -3,19 +3,19 @@ package request;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import constant.HttpCookie;
 import constant.HttpMethod;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import session.HttpSession;
+import session.SessionManager;
 
 public class HttpRequestTest {
 
@@ -79,23 +79,6 @@ public class HttpRequestTest {
     }
 
     @Test
-    @DisplayName("body값을 추가합니다.")
-    void addBodyTest() {
-        List<String> lines = List.of("GET /index.html?name=1234 HTTP/1.1", "Host: localhost:8080", "Cookie: logined=true");
-        HttpRequest httpRequest = HttpRequest.from(lines);
-
-        String body = "userId=java&password=1234";
-        httpRequest.addBody(body);
-
-        Map<String, String> map = new HashMap<>();
-        map.put("userId", "java");
-        map.put("password", "1234");
-        RequestBody requestBody = new RequestBody(map);
-
-        assertThat(httpRequest.getBody()).isEqualTo(requestBody);
-    }
-
-    @Test
     @DisplayName("파라미터 값을 반환합니다.")
     void getParameterTest() {
         List<String> lines = List.of("GET /index.html?name=1234 HTTP/1.1", "Host: localhost:8080", "Cookie: logined=true");
@@ -119,9 +102,38 @@ public class HttpRequestTest {
         List<String> lines = List.of("GET /index.html?name=1234 HTTP/1.1", "Host: localhost:8080", "Cookie: logined=true");
         HttpRequest httpRequest = HttpRequest.from(lines);
 
-        Cookie cookie = httpRequest.getCoookie();
+        RequestCookie cookie = httpRequest.getCoookie();
 
-        assertThat(cookie.getLogined()).isEqualTo("true");
+        assertThat(cookie.getParameter(HttpCookie.LOGIN.getValue())).isEqualTo("true");
+    }
+
+    @Test
+    @DisplayName("로그인된 JSESSIONID이 있을 떄 true로 반환하기")
+    void isLoginedTest() {
+        HttpSession session = SessionManager.createSession();
+        List<String> lines = List.of("GET /index.html?name=1234 HTTP/1.1", "Host: localhost:8080", "Cookie: JSESSIONID="+session.getId());
+        HttpRequest httpRequest = HttpRequest.from(lines);
+
+        assertThat(httpRequest.isLogined()).isTrue();
+    }
+
+    @Test
+    @DisplayName("SessionManager에 없는 SessionID가 들어올 경우 false반환합니다.")
+    void isLoginedFalseTest() {
+        List<String> lines = List.of("GET /index.html?name=1234 HTTP/1.1", "Host: localhost:8080", "Cookie: JSESSIONID=JSESSIONID");
+        HttpRequest httpRequest = HttpRequest.from(lines);
+
+        assertThat(httpRequest.isLogined()).isFalse();
+    }
+
+    @Test
+    @DisplayName("요청받은 SessionId로 알맞은 Session을 받는지 확인합니다.")
+    void getHttpSesionTest() {
+        HttpSession session = SessionManager.createSession();
+        List<String> lines = List.of("GET /index.html?name=1234 HTTP/1.1", "Host: localhost:8080", "Cookie: JSESSIONID="+session.getId());
+        HttpRequest httpRequest = HttpRequest.from(lines);
+
+        assertThat(httpRequest.getHttpSesion()).isEqualTo(session);
     }
 
 }

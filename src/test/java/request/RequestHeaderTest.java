@@ -3,6 +3,7 @@ package request;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +25,7 @@ public class RequestHeaderTest {
         List<String> header = List.of("Cookie: logined=true");
 
         RequestHeader requestHeader = RequestHeader.from(header);
-        Cookie cookie = new Cookie("true");
+        RequestCookie cookie = new RequestCookie(Map.of("logined", "true"));
 
         assertThat(requestHeader.getCookie()).isEqualTo(cookie);
     }
