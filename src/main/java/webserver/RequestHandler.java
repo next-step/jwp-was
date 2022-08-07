@@ -6,9 +6,10 @@ import org.slf4j.LoggerFactory;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.HttpStatus;
-import webserver.http.exception.MethodNotAllowedException;
 import webserver.http.exception.NotFoundException;
-import webserver.http.exception.NotImplementedException;
+import webserver.http.view.ErrorViewResolver;
+import webserver.http.view.View;
+import webserver.http.view.ViewResolver;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,12 +36,12 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void process(InputStream in, OutputStream out) {
+    private void process(InputStream in, OutputStream out) throws Exception {
         HttpResponse response = new HttpResponse(out);
         try {
             HttpRequest request = new HttpRequest(in);
 
-            if(request.getCookies().getCookie("JSESSIONID") == null) {
+            if (request.getCookies().getCookie("JSESSIONID") == null) {
                 response.addHeader("Set-Cookie", "JSESSIONID=" + UUID.randomUUID());
             }
 
@@ -48,11 +49,21 @@ public class RequestHandler implements Runnable {
             controller.service(request, response);
         } catch (NotFoundException e) {
             logger.error(e.getMessage());
-            response.forwardError(HttpStatus.NOT_FOUND);
+            responseError(response, HttpStatus.NOT_FOUND);
+
         } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
-            response.forwardError(HttpStatus.INTERNAL_SERVER_ERROR);
+
+            responseError(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private void responseError(HttpResponse response, HttpStatus notFound) throws Exception {
+        response.updateStatus(notFound);
+
+        ViewResolver viewResolver = new ErrorViewResolver();
+        View view = viewResolver.resolveView("");
+        view.render(response);
     }
 }
