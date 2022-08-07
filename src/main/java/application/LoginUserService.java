@@ -2,13 +2,11 @@ package application;
 
 import db.DataBase;
 import model.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 public class LoginUserService {
-    private static final Logger logger = LoggerFactory.getLogger(LoginUserService.class);
+    public static final String LOGINED_FLAG = "logined";
 
     private static Optional<User> findUserById(String userId) {
         User user = DataBase.findUserById(userId);

@@ -66,6 +66,11 @@
 - 응답한 웹 페이지 스타일시트(css) 적용 구현하기
     - 지금까지 구현한 소스 코드는 stylesheet 파일을 지원하지 못하고 있다. Stylesheet 파일을 지원하도록 구현하도록 한다.
 
+### Step4 요구사항
 
-
+- HttpSession 구현
+    - HTTP Request Cookie Header에 JWP-SESSION-ID key, value 쌍을 가지게 한 후 이 값을 기반으로 서버에 HttpSession을 구현한다.
+    - HTTP Request Cookie에 JWP-SESSION-ID 가 있으면, Session 꺼내서 사용
+    - HTTP Request Cookie에 JWP-SESSION-ID 가 없으면, Set-Cookie 헤더에 JWP-SESSION-ID를 응답
+    - 로그인 여부를 HttpSession Attribute 기반으로 판단할 수 있도록 구현 
 

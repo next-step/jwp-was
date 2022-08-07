@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@InterceptableHandler(interceptor = PreLoginValidationFromCookieProxyHandler.class)
+@InterceptableHandler(interceptor = PreLoginValidationFromSessionProxyHandler.class)
 public class UserListPageHandlerHomeHttpRequestHandler extends HttpRequestEndpointHandler {
     private static final String ENDPOINT = "/user/list.html";
 

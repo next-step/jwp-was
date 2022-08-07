@@ -1,12 +1,11 @@
 package endpoint;
 
 import com.google.common.io.Files;
-import utils.TemplatePageLoader;
 
 public class TemplateResource {
     public static final TemplateResource EMPTY = new TemplateResource("", new byte[]{});
-    private String filename;
-    private byte[] fileBytes;
+    private final String filename;
+    private final byte[] fileBytes;
 
     public TemplateResource(String filename, byte[] fileBytes) {
         this.filename = filename;
@@ -24,8 +23,4 @@ public class TemplateResource {
     public String fileExtensionName() {
         return Files.getFileExtension(filename);
     }
-
-    public static final TemplateResource NOT_FOUND_PAGE = TemplatePageLoader.notFoundPage();
-
-
 }

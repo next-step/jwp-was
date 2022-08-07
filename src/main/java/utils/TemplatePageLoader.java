@@ -12,9 +12,12 @@ import java.util.Map;
 public class TemplatePageLoader {
     public static final byte[] EMPTY_TEMPLATE_BYTES = new byte[]{};
     private static final String TEMPLATES_BASE_PATH = "./templates";
-    private static final String NOT_FOUND_PAGE_FILE_PATH = "/nof_found.html";
+    private static final String NOT_FOUND_PAGE_FILE_PATH = "/not_found.html";
     private static final String TEMPLATE_FILE_EXTENSION = ".html";
     private static final String PAGE_PATH_DELIMITER = "/";
+
+    private TemplatePageLoader() {
+    }
 
     public static TemplateResource notFoundPage() {
         return getTemplatePage(NOT_FOUND_PAGE_FILE_PATH);
@@ -25,7 +28,7 @@ public class TemplatePageLoader {
             byte[] templatePageBytes = FileIoUtils.loadFileFromClasspath(TEMPLATES_BASE_PATH + templatePageName).orElse(EMPTY_TEMPLATE_BYTES);
             return new TemplateResource(templatePageName, templatePageBytes);
         } catch (Exception e) {
-            return TemplateResource.NOT_FOUND_PAGE;
+            return TemplateResource.EMPTY;
         }
     }
 
@@ -45,7 +48,7 @@ public class TemplatePageLoader {
 
             return new TemplateResource(templatePageName, profilePage.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
-            return TemplateResource.NOT_FOUND_PAGE;
+            return TemplateResource.EMPTY;
         }
     }
 }

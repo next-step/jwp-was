@@ -1,26 +1,30 @@
 package endpoint.page;
 
 import endpoint.HttpRequestHandler;
-import webserver.http.header.HttpCookie;
 import webserver.http.request.HttpRequestMessage;
 import webserver.http.response.HttpResponseMessage;
+import webserver.http.session.HttpSession;
 
-public class PreLoginValidationFromCookieProxyHandler implements HttpRequestHandler {
+import static application.LoginUserService.LOGINED_FLAG;
+
+public class PreLoginValidationFromSessionProxyHandler implements HttpRequestHandler {
     private static final String LOGIN_PAGE_ENDPOINT = "/user/login.html";
     private HttpRequestHandler originHandler;
 
-    public PreLoginValidationFromCookieProxyHandler(HttpRequestHandler originHandler) {
+    public PreLoginValidationFromSessionProxyHandler(HttpRequestHandler originHandler) {
         this.originHandler = originHandler;
     }
 
     @Override
     public HttpResponseMessage handle(HttpRequestMessage httpRequestMessage) {
 
-        HttpCookie httpCookie = httpRequestMessage.getCookie("logined");
+        HttpSession httpSession = httpRequestMessage.getSession();
 
-        boolean isNotLogined = !Boolean.parseBoolean(httpCookie.getCookieValue());
+        Object loginedAttribute = httpSession.getAttribute(LOGINED_FLAG);
 
-        if (isNotLogined) {
+        boolean isLogined = loginedAttribute != null && (boolean) loginedAttribute;
+
+        if (!isLogined) {
             return HttpResponseMessage.redirect(LOGIN_PAGE_ENDPOINT);
         }
 

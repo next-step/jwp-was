@@ -5,6 +5,7 @@ import endpoint.HttpRequestHandler;
 import endpoint.RequestEndpointHandlerRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.filter.GlobalHttpFilterChainExecutor;
 import webserver.http.request.HttpRequestMessage;
 import webserver.http.response.HttpResponseMessage;
 
@@ -41,6 +42,8 @@ public class RequestHandler implements Runnable {
             HttpRequestHandler httpRequestHandler = RequestEndpointHandlerRegistry.getEndpointHandler(endpoint);
 
             HttpResponseMessage httpResponseMessage = httpRequestHandler.handle(httpRequestMessage);
+            httpResponseMessage = GlobalHttpFilterChainExecutor.doAllFilterChain(httpRequestMessage, httpResponseMessage);
+
             DataOutputStream dos = new DataOutputStream(out);
 
             ResponseHandler.handleResponse(dos, httpResponseMessage);

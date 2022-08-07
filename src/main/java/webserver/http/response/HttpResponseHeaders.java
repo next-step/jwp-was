@@ -14,8 +14,8 @@ import static webserver.http.response.HttpResponseMessage.RESPONSE_END_OF_LINE_M
 public class HttpResponseHeaders {
 
 
-    private Map<String, String> headers = new LinkedHashMap<>();
-    private HttpCookies httpCookies = new HttpCookies();
+    private final Map<String, String> headers = new LinkedHashMap<>();
+    private final HttpCookies httpCookies = new HttpCookies();
 
     public void addHeader(String headerName, String headerValue) {
         headers.put(headerName, headerValue);
@@ -35,7 +35,7 @@ public class HttpResponseHeaders {
                 .collect(Collectors.toList());
     }
 
-    public String toRawHeader(Map.Entry<String, String> headerEntry) {
+    private String toRawHeader(Map.Entry<String, String> headerEntry) {
         return headerEntry.getKey() + HTTP_HEADER_DELIMITER + headerEntry.getValue() + RESPONSE_END_OF_LINE_MARKER;
     }
 
