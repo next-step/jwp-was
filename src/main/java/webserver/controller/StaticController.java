@@ -8,7 +8,6 @@ import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Map;
 
 public class StaticController implements Controller {
     private static final String STATIC_PATH = "./static";
@@ -16,7 +15,7 @@ public class StaticController implements Controller {
     @Override
     public HttpResponse process(HttpRequest httpRequest) throws IOException, URISyntaxException {
         return HttpResponse.ok(
-                new Header(Map.of("Content-Type", "text/css;charset=utf-8")),
+                Header.staticResponse(),
                 FileIoUtils.loadFileFromClasspath(STATIC_PATH + httpRequest.getPath())
         );
     }

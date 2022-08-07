@@ -13,7 +13,8 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 public class UserListController implements Controller {
-    private final static String TEMPLATE_ENGINE_USERS_KEY = "users";
+    private static final String TEMPLATE_ENGINE_USERS_KEY = "users";
+
     private final Handlebars handlebars;
 
     public UserListController(Handlebars handlebars) {
@@ -24,22 +25,12 @@ public class UserListController implements Controller {
     public HttpResponse process(HttpRequest httpRequest) throws IOException, URISyntaxException {
         if (httpRequest.isLogin()) {
             return HttpResponse.ok(
-                    new Header(
-                            Map.of(
-                                    "Content-Type", "text/html;charset=utf-8",
-                                    "Set-Cookie", "logined=true; Path=/"
-                            )
-                    ),
+                    Header.loginSuccessResponse(),
                     handlebars.compile(httpRequest.getPath()).apply(Map.of(TEMPLATE_ENGINE_USERS_KEY, DataBase.findAll())).getBytes());
         }
 
         return HttpResponse.redirect("/user/login.html",
-                new Header(
-                        Map.of(
-                                "Content-Type", "text/html;charset=utf-8",
-                                "Set-Cookie", "logined=false; Path=/"
-                        )
-                )
+               Header.loginFailResponse()
         );
     }
 

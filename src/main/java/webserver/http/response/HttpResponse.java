@@ -1,6 +1,7 @@
 package webserver.http.response;
 
 import webserver.http.Header;
+import webserver.http.HeaderKey;
 import webserver.http.request.requestline.Protocol;
 import webserver.http.request.requestline.ProtocolType;
 import webserver.http.request.requestline.Version;
@@ -18,7 +19,7 @@ public class HttpResponse {
     public HttpResponse(StatusLine statusLine, Header header, byte[] body) {
         validate(statusLine, header);
         this.statusLine = statusLine;
-        this.header = header.add("Content-Length", String.valueOf(body.length));
+        this.header = header.add(HeaderKey.CONTENT_LENGTH, String.valueOf(body.length));
         this.body = body;
     }
 
@@ -39,11 +40,11 @@ public class HttpResponse {
     }
 
     public static HttpResponse redirect(String path) {
-        return new HttpResponse(StatusLine.of(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), StatusCode.FOUND), new Header(Map.of("Location", path)), new byte[0]);
+        return new HttpResponse(StatusLine.of(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), StatusCode.FOUND), new Header(Map.of(HeaderKey.LOCATION, path)), new byte[0]);
     }
 
     public static HttpResponse redirect(String path, Header header) {
-        return new HttpResponse(StatusLine.of(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), StatusCode.FOUND), header.add("Location", path), new byte[0]);
+        return new HttpResponse(StatusLine.of(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), StatusCode.FOUND), header.add(HeaderKey.LOCATION, path), new byte[0]);
     }
 
     public String response() {
@@ -54,7 +55,7 @@ public class HttpResponse {
         return this.body;
     }
 
-    public boolean isHeaderValueEqual(String key, String value) {
+    public boolean isHeaderValueEqual(HeaderKey key, String value) {
         return this.header.isHeaderValueEqual(key, value);
     }
     public int getContentLength() {

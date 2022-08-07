@@ -10,7 +10,6 @@ import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Map;
 
 public class UserLoginController implements Controller {
     @Override
@@ -19,22 +18,12 @@ public class UserLoginController implements Controller {
 
         if (user == null || !user.isPasswordCorrect(httpRequest.getParam("password"))) {
             return HttpResponse.redirect("/user/login_failed.html",
-                    new Header(
-                            Map.of(
-                                    "Content-Type", "text/html;charset=utf-8",
-                                    "Set-Cookie", "logined=false; Path=/"
-                            )
-                    )
+                    Header.loginFailResponse()
             );
         }
 
         return HttpResponse.redirect("/index.html",
-                new Header(
-                        Map.of(
-                                "Content-Type", "text/html;charset=utf-8",
-                                "Set-Cookie", "logined=true; Path=/"
-                        )
-                )
+                Header.loginSuccessResponse()
         );
     }
 

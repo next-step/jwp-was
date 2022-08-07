@@ -3,6 +3,8 @@ package webserver.http.request;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.Header;
+import webserver.http.HeaderKey;
+import webserver.http.HeaderValue;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
 import webserver.http.request.requestline.Protocol;
@@ -29,11 +31,11 @@ class HttpRequestTest {
         // given
         RequestLine requestLine = RequestLine.parse("POST /user/create HTTP/1.1");
         Header header = new Header(Map.of(
-                "Host", "localhost:8080",
-                "Connection", "keep-alive",
-                "Content-Length", "71",
-                "Content-Type", "application/x-www-form-urlencoded",
-                "Accept", "*/*"
+                HeaderKey.HOST, "localhost:8080",
+                HeaderKey.CONNECTION, HeaderValue.KEEP_ALIVE,
+                HeaderKey.CONTENT_LENGTH, "71",
+                HeaderKey.CONTENT_TYPE, HeaderValue.APPLICATION_HTML_FORM,
+                HeaderKey.ACCEPT, HeaderValue.ALL_MIME_TYPE
         ));
         QueryString body = QueryString.parse("userId=javajigi&password=password&name=JaeSung&email=javajigi@slipp.net");
         HttpRequest expectedHttpRequest = new HttpRequest(requestLine, header, body);

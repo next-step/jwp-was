@@ -14,13 +14,11 @@ import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class RequestMapping {
-    private static Set<Controller> CONTROLLERS = new HashSet<>();
+    private static final Set<Controller> CONTROLLERS = new HashSet<>();
 
     static {
         TemplateLoader loader = new ClassPathTemplateLoader();

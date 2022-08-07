@@ -6,8 +6,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 
+import java.util.Collections;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class HeaderTest {
     @Test
@@ -31,5 +34,14 @@ class HeaderTest {
     void throw_exception_setCookie_null(String cookieString) {
         Header header = new Header();
         assertThatThrownBy(() -> header.setCookie(cookieString)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("Header 생성 시, Header fields, cookie 값이 null 일 경우 예외가 발생한다.")
+    void throw_exception_fields_or_cookie_null() {
+        assertAll(
+                () -> assertThatThrownBy(() -> new Header(null, new Cookie())),
+                () -> assertThatThrownBy(() -> new Header(Collections.emptyMap(), null))
+        );
     }
 }

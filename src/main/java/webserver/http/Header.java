@@ -1,5 +1,6 @@
 package webserver.http;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -8,30 +9,72 @@ public class Header {
     private static final String EMPTY_STRING = "";
     private static final String HEADER_FIELD_DELIMITER = ": ";
     private static final String COOKIE_DELIMITER = "=";
-    private static final String CONTENT_LENGTH_STRING = "Content-Length";
-    private static final String COOKIE_STRING = "Cookie";
     private static final String ZERO_STRING = "0";
     private static final int KEY_INDEX = 0;
     private static final int VALUE_INDEX = 1;
 
-    private Map<String, String> fields;
+    private Map<HeaderKey, String> fields;
     private Cookie cookie;
 
-    public Header(Map<String, String> fields, Cookie cookie) {
-        this.fields = fields;
-        this.cookie = cookie;
-    }
-
-    public Header(Map<String, String> fields) {
+    public Header(Map<HeaderKey, String> fields) {
         this(fields, new Cookie());
     }
 
     public Header() {
-        this(new HashMap<>());
+        this(new EnumMap<>(HeaderKey.class));
     }
 
-    public Header add(String key, String value) {
-        Map<String, String> fields = new HashMap<>(this.fields);
+    public Header(Map<HeaderKey, String> fields, Cookie cookie) {
+        validate(fields, cookie);
+        this.fields = fields;
+        this.cookie = cookie;
+    }
+
+    private void validate(Map<HeaderKey, String> fields, Cookie cookie) {
+        validateFields(fields);
+        validateCookie(cookie);
+    }
+
+    private void validateCookie(Cookie cookie) {
+        if (cookie == null) {
+            throw new IllegalArgumentException("전달 받은 쿠키는 null 일 수 없습니다.");
+        }
+    }
+
+    private void validateFields(Map<HeaderKey, String> fields) {
+        if (fields == null) {
+            throw new IllegalArgumentException("전달받은 헤더 필드는 null 일 수 없습니다.");
+        }
+    }
+
+    public static Header templateResponse() {
+        return new Header(Map.of(HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8));
+    }
+
+    public static Header staticResponse() {
+        return new Header(Map.of(HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_CSS_UTF8));
+    }
+
+    public static Header loginFailResponse() {
+        return new Header(
+                Map.of(
+                        HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8,
+                        HeaderKey.SET_COOKIE, HeaderValue.LOGINED_FALSE_ALL_PATH
+                )
+        );
+    }
+
+    public static Header loginSuccessResponse() {
+        return new Header(
+                Map.of(
+                        HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8,
+                        HeaderKey.SET_COOKIE, HeaderValue.LOGINED_TRUE_ALL_PATH
+                )
+        );
+    }
+
+    public Header add(HeaderKey key, String value) {
+        Map<HeaderKey, String> fields = new HashMap<>(this.fields);
         fields.put(key, value);
         return new Header(fields);
     }
@@ -39,7 +82,7 @@ public class Header {
     public void addField(String headerString) {
         validateHeaderString(headerString);
         String[] fieldElements = headerString.split(HEADER_FIELD_DELIMITER);
-        fields.put(fieldElements[KEY_INDEX], fieldElements[VALUE_INDEX]);
+        fields.put(HeaderKey.valueOfKey(fieldElements[KEY_INDEX]), fieldElements[VALUE_INDEX]);
     }
 
     public void setCookie(String cookieString) {
@@ -51,18 +94,18 @@ public class Header {
     }
 
     public int getContentLength() {
-        return Integer.parseInt(this.fields.getOrDefault(CONTENT_LENGTH_STRING, ZERO_STRING));
+        return Integer.parseInt(this.fields.getOrDefault(HeaderKey.CONTENT_LENGTH, ZERO_STRING));
     }
 
     public String getCookieValue() {
-        return this.fields.getOrDefault(COOKIE_STRING, EMPTY_STRING);
+        return this.fields.getOrDefault(HeaderKey.COOKIE, EMPTY_STRING);
     }
 
     public boolean isLogin() {
         return Boolean.parseBoolean(this.cookie.getValue());
     }
 
-    public boolean isHeaderValueEqual(String key, String value) {
+    public boolean isHeaderValueEqual(HeaderKey key, String value) {
         return Optional.ofNullable(this.fields.get(key)).map(headerValue -> headerValue.equals(value)).orElse(false);
     }
 
@@ -80,8 +123,8 @@ public class Header {
 
     public String header() {
         StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> entry : this.fields.entrySet()) {
-            sb.append(String.format("%s: %s\r\n", entry.getKey(), entry.getValue()));
+        for (Map.Entry<HeaderKey, String> entry : this.fields.entrySet()) {
+            sb.append(String.format("%s: %s\r\n", entry.getKey().getHeaderKey(), entry.getValue()));
         }
         return sb.toString();
     }

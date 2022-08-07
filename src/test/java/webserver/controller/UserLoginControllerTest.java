@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import webserver.http.Header;
+import webserver.http.HeaderKey;
+import webserver.http.HeaderValue;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
@@ -46,8 +48,8 @@ class UserLoginControllerTest {
         // then
         assertAll(
                 () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual("Set-Cookie", "logined=true; Path=/")).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual("Location", "/index.html")).isTrue()
+                () -> assertThat(httpResponse.isHeaderValueEqual(HeaderKey.SET_COOKIE, HeaderValue.LOGINED_TRUE_ALL_PATH)).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual(HeaderKey.LOCATION, "/index.html")).isTrue()
         );
     }
 
@@ -64,7 +66,7 @@ class UserLoginControllerTest {
         // then
         assertAll(
                 () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual("Set-Cookie", "logined=false; Path=/")).isTrue()
+                () -> assertThat(httpResponse.isHeaderValueEqual(HeaderKey.SET_COOKIE, HeaderValue.LOGINED_FALSE_ALL_PATH)).isTrue()
         );
     }
 
