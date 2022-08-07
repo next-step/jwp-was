@@ -1,0 +1,70 @@
+package model.request;
+
+import enums.HttpMethod;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+public class RequestLineTest {
+
+    static String GET_REQUEST_LINE = "GET /users HTTP/1.1";
+    static String POST_REQUEST_LINE = "POST /users HTTP/1.1";
+    static String GET_QUERY_STRING_REQUEST_LINE = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+
+    @Test
+    @DisplayName("Request Line이 올바른 형식을 가지는지 테스트")
+    void regexTest() {
+        String regex = "[A-Z]* {1}\\S* {1}[A-Z]*\\/[0-9|.]+";
+        assertAll(
+            () -> assertThat(GET_REQUEST_LINE.matches(regex)).isTrue(),
+            () -> assertThat(POST_REQUEST_LINE.matches(regex)).isTrue(),
+            () -> assertThat(GET_QUERY_STRING_REQUEST_LINE.matches(regex)).isTrue()
+        );
+    }
+
+    @Test
+    @DisplayName("requestLine을 method, path(request-target), protocol, version으로 분리 할 수 있다.")
+    void constructorTest() {
+        //given
+        String path = "/users";
+        String protocolType = "HTTP";
+        String protocolVersion = "1.1";
+
+        //when
+        RequestLine getRequestLineResult = new RequestLine(GET_REQUEST_LINE);
+        RequestLine postRequestLineResult = new RequestLine(POST_REQUEST_LINE);
+
+        //then
+        assertAll(
+            () -> assertThat(getRequestLineResult.getHttpMethod()).isEqualTo(HttpMethod.GET),
+            () -> assertThat(getRequestLineResult.getPath()).isEqualTo(path),
+            () -> assertThat(getRequestLineResult.getWebProtocol().getType()).isEqualTo(protocolType),
+            () -> assertThat(getRequestLineResult.getWebProtocol().getVersion()).isEqualTo(protocolVersion),
+
+            () -> assertThat(postRequestLineResult.getHttpMethod()).isEqualTo(HttpMethod.POST),
+            () -> assertThat(postRequestLineResult.getPath()).isEqualTo(path),
+            () -> assertThat(postRequestLineResult.getWebProtocol().getType()).isEqualTo(protocolType),
+            () -> assertThat(postRequestLineResult.getWebProtocol().getVersion()).isEqualTo(protocolVersion)
+        );
+    }
+
+    @Test
+    @DisplayName("requestLine parsing시, queryString이 포함되어 있다면 queryString도 파싱한다.")
+    void queryStringTest() {
+        //given
+        String queryStringRemovedPath = "/users";
+
+        //when
+        RequestLine queryStringRequestLineResult = new RequestLine(GET_QUERY_STRING_REQUEST_LINE);
+
+        //then
+        assertAll(
+            () -> assertThat(queryStringRequestLineResult.getPath()).isEqualTo(queryStringRemovedPath),
+            () -> assertThat(queryStringRequestLineResult.hasQueryString()).isTrue()
+        );
+    }
+}

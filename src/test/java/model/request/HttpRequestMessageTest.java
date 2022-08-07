@@ -29,8 +29,9 @@ class HttpRequestMessageTest {
             () -> assertThat(result.getClass()).isEqualTo(HttpRequestMessage.class),
             () -> assertThat(result.getHttpHeader().getValueByKey("Host")).isEqualTo("localhost:8080"),
             () -> assertThat(result.getRequestLine().getHttpMethod()).isEqualTo(GET),
-            () -> assertThat(result.getPath()).isEqualTo("/jason/test/"),
-            () -> assertThat(result.getRequestLine().getWebProtocol().getType()).isEqualTo("HTTP")
+            () -> assertThat(result.getPath()).isEqualTo("/jason/test/create"),
+            () -> assertThat(result.getRequestLine().getWebProtocol().getType()).isEqualTo("HTTP"),
+            () -> assertThat(result.getParameter("userId")).isEqualTo("javajigi")
         );
     }
 

@@ -17,7 +17,7 @@ class BufferedReaderUtilsTest {
     void linesTest() throws IOException {
         int mockStringSize = 13;
         String LINE_SEPARATOR = "\n";
-        String FIST_LINE = "GET /jason/test/ HTTP/1.1";
+        String FIST_LINE = "GET /jason/test/create?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
         int FIRST_LINE_INDEX = 0;
         String httpRequestHeaderStringDummy = HTTP_REQUEST_HEADER_STRING_DUMMY;
 
