@@ -1,5 +1,6 @@
 package webserver;
 
+import http.Cookies;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,9 +18,20 @@ class CookiesTest {
 
         assertAll(
                 () -> assertThat(cookie.getCookieValue("logined").get()).isEqualTo("true"),
+
                 () -> assertThat(cookies.getCookieValue("PHPSESSID").get()).isEqualTo("298zf09hf012fh2"),
                 () -> assertThat(cookies.getCookieValue("csrftoken").get()).isEqualTo("u32t4o3tb3gg43"),
                 () -> assertThat(cookies.getCookieValue("_gat").get()).isEqualTo("1")
         );
+    }
+
+    @DisplayName("key 값만 존재할 경우 예외")
+    @Test
+    void emptyValueToEmptyString() {
+        assertThatThrownBy(
+                () -> Cookies.from("PHPSESSID=; csrftoken=")
+        )
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Value값이 존재하지 않습니다.");
     }
 }
