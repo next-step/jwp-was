@@ -3,28 +3,53 @@ package model;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.io.*;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("HttpRequest 테스트")
 class HttpRequestTest {
+    private static final String TEST_DIRECTORY = "./src/test/resources/";
 
-    @DisplayName("HttpRequest 생성")
+    @DisplayName("GET HttpRequest 생성")
     @Test
-    void create() {
-        HttpRequest request = HttpRequest.of(
-                List.of("GET /docs/index.html HTTP/1.1", "Host: www.nowhere123.com", "Accept: image/gif, image/jpeg, */*")
-        );
-        assertThat(request.getHttpMethod()).isEqualTo(HttpMethod.GET);
-        assertThat(request.getPath()).isEqualTo("/docs/index.html");
-        assertThat(request.getHeader()).contains(
-                Map.entry("Host","www.nowhere123.com"),
-                Map.entry("Accept","image/gif, image/jpeg, */*")
+    void get() throws IOException {
+        InputStream fileInputStream = new FileInputStream(new File(TEST_DIRECTORY + "http_get.txt"));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
+        HttpRequest request = HttpRequest.of(bufferedReader);
 
+        assertAll(
+                () -> assertThat(request.getHttpMethod()).isEqualTo(HttpMethod.GET),
+                () -> assertThat(request.getPath()).isEqualTo("/docs/index.html"),
+                () -> assertThat(request.getHeader()).contains(
+                        Map.entry("Host", "www.nowhere123.com"),
+                        Map.entry("Accept", "image/gif, image/jpeg, */*"))
         );
 
+    }
+
+    @DisplayName("POST HttpRequest 생성")
+    @Test
+    void post() throws IOException {
+        InputStream fileInputStream = new FileInputStream(new File(TEST_DIRECTORY + "http_post.txt"));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
+        HttpRequest request = HttpRequest.of(bufferedReader);
+
+        assertAll(
+                () -> assertThat(request.getHttpMethod()).isEqualTo(HttpMethod.POST),
+                () -> assertThat(request.getPath()).isEqualTo("/user/create"),
+                () -> assertThat(request.getHeader()).contains(
+                        Map.entry("Host", "localhost:8080"),
+                        Map.entry("Connection", "keep-alive"),
+                        Map.entry("Content-Length", "46"),
+                        Map.entry("Content-Type", "application/x-www-form-urlencoded"),
+                        Map.entry("Accept", "*/*")),
+                () -> assertThat(request.getParameter("userId")).isEqualTo("javajigi"),
+                () -> assertThat(request.getParameter("password")).isEqualTo("password"),
+                () -> assertThat(request.getParameter("name")).isEqualTo("JaeSung")
+        );
     }
 
 }

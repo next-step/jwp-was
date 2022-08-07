@@ -14,7 +14,7 @@ public class LoginController implements Controller {
 
     @Override
     public HttpResponse execute(HttpRequest request) {
-        User user = DataBase.findUserById(request.getBodyValue("userId"));
+        User user = DataBase.findUserById(request.getParameter("userId"));
         if (user == null || !validatePassword(request, user)) {
             return HttpResponse.found("/user/login_failed.html", "logined=false; Path=/");
         }
@@ -22,6 +22,6 @@ public class LoginController implements Controller {
     }
 
     private boolean validatePassword(HttpRequest request, User user) {
-        return user.equalsPassword(request.getBodyValue("password"));
+        return user.equalsPassword(request.getParameter("password"));
     }
 }

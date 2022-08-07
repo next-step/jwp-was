@@ -34,21 +34,12 @@ public class RequestHandler implements Runnable {
 
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
              DataOutputStream dos = new DataOutputStream(connection.getOutputStream())) {
-            HttpRequest request = createHttpRequest(bufferedReader);
+            HttpRequest request = HttpRequest.of(bufferedReader);
             HttpResponse httpResponse = handle(request);
             writeHttpResponse(httpResponse, dos);
         } catch (IOException | URISyntaxException | ResourceNotFoundException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    private HttpRequest createHttpRequest(BufferedReader bufferedReader) throws IOException {
-        List<String> lines = IOUtils.readLines(bufferedReader);
-        HttpRequest request = HttpRequest.of(lines);
-        if (request.hasContent()) {
-            return request.writeBody(HttpRequestBody.of(IOUtils.readData(bufferedReader, request.getContentLength())));
-        }
-        return request;
     }
 
     private HttpResponse handle(HttpRequest request) throws IOException, URISyntaxException {

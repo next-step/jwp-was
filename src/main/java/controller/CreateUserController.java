@@ -15,10 +15,10 @@ public class CreateUserController implements Controller {
     @Override
     public HttpResponse execute(HttpRequest request) {
         User user = new User(
-                request.getBodyValue("userId"),
-                request.getBodyValue("password"),
-                request.getBodyValue("name"),
-                request.getBodyValue("email")
+                request.getParameter("userId"),
+                request.getParameter("password"),
+                request.getParameter("name"),
+                request.getParameter("email")
         );
         DataBase.addUser(user);
 
