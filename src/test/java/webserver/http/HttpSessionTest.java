@@ -22,4 +22,17 @@ public class HttpSessionTest {
                 () -> assertThat(httpSession1.getId()).isNotEqualTo(httpSession2.getId())
         );
     }
+
+    @DisplayName("세션에 속성을 저장한다.")
+    @Test
+    void setAttribute() {
+        // given
+        HttpSession httpSession = new HttpSession();
+
+        // when
+        httpSession.setAttribute("name", "value");
+
+        // then
+        assertThat(httpSession.getAttribute("name")).isEqualTo("value");
+    }
 }
