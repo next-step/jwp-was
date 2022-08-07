@@ -1,21 +1,21 @@
-package webserver.controller;
+package mvc.controller;
 
 import db.DataBase;
 import exception.NotFoundException;
-import http.request.Protocol;
-import model.User;
-import webserver.HttpHeader;
-import webserver.request.HttpRequest;
-import webserver.response.HttpResponse;
-import webserver.response.HttpStatusCode;
-import webserver.response.StatusLine;
+import http.request.protocol.Protocol;
+import mvc.model.User;
+import http.HttpHeader;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
+import http.response.HttpStatusCode;
+import http.response.StatusLine;
 
 import java.util.Map;
 
-public class UserCreateController implements Controller {
+public class UserCreateController extends AbstractController {
 
     @Override
-    public HttpResponse service(HttpRequest request) {
+    public void doPost(HttpRequest request, HttpResponse response) {
         DataBase.addUser(new User(
                 extractRequireBody(request, "userId"),
                 extractRequireBody(request, "password"),
@@ -23,8 +23,8 @@ public class UserCreateController implements Controller {
                 extractRequireBody(request, "email")
                 )
         );
-        return HttpResponse.of(
-                StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.FOUND),
+        response.buildResponse(
+                StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.CREATED),
                 HttpHeader.from(Map.of(HttpHeader.LOCATION, "/index.html"))
         );
     }

@@ -1,4 +1,4 @@
-package webserver.controller;
+package mvc.controller;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;

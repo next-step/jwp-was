@@ -1,17 +1,15 @@
 package webserver.controller;
 
-import db.DataBase;
-import model.User;
+import mvc.controller.UserCreateController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.HttpHeader;
-import webserver.request.HttpRequest;
-import webserver.response.HttpResponse;
-import webserver.response.HttpStatusCode;
+import http.HttpHeader;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
+import http.response.HttpStatusCode;
+import webserver.WasTestTemplate;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.*;
@@ -20,21 +18,25 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("회원가입 컨트롤러 테스트")
 class UserCreateControllerTest {
 
-    private String testDirectory = "./src/test/resources/";
-    private HttpResponse response;
+    private WasTestTemplate testTemplate;
+    private UserCreateController controller;
 
     @BeforeEach
-    void initEach() throws IOException {
-        HttpRequest request = HttpRequest.from(new FileInputStream(new File(testDirectory + "Http_POST.txt")));
-        UserCreateController controller = new UserCreateController();
-        response = controller.service(request);
+    void initEach() {
+        testTemplate = new WasTestTemplate();
+        controller = new UserCreateController();
     }
 
     @DisplayName("회원가입시 index.html로 리다이랙트")
     @Test
-    void redirect() {
+    void redirect() throws IOException {
+        HttpRequest request = testTemplate.request("Http_POST.txt");
+        HttpResponse response = new HttpResponse(testTemplate.createOutputStream("Http_POST.txt"));
+
+        controller.doPost(request, response);
+
         assertAll(
-                () -> assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND),
+                () -> assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.CREATED),
                 () -> assertThat(response.getResponseHeader(HttpHeader.LOCATION)).contains("/index.html")
         );
     }

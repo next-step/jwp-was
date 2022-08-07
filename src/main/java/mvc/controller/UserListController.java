@@ -1,21 +1,18 @@
-package webserver.controller;
+package mvc.controller;
 
 import com.github.jknack.handlebars.Handlebars;
 import db.DataBase;
-import http.request.Protocol;
-import webserver.HttpHeader;
-import webserver.request.HttpRequest;
-import webserver.response.HttpResponse;
-import webserver.response.HttpStatusCode;
-import webserver.response.StatusLine;
+import http.request.protocol.Protocol;
+import http.HttpHeader;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
+import http.response.HttpStatusCode;
+import http.response.StatusLine;
 
 import java.io.IOException;
 import java.util.Collections;
 
-public class UserListController implements Controller {
-
-    private static final String CONTENT_TYPE = "Content-Type";
-    private static final String LOCATION = "Location";
+public class UserListController extends AbstractController {
     private static final String USER_LIST_TEMPLATE = "user/list";
     private final Handlebars handlebars;
 
@@ -24,17 +21,17 @@ public class UserListController implements Controller {
     }
 
     @Override
-    public HttpResponse service(HttpRequest request) throws IOException {
+    public void doGet(HttpRequest request, HttpResponse response) throws IOException {
         if (isLogin(request)) {
-            return HttpResponse.of(
+            response.buildResponse(
                     StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.OK),
-                    HttpHeader.from(Collections.singletonMap(CONTENT_TYPE, "text/html;charset=utf-8")),
+                    HttpHeader.from(Collections.singletonMap(HttpHeader.CONTENT_TYPE, "text/html;charset=utf-8")),
                     handlebars.compile(USER_LIST_TEMPLATE).apply(Collections.singletonMap("users", DataBase.findAll()))
             );
         }
-        return HttpResponse.of(
+        response.buildResponse(
                 StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.FOUND),
-                HttpHeader.from(Collections.singletonMap(LOCATION, "/user/login.html"))
+                HttpHeader.from(Collections.singletonMap(HttpHeader.LOCATION, "/user/login.html"))
         );
     }
 
