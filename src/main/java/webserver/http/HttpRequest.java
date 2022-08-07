@@ -49,11 +49,15 @@ public class HttpRequest {
         return requestHeader.getHeader(key);
     }
 
-    public Cookies getCookie() {
+    public Cookies getCookies() {
         return requestHeader.getCookie();
     }
 
     public HttpMethod getMethod() {
         return requestLine.getMethod();
+    }
+
+    public HttpSession getSession() {
+        return requestHeader.getSession();
     }
 }

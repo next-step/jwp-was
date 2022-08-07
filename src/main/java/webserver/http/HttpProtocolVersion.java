@@ -1,5 +1,7 @@
 package webserver.http;
 
+import webserver.http.exception.VersionNotSupportException;
+
 public class HttpProtocolVersion {
 
     private static final String PROTOCOL_SEPERATOR = "/";
@@ -9,7 +11,7 @@ public class HttpProtocolVersion {
     public HttpProtocolVersion(String protocolVersion) {
         String[] splitProtocolVersion = protocolVersion.split(PROTOCOL_SEPERATOR);
         if (splitProtocolVersion.length != 2) {
-            throw new IllegalArgumentException("잘못된 HTTP 프로토콜 형식입니다.");
+            throw new VersionNotSupportException("잘못된 HTTP 프로토콜 형식입니다.");
         }
         this.protocol = splitProtocolVersion[0];
         this.version = splitProtocolVersion[1];

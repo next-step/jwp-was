@@ -59,8 +59,8 @@ class RequestLineTest {
     @ParameterizedTest()
     @ValueSource(strings = {"GET /users", "GET /usersHTTP/1.1", "GET /users HTTP1.1", "GET HTTP/1.1"})
     void 잘못된유형의_REQUEST요청_테스트(String requestMessage) {
-        assertThatThrownBy(
-                () -> new RequestLine(requestMessage)
-        ).isInstanceOf(IllegalArgumentException.class);
+        RequestLine requestLine = new RequestLine(requestMessage);
+
+        assertThat(requestLine.getPath()).isEqualTo("/error");
     }
 }

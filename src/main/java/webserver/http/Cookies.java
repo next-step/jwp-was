@@ -10,7 +10,6 @@ public class Cookies {
 
     private static final String COOKIES_DELIMETER = ";";
     private static final String COOKIES_VALUES_DELIMETER = "=";
-    private static final String EMPTY_COOKIE_VALUE = "";
 
     private Map<String, String> cookies = new HashMap<>();
 
@@ -28,6 +27,6 @@ public class Cookies {
     }
 
     public String getCookie(String cookieKey) {
-        return cookies.getOrDefault(cookieKey, EMPTY_COOKIE_VALUE);
+        return cookies.get(cookieKey);
     }
 }

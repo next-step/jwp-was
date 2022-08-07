@@ -42,4 +42,8 @@ public class RequestHeader {
     public Cookies getCookie() {
         return new Cookies(getHeader(COOKIE));
     }
+
+    public HttpSession getSession() {
+        return HttpSessions.getSession(getCookie().getCookie("JSESSIONID"));
+    }
 }

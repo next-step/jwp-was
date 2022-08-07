@@ -1,8 +1,10 @@
 package webserver.http.exception;
 
-public class MethodNotAllowedException extends RuntimeException {
+import webserver.http.HttpStatus;
+
+public class MethodNotAllowedException extends RequestProcessException {
 
     public MethodNotAllowedException(String message) {
-        super(message);
+        super(message, HttpStatus.METHOD_NOT_ALLOWED);
     }
 }

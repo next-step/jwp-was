@@ -2,19 +2,20 @@ package controller;
 
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
+import webserver.http.view.ResourceViewResolver;
+import webserver.http.view.View;
+import webserver.http.view.ViewResolver;
 
 public class DefaultResourceController extends AbstractController {
 
     private static final String ROOT_PATH = "/";
 
     @Override
-    public void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-        String path = getDefaultPath(request.getPath());
+    public void doGet(HttpRequest request, HttpResponse response) throws Exception {
+        ViewResolver viewResolver = new ResourceViewResolver();
+        View view = viewResolver.resolveView(getDefaultPath(request.getPath()));
 
-        response.forward(path);
+        view.render(response);
     }
 
     private String getDefaultPath(String path) {
