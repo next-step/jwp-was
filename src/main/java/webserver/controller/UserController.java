@@ -5,6 +5,10 @@ import db.DataBase;
 import model.User;
 import webserver.http.model.HandlerAdapter;
 import webserver.http.model.HttpRequest;
+import webserver.http.model.Model;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserController {
 
@@ -44,10 +48,12 @@ public class UserController {
         return "/user/login_failed.html";
     }
 
-    public String retrieveUsers(HttpRequest httpRequest) {
+    public Model retrieveUsers(HttpRequest httpRequest) {
         if (HandlerAdapter.accessiblePagesAfterLogin(httpRequest) && "logined=true".equals(httpRequest.getRequestHeaders().get("Cookie"))) {
-            return "/user/list.html";
+            Map<String, Object> modelMap = new HashMap<>();
+            modelMap.put("users", DataBase.findAll());
+            return new Model("user/list", modelMap);
         }
-        return "/user/login.html";
+        return new Model("/user/login.html", null);
     }
 }
