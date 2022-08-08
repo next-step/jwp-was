@@ -10,24 +10,29 @@ import java.util.Map;
 
 public class ViewController implements Controller{
 
-    private static final String HTML_CLASS_Path = "./templates";
+    private static final String HTML_CLASS_PATH = "./templates";
     private static final String CLASS_Path = "./static";
 
-    Map<String, String> path = Map.of(
+    private static final Map<String, String> extensionToContentType = Map.of(
             "css", "text/css",
             "html", "text/html",
-            "js", "application/javascript");
+            "js", "application/javascript",
+            "ico", "image/x-icon");
 
     @Override
     public HttpResponse process(HttpRequest request) throws IOException, URISyntaxException {
         final String requestPath = request.getRequestLine().getRequestPath();
         final String extension = request.getRequestLine().getExtension();
 
-        if (extension.equals("html")) {
+        if (isHtmlClassPath(extension)) {
             return HttpResponse.successView(
-                    FileIoUtils.loadFileFromClasspath(HTML_CLASS_Path + requestPath), path.get(extension));
+                    FileIoUtils.loadFileFromClasspath(HTML_CLASS_PATH + requestPath), extensionToContentType.get(extension));
         }
         return HttpResponse.successView(
-                FileIoUtils.loadFileFromClasspath(CLASS_Path + requestPath), path.get(extension));
+                FileIoUtils.loadFileFromClasspath(CLASS_Path + requestPath), extensionToContentType.get(extension));
+    }
+
+    private boolean isHtmlClassPath(String extension) {
+        return extension.equals("html") || extension.equals("ico");
     }
 }
