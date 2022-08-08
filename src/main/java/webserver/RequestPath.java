@@ -28,4 +28,12 @@ public class RequestPath {
     public RequestParams getParams() {
         return params;
     }
+
+    @Override
+    public String toString() {
+        return "RequestPath{" +
+                "path='" + path + '\'' +
+                ", params=" + params +
+                '}';
+    }
 }

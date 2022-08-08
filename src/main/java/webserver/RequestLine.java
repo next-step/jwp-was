@@ -59,7 +59,12 @@ public class RequestLine {
         return protocol.getVersion();
     }
 
-    public boolean isCreateUserPath() {
-        return request.getPath().equals(CREATE_PATH);
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method=" + method +
+                ", request=" + request +
+                ", protocol=" + protocol +
+                '}';
     }
 }

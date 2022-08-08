@@ -52,4 +52,13 @@ public class Cookie {
     public int hashCode() {
         return Objects.hash(name, value, path);
     }
+
+    @Override
+    public String toString() {
+        return "Cookie{" +
+                "name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                ", path='" + path + '\'' +
+                '}';
+    }
 }

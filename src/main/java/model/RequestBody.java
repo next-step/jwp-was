@@ -21,4 +21,11 @@ public class RequestBody {
     public String getOneValue(String key) throws UnsupportedEncodingException {
         return body.get(key).get(ONE_VALUE);
     }
+
+    @Override
+    public String toString() {
+        return "RequestBody{" +
+                "body=" + body +
+                '}';
+    }
 }

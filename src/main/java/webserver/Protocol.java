@@ -29,4 +29,12 @@ public class Protocol {
     public String getVersion() {
         return version;
     }
+
+    @Override
+    public String toString() {
+        return "Protocol{" +
+                "protocol='" + protocol + '\'' +
+                ", version='" + version + '\'' +
+                '}';
+    }
 }

@@ -27,4 +27,13 @@ public class HttpRequest {
     public Cookie getCookie() {
         return cookie;
     }
+
+    @Override
+    public String toString() {
+        return "HttpRequest{" +
+                "requestLine=" + requestLine +
+                ", body=" + body +
+                ", cookie=" + cookie +
+                '}';
+    }
 }

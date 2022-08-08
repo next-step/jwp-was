@@ -30,6 +30,7 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
+
             DataOutputStream dos = new DataOutputStream(out);
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
@@ -37,6 +38,8 @@ public class RequestHandler implements Runnable {
             final RequestLine requestLine = new RequestLine(httpHeader.getRequestLine());
             final String requestBody = IOUtils.readData(br, httpHeader.getContentLength());
             final HttpRequest httpRequest = new HttpRequest(httpHeader, requestBody);
+
+            logger.debug("request : {}", httpRequest.toString());
 
             Controller controller = mapper.mapping(new RequestMappingInfo(requestLine.getMethod(), requestLine.getRequestPath()));
             HttpResponse response = controller.process(httpRequest);
