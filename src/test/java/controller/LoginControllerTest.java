@@ -45,7 +45,7 @@ public class LoginControllerTest {
         final String data = "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
         final RequestBody body = new RequestBody(data);
 
-        return User.createUser(body);
+        return new User(body.getOneValue("userId"), body.getOneValue("password"), body.getOneValue("name"), body.getOneValue("email"));
     }
 
     private HttpRequest createHttpRequest(String userId) throws UnsupportedEncodingException {

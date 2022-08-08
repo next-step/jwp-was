@@ -13,7 +13,7 @@ class UserTest {
         final String data = "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
         final RequestBody body = new RequestBody(data);
 
-        final User user = User.createUser(body);
+        final User user = new User(body.getOneValue("userId"), body.getOneValue("password"), body.getOneValue("name"), body.getOneValue("email"));
 
         assertThat(user.getUserId()).isEqualTo("javajigi");
         assertThat(user.getEmail()).isEqualTo("javajigi@slipp.net");

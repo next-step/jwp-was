@@ -15,10 +15,6 @@ public class User {
         this.email = email;
     }
 
-    public static User createUser(RequestBody body) throws UnsupportedEncodingException {
-        return new User(body.getOneValue("userId"), body.getOneValue("password"), body.getOneValue("name"), body.getOneValue("email"));
-    }
-
     public String getUserId() {
         return userId;
     }

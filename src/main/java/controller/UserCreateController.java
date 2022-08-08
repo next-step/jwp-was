@@ -14,7 +14,9 @@ public class UserCreateController implements Controller{
 
     @Override
     public HttpResponse process(HttpRequest request) throws IOException, URISyntaxException {
-        DataBase.addUser(User.createUser(request.getBody()));
+        RequestBody body = request.getBody();
+        final User user = new User(body.getOneValue("userId"), body.getOneValue("password"), body.getOneValue("name"), body.getOneValue("email"));
+        DataBase.addUser(user);
 
         return HttpResponse.redirect(REDIRECT_PATH);
     }

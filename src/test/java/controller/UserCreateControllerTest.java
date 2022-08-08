@@ -23,7 +23,7 @@ public class UserCreateControllerTest {
         final UserCreateController controller = new UserCreateController();
         final HttpRequest httpRequest = createHttpRequest();
         final HttpResponse response = controller.process(httpRequest);
-        final byte[] responseBody = FileIoUtils.loadFileFromClasspath("/index.html");
+        final byte[] responseBody = FileIoUtils.loadFileFromClasspath("./templates/index.html");
 
         assertThat(response.getMessages().get(0)).isEqualTo("HTTP/1.1 302 OK \r\n");
     }
