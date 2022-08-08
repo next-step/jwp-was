@@ -3,7 +3,6 @@ package webserver.request;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.exception.NotFoundMethod;
-import webserver.request.Method;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

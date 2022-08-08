@@ -3,6 +3,7 @@ package webserver.controller;
 import db.DataBase;
 import model.User;
 import utils.IOUtils;
+import webserver.ContentType;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.util.HandlebarsObject;
@@ -27,7 +28,7 @@ public class UserListController extends GetController {
                 Collection<User> users = DataBase.findAll();
                 path = handlebarObj.applyTemplate("user/list", users);
             }
-            response.forward(path);
+            response.forward(path, ContentType.from(path).getMediaType());
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }

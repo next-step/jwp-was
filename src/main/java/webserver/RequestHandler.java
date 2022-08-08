@@ -1,23 +1,18 @@
 package webserver;
 
-import java.io.*;
-import java.net.Socket;
-import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.Map;
-
-import db.DataBase;
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
 import webserver.controller.Controller;
 import webserver.controller.RequestMapping;
 import webserver.request.HttpRequest;
-import webserver.request.Method;
-import webserver.request.RequestBody;
 import webserver.response.HttpResponse;
-import webserver.util.HandlebarsObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.URISyntaxException;
 
 
 public class RequestHandler implements Runnable {
@@ -42,16 +37,29 @@ public class RequestHandler implements Runnable {
                     controller.service(httpRequest, httpResponse);
                 } else {
                     String path = httpRequest.getPath();
-                    if (path.endsWith("html")) {
-                        httpResponse.forward(IOUtils.loadFileFromClasspath("./templates" + path));
-                    } else if (path.endsWith("css")) {
-                        httpResponse.forwardCSS(IOUtils.loadFileFromClasspath("./static" + path));
-                    }
+
+                    httpResponse.forward(getResourcePath(path), ContentType.from(path).getMediaType());
+
+
+//                    if (path.endsWith("html")) {
+//                        httpResponse.forward(getResourcePath(path));
+//                    } else if (path.endsWith("css")) {
+//                        httpResponse.forwardCSS(getResourcePath(path));
+//                    } else if (path.endsWith("eot")) {
+//                        httpResponse.forwardCSS(getResourcePath(path));
+//                    }
                 }
             }
 
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private String getResourcePath(String path) throws IOException, URISyntaxException {
+        if (path.endsWith("html")) {
+            return IOUtils.loadFileFromClasspath("./templates" + path);
+        }
+        return IOUtils.loadFileFromClasspath("./static" + path);
     }
 }
