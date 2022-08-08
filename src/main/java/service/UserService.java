@@ -1,10 +1,7 @@
 package service;
 
 import db.DataBase;
-import model.HttpResponseMessage;
-import model.Credential;
-import model.HttpHeaders;
-import model.User;
+import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import types.HttpStatus;
@@ -37,7 +34,7 @@ public class UserService {
         return new HttpResponseMessage(HttpStatus.FOUND, httpHeaders, user);
     }
 
-    public HttpResponseMessage auth(Credential credential) throws IOException {
+    public HttpResponseMessage auth(HttpHeaders requestHeaders, Credential credential) {
         User user = DataBase.findUserById(credential.getUserId());
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -45,14 +42,17 @@ public class UserService {
         if (!this.isLoginSuccess(user, credential)) {
             logger.info("login failed ...");
             httpHeaders.setLocation(URI.create("http://localhost:8080/user/login_failed.html").toString());
-            httpHeaders.setCookie(AuthService.LOGIN_HEADER_KEY + "=false; Path=/");
-            return new HttpResponseMessage(HttpStatus.FOUND, httpHeaders, null);
+            return new HttpResponseMessage(HttpStatus.FOUND, httpHeaders);
         }
 
         logger.info("login success ... (userId: {})", user.getUserId());
         httpHeaders.setLocation(URI.create("http://localhost:8080/index.html").toString());
-        httpHeaders.setCookie(AuthService.LOGIN_HEADER_KEY + "=true; Path=/");
-        return new HttpResponseMessage(HttpStatus.FOUND, httpHeaders, null);
+        Session session = SessionStorage.getInstance().getSession(requestHeaders.getSessionId());
+        if (session == null) {
+            throw new IllegalAccessError();
+        }
+        session.setUserLogined();
+        return new HttpResponseMessage(HttpStatus.FOUND, httpHeaders);
     }
 
     public HttpResponseMessage getUsers() throws IOException {
@@ -61,7 +61,7 @@ public class UserService {
         httpHeaders.setContentType(MediaType.TEXT_HTML);
         if (!logined) {
             httpHeaders.setLocation(URI.create("http://localhost:8080/user/login.html").toString());
-            return new HttpResponseMessage(HttpStatus.FOUND, httpHeaders, null);
+            return new HttpResponseMessage(HttpStatus.FOUND, httpHeaders);
         }
 
         List<User> users = new ArrayList<>(DataBase.findAll());

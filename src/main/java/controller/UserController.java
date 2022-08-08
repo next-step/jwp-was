@@ -3,6 +3,7 @@ package controller;
 import annotation.GetMapping;
 import annotation.PostMapping;
 import db.DataBase;
+import model.HttpHeaders;
 import model.HttpResponseMessage;
 import model.Credential;
 import model.User;
@@ -30,8 +31,8 @@ public class UserController {
     }
 
     @PostMapping(path = "/user/login")
-    public HttpResponseMessage login(Credential credential) throws IOException {
-        return UserService.getInstance().auth(credential);
+    public HttpResponseMessage login(HttpHeaders requestHeaders, Credential credential) throws IOException {
+        return UserService.getInstance().auth(requestHeaders, credential);
     }
 
     @GetMapping(path = "/user/list")

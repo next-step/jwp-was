@@ -8,15 +8,15 @@ import java.util.Map;
 
 public class HttpHeaders {
 
+    public static final String SESSION_HEADER_KEY = "JSESSIONID";
+    private static final String COOKIE_HEADER_KEY = "Cookie";
     private final String HEADER_KEY_VALUE_SEPARATOR = ": ";
+
+    private final String COOKIE_KEY_VALUE_SEPARATOR = "=";
     private final Map<String, String> headers;
 
     public HttpHeaders() {
         this.headers = new HashMap<>();
-    }
-
-    public HttpHeaders(Map<String, String> headers) {
-        this.headers = headers;
     }
 
     public HttpHeaders(List<String> httpMessageData) {
@@ -59,5 +59,27 @@ public class HttpHeaders {
 
     public void setCookie(String value) {
         this.headers.put("Set-Cookie", value);
+    }
+
+    public void setSessionIdInCookie(String value) {
+        this.setCookie(SESSION_HEADER_KEY + COOKIE_KEY_VALUE_SEPARATOR + value);
+    }
+
+    public Cookie getCookie() {
+        String cookieValues = this.headers.get(COOKIE_HEADER_KEY);
+        if (cookieValues == null) {
+            return null;
+        }
+
+        return new Cookie(cookieValues);
+    }
+
+    public String getSessionId() {
+        Cookie cookie = this.getCookie();
+        if (cookie == null) {
+            return null;
+        }
+
+        return cookie.getValue(SESSION_HEADER_KEY);
     }
 }
