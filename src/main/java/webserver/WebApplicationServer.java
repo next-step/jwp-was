@@ -2,6 +2,7 @@ package webserver;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,7 @@ public class WebApplicationServer {
             port = Integer.parseInt(args[0]);
         }
 
-        WebApplicationConfig webApplicationConfig = new WebApplicationConfig(10);
+        WebApplicationConfig webApplicationConfig = new WebApplicationConfig(250);
         var executorService = new ThreadPoolConfig(webApplicationConfig)
             .create();
 
@@ -29,6 +30,8 @@ public class WebApplicationServer {
             while ((connection = listenSocket.accept()) != null) {
                 executorService.execute(new RequestHandler(connection));
             }
+        } catch (Exception e) {
+            logger.info("{}", e.getMessage() + Arrays.toString(e.getStackTrace()));
         }
     }
 }
