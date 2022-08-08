@@ -11,8 +11,30 @@ public class Protocol {
     private Version version;
 
     public Protocol(ProtocolType protocolType, Version version) {
+        validate(protocolType, version);
         this.protocolType = protocolType;
         this.version = version;
+    }
+
+    private static void validate(ProtocolType protocolType, Version version) {
+        validateProtocolType(protocolType);
+        validateVersion(version);
+    }
+
+    private static void validateProtocolType(ProtocolType protocolType) {
+        if (protocolType == null) {
+            throw new IllegalArgumentException("프로토콜 타입은 null 일 수 없습니다.");
+        }
+    }
+
+    private static void validateVersion(Version version) {
+        if (version == null) {
+            throw new IllegalArgumentException("프로토콜 버전은 null 일 수 없습니다.");
+        }
+    }
+
+    public static Protocol ofHttp_V1_1() {
+        return new Protocol(ProtocolType.HTTP, Version.ONE_ONE);
     }
 
     public static Protocol parse(String protocolString) {
