@@ -17,9 +17,9 @@ public class HttpResponse {
         this.messages = messages;
     }
 
-    public static HttpResponse redirect(String location) {
+    public static HttpResponse redirect(String location, HttpHeader header) {
         return new HttpResponse(Arrays.asList("HTTP/1.1 302 OK \r\n",
-                "Location: http://localhost:8080" + location + "\r\n",
+                "Location: " + header.getHost() + location + "\r\n",
                 "\r\n"));
     }
 
@@ -30,9 +30,9 @@ public class HttpResponse {
                 "\r\n"), body);
     }
 
-    public static HttpResponse loginRedirect(String location, boolean login) {
+    public static HttpResponse loginRedirect(String location, boolean login, HttpHeader header) {
         return new HttpResponse(Arrays.asList("HTTP/1.1 302 OK \r\n",
-                "Location: http://localhost:8080" + location + "\r\n",
+                "Location: " + header.getHost() + location + "\r\n",
                 "Set-Cookie: logined=" + login + "; Path=/\r\n",
                 "\r\n"));
     }

@@ -6,11 +6,13 @@ import java.io.UnsupportedEncodingException;
 
 public class HttpRequest {
 
+    private HttpHeader header;
     private RequestLine requestLine;
     private RequestBody body;
     private Cookie cookie;
 
     public HttpRequest(HttpHeader header, String body) throws UnsupportedEncodingException {
+        this.header = header;
         this.requestLine = new RequestLine(header.getRequestLine());
         this.cookie = new Cookie(header.getCookie(), requestLine.getRequestPath());
         this.body = new RequestBody(body);
@@ -26,6 +28,10 @@ public class HttpRequest {
 
     public Cookie getCookie() {
         return cookie;
+    }
+
+    public HttpHeader getHeader() {
+        return header;
     }
 
     @Override

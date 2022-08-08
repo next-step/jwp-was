@@ -18,6 +18,13 @@ public class HttpHeaderTest {
         assertThat(httpHeader.getContentLength()).isEqualTo(59);
     }
 
+    @Test
+    void 호스트값_가져오기() throws UnsupportedEncodingException {
+        final HttpHeader httpHeader = createHttpHeader();
+
+        assertThat(httpHeader.getHost()).isEqualTo("localhost:8080");
+    }
+
     private HttpHeader createHttpHeader() throws UnsupportedEncodingException {
         String data = "POST /user/create HTTP/1.1\n" +
                 "Host: localhost:8080\n" +

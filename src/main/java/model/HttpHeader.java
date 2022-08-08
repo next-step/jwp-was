@@ -12,6 +12,8 @@ public class HttpHeader {
     public static final int REQUEST_LINE_INDEX = 0;
     public static final String COOKIE = "Cookie";
     public static final String NO_COOKIE = null;
+    public static final String HOST = "Host";
+    public static final int PORT_INDEX = 2;
 
     private List<String> headers;
 
@@ -39,5 +41,14 @@ public class HttpHeader {
                 .map(header -> header[VALUE_INDEX].strip())
                 .findFirst()
                 .orElse(NO_COOKIE);
+    }
+
+    public String getHost() {
+        return headers.stream()
+                .map(header -> header.split(DELIMITER))
+                .filter(header -> header[NAME_INDEX].equals(HOST))
+                .map(header -> header[VALUE_INDEX].strip() + DELIMITER + header[PORT_INDEX].strip())
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("호스트 정보가 없습니다."));
     }
 }

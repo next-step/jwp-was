@@ -27,7 +27,7 @@ public class UserListController implements Controller{
         if (validationCookie(cookie, loginCookie)) {
             return HttpResponse.success(HandlebarsUtils.makeUserListTemplate().getBytes());
         }
-        return HttpResponse.redirect(USER_LOGIN_PATH);
+        return HttpResponse.redirect(USER_LOGIN_PATH, request.getHeader());
     }
 
     private boolean validationCookie(Cookie cookie, Cookie loginCookie) {
