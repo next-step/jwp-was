@@ -6,6 +6,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import model.*;
+import utils.HandlebarsUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -24,25 +25,12 @@ public class UserListController implements Controller{
         final Cookie loginCookie = new Cookie("logined", "true", "/.*");
 
         if (validationCookie(cookie, loginCookie)) {
-            return HttpResponse.success(makeUserListTemplate().getBytes());
+            return HttpResponse.success(HandlebarsUtils.makeUserListTemplate().getBytes());
         }
         return HttpResponse.redirect(USER_LOGIN_PATH);
     }
 
     private boolean validationCookie(Cookie cookie, Cookie loginCookie) {
         return cookie != null && cookie.equals(loginCookie);
-    }
-
-    private String makeUserListTemplate() throws Exception {
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".html");
-        Handlebars handlebars = new Handlebars(loader);
-
-        Template template = handlebars.compile("user/list");
-
-        final Collection<User> users = DataBase.findAll();
-
-        return template.apply(Map.of("users", users));
     }
 }
