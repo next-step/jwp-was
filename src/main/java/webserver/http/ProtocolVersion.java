@@ -1,4 +1,4 @@
-package webserver.domain;
+package webserver.http;
 
 public class ProtocolVersion {
     private static final String PROTOCOL_DELIMITER = "/";
@@ -22,11 +22,26 @@ public class ProtocolVersion {
         );
     }
 
+    public static ProtocolVersion ofServerProtocolVersion(){
+        return new ProtocolVersion(
+                Protocol.HTTP,
+                HttpVersion.VER_1_1
+        );
+    }
+
     public Protocol getProtocol() {
         return protocol;
     }
 
     public HttpVersion getVersion() {
         return version;
+    }
+
+    @Override
+    public String toString() {
+        return "ProtocolVersion{" +
+                "protocol=" + protocol +
+                ", version=" + version +
+                '}';
     }
 }

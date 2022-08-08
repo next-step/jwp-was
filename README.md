@@ -14,3 +14,36 @@
 - [X] POST 요청 파싱하기
 - [X] QueryString 파싱하기
 - [X] HttpMethod 에 enum 적용하기
+### STEP 2
+- 요구사항 1
+  - [X] InputStream을 RequestLine으로 변환하기
+  - [X] Request 헤더를 출력하기
+  - [X] path에 해당하는 파일 읽어 응답하기
+- 요구사항 2
+  - [X] GET `/user/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net` 요청 처리하기
+    - [X] Request Parameter 추출하기
+    - [X] Request Parameter 디코딩하기
+    - [X] 빌더 패턴 이용하여 User 객체 생성하기
+- 요구사항 3
+  - [X] POST `/user/create` 요청 처리하기
+    - [X] RequestBody 생성하기
+    - [X] HttpRequest 정의하여 추상화하기
+    - [X] SignUpController 구현하기
+- 요구사항 4
+  - [X] 회원가입 후 `/index.html`로 리다이렉트하기
+    - [X] route 기능 만들기
+    - [X] HttpResonse 요소마다 분리하여 write하기
+    - [X] HttpResponse에 redirect, getView 정의하기
+    - [X] HttpStatus 에 알맞게 HttpHeader 생성하기
+    - [X] HomeController 구현하기
+- 요구사항 5
+  - [X] 로그인 시 쿠키 전달하기
+    - [X] 쿠키 헤더 구현하기
+    - [X] LogInController 구현하기
+- 요구사항 6
+  - [X] GET `/user/list` 구현하기
+    - [X] 쿠키로 로그인 상태 판별하여 비로그인 상태면 로그인 페이지로 리다이렉트하기
+    - [X] Handlebars로 동적뷰 만들어서 리턴하기
+- 요구사항 7
+  - [] GET `./css/style.css` 구현하기
+    - [X] 정적파일 요청에 대해 ContentType 응답 헤더 추가하기

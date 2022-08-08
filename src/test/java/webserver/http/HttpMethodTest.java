@@ -1,4 +1,4 @@
-package webserver.domain;
+package webserver.http;
 
 import exception.ResourceNotFound;
 import org.junit.jupiter.api.DisplayName;

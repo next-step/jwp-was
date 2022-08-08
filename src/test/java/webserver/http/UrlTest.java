@@ -1,4 +1,4 @@
-package webserver.domain;
+package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ public class UrlTest {
                 "name", "JaeSung"
         );
 
-        Url url = Url.from(input);
+        Url url = Url.parseFrom(input);
 
         assertAll(
                 () -> assertEquals("/users", url.getPath()),

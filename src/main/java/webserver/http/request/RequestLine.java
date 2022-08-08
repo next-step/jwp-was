@@ -1,4 +1,8 @@
-package webserver.domain;
+package webserver.http.request;
+
+import webserver.http.HttpMethod;
+import webserver.http.ProtocolVersion;
+import webserver.http.Url;
 
 public class RequestLine {
 
@@ -21,7 +25,7 @@ public class RequestLine {
         String[] httpElement = startLine.split(REQUEST_LINE_DELIMITER);
 
         HttpMethod httpMethod = HttpMethod.from(httpElement[RequestLine.METHOD_INDEX]);
-        Url url = Url.from(httpElement[RequestLine.URL_INDEX]);
+        Url url = Url.parseFrom(httpElement[RequestLine.URL_INDEX]);
         ProtocolVersion protocol = ProtocolVersion.parseFrom(httpElement[RequestLine.PROTOCOL_INDEX]);
 
         return new RequestLine(httpMethod, url, protocol);
@@ -37,5 +41,14 @@ public class RequestLine {
 
     public ProtocolVersion getProtocolVersion() {
         return protocolVersion;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method=" + method +
+                ", url=" + url +
+                ", protocolVersion=" + protocolVersion +
+                '}';
     }
 }
