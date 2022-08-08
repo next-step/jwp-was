@@ -14,7 +14,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
 
-
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
@@ -37,17 +36,7 @@ public class RequestHandler implements Runnable {
                     controller.service(httpRequest, httpResponse);
                 } else {
                     String path = httpRequest.getPath();
-
                     httpResponse.forward(getResourcePath(path), ContentType.from(path).getMediaType());
-
-
-//                    if (path.endsWith("html")) {
-//                        httpResponse.forward(getResourcePath(path));
-//                    } else if (path.endsWith("css")) {
-//                        httpResponse.forwardCSS(getResourcePath(path));
-//                    } else if (path.endsWith("eot")) {
-//                        httpResponse.forwardCSS(getResourcePath(path));
-//                    }
                 }
             }
 

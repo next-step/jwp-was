@@ -40,15 +40,21 @@
 - 비로그인 상태라면 index.html 로 이동
 
 ### 리팩토링 목록
-- Request 코드 리팩토링 
-    - HttpRequest는 RequestLine, Header, Body를 갖는다.(o)
-    - 현재 Method, Path를 RequestLine 도메인으로 관리(o)
-    - Method enum 클래스내의 상태값 및 메소드 추가(o)
-    - QueryString과 RequestBody를 따로 관리할 필요가 있을까? 그냥 Body 하나로 관리하는건 어떨까?(o)
+- Request 코드 리팩토링
+  - HttpRequest는 RequestLine, Header, Body를 갖는다.(o)
+  - 현재 Method, Path를 RequestLine 도메인으로 관리(o)
+  - Method enum 클래스내의 상태값 및 메소드 추가(o)
+  - QueryString과 RequestBody를 따로 관리할 필요가 있을까? 그냥 Body 하나로 관리하는건 어떨까?(o)
+
+- Controller 생성 및 RequestHandler 리팩토링(o)
+
+- Handlebars 클래스 분리(o)
+
+- ContentType enum 클래스로 분리(o)
 
 - HttpResponse 클래스 리팩토링
-  - HttpResponse클래스는 StatusLine, Header, RequestBody를 포함한다.
+  - HttpResponse 클래스는 StatusLine, Header, RequestBody 를 포함한다.
 
-- Controller 생성 및 RequestHandler 리팩토링
+- Cookie 클래스 분리
 
-- Cookie, Handlebars 클래스 분리
+
