@@ -2,12 +2,17 @@ package webserver.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Attributes {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final Map<String, Object> attributes;
+
+    public Attributes() {
+        this(new HashMap<>());
+    }
 
     public Attributes(Map<String, Object> attributes) {
         this.attributes = attributes;

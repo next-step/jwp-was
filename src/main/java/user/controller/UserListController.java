@@ -5,13 +5,18 @@ import user.model.User;
 import webserver.controller.AbstractController;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
+import webserver.http.HttpSessionManager;
 
 import java.util.Collection;
 
 public class UserListController extends AbstractController {
+    private static final String LOGINED_KEY = "logined";
+
     @Override
     public HttpResponse doGet(HttpRequest httpRequest) {
-        final boolean logined = httpRequest.getCookie("logined", Boolean.class);
+        final HttpSession httpSession = HttpSessionManager.getHttpSession(httpRequest);
+        final boolean logined = httpSession.getAttribute(LOGINED_KEY, Boolean.class);
         if (!logined) {
             HttpResponse.sendRedirect("/index.html");
         }
