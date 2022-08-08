@@ -1,0 +1,69 @@
+package controller.user;
+
+import controller.Controller;
+import db.DataBase;
+import model.User;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.http.request.Request;
+import webserver.http.request.RequestBody;
+import webserver.http.request.RequestHeader;
+import webserver.http.request.RequestLine;
+import webserver.http.response.Response;
+
+import java.io.ByteArrayOutputStream;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class LoginControllerTest {
+    private static final Logger logger = LoggerFactory.getLogger(LoginControllerTest.class);
+
+    private Controller controller;
+
+    @BeforeEach
+    void controllerSetup() {
+        DataBase.addUser(new User("aaaa", "aaaa", "aaaa", "aaaa%40aaaa.com"));
+        controller = new LoginController();
+    }
+
+    @Test
+    @DisplayName("로그인 성공 테스트")
+    void testLogin_WithSuccess() throws Exception {
+        RequestLine requestLine = new RequestLine("POST /user/login HTTP/1.1");
+        RequestHeader requestHeader = new RequestHeader(Map.of("Host", "localhost:8080", "Connection", "keep-alive", "Content-Length", "26", "Content-Type", "applcation/x-www-form-urlencoded", "Accept", "*/*"));
+        RequestBody requestBody = new RequestBody("userId=aaaa&password=aaaa");
+
+        Request request = new Request(requestLine, requestHeader, requestBody);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Response response = new Response(out);
+
+        controller.service(request, response);
+
+        assertThat(out.toString()).contains("HTTP/1.1 302 Found");
+        assertThat(out.toString()).contains("Location: /index.html");
+        assertThat(out.toString()).contains("logined=true; Path=/");
+    }
+
+    @Test
+    @DisplayName("로그인 실패 테스트")
+    void testLogin_WithFail() throws Exception {
+        RequestLine requestLine = new RequestLine("POST /user/login HTTP/1.1");
+        RequestHeader requestHeader = new RequestHeader(Map.of("Host", "localhost:8080", "Connection", "keep-alive", "Content-Length", "26", "Content-Type", "applcation/x-www-form-urlencoded", "Accept", "*/*"));
+        RequestBody requestBody = new RequestBody("userId=aaaa&password=bbbb");
+
+        Request request = new Request(requestLine, requestHeader, requestBody);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Response response = new Response(out);
+
+        controller.service(request, response);
+
+        assertThat(out.toString()).contains("HTTP/1.1 302 Found");
+        assertThat(out.toString()).contains("/user/login_failed.html");
+        assertThat(out.toString()).contains("logined=false; Path=/");
+    }
+
+}
