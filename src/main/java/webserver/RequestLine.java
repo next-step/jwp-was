@@ -18,7 +18,7 @@ public class RequestLine {
 
     public static RequestLine from(String line) {
         String[] tokens = validTokens(line);
-        return new RequestLine(HttpMethod.from(tokens[0]), Path.from(tokens[1]), Protocol.from(tokens[2]));
+        return new RequestLine(HttpMethod.valueOf(tokens[0]), Path.from(tokens[1]), Protocol.from(tokens[2]));
     }
 
     private static String[] validTokens(String httpRequest) {
