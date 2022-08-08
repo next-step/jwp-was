@@ -1,33 +1,36 @@
 package webserver.response;
 
+import webserver.ContentType;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
 public class HttpResponse {
 
+    private static final String CRLF = "\r\n";
+
+//    private StatusLine statusLine;
+//    private Header header;
+//    private ResponseBody responseBody;
+
     private DataOutputStream dos;
+
+//    public HttpResponse(StatusLine statusLine, Header header, ResponseBody responseBody) {
+//        this.statusLine = statusLine;
+//        this.header = header;
+//        this.responseBody = responseBody;
+//    }
 
     public HttpResponse(OutputStream outputStream) {
         dos = new DataOutputStream(outputStream);
     }
 
-    public void forward(String path) throws IOException {
+    public void forward(String path, String mediaType) throws IOException {
         int lengthOfBodyContent = path.length();
 
         dos.writeBytes("HTTP/1.1 200 OK \r\n");
-        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-        dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-        dos.writeBytes("\r\n");
-
-        responseBody(path.getBytes());
-    }
-
-    public void forwardCSS(String path) throws IOException {
-        int lengthOfBodyContent = path.length();
-
-        dos.writeBytes("HTTP/1.1 200 OK \r\n");
-        dos.writeBytes("Content-Type: text/css\r\n");
+        dos.writeBytes("Content-Type: " + mediaType + "\r\n");
         dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
         dos.writeBytes("\r\n");
 
