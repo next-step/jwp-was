@@ -156,6 +156,6 @@ Set-Cookie: logined=true; Path=/
   - Object getAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환
   - void removeAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
   - void invalidate(): 현재 세션에 저장되어 있는 모든 값을 삭제
-- [ ] 쿠키를 활용하여 클라이언트와 서버의 세션을 공유한다.
-- [ ] Map<String, HttpSession>와 같은 구조로 세션을 관리한다.
+- [X] 쿠키를 활용하여 클라이언트와 서버의 세션을 공유한다.
+- [X] Map<String, HttpSession>와 같은 구조로 세션을 관리한다.
   - 키(key)는 앞에서 UUID로 생성한 고유한 아이디
