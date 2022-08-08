@@ -1,6 +1,5 @@
-package webserver.request;
+package http.request;
 
-import http.request.QueryParameters;
 import utils.QueryUrlParser;
 
 import java.util.Collections;

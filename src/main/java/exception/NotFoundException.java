@@ -1,6 +1,6 @@
 package exception;
 
-import webserver.response.HttpStatusCode;
+import http.response.HttpStatusCode;
 
 public class NotFoundException extends RuntimeException {
 

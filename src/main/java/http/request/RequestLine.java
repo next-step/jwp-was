@@ -1,5 +1,9 @@
 package http.request;
 
+import http.HttpMethod;
+import http.request.path.Path;
+import http.request.protocol.Protocol;
+
 public class RequestLine {
 
     private static final String REQUEST_LINE_DELIMITER = " ";

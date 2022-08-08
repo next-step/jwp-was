@@ -1,4 +1,4 @@
-package http.request;
+package http.request.protocol;
 
 public class Protocol {
 
@@ -34,5 +34,10 @@ public class Protocol {
 
     public String getVersion() {
         return version;
+    }
+
+    @Override
+    public String toString() {
+        return String.join(DELIMITER, String.valueOf(protocolType), version);
     }
 }
