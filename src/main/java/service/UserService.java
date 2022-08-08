@@ -55,6 +55,19 @@ public class UserService {
         return new HttpResponseMessage(HttpStatus.FOUND, httpHeaders);
     }
 
+    public HttpResponseMessage logout(HttpHeaders requestHeaders) {
+        Session session = SessionStorage.getInstance().getSession(requestHeaders.getSessionId());
+        if (session == null) {
+            throw new IllegalAccessError();
+        }
+        session.invalidate();
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.TEXT_HTML);
+        httpHeaders.setLocation(URI.create("http://localhost:8080/index.html").toString());
+        return new HttpResponseMessage(HttpStatus.FOUND, httpHeaders);
+    }
+
     public HttpResponseMessage getUsers() throws IOException {
         boolean logined = AuthService.userLogined.get();
         HttpHeaders httpHeaders = new HttpHeaders();
