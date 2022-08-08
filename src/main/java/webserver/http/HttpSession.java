@@ -5,25 +5,29 @@ import java.util.Map;
 
 public class HttpSession {
     private String id;
-    private Map<String, Object> sessions = new HashMap<>();
+    private final Map<String, Object> values = new HashMap<>();
+
+    public HttpSession(String id) {
+        this.id = id;
+    }
 
     public String getId() {
         return id;
     }
 
     public void setAttribute(String name, Object value) {
-        sessions.put(name, value);
+        values.put(name, value);
     }
 
     public Object getAttribute(String name) {
-        return sessions.get(name);
+        return values.get(name);
     }
 
     public void removeAttribute(String name) {
-        sessions.remove(name);
+        values.remove(name);
     }
 
     public void invalidate() {
-        sessions.clear();
+        HttpSessionStorage.remove(id);
     }
 }

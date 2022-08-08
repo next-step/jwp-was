@@ -19,12 +19,4 @@ public class HttpCookie {
             cookies.put(cookieName, cookieValue);
         }
     }
-
-    public boolean isLogin() {
-        if (cookies.get("logined") == null) {
-            return false;
-        }
-        return cookies.get("logined").equals("true");
-    }
-
 }

@@ -2,7 +2,7 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.sql.Connection;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +22,10 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = new HttpRequest(in);
             HttpResponse httpResponse = new HttpResponse(out);
+
+            if (httpRequest.getSessionId() == null) {
+                httpResponse.addHeader("Set-Cookie","JSESSIONID=" + UUID.randomUUID());
+            }
 
             String url = httpRequest.getPath();
             RequestMapping requestMapping = new RequestMapping();
