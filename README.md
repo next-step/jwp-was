@@ -44,8 +44,17 @@ userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajig
 
 >각각의 역할을 분리해 재사용 가능하도록 개선한다.
 >즉, WAS 기능, HTTP 요청/응답 처리 기능은 애플리케이션 개발자가 신경쓰지 않아도 재사용이 가능한 구조가 되도록 한다.
-> 
-> 
+
+
+### 4단계 세션 구현
+* 세션 API 구현
+  * getId()
+  * setAttribute()
+  * getAttribute()
+  * removeAttribute()
+  * invalidate()
+* 여러 세션들을 관리할 세션 컨테이너 구현
+* 요청에서 세션 쿠키 확인, 없다면 쿠키 만들어주기
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
