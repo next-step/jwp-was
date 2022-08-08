@@ -23,10 +23,14 @@ public class UserListController implements Controller{
         final Cookie cookie = request.getCookie();
         final Cookie loginCookie = new Cookie("logined", "true", "/.*");
 
-        if (cookie.equals(loginCookie)) {
+        if (validationCookie(cookie, loginCookie)) {
             return HttpResponse.success(makeUserListTemplate().getBytes());
         }
         return HttpResponse.redirect(USER_LOGIN_PATH);
+    }
+
+    private boolean validationCookie(Cookie cookie, Cookie loginCookie) {
+        return cookie != null && cookie.equals(loginCookie);
     }
 
     private String makeUserListTemplate() throws Exception {
