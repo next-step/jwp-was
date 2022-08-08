@@ -1,6 +1,7 @@
 package webserver.controller;
 
 import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
 import db.DataBase;
 import webserver.http.Header;
 import webserver.http.request.HttpRequest;
@@ -24,14 +25,19 @@ public class UserListController implements Controller {
     @Override
     public HttpResponse process(HttpRequest httpRequest) throws IOException, URISyntaxException {
         if (httpRequest.isLogin()) {
+            Template template = getTemplate(httpRequest);
             return HttpResponse.ok(
                     Header.loginSuccessResponse(),
-                    handlebars.compile(httpRequest.getPath()).apply(Map.of(TEMPLATE_ENGINE_USERS_KEY, DataBase.findAll())).getBytes());
+                    template.apply(Map.of(TEMPLATE_ENGINE_USERS_KEY, DataBase.findAll())).getBytes());
         }
 
         return HttpResponse.redirect("/user/login.html",
                Header.loginFailResponse()
         );
+    }
+
+    private Template getTemplate(HttpRequest httpRequest) throws IOException {
+        return handlebars.compile(httpRequest.getPath());
     }
 
     @Override
