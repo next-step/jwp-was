@@ -6,7 +6,9 @@ import webserver.handler.CreateMemberHandler;
 import webserver.handler.ListMemberHandler;
 import webserver.handler.LoginMemberHandler;
 import webserver.handler.StaticFileHandler;
-import webserver.http.*;
+import webserver.http.HttpMethod;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 import webserver.view.View;
 import webserver.view.ViewResolver;
 
@@ -16,12 +18,10 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.List;
 
-;
-
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private static final HttpSessionStore SESSION_STORE = new ApplicationHttpSessionStore(new RandomUuidGenerator());
+    private static final HttpSessionStore SESSION_STORE = new MemoryHttpSessionStore(new RandomUuidGenerator());
 
     private final Socket connection;
 
@@ -32,6 +32,8 @@ public class RequestHandler implements Runnable {
             new StaticFileHandler());
 
     private final ViewResolver viewResolver = new ViewResolver("/templates", ".html");
+
+    private final HttpSessionHandler sessionInitializer = new HttpSessionHandler(SESSION_STORE);
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -55,7 +57,7 @@ public class RequestHandler implements Runnable {
     }
 
     private void handleRequest(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
-        initSession(httpRequest, httpResponse);
+        sessionInitializer.handleSession(httpRequest, httpResponse);
 
         Handler handler = handlerMapping.getHandler(httpRequest);
 
@@ -68,35 +70,5 @@ public class RequestHandler implements Runnable {
         View view = viewResolver.resolveView(modelAndView.getView());
 
         view.render(modelAndView.getModel(), httpResponse);
-    }
-
-    private void initSession(HttpRequest httpRequest, HttpResponse httpResponse) {
-        HttpSession httpSession = getHttpSession(httpRequest);
-
-        if (httpSession == null) {
-            httpSession = createHttpSession(httpRequest);
-        }
-
-        addSessionCookie(httpResponse, httpSession);
-    }
-
-    private HttpSession createHttpSession(HttpRequest httpRequest) {
-        HttpSession httpSession = SESSION_STORE.createHttpSession();
-
-        httpRequest.initHttpSession(httpSession);
-
-        return httpSession;
-    }
-
-    private HttpSession getHttpSession(HttpRequest httpRequest) {
-        String sessionIdFromCookie = httpRequest.getCookie("JWP_SESSION");
-
-        return SESSION_STORE.getSession(sessionIdFromCookie);
-    }
-
-    private static void addSessionCookie(HttpResponse httpResponse, HttpSession httpSession) {
-        Cookie sessionCookie = new Cookie("JWP_SESSION", httpSession.getId(), "/");
-
-        httpResponse.addCookie(sessionCookie);
     }
 }

@@ -130,7 +130,7 @@ public class HttpRequest {
 
     public void initHttpSession(HttpSession httpSession) {
         if (this.httpSession != null) {
-            throw new IllegalStateException("이미 Http Session 은 초기화 되었습니다. " + httpSession.getId());
+            throw new IllegalStateException("이미 HttpSession 이 초기화 되었습니다. " + httpSession.getId());
         }
 
         this.httpSession = httpSession;
