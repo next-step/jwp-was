@@ -54,4 +54,12 @@ public class HttpRequest {
     public Path getPath() {
         return requestLine.getPath();
     }
+
+    public HttpCookie getCookies() {
+        return new HttpCookie(headers.getCookie());
+    }
+
+    public HttpSession getSession() {
+        return HttpSessions.getSession(getCookies().getJSession());
+    }
 }

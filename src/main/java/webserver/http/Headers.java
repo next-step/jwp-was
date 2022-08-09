@@ -44,6 +44,10 @@ public class Headers {
         return headers.get(key);
     }
 
+    public String getCookie() {
+        return headers.get("Cookie");
+    }
+
     public Set<String> getKeySet() {
         return headers.keySet();
     }

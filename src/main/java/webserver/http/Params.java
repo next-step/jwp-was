@@ -22,22 +22,30 @@ public class Params {
     }
 
     public static Params from(String queryString) {
-        return parseParams(queryString);
+        return parseParams(queryString, PARAM_DELIMITER);
     }
 
     public static Params from(Map<String, String> params) {
         return new Params(params);
     }
 
+    public static Params of(String queryString, String delimiter) {
+        return parseParams(queryString, delimiter);
+    }
+
     public Map<String, String> getParams() {
         return Collections.unmodifiableMap(params);
     }
 
-    private static Params parseParams(String values) {
+    public String getParam(String key) {
+        return params.get(key);
+    }
+
+    private static Params parseParams(String values, String delimiter) {
         if (values.isEmpty()) {
             return new Params();
         }
-        String[] tokens = values.split(PARAM_DELIMITER);
+        String[] tokens = values.split(delimiter);
         return new Params(Arrays.stream(tokens)
                 .map(KeyValue::of)
                 .filter(Objects::nonNull)
