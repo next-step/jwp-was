@@ -5,13 +5,13 @@ import utils.parser.UrlKeyValueParser;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class QueryString {
+public class QueryStrings {
     private static final Pattern QUERY_STRING = Pattern.compile("^(\\/[a-zA-Z]*)*\\?([^=]+=+[^=]+)+[^=]+(=+[^=]+)?$");
     private static final String QUERYSTRING_SEPARATOR = "?";
 
     private final Map<String, String> queryString;
 
-    public QueryString(String path) {
+    public QueryStrings(String path) {
         if (hasQueryString(path)) {
             this.queryString = UrlKeyValueParser.parse(path);
 

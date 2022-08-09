@@ -8,7 +8,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class QueryStringTest {
+class QueryStringsTest {
     @Test
     @DisplayName("쿼리스트링 판정 정규식 테스트")
     void queryStringRegexTest() {
@@ -33,11 +33,11 @@ class QueryStringTest {
             "name", "차재언"
         );
 
-        QueryString queryString = new QueryString(path);
+        QueryStrings queryStrings = new QueryStrings(path);
 
         assertAll(
-            () -> assertThat(queryString.getParameter("name")).isEqualTo("차재언"),
-            () -> assertThat(queryString.getQueryString()).isEqualTo(filedNameToValue)
+            () -> assertThat(queryStrings.getParameter("name")).isEqualTo("차재언"),
+            () -> assertThat(queryStrings.getQueryString()).isEqualTo(filedNameToValue)
         );
     }
 
@@ -47,8 +47,8 @@ class QueryStringTest {
         String path = "/users?userId=javajigi&password=password&name=JaeSung";
         String queryStringRemovedPath = "/users";
 
-        QueryString queryString = new QueryString(path);
-        String queryStringParseResult = queryString.removeQueryString(path);
+        QueryStrings queryStrings = new QueryStrings(path);
+        String queryStringParseResult = queryStrings.removeQueryString(path);
 
         assertThat(queryStringParseResult).isEqualTo(queryStringRemovedPath);
     }
@@ -59,8 +59,8 @@ class QueryStringTest {
         String path = "/users";
         String queryStringRemovedPath = "/users";
 
-        QueryString queryString = new QueryString(path);
-        String queryStringParseResult = queryString.removeQueryString(path);
+        QueryStrings queryStrings = new QueryStrings(path);
+        String queryStringParseResult = queryStrings.removeQueryString(path);
 
         assertThat(queryStringParseResult).isEqualTo(queryStringRemovedPath);
     }

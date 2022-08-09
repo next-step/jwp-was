@@ -2,15 +2,15 @@ package model.request;
 
 public class Path {
     private final String path;
-    private final QueryString queryString;
+    private final QueryStrings queryStrings;
 
     public Path(String path) {
-        this.queryString = new QueryString(path);
-        this.path = queryString.removeQueryString(path);
+        this.queryStrings = new QueryStrings(path);
+        this.path = queryStrings.removeQueryString(path);
     }
 
     public Boolean hasQueryString() {
-        return queryString.getQueryString() != null;
+        return queryStrings.getQueryString() != null;
     }
 
     public String getPath() {
@@ -18,6 +18,6 @@ public class Path {
     }
 
     public String getParameter(String key) {
-        return queryString.getParameter(key);
+        return queryStrings.getParameter(key);
     }
 }
