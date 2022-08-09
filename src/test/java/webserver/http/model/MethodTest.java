@@ -1,4 +1,4 @@
-package model.http;
+package webserver.http.model;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,5 +19,12 @@ class MethodTest {
     @Test
     void construct_unExistEnum() {
         assertThatIllegalArgumentException().isThrownBy(() -> Method.of("UnExistMethod"));
+    }
+
+    @DisplayName("POST Method 인지 확인")
+    @Test
+    void isPost() {
+        assertThat(Method.isPost("post")).isTrue();
+        assertThat(Method.isPost("get")).isFalse();
     }
 }

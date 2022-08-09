@@ -1,15 +1,15 @@
-package model.http;
+package webserver.http.model;
 
 import exception.IllegalHttpRequestException;
 
-public class Http {
+public class RequestLine {
     private static final int VALID_REQUEST_LINE_LENGTH = 3;
 
-    private Method method;
-    private PathInformation pathInformation;
-    private ProtocolVersion protocolVersion;
+    private final Method method;
+    private final PathInformation pathInformation;
+    private final ProtocolVersion protocolVersion;
 
-    public Http(String requestLine) {
+    public RequestLine(String requestLine) {
         String[] requestData = requestLine.split(" ");
 
         if (requestData.length != VALID_REQUEST_LINE_LENGTH) {
@@ -19,6 +19,22 @@ public class Http {
         this.method = Method.of(requestData[0]);
         this.pathInformation = new PathInformation(requestData[1]);
         this.protocolVersion = new ProtocolVersion(requestData[2]);
+    }
+
+    public boolean isStaticResource() {
+        return pathInformation.isStaticResource();
+    }
+
+    public String fullPath() {
+        return pathInformation.fullPath();
+    }
+
+    public QueryStrings getQueryStrings() {
+        return pathInformation.getQueryStrings();
+    }
+
+    public String path() {
+        return pathInformation.path();
     }
 
     public Method getMethod() {

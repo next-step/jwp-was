@@ -1,4 +1,4 @@
-package model.http;
+package webserver.http.model;
 
 import exception.IllegalHttpRequestException;
 
@@ -28,6 +28,13 @@ public class PathInformation {
         this.queryStrings = null;
     }
 
+    public String fullPath() {
+        return path.resource();
+    }
+
+    public boolean isStaticResource() {
+        return path.isStaticResource();
+    }
 
     public Path getPath() {
         return path;
@@ -35,6 +42,10 @@ public class PathInformation {
 
     public QueryStrings getQueryStrings() {
         return queryStrings;
+    }
+
+    public String path() {
+        return path.getPath();
     }
 
     @Override

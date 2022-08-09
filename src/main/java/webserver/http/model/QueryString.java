@@ -1,4 +1,4 @@
-package model.http;
+package webserver.http.model;
 
 import exception.IllegalHttpRequestException;
 
@@ -7,8 +7,8 @@ import java.util.Objects;
 public class QueryString {
     private static final int INVALID_QUERY_STRING_LENGTH = 2;
 
-    private QueryStringKey queryStringKey;
-    private QueryStringValue queryStringValue;
+    private final QueryStringKey queryStringKey;
+    private final QueryStringValue queryStringValue;
 
     public QueryString(String queryString) {
         String[] queryStringData = queryString.split("=");

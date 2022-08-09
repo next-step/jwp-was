@@ -1,4 +1,4 @@
-package model.http;
+package webserver.http.model;
 
 import java.util.Objects;
 
@@ -7,6 +7,10 @@ public class QueryStringValue {
 
     public QueryStringValue(String queryStringValue) {
         this.queryStringValue = queryStringValue;
+    }
+
+    public String getQueryStringValue() {
+        return queryStringValue;
     }
 
     @Override
