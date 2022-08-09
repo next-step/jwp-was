@@ -44,7 +44,8 @@ public class RequestLine {
     }
 
     public String getExtension() {
-        return request.getPath().split(EXTENSION_DELIMITER)[EXTENTION_INDEX];
+        final String[] split = request.getPath().split(EXTENSION_DELIMITER);
+        return split[split.length - 1];
     }
 
     public RequestParams getRequestParams() {

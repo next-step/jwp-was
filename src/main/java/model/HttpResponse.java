@@ -19,7 +19,7 @@ public class HttpResponse {
 
     public static HttpResponse redirect(String location, HttpHeader header) {
         return new HttpResponse(Arrays.asList("HTTP/1.1 302 OK \r\n",
-                "Location: " + header.getHost() + location + "\r\n",
+                "Location: http://" + header.getHost() + location + "\r\n",
                 "\r\n"));
     }
 
@@ -32,7 +32,7 @@ public class HttpResponse {
 
     public static HttpResponse loginRedirect(String location, boolean login, HttpHeader header) {
         return new HttpResponse(Arrays.asList("HTTP/1.1 302 OK \r\n",
-                "Location: " + header.getHost() + location + "\r\n",
+                "Location: http://" + header.getHost() + location + "\r\n",
                 "Set-Cookie: logined=" + login + "; Path=/\r\n",
                 "\r\n"));
     }
