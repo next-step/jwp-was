@@ -14,7 +14,7 @@ public class ViewController implements Controller {
     private static final String STATIC_PATH = "./static";
 
     @Override
-    public Boolean canExecute(HttpRequest httpRequest) {
+    public boolean canExecute(HttpRequest httpRequest) {
         return FileIoUtils.exists(TEMPLATE_PATH + httpRequest.getPath()) ||
                 FileIoUtils.exists(STATIC_PATH + httpRequest.getPath());
     }

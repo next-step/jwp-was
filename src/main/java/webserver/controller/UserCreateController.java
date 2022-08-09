@@ -14,7 +14,7 @@ public class UserCreateController implements Controller {
     static final HttpMethod EXECUTABLE_METHOD = HttpMethod.POST;
 
     @Override
-    public Boolean canExecute(HttpRequest httpRequest) {
+    public boolean canExecute(HttpRequest httpRequest) {
         return httpRequest.getPath().equals(EXECUTABLE_PATH) &&
                 httpRequest.getMethod().equals(EXECUTABLE_METHOD);
     }

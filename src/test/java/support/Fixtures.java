@@ -23,7 +23,7 @@ public class Fixtures {
         return new User("id", "password", "name", "email");
     }
 
-    public static RequestBody createRequestBody(String bodyString) {
-        return new RequestBody(bodyString);
+    public static RequestBody createRequestBody() {
+        return new RequestBody("userId=id&password=password&name=name&email=email");
     }
 }

@@ -4,6 +4,7 @@ import db.DataBase;
 import enums.HttpMethod;
 import enums.HttpStatusCode;
 import java.util.Map;
+import java.util.Objects;
 import model.User;
 import webserver.Cookie;
 import webserver.HttpHeader;
@@ -18,7 +19,7 @@ public class LoginController implements Controller {
     static final String LOGIN_FAIL_REDIRECT_URL = "/user/login_failed.html";
 
     @Override
-    public Boolean canExecute(HttpRequest httpRequest) {
+    public boolean canExecute(HttpRequest httpRequest) {
         return httpRequest.getPath().equals(EXECUTABLE_PATH) &&
                 httpRequest.getMethod().equals(EXECUTABLE_METHOD);
     }
@@ -39,7 +40,7 @@ public class LoginController implements Controller {
     private User login(String userId, String password) {
         User user = DataBase.findUserById(userId);
 
-        if (user != null && user.getPassword().equals(password)) {
+        if (user != null && user.equalsPassword(password)) {
             return user;
         }
 

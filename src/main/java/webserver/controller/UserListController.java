@@ -22,7 +22,7 @@ public class UserListController implements Controller {
     private static final String VIEW_EXTENSION = ".html";
 
     @Override
-    public Boolean canExecute(HttpRequest httpRequest) {
+    public boolean canExecute(HttpRequest httpRequest) {
         return httpRequest.getPath().equals(EXECUTABLE_PATH) &&
                 httpRequest.getMethod().equals(EXECUTABLE_METHOD);
     }
@@ -41,7 +41,7 @@ public class UserListController implements Controller {
         return new HttpResponse(HttpStatusCode.OK, page.getBytes());
     }
 
-    private Boolean isLogined(HttpRequest request) {
+    private boolean isLogined(HttpRequest request) {
         Cookie cookie = request.getCookie(LOGIN_COOKIE_KEY);
 
         return cookie != null && !cookie.getValue().equals("false");

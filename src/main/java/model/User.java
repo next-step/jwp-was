@@ -1,8 +1,6 @@
 package model;
 
-import java.io.Serializable;
-
-public class User implements Serializable {
+public class User {
     private String userId;
     private String password;
     private String name;
@@ -29,6 +27,10 @@ public class User implements Serializable {
 
     public String getEmail() {
         return email;
+    }
+
+    public boolean equalsPassword(String input) {
+        return password.equals(input);
     }
 
     @Override
