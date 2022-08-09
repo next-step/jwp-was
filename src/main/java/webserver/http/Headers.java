@@ -1,6 +1,6 @@
 package webserver.http;
 
-import utils.CastingUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import utils.HttpUtils;
 
 import java.util.HashMap;
@@ -10,13 +10,13 @@ import java.util.regex.Pattern;
 public class Headers {
     private static final String COOKIE_KEY = "Cookie";
     private static final Pattern COOKIE_PATTERN = Pattern.compile("(?:; )?([^;]+)=([^;]+)");
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final Map<String, Object> headers;
     private final Map<String, Object> cookies;
 
     public Headers() {
-        this.headers = new HashMap<>();
-        this.cookies = new HashMap<>();
+        this(new HashMap<>());
     }
 
     public Headers(Map<String, Object> headers) {
@@ -29,7 +29,7 @@ public class Headers {
     }
 
     public <T> T getHeader(String key, Class<T> returnType) {
-        return CastingUtils.cast(headers.get(key), returnType);
+        return OBJECT_MAPPER.convertValue(headers.get(key), returnType);
     }
 
     public String getHeader(String key) {
@@ -45,7 +45,7 @@ public class Headers {
     }
 
     public <T> T getCookie(String key, Class<T> returnType) {
-        return CastingUtils.cast(cookies.get(key), returnType);
+        return OBJECT_MAPPER.convertValue(cookies.get(key), returnType);
     }
 
     public String getCookie(String key) {

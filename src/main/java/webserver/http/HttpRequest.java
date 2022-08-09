@@ -37,6 +37,10 @@ public class HttpRequest {
         return requestLine;
     }
 
+    public HttpMethod getHttpMethod() {
+        return requestLine.getHttpMethod();
+    }
+
     public boolean isGet() {
         return requestLine.isGet();
     }
@@ -76,7 +80,10 @@ public class HttpRequest {
         return attributes.getAttribute(key);
     }
 
-    public boolean getCookie(String key, Class<Boolean> returnType) {
+    public <T> T getCookie(String key, Class<T> returnType) {
         return headers.getCookie(key, returnType);
+    }
+    public String getCookie(String key) {
+        return headers.getCookie(key);
     }
 }

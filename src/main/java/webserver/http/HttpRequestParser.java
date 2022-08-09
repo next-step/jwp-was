@@ -60,7 +60,7 @@ public class HttpRequestParser {
 
     private static Attributes makeAttributes(BufferedReader br, Headers headers) {
         if (!headers.hasHeader(CONTENT_LENGTH_KEY)) {
-            return new Attributes(new HashMap<>());
+            return new Attributes();
         }
 
         try {
@@ -69,7 +69,7 @@ public class HttpRequestParser {
             return new Attributes(HttpUtils.parseParameters(payload, ATTRIBUTE_PATTERN));
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
-            return new Attributes(new HashMap<>());
+            return new Attributes();
         }
     }
 }
