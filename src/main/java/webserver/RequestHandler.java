@@ -33,7 +33,7 @@ public class RequestHandler implements Runnable {
 
     private final ViewResolver viewResolver = new ViewResolver("/templates", ".html");
 
-    private final HttpSessionHandler sessionInitializer = new HttpSessionHandler(SESSION_STORE);
+    private final HttpSessionHandler sessionHandler = new HttpSessionHandler(SESSION_STORE);
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -57,7 +57,7 @@ public class RequestHandler implements Runnable {
     }
 
     private void handleRequest(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
-        sessionInitializer.handleSession(httpRequest, httpResponse);
+        sessionHandler.handleSession(httpRequest, httpResponse);
 
         Handler handler = handlerMapping.getHandler(httpRequest);
 
