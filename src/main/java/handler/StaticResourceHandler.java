@@ -1,12 +1,13 @@
 package handler;
 
+import enums.HttpMethod;
 import model.HttpHeader;
 import model.request.HttpRequestMessage;
 import model.response.HttpResponseMessage;
 import model.response.ResponseLine;
 import utils.FileIoUtils;
 
-public class StaticResourceHandler implements PathHandler {
+public class StaticResourceHandler extends AbstractHandler {
     private static final String CSS_PATH = "css";
     private static final String IMAGES_PATH = "images";
     private static final String FONTS_PATH = "fonts";
@@ -24,6 +25,7 @@ public class StaticResourceHandler implements PathHandler {
     }
 
     private boolean hasStaticResourcePath(String rootResource) {
+
         if (rootResource.equals(CSS_PATH) ||
             rootResource.equals(IMAGES_PATH) ||
             rootResource.equals(FONTS_PATH) ||
@@ -36,7 +38,15 @@ public class StaticResourceHandler implements PathHandler {
     }
 
     @Override
-    public HttpResponseMessage Handle(HttpRequestMessage httpRequestMessage) {
+    public HttpResponseMessage handle(HttpRequestMessage httpRequestMessage) {
+        if (httpRequestMessage.getHttpMethod() == HttpMethod.GET) {
+            return doGet(httpRequestMessage);
+        }
+
+        return new HttpResponseMessage(ResponseLine.httpBadRequest(), null, new byte[0]);
+    }
+
+    private HttpResponseMessage doGet(HttpRequestMessage httpRequestMessage) {
         byte[] body = FileIoUtils.loadFileFromStaticFilePath(httpRequestMessage.getPath());
 
         return new HttpResponseMessage(ResponseLine.httpOk(), createOkStyleSheetHttpHeader(body), body);

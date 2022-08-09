@@ -9,13 +9,13 @@ public enum Handler {
     USER_HANDLER(new UserHandler()),
     RESOURCE_HANDLER(new StaticResourceHandler());
 
-    private final PathHandler pathHandler;
+    private final AbstractHandler pathHandler;
 
-    Handler(PathHandler pathHandler) {
+    Handler(AbstractHandler pathHandler) {
         this.pathHandler = pathHandler;
     }
 
-    public static List<PathHandler> getAllHandler() {
+    public static List<AbstractHandler> getAllHandler() {
 
         return Arrays.stream(Handler.values()).map(it -> it.pathHandler).collect(Collectors.toList());
     }

@@ -1,8 +1,6 @@
 package webserver;
 
-import handler.IndexHandler;
-import handler.PathHandler;
-import handler.UserHandler;
+import handler.*;
 import model.request.HttpRequestMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,8 +19,8 @@ class HandlerSelectorTest {
 
         HandlerSelector handlerSelector = new HandlerSelector();
 
-        PathHandler indexHandlerResult = handlerSelector.selectAvailableHandler(getIndexHttpRequest);
-        PathHandler userHandlerResult = handlerSelector.selectAvailableHandler(getUserHttpRequest);
+        AbstractHandler indexHandlerResult = handlerSelector.selectAvailableHandler(getIndexHttpRequest);
+        AbstractHandler userHandlerResult = handlerSelector.selectAvailableHandler(getUserHttpRequest);
 
         assertAll(
             () -> assertThat(indexHandlerResult.getClass()).isEqualTo(IndexHandler.class),

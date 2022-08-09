@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class QueryStringParser {
+public class UrlKeyValueParser {
     private static final String QUERYSTRING_SEPARATOR = "?";
     private static final String FIELD_SEPARATOR = "&";
     private static final String FIELD_NAME_VALUE_SEPARATOR = "=";
@@ -28,11 +28,5 @@ public class QueryStringParser {
 
     private static String decodeValue(String value) {
         return URLDecoder.decode(value, StandardCharsets.UTF_8);
-    }
-
-    public static String removeQueryString(String path) {
-        String queryString = path.substring(path.indexOf(QUERYSTRING_SEPARATOR));
-
-        return path.replace(queryString, "");
     }
 }

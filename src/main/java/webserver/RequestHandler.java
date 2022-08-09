@@ -31,7 +31,7 @@ public class RequestHandler implements Runnable {
 
             HandlerSelector handlerSelector = new HandlerSelector();
             PathHandler pathHandler = handlerSelector.selectAvailableHandler(httpRequestMessage);
-            HttpResponseMessage httpResponseMessage = pathHandler.Handle(httpRequestMessage);
+            HttpResponseMessage httpResponseMessage = pathHandler.handle(httpRequestMessage);
 
             responseHeader(dataOutputStream, httpResponseMessage);
         } catch (IOException e) {

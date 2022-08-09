@@ -10,7 +10,7 @@ public interface PathHandler {
 
     Boolean canHandling(HttpRequestMessage httpRequestMessage);
 
-    HttpResponseMessage Handle(HttpRequestMessage httpRequestMessage);
+    HttpResponseMessage handle(HttpRequestMessage httpRequestMessage);
 
     default Boolean hasResourceIdentifier(String path) {
 

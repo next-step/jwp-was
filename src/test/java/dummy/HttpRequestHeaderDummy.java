@@ -3,13 +3,9 @@ package dummy;
 import model.HttpHeader;
 import model.request.HttpRequestMessage;
 import model.request.RequestLine;
-import model.WebProtocol;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class HttpRequestHeaderDummy {
-    public static String HTTP_REQUEST_HEADER_STRING_DUMMY = "GET /jason/test/ HTTP/1.1\n" +
+    public static String HTTP_REQUEST_HEADER_STRING_DUMMY = "GET /jason/test/create?userId=javajigi&password=password&name=JaeSung HTTP/1.1\n" +
         "Host: localhost:8080\n" +
         "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729)\n" +
         "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\n" +
@@ -42,15 +38,7 @@ public class HttpRequestHeaderDummy {
 
     public static HttpRequestMessage GET_USER_HTTP_REQUEST_DUMMY
         = HttpRequestMessage.getRequestHeaderOf(
-        new RequestLine(
-            "GET",
-            "/user/something",
-            Map.of(
-                "userId", "javajigi",
-                "password", "password",
-                "name", "JaeSung"
-            ),
-            new WebProtocol("HTTP", "1.1")),
+        new RequestLine("GET /user/something?userId=javajigi&password=password&name=JaeSung HTTP/1.1"),
         new HttpHeader.Builder()
             .addHeader("Host: localhost:8080")
             .build()
@@ -58,11 +46,7 @@ public class HttpRequestHeaderDummy {
 
     public static HttpRequestMessage GET_INDEX_HTTP_REQUEST_DUMMY
         = HttpRequestMessage.getRequestHeaderOf(
-        new RequestLine(
-            "GET",
-            "/index.html",
-            new WebProtocol("HTTP", "1.1")
-        ),
+        new RequestLine("GET /index.html HTTP/1.1"),
         new HttpHeader.Builder()
             .addHeader("Host: localhost:8080")
             .build()

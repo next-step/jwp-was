@@ -12,7 +12,7 @@ class IndexHandlerTest {
     @DisplayName("첫번째 리소스 경로가 공백인 HttpRequestHeader는 true를 반환한다.")
     void canHandlingTest() {
         HttpRequestMessage getIndexHttpRequest = GET_INDEX_HTTP_REQUEST_DUMMY;
-        PathHandler indexHandler = new IndexHandler();
+        AbstractHandler indexHandler = new IndexHandler();
 
         Boolean result = indexHandler.canHandling(getIndexHttpRequest);
 

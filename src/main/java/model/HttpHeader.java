@@ -11,14 +11,14 @@ public class HttpHeader {
     private static final Integer HEADER_INDEX = 0;
     private static final Integer VALUE_INDEX = 1;
 
-    private LinkedHashMap<String, String> keyToValue;
+    private final LinkedHashMap<String, String> keyToValue;
 
     private HttpHeader(Builder builder) {
         this.keyToValue = builder.keyToValue;
     }
 
     public static class Builder {
-        private LinkedHashMap<String, String> keyToValue;
+        private final LinkedHashMap<String, String> keyToValue;
 
         public Builder() {
             this.keyToValue = new LinkedHashMap();
@@ -38,6 +38,12 @@ public class HttpHeader {
 
                 this.keyToValue.put(split[HEADER_INDEX], split[VALUE_INDEX]);
             }
+
+            return this;
+        }
+
+        public Builder sendRedirect(String path) {
+            keyToValue.put("Location: ", "http://localhost:8080" + path);
 
             return this;
         }

@@ -1,6 +1,7 @@
 package handler;
 
 import db.DataBase;
+import enums.HttpMethod;
 import model.HttpHeader;
 import model.User;
 import model.request.HttpRequestMessage;
@@ -10,9 +11,10 @@ import service.UserService;
 import utils.FileIoUtils;
 import utils.HandleBarCompiler;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 
-public class UserHandler implements PathHandler {
+public class UserHandler extends AbstractHandler {
     private static final String USER_PATH = "user";
     private static final String CREATE_REQUEST_PATH = "/user/create";
     private static final String LOGIN = "/user/login";
@@ -33,21 +35,19 @@ public class UserHandler implements PathHandler {
     }
 
     @Override
-    public HttpResponseMessage Handle(HttpRequestMessage httpRequestMessage) {
-        if (httpRequestMessage.isEqualPath(CREATE_REQUEST_PATH)) {
-            userService.createUser(httpRequestMessage.getRequestBody());
-
-            HttpHeader httpFoundHeader = new HttpHeader.Builder()
-                .addHeader("Location: http://localhost:8080/index.html")
-                .build();
-
-            return new HttpResponseMessage(ResponseLine.httpFound(), httpFoundHeader, new byte[0]);
+    public HttpResponseMessage handle(HttpRequestMessage httpRequestMessage) {
+        if (httpRequestMessage.getHttpMethod() == HttpMethod.GET) {
+            return doGet(httpRequestMessage);
         }
 
-        if (httpRequestMessage.isEqualPath(LOGIN)) {
-            return login(httpRequestMessage.getRequestBody());
+        if (httpRequestMessage.getHttpMethod() == HttpMethod.POST) {
+            return doPost(httpRequestMessage);
         }
 
+        return new HttpResponseMessage(ResponseLine.httpBadRequest(), null, new byte[0]);
+    }
+
+    private HttpResponseMessage doGet(HttpRequestMessage httpRequestMessage) {
         if (httpRequestMessage.isEqualPath(FIND_ALL_PATH)) {
             return findAll(httpRequestMessage);
         }
@@ -66,6 +66,53 @@ public class UserHandler implements PathHandler {
             .addHeader("Content-Type: text/html;charset=utf-8")
             .addHeader("Content-Length: " + body.length)
             .build();
+    }
+
+    private HttpResponseMessage findAll(HttpRequestMessage httpRequestMessage) {
+        if ((!validateCookie(httpRequestMessage))) {
+            return new HttpResponseMessage(ResponseLine.httpFound(), createNoCookieHttpHeader(), new byte[0]);
+        }
+
+        byte[] profileBody = createUserProfileBody();
+
+        return new HttpResponseMessage(ResponseLine.httpOk(), createOkTemplateHttpHeader(profileBody), profileBody);
+    }
+
+    private boolean validateCookie(HttpRequestMessage httpRequestMessage) {
+        return httpRequestMessage.hasCookie(LOGIN_PASSED);
+    }
+
+    private HttpHeader createNoCookieHttpHeader() {
+
+        return new HttpHeader.Builder()
+            .addHeader("Content-Type: text/html;charset=utf-8")
+            .addHeader("Set-Cookie: logined=false;")
+            .sendRedirect("/user/login.html")
+            .build();
+    }
+
+    private byte[] createUserProfileBody() {
+        Collection<User> users = DataBase.findAll();
+
+        return HandleBarCompiler.compile(FIND_ALL_TEMPLATE, users).getBytes();
+    }
+
+    private HttpResponseMessage doPost(HttpRequestMessage httpRequestMessage) {
+        if (httpRequestMessage.isEqualPath(CREATE_REQUEST_PATH)) {
+            userService.createUser(httpRequestMessage.getRequestBody());
+
+            HttpHeader httpFoundHeader = new HttpHeader.Builder()
+                .addHeader("Location: http://localhost:8080/index.html")
+                .build();
+
+            return new HttpResponseMessage(ResponseLine.httpFound(), httpFoundHeader, new byte[0]);
+        }
+
+        if (httpRequestMessage.isEqualPath(LOGIN)) {
+            return login(httpRequestMessage.getRequestBody());
+        }
+
+        return new HttpResponseMessage(ResponseLine.httpBadRequest(), null, new byte[0]);
     }
 
     private HttpResponseMessage login(Map<String, String> requestBody) {
@@ -90,7 +137,7 @@ public class UserHandler implements PathHandler {
         return new HttpHeader.Builder()
             .addHeader("Content-Type: text/html;charset=utf-8")
             .addHeader("Set-Cookie: logined=false;")
-            .addHeader("Location: http://localhost:8080/user/login_failed.html")
+            .sendRedirect("/user/login_failed.html")
             .build();
     }
 
@@ -99,36 +146,7 @@ public class UserHandler implements PathHandler {
         return new HttpHeader.Builder()
             .addHeader("Content-Type: text/html;charset=utf-8")
             .addHeader("Set-Cookie: logined=true; Path=/")
-            .addHeader("Location: http://localhost:8080/index.html")
+            .sendRedirect("/index.html")
             .build();
-    }
-
-    private HttpResponseMessage findAll(HttpRequestMessage httpRequestMessage) {
-        if ((!validateCookie(httpRequestMessage))) {
-            return new HttpResponseMessage(ResponseLine.httpFound(), createNoCookieHttpHeader(), new byte[0]);
-        }
-
-        byte[] profileBody = createUserProfileBody();
-
-        return new HttpResponseMessage(ResponseLine.httpOk(), createOkTemplateHttpHeader(profileBody), profileBody);
-    }
-
-    private boolean validateCookie(HttpRequestMessage httpRequestMessage) {
-        return httpRequestMessage.hasCookie(LOGIN_PASSED);
-    }
-
-    private HttpHeader createNoCookieHttpHeader() {
-
-        return new HttpHeader.Builder()
-            .addHeader("Content-Type: text/html;charset=utf-8")
-            .addHeader("Set-Cookie: logined=false;")
-            .addHeader("Location: http://localhost:8080/user/login.html")
-            .build();
-    }
-
-    private byte[] createUserProfileBody() {
-        Collection<User> users = DataBase.findAll();
-
-        return HandleBarCompiler.compile(FIND_ALL_TEMPLATE, users).getBytes();
     }
 }

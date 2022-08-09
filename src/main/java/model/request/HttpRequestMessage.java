@@ -5,8 +5,7 @@ import enums.HttpMethod;
 import model.HttpHeader;
 import utils.BufferedReaderUtils;
 import utils.IOUtils;
-import utils.parser.QueryStringParser;
-import utils.parser.RequestLineParser;
+import utils.parser.UrlKeyValueParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -41,7 +40,7 @@ public class HttpRequestMessage {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         List<String> httpRequestHeaders = BufferedReaderUtils.lines(br);
 
-        RequestLine requestLine = RequestLineParser.parse(httpRequestHeaders.get(REQUEST_LINE_INDEX));
+        RequestLine requestLine = new RequestLine(httpRequestHeaders.get(REQUEST_LINE_INDEX));
         HttpHeader httpHeader = new HttpHeader.Builder()
             .addHeaders(extractHttpHeaders(httpRequestHeaders))
             .build();
@@ -63,12 +62,20 @@ public class HttpRequestMessage {
 
         if (requestLine.getHttpMethod() == HttpMethod.POST) {
             int contentLength = Integer.parseInt(httpHeader.getValueByKey("Content-Length"));
-            Map<String, String> httpBody = QueryStringParser.parse(IOUtils.readData(br, contentLength));
+            Map<String, String> httpBody = UrlKeyValueParser.parse(IOUtils.readData(br, contentLength));
 
             return postRequestHeaderWithBody(requestLine, httpHeader, httpBody);
         }
 
         return null;
+    }
+
+    public Boolean isEqualPath(String path) {
+        return requestLine.getPath().equals(path);
+    }
+
+    public boolean hasCookie(String cookie) {
+        return httpHeader.hasCookie(cookie);
     }
 
     public RequestLine getRequestLine() {
@@ -83,15 +90,15 @@ public class HttpRequestMessage {
         return requestLine.getPath();
     }
 
-    public Boolean isEqualPath(String path) {
-        return requestLine.getPath().equals(path);
-    }
-
     public Map<String, String> getRequestBody() {
         return requestBody;
     }
 
-    public boolean hasCookie(String cookie) {
-        return httpHeader.hasCookie(cookie);
+    public String getParameter(String parameterKey) {
+        return requestLine.getParameter(parameterKey);
+    }
+
+    public HttpMethod getHttpMethod() {
+        return requestLine.getHttpMethod();
     }
 }
