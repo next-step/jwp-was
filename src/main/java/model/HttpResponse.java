@@ -33,9 +33,7 @@ public class HttpResponse {
     public static HttpResponse found(String path, String cookie) {
         return new HttpResponse(
                 HttpStatusCode.FOUND,
-                ResponseHeader.of(Map.of(
-                        HttpHeaders.LOCATION, path,
-                        HttpHeaders.SET_COOKIE, cookie)),
+                ResponseHeader.of(Map.of(HttpHeaders.LOCATION, path), cookie),
                 new byte[0]);
     }
 
@@ -53,5 +51,13 @@ public class HttpResponse {
 
     public Set<Map.Entry<String, Object>> getHeaders() {
         return header.getHeaders().entrySet();
+    }
+
+    public boolean containsCookie() {
+        return header.containsCookie();
+    }
+
+    public String getCookie() {
+        return header.getCookie();
     }
 }

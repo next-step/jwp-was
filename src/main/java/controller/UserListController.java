@@ -34,8 +34,10 @@ public class UserListController implements Controller {
         Collection<User> users = DataBase.findAll();
 
         return HttpResponse.ok(
-                ResponseHeader.of(Map.of(
-                        HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8")),
+                ResponseHeader.of(
+                        Map.of(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8"),
+                        request.getCookie()
+                ),
                 handlebars.compile(USER_LIST_TEMPLATE)
                         .apply(Map.of("users", users))
                         .getBytes(StandardCharsets.UTF_8)

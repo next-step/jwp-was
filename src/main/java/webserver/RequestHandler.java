@@ -2,12 +2,11 @@ package webserver;
 
 import controller.DispatchController;
 import exception.ResourceNotFoundException;
+import model.HttpHeaders;
 import model.HttpRequest;
-import model.HttpRequestBody;
 import model.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Map;
 
 public class RequestHandler implements Runnable {
@@ -56,6 +54,10 @@ public class RequestHandler implements Runnable {
         dos.writeBytes(String.format("HTTP/1.1 %s \r\n", httpResponse.getHttpResponseCode()));
         for (Map.Entry<String, Object> header : httpResponse.getHeaders()) {
             dos.writeBytes(String.format("%s: %s \r\n", header.getKey(), header.getValue()));
+        }
+
+        if (httpResponse.containsCookie()) {
+            dos.writeBytes(String.format("%s: %s \r\n", HttpHeaders.SET_COOKIE, httpResponse.getCookie()));
         }
     }
 

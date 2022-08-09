@@ -90,4 +90,8 @@ public class HttpRequest {
     public boolean isLogin() {
         return header.containsLoginCookie();
     }
+
+    public HttpCookie getCookie() {
+        return header.getCookie();
+    }
 }

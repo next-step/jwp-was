@@ -32,7 +32,7 @@ class UserListControllerTest {
     void success() throws Exception {
         HttpRequest request = HttpRequest.of(
                 RequestLine.of(HttpMethod.GET, Path.of("/user/list"), new String[]{"HTTP", "1.1"}),
-                HttpRequestHeader.of(List.of("Set-Cookie: logined=true; Path=/")),
+                HttpRequestHeader.of(List.of("Host: www.nowhere123.com", "Accept-Language: en-us","Set-Cookie: logined=true; Path=/")),
                 HttpRequestBody.empty()
         );
 

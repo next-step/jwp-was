@@ -6,9 +6,15 @@ import java.util.Map;
 
 public class ResponseHeader {
     private final Map<String, Object> headers;
+    private HttpCookie cookie;
 
     private ResponseHeader(Map<String, Object> headers) {
         this.headers = headers;
+    }
+
+    private ResponseHeader(Map<String, Object> headers, HttpCookie cookie) {
+        this.headers = headers;
+        this.cookie = cookie;
     }
 
     public static ResponseHeader text(int length, String path) {
@@ -26,11 +32,27 @@ public class ResponseHeader {
         return new ResponseHeader(map);
     }
 
+    public static ResponseHeader of(Map<String, Object> headers, String cookie) {
+        return new ResponseHeader(headers, HttpCookie.of(cookie));
+    }
+
+    public static ResponseHeader of(Map<String, Object> headers, HttpCookie cookie) {
+        return new ResponseHeader(headers, cookie);
+    }
+
     public Map<String, Object> getHeaders() {
         return headers;
     }
 
     private static String fileExtension(String path) {
         return path.substring(path.lastIndexOf('.') + 1);
+    }
+
+    public boolean containsCookie() {
+        return cookie != null;
+    }
+
+    public String getCookie() {
+        return cookie.getValue();
     }
 }

@@ -35,9 +35,8 @@ class LoginControllerTest {
         assertAll(
                 () -> assertThat(response.getHttpResponseCode()).isEqualTo("302 FOUND"),
                 () -> assertThat(response.getHeaders()).contains(
-                        Map.entry(HttpHeaders.LOCATION, "/index.html"),
-                        Map.entry(HttpHeaders.SET_COOKIE, "logined=true; Path=/")
-                )
+                        Map.entry(HttpHeaders.LOCATION, "/index.html")),
+                () -> assertThat(response.getCookie()).isEqualTo("logined=true; Path=/")
         );
     }
 
@@ -55,9 +54,9 @@ class LoginControllerTest {
         assertAll(
                 () -> assertThat(response.getHttpResponseCode()).isEqualTo("302 FOUND"),
                 () -> assertThat(response.getHeaders()).contains(
-                        Map.entry(HttpHeaders.LOCATION, "/user/login_failed.html"),
-                        Map.entry(HttpHeaders.SET_COOKIE, "logined=false; Path=/")
-                )
+                        Map.entry(HttpHeaders.LOCATION, "/user/login_failed.html")
+                ),
+                () -> assertThat(response.getCookie()).isEqualTo("logined=false; Path=/")
         );
     }
 
