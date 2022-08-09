@@ -12,3 +12,49 @@
 - GET요청 파싱을 위한 RequestParser 클래스 생성 및 테스트코드 작성
 - POST요청 파싱을 위한 RequestParser 클래스 생성 및 테스트코드 작성
 - ENUM 적용
+
+## Step2
+### 기능 요구사항 1
+- RequestHeader 도메인 구현
+- Request 도메인 구현
+- path 값을 응답
+
+### 기능 요구사항 2
+- User 클래스 생성
+- RequestLine 파라미터 분리
+- 분리한 파라미터 메소드로 User 생성
+
+### 기능 요구사항 3
+- RequestBody 구현
+
+### 기능 요구사항 4
+- HttpResponse 클래스 구현
+- redirect, forward 구현
+
+### 기능 요구사항 5
+- /user/login 분기 구현
+- response 에 set-cookie 헤더 추가
+
+### 기능 요구사항 6
+- /user/list 분기에서 로그인 상태이면 동적으로 html 생성 후 이동
+- 비로그인 상태라면 index.html 로 이동
+
+### 리팩토링 목록
+- Request 코드 리팩토링
+  - HttpRequest는 RequestLine, Header, Body를 갖는다.(o)
+  - 현재 Method, Path를 RequestLine 도메인으로 관리(o)
+  - Method enum 클래스내의 상태값 및 메소드 추가(o)
+  - QueryString과 RequestBody를 따로 관리할 필요가 있을까? 그냥 Body 하나로 관리하는건 어떨까?(o)
+
+- Controller 생성 및 RequestHandler 리팩토링(o)
+
+- Handlebars 클래스 분리(o)
+
+- ContentType enum 클래스로 분리(o)
+
+- HttpResponse 클래스 리팩토링
+  - HttpResponse 클래스는 StatusLine, Header, RequestBody 를 포함한다.
+
+- Cookie 클래스 분리
+
+

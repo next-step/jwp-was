@@ -1,24 +1,23 @@
-package webserver.domain;
+package webserver.request;
 
-import lombok.Getter;
 import org.springframework.util.StringUtils;
 import webserver.exception.StringEmptyException;
 
 import java.util.Objects;
 
-@Getter
 public class Path {
 
-    private static final int PATH_PLACE_IDX = 1;
+    private static final String DELIMITER = "\\?";
 
     private String path;
-    private String queryString;
+    // QueryString = RequestBody
+    private RequestBody queryString = null;
 
     public Path(String path) {
         this.path = path;
     }
 
-    public Path(String path, String queryString) {
+    public Path(String path, RequestBody queryString) {
         this.path = path;
         this.queryString = queryString;
     }
@@ -26,11 +25,11 @@ public class Path {
     public static Path parse(String pathInfo) {
         validate(pathInfo);
 
-        String[] paths = pathInfo.split("\\?");
-        if(paths.length >= 2) {
-            return new Path(paths[0], paths[1]);
+        String[] path = pathInfo.split(DELIMITER);
+        if(path.length >= 2) {
+            return new Path(path[0], new RequestBody(path[1]));
         }
-        return new Path(paths[0]);
+        return new Path(path[0]);
     }
 
     private static void validate(String pathInfo) {
@@ -38,16 +37,24 @@ public class Path {
             throw new StringEmptyException("pathinfo is empty");
     }
 
+    public RequestBody getQueryString() {
+        return this.queryString;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Path path1 = (Path) o;
-        return Objects.equals(getPath(), path1.getPath()) && Objects.equals(getQueryString(), path1.getQueryString());
+        return Objects.equals(getPath(), path1.getPath());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPath(), getQueryString());
+        return Objects.hash(getPath());
     }
 }

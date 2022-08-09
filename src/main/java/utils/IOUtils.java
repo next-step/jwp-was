@@ -2,6 +2,7 @@ package utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class IOUtils {
     /**
@@ -16,5 +17,10 @@ public class IOUtils {
         char[] body = new char[contentLength];
         br.read(body, 0, contentLength);
         return String.copyValueOf(body);
+    }
+
+    public static String loadFileFromClasspath(String path) throws IOException, URISyntaxException {
+        byte[] body = FileIoUtils.loadFileFromClasspath(path);
+        return new String(body);
     }
 }

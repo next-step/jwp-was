@@ -1,9 +1,10 @@
-package webserver.domain;
+package webserver.request;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.exception.StringEmptyException;
+import webserver.request.ProtocolInfo;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
