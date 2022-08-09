@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request.requestline;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

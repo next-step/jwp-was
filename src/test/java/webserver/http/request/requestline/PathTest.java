@@ -1,9 +1,12 @@
-package webserver.http;
+package webserver.http.request.requestline;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -27,5 +30,29 @@ class PathTest {
     @DisplayName("HTTP 요청 path 가 '/' 로 시작하지 않을 경우 예외가 발생한다.")
     void throw_exception_path_not_start_slash() {
         assertThatThrownBy(() -> Path.parse("users")).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @ParameterizedTest
+    @DisplayName("Path 가 html 파일인지 아닌지 구분한다.")
+    @CsvSource(value = {
+            "/index.html, true",
+            "/style.css, false",
+            "/users, false"
+    })
+    void isHtmlFilePath(String pathString, boolean trueOrFalse) {
+        Path path = new Path(pathString, new QueryString(Collections.emptyMap()));
+        assertThat(path.isHtmlFilePath()).isEqualTo(trueOrFalse);
+    }
+
+    @ParameterizedTest
+    @DisplayName("Path 가 static 파일인지 아닌지 구분한다.")
+    @CsvSource(value = {
+            "/index.html, false",
+            "/style.css, true",
+            "/users, false"
+    })
+    void isStaticFilePath(String pathString, boolean trueOrFalse) {
+        Path path = new Path(pathString, new QueryString(Collections.emptyMap()));
+        assertThat(path.isStaticFilePath()).isEqualTo(trueOrFalse);
     }
 }

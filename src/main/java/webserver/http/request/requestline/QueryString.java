@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request.requestline;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,10 +6,16 @@ import java.util.Map;
 public class QueryString {
     private static final int QUERY_KEY_INDEX = 0;
     private static final int QUERY_VALUE_INDEX = 1;
+    private static final int QUERY_EMPTY_VALUE_LENGTH = 1;
     private static final String QUERY_ELEMENT_DELIMITER = "&";
     private static final String QUERY_EQUAL_DELIMITER = "=";
+    private static final String EMPTY_STRING = "";
 
     private Map<String, String> queryStrings;
+
+    public QueryString() {
+        this(new HashMap<>());
+    }
 
     QueryString(Map<String, String> queryStrings) {
         this.queryStrings = queryStrings;
@@ -33,7 +39,14 @@ public class QueryString {
 
     private static void setQueryString(Map<String, String> queryStrings, String query) {
         String[] queryElements = query.split(QUERY_EQUAL_DELIMITER);
+        if (queryElements.length == QUERY_EMPTY_VALUE_LENGTH) {
+            return;
+        }
         queryStrings.put(queryElements[QUERY_KEY_INDEX], queryElements[QUERY_VALUE_INDEX]);
+    }
+
+    public String getValue(String key) {
+        return queryStrings.getOrDefault(key, EMPTY_STRING);
     }
 
     @Override
@@ -43,11 +56,11 @@ public class QueryString {
 
         QueryString that = (QueryString) o;
 
-        return queryStrings != null ? queryStrings.equals(that.queryStrings) : that.queryStrings == null;
+        return queryStrings.equals(that.queryStrings);
     }
 
     @Override
     public int hashCode() {
-        return queryStrings != null ? queryStrings.hashCode() : 0;
+        return queryStrings.hashCode();
     }
 }

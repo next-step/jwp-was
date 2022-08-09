@@ -1,10 +1,9 @@
-package webserver.http;
+package webserver.http.request.requestline;
 
 public class RequestLine {
     private static final String BLANK_DELIMITER = " ";
     private static final int METHOD_INDEX = 0;
     private static final int PATH_INDEX = 1;
-
     private static final int PROTOCOL_AND_VERSION_INDEX = 2;
     private static final int REQUEST_PARSING_ELEMENT_NUMBER = 3;
 
@@ -12,7 +11,7 @@ public class RequestLine {
     private Path path;
     private Protocol protocol;
 
-    RequestLine(Method method, Path path, Protocol protocol) {
+    public RequestLine(Method method, Path path, Protocol protocol) {
         this.method = method;
         this.path = path;
         this.protocol = protocol;
@@ -40,6 +39,34 @@ public class RequestLine {
         if (length != REQUEST_PARSING_ELEMENT_NUMBER) {
             throw new IllegalArgumentException(String.format("요청된 HTTP RequestLine 을 공백으로 파싱한 정보 갯수가 [method] + [path] + [protocol/version]로 총 3이여야 합니다. 현재 파싱된 정보 갯수 : %d", length));
         }
+    }
+
+    public String getPath() {
+        return this.path.getPath();
+    }
+
+    public Method getMethod() {
+        return this.method;
+    }
+
+    public String getQueryStringValue(String key) {
+        return this.path.getQueryStringValue(key);
+    }
+
+    public boolean isHtmlFilePath() {
+        return this.path.isHtmlFilePath();
+    }
+
+    public boolean isStaticFilePath() {
+        return this.path.isStaticFilePath();
+    }
+
+    public boolean isMethodEqual(Method method) {
+        return this.method.isMethodEqual(method);
+    }
+
+    public boolean isPathEqual(Path path) {
+        return this.path.isPathEqual(path);
     }
 
     @Override

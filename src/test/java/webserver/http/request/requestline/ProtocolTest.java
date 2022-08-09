@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.request.requestline;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,12 +7,13 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ProtocolTest {
     @Test
     @DisplayName("Protocol 객체를 생성한다.")
     void create_Protocol() {
-        Protocol protocol = new Protocol("HTTP", Version.ONE_ONE);
+        Protocol protocol = new Protocol(ProtocolType.HTTP, Version.ONE_ONE);
         assertThat(protocol).isNotNull().isInstanceOf(Protocol.class);
     }
 
@@ -33,5 +34,14 @@ class ProtocolTest {
     @DisplayName("HTTP 요청 protocol 이 'HTTP' 가 아닐 경우 예외가 발생한다.")
     void throw_exception_protocol_not_HTTP() {
         assertThatThrownBy(() -> Protocol.parse("HTTPS/1.1")).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("프로토콜 타입 또는 버전이 null 일 경우 예외가 발생한다.")
+    void throw_exception_protocol_or_version_null() {
+        assertAll(
+                () -> assertThatThrownBy(() -> new Protocol(null, Version.ONE_ONE)).isInstanceOf(IllegalArgumentException.class),
+                () -> assertThatThrownBy(() -> new Protocol(ProtocolType.HTTP, null)).isInstanceOf(IllegalArgumentException.class)
+        );
     }
 }
