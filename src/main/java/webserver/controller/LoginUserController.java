@@ -8,12 +8,10 @@ import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.HttpSession;
 
-import java.util.UUID;
-
 public class LoginUserController extends AbstractController {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    protected void doPost(HttpRequest request, HttpResponse response) {
         final HttpBody httpBody = request.getHttpBody();
         final Contents contents = httpBody.getContents();
         User user = getUser(contents);
@@ -23,7 +21,8 @@ public class LoginUserController extends AbstractController {
             return;
         }
         if (isSamePassword(user, contents)) {
-            response.addHeader("Set-Cookie", "JESSIONID" + UUID.randomUUID());
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
             response.sendRedirect("/");
             return;
         }
@@ -40,8 +39,4 @@ public class LoginUserController extends AbstractController {
         return DataBase.findUserById(userId);
     }
 
-    private boolean isLogined(HttpSession httpSession) {
-        Object user = httpSession.getAttribute("user");
-        return user != null;
-    }
 }

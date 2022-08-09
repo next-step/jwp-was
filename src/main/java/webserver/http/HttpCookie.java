@@ -1,7 +1,7 @@
 package webserver.http;
 
 public class HttpCookie {
-    private static final String COOKIE_DELIMITER = ":";
+    private static final String COOKIE_DELIMITER = ";";
     private Params params;
 
     public HttpCookie(String value) {
@@ -12,7 +12,4 @@ public class HttpCookie {
         return params.getParam(value);
     }
 
-    public String getJSession() {
-        return params.getParam("JSESSIONID");
-    }
 }

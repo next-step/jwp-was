@@ -59,7 +59,9 @@ public class HttpRequest {
         return new HttpCookie(headers.getCookie());
     }
 
+
     public HttpSession getSession() {
-        return HttpSessions.getSession(getCookies().getJSession());
+        String jsessionid = getCookies().getCookie("JSESSIONID");
+        return HttpSessions.getSession(jsessionid);
     }
 }
