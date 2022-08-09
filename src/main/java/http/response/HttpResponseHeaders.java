@@ -34,15 +34,6 @@ public class HttpResponseHeaders {
         return new HashMap<>(values);
     }
 
-    public boolean isMarkDown() {
-        if (!values.containsKey(CONTENT_TYPE)) {
-            return false;
-        }
-
-        return values.get(CONTENT_TYPE)
-            .startsWith("text/html");
-    }
-
     public void write(DataOutputStream dos) throws IOException {
         for (Map.Entry<String, String> entry : values.entrySet()) {
             dos.writeBytes(String.format("%s: %s\r\n", entry.getKey(), entry.getValue()));

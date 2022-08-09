@@ -22,6 +22,13 @@ public class LoginController implements PostController {
         request.getHttpSession()
             .setAttribute("isLogined", String.valueOf(isLogined));
 
+        var httpResponse = createResponse(isLogined);
+        httpResponse.putCookie(request.getHttpSession());
+
+        return httpResponse;
+    }
+
+    private HttpResponse createResponse(boolean isLogined) {
         if (isLogined) {
             return new HttpResponse(HttpStatus.FOUND, Map.of("Location", "/index.html"));
         }

@@ -15,6 +15,8 @@ import http.HttpStatus;
 import http.exception.HttpResponseWriteException;
 import http.request.ContentType;
 import http.request.Protocol;
+import http.request.session.DefaultHttpSession;
+import http.request.session.HttpSession;
 import utils.FileIoUtils;
 
 public class HttpResponse {
@@ -125,7 +127,7 @@ public class HttpResponse {
         return httpResponseHeaders.getHeaders();
     }
 
-    public boolean isMarkdown() {
-        return httpResponseHeaders.isMarkDown();
+    public void putCookie(HttpSession session) {
+        cookies.putCookie(DefaultHttpSession.SESSION_KEY, session.getSessionId());
     }
 }
