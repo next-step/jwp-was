@@ -3,6 +3,8 @@ package webserver.http;
 import java.util.HashMap;
 import java.util.Map;
 
+import static webserver.http.HttpSession.SESSION_ID_NAME;
+
 public class HttpCookie {
     Map<String, String> cookies = new HashMap<>();
 
@@ -21,6 +23,6 @@ public class HttpCookie {
     }
 
     public String getSessionId() {
-        return cookies.get("JSESSIONID");
+        return cookies.get(SESSION_ID_NAME);
     }
 }
