@@ -3,15 +3,22 @@ package webserver;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import io.netty.buffer.Unpooled;
+
 public class RequestLineDecodeTest {
+	static RequestLineDecoder requestLineDecoder;
+	@BeforeAll
+	public static void setUp() {
+		requestLineDecoder = new RequestLineDecoder();
+	}
 	@Test
 	public void decodeRequestLine() {
 		byte[] requestLine = "GET /hello?page=1&category=admin HTTP/1.1\r\n".getBytes(StandardCharsets.UTF_8);
 
-		RequestLineDecoder requestLineDecoder = new RequestLineDecoder(requestLine);
-		HttpRequestLine httpRequestLine = requestLineDecoder.decode();
+		RequestLine httpRequestLine = requestLineDecoder.decode(Unpooled.wrappedBuffer(requestLine));
 
 		Assertions.assertEquals("GET", httpRequestLine.getMethod());
 		Assertions.assertEquals(HttpVersion.HTTP_1_1, httpRequestLine.getHttpVersion());
@@ -25,8 +32,7 @@ public class RequestLineDecodeTest {
 		byte[] requestLine = "GET /hello\r\n".getBytes(StandardCharsets.UTF_8);
 
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			RequestLineDecoder requestLineDecoder = new RequestLineDecoder(requestLine);
-			HttpRequestLine httpRequestLine = requestLineDecoder.decode();
+			RequestLine httpRequestLine = requestLineDecoder.decode(Unpooled.wrappedBuffer(requestLine));
 		});
 
 		String expectedMessage = "Invalid argument count exception. There must be 3 elements";
@@ -38,9 +44,9 @@ public class RequestLineDecodeTest {
 	@Test
 	void when_moreThanOneSeparator_thenRequestLineFormatExceptionThrown(){
 		byte[] requestLine = "GET  /hello HTTP/1.1\r\n".getBytes(StandardCharsets.UTF_8);
+
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			RequestLineDecoder requestLineDecoder = new RequestLineDecoder(requestLine);
-			HttpRequestLine httpRequestLine = requestLineDecoder.decode();
+			RequestLine httpRequestLine = requestLineDecoder.decode(Unpooled.wrappedBuffer(requestLine));
 		});
 
 		String expectedMessage = "Invalid separator. only a single space or horizontal tab allowed.";
@@ -54,8 +60,7 @@ public class RequestLineDecodeTest {
 		byte[] requestLine = "GET hello HTTP/1.1\r\n".getBytes(StandardCharsets.UTF_8);
 
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			RequestLineDecoder requestLineDecoder = new RequestLineDecoder(requestLine);
-			HttpRequestLine httpRequestLine = requestLineDecoder.decode();
+			RequestLine httpRequestLine = requestLineDecoder.decode(Unpooled.wrappedBuffer(requestLine));
 		});
 
 		String expectedMessage = "Unsupported URI format. URI must start with '/'";

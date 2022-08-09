@@ -10,30 +10,30 @@ public class HttpVersion {
 	private int majorVersion;
 	private int minorVersion;
 	private boolean keepAlive;
+	private String rawVersion;
 
-	private String versionString;
-
-	public HttpVersion(String protocolName, int majorVersion, int minorVersion, boolean keepAlive, String versionString) {
+	public HttpVersion(String protocolName, int majorVersion, int minorVersion, boolean keepAlive, String rawVersion) {
 		this.protocolName = protocolName;
 		this.majorVersion = majorVersion;
 		this.minorVersion = minorVersion;
 		this.keepAlive = keepAlive;
-		this.versionString = versionString;
+		this.rawVersion = rawVersion;
 	}
 
 	public static HttpVersion valueOf(String version) {
 		Assert.notNull(version.trim(), "version must not be null");
 
-		if(version.equals(HTTP_1_0.versionString)) {
+		if(HTTP_1_0.isSameAs(version)) {
 			return HTTP_1_0;
 		}
-		if(version.equals(HTTP_1_1.versionString)) {
+		if(HTTP_1_1.isSameAs(version)) {
 			return HTTP_1_1;
 		}
-		throw new IllegalArgumentException("지원하지 않는 버전입니다.");
+
+		throw new IllegalArgumentException("Unsupported HTTP version.");
 	}
 
-	public String getVersionString() {
-		return versionString;
+	private boolean isSameAs(String version) {
+		return rawVersion.equals(version);
 	}
 }
