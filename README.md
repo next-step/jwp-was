@@ -55,6 +55,7 @@ userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajig
   * invalidate()
 * 여러 세션들을 관리할 세션 컨테이너 구현
 * 요청에서 세션 쿠키 확인, 없다면 쿠키 만들어주기
+* 로그인 부분을 세션으로 변경해보기
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)

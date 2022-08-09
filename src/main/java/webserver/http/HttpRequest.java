@@ -58,6 +58,10 @@ public class HttpRequest {
         return new HttpRequest(requestLine, headers, requestBody);
     }
 
+    public HttpSession getSession() {
+        return this.httpSession;
+    }
+
     private static Headers readHeaders(BufferedReader reader) throws IOException {
         List<String> headerLines = new ArrayList<>();
 

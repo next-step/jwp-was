@@ -7,10 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.ModelAndView;
-import webserver.http.Headers;
-import webserver.http.HttpRequest;
-import webserver.http.HttpResponse;
-import webserver.http.RequestLine;
+import webserver.http.*;
 
 import java.util.ArrayList;
 
@@ -24,12 +21,14 @@ class LoginMemberHandlerTest {
         DataBase.clear();
     }
 
-    @DisplayName("로그인 성공 시 로그인 성공 쿠키가 생성 되고 index.html 로 이동해야 한다.")
+    @DisplayName("로그인 성공 시 세션에 로그인 성공이라고 저장하고 index.html 로 이동해야 한다.")
     @Test
     void loginSuccessTest() {
         // given
         DataBase.addUser(new User("testUser", "testPw", "test", "test@test.com"));
+        HttpSession httpSession = new HttpSession("TEST");
         HttpRequest httpRequest = createLoginRequest("userId=testUser&password=testPw");
+        httpRequest.initHttpSession(httpSession);
         HttpResponse httpResponse = new HttpResponse();
 
         // when
@@ -37,14 +36,16 @@ class LoginMemberHandlerTest {
 
         // then
         Assertions.assertThat(modelAndView.getView()).isEqualTo("redirect:/index.html");
-        Assertions.assertThat(httpResponse.getHeaders().getValue("Set-Cookie")).isEqualTo("logined=true; Path=/");
+        Assertions.assertThat(httpSession.getAttribute("logined")).isEqualTo(true);
     }
 
-    @DisplayName("로그인 실패 시 로그인 실패 쿠키가 생성 되고 /user/login_failed.html 로 이동해야 한다.")
+    @DisplayName("로그인 실패 시 세션에 로그인 실패라고 저장하고 /user/login_failed.html 로 이동해야 한다.")
     @Test
     void loginFailTest() {
         // given
+        HttpSession httpSession = new HttpSession("TEST");
         HttpRequest httpRequest = createLoginRequest("userId=testUser&password=testPw");
+        httpRequest.initHttpSession(httpSession);
         HttpResponse httpResponse = new HttpResponse();
 
         // when
@@ -52,7 +53,7 @@ class LoginMemberHandlerTest {
 
         // then
         Assertions.assertThat(modelAndView.getView()).isEqualTo("redirect:/user/login_failed.html");
-        Assertions.assertThat(httpResponse.getHeaders().getValue("Set-Cookie")).isEqualTo("logined=false; Path=/");
+        Assertions.assertThat(httpSession.getAttribute("logined")).isEqualTo(false);
     }
 
 

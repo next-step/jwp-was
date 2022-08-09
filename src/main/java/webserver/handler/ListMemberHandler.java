@@ -5,14 +5,16 @@ import webserver.Handler;
 import webserver.ModelAndView;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
 
 public class ListMemberHandler implements Handler {
 
     @Override
     public ModelAndView handle(HttpRequest httpRequest, HttpResponse httpResponse) {
-        String logined = httpRequest.getCookie("logined");
+        HttpSession httpSession = httpRequest.getSession();
+        Object logined = httpSession.getAttribute("logined");
 
-        if (logined.equals("true")) {
+        if (logined != null && (boolean) logined) {
             ModelAndView modelAndView = new ModelAndView("/user/list");
             modelAndView.addAttribute("users", DataBase.findAll());
             return modelAndView;

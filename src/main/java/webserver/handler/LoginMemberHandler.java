@@ -4,9 +4,9 @@ import db.DataBase;
 import model.User;
 import webserver.Handler;
 import webserver.ModelAndView;
-import webserver.http.Cookie;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
 
 public class LoginMemberHandler implements Handler {
 
@@ -15,17 +15,15 @@ public class LoginMemberHandler implements Handler {
         String userId = httpRequest.getBody("userId");
         String password = httpRequest.getBody("password");
         User userById = DataBase.findUserById(userId);
+        HttpSession httpSession = httpRequest.getSession();
 
         if (userById != null && userById.matchPassword(password)) {
-            return handleResponse(new Cookie("logined", "true", "/"), "/index.html", httpResponse);
+            httpSession.setAttribute("logined", true);
+            return new ModelAndView("redirect:/index.html");
         }
 
-        return handleResponse(new Cookie("logined", "false", "/"), "/user/login_failed.html", httpResponse);
-    }
-
-    private ModelAndView handleResponse(Cookie cookie, String location, HttpResponse httpResponse) {
-        httpResponse.addCookie(cookie);
-        return new ModelAndView("redirect:" + location);
+        httpSession.setAttribute("logined", false);
+        return new ModelAndView("redirect:/user/login_failed.html");
     }
 
 }

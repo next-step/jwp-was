@@ -19,18 +19,12 @@ class HttpSessionHandler {
         HttpSession httpSession = getHttpSession(httpRequest);
 
         if (httpSession == null) {
-            httpSession = createHttpSession(httpRequest);
+            httpSession = sessionStore.createHttpSession();
         }
-
-        addSessionCookie(httpResponse, httpSession);
-    }
-
-    private HttpSession createHttpSession(HttpRequest httpRequest) {
-        HttpSession httpSession = sessionStore.createHttpSession();
 
         httpRequest.initHttpSession(httpSession);
 
-        return httpSession;
+        addSessionCookie(httpResponse, httpSession);
     }
 
     private HttpSession getHttpSession(HttpRequest httpRequest) {

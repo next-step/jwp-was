@@ -7,7 +7,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.ModelAndView;
-import webserver.http.*;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
+import webserver.http.RequestLine;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +32,7 @@ class ListMemberHandlerTest {
     void redirectLoginPageTest() {
         // given
         HttpRequest httpRequest = new HttpRequest(RequestLine.parseOf("GET /user/list HTTP/1.1"));
+        httpRequest.initHttpSession(new HttpSession("TEST"));
         HttpResponse httpResponse = new HttpResponse();
 
         // when
@@ -42,8 +46,12 @@ class ListMemberHandlerTest {
     @Test
     void loginListPageTest() {
         // given
-        Header cookieHeader = new Header("cookie", "logined=true");
-        HttpRequest httpRequest = new HttpRequest(RequestLine.parseOf("GET /user/list HTTP/1.1"), Headers.of(cookieHeader));
+        HttpSession httpSession = new HttpSession("TEST");
+        httpSession.setAttribute("logined", true);
+
+        HttpRequest httpRequest = new HttpRequest(RequestLine.parseOf("GET /user/list HTTP/1.1"));
+        httpRequest.initHttpSession(httpSession);
+
         HttpResponse httpResponse = new HttpResponse();
         List<User> currentUsers = addUsers();
 
