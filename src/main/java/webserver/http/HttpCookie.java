@@ -19,4 +19,8 @@ public class HttpCookie {
             cookies.put(cookieName, cookieValue);
         }
     }
+
+    public String getSessionId() {
+        return cookies.get("JSESSIONID");
+    }
 }
