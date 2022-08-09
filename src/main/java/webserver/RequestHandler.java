@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import webserver.controller.*;
 import webserver.http.*;
 
+import static webserver.http.HttpSession.SESSION_ID_NAME;
+
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private Socket connection;
@@ -24,7 +26,7 @@ public class RequestHandler implements Runnable {
             HttpResponse httpResponse = new HttpResponse(out);
 
             if (httpRequest.getSessionId() == null) {
-                httpResponse.addHeader("Set-Cookie","JSESSIONID=" + UUID.randomUUID());
+                httpResponse.addHeader("Set-Cookie",SESSION_ID_NAME + UUID.randomUUID());
             }
 
             String url = httpRequest.getPath();

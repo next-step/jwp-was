@@ -162,3 +162,5 @@ Set-Cookie: logined=true; Path=/
 
 ### 4단계 피드백
 - [ ] JSESSIONID는 HttpSession 객체에 선언
+- [ ] 중복되는 JSESSIONID 리팩토링
+- [ ]
