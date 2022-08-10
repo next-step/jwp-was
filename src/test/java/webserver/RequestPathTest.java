@@ -8,19 +8,17 @@ public class RequestPathTest {
 
     @Test
     void path_를_map으로_변환해서_값_가져오기() {
-
         String request = "/users?userId=javajigi&password=password&name=JaeSung";
 
         final RequestPath requestPath = new RequestPath(request);
 
-        assertThat(requestPath.getParams().get("userId").get(0)).isEqualTo("javajigi");
-        assertThat(requestPath.getParams().get("password").get(0)).isEqualTo("password");
-        assertThat(requestPath.getParams().get("name").get(0)).isEqualTo("JaeSung");
+        assertThat(requestPath.getParams().getOneValue("userId")).isEqualTo("javajigi");
+        assertThat(requestPath.getParams().getOneValue("password")).isEqualTo("password");
+        assertThat(requestPath.getParams().getOneValue("name")).isEqualTo("JaeSung");
     }
 
     @Test
     void path_값_가져오기() {
-
         String request = "/users?userId=javajigi&password=password&name=JaeSung";
 
         final RequestPath requestPath = new RequestPath(request);

@@ -1,17 +1,18 @@
 package webserver;
 
-import model.HttpMethodType;
-
-import java.util.List;
+import model.HttpMethod;
 
 public class RequestLine {
 
-    public static final int METHOD_INDEX = 0;
-    public static final int PATH_INDEX = 1;
-    public static final int PROTOCOL_AND_VERSION_INDEX = 2;
-    public static final String REGEX_BLANK = " ";
+    private static final int METHOD_INDEX = 0;
+    private static final int PATH_INDEX = 1;
+    private static final int PROTOCOL_AND_VERSION_INDEX = 2;
+    private static final String REGEX_BLANK = " ";
+    private static final String CREATE_PATH = "/user/create";
+    private static final String EXTENSION_DELIMITER = "\\.";
+    private static final int ONLY_PATH_INDEX = 0;
 
-    private HttpMethodType method;
+    private HttpMethod method;
     private RequestPath request;
     private Protocol protocol;
 
@@ -21,8 +22,8 @@ public class RequestLine {
         this.protocol = parsingProtocol(requestLine);
     }
 
-    private HttpMethodType parsingMethod(String requestLine) {
-        return HttpMethodType.getType(
+    private HttpMethod parsingMethod(String requestLine) {
+        return HttpMethod.getType(
                 requestLine.split(REGEX_BLANK)[METHOD_INDEX]);
     }
 
@@ -34,16 +35,25 @@ public class RequestLine {
         return new Protocol(requestLine.split(REGEX_BLANK)[PROTOCOL_AND_VERSION_INDEX]);
     }
 
-    public HttpMethodType getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
-    public String getRequestPath() {
+    public String getFullRequestPath() {
         return request.getPath();
     }
 
-    public List<String> getValuesOfParam(String key) {
-        return request.getParams().get(key);
+    public String getRequestPath() {
+        return request.getPath().split(EXTENSION_DELIMITER)[ONLY_PATH_INDEX];
+    }
+
+    public String getExtension() {
+        final String[] split = request.getPath().split(EXTENSION_DELIMITER);
+        return split[split.length - 1];
+    }
+
+    public RequestParams getRequestParams() {
+        return request.getParams();
     }
 
     public String getProtocol() {
@@ -52,5 +62,14 @@ public class RequestLine {
 
     public String getVersion() {
         return protocol.getVersion();
+    }
+
+    @Override
+    public String toString() {
+        return "RequestLine{" +
+                "method=" + method +
+                ", request=" + request +
+                ", protocol=" + protocol +
+                '}';
     }
 }

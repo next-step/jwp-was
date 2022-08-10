@@ -38,11 +38,27 @@ public class IOUtils {
                 data.add(line);
                 line = br.readLine();
             }
-
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+        final int firstIndex = 0;
 
-        return data.get(0);
+        return data.get(firstIndex);
+    }
+
+    public static List<String> readHeaderData(BufferedReader br) {
+        List<String> data = new ArrayList<>();
+
+        try {
+            String line = br.readLine();
+
+            while (line != null && !line.isEmpty()) {
+                data.add(line);
+                line = br.readLine();
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+        return data;
     }
 }
