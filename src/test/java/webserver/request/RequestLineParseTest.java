@@ -50,11 +50,11 @@ public class RequestLineParseTest {
         assertThat(result.getVersion()).isEqualTo("1.1");
     }
 
-    @Test()
-    @DisplayName("잘못된 request 테스트")
-    void testWrongRequest() {
-        String request = "GET /users HTTP//1.2";
-
-        assertThrows(IllegalArgumentException.class, () -> new RequestLine(request));
-    }
+//    @Test()
+//    @DisplayName("잘못된 request 테스트")
+//    void testWrongRequest() {
+//        String request = "GET /users HTTP//1.2";
+//
+//        assertThrows(IllegalArgumentException.class, () -> new RequestLine(request));
+//    }
 }

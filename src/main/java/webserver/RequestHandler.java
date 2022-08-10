@@ -1,13 +1,19 @@
 package webserver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.IOUtils;
+import webserver.controller.HandlerMapper;
+import webserver.request.HttpRequest;
+import webserver.request.RequestBody;
+import webserver.response.HttpResponse;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -23,24 +29,67 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
+
+            HttpRequest httpRequest = getRequest(in);
+
+            HandlerMapper handlerMapper = new HandlerMapper();
+
+            HttpResponse httpResponse = handlerMapper.handle(httpRequest);
+
+            response(out, httpResponse);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    private HttpRequest getRequest(InputStream in) throws IOException {
+        List<String> request = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+
+        String line = br.readLine();
+        request.add(line);
+
+        while (!line.equals("")) {
+            line = br.readLine();
+            request.add(line);
+        }
+
+        HttpRequest httpRequest = new HttpRequest(request);
+        String contentLength = httpRequest.getHeaders().get("Content-Length");
+
+        if (contentLength != null) {
+            String body = IOUtils.readData(br, Integer.parseInt(contentLength));
+            httpRequest.setBody(new RequestBody(body));
+        }
+
+        return httpRequest;
+    }
+
+    private void response(OutputStream out, HttpResponse response) {
+        DataOutputStream dos = new DataOutputStream(out);
+        byte[] body = response.getBody();
+
+        try {
+            dos.writeBytes(String.format("HTTP/1.1 %s \r\n", response.getStatusCode()));
+            responseHeader(dos, response.getHeaders(), body.length);
+            responseCookie(dos, response.getCookies());
+            dos.writeBytes("\r\n");
             responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+    private void responseHeader(DataOutputStream dos, HttpHeader headers, Integer bodyLength) throws IOException {
+        for (Map.Entry<String, String> header : headers.getHeaders().entrySet()) {
+            dos.writeBytes(String.format("%s: %s \r\n", header.getKey(), header.getValue()));
+        }
+        dos.writeBytes(String.format("Content-Length: %s \r\n", bodyLength));
+    }
+
+    private void responseCookie(DataOutputStream dos, Map<String, Cookie> cookies) throws IOException {
+        for (Map.Entry<String, Cookie> cookie : cookies.entrySet()) {
+            dos.writeBytes(String.format("Set-Cookie: %s \r\n", cookie.getValue()));
         }
     }
 

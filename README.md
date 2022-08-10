@@ -21,3 +21,13 @@
 - [X] POST 요청 파싱
 - [X] Query String 파싱
 - [X] HttpMethod를 enum 타입으로 변경
+
+### 2단계
+
+- [X] 모든 header 파싱 및 index.html 요청 응답
+- [X] GET 요청 시 query string 파싱
+- [X] POST로 유저 생성 요청 시 body 파싱
+- [X] http response에 header 설정 추가
+- [X] header에서 쿠키 파싱 및 쿠키 사용
+- [X] handlebars 사용하여 동적 페이지 추가
+- [X] stylesheet 지원
