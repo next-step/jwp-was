@@ -5,8 +5,8 @@ import java.util.Objects;
 
 public class UrlPath {
 
+    private static final List<String> SESSION_CHECK_EXCLUDE_URLS = List.of("/");
     private static final List<String> FILE_EXTENSIONS = List.of(".html");
-
     private static final String HTML_EXTENSION = ".html";
     private final String path;
 
@@ -60,6 +60,10 @@ public class UrlPath {
 
     public boolean isRequestForHtml() {
         return this.path.contains(HTML_EXTENSION);
+    }
+
+    public boolean isSessionCheckExcludeUrls() {
+        return SESSION_CHECK_EXCLUDE_URLS.contains(path);
     }
 
 }

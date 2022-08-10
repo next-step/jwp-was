@@ -58,4 +58,8 @@ public class RequestLine {
         return RESOURCE_FILE_EXTENSIONS.stream().anyMatch(requestLine.getUrlPath().getPath()::contains);
     }
 
+    public boolean isSessionCheckExcludeUrls() {
+        return this.urlPath.isSessionCheckExcludeUrls();
+    }
+
 }

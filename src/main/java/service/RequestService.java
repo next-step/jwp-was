@@ -19,7 +19,6 @@ public class RequestService {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestService.class);
     private static final String BODY_SEPARATOR = "";
-    private static final List<String> SESSION_CHECK_EXCLUDE_URLS = List.of("/");
 
     public static List<String> getHttpMessageData(BufferedReader bufferedReader) throws IOException {
         String line = bufferedReader.readLine();
@@ -34,7 +33,7 @@ public class RequestService {
     public static HttpResponseMessage getClientResponse(HttpRequestMessage httpRequestMessage) throws IOException, URISyntaxException, InvocationTargetException, IllegalAccessException {
 
         RequestLine requestLine = httpRequestMessage.getRequestLine();
-        if ((!SESSION_CHECK_EXCLUDE_URLS.contains(requestLine.getUrlPath().getPath())) && (!hasSession(httpRequestMessage))) {
+        if ((!requestLine.isSessionCheckExcludeUrls()) && (!hasSession(httpRequestMessage))) {
             return redirectHome();
         }
 
