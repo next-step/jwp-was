@@ -146,4 +146,21 @@ Set-Cookie: logined=true; Path=/
 - [X] HttpRequest POST방식 -> body 전달 + Query 전달
 - [X] Test 수정
 - [X] Response Cookie 설정 변경
-- [ ] Mapping Controller 클래스 생성
+- [X] Mapping Controller 클래스 생성
+- [X] Controller의 service메소드 사용하여 연결
+
+## 세션 구현하기
+- [X] HttpSession 구현
+  - String getId(): 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환
+  - void setAttribute(String name, Object value): 현재 세션에 value 인자로 전달되는 객체를 name 인자 이름으로 저장
+  - Object getAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환
+  - void removeAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
+  - void invalidate(): 현재 세션에 저장되어 있는 모든 값을 삭제
+- [X] 쿠키를 활용하여 클라이언트와 서버의 세션을 공유한다.
+- [X] Map<String, HttpSession>와 같은 구조로 세션을 관리한다.
+  - 키(key)는 앞에서 UUID로 생성한 고유한 아이디
+
+### 4단계 피드백
+- [ ] JSESSIONID는 HttpSession 객체에 선언
+- [ ] 중복되는 JSESSIONID 리팩토링
+- [ ]

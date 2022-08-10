@@ -9,7 +9,7 @@ public class RequestMapping {
     static {
         controllers.put("/user/create", new CreateUserController());
         controllers.put("/user/login", new LoginController());
-        controllers.put("/user/lits", new ListUserController());
+        controllers.put("/user/list", new ListUserController());
     }
 
     public RequestMapping() {

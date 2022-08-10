@@ -2,12 +2,14 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.sql.Connection;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.controller.*;
 import webserver.http.*;
+
+import static webserver.http.HttpSession.SESSION_ID_NAME;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -23,6 +25,10 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = new HttpRequest(in);
             HttpResponse httpResponse = new HttpResponse(out);
 
+            if (httpRequest.getSessionId() == null) {
+                httpResponse.addHeader("Set-Cookie",SESSION_ID_NAME + UUID.randomUUID());
+            }
+
             String url = httpRequest.getPath();
             RequestMapping requestMapping = new RequestMapping();
             Controller controller = requestMapping.getController(url);
@@ -30,14 +36,7 @@ public class RequestHandler implements Runnable {
                 httpResponse.forward(url);
                 return;
             }
-
-            if ("/user/create".equals(url)) {
-                new CreateUserController().doPost(httpRequest, httpResponse);
-            } else if ("/user/login".equals(url)) {
-                new LoginController().doPost(httpRequest, httpResponse);
-            } else if("/user/list".equals(url)) {
-                new ListUserController().doGet(httpRequest, httpResponse);
-            }
+            controller.service(httpRequest, httpResponse);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

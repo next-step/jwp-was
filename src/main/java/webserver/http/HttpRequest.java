@@ -18,6 +18,7 @@ public class HttpRequest {
     private String path;
     private HttpHeader header = new HttpHeader();
     private HttpParameter parameter = new HttpParameter();
+    private HttpCookie httpCookie = new HttpCookie(header.getHeaderValue("Cookie"));
 
     public HttpRequest(InputStream in) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
@@ -60,5 +61,13 @@ public class HttpRequest {
 
     public String getParameter(String name) {
         return parameter.getParameters(name);
+    }
+
+    public String getSessionId() {
+        return httpCookie.getSessionId();
+    }
+
+    public HttpSession getSession() {
+        return HttpSessionStorage.getSession(getSessionId());
     }
 }

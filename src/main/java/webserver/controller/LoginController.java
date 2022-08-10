@@ -4,6 +4,7 @@ import db.DataBase;
 import model.User;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
 
 public class LoginController extends AbstractController{
     @Override
@@ -17,8 +18,12 @@ public class LoginController extends AbstractController{
             return;
         }
         if (user.getPassword().equals(password)) {
-            httpResponse.addHeader("Set-Cookie","logined=true");
+            HttpSession session = httpRequest.getSession();
+            session.setAttribute("user",user);
             httpResponse.sendRedirect("/index.html");
+        }
+        if (!user.getPassword().equals(password)) {
+            httpResponse.sendRedirect("/user/login_failed.html");
         }
     }
 }
