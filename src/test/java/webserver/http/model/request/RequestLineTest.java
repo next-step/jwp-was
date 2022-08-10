@@ -1,4 +1,4 @@
-package webserver.http.model;
+package webserver.http.model.request;
 
 import exception.IllegalHttpRequestException;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +25,7 @@ class RequestLineTest {
         String requestLine = "GET /docs/index.html HTTP/1.1";
 
         RequestLine http = new RequestLine(requestLine);
-        assertThat(http.getMethod()).isEqualTo(Method.GET);
+        assertThat(http.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(http.getPathInformation()).isEqualTo(new PathInformation("/docs/index.html"));
         assertThat(http.getProtocol()).isEqualTo(new ProtocolVersion("HTTP/1.1"));
     }
@@ -36,7 +36,7 @@ class RequestLineTest {
         String requestLine = "POST /users HTTP/1.1";
 
         RequestLine http = new RequestLine(requestLine);
-        assertThat(http.getMethod()).isEqualTo(Method.POST);
+        assertThat(http.getMethod()).isEqualTo(HttpMethod.POST);
         assertThat(http.getPathInformation()).isEqualTo(new PathInformation("/users"));
         assertThat(http.getProtocol()).isEqualTo(new ProtocolVersion("HTTP/1.1"));
     }
@@ -47,7 +47,7 @@ class RequestLineTest {
         String requestLine = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
 
         RequestLine http = new RequestLine(requestLine);
-        assertThat(http.getMethod()).isEqualTo(Method.GET);
+        assertThat(http.getMethod()).isEqualTo(HttpMethod.GET);
         assertThat(http.getPathInformation()).isEqualTo(new PathInformation("/users?userId=javajigi&password=password&name=JaeSung"));
         assertThat(http.getProtocol()).isEqualTo(new ProtocolVersion("HTTP/1.1"));
     }

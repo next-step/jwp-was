@@ -1,25 +1,25 @@
 package webserver.controller;
 
-import webserver.http.model.HttpRequest;
-import webserver.http.model.Method;
+import webserver.http.model.request.HttpMethod;
+import webserver.http.model.request.HttpRequest;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 public enum ControllerEnum {
-    CREATE_USER_GET(Method.GET, "/user/create", UserController.of(), "createUserGet", false),
-    CREATE_USER_POST(Method.POST, "/user/create", UserController.of(), "createUserPost", false),
-    LOGIN(Method.POST, "/user/login", UserController.of(), "login", false),
-    USER_LIST(Method.GET, "/user/list", UserController.of(), "retrieveUsers", true),
-    INDEX(Method.GET, "/index.html", UserController.of(), "index", false);
+    CREATE_USER_GET(HttpMethod.GET, "/user/create", UserController.of(), "createUserGet", false),
+    CREATE_USER_POST(HttpMethod.POST, "/user/create", UserController.of(), "createUserPost", false),
+    LOGIN(HttpMethod.POST, "/user/login", UserController.of(), "login", false),
+    USER_LIST(HttpMethod.GET, "/user/list", UserController.of(), "retrieveUsers", true),
+    INDEX(HttpMethod.GET, "/index.html", UserController.of(), "index", false);
 
-    private final Method httpMethod;
+    private final HttpMethod httpMethod;
     private final String path;
     private final Object classObject;
     private final String methodName;
     private final boolean accessibleAfterLogin;
 
-    ControllerEnum(Method httpMethod, String path, Object classObject, String methodName, boolean accessibleAfterLogin) {
+    ControllerEnum(HttpMethod httpMethod, String path, Object classObject, String methodName, boolean accessibleAfterLogin) {
         this.httpMethod = httpMethod;
         this.path = path;
         this.classObject = classObject;
@@ -43,7 +43,7 @@ public enum ControllerEnum {
     }
 
     public static boolean accessiblePagesAfterLogin(HttpRequest httpRequest) {
-        return Arrays.stream(values()).filter(controllerEnumEnum -> controllerEnumEnum.httpMethod == httpRequest.getRequestLine().getMethod())
+        return Arrays.stream(values()).filter(controllerEnum -> controllerEnum.httpMethod == httpRequest.getRequestLine().getMethod())
                 .filter(controllerEnumEnum -> controllerEnumEnum.path.equals(httpRequest.path()))
                 .map(controllerEnumEnum -> controllerEnumEnum.accessibleAfterLogin).findFirst().orElse(true);
     }

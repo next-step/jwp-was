@@ -1,11 +1,11 @@
-package webserver.http.model;
+package webserver.http.model.request;
 
 import exception.IllegalHttpRequestException;
 
 public class RequestLine {
     private static final int VALID_REQUEST_LINE_LENGTH = 3;
 
-    private final Method method;
+    private final HttpMethod httpMethod;
     private final PathInformation pathInformation;
     private final ProtocolVersion protocolVersion;
 
@@ -16,7 +16,7 @@ public class RequestLine {
             throw new IllegalHttpRequestException("RequestLine은 method, pathInformation, protocol을 공백 기준으로 나누어 전송해야 합니다.");
         }
 
-        this.method = Method.of(requestData[0]);
+        this.httpMethod = HttpMethod.of(requestData[0]);
         this.pathInformation = new PathInformation(requestData[1]);
         this.protocolVersion = new ProtocolVersion(requestData[2]);
     }
@@ -29,7 +29,7 @@ public class RequestLine {
         return pathInformation.fullPath();
     }
 
-    public QueryStrings getQueryStrings() {
+    public QueryString getQueryStrings() {
         return pathInformation.getQueryStrings();
     }
 
@@ -37,8 +37,8 @@ public class RequestLine {
         return pathInformation.path();
     }
 
-    public Method getMethod() {
-        return method;
+    public HttpMethod getMethod() {
+        return httpMethod;
     }
 
     public PathInformation getPathInformation() {

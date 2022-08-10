@@ -3,9 +3,9 @@ package webserver.http.controller;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.controller.ControllerEnum;
-import webserver.http.model.HttpRequest;
-import webserver.http.model.RequestBody;
-import webserver.http.model.RequestLine;
+import webserver.http.model.request.HttpRequest;
+import webserver.http.model.request.RequestBody;
+import webserver.http.model.request.RequestLine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

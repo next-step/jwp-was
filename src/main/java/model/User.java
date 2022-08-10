@@ -1,8 +1,5 @@
 package model;
 
-import webserver.http.model.QueryStrings;
-import webserver.http.model.RequestBody;
-
 import java.util.Map;
 
 public class User {

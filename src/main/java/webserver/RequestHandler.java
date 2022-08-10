@@ -15,6 +15,8 @@ import webserver.http.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import webserver.http.model.request.Extension;
+import webserver.http.model.request.HttpRequest;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -49,7 +51,7 @@ public class RequestHandler implements Runnable {
     }
 
     private void responseHeader(HttpRequest httpRequest, DataOutputStream dos, byte[] body) {
-        if (Extension.CSS == Extension.getEnum(httpRequest.path())) {
+        if (Extension.CSS == Extension.getEnum(httpRequest.getPath())) {
             response200CssHeader(dos, body.length);
             return;
         }

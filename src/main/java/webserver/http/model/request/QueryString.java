@@ -1,14 +1,14 @@
-package webserver.http.model;
+package webserver.http.model.request;
 
 import exception.IllegalHttpRequestException;
 
 import java.util.*;
 
-public class QueryStrings {
+public class QueryString {
     private static final int INVALID_QUERY_STRING_LENGTH = 2;
     private Map<String, String> queryStringMap;
 
-    public QueryStrings(String queryStrings) {
+    public QueryString(String queryStrings) {
         if (queryStrings.isBlank()) {
             return;
         }
@@ -40,7 +40,7 @@ public class QueryStrings {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        QueryStrings that = (QueryStrings) o;
+        QueryString that = (QueryString) o;
         return Objects.equals(queryStringMap, that.queryStringMap);
     }
 

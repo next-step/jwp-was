@@ -1,4 +1,4 @@
-package webserver.http.model;
+package webserver.http.model.request;
 
 import exception.IllegalHttpRequestException;
 
@@ -8,7 +8,7 @@ public class PathInformation {
     private static final int HAVE_QUERY_STRING = 1;
 
     private final Path path;
-    private QueryStrings queryStrings;
+    private QueryString queryString;
 
     public PathInformation(String path) {
         if (!path.startsWith("/")) {
@@ -22,10 +22,10 @@ public class PathInformation {
 
     private void initialQueryString(String[] pathInformations) {
         if (pathInformations.length > HAVE_QUERY_STRING) {
-            this.queryStrings = new QueryStrings(pathInformations[1]);
+            this.queryString = new QueryString(pathInformations[1]);
             return;
         }
-        this.queryStrings = null;
+        this.queryString = null;
     }
 
     public String fullPath() {
@@ -40,8 +40,8 @@ public class PathInformation {
         return path;
     }
 
-    public QueryStrings getQueryStrings() {
-        return queryStrings;
+    public QueryString getQueryStrings() {
+        return queryString;
     }
 
     public String path() {

@@ -3,8 +3,8 @@ package webserver.controller;
 import cookie.Cookie;
 import db.DataBase;
 import model.User;
-import webserver.http.model.HttpRequest;
 import webserver.http.model.Model;
+import webserver.http.model.request.HttpRequest;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package webserver.http.model;
+package webserver.http.model.request;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ public class HttpRequest {
         this.requestLine = new RequestLine(line);
         this.requestHeaders = new RequestHeaders(bufferedReader, line);
         this.requestBody = null;
-        if (Method.isPost(requestLine.getMethod())) {
+        if (HttpMethod.isPost(requestLine.getMethod())) {
             this.requestBody = new RequestBody(bufferedReader, requestHeaders);
         }
     }
@@ -25,7 +25,7 @@ public class HttpRequest {
         this.requestLine = new RequestLine(httpRequestLines.requestLine());
         this.requestHeaders = new RequestHeaders(httpRequestLines.requestHeader());
         this.requestBody = RequestBody.empty();
-        if (Method.isPost(requestLine.getMethod())) {
+        if (HttpMethod.isPost(requestLine.getMethod())) {
             this.requestBody = new RequestBody(httpRequestLines.requestBody());
         }
     }
@@ -34,6 +34,22 @@ public class HttpRequest {
         this.requestLine = requestLine;
         this.requestHeaders = requestHeaders;
         this.requestBody = requestBody;
+    }
+
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
+    }
+
+    public String getPath() {
+        return requestLine.path();
+    }
+
+    public String getHeader(String header) {
+        return null;
+    }
+
+    public String getParameter(String parameter) {
+        return null;
     }
 
     public boolean isStaticResource() {
@@ -48,16 +64,12 @@ public class HttpRequest {
         return requestLine.path();
     }
 
-    public QueryStrings getQueryStrings() {
+    public QueryString getQueryStrings() {
         return requestLine.getQueryStrings();
     }
 
     public RequestLine getRequestLine() {
         return requestLine;
-    }
-
-    public Method getMethod() {
-        return requestLine.getMethod();
     }
 
     public Map<String, String> getRequestHeaders() {

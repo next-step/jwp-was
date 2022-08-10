@@ -1,4 +1,4 @@
-package webserver.http.model;
+package webserver.http.model.request;
 
 import exception.IllegalHttpRequestException;
 import org.junit.jupiter.api.DisplayName;
