@@ -4,13 +4,13 @@ import model.HttpMethod;
 
 public class RequestLine {
 
-    public static final int METHOD_INDEX = 0;
-    public static final int PATH_INDEX = 1;
-    public static final int PROTOCOL_AND_VERSION_INDEX = 2;
-    public static final String REGEX_BLANK = " ";
-    public static final String CREATE_PATH = "/user/create";
-    public static final String EXTENSION_DELIMITER = "\\.";
-    public static final int EXTENTION_INDEX = 1;
+    private static final int METHOD_INDEX = 0;
+    private static final int PATH_INDEX = 1;
+    private static final int PROTOCOL_AND_VERSION_INDEX = 2;
+    private static final String REGEX_BLANK = " ";
+    private static final String CREATE_PATH = "/user/create";
+    private static final String EXTENSION_DELIMITER = "\\.";
+    private static final int ONLY_PATH_INDEX = 0;
 
     private HttpMethod method;
     private RequestPath request;
@@ -39,8 +39,12 @@ public class RequestLine {
         return method;
     }
 
-    public String getRequestPath() {
+    public String getFullRequestPath() {
         return request.getPath();
+    }
+
+    public String getRequestPath() {
+        return request.getPath().split(EXTENSION_DELIMITER)[ONLY_PATH_INDEX];
     }
 
     public String getExtension() {

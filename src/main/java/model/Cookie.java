@@ -70,6 +70,13 @@ public class Cookie {
     }
 
     public boolean isLogin() {
+        if (isEmpty()) {
+            return false;
+        }
         return name.equals("logined") && value.equals("true");
+    }
+
+    private boolean isEmpty() {
+        return name == null || value == null;
     }
 }

@@ -4,22 +4,23 @@ import controller.*;
 import model.HttpMethod;
 import model.RequestMappingInfo;
 
+import java.util.List;
 import java.util.Map;
 
 public class RequestMapper {
 
-    private Map<RequestMappingInfo, Controller> controllers = Map.of(
-            new RequestMappingInfo(HttpMethod.POST, "/user/create"), new UserCreateController(),
-            new RequestMappingInfo(HttpMethod.GET, "/.*"), new ViewController(),
-            new RequestMappingInfo(HttpMethod.POST, "/user/login"), new LoginController(),
-            new RequestMappingInfo(HttpMethod.GET, "/user/list"), new UserListController());
+    private List<RequestMappingInfo> controllers = List.of(
+            new RequestMappingInfo(HttpMethod.POST, "/user/create", new UserCreateController()),
+            new RequestMappingInfo(HttpMethod.POST, "/user/login", new LoginController()),
+            new RequestMappingInfo(HttpMethod.GET, "/user/list", new UserListController()),
+            new RequestMappingInfo(HttpMethod.GET, "/.*", new ViewController())
+            );
 
     public Controller mapping(RequestMappingInfo info) {
-
-        return controllers.keySet().stream()
-                .filter(key -> key.equals(info))
+        return controllers.stream()
+                .filter(mappingInfo -> mappingInfo.match(info))
                 .findFirst()
-                .map(key -> controllers.get(key))
+                .map(mappingInfo -> mappingInfo.getController())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 경로입니다."));
     }
 }

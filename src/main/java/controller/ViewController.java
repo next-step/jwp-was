@@ -22,7 +22,7 @@ public class ViewController implements Controller{
 
     @Override
     public HttpResponse process(HttpRequest request) throws IOException, URISyntaxException {
-        final String requestPath = request.getRequestLine().getRequestPath();
+        final String requestPath = request.getRequestLine().getFullRequestPath();
         final String extension = request.getRequestLine().getExtension();
 
         if (isHtmlClassPath(extension)) {

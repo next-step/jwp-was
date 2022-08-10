@@ -14,7 +14,7 @@ public class HttpRequest {
     public HttpRequest(HttpHeader header, String body) throws UnsupportedEncodingException {
         this.header = header;
         this.requestLine = new RequestLine(header.getRequestLine());
-        this.cookie = Cookie.createCookie(header.getCookie(), requestLine.getRequestPath());
+        this.cookie = Cookie.createCookie(header.getCookie(), requestLine.getFullRequestPath());
         this.body = new RequestBody(body);
     }
 
