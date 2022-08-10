@@ -37,10 +37,6 @@ public class AuthService {
         }
 
         Session userSession = SessionStorage.getInstance().getSession(sessionId);
-        if (userSession == null) {
-            return false;
-        }
-
         return userSession.isUserLogined();
     }
 

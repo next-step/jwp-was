@@ -48,18 +48,12 @@ public class UserService {
         logger.info("login success ... (userId: {})", user.getUserId());
         httpHeaders.setLocation(URI.create("http://localhost:8080/index.html").toString());
         Session session = SessionStorage.getInstance().getSession(requestHeaders.getSessionId());
-        if (session == null) {
-            throw new IllegalAccessError();
-        }
         session.setUserLogined();
         return new HttpResponseMessage(HttpStatus.FOUND, httpHeaders);
     }
 
     public HttpResponseMessage logout(HttpHeaders requestHeaders) {
         Session session = SessionStorage.getInstance().getSession(requestHeaders.getSessionId());
-        if (session == null) {
-            throw new IllegalAccessError();
-        }
         session.invalidate();
 
         HttpHeaders httpHeaders = new HttpHeaders();

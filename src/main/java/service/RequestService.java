@@ -59,16 +59,8 @@ public class RequestService {
     private static boolean hasSession(HttpRequestMessage httpRequestMessage) {
         HttpHeaders requestHeaders = httpRequestMessage.getRequestHeaders();
         String sessionId = requestHeaders.getSessionId();
-        if (sessionId == null) {
-            return false;
-        }
 
-        Session userSession = SessionStorage.getInstance().getSession(sessionId);
-        if (userSession == null) {
-            return false;
-        }
-
-        return true;
+        return (sessionId != null);
     }
 
     private static HttpResponseMessage redirectHome() {

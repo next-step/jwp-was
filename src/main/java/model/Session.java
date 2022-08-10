@@ -6,14 +6,13 @@ import java.util.Map;
 public class Session {
 
     public static final String LOGIN_HEADER_KEY = "logined";
-    private final Map<String, Object> storage;
+    private final Map<String, Object> storage = new HashMap<>();
 
     public Session() {
-        this.storage = new HashMap<>();
     }
 
     public Object getId() {
-        return String.valueOf(this.storage.get(SessionStorage.UUID));
+        return String.valueOf(this.storage.get(SessionStorage.SESSION_ID_NAME));
     }
 
     public void setAttribute(String key, Object value) {
