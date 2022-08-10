@@ -1,5 +1,7 @@
 package utils;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -18,4 +20,12 @@ class ParamsUtilsTest {
         System.out.println("params :" + params);
         assertThat(params).isNotNull();
     }
+
+	@DisplayName("Cookie Header 값 파싱 테스트")
+	@Test
+	void cookie_test() {
+		Map<String, String> cookie = ParamsUtils.parsedCookie("logined=true");
+		assertThat(cookie).isNotNull();
+		assertThat(cookie.get("logined")).isEqualTo("true");
+	}
 }

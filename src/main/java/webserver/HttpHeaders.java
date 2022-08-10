@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpHeaders {
+	static final String COOKIE = "Cookie";
     static final String HEADER_DELIMITER = ":";
 
     private final Map<String, String> headers = new HashMap<>();
@@ -35,4 +36,8 @@ public class HttpHeaders {
         }
         return Integer.parseInt(header);
     }
+
+	public HttpCookie getCookie() {
+		return new HttpCookie(get(COOKIE));
+	}
 }

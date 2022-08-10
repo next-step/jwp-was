@@ -128,7 +128,8 @@ public class RequestHandler implements Runnable {
     private void list(HttpHeaders httpHeaders, DataOutputStream dos) throws IOException, URISyntaxException {
         byte[] body = FileIoUtils.loadFileFromClasspath("./templates/user/login.html");
 
-        if (httpHeaders.get("Cookie").equals("logined=true")) {
+//        if (httpHeaders.get("Cookie").equals("logined=true")) {
+		if (httpHeaders.getCookie().get("logined").equals("true")) {
             TemplateLoader loader = new ClassPathTemplateLoader();
             loader.setPrefix("/templates");
             loader.setSuffix(".html");
