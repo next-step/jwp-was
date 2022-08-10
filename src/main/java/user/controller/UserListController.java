@@ -16,9 +16,9 @@ public class UserListController extends AbstractController {
     @Override
     public HttpResponse doGet(HttpRequest httpRequest) {
         final HttpSession httpSession = HttpSessionManager.getHttpSession(httpRequest);
-        final boolean logined = httpSession.getAttribute(LOGINED_KEY, Boolean.class);
-        if (!logined) {
-            HttpResponse.sendRedirect("/index.html");
+        final Boolean logined = httpSession.getAttribute(LOGINED_KEY, Boolean.class);
+        if (logined == null || !logined) {
+            return HttpResponse.sendRedirect("/index.html");
         }
 
         final Collection<User> users = DataBase.findAll();
