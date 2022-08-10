@@ -17,7 +17,10 @@ public class HttpRequest {
     private Header header = new Header();
     private QueryString body = new QueryString();
 
-    HttpRequest() {
+    public HttpRequest(BufferedReader br) throws IOException {
+        initRequestLine(br);
+        initHeader(br);
+        initBody(br);
     }
 
     public HttpRequest(RequestLine requestLine, Header header, QueryString body) {
@@ -51,35 +54,24 @@ public class HttpRequest {
         }
     }
 
-    public static HttpRequest of(BufferedReader br) throws IOException {
-        HttpRequest httpRequest = new HttpRequest();
-
-        initRequestLine(br, httpRequest);
-        initHeader(br, httpRequest);
-        initBody(br, httpRequest);
-
-        return httpRequest;
-    }
-
-    private static void initBody(BufferedReader br, HttpRequest httpRequest) throws IOException {
-        int contentLength = httpRequest.header.getContentLength();
+    private void initBody(BufferedReader br) throws IOException {
+        int contentLength = this.header.getContentLength();
         String bodyString = IOUtils.readData(br, contentLength);
-        httpRequest.body = QueryString.parse(bodyString);
+        this.body = QueryString.parse(bodyString);
     }
 
-    private static void initRequestLine(BufferedReader br, HttpRequest httpRequest) throws IOException {
+    private void initRequestLine(BufferedReader br) throws IOException {
         String line = br.readLine();
         if (line == null) { // 요청 line 이 null 일 경우 parse 하지 않음.
             return;
         }
-        httpRequest.requestLine = RequestLine.parse(line);
+        this.requestLine = RequestLine.parse(line);
     }
 
-    private static void initHeader(BufferedReader br, HttpRequest httpRequest) throws IOException {
+    private void initHeader(BufferedReader br) throws IOException {
         String line;
-        Header header = httpRequest.header;
         while (!isEmpty(line = br.readLine())) {
-            header.addField(line);
+            this.header.addField(line);
         }
         header.setCookie(header.getCookieValue());
     }

@@ -43,7 +43,7 @@ class HttpRequestTest {
         // when
         InputStream in = new FileInputStream("./src/test/resources/request.txt");
         BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-        HttpRequest actualHttpRequest = HttpRequest.of(br);
+        HttpRequest actualHttpRequest = new HttpRequest(br);
 
         // then
         assertThat(expectedHttpRequest).isEqualTo(actualHttpRequest);
