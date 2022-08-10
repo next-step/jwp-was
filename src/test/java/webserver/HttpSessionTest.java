@@ -14,28 +14,35 @@ public class HttpSessionTest {
 
     @Test
     void getID_테스트() {
+        // Then
         assertThat(httpSession.getId()).isEqualTo(id);
     }
 
     @Test
     void setAttribute_테스트() {
+        // Given
         User user = new User("testId","password","name","email@gmail.com");
         httpSession.setAttribute("user", user);
-
+        // Then
         assertThat(httpSession.getAttribute("user")).isEqualTo(user);
     }
 
     @Test
     void getAttribute_테스트() {
-
+        // Given
+        User user = new User("testId","password","name","email@gmail.com");
+        httpSession.setAttribute("user", user);
+        // Then
+        assertThat(httpSession.getAttribute("user")).isEqualTo(user);
     }
 
     @Test
     void removeAttribute_테스트() {
+        // Given
         User user = new User("testId","password","name","email@gmail.com");
         httpSession.setAttribute("user", user);
         httpSession.removeAttribute("user");
-
+        // Then
         assertThat(httpSession.getAttribute("user")).isEqualTo(null);
     }
 }

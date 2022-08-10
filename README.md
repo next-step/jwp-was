@@ -161,6 +161,7 @@ Set-Cookie: logined=true; Path=/
   - 키(key)는 앞에서 UUID로 생성한 고유한 아이디
 
 ### 4단계 피드백
-- [ ] JSESSIONID는 HttpSession 객체에 선언
-- [ ] 중복되는 JSESSIONID 리팩토링
-- [ ]
+- [X] JSESSIONID는 HttpSession 객체에 선언
+- [X] 중복되는 JSESSIONID 리팩토링
+
+- [X] 추가 피드백 : 상수는 최상단, get테스트, /user/list 버튼 수정, given/when/then  
