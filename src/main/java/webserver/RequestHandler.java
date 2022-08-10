@@ -3,20 +3,14 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
-import cookie.Cookie;
-import webserver.controller.ControllerEnum;
+import webserver.controller.Controller;
 import webserver.http.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.http.model.request.Extension;
 import webserver.http.model.request.HttpRequest;
+import webserver.http.model.response.HttpResponse;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -31,107 +25,20 @@ public class RequestHandler implements Runnable {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            movePage(new HttpRequest(in), new DataOutputStream(out));
+            movePage(new HttpRequest(in), new HttpResponse(out));
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void movePage(HttpRequest httpRequest, DataOutputStream dos) throws IOException, URISyntaxException {
+    private void movePage(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException, URISyntaxException {
         if (httpRequest.isStaticResource()) {
-            byte[] body = FileIoUtils.loadFileFromClasspath(httpRequest.responsePath());
-            responseHeader(httpRequest, dos, body);
-            responseBody(dos, body);
+            httpResponse.responseStaticResource(httpRequest, httpResponse, FileIoUtils.loadFileFromClasspath(httpRequest.responsePath()));
             return;
         }
-        Object handlerMapping = ControllerEnum.handlerMapping(httpRequest);
-        moveNotStaticResourcePage(dos, handlerMapping);
-    }
 
-    private void responseHeader(HttpRequest httpRequest, DataOutputStream dos, byte[] body) {
-        if (Extension.CSS == Extension.getEnum(httpRequest.getPath())) {
-            response200CssHeader(dos, body.length);
-            return;
-        }
-        response200Header(dos, body.length);
-    }
-
-    private void moveNotStaticResourcePage(DataOutputStream dos, Object handlerMapping) throws IOException {
-        if (handlerMapping instanceof Model) {
-            movePageForModelType(dos, (Model) handlerMapping);
-            return;
-        }
-        response302Header(dos, String.valueOf(handlerMapping));
-    }
-
-    private void movePageForModelType(DataOutputStream dos, Model model) throws IOException {
-        if (model.getModelMap() == null) {
-            response302Header(dos, String.valueOf(model.getPath()));
-            return;
-        }
-        movePageWithModel(dos, model);
-    }
-
-    private void movePageWithModel(DataOutputStream dos, Model model) throws IOException {
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".html");
-        Handlebars handlebars = new Handlebars(loader);
-        Template template = handlebars.compile(model.getPath());
-
-        String page = template.apply(model.getModelMap());
-        byte[] body = page.getBytes(StandardCharsets.UTF_8);
-        response200Header(dos, body.length);
-        responseBody(dos, body);
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            if (Cookie.exists()) {
-                dos.writeBytes(Cookie.getResponseCookie() + "\r\n");
-            }
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200CssHeader(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n"); // Status Code
-            dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n"); // Response Header
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n"); // Response Header
-            if (Cookie.exists()) {
-                dos.writeBytes(Cookie.getResponseCookie() + "\r\n");
-            }
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response302Header(DataOutputStream dos, String redirectPath) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: " + redirectPath + " \r\n");
-            if (Cookie.exists()) {
-                dos.writeBytes(Cookie.getResponseCookie() + "\r\n");
-            }
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+        HandlerMapping handlerMapping = new HandlerMapping();
+        Controller controller = handlerMapping.getControllerMap().get(httpRequest.getPath());
+        controller.service(httpRequest, httpResponse);
     }
 }

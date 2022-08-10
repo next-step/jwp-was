@@ -2,7 +2,7 @@ package webserver.http.model.response;
 
 public enum StatusCode {
     OK(200, "OK"),
-    FOUND(302, "FOUND");
+    FOUND(302, "Found");
 
     private final int code;
     private final String status;
