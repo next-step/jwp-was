@@ -9,6 +9,14 @@ public class Protocol {
         this.protocol = protocol;
     }
 
+    public static Protocol httpProtocol() {
+        return new Protocol("HTTP/1.1");
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
