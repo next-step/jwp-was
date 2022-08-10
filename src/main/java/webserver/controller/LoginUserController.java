@@ -6,11 +6,12 @@ import webserver.http.Contents;
 import webserver.http.HttpBody;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
 
 public class LoginUserController extends AbstractController {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    protected void doPost(HttpRequest request, HttpResponse response) {
         final HttpBody httpBody = request.getHttpBody();
         final Contents contents = httpBody.getContents();
         User user = getUser(contents);
@@ -20,7 +21,9 @@ public class LoginUserController extends AbstractController {
             return;
         }
         if (isSamePassword(user, contents)) {
-            response.responseLoginSuccess();
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
+            response.sendRedirect("/");
             return;
         }
         response.sendRedirect("/user/login_failed.html");
@@ -35,4 +38,5 @@ public class LoginUserController extends AbstractController {
         final String userId = contents.getContent("userId");
         return DataBase.findUserById(userId);
     }
+
 }

@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import static webserver.http.HttpSession.JSESSIONID;
+
 public class HttpRequest {
     private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
     private Headers headers;
@@ -53,5 +55,15 @@ public class HttpRequest {
 
     public Path getPath() {
         return requestLine.getPath();
+    }
+
+    public HttpCookie getCookies() {
+        return new HttpCookie(headers.getCookie());
+    }
+
+
+    public HttpSession getSession() {
+        String jsessionid = getCookies().getCookie(JSESSIONID);
+        return HttpSessions.getSession(jsessionid);
     }
 }

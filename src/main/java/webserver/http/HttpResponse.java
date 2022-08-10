@@ -2,66 +2,46 @@ package webserver.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
+import utils.WatcherOutputStream;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.util.Set;
 
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
-    private DataOutputStream dos;
+    private WatcherOutputStream dos;
 
     private Headers headers = new Headers();
 
+
     public HttpResponse(OutputStream out) {
-        dos = new DataOutputStream(out);
+        dos = new WatcherOutputStream(out);
     }
 
     public void addHeader(String key, String value) {
         headers.put(key, value);
     }
 
-    public void forward(String url) {
-        try {
-            byte[] body = null;
-
-            if (url.endsWith(".css")) {
-                body = FileIoUtils.loadFileFromClasspath("./static" + url);
-                headers.put("Content-Type", "text/css");
-            }
-            if (url.endsWith(".js")) {
-                body = FileIoUtils.loadFileFromClasspath("./static" + url);
-                headers.put("Content-Type", "application/javascript");
-            }
-            if (url.startsWith("/fonts")) {
-                body = FileIoUtils.loadFileFromClasspath("./static" + url);
-            }
-            if (url.endsWith("html") || url.endsWith("ico")) {
-                body = FileIoUtils.loadFileFromClasspath("./templates" + url);
-            }
-
-            response200Header(body.length);
-            responseBody(body);
-        } catch (IOException | URISyntaxException e) {
-            logger.error(e.getMessage());
-        }
+    public byte[] forward(String url) {
+        byte[] body = ResourceHandler.handle(url, headers);
+        response200Header();
+        responseBody(body);
+        return body;
     }
 
     public void forwardBody(String body) {
         byte[] contents = body.getBytes();
         headers.put("Content-Type", "text/html;charset=utf-8");
         headers.put("Content-Length", contents.length + "");
-        response200Header(contents.length);
+        response200Header();
         responseBody(contents);
     }
 
-    private void response200Header(int lengthOfBodyContent) {
+    private void response200Header() {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.write("HTTP/1.1 200 OK \r\n");
             processHeaders();
             dos.writeBytes("\r\n");
         } catch (IOException e) {
@@ -71,8 +51,8 @@ public class HttpResponse {
 
     private void responseBody(byte[] body) {
         try {
-            dos.write(body, 0, body.length);
-            dos.writeBytes("\r\n");
+            dos.write(body);
+            dos.write("\r\n");
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -81,21 +61,10 @@ public class HttpResponse {
 
     public void sendRedirect(String redirectUrl) {
         try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.write("HTTP/1.1 302 Found \r\n");
             processHeaders();
-            dos.writeBytes("Location: " + redirectUrl + " \r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    public void responseLoginSuccess() {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
-            dos.writeBytes("Set-Cookie: logined=true \r\n");
-            dos.writeBytes("Location: / \r\n");
-            dos.writeBytes("\r\n");
+            dos.write("Location: " + redirectUrl + " \r\n");
+            dos.write("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -105,10 +74,22 @@ public class HttpResponse {
         try {
             Set<String> keys = headers.getKeySet();
             for (String key : keys) {
-                dos.writeBytes(key + ": " + headers.getHeader(key) + " \r\n");
+                dos.write(key + ": " + headers.getHeader(key) + " \r\n");
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    public Headers getHeaders() {
+        return headers;
+    }
+
+    public String getHeader(String key) {
+        return headers.getHeader(key);
+    }
+
+    public byte[] getBytes() {
+        return dos.getData();
     }
 }

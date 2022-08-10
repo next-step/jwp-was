@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.UUID;
+
+import static webserver.http.HttpSession.JSESSIONID;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -30,7 +33,11 @@ public class RequestHandler implements Runnable {
             Path path = httpRequest.getPath();
             HttpResponse httpResponse = new HttpResponse(out);
 
-            Controller controller = RequestMapping.getController(path);
+            if (httpRequest.getCookies().getCookie(JSESSIONID) == null) {
+                httpResponse.addHeader("Set-Cookie", "JSESSIONID=" + UUID.randomUUID());
+            }
+
+            Controller controller = RequestMapping.getController(httpRequest);
             if (controller == null) {
                 httpResponse.forward(path.getPath());
                 return;
@@ -40,4 +47,5 @@ public class RequestHandler implements Runnable {
             logger.error(e.getMessage());
         }
     }
+
 }

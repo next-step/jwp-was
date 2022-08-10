@@ -9,9 +9,8 @@ import webserver.user.UserFactory;
 public class CreateUserController extends AbstractController {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    protected void doPost(HttpRequest request, HttpResponse response) {
         final User user = UserFactory.from(request);
-
         DataBase.addUser(user);
         response.sendRedirect("/index.html");
     }

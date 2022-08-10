@@ -16,7 +16,7 @@ class UserFactoryTest {
     void create_with_valid_http_post_request() throws UnsupportedEncodingException {
         String stringPath = "/user/create";
         String stringBody = "userId=javajigi&password=password&name=javajigi&email=javajigi@slipp.net";
-        HttpRequest httpRequest = HttpRequestUtil.create_with_post_request(stringPath, stringBody);
+        HttpRequest httpRequest = HttpRequestUtil.createWithPostRequest(stringPath, stringBody);
 
         User actual = UserFactory.from(httpRequest);
 
@@ -29,7 +29,7 @@ class UserFactoryTest {
     @Test
     void create_with_valid_http_get_request() throws UnsupportedEncodingException {
         String stringPath = "/user/create?userId=javajigi&password=password&name=javajigi&email=javajigi@slipp.net";
-        HttpRequest httpRequest = HttpRequestUtil.create_with_get_request(stringPath);
+        HttpRequest httpRequest = HttpRequestUtil.createWithGetRequest(stringPath);
 
         User actual = UserFactory.from(httpRequest);
 
