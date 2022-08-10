@@ -30,6 +30,9 @@ public class Params {
     }
 
     public static Params of(String queryString, String delimiter) {
+        if (queryString == null || queryString.isBlank()) {
+            return new Params();
+        }
         return parseParams(queryString, delimiter);
     }
 
@@ -42,7 +45,7 @@ public class Params {
     }
 
     private static Params parseParams(String values, String delimiter) {
-        if (values.isEmpty()) {
+        if (values.isBlank()) {
             return new Params();
         }
         String[] tokens = values.split(delimiter);
