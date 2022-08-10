@@ -31,7 +31,7 @@ public class HttpRequestTest {
         assertThat(httpRequest.getRequestHeaders()).hasSize(5);
     }
 
-    @DisplayName("GET 요청에 대해 데이터를 입력한다.")
+    @DisplayName("GET 요청에 대해 요청 정보를 파싱하여 httpRequest 인스턴스를 정상적으로 생성한다.")
     @Test
     public void request_GET() throws Exception {
         InputStream in = new FileInputStream(testDirectory + "Http_GET.txt");
@@ -43,7 +43,7 @@ public class HttpRequestTest {
         assertEquals("javajigi", request.getParameter("userId"));
     }
 
-    @DisplayName("POST 요청에 대해 데이터를 입력한다.")
+    @DisplayName("POST 요청에 대해 요청 정보를 파싱하여 httpRequest 인스턴스를 정상적으로 생성한다.")
     @Test
     public void request_POST() throws Exception {
         InputStream in = new FileInputStream(testDirectory + "Http_POST.txt");
@@ -52,6 +52,19 @@ public class HttpRequestTest {
         assertEquals(HttpMethod.POST, request.getMethod());
         assertEquals("/user/create", request.getPath());
         assertEquals("keep-alive", request.getHeader("Connection"));
+        assertEquals("javajigi", request.getParameter("userId"));
+    }
+
+    @DisplayName("POST 요청에 대해 요청 정보를 파싱하여 httpRequest 인스턴스를 정상적으로 생성하고, queryString으로 전달되는 값도 설정한다.")
+    @Test
+    public void request_POST2() throws Exception {
+        InputStream in = new FileInputStream(testDirectory + "Http_POST2.txt");
+        HttpRequest request = new HttpRequest(in);
+
+        assertEquals(HttpMethod.POST, request.getMethod());
+        assertEquals("/user/create", request.getPath());
+        assertEquals("keep-alive", request.getHeader("Connection"));
+        assertEquals("1", request.getParameter("id"));
         assertEquals("javajigi", request.getParameter("userId"));
     }
 }

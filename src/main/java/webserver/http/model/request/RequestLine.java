@@ -2,6 +2,8 @@ package webserver.http.model.request;
 
 import exception.IllegalHttpRequestException;
 
+import java.util.Map;
+
 public class RequestLine {
     private static final int VALID_REQUEST_LINE_LENGTH = 3;
 
@@ -31,6 +33,10 @@ public class RequestLine {
 
     public QueryString getQueryString() {
         return pathInformation.getQueryString();
+    }
+
+    public Map<String, String> getQueryStringMap() {
+        return pathInformation.getQueryString().getQueryStringMap();
     }
 
     public String path() {

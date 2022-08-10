@@ -63,14 +63,15 @@ public class HttpRequest {
     }
 
     public String getParameter(String parameter) {
+        String value = null;
         if (requestBody != null) {
-            return this.requestBody.getRequestBodyMap().get(parameter);
+            value = this.requestBody.getRequestBodyMap().get(parameter);
         }
 
-        if (requestLine.getQueryString() != null) {
-            return requestLine.getQueryString().getQueryStringMap().get(parameter);
+        if (requestLine.getQueryString() != null && value == null) {
+            return requestLine.getQueryStringMap().get(parameter);
         }
-        return null;
+        return value;
     }
 
     public boolean isStaticResource() {
