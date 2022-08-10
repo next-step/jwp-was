@@ -27,7 +27,7 @@
    1. HttpRequest를 파싱하여 HttpRequestBody 데이터를 넣는다. 
    2. POST 방식으로 user를 등록한다.
 4. 회원 가입 이후에 index.html 페이지로 이동 시킨다.
-   1. handlerAdapter enum 클래스를 통해 controller를 구현하고, user 등록시 index.html 페이지로 이동한다.
+   1. controllerEnum enum 클래스를 통해 controller를 구현하고, user 등록시 index.html 페이지로 이동한다.
 5. 로그인 성공시 index.html, 실패시 login_failed.html로 이동한다. 로그인 성공시 cookie를 활용해 로그인 상태 유지
    1. 로그인 성공 시 성공시 index.html, 실패시 login_failed.html로 이동한다.
    2. 로그인 성공시 cookie header 값을 logined=true, 실패시 logined=false 로 전달

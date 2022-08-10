@@ -3,7 +3,6 @@ package webserver.controller;
 import cookie.Cookie;
 import db.DataBase;
 import model.User;
-import webserver.http.model.HandlerAdapter;
 import webserver.http.model.HttpRequest;
 import webserver.http.model.Model;
 
@@ -11,9 +10,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserController {
+    private static final UserController userController = new UserController();
+
+    private UserController() {
+
+    }
 
     public static UserController of() {
-        return new UserController();
+        return userController;
     }
 
     public String index(HttpRequest httpRequest) {
@@ -21,12 +25,12 @@ public class UserController {
     }
 
     public String createUserGet(HttpRequest httpRequest) {
-        User user = new User(httpRequest.getQueryStrings());
+        User user = new User(httpRequest.getQueryStrings().getQueryStringMap());
         return "/index.html";
     }
 
     public String createUserPost(HttpRequest httpRequest) {
-        User user = new User(httpRequest.getRequestBody());
+        User user = new User(httpRequest.getRequestBody().getRequestBodyMap());
         DataBase.addUser(user);
         return "/index.html";
     }
@@ -41,15 +45,15 @@ public class UserController {
     private String pathAfterLogin(String password, User user) {
         Cookie cookie = new Cookie();
         if (user.getPassword().equals(password)) {
-            cookie.setResponseLoginCookie(true);
+            cookie.setCookie("logined=true");
             return "/index.html";
         }
-        cookie.setResponseLoginCookie(false);
+        cookie.setCookie("logined=false");
         return "/user/login_failed.html";
     }
 
     public Model retrieveUsers(HttpRequest httpRequest) {
-        if (HandlerAdapter.accessiblePagesAfterLogin(httpRequest) && "logined=true".equals(httpRequest.getRequestHeaders().get("Cookie"))) {
+        if (ControllerEnum.accessiblePagesAfterLogin(httpRequest) && "logined=true".equals(httpRequest.getRequestHeaders().get("Cookie"))) {
             Map<String, Object> modelMap = new HashMap<>();
             modelMap.put("users", DataBase.findAll());
             return new Model("user/list", modelMap);

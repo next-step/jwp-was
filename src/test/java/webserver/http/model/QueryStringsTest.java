@@ -19,8 +19,8 @@ class QueryStringsTest {
     void construct() {
         QueryStrings queryStrings = new QueryStrings("userId=javajigi&password=password&name=JaeSung");
         assertThat(queryStrings.getQueryStringMap()).hasSize(3);
-        assertThat(queryStrings.getQueryStringMap().get(new QueryStringKey("userId"))).isEqualTo(new QueryStringValue("javajigi"));
-        assertThat(queryStrings.getQueryStringMap().get(new QueryStringKey("password"))).isEqualTo(new QueryStringValue("password"));
-        assertThat(queryStrings.getQueryStringMap().get(new QueryStringKey("name"))).isEqualTo(new QueryStringValue("JaeSung"));
+        assertThat(queryStrings.getQueryStringMap().get("userId")).isEqualTo("javajigi");
+        assertThat(queryStrings.getQueryStringMap().get("password")).isEqualTo("password");
+        assertThat(queryStrings.getQueryStringMap().get("name")).isEqualTo("JaeSung");
     }
 }

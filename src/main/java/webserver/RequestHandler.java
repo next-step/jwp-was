@@ -10,6 +10,7 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import cookie.Cookie;
+import webserver.controller.ControllerEnum;
 import webserver.http.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ public class RequestHandler implements Runnable {
             responseBody(dos, body);
             return;
         }
-        Object handlerMapping = HandlerAdapter.handlerMapping(httpRequest);
+        Object handlerMapping = ControllerEnum.handlerMapping(httpRequest);
         moveNotStaticResourcePage(dos, handlerMapping);
     }
 

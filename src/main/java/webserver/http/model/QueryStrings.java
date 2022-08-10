@@ -1,9 +1,12 @@
 package webserver.http.model;
 
+import exception.IllegalHttpRequestException;
+
 import java.util.*;
 
 public class QueryStrings {
-    private Map<QueryStringKey, QueryStringValue> queryStringMap;
+    private static final int INVALID_QUERY_STRING_LENGTH = 2;
+    private Map<String, String> queryStringMap;
 
     public QueryStrings(String queryStrings) {
         if (queryStrings.isBlank()) {
@@ -13,16 +16,19 @@ public class QueryStrings {
         queryStringMap = new LinkedHashMap<>();
         String[] queryStringArray = queryStrings.split("&");
         for (String queryString : queryStringArray) {
-            QueryString queryStringObject = new QueryString(queryString);
-            queryStringMap.put(queryStringObject.getQueryStringKey(), queryStringObject.getQueryStringValue());
+            initial(queryString);
         }
     }
 
-    public String queryStringValue(String queryStringKey) {
-        return queryStringMap.get(new QueryStringKey(queryStringKey)).getQueryStringValue();
+    private void initial(String queryString) {
+        String[] queryStringData = queryString.split("=");
+        if (queryStringData.length != INVALID_QUERY_STRING_LENGTH) {
+            throw new IllegalHttpRequestException("Query String은 키, 값 한쌍으로 이루어져 있습니다.");
+        }
+        queryStringMap.put(queryStringData[0], queryStringData[1]);
     }
 
-    public Map<QueryStringKey, QueryStringValue> getQueryStringMap() {
+    public Map<String, String> getQueryStringMap() {
         return queryStringMap;
     }
 

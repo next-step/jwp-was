@@ -4,12 +4,11 @@ import utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RequestBody {
+    private static final RequestBody emptyBody = new RequestBody(Collections.emptyMap());
     private Map<String, String> requestBodyMap;
 
     public RequestBody (BufferedReader bufferedReader, RequestHeaders requestHeaders) throws IOException {
@@ -18,12 +17,20 @@ public class RequestBody {
         initial(requestBodyText);
     }
 
+    public RequestBody(Map<String, String> requestBodyMap) {
+        this.requestBodyMap = requestBodyMap;
+    }
+
     public RequestBody(List<String> requestBodyList) {
         initialList(requestBodyList);
     }
 
     public RequestBody(String requestBodyText) {
         initial(requestBodyText);
+    }
+
+    public static RequestBody empty() {
+        return emptyBody;
     }
 
     private void initial(String requestBodyText) {

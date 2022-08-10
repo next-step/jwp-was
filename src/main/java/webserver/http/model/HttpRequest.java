@@ -2,11 +2,7 @@ package webserver.http.model;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class HttpRequest {
 
@@ -25,20 +21,13 @@ public class HttpRequest {
     }
 
     public HttpRequest(String httpRequestText) {
-        List<String> textList = Arrays.asList(httpRequestText.split("\n"));
-        List<List<String>> requestInformation = requestHeaderAndBody(textList);
-
-        this.requestLine = new RequestLine(textList.get(0));
-        this.requestHeaders = new RequestHeaders(requestInformation.get(0));
-        this.requestBody = null;
+        HttpRequestLines httpRequestLines = new HttpRequestLines(httpRequestText);
+        this.requestLine = new RequestLine(httpRequestLines.requestLine());
+        this.requestHeaders = new RequestHeaders(httpRequestLines.requestHeader());
+        this.requestBody = RequestBody.empty();
         if (Method.isPost(requestLine.getMethod())) {
-            this.requestBody = new RequestBody(requestInformation.get(1));
+            this.requestBody = new RequestBody(httpRequestLines.requestBody());
         }
-    }
-
-    private List<List<String>> requestHeaderAndBody(List<String> textList) {
-        return new ArrayList<>(textList.stream().filter(text -> !text.equals(textList.get(0)))
-                .collect(Collectors.partitioningBy(line -> textList.indexOf(line) > textList.indexOf(""))).values());
     }
 
     public HttpRequest(RequestLine requestLine, RequestHeaders requestHeaders, RequestBody requestBody) {

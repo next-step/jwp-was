@@ -15,12 +15,8 @@ public class Cookie {
         return cookie != null && !cookie.isBlank();
     }
 
-    public void setResponseLoginCookie(boolean loginSuccess) {
-        if (loginSuccess) {
-            cookie = "logined=true";
-            return;
-        }
-        cookie = "logined=false";
+    public void setCookie(String cookie) {
+        Cookie.cookie = cookie;
     }
 
     public String getCookie() {
