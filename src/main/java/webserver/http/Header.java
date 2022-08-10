@@ -1,7 +1,6 @@
 package webserver.http;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -48,35 +47,34 @@ public class Header {
     }
 
     public static Header templateResponse() {
-        return new Header(Map.of(HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8));
+        Map<HeaderKey, String> fields = new EnumMap<>(HeaderKey.class);
+        fields.put(HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8);
+        return new Header(fields);
     }
 
     public static Header staticResponse() {
-        return new Header(Map.of(HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_CSS_UTF8));
+        Map<HeaderKey, String> fields = new EnumMap<>(HeaderKey.class);
+        fields.put(HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_CSS_UTF8);
+        return new Header(fields);
     }
 
     public static Header loginFailResponse() {
-        return new Header(
-                Map.of(
-                        HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8,
-                        HeaderKey.SET_COOKIE, HeaderValue.LOGINED_FALSE_ALL_PATH
-                )
-        );
+        Map<HeaderKey, String> fields = new EnumMap<>(HeaderKey.class);
+        fields.put(HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8);
+        fields.put(HeaderKey.SET_COOKIE, HeaderValue.LOGINED_FALSE_ALL_PATH);
+        return new Header(fields);
     }
 
     public static Header loginSuccessResponse() {
-        return new Header(
-                Map.of(
-                        HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8,
-                        HeaderKey.SET_COOKIE, HeaderValue.LOGINED_TRUE_ALL_PATH
-                )
-        );
+        Map<HeaderKey, String> fields = new EnumMap<>(HeaderKey.class);
+        fields.put(HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8);
+        fields.put(HeaderKey.SET_COOKIE, HeaderValue.LOGINED_TRUE_ALL_PATH);
+        return new Header(fields);
     }
 
     public Header add(HeaderKey key, String value) {
-        Map<HeaderKey, String> fields = new HashMap<>(this.fields);
-        fields.put(key, value);
-        return new Header(fields);
+        this.fields.put(key, value);
+        return new Header(this.fields);
     }
 
     public void addField(String headerString) {

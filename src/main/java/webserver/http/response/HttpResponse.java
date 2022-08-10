@@ -6,6 +6,7 @@ import webserver.http.response.statusline.StatusCode;
 import webserver.http.response.statusline.StatusLine;
 
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class HttpResponse {
@@ -55,7 +56,9 @@ public class HttpResponse {
     }
 
     public static HttpResponse redirect(String path) {
-        return new HttpResponse(StatusLine.ofHttp_V1_1_Found(), new Header(Map.of(HeaderKey.LOCATION, path)), new byte[0]);
+        Map<HeaderKey, String> fields = new EnumMap<>(HeaderKey.class);
+        fields.put(HeaderKey.LOCATION, path);
+        return new HttpResponse(StatusLine.ofHttp_V1_1_Found(), new Header(fields), new byte[0]);
     }
 
     public static HttpResponse redirect(String path, Header header) {
