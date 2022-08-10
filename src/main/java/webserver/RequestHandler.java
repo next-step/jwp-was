@@ -38,12 +38,7 @@ public class RequestHandler implements Runnable {
             RequestLine requestLine = RequestLine.from(firstLine);
             logger.debug("RequestLine : {}", requestLine);
 
-            HttpHeaders httpHeaders = new HttpHeaders();
-            String line;
-            while (!(line = br.readLine()).equals("")) {
-                logger.debug("header : {}", line);
-                httpHeaders.add(line);
-            }
+            HttpHeaders httpHeaders = HttpHeaders.create(br);
             logger.debug("HttpHeaders : {}", httpHeaders);
 
             DataOutputStream dos = new DataOutputStream(out);
