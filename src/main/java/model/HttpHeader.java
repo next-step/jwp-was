@@ -1,5 +1,7 @@
 package model;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class HttpHeader {
@@ -50,5 +52,51 @@ public class HttpHeader {
                 .map(header -> header[VALUE_INDEX].strip() + DELIMITER + header[PORT_INDEX].strip())
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("호스트 정보가 없습니다."));
+    }
+
+    public void addEndHeader() {
+        headers.add("\r\n");
+    }
+
+    public void addRedirectStatus() {
+        headers.add("HTTP/1.1 302 OK \r\n");
+    }
+
+    public void addRedirectLocation(String location) {
+        headers.add("Location: "+  location + "\r\n");
+    }
+
+    public void addContentLength(int length) {
+        headers.add("Content-Length: " + length + "\r\n");
+    }
+
+    public void addContentType(String contentType) {
+        headers.add("Content-Type: " + contentType + ";charset=utf-8\r\n");
+    }
+
+    public void addSuccessStatus() {
+        headers.add("HTTP/1.1 200 OK \r\n");
+    }
+
+    public void addCookie(String name, String value) {
+        headers.add("Set-Cookie: " + name + "=" + value + "; Path=/\r\n");
+    }
+
+    public void writeOutput(DataOutputStream dos) {
+        headers.stream()
+                .forEach(header -> {
+                    try {
+                        dos.writeBytes(header);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+    }
+
+    @Override
+    public String toString() {
+        return "HttpHeader{" +
+                "headers=" + headers +
+                '}';
     }
 }

@@ -2,6 +2,7 @@ package controller;
 
 import model.HttpRequest;
 import model.HttpResponse;
+import model.ResponseBody;
 import utils.FileIoUtils;
 
 import java.io.IOException;
@@ -25,11 +26,13 @@ public class ViewController implements Controller{
         final String extension = request.getRequestLine().getExtension();
 
         if (isHtmlClassPath(extension)) {
-            return HttpResponse.successView(
-                    FileIoUtils.loadFileFromClasspath(HTML_CLASS_PATH + requestPath), extensionToContentType.get(extension));
+            return HttpResponse.success(
+                    new ResponseBody(FileIoUtils.loadFileFromClasspath(HTML_CLASS_PATH + requestPath))
+                    , extensionToContentType.get(extension));
         }
-        return HttpResponse.successView(
-                FileIoUtils.loadFileFromClasspath(CLASS_Path + requestPath), extensionToContentType.get(extension));
+        return HttpResponse.success(
+                new ResponseBody(FileIoUtils.loadFileFromClasspath(CLASS_Path + requestPath))
+                , extensionToContentType.get(extension));
     }
 
     private boolean isHtmlClassPath(String extension) {

@@ -3,6 +3,9 @@ package controller;
 import db.DataBase;
 import model.*;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.FileIoUtilsTest;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -14,6 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoginControllerTest {
 
+    private static final Logger logger = LoggerFactory.getLogger(LoginControllerTest.class);
+
     @Test
     void 로그인_성공() throws IOException, URISyntaxException {
 
@@ -24,8 +29,8 @@ public class LoginControllerTest {
         DataBase.addUser(user);
         final HttpResponse response = controller.process(httpRequest);
 
-        assertThat(response.getMessages().get(0)).isEqualTo("HTTP/1.1 302 OK \r\n");
-        assertThat(response.getMessages().get(2)).isEqualTo("Set-Cookie: logined=" + true + "; Path=/\r\n");
+        logger.debug("respnse: {}", response);
+
     }
 
     @Test
@@ -35,8 +40,7 @@ public class LoginControllerTest {
 
         final HttpResponse response = controller.process(httpRequest);
 
-        assertThat(response.getMessages().get(0)).isEqualTo("HTTP/1.1 302 OK \r\n");
-        assertThat(response.getMessages().get(2)).isEqualTo("Set-Cookie: logined=" + false + "; Path=/\r\n");
+        logger.debug("respnse: {}", response);
     }
 
     private User createUser() throws UnsupportedEncodingException {

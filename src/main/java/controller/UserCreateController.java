@@ -18,6 +18,6 @@ public class UserCreateController implements Controller{
         final User user = new User(body.getOneValue("userId"), body.getOneValue("password"), body.getOneValue("name"), body.getOneValue("email"));
         DataBase.addUser(user);
 
-        return HttpResponse.redirect(REDIRECT_PATH, request.getHeader());
+        return HttpResponse.redirect(REDIRECT_PATH);
     }
 }

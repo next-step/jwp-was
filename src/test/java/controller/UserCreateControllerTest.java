@@ -3,9 +3,11 @@ package controller;
 import model.HttpHeader;
 import model.HttpRequest;
 import model.HttpResponse;
+import model.ResponseBody;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import webserver.RequestLine;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -16,6 +18,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserCreateControllerTest {
+    private static final Logger logger = LoggerFactory.getLogger(UserCreateControllerTest.class);
 
     @Test
     void 회원가입시_index_페이지_리다이렉트_응답() throws IOException, URISyntaxException {
@@ -23,9 +26,8 @@ public class UserCreateControllerTest {
         final UserCreateController controller = new UserCreateController();
         final HttpRequest httpRequest = createHttpRequest();
         final HttpResponse response = controller.process(httpRequest);
-        final byte[] responseBody = FileIoUtils.loadFileFromClasspath("./templates/index.html");
 
-        assertThat(response.getMessages().get(0)).isEqualTo("HTTP/1.1 302 OK \r\n");
+        logger.debug("respnse: {}", response);
     }
 
     private HttpRequest createHttpRequest() throws UnsupportedEncodingException {

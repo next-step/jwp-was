@@ -39,30 +39,18 @@ public class RequestHandler implements Runnable {
             final String requestBody = IOUtils.readData(br, httpHeader.getContentLength());
             final HttpRequest httpRequest = new HttpRequest(httpHeader, requestBody);
 
-            logger.debug("request : {}", httpRequest.toString());
+            logger.debug("request : {}", httpRequest);
 
             Controller controller = mapper.mapping(new RequestMappingInfo(requestLine.getMethod(), requestLine.getRequestPath()));
             HttpResponse response = controller.process(httpRequest);
-            writeResponse(dos, response);
+            response.writeResponse(dos);
+
+            dos.flush();
 
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private void writeResponse(DataOutputStream dos, HttpResponse response) {
-        try {
-            for (String message: response.getMessages()) {
-                dos.writeBytes(message);
-            }
-            if (response.hasBody()) {
-                dos.write(response.getBody(), 0, response.getBody().length);
-            }
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
         }
     }
 }

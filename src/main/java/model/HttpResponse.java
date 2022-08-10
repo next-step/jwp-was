@@ -1,58 +1,72 @@
 package model;
 
-import java.util.Arrays;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.RequestHandler;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class HttpResponse {
+    private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
-    private List<String> messages;
-    private byte[] body;
+    private HttpHeader header;
+    private ResponseBody body;
 
-    public HttpResponse(List<String> messages, byte[] body) {
-        this.messages = messages;
+    public HttpResponse(HttpHeader header, ResponseBody body) {
+        this.header = header;
         this.body = body;
     }
 
-    public HttpResponse(List<String> messages) {
-        this.messages = messages;
+    public HttpResponse(HttpHeader header) {
+        this.header = header;
+        this.body = ResponseBody.empty();
     }
 
-    public static HttpResponse redirect(String location, HttpHeader header) {
-        return new HttpResponse(Arrays.asList("HTTP/1.1 302 OK \r\n",
-                "Location: http://" + header.getHost() + location + "\r\n",
-                "\r\n"));
+    public static HttpResponse redirect(String location) {
+        final HttpHeader httpHeader = new HttpHeader(new ArrayList<>());
+        httpHeader.addRedirectStatus();
+        httpHeader.addRedirectLocation(location);
+        httpHeader.addEndHeader();
+
+        return new HttpResponse(httpHeader);
     }
 
-    public static HttpResponse success(byte[] body) {
-        return new HttpResponse(Arrays.asList("HTTP/1.1 200 OK \r\n",
-                "Content-Type: text/html;charset=utf-8\r\n",
-                "Content-Length: " + body.length + "\r\n",
-                "\r\n"), body);
+    public static HttpResponse success(ResponseBody body, String contentType) {
+        final HttpHeader httpHeader = new HttpHeader(new ArrayList<>());
+        httpHeader.addSuccessStatus();
+        httpHeader.addContentType(contentType);
+        httpHeader.addContentLength(body.getLength());
+        httpHeader.addEndHeader();
+
+        return new HttpResponse(httpHeader, body);
     }
 
-    public static HttpResponse loginRedirect(String location, boolean login, HttpHeader header) {
-        return new HttpResponse(Arrays.asList("HTTP/1.1 302 OK \r\n",
-                "Location: http://" + header.getHost() + location + "\r\n",
-                "Set-Cookie: logined=" + login + "; Path=/\r\n",
-                "\r\n"));
+    public static HttpResponse loginRedirect(String location, String loginValue) {
+        final HttpHeader httpHeader = new HttpHeader(new ArrayList<>());
+        httpHeader.addRedirectStatus();
+        httpHeader.addRedirectLocation(location);
+        httpHeader.addCookie("logined", loginValue);
+
+        return new HttpResponse(httpHeader);
     }
 
-    public static HttpResponse successView(byte[] body, String contentType) {
-        return new HttpResponse(Arrays.asList("HTTP/1.1 200 OK \r\n",
-                "Content-Type: " + contentType + ";charset=utf-8\r\n",
-                "Content-Length: " + body.length + "\r\n",
-                "\r\n"), body);
+    public void writeResponse(DataOutputStream dos) {
+        try {
+            header.writeOutput(dos);
+            body.writeOutput(dos);
+
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 
-    public List<String> getMessages() {
-        return messages;
-    }
-
-    public byte[] getBody() {
-        return body;
-    }
-
-    public boolean hasBody() {
-        return body != null && body.length > 0;
+    @Override
+    public String toString() {
+        return "HttpResponse{" +
+                "header=" + header +
+                ", body=" + body +
+                '}';
     }
 }

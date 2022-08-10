@@ -1,5 +1,6 @@
 package utils;
 
+import model.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,13 +10,13 @@ public class FileIoUtilsTest {
 
     @Test
     void loadFileFromClasspath() throws Exception {
-        byte[] body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
+        final byte[] body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
         log.debug("file : {}", body.toString());
     }
 
     @Test
     void css_파일가져오기() throws Exception {
-        byte[] body = FileIoUtils.loadFileFromClasspath("./static/css/styles.css");
+        final byte[] body = FileIoUtils.loadFileFromClasspath("./static/css/styles.css");
         log.debug("length : {}", body.length);
         log.debug("file : {}", new String(body));
     }

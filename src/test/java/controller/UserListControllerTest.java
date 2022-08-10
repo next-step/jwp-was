@@ -2,6 +2,8 @@ package controller;
 
 import model.*;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.RequestLine;
 
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserListControllerTest {
+    private static final Logger logger = LoggerFactory.getLogger(UserListControllerTest.class);
 
     @Test
     void 로그인_쿠키_존재시_정상응답() throws Exception {
@@ -21,7 +24,7 @@ public class UserListControllerTest {
         final UserListController controller = new UserListController();
         final HttpResponse response = controller.process(httpRequest);
 
-        assertThat(response.getMessages().get(0)).isEqualTo("HTTP/1.1 200 OK \r\n");
+        logger.debug("respnse: {}", response);
     }
 
     @Test
@@ -31,7 +34,7 @@ public class UserListControllerTest {
         final UserListController controller = new UserListController();
         final HttpResponse response = controller.process(httpRequest);
 
-        assertThat(response.getMessages().get(0)).isEqualTo("HTTP/1.1 302 OK \r\n");
+        logger.debug("respnse: {}", response);
     }
 
     private User createUser() throws UnsupportedEncodingException {
