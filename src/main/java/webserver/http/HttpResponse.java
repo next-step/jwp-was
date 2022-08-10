@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Objects;
 
+import static webserver.http.HttpRequest.*;
+
 public class HttpResponse {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpResponse.class);
 
@@ -84,5 +86,9 @@ public class HttpResponse {
     public void setCookie(String key, Object value) {
         headers.setHeader("Set-Cookie", String.format("%s=%s; Path=/", key, value));
         headers.setCookie(key, value);
+    }
+
+    public void setSessionCookie(HttpSession httpSession) {
+        setCookie(SESSION_ID_KEY, httpSession.getId());
     }
 }

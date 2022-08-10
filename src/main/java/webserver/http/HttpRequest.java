@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class HttpRequest {
     public static final String VALIDATION_MESSAGE = "잘못된 요청입니다.";
+    public static final String SESSION_ID_KEY = "sessionId";
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequest.class);
 
     private final RequestLine requestLine;
@@ -50,8 +51,7 @@ public class HttpRequest {
     }
 
     public String getPath() {
-        return requestLine.getPath();
-    }
+        return requestLine.getPath();    }
 
     public HttpProtocol getHttpProtocol() {
         return requestLine.getHttpProtocol();
@@ -83,7 +83,12 @@ public class HttpRequest {
     public <T> T getCookie(String key, Class<T> returnType) {
         return headers.getCookie(key, returnType);
     }
+
     public String getCookie(String key) {
         return headers.getCookie(key);
+    }
+
+    public String getSessionCookie() {
+        return getCookie(SESSION_ID_KEY);
     }
 }

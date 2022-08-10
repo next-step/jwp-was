@@ -18,7 +18,7 @@ public class UserLoginController extends AbstractController {
         final String password = httpRequest.getAttribute("password");
 
         final HttpResponse httpResponse = login(httpSession, user, password);
-        HttpSessionManager.setSessionIdToCookie(httpResponse, httpSession);
+        httpResponse.setSessionCookie(httpSession);
         return httpResponse;
     }
 
