@@ -2,6 +2,9 @@ package webserver.http.model.request;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class HttpRequest {
@@ -9,6 +12,17 @@ public class HttpRequest {
     private final RequestLine requestLine;
     private final RequestHeaders requestHeaders;
     private RequestBody requestBody;
+
+    public HttpRequest(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+        String line = bufferedReader.readLine();
+        this.requestLine = new RequestLine(line);
+        this.requestHeaders = new RequestHeaders(bufferedReader, line);
+        this.requestBody = null;
+        if (HttpMethod.isPost(requestLine.getMethod())) {
+            this.requestBody = new RequestBody(bufferedReader, requestHeaders);
+        }
+    }
 
     public HttpRequest(BufferedReader bufferedReader) throws IOException {
         String line = bufferedReader.readLine();
@@ -45,10 +59,17 @@ public class HttpRequest {
     }
 
     public String getHeader(String header) {
-        return null;
+        return requestHeaders.getRequestHeadersMap().get(header);
     }
 
     public String getParameter(String parameter) {
+        if (requestBody != null) {
+            return this.requestBody.getRequestBodyMap().get(parameter);
+        }
+
+        if (requestLine.getQueryString() != null) {
+            return requestLine.getQueryString().getQueryStringMap().get(parameter);
+        }
         return null;
     }
 
@@ -60,12 +81,8 @@ public class HttpRequest {
         return requestLine.fullPath();
     }
 
-    public String path() {
-        return requestLine.path();
-    }
-
-    public QueryString getQueryStrings() {
-        return requestLine.getQueryStrings();
+    public QueryString getQueryString() {
+        return requestLine.getQueryString();
     }
 
     public RequestLine getRequestLine() {

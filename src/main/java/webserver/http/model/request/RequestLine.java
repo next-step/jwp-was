@@ -29,8 +29,8 @@ public class RequestLine {
         return pathInformation.fullPath();
     }
 
-    public QueryString getQueryStrings() {
-        return pathInformation.getQueryStrings();
+    public QueryString getQueryString() {
+        return pathInformation.getQueryString();
     }
 
     public String path() {

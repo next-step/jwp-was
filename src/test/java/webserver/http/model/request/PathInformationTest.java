@@ -21,6 +21,6 @@ class PathInformationTest {
     void construct() {
         PathInformation pathInformation = new PathInformation("/users?userId=javajigi&password=password&name=JaeSung");
         assertThat(pathInformation.getPath()).isEqualTo(new Path("/users"));
-        assertThat(pathInformation.getQueryStrings()).isEqualTo(new QueryString("userId=javajigi&password=password&name=JaeSung"));
+        assertThat(pathInformation.getQueryString()).isEqualTo(new QueryString("userId=javajigi&password=password&name=JaeSung"));
     }
 }

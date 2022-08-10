@@ -29,7 +29,7 @@ public enum ControllerEnum {
 
     public static Object handlerMapping(HttpRequest httpRequest) {
         ControllerEnum controllerEnum = Arrays.stream(values()).filter(controllerEnumEnum -> controllerEnumEnum.httpMethod == httpRequest.getRequestLine().getMethod())
-                .filter(controllerEnumEnum -> controllerEnumEnum.path.equals(httpRequest.path()))
+                .filter(controllerEnumEnum -> controllerEnumEnum.path.equals(httpRequest.getPath()))
                 .findFirst().orElse(ControllerEnum.INDEX);
 
         Object instance = controllerEnum.classObject;
@@ -44,7 +44,7 @@ public enum ControllerEnum {
 
     public static boolean accessiblePagesAfterLogin(HttpRequest httpRequest) {
         return Arrays.stream(values()).filter(controllerEnum -> controllerEnum.httpMethod == httpRequest.getRequestLine().getMethod())
-                .filter(controllerEnumEnum -> controllerEnumEnum.path.equals(httpRequest.path()))
+                .filter(controllerEnumEnum -> controllerEnumEnum.path.equals(httpRequest.getPath()))
                 .map(controllerEnumEnum -> controllerEnumEnum.accessibleAfterLogin).findFirst().orElse(true);
     }
 }

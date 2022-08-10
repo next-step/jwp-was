@@ -25,7 +25,7 @@ public class UserController {
     }
 
     public String createUserGet(HttpRequest httpRequest) {
-        User user = new User(httpRequest.getQueryStrings().getQueryStringMap());
+        User user = new User(httpRequest.getQueryString().getQueryStringMap());
         return "/index.html";
     }
 

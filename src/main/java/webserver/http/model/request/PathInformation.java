@@ -40,7 +40,7 @@ public class PathInformation {
         return path;
     }
 
-    public QueryString getQueryStrings() {
+    public QueryString getQueryString() {
         return queryString;
     }
 
