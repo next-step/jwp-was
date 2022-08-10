@@ -1,8 +1,10 @@
-package webserver;
+package webserver.http.request.start_line;
 
+import webserver.http.StaticContentType;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class RequestPath {
 
@@ -44,18 +46,9 @@ public class RequestPath {
 		return query;
 	}
 
-	@Override public boolean equals(final Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		final RequestPath that = (RequestPath) o;
-		return Objects.equals(path, that.path);
+	public boolean isStaticContentType() {
+		return Arrays.stream(StaticContentType.values())
+				.anyMatch(staticContentType -> path.contains(staticContentType.getType()));
 	}
 
-	@Override public int hashCode() {
-		return Objects.hash(path);
-	}
 }

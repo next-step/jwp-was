@@ -7,6 +7,7 @@ import java.util.HashMap;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
+import webserver.http.request.start_line.HttpRequestLine;
 
 class HttpRequestLineTest {
 
