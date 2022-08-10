@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.UUID;
 
+import static webserver.http.HttpSession.JSESSIONID;
+
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
@@ -31,7 +33,7 @@ public class RequestHandler implements Runnable {
             Path path = httpRequest.getPath();
             HttpResponse httpResponse = new HttpResponse(out);
 
-            if (httpRequest.getCookies().getCookie("JSESSIONID") == null) {
+            if (httpRequest.getCookies().getCookie(JSESSIONID) == null) {
                 httpResponse.addHeader("Set-Cookie", "JSESSIONID=" + UUID.randomUUID());
             }
 

@@ -1,6 +1,7 @@
 package webserver.http;
 
 public class HttpSession {
+    public static final String JSESSIONID = "JSESSIONID";
     private SessionData sessionData;
     private String id;
 
