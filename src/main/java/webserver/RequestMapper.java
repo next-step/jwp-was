@@ -1,14 +1,9 @@
 package webserver;
 
-import controller.Controller;
-import controller.UserCreateController;
-import controller.UserListController;
-import controller.ViewController;
+import controller.*;
 import model.HttpMethod;
 import model.RequestMappingInfo;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 public class RequestMapper {

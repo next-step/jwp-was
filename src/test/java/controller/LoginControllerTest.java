@@ -3,8 +3,6 @@ package controller;
 import db.DataBase;
 import model.*;
 import org.junit.jupiter.api.Test;
-import webserver.LoginController;
-import webserver.RequestLine;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

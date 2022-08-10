@@ -1,4 +1,4 @@
-package webserver;
+package controller;
 
 import controller.Controller;
 import db.DataBase;

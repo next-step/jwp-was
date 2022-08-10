@@ -13,19 +13,26 @@ public class Cookie {
     private String value;
     private String path;
 
+    public Cookie() {}
+
     public Cookie(String name, String value, String path) {
         this.name = name;
         this.value = value;
         this.path = path;
     }
 
-    public Cookie(String cookie, String path) {
+    public Cookie(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    public static Cookie createCookie(String cookie, String path) {
         if (cookie == null || cookie.isEmpty()) {
-            return;
+            return new Cookie();
         }
-        this.name = cookie.split(DELIMITER)[NAME_INDEX];
-        this.value = cookie.split(DELIMITER)[VALUE_INDEX];
-        this.path = path;
+        String name = cookie.split(DELIMITER)[NAME_INDEX];
+        String value = cookie.split(DELIMITER)[VALUE_INDEX];
+        return new Cookie(name, value, path);
     }
 
     public String getName() {
@@ -60,5 +67,9 @@ public class Cookie {
                 ", value='" + value + '\'' +
                 ", path='" + path + '\'' +
                 '}';
+    }
+
+    public boolean isLogin() {
+        return name.equals("logined") && value.equals("true");
     }
 }
