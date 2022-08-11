@@ -3,13 +3,14 @@ package model;
 import webserver.RequestLine;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 public class HttpRequest {
 
     private HttpHeader header;
     private RequestLine requestLine;
     private RequestBody body;
-    private Cookie cookie;
+    private Map<String, Cookie> cookie;
 
     public HttpRequest(HttpHeader header, String body) throws UnsupportedEncodingException {
         this.header = header;
@@ -26,8 +27,8 @@ public class HttpRequest {
         return body;
     }
 
-    public Cookie getCookie() {
-        return cookie;
+    public Cookie getCookie(String name) {
+        return cookie.get(name);
     }
 
     public HttpHeader getHeader() {
