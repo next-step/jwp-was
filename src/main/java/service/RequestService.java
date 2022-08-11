@@ -10,6 +10,7 @@ import utils.HandlerAdapter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,10 @@ public class RequestService {
     public static HttpResponseMessage getClientResponse(HttpRequestMessage httpRequestMessage) throws IOException, URISyntaxException, InvocationTargetException, IllegalAccessException {
 
         RequestLine requestLine = httpRequestMessage.getRequestLine();
+        if ((!requestLine.isSessionCheckExcludeUrls()) && (!hasSession(httpRequestMessage))) {
+            return redirectHome();
+        }
+
         if (requestLine.isRequestForFileResource(requestLine)) {
             return getFileResourceResponse(requestLine);
         }
@@ -41,13 +46,27 @@ public class RequestService {
         }
 
         logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpRequestMessage.toStringHttpMessage());
-        AuthService.getInstance().setUserCredential(httpRequestMessage.getRequestHeaders().getHeaders());
+        AuthService.getInstance().setUserCredential(httpRequestMessage.getRequestHeaders());
 
         HttpResponseMessage httpResponseMessage = HandlerAdapter.getInstance().invoke(httpRequestMessage);
 
         AuthService.getInstance().removeUserCredential();
 
         return httpResponseMessage;
+    }
+
+    private static boolean hasSession(HttpRequestMessage httpRequestMessage) {
+        HttpHeaders requestHeaders = httpRequestMessage.getRequestHeaders();
+        String sessionId = requestHeaders.getSessionId();
+
+        return (sessionId != null);
+    }
+
+    private static HttpResponseMessage redirectHome() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.TEXT_HTML);
+        httpHeaders.setLocation(URI.create("http://localhost:8080/").toString());
+        return new HttpResponseMessage(HttpStatus.FOUND, httpHeaders);
     }
 
     private static HttpResponseMessage getHtmlResponse(RequestLine requestLine) throws IOException, URISyntaxException {

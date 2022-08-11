@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class HandlerAdapter {
 
@@ -24,7 +25,7 @@ public class HandlerAdapter {
     private HandlerAdapter() {
     }
 
-    public HttpResponseMessage invoke(HttpRequestMessage httpRequestMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+    public HttpResponseMessage invoke(HttpRequestMessage httpRequestMessage) throws InvocationTargetException, IllegalAccessException {
         RequestLine requestLine = httpRequestMessage.getRequestLine();
 
         if (this.handlers == null) {
@@ -39,26 +40,94 @@ public class HandlerAdapter {
         return this.invokeHandler(handlerPair, httpRequestMessage);
     }
 
-    private HttpResponseMessage invokeHandler(HandlerPair handlerPair, HttpRequestMessage httpRequestMessage) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+    public static HandlerAdapter getInstance() {
+        return instance;
+    }
+
+    private HttpResponseMessage invokeHandler(HandlerPair handlerPair, HttpRequestMessage httpRequestMessage) throws InvocationTargetException, IllegalAccessException {
         RequestLine requestLine = httpRequestMessage.getRequestLine();
         Object controller = handlerPair.getController();
         Method handler = handlerPair.getHandler();
 
-        Parameter[] parameters = handler.getParameters();
-        if (parameters.length == 0) {
+        List<Parameter> parameters = Arrays.stream(handler.getParameters())
+                .collect(Collectors.toList());
+
+        List<?> convertedParameters = parameters.stream()
+                .filter(parameter -> !(parameter.getType().equals(HttpHeaders.class)))
+                .map(parameter -> {
+                    Class<?> parameterClass = parameter.getType();
+                    String data = null;
+                    try {
+                        data = this.getParameterData(requestLine.getHttpMethod(), httpRequestMessage);
+                        return this.getParaMeterObject(data, parameterClass);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList());
+
+        this.removeHeaderParameter(convertedParameters);
+        if ((this.parameterContainsHeader(parameters))) {
+            return this.getHttpResponseMessageWithRequestHeader(httpRequestMessage.getRequestHeaders(), handlerPair, convertedParameters);
+        }
+
+        return this.getHttpResponseMessage(handlerPair, convertedParameters);
+    }
+
+    private HttpResponseMessage getHttpResponseMessage(HandlerPair handlerPair, List<?> convertedParameters) throws IllegalAccessException, InvocationTargetException {
+        Object controller = handlerPair.getController();
+        Method handler = handlerPair.getHandler();
+
+        if (convertedParameters == null || convertedParameters.isEmpty()) {
             return (HttpResponseMessage) handler.invoke(controller);
         }
 
-        if (parameters.length == 1) {
-            Parameter definedParameter = parameters[0];
-            Class<?> parameterClass = definedParameter.getType();
-            String data = this.getParameterData(requestLine.getHttpMethod(), httpRequestMessage);
-            Object parameter = this.getParaMeterObject(data, parameterClass);
-            return (HttpResponseMessage) handler.invoke(controller, parameter);
+        if (convertedParameters.size() == 1) {
+            return (HttpResponseMessage) handler.invoke(controller, convertedParameters.get(0));
         }
 
-        // TODO 1개 초과 파라미터 설정시 어노테이션에 따라 파라미터 컨버팅 처리 구현
-        return (HttpResponseMessage) handler.invoke(controller);
+        if (convertedParameters.size() == 2) {
+            return (HttpResponseMessage) handler.invoke(controller, convertedParameters.get(0), convertedParameters.get(1));
+        }
+
+        throw new IllegalArgumentException();
+    }
+
+    private HttpResponseMessage getHttpResponseMessageWithRequestHeader(HttpHeaders requestHeaders, HandlerPair handlerPair, List<?> convertedParameters) throws IllegalAccessException, InvocationTargetException {
+        Object controller = handlerPair.getController();
+        Method handler = handlerPair.getHandler();
+
+        if (convertedParameters == null || convertedParameters.isEmpty()) {
+            return (HttpResponseMessage) handler.invoke(controller, requestHeaders);
+        }
+
+        if (convertedParameters.size() == 1) {
+            return (HttpResponseMessage) handler.invoke(controller, requestHeaders, convertedParameters.get(0));
+        }
+
+        if (convertedParameters.size() == 2) {
+            return (HttpResponseMessage) handler.invoke(controller, requestHeaders, convertedParameters.get(0), convertedParameters.get(1));
+        }
+
+        throw new IllegalArgumentException();
+    }
+
+    private void removeHeaderParameter(List<?> convertedParameters) {
+        HttpHeaders requestHeader = (HttpHeaders) convertedParameters.stream()
+                .filter(parameter -> parameter.getClass().equals(HttpHeaders.class))
+                .findAny()
+                .orElse(null);
+        if (requestHeader == null) {
+            return;
+        }
+
+        convertedParameters.remove(requestHeader);
+    }
+
+
+    private boolean parameterContainsHeader(List<Parameter> parameters) {
+        return parameters.stream()
+                .anyMatch(parameter -> parameter.getType().equals(HttpHeaders.class));
     }
 
     private Object getParaMeterObject(String data, Class<?> parameterClass) throws JsonProcessingException {
@@ -68,7 +137,6 @@ public class HandlerAdapter {
 
         return ObjectMapperFactory.getObjectMapper().readValue(data, parameterClass);
     }
-
 
     private String getParameterData(HttpMethod httpMethod, HttpRequestMessage httpRequestMessage) throws JsonProcessingException {
         UrlPath urlPath = httpRequestMessage.getRequestLine().getUrlPath();
@@ -84,10 +152,6 @@ public class HandlerAdapter {
         }
 
         return null;
-    }
-
-    public static HandlerAdapter getInstance() {
-        return instance;
     }
 
     private void initHandlers() {

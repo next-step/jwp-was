@@ -51,11 +51,15 @@ public class RequestLine {
     }
 
     public boolean isRequestForHtml() {
-        return this.getUrlPath().isRequestForHtml();
+        return this.urlPath.isRequestForHtml();
     }
 
     public boolean isRequestForFileResource(RequestLine requestLine) {
         return RESOURCE_FILE_EXTENSIONS.stream().anyMatch(requestLine.getUrlPath().getPath()::contains);
+    }
+
+    public boolean isSessionCheckExcludeUrls() {
+        return this.urlPath.isSessionCheckExcludeUrls();
     }
 
 }

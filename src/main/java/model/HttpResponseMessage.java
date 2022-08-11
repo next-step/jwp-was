@@ -52,7 +52,7 @@ public class HttpResponseMessage {
     }
 
     private void makeResponseHeader(DataOutputStream dataOutputStream) throws IOException {
-        byte[] body = this.getBytesBody();
+        byte[] body = this.bytesBody;
 
         HttpStatus responseHttpStatus = this.getResponseHttpStatus();
         HttpHeaders responseHeaders = this.getResponseHeaders();
@@ -77,7 +77,7 @@ public class HttpResponseMessage {
     }
 
     private void makeResponseBody(DataOutputStream dataOutputStream) throws IOException {
-        byte[] body = this.getBytesBody();
+        byte[] body = this.bytesBody;
         if (body == null) {
             dataOutputStream.flush();
             return;

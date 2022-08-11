@@ -1,16 +1,13 @@
 package service;
 
-import utils.HttpParser;
-
-import java.util.Map;
+import model.HttpHeaders;
+import model.Session;
+import model.SessionStorage;
 
 public class AuthService {
 
-    public static final String LOGIN_HEADER_KEY = "logined";
-
     public static ThreadLocal<Boolean> userLogined = new ThreadLocal<>();
     private static final AuthService authService = new AuthService();
-    private static final String COOKIE_HEADER_KEY = "Cookie";
 
     private AuthService() {
 
@@ -20,8 +17,8 @@ public class AuthService {
         return authService;
     }
 
-    public void setUserCredential(Map<String, String> requestHeaders) {
-        if (this.parseLoginedFromCookie(requestHeaders)) {
+    public void setUserCredential(HttpHeaders requestHeaders) {
+        if (this.userLogined(requestHeaders)) {
             userLogined.set(true);
             return;
         }
@@ -33,9 +30,14 @@ public class AuthService {
         userLogined.remove();
     }
 
-    private boolean parseLoginedFromCookie(Map<String, String> requestHeaders) {
-        String cookieValue = requestHeaders.get(COOKIE_HEADER_KEY);
-        return (cookieValue != null && Boolean.parseBoolean(cookieValue.split(HttpParser.QUERY_PARAMETER_KEY_VALUE_SEPARATOR)[1]));
+    private boolean userLogined(HttpHeaders requestHeaders) {
+        String sessionId = requestHeaders.getSessionId();
+        if (sessionId == null) {
+            return false;
+        }
+
+        Session userSession = SessionStorage.getInstance().getSession(sessionId);
+        return userSession.isUserLogined();
     }
 
 }
