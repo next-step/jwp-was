@@ -22,8 +22,8 @@ public class QueryString {
     public static QueryString parse(String queryString) {
         String[] datas = queryString.split(PARAM_DELIMITER);
         Map<String, String> data = Arrays.stream(datas)
-                .map(s -> (s.split(KEY_VALUE_DELIMITER)))
-                .collect(Collectors.toMap(s -> s[KEY_IDX], s -> s[VALUE_IDX]));
+                .map(queryData -> (queryData.split(KEY_VALUE_DELIMITER)))
+                .collect(Collectors.toMap(queryData -> queryData[KEY_IDX], queryData -> queryData[VALUE_IDX]));
 
         return new QueryString(data);
     }
