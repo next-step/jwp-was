@@ -1,6 +1,7 @@
 package webserver.http.view;
 
 import utils.HandlebarsUtils;
+import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
 public class TemplateView implements View {
@@ -12,8 +13,8 @@ public class TemplateView implements View {
     }
 
     @Override
-    public void render(HttpResponse response) throws Exception {
-        String body = HandlebarsUtils.template(resourcePath, response.getAttributes());
+    public void render(HttpRequest request, HttpResponse response) throws Exception {
+        String body = HandlebarsUtils.template(resourcePath, request.getAttributes());
 
         byte[] contents = body.getBytes();
         response.addHeader("Content-Type", "text/html;charset=utf-8");
