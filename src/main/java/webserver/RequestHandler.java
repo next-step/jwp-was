@@ -52,7 +52,7 @@ public class RequestHandler implements Runnable {
 
     private void writeHttpHeaders(HttpResponse httpResponse, DataOutputStream dos) throws IOException {
         dos.writeBytes(String.format("HTTP/1.1 %s \r\n", httpResponse.getHttpResponseCode()));
-        for (Map.Entry<String, Object> header : httpResponse.getHeaders()) {
+        for (Map.Entry<HttpHeaders, Object> header : httpResponse.getHeaders()) {
             dos.writeBytes(String.format("%s: %s \r\n", header.getKey(), header.getValue()));
         }
 

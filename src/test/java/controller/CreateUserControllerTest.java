@@ -41,7 +41,7 @@ class CreateUserControllerTest {
         assertAll(
                 () -> assertThat(response.getHttpResponseCode()).isEqualTo("302 FOUND"),
                 () -> assertThat(response.getHeaders()).contains(
-                        Map.entry("Location", "/index.html")
+                        Map.entry(HttpHeaders.LOCATION, "/index.html")
                 )
         );
 

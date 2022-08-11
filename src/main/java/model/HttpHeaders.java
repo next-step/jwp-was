@@ -1,9 +1,35 @@
 package model;
 
-public class HttpHeaders {
-    public static final String CONTENT_LENGTH = "Content-Length";
-    public static final String CONTENT_TYPE = "Content-Type";
-    public static final String LOCATION = "Location";
-    public static final String SET_COOKIE = "Set-Cookie";
+import java.util.Arrays;
 
+public enum HttpHeaders {
+    CONTENT_LENGTH("Content-Length"),
+    CONTENT_TYPE("Content-Type"),
+    LOCATION("Location"),
+    SET_COOKIE("Set-Cookie"),
+    HOST("Host"),
+    ACCEPT("Accept"),
+    ACCEPT_LANGUAGE("Accept-Language"),
+    CONNECTION("Connection");
+
+    private String header;
+
+    HttpHeaders(String header) {
+        this.header = header;
+    }
+
+    public static HttpHeaders of(String value) {
+        return Arrays.stream(values())
+                .filter( httpHeaders -> httpHeaders.equals(value))
+                .findAny()
+                .orElseThrow( () -> new IllegalArgumentException("존재하지 않는 HttpHeaders 입니다. value=" + value));
+    }
+
+    public String getHeader() {
+        return header;
+    }
+
+    public boolean equals(String header) {
+        return this.header.equals(header);
+    }
 }

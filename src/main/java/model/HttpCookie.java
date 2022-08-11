@@ -1,19 +1,21 @@
 package model;
 
+import utils.EnumMapUtils;
+
 import java.util.Map;
 
 public class HttpCookie {
-    private final Map<String, String> cookieMap;
+    private final Map<HttpHeaders, String> cookieMap;
 
-    public HttpCookie(Map<String, String> cookieMap) {
+    public HttpCookie(Map<HttpHeaders, String> cookieMap) {
         this.cookieMap = cookieMap;
     }
 
     public static HttpCookie of(String value) {
-        return new HttpCookie(Map.of(HttpHeaders.SET_COOKIE, value));
+        return new HttpCookie(EnumMapUtils.of(Map.of(HttpHeaders.SET_COOKIE, value)));
     }
 
-    public static HttpCookie of(Map<String, String> cookieMap) {
+    public static HttpCookie of(Map<HttpHeaders, String> cookieMap) {
         return new HttpCookie(cookieMap);
     }
 

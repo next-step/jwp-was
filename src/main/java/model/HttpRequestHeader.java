@@ -1,5 +1,6 @@
 package model;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -7,14 +8,14 @@ import java.util.stream.Collectors;
 public class HttpRequestHeader {
     private static final String DEFAULT_CONTENT_LENGTH = "0";
 
-    private Map<String, String> headers;
+    private Map<HttpHeaders, String> headers;
     private HttpCookie httpCookie;
 
-    private HttpRequestHeader(Map<String, String> headers) {
+    private HttpRequestHeader(Map<HttpHeaders, String> headers) {
         this.headers = headers;
     }
 
-    private HttpRequestHeader(Map<String, String> headers, HttpCookie httpCookie) {
+    private HttpRequestHeader(Map<HttpHeaders, String> headers, HttpCookie httpCookie) {
         this.headers = headers;
         this.httpCookie = httpCookie;
     }
@@ -29,10 +30,10 @@ public class HttpRequestHeader {
     }
 
     private static HttpCookie createCookie(List<String> headers) {
-        Map<String, String> cookieMap = headers.stream()
+        Map<HttpHeaders, String> cookieMap = headers.stream()
                 .map(header -> header.split(": "))
                 .filter(header -> HttpHeaders.SET_COOKIE.equals(header[0]))
-                .collect(Collectors.toMap(key -> key[0], value -> value[1]));
+                .collect(Collectors.toMap(key -> HttpHeaders.of(key[0]), value -> value[1]));
         return HttpCookie.of(cookieMap);
     }
 
@@ -47,14 +48,14 @@ public class HttpRequestHeader {
     }
 
     private static HttpRequestHeader createHttpRequestHeader(List<String> headers) {
-        Map<String, String> headerMap = headers.stream()
+        Map<HttpHeaders, String> headerMap = headers.stream()
                 .map(header -> header.split(": "))
                 .filter(header -> !HttpHeaders.SET_COOKIE.equals(header[0]))
-                .collect(Collectors.toMap(key -> key[0], value -> value[1]));
+                .collect(Collectors.toMap(key -> HttpHeaders.of(key[0]), value -> value[1]));
         return new HttpRequestHeader(headerMap);
     }
 
-    public Map<String, String> getHeaders() {
+    public Map<HttpHeaders, String> getHeaders() {
         return headers;
     }
 

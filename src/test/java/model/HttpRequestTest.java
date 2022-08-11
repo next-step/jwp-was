@@ -24,8 +24,8 @@ class HttpRequestTest {
                 () -> assertThat(request.getHttpMethod()).isEqualTo(HttpMethod.GET),
                 () -> assertThat(request.getPath()).isEqualTo("/docs/index.html"),
                 () -> assertThat(request.getHeader()).contains(
-                        Map.entry("Host", "www.nowhere123.com"),
-                        Map.entry("Accept", "image/gif, image/jpeg, */*"))
+                        Map.entry(HttpHeaders.HOST, "www.nowhere123.com"),
+                        Map.entry(HttpHeaders.ACCEPT, "image/gif, image/jpeg, */*"))
         );
 
     }
@@ -41,11 +41,11 @@ class HttpRequestTest {
                 () -> assertThat(request.getHttpMethod()).isEqualTo(HttpMethod.POST),
                 () -> assertThat(request.getPath()).isEqualTo("/user/create"),
                 () -> assertThat(request.getHeader()).contains(
-                        Map.entry("Host", "localhost:8080"),
-                        Map.entry("Connection", "keep-alive"),
-                        Map.entry("Content-Length", "46"),
-                        Map.entry("Content-Type", "application/x-www-form-urlencoded"),
-                        Map.entry("Accept", "*/*")),
+                        Map.entry(HttpHeaders.HOST, "localhost:8080"),
+                        Map.entry(HttpHeaders.CONNECTION, "keep-alive"),
+                        Map.entry(HttpHeaders.CONTENT_LENGTH, "46"),
+                        Map.entry(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded"),
+                        Map.entry(HttpHeaders.ACCEPT, "*/*")),
                 () -> assertThat(request.getParameter("userId")).isEqualTo("javajigi"),
                 () -> assertThat(request.getParameter("password")).isEqualTo("password"),
                 () -> assertThat(request.getParameter("name")).isEqualTo("JaeSung")

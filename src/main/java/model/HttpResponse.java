@@ -1,5 +1,7 @@
 package model;
 
+import utils.EnumMapUtils;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -17,7 +19,7 @@ public class HttpResponse {
     public static HttpResponse found(String path) {
         return new HttpResponse(
                 HttpStatusCode.FOUND,
-                ResponseHeader.of(Map.of(HttpHeaders.LOCATION, path)),
+                ResponseHeader.of(EnumMapUtils.of(Map.of(HttpHeaders.LOCATION, path))),
                 new byte[0]
         );
     }
@@ -49,7 +51,7 @@ public class HttpResponse {
         return body;
     }
 
-    public Set<Map.Entry<String, Object>> getHeaders() {
+    public Set<Map.Entry<HttpHeaders, Object>> getHeaders() {
         return header.getHeaders().entrySet();
     }
 

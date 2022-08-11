@@ -43,7 +43,7 @@ public class HttpRequest {
         return new HttpRequest(requestLine, header, body);
     }
 
-    public Map<String, String> getHeader() {
+    public Map<HttpHeaders, String> getHeader() {
         return header.getHeaders();
     }
 

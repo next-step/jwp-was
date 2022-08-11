@@ -1,24 +1,25 @@
 package model;
 
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ResponseHeader {
-    private final Map<String, Object> headers;
+    private final Map<HttpHeaders, Object> headers;
     private HttpCookie cookie;
 
-    private ResponseHeader(Map<String, Object> headers) {
+    private ResponseHeader(Map<HttpHeaders, Object> headers) {
         this.headers = headers;
     }
 
-    private ResponseHeader(Map<String, Object> headers, HttpCookie cookie) {
+    private ResponseHeader(Map<HttpHeaders, Object> headers, HttpCookie cookie) {
         this.headers = headers;
         this.cookie = cookie;
     }
 
     public static ResponseHeader text(int length, String path) {
-        Map<String, Object> map = new HashMap<>();
+        Map<HttpHeaders, Object> map = new EnumMap<HttpHeaders, Object>(HttpHeaders.class);
         map.put(HttpHeaders.CONTENT_TYPE, String.format("text/%s;charset=utf-8", fileExtension(path)));
         map.put(HttpHeaders.CONTENT_LENGTH, length);
         return new ResponseHeader(map);
@@ -28,19 +29,19 @@ public class ResponseHeader {
         return new ResponseHeader(Collections.emptyMap());
     }
 
-    public static ResponseHeader of(Map<String, Object> map) {
+    public static ResponseHeader of(Map<HttpHeaders, Object> map) {
         return new ResponseHeader(map);
     }
 
-    public static ResponseHeader of(Map<String, Object> headers, String cookie) {
+    public static ResponseHeader of(Map<HttpHeaders, Object> headers, String cookie) {
         return new ResponseHeader(headers, HttpCookie.of(cookie));
     }
 
-    public static ResponseHeader of(Map<String, Object> headers, HttpCookie cookie) {
+    public static ResponseHeader of(Map<HttpHeaders, Object> headers, HttpCookie cookie) {
         return new ResponseHeader(headers, cookie);
     }
 
-    public Map<String, Object> getHeaders() {
+    public Map<HttpHeaders, Object> getHeaders() {
         return headers;
     }
 
