@@ -22,8 +22,8 @@ public class LoginController implements Controller {
         final User findUser = DataBase.findUserById(userId);
 
         if (findUser == null) {
-            return HttpResponse.loginRedirect(LOGIN_FAILED_PATH, Boolean.FALSE.toString());
+            return HttpResponse.loginRedirect(LOGIN_FAILED_PATH, false);
         }
-        return HttpResponse.loginRedirect(LOGIN_SUCCESS_PATH, Boolean.TRUE.toString());
+        return HttpResponse.loginRedirect(LOGIN_SUCCESS_PATH, true);
     }
 }

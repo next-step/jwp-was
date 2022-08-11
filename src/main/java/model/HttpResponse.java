@@ -43,11 +43,11 @@ public class HttpResponse {
         return new HttpResponse(httpHeader, body);
     }
 
-    public static HttpResponse loginRedirect(String location, String loginValue) {
+    public static HttpResponse loginRedirect(String location, Boolean loginValue) {
         final HttpHeader httpHeader = new HttpHeader(new ArrayList<>());
         httpHeader.addRedirectStatus();
         httpHeader.addRedirectLocation(location);
-        httpHeader.addCookie("logined", loginValue);
+        httpHeader.addCookie("logined", loginValue.toString());
 
         return new HttpResponse(httpHeader);
     }
