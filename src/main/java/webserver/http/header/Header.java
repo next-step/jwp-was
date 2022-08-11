@@ -1,6 +1,10 @@
-package webserver.http;
+package webserver.http.header;
 
-import java.util.EnumMap;
+import webserver.http.header.type.EntityHeader;
+import webserver.http.header.type.RequestHeader;
+import webserver.http.header.type.ResponseHeader;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,7 +24,7 @@ public class Header {
     }
 
     public Header() {
-        this(new EnumMap<>(HeaderKey.class));
+        this(new HashMap<>());
     }
 
     public Header(Map<HeaderKey, String> fields, Cookie cookie) {
@@ -47,28 +51,28 @@ public class Header {
     }
 
     public static Header templateResponse() {
-        Map<HeaderKey, String> fields = new EnumMap<>(HeaderKey.class);
-        fields.put(HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8);
+        Map<HeaderKey, String> fields = new HashMap<>();
+        fields.put(EntityHeader.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8);
         return new Header(fields);
     }
 
     public static Header staticResponse() {
-        Map<HeaderKey, String> fields = new EnumMap<>(HeaderKey.class);
-        fields.put(HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_CSS_UTF8);
+        Map<HeaderKey, String> fields = new HashMap<>();
+        fields.put(EntityHeader.CONTENT_TYPE, HeaderValue.TEXT_CSS_UTF8);
         return new Header(fields);
     }
 
     public static Header loginFailResponse() {
-        Map<HeaderKey, String> fields = new EnumMap<>(HeaderKey.class);
-        fields.put(HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8);
-        fields.put(HeaderKey.SET_COOKIE, HeaderValue.LOGINED_FALSE_ALL_PATH);
+        Map<HeaderKey, String> fields = new HashMap<>();
+        fields.put(EntityHeader.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8);
+        fields.put(ResponseHeader.SET_COOKIE, HeaderValue.LOGINED_FALSE_ALL_PATH);
         return new Header(fields);
     }
 
     public static Header loginSuccessResponse() {
-        Map<HeaderKey, String> fields = new EnumMap<>(HeaderKey.class);
-        fields.put(HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8);
-        fields.put(HeaderKey.SET_COOKIE, HeaderValue.LOGINED_TRUE_ALL_PATH);
+        Map<HeaderKey, String> fields = new HashMap<>();
+        fields.put(EntityHeader.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8);
+        fields.put(ResponseHeader.SET_COOKIE, HeaderValue.LOGINED_TRUE_ALL_PATH);
         return new Header(fields);
     }
 
@@ -92,11 +96,11 @@ public class Header {
     }
 
     public int getContentLength() {
-        return Integer.parseInt(this.fields.getOrDefault(HeaderKey.CONTENT_LENGTH, ZERO_STRING));
+        return Integer.parseInt(this.fields.getOrDefault(EntityHeader.CONTENT_LENGTH, ZERO_STRING));
     }
 
     public String getCookieValue() {
-        return this.fields.getOrDefault(HeaderKey.COOKIE, EMPTY_STRING);
+        return this.fields.getOrDefault(RequestHeader.COOKIE, EMPTY_STRING);
     }
 
     public boolean isLogin() {

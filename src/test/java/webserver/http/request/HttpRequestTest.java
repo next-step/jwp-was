@@ -2,9 +2,11 @@ package webserver.http.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.Header;
-import webserver.http.HeaderKey;
-import webserver.http.HeaderValue;
+import webserver.http.header.type.EntityHeader;
+import webserver.http.header.type.GeneralHeader;
+import webserver.http.header.Header;
+import webserver.http.header.HeaderValue;
+import webserver.http.header.type.RequestHeader;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
 import webserver.http.request.requestline.Protocol;
@@ -29,11 +31,11 @@ class HttpRequestTest {
         // given
         RequestLine requestLine = RequestLine.parse("POST /user/create HTTP/1.1");
         Header header = new Header(Map.of(
-                HeaderKey.HOST, "localhost:8080",
-                HeaderKey.CONNECTION, HeaderValue.KEEP_ALIVE,
-                HeaderKey.CONTENT_LENGTH, "71",
-                HeaderKey.CONTENT_TYPE, HeaderValue.APPLICATION_HTML_FORM,
-                HeaderKey.ACCEPT, HeaderValue.ALL_MIME_TYPE
+                RequestHeader.HOST, "localhost:8080",
+                GeneralHeader.CONNECTION, HeaderValue.KEEP_ALIVE,
+                EntityHeader.CONTENT_LENGTH, "71",
+                EntityHeader.CONTENT_TYPE, HeaderValue.APPLICATION_HTML_FORM,
+                RequestHeader.ACCEPT, HeaderValue.ALL_MIME_TYPE
         ));
         QueryString body = QueryString.parse("userId=javajigi&password=password&name=JaeSung&email=javajigi@slipp.net");
         HttpRequest expectedHttpRequest = new HttpRequest(requestLine, header, body);

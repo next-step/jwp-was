@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.header;
 
 public class Cookie {
     private static final String EMPTY_STRING = "";

@@ -1,7 +1,7 @@
 package webserver.http.request;
 
 import utils.IOUtils;
-import webserver.http.Header;
+import webserver.http.header.Header;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
 import webserver.http.request.requestline.QueryString;

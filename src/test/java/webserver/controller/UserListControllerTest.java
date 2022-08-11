@@ -10,9 +10,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import webserver.http.Header;
-import webserver.http.HeaderKey;
-import webserver.http.HeaderValue;
+import webserver.http.header.Header;
+import webserver.http.header.HeaderValue;
+import webserver.http.header.type.ResponseHeader;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
@@ -53,7 +53,7 @@ class UserListControllerTest {
         // then
         assertAll(
                 () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.OK)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual(HeaderKey.SET_COOKIE, HeaderValue.LOGINED_TRUE_ALL_PATH)).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.SET_COOKIE, HeaderValue.LOGINED_TRUE_ALL_PATH)).isTrue(),
                 () -> assertAll(
                         () -> assertThat(body.contains("test_id")),
                         () -> assertThat(body.contains("test_password")),
@@ -75,8 +75,8 @@ class UserListControllerTest {
         // then
         assertAll(
                 () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual(HeaderKey.SET_COOKIE, HeaderValue.LOGINED_FALSE_ALL_PATH)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual(HeaderKey.LOCATION, "/user/login.html")).isTrue()
+                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.SET_COOKIE, HeaderValue.LOGINED_FALSE_ALL_PATH)).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.LOCATION, "/user/login.html")).isTrue()
         );
     }
 

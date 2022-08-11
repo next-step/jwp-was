@@ -5,9 +5,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import webserver.http.Header;
-import webserver.http.HeaderKey;
-import webserver.http.HeaderValue;
+import webserver.http.header.type.EntityHeader;
+import webserver.http.header.Header;
+import webserver.http.header.HeaderValue;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
@@ -43,7 +43,7 @@ class TemplateControllerTest {
         // then
         assertAll(
                 () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.OK)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual(HeaderKey.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8)).isTrue()
+                () -> assertThat(httpResponse.isHeaderValueEqual(EntityHeader.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8)).isTrue()
         );
     }
 

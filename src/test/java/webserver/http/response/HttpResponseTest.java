@@ -2,10 +2,8 @@ package webserver.http.response;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.Header;
+import webserver.http.header.Header;
 import webserver.http.request.requestline.Protocol;
-import webserver.http.request.requestline.ProtocolType;
-import webserver.http.request.requestline.Version;
 import webserver.http.response.statusline.StatusCode;
 import webserver.http.response.statusline.StatusLine;
 

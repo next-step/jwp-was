@@ -2,7 +2,7 @@ package webserver.controller;
 
 import db.DataBase;
 import model.User;
-import webserver.http.Header;
+import webserver.http.header.Header;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.requestline.Path;
 import webserver.http.response.HttpResponse;

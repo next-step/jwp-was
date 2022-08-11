@@ -3,7 +3,7 @@ package webserver.controller;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import db.DataBase;
-import webserver.http.Header;
+import webserver.http.header.Header;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.requestline.Path;
 import webserver.http.response.HttpResponse;

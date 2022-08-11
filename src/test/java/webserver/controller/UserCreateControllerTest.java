@@ -7,8 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import webserver.http.Header;
-import webserver.http.HeaderKey;
+import webserver.http.header.Header;
+import webserver.http.header.type.ResponseHeader;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
@@ -45,7 +45,7 @@ class UserCreateControllerTest {
         // then
         assertAll(
                 () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual(HeaderKey.LOCATION, "/index.html")).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.LOCATION, "/index.html")).isTrue(),
                 () -> assertThat(DataBase.findUserById(httpRequest.getParam("userId"))).isEqualTo(user)
         );
     }
