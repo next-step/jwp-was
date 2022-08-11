@@ -8,6 +8,8 @@
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
 
+## step 1 - TDD 실습
+
 ### 요구사항 1 - GET 요청
 - [o] HTTP GET 요청에 대한 RequestLine을 파싱
 
@@ -15,7 +17,15 @@
 - [o] HTTP POST 요청에 대한 RequestLine을 파싱
 
 ### 요구사항 3 - Query String 요청
-- [] HTTP 요청의 Query String 으로 전달되는 데이터 파싱
+- [o] HTTP 요청의 Query String 으로 전달되는 데이터 파싱
 
 ### 요구사항 4 - enum 적용
-- [] HTTP metho를 enum 으로 구현 
+- [o] HTTP metho를 enum 으로 구현 
+
+
+## step 2 - HTTP 웹 서버 구현
+
+### 요구사항 1 
+- [] BufferedReader api를 이용해 모든 Request Header 출력하기
+- [] 첫 번째 Request Line 에서 요청 URL 추출하기
+- [] path에 해당하는 파일을 읽어서 응답하기
