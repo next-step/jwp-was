@@ -52,4 +52,22 @@ public class StatusLine {
     public String statusLine() {
         return String.format("%s %s %s\r\n", this.protocol.protocol(), this.statusCode.statusCode(), this.statusCode.statusMessage());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StatusLine that = (StatusLine) o;
+
+        if (!protocol.equals(that.protocol)) return false;
+        return statusCode == that.statusCode;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = protocol.hashCode();
+        result = 31 * result + statusCode.hashCode();
+        return result;
+    }
 }

@@ -14,10 +14,8 @@ import webserver.http.request.HttpRequest;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
 import webserver.http.request.requestline.Protocol;
-import webserver.http.request.requestline.ProtocolType;
 import webserver.http.request.requestline.QueryString;
 import webserver.http.request.requestline.RequestLine;
-import webserver.http.request.requestline.Version;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.statusline.StatusCode;
 
@@ -71,15 +69,23 @@ class UserLoginControllerTest {
     }
 
     @ParameterizedTest
+    @DisplayName("POST 요청 이외의 메서드는 Not Found 를 반환한다.")
+    @CsvSource(value = {
+            "GET, PUT, DELETE, PATCH"
+    })
+    void throw_exception_exceptGetMethod(Method method) throws IOException, URISyntaxException {
+        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path("/user/login", new QueryString()), Protocol.ofHttp_V1_1()), new Header(), new QueryString());
+        assertThat(controller.process(httpRequest)).isEqualTo(HttpResponse.notFound());
+    }
+
+    @ParameterizedTest
     @DisplayName("해당 요청에 대한 Mapping 이 일치하는지 확인한다.")
     @CsvSource(value = {
-            "GET, /user/login, false",
-            "GET, /user/logins, false",
-            "POST, /user/login, true",
-            "POST, /user/logins, false"
+            "/user/login, true",
+            "/user/logins, false",
     })
-    void isMatchRequest(Method method, String path, boolean trueOrFalse) {
-        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path(path, new QueryString()), new Protocol(ProtocolType.HTTP, Version.ONE_ONE)), new Header(), new QueryString());
-        assertThat(controller.isMatchRequest(httpRequest)).isEqualTo(trueOrFalse);
+    void isMatchRequest(String path, boolean trueOrFalse) {
+        HttpRequest httpRequest = new HttpRequest(new RequestLine(Method.GET, new Path(path, new QueryString()), Protocol.ofHttp_V1_1()), new Header(), new QueryString());
+        assertThat(controller.isMatchPath(httpRequest)).isEqualTo(trueOrFalse);
     }
 }

@@ -5,7 +5,7 @@ import webserver.http.HeaderKey;
 import webserver.http.response.statusline.StatusCode;
 import webserver.http.response.statusline.StatusLine;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -52,7 +52,7 @@ public class HttpResponse {
     }
 
     public static HttpResponse notFound() {
-        return new HttpResponse(StatusLine.ofHttp_V1_1_NotFound(), new Header(Collections.emptyMap()), new byte[0]);
+        return new HttpResponse(StatusLine.ofHttp_V1_1_NotFound(), new Header(new EnumMap<>(HeaderKey.class)), new byte[0]);
     }
 
     public static HttpResponse redirect(String path) {
@@ -82,5 +82,25 @@ public class HttpResponse {
 
     public boolean isStatusCodeEqual(StatusCode statusCode) {
         return this.statusLine.isStatusCodeEqual(statusCode);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        HttpResponse that = (HttpResponse) o;
+
+        if (!statusLine.equals(that.statusLine)) return false;
+        if (!header.equals(that.header)) return false;
+        return Arrays.equals(body, that.body);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = statusLine.hashCode();
+        result = 31 * result + header.hashCode();
+        result = 31 * result + Arrays.hashCode(body);
+        return result;
     }
 }

@@ -17,7 +17,7 @@ class HttpResponseTest {
     @Test
     @DisplayName("HttpResponse 를 생성한다.")
     void create_HttpRequest() {
-        HttpResponse httpResponse = new HttpResponse(new StatusLine(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), StatusCode.OK), new Header(), new byte[0]);
+        HttpResponse httpResponse = new HttpResponse(new StatusLine(Protocol.ofHttp_V1_1(), StatusCode.OK), new Header(), new byte[0]);
         assertThat(httpResponse).isNotNull().isInstanceOf(HttpResponse.class);
     }
 
@@ -26,7 +26,7 @@ class HttpResponseTest {
     void throw_exception_response_null() {
         assertAll(
                 () -> assertThatThrownBy(() -> new HttpResponse(null, new Header(), new byte[0])).isInstanceOf(IllegalArgumentException.class),
-                () -> assertThatThrownBy(() -> new HttpResponse(StatusLine.of(new Protocol(ProtocolType.HTTP, Version.ONE_ONE), StatusCode.OK), null, new byte[0])).isInstanceOf(IllegalArgumentException.class)
+                () -> assertThatThrownBy(() -> new HttpResponse(StatusLine.of(Protocol.ofHttp_V1_1(), StatusCode.OK), null, new byte[0])).isInstanceOf(IllegalArgumentException.class)
         );
     }
 }

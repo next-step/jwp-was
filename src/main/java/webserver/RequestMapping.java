@@ -40,7 +40,7 @@ public class RequestMapping {
 
     public static HttpResponse process(HttpRequest httpRequest) {
         return CONTROLLERS.stream()
-                .filter(controller -> controller.isMatchRequest(httpRequest))
+                .filter(controller -> controller.isMatchPath(httpRequest))
                 .findAny()
                 .map(controller -> requestProcess(httpRequest, controller))
                 .orElseGet(HttpResponse::notFound);
