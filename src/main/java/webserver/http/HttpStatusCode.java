@@ -1,4 +1,4 @@
-package model;
+package webserver.http;
 
 public enum HttpStatusCode {
     OK(200, "OK"),

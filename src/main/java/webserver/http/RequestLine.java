@@ -1,4 +1,4 @@
-package model;
+package webserver.http;
 
 import java.util.Map;
 

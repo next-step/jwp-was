@@ -1,9 +1,9 @@
 package controller;
 
-import model.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

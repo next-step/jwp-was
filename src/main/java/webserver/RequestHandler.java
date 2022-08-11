@@ -2,9 +2,9 @@ package webserver;
 
 import controller.DispatchController;
 import exception.ResourceNotFoundException;
-import model.HttpHeaders;
-import model.HttpRequest;
-import model.HttpResponse;
+import webserver.http.HttpHeaders;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

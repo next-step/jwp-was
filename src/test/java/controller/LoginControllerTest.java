@@ -1,14 +1,17 @@
 package controller;
 
 import db.DataBase;
-import model.*;
-import org.junit.jupiter.api.*;
+import model.User;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import webserver.http.*;
 
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("LoginController 테스트")
 class LoginControllerTest {
@@ -18,7 +21,7 @@ class LoginControllerTest {
     @BeforeAll
     static void setUp() {
         loginController = new LoginController();
-        DataBase.addUser(new User("javajigi","password","JaeSung","koola976@gmail.com"));
+        DataBase.addUser(new User("javajigi", "password", "JaeSung", "koola976@gmail.com"));
     }
 
     @DisplayName("로그인 성공")

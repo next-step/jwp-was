@@ -3,16 +3,16 @@ package controller;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import model.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.*;
 
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("UserListController 테스트")
 class UserListControllerTest {
@@ -32,7 +32,7 @@ class UserListControllerTest {
     void success() throws Exception {
         HttpRequest request = HttpRequest.of(
                 RequestLine.of(HttpMethod.GET, Path.of("/user/list"), new String[]{"HTTP", "1.1"}),
-                HttpRequestHeader.of(List.of("Host: www.nowhere123.com", "Accept-Language: en-us","Set-Cookie: logined=true; Path=/")),
+                HttpRequestHeader.of(List.of("Host: www.nowhere123.com", "Accept-Language: en-us", "Set-Cookie: logined=true; Path=/")),
                 HttpRequestBody.empty()
         );
 

@@ -1,6 +1,5 @@
-package model;
+package webserver.http;
 
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

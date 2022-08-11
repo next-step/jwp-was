@@ -1,7 +1,7 @@
 package controller;
 
-import model.HttpRequest;
-import model.HttpResponse;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

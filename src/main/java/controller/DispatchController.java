@@ -3,10 +3,8 @@ package controller;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import model.HttpRequest;
-import model.HttpResponse;
-import model.HttpStatusCode;
-import model.ResponseHeader;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

@@ -1,8 +1,8 @@
-package model;
+package webserver.http;
 
-import exception.NotFoundHttpMethodException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.exception.NotFoundHttpMethodException;
 
 import java.util.Map;
 
