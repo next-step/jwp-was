@@ -72,5 +72,10 @@
     - HTTP Request Cookie Header에 JWP-SESSION-ID key, value 쌍을 가지게 한 후 이 값을 기반으로 서버에 HttpSession을 구현한다.
     - HTTP Request Cookie에 JWP-SESSION-ID 가 있으면, Session 꺼내서 사용
     - HTTP Request Cookie에 JWP-SESSION-ID 가 없으면, Set-Cookie 헤더에 JWP-SESSION-ID를 응답
-    - 로그인 여부를 HttpSession Attribute 기반으로 판단할 수 있도록 구현 
+    - 로그인 여부를 HttpSession Attribute 기반으로 판단할 수 있도록 구현
+
+### Step5 요구사항
+
+- WAS ThreadPool 구현
+    - 최대 ThradPool의 크기는 250, 모든 Thread가 사용 중인(Busy) 상태이면 100명까지 대기 상태가 되도록 구현한다.
 
