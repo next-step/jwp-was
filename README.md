@@ -113,6 +113,10 @@ GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1
     - StatusCode 객체
       - 응답 코드(200, 302, 404)와 응답 메시지("OK", "Found", "Not Found")를 필드로 가진다.
   - Header 객체 (HttpRequest 의 Header 와 동일)
+    - HeaderKey 인터페이스
+      - GeneralHeader / RequestHeader / ResponseHeader / EntityHeader 를 구현체로 가진다.
+    - HeaderValue 클래스
+      - Header Key 에 대한 상수 값을 가진다.
   - body (byte[]) 필드
     - responseBody 에 대한 byte[] 를 가진다.
 
