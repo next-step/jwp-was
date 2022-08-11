@@ -15,10 +15,18 @@ public class UserListController implements Controller{
 
         final Cookie cookie = request.getCookie();
         final String s = HandlebarsUtils.makeUserListTemplate();
-        if (cookie.isLogin()) {
+
+        if (isLogin(cookie)) {
             return HttpResponse.success(new ResponseBody(s.getBytes()), CONTENT_TYPE);
         }
         return HttpResponse.redirect(USER_LOGIN_PATH);
+    }
+
+    private boolean isLogin(Cookie cookie) {
+        if (cookie.isEmpty()) {
+            return false;
+        }
+        return cookie.getName().equals("logined") && cookie.getValue().equals("true");
     }
 
 }
