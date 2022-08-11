@@ -44,6 +44,6 @@ public class RequestHeader {
     }
 
     public HttpSession getSession() {
-        return HttpSessions.getSession(getCookie().getCookie("JSESSIONID"));
+        return SessionManager.getSession(getCookie().getCookie("JSESSIONID"));
     }
 }

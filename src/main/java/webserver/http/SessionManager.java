@@ -3,7 +3,7 @@ package webserver.http;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpSessions {
+public class SessionManager {
     private static Map<String, HttpSession> sessions = new HashMap<>();
 
     public static HttpSession getSession(String id) {
