@@ -14,8 +14,8 @@ public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
     private static final int DEFAULT_PORT = 8080;
 
-    private static final int CORE_POOL_SIZE = 250;
-    private static final int MAXIMUM_POOL_SIZE = 250;
+    private static final int CORE_POOL_SIZE = 5;
+    private static final int MAXIMUM_POOL_SIZE = 5;
     private static final int KEEP_ALIVE_TIME = 0;
     private static final int WAITING_QUEUE_SIZE = 100;
 
