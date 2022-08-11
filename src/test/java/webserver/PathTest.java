@@ -11,7 +11,7 @@ class PathTest {
     @Test
     void from_noneData() {
         String onlyPath = "/users";
-        Path path = Path.from(onlyPath);
+        Path path = new Path(onlyPath);
         assertThat(path).isNotNull();
         assertThat(path.getPath()).isEqualTo("/users");
     }
@@ -21,7 +21,7 @@ class PathTest {
     void from_noneData_exception() {
         String wrongPath = "!users";
         assertThatIllegalArgumentException().isThrownBy(() -> {
-            Path.from(wrongPath);
+            new Path(wrongPath);
         }).withMessageContaining("형식");
     }
 
@@ -29,10 +29,10 @@ class PathTest {
     @Test
     void from_hasData() {
         String queryString = "/users?userId=javajigi&password=password&name=JaeSung";
-        Path path = Path.from(queryString);
+        Path path = new Path(queryString);
         assertThat(path).isNotNull();
         assertThat(path.getPath()).isEqualTo("/users");
-        assertThat(path.getData()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
+        assertThat(path.getQueryString()).isEqualTo("userId=javajigi&password=password&name=JaeSung");
     }
 
     @DisplayName("Query String으로 데이터를 전달하는 유효하지 않은 Path 생성 시 예외 발생 테스트")
@@ -40,7 +40,7 @@ class PathTest {
     void from_hasData_exception() {
         String wrongQueryString = "/users?userId=javajigi?password=password&name=JaeSung";
         assertThatIllegalArgumentException().isThrownBy(() -> {
-            Path.from(wrongQueryString);
+            new Path(wrongQueryString);
         }).withMessageContaining("속성");
     }
 }

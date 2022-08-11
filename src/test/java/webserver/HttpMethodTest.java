@@ -10,7 +10,7 @@ class HttpMethodTest {
     @DisplayName("HttpMethod 생성 테스트")
     @Test
     void from() {
-        HttpMethod method = HttpMethod.from("GET");
+        HttpMethod method = HttpMethod.valueOf("GET");
         assertThat(method).isNotNull();
         assertThat(method).isEqualTo(HttpMethod.GET);
     }
@@ -19,7 +19,7 @@ class HttpMethodTest {
     @Test
     void from_exception() {
         assertThatIllegalArgumentException().isThrownBy(() -> {
-            HttpMethod.from("POOST");
+            HttpMethod.valueOf("POOST");
         });
     }
 }
