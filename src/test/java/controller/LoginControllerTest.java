@@ -19,7 +19,7 @@ public class LoginControllerTest {
     String testDirectory = "./src/test/resources/";
 
     @Test
-    void 로그인_성공() throws IOException, URISyntaxException {
+    void 로그인_성공() throws Exception {
 
         final LoginController controller = new LoginController();
         final User user = createUser();
@@ -34,7 +34,7 @@ public class LoginControllerTest {
     }
 
     @Test
-    void 로그인_실패후_리다이렉트() throws IOException, URISyntaxException {
+    void 로그인_실패후_리다이렉트() throws Exception {
         final LoginController controller = new LoginController();
         final HttpRequest httpRequest = createHttpRequest("test");
         final HttpResponse httpResponse = createHttpResponse();

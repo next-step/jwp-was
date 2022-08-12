@@ -3,14 +3,14 @@ package controller;
 import model.*;
 import utils.HandlebarsUtils;
 
-public class UserListController implements Controller{
+public class UserListController extends AbstractController{
 
     public static final String USER_LOGIN_PATH = "/user/login.html";
     public static final String CONTENT_TYPE = "text/html";
     public static final String COOKIE_NAME_LOGINED = "logined";
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) throws Exception {
+    public void doGet(HttpRequest request, HttpResponse response) throws Exception {
 
         final Cookie cookie = request.getCookie(COOKIE_NAME_LOGINED);
         final String s = HandlebarsUtils.makeUserListTemplate();
