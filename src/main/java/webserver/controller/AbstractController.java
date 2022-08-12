@@ -1,6 +1,5 @@
 package webserver.controller;
 
-import webserver.http.HttpMethod;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
@@ -9,8 +8,13 @@ public abstract class AbstractController implements Controller {
 
     @Override
     public HttpResponse service(HttpRequest httpRequest) {
-        final HttpMethod httpMethod = httpRequest.getHttpMethod();
-        return httpMethod.getAction().apply(this, httpRequest);
+        if (httpRequest.isGet()) {
+            return doGet(httpRequest);
+        }
+        if (httpRequest.isPost()) {
+            return doPost(httpRequest);
+        }
+        throw new IllegalStateException(METHOD_NOT_ALLOWED);
     }
 
     public HttpResponse doGet(HttpRequest httpRequest) {

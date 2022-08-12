@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
+import static webserver.http.HttpRequest.*;
 
 @DisplayName("HttpSessionManager 단위 테스트")
 class HttpSessionManagerTest {
@@ -27,7 +28,7 @@ class HttpSessionManagerTest {
     void getSession2() {
         // given
         final Headers headers = new Headers();
-        headers.setCookie(HttpSessionManager.SESSION_ID, httpSession.getId());
+        headers.setCookie(SESSION_ID_KEY, httpSession.getId());
         final HttpRequest httpRequest = new HttpRequest(new RequestLine("GET /users HTTP/1.1"), headers, new Attributes());
 
         // when
