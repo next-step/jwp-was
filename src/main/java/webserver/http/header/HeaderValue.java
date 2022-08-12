@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.header;
 
 public class HeaderValue {
     public static final String TEXT_HTML_UTF8 = "text/html;charset=utf-8";

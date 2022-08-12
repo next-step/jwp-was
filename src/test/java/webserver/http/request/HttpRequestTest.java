@@ -2,16 +2,16 @@ package webserver.http.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.Header;
-import webserver.http.HeaderKey;
-import webserver.http.HeaderValue;
+import webserver.http.header.type.EntityHeader;
+import webserver.http.header.type.GeneralHeader;
+import webserver.http.header.Header;
+import webserver.http.header.HeaderValue;
+import webserver.http.header.type.RequestHeader;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
 import webserver.http.request.requestline.Protocol;
-import webserver.http.request.requestline.ProtocolType;
 import webserver.http.request.requestline.QueryString;
 import webserver.http.request.requestline.RequestLine;
-import webserver.http.request.requestline.Version;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -31,11 +31,11 @@ class HttpRequestTest {
         // given
         RequestLine requestLine = RequestLine.parse("POST /user/create HTTP/1.1");
         Header header = new Header(Map.of(
-                HeaderKey.HOST, "localhost:8080",
-                HeaderKey.CONNECTION, HeaderValue.KEEP_ALIVE,
-                HeaderKey.CONTENT_LENGTH, "71",
-                HeaderKey.CONTENT_TYPE, HeaderValue.APPLICATION_HTML_FORM,
-                HeaderKey.ACCEPT, HeaderValue.ALL_MIME_TYPE
+                RequestHeader.HOST, "localhost:8080",
+                GeneralHeader.CONNECTION, HeaderValue.KEEP_ALIVE,
+                EntityHeader.CONTENT_LENGTH, "71",
+                EntityHeader.CONTENT_TYPE, HeaderValue.APPLICATION_HTML_FORM,
+                RequestHeader.ACCEPT, HeaderValue.ALL_MIME_TYPE
         ));
         QueryString body = QueryString.parse("userId=javajigi&password=password&name=JaeSung&email=javajigi@slipp.net");
         HttpRequest expectedHttpRequest = new HttpRequest(requestLine, header, body);
@@ -43,7 +43,7 @@ class HttpRequestTest {
         // when
         InputStream in = new FileInputStream("./src/test/resources/request.txt");
         BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-        HttpRequest actualHttpRequest = HttpRequest.of(br);
+        HttpRequest actualHttpRequest = new HttpRequest(br);
 
         // then
         assertThat(expectedHttpRequest).isEqualTo(actualHttpRequest);
@@ -54,8 +54,8 @@ class HttpRequestTest {
     void throw_exception_request_null() {
         assertAll(
                 () -> assertThatThrownBy(() -> new HttpRequest(null, new Header(), new QueryString())).isInstanceOf(IllegalArgumentException.class),
-                () -> assertThatThrownBy(() -> new HttpRequest(new RequestLine(Method.GET, new Path("/index.html", new QueryString()), new Protocol(ProtocolType.HTTP, Version.ONE_ONE)), null, new QueryString())).isInstanceOf(IllegalArgumentException.class),
-                () -> assertThatThrownBy(() -> new HttpRequest(new RequestLine(Method.GET, new Path("/index.html", new QueryString()), new Protocol(ProtocolType.HTTP, Version.ONE_ONE)), new Header(), null)).isInstanceOf(IllegalArgumentException.class)
+                () -> assertThatThrownBy(() -> new HttpRequest(new RequestLine(Method.GET, new Path("/index.html", new QueryString()), Protocol.ofHttp_V1_1()), null, new QueryString())).isInstanceOf(IllegalArgumentException.class),
+                () -> assertThatThrownBy(() -> new HttpRequest(new RequestLine(Method.GET, new Path("/index.html", new QueryString()), Protocol.ofHttp_V1_1()), new Header(), null)).isInstanceOf(IllegalArgumentException.class)
         );
     }
 }

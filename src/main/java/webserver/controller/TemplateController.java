@@ -1,19 +1,18 @@
 package webserver.controller;
 
 import utils.FileIoUtils;
-import webserver.http.Header;
+import webserver.http.header.Header;
 import webserver.http.request.HttpRequest;
-import webserver.http.request.requestline.Method;
 import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class TemplateController implements Controller {
+public class TemplateController extends MethodController {
     private static final String TEMPLATE_PATH = "./templates";
 
     @Override
-    public HttpResponse process(HttpRequest httpRequest) throws IOException, URISyntaxException {
+    public HttpResponse processGet(HttpRequest httpRequest) throws IOException, URISyntaxException {
         return HttpResponse.ok(
                 Header.templateResponse(),
                 FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + httpRequest.getPath())
@@ -21,7 +20,12 @@ public class TemplateController implements Controller {
     }
 
     @Override
-    public boolean isMatchRequest(HttpRequest httpRequest) {
-        return httpRequest.isMethodEqual(Method.GET) && httpRequest.isHtmlFilePath();
+    HttpResponse processPost(HttpRequest httpRequest) {
+        return HttpResponse.notFound();
+    }
+
+    @Override
+    public boolean isMatchPath(HttpRequest httpRequest) {
+        return httpRequest.isHtmlFilePath();
     }
 }

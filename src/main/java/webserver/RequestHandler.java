@@ -29,7 +29,7 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             DataOutputStream dos = new DataOutputStream(out);
-            HttpRequest httpRequest = HttpRequest.of(br);
+            HttpRequest httpRequest = new HttpRequest(br);
 
             HttpResponse httpResponse = RequestMapping.process(httpRequest);
             response(dos, httpResponse);

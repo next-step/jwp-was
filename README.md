@@ -71,6 +71,10 @@ GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1
 ## 요구사항 7
 - 지금까지 구현한 소스 코드는 stylesheet 파일을 지원하지 못하고 있다. Stylesheet 파일을 지원하도록 구현하도록 한다.
 
+# 기능 요구사항 (HTTP 웹 서버 리팩토링)
+- WAS 기능, HTTP 요청/응답 처리, 개발자가 구현할 애플리케이션 기능이 혼재되어있는 것을 각각 역할을 분리해 재사용 가능하도록 개선한다.
+- WAS 기능, HTTP 요청/응답 처리 기능은 애플리케이션 개발자가 신경쓰지 않아도 재사용이 가능한 구조가 되도록 한다.
+
 ## 기능 목록
 
 ### * 요청 객체
@@ -109,12 +113,17 @@ GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1
     - StatusCode 객체
       - 응답 코드(200, 302, 404)와 응답 메시지("OK", "Found", "Not Found")를 필드로 가진다.
   - Header 객체 (HttpRequest 의 Header 와 동일)
+    - HeaderKey 인터페이스
+      - GeneralHeader / RequestHeader / ResponseHeader / EntityHeader 를 구현체로 가진다.
+    - HeaderValue 클래스
+      - Header Key 에 대한 상수 값을 가진다.
   - body (byte[]) 필드
     - responseBody 에 대한 byte[] 를 가진다.
 
 ### * 컨트롤러
 - Controller 인터페이스
-  - HttpRequest 에 대한 HttpResponse 를 반환하는 추상 메서드 / HttpRequest 와 매핑되는 지 판단하는 추상 메서드를 가진다. 
+  - HttpRequest 에 대한 HttpResponse 를 반환하는 추상 메서드 / HttpRequest 와 매핑되는 지 판단하는 추상 메서드를 가진다.
+  - MethodController 추상 클래스로 각 컨트롤러의 요청 path 가 같더라도 메서드가 다를 경우에 대한 처리를 담당한다.
   - StaticController 구현체
     - 정적 파일에 대한 요청 처리를 담당한다.
     - Content-Type을 text/css 값으로 응답을 준다.

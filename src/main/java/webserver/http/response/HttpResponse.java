@@ -1,11 +1,14 @@
 package webserver.http.response;
 
-import webserver.http.Header;
-import webserver.http.HeaderKey;
+import webserver.http.header.type.EntityHeader;
+import webserver.http.header.Header;
+import webserver.http.header.HeaderKey;
+import webserver.http.header.type.ResponseHeader;
 import webserver.http.response.statusline.StatusCode;
 import webserver.http.response.statusline.StatusLine;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 public class HttpResponse {
@@ -17,7 +20,7 @@ public class HttpResponse {
     public HttpResponse(StatusLine statusLine, Header header, byte[] body) {
         validate(statusLine, header);
         this.statusLine = statusLine;
-        this.header = header.add(HeaderKey.CONTENT_LENGTH, String.valueOf(body.length));
+        this.header = header.add(EntityHeader.CONTENT_LENGTH, String.valueOf(body.length));
         this.body = body;
     }
 
@@ -51,15 +54,17 @@ public class HttpResponse {
     }
 
     public static HttpResponse notFound() {
-        return new HttpResponse(StatusLine.ofHttp_V1_1_NotFound(), new Header(Collections.emptyMap()), new byte[0]);
+        return new HttpResponse(StatusLine.ofHttp_V1_1_NotFound(), new Header(new HashMap<>()), new byte[0]);
     }
 
     public static HttpResponse redirect(String path) {
-        return new HttpResponse(StatusLine.ofHttp_V1_1_Found(), new Header(Map.of(HeaderKey.LOCATION, path)), new byte[0]);
+        Map<HeaderKey, String> fields = new HashMap<>();
+        fields.put(ResponseHeader.LOCATION, path);
+        return new HttpResponse(StatusLine.ofHttp_V1_1_Found(), new Header(fields), new byte[0]);
     }
 
     public static HttpResponse redirect(String path, Header header) {
-        return new HttpResponse(StatusLine.ofHttp_V1_1_Found(), header.add(HeaderKey.LOCATION, path), new byte[0]);
+        return new HttpResponse(StatusLine.ofHttp_V1_1_Found(), header.add(ResponseHeader.LOCATION, path), new byte[0]);
     }
 
     public String response() {
@@ -79,5 +84,25 @@ public class HttpResponse {
 
     public boolean isStatusCodeEqual(StatusCode statusCode) {
         return this.statusLine.isStatusCodeEqual(statusCode);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        HttpResponse that = (HttpResponse) o;
+
+        if (!statusLine.equals(that.statusLine)) return false;
+        if (!header.equals(that.header)) return false;
+        return Arrays.equals(body, that.body);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = statusLine.hashCode();
+        result = 31 * result + header.hashCode();
+        result = 31 * result + Arrays.hashCode(body);
+        return result;
     }
 }

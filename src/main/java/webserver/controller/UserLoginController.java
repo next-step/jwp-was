@@ -2,18 +2,19 @@ package webserver.controller;
 
 import db.DataBase;
 import model.User;
-import webserver.http.Header;
+import webserver.http.header.Header;
 import webserver.http.request.HttpRequest;
-import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
 import webserver.http.response.HttpResponse;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-public class UserLoginController implements Controller {
+public class UserLoginController extends MethodController {
     @Override
-    public HttpResponse process(HttpRequest httpRequest) throws IOException, URISyntaxException {
+    HttpResponse processGet(HttpRequest httpRequest) {
+        return HttpResponse.notFound();
+    }
+
+    @Override
+    public HttpResponse processPost(HttpRequest httpRequest) {
         User user = DataBase.findUserById(httpRequest.getParam("userId"));
 
         if (user == null || !user.isPasswordCorrect(httpRequest.getParam("password"))) {
@@ -28,7 +29,7 @@ public class UserLoginController implements Controller {
     }
 
     @Override
-    public boolean isMatchRequest(HttpRequest httpRequest) {
-        return httpRequest.isMethodEqual(Method.POST) && httpRequest.isPathEqual(new Path("/user/login"));
+    public boolean isMatchPath(HttpRequest httpRequest) {
+        return httpRequest.isPathEqual(new Path("/user/login"));
     }
 }
