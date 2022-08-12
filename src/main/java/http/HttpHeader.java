@@ -3,6 +3,9 @@ package http;
 import exception.Assert;
 import exception.NotFoundException;
 import http.response.HttpStatusCode;
+import org.apache.logging.log4j.util.Strings;
+import webserver.session.HttpSession;
+import webserver.session.HttpSessionStorage;
 
 import java.util.*;
 import java.util.List;
@@ -73,8 +76,7 @@ public class HttpHeader {
     }
 
     public String getCookieValue(String key) {
-        return cookies.getCookieValue(key)
-                .orElseThrow(() -> new NotFoundException(HttpStatusCode.BAD_REQUEST));
+        return cookies.getCookieValue(key).orElseGet(() -> Strings.EMPTY);
     }
 
     public Set<Map.Entry<String, String>> getCookies() {
@@ -85,6 +87,10 @@ public class HttpHeader {
         HashMap<String, String> newHeader = new HashMap<>(headers);
         newHeader.put(header, value);
         return from(newHeader);
+    }
+
+    public HttpSession getSession() {
+        return HttpSessionStorage.getSession(getCookieValue(HttpSessionStorage.JSESSIONID));
     }
 
     @Override

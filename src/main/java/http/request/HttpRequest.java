@@ -1,7 +1,10 @@
 package http.request;
 
+import com.google.common.base.Strings;
 import utils.IOUtils;
 import http.HttpHeader;
+import webserver.session.HttpSession;
+import webserver.session.HttpSessionStorage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -76,5 +79,14 @@ public class HttpRequest {
 
     public String getCookieValue(String key) {
         return requestHeader.getCookieValue(key);
+    }
+
+    public boolean sessionIdPresentInCookie() {
+        String sessionValue = getCookieValue(HttpSessionStorage.JSESSIONID);
+        return !Strings.isNullOrEmpty(sessionValue);
+    }
+
+    public HttpSession getSession() {
+        return requestHeader.getSession();
     }
 }

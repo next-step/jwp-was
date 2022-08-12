@@ -10,6 +10,7 @@ import mvc.controller.Controller;
 import mvc.controller.ControllerMatcher;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
+import webserver.session.SessionInterceptor;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -35,7 +36,7 @@ public class RequestHandler implements Runnable {
                 response.writeResponse();
                 return;
             }
-            controller.service(request, response);
+            SessionInterceptor.from(controller).service(request, response);
             response.writeResponse();
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());

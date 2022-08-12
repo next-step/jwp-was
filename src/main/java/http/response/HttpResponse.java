@@ -3,6 +3,7 @@ package http.response;
 import exception.Assert;
 import http.HttpHeader;
 import http.request.protocol.Protocol;
+import mvc.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +11,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -128,5 +131,16 @@ public class HttpResponse {
     public void notFound() {
         buildResponse(StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.NOT_FOUND),
                 HttpHeader.empty());
+    }
+
+    public void addBodyAttribute(String name, Object value) {
+        responseBody.addAttribute(name, value);
+    }
+
+    public Map<String, Object> getBodyAttributes() {
+        if (responseBody == null) {
+            return Collections.emptyMap();
+        }
+        return responseBody.getBodyAttributes();
     }
 }
