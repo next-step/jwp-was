@@ -7,16 +7,12 @@ import http.request.protocol.Protocol;
 import http.response.HttpResponse;
 import http.response.HttpStatusCode;
 import http.response.StatusLine;
-import utils.FileIoUtils;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 public class TemplateView implements View {
-
-    private static final String TEMPLATE_PATH = "./templates";
 
     private Template template;
 
