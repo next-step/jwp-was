@@ -9,6 +9,7 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.response.HttpStatusCode;
 import http.response.StatusLine;
+import webserver.session.HttpSession;
 
 import java.util.Map;
 
@@ -21,19 +22,20 @@ public class UserLoginController extends AbstractController {
 
     private void login(HttpRequest request, HttpResponse response) {
         if (isValidUserInfo(request)) {
+            User user = DataBase.findUserById(extractRequiredBody(request, "userId"));
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
             response.buildResponse(
                     StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.FOUND),
                     HttpHeader.from(Map.of(
-                            HttpHeader.LOCATION, "/index.html",
-                            HttpHeader.SET_COOKIE, "logined=true; Path=/"))
+                            HttpHeader.LOCATION, "/index.html"))
             );
             return;
         }
         response.buildResponse(
                 StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.FOUND),
                 HttpHeader.from(Map.of(
-                        HttpHeader.LOCATION, "/user/login_failed.html",
-                        HttpHeader.SET_COOKIE, "logined=false; Path=/"))
+                        HttpHeader.LOCATION, "/user/login_failed.html"))
         );
     }
 
