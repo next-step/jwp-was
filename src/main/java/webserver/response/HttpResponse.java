@@ -1,6 +1,7 @@
 package webserver.response;
 
 import webserver.ContentType;
+import webserver.request.Header;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -37,16 +38,18 @@ public class HttpResponse {
         responseBody(path.getBytes());
     }
 
-    public void redirect(String path) throws IOException {
-        dos.writeBytes("HTTP/1.1 302 Found \r\n");
-        dos.writeBytes("Location: " + path + "\r\n");
-        dos.writeBytes("\r\n");
-    }
+//    public void redirect(String path) throws IOException {
+//        dos.writeBytes("HTTP/1.1 302 Found \r\n");
+//        dos.writeBytes("Location: " + path + "\r\n");
+//        dos.writeBytes("\r\n");
+//    }
 
-    public void loginRedirect(String path, String setCookie) throws IOException {
+    public void redirect(String path, String setCookie) throws IOException {
         dos.writeBytes("HTTP/1.1 302 Found \r\n");
         dos.writeBytes("Location: " + path + "\r\n");
-        dos.writeBytes("Set-Cookie: " + setCookie + "\r\n");
+        if (setCookie != null) {
+            dos.writeBytes("Set-Cookie: " + setCookie + "\r\n");
+        }
         dos.writeBytes("\r\n");
     }
 

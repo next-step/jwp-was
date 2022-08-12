@@ -13,9 +13,9 @@ public class LoginController implements Controller {
     public void service(HttpRequest request, HttpResponse response) {
         try {
             if (isLogin(request)) {
-                response.loginRedirect("/index.html", "logined=true; Path=/");
+                response.redirect("/index.html", "logined=true; Path=/");
             } else {
-                response.loginRedirect("/user/login_failed.html", "logined=false");
+                response.redirect("/user/login_failed.html", "logined=false");
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -32,23 +32,11 @@ public class RequestHandler implements Runnable {
                 HttpRequest httpRequest = new HttpRequest(in);
                 HttpResponse httpResponse = new HttpResponse(out);
                 Controller controller = RequestMapping.getController(httpRequest.getPath());
-                if (controller != null) {
-                    controller.service(httpRequest, httpResponse);
-                } else {
-                    String path = httpRequest.getPath();
-                    httpResponse.forward(getResourcePath(path), ContentType.from(path).getMediaType());
-                }
+                controller.service(httpRequest, httpResponse);
             }
-
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private String getResourcePath(String path) throws IOException, URISyntaxException {
-        if (path.endsWith("html") || path.endsWith("ico")) {
-            return IOUtils.loadFileFromClasspath("./templates" + path);
-        }
-        return IOUtils.loadFileFromClasspath("./static" + path);
-    }
 }
