@@ -178,7 +178,6 @@
 * HttpSession은 
 * 세션에 `Key-Value` 형태로 로그인 회원 정보 보관
   * `void setAttribute(String name, Object value)`
-
   
 * `String getId()`
   * 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환.
@@ -205,4 +204,3 @@
 - SessionInterceptor
   - Controller의 `servie()` 메서드 수행 이전에 요청을 가로채서 로그인 여부를 판단.
   - `HttpSessionStorage`에 해당 사용자 객체가 없다면 로그인 페이지로 리다이랙트
-  - 

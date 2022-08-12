@@ -3,7 +3,6 @@ package http.response;
 import exception.Assert;
 import http.HttpHeader;
 import http.request.protocol.Protocol;
-import mvc.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +10,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
