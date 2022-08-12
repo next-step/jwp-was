@@ -50,6 +50,30 @@ class HttpRequestTest {
     }
 
     @Test
+    @DisplayName("HttpRequest 요청이 queryString 과 body 이 함께 들어올 경우에 대한 처리를 한다.")
+    void create_HttpRequest_with_queryString_and_body() throws Exception {
+        // given
+        RequestLine requestLine = RequestLine.parse("POST /user/create?id=1 HTTP/1.1");
+        Header header = new Header(Map.of(
+                RequestHeader.HOST, "localhost:8080",
+                GeneralHeader.CONNECTION, HeaderValue.KEEP_ALIVE,
+                EntityHeader.CONTENT_LENGTH, "46",
+                EntityHeader.CONTENT_TYPE, HeaderValue.APPLICATION_HTML_FORM,
+                RequestHeader.ACCEPT, HeaderValue.ALL_MIME_TYPE
+        ));
+        QueryString body = QueryString.parse("userId=javajigi&password=password&name=JaeSung");
+        HttpRequest expectedHttpRequest = new HttpRequest(requestLine, header, body);
+
+        // when
+        InputStream in = new FileInputStream("./src/test/resources/request_with_query_string_and_body.txt");
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+        HttpRequest actualHttpRequest = new HttpRequest(br);
+
+        // then
+        assertThat(expectedHttpRequest).isEqualTo(actualHttpRequest);
+    }
+
+    @Test
     @DisplayName("HttpRequest 요청라인, 헤더, 바디가 null 일 경우 예외가 발생한다.")
     void throw_exception_request_null() {
         assertAll(
