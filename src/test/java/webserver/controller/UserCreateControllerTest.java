@@ -56,7 +56,7 @@ class UserCreateControllerTest {
             "GET, PUT, DELETE, PATCH"
     })
     void throw_exception_exceptGetMethod(Method method) throws IOException, URISyntaxException {
-        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path("/user/create", new QueryString()), Protocol.ofHttp_V1_1()), new Header(), new QueryString());
+        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path("/user/create", new QueryString()), Protocol.ofHttpV11()), new Header(), new QueryString());
         assertThat(controller.process(httpRequest)).isEqualTo(HttpResponse.notFound());
     }
 
@@ -67,7 +67,7 @@ class UserCreateControllerTest {
             "/user/creates, false",
     })
     void isMatchRequest(String path, boolean trueOrFalse) {
-        HttpRequest httpRequest = new HttpRequest(new RequestLine(Method.GET, new Path(path, new QueryString()), Protocol.ofHttp_V1_1()), new Header(), new QueryString());
+        HttpRequest httpRequest = new HttpRequest(new RequestLine(Method.GET, new Path(path, new QueryString()), Protocol.ofHttpV11()), new Header(), new QueryString());
         assertThat(controller.isMatchPath(httpRequest)).isEqualTo(trueOrFalse);
     }
 }

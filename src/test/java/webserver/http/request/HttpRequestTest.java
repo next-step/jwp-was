@@ -54,8 +54,8 @@ class HttpRequestTest {
     void throw_exception_request_null() {
         assertAll(
                 () -> assertThatThrownBy(() -> new HttpRequest(null, new Header(), new QueryString())).isInstanceOf(IllegalArgumentException.class),
-                () -> assertThatThrownBy(() -> new HttpRequest(new RequestLine(Method.GET, new Path("/index.html", new QueryString()), Protocol.ofHttp_V1_1()), null, new QueryString())).isInstanceOf(IllegalArgumentException.class),
-                () -> assertThatThrownBy(() -> new HttpRequest(new RequestLine(Method.GET, new Path("/index.html", new QueryString()), Protocol.ofHttp_V1_1()), new Header(), null)).isInstanceOf(IllegalArgumentException.class)
+                () -> assertThatThrownBy(() -> new HttpRequest(new RequestLine(Method.GET, new Path("/index.html", new QueryString()), Protocol.ofHttpV11()), null, new QueryString())).isInstanceOf(IllegalArgumentException.class),
+                () -> assertThatThrownBy(() -> new HttpRequest(new RequestLine(Method.GET, new Path("/index.html", new QueryString()), Protocol.ofHttpV11()), new Header(), null)).isInstanceOf(IllegalArgumentException.class)
         );
     }
 }

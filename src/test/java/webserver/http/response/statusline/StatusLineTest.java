@@ -12,7 +12,7 @@ class StatusLineTest {
     @Test
     @DisplayName("StatusLine 객체를 생성한다.")
     void create_StatusLine() {
-        StatusLine statusLine = new StatusLine(Protocol.ofHttp_V1_1(), StatusCode.OK);
+        StatusLine statusLine = new StatusLine(Protocol.ofHttpV11(), StatusCode.OK);
         assertThat(statusLine).isNotNull().isInstanceOf(StatusLine.class);
     }
 
@@ -21,7 +21,7 @@ class StatusLineTest {
     void throw_exception_response_null() {
         assertAll(
                 () -> assertThatThrownBy(() -> new StatusLine(null, StatusCode.OK)).isInstanceOf(IllegalArgumentException.class),
-                () -> assertThatThrownBy(() -> new StatusLine(Protocol.ofHttp_V1_1(), null)).isInstanceOf(IllegalArgumentException.class)
+                () -> assertThatThrownBy(() -> new StatusLine(Protocol.ofHttpV11(), null)).isInstanceOf(IllegalArgumentException.class)
         );
     }
 }

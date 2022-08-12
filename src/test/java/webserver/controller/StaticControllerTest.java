@@ -53,7 +53,7 @@ class StaticControllerTest {
             "POST, PUT, DELETE, PATCH"
     })
     void throw_exception_exceptGetMethod(Method method) throws IOException, URISyntaxException {
-        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path("/css/styles.css", new QueryString()), Protocol.ofHttp_V1_1()), new Header(), new QueryString());
+        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path("/css/styles.css", new QueryString()), Protocol.ofHttpV11()), new Header(), new QueryString());
         assertThat(controller.process(httpRequest)).isEqualTo(HttpResponse.notFound());
     }
 
@@ -64,7 +64,7 @@ class StaticControllerTest {
             "/style.csss, false",
     })
     void isMatchRequest(String path, boolean trueOrFalse) {
-        HttpRequest httpRequest = new HttpRequest(new RequestLine(Method.GET, new Path(path, new QueryString()), Protocol.ofHttp_V1_1()), new Header(), new QueryString());
+        HttpRequest httpRequest = new HttpRequest(new RequestLine(Method.GET, new Path(path, new QueryString()), Protocol.ofHttpV11()), new Header(), new QueryString());
         assertThat(controller.isMatchPath(httpRequest)).isEqualTo(trueOrFalse);
     }
 }
