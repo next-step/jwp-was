@@ -163,6 +163,9 @@
 * Controller 인터페이스와 HttpResponse의 결합도를 낮추기 위해 수정.
   * Controller가 HttpResponse를 생성, 반환하지 않고 HttpResponse를 사용만 할 수 있도록 변경.
 
+* 화면을 구성하는 부분에 대한 책임 분리
+  * `ViewResolver`와 `View` 객체 생성.
+
 ## 4단계 - 세션 구현
 
 ### 기능 요구사항
@@ -175,3 +178,31 @@
 * HttpSession은 
 * 세션에 `Key-Value` 형태로 로그인 회원 정보 보관
   * `void setAttribute(String name, Object value)`
+
+  
+* `String getId()`
+  * 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환.
+* `void setAttribute(String name, Object value)`
+  * 현재 세션에 value 인자로 전달되는 객체를 name 인자 이름으로 저장.
+* `Object getAttribute(String name)`
+  * 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환.
+* `void removeAttribute(String name)`
+  * 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제.
+* `void invalidate()`
+  * 현재 세션에 저장되어 있는 모든 값을 삭제.
+
+### Domain
+
+- HttpSessionStorage
+  - HttpSession 객체를 저장하는 일급 컬렉션.
+  - HttpSession의 Id와 HttpSession 객체를 맵핑해서 key-value 형태로 저장.
+  - 특정 Id의 HttpSession을 추가, 삭제, 조회 가능.
+
+- HttpSession
+  - 고유한 랜덤 Id와 를 포함.
+  - `request.getSession()`이 호출되는 순간 생성된 세션이 없다면 세션을 생성.
+
+- SessionInterceptor
+  - Controller의 `servie()` 메서드 수행 이전에 요청을 가로채서 로그인 여부를 판단.
+  - `HttpSessionStorage`에 해당 사용자 객체가 없다면 로그인 페이지로 리다이랙트
+  - 
