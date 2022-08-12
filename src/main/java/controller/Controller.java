@@ -9,5 +9,5 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 public interface Controller {
-    HttpResponse process(HttpRequest request) throws Exception;
+    void service(HttpRequest request, HttpResponse response) throws Exception;
 }

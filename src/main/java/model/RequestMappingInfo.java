@@ -16,9 +16,9 @@ public class RequestMappingInfo {
         this.controller = controller;
     }
 
-    public RequestMappingInfo(HttpMethod method, String path) {
-        this.method = method;
-        this.path = path;
+    public RequestMappingInfo(HttpRequest request) {
+        this.method = request.getMethod();
+        this.path = request.getPath();
     }
 
     public boolean match(RequestMappingInfo info) {

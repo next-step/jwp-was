@@ -1,8 +1,9 @@
 package model;
 
+import utils.IOUtils;
 import webserver.RequestLine;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.Map;
 
 public class HttpRequest {
@@ -12,11 +13,21 @@ public class HttpRequest {
     private RequestBody body;
     private Map<String, Cookie> cookie;
 
-    public HttpRequest(HttpHeader header, String body) throws UnsupportedEncodingException {
-        this.header = header;
-        this.requestLine = new RequestLine(header.getRequestLine());
-        this.cookie = Cookie.createCookie(header.getCookie(), requestLine.getFullRequestPath());
-        this.body = new RequestBody(body);
+    public HttpRequest(InputStream in) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+
+        this.requestLine = new RequestLine(IOUtils.readRequestData(br));
+        this.header = new HttpHeader(IOUtils.readHeaderData(br));
+        this.cookie = Cookie.createCookie(header);
+        this.body = new RequestBody(getBody(br, header.getValueToInt("Content-Length")));
+    }
+
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
+    }
+
+    private String getBody(BufferedReader br, int contentLength) throws IOException {
+        return IOUtils.readData(br, contentLength);
     }
 
     public RequestLine getRequestLine() {
@@ -31,8 +42,8 @@ public class HttpRequest {
         return cookie.get(name);
     }
 
-    public HttpHeader getHeader() {
-        return header;
+    public String getHeader(String name) {
+        return header.getValue(name);
     }
 
     @Override
@@ -42,5 +53,16 @@ public class HttpRequest {
                 ", body=" + body +
                 ", cookie=" + cookie +
                 '}';
+    }
+
+    public String getPath() {
+        return requestLine.getRequestPath();
+    }
+
+    public String getParameter(String param) throws UnsupportedEncodingException {
+        if (requestLine.getMethod() == HttpMethod.GET) {
+            return requestLine.getRequestParams(param);
+        }
+        return body.getFirstValue(param);
     }
 }

@@ -14,7 +14,7 @@ public class RequestMapperTest {
     @Test
     void 회원가입_컨트롤러_가져오기() {
         final String path = "/user/create";
-        final RequestMappingInfo requestMappingInfo = new RequestMappingInfo(HttpMethod.POST, path);
+        final RequestMappingInfo requestMappingInfo = new RequestMappingInfo(HttpMethod.POST, path, new UserCreateController());
 
         Controller controller = requestMapper.mapping(requestMappingInfo);
 
@@ -24,7 +24,7 @@ public class RequestMapperTest {
     @Test
     void 뷰컨트롤러_가져오기() {
         final String path = "/index.html";
-        final RequestMappingInfo requestMappingInfo = new RequestMappingInfo(HttpMethod.GET, path);
+        final RequestMappingInfo requestMappingInfo = new RequestMappingInfo(HttpMethod.GET, path, new ViewController());
 
         Controller controller = requestMapper.mapping(requestMappingInfo);
 
@@ -34,7 +34,7 @@ public class RequestMapperTest {
     @Test
     void 로그인_컨트롤러_가져오기() {
         final String path = "/user/login";
-        final RequestMappingInfo requestMappingInfo = new RequestMappingInfo(HttpMethod.POST, path);
+        final RequestMappingInfo requestMappingInfo = new RequestMappingInfo(HttpMethod.POST, path, new LoginController());
 
         Controller controller = requestMapper.mapping(requestMappingInfo);
 
@@ -43,7 +43,7 @@ public class RequestMapperTest {
     @Test
     void 유저목록_컨트롤러_가져오기() {
         final String path = "/user/list";
-        final RequestMappingInfo requestMappingInfo = new RequestMappingInfo(HttpMethod.GET, path);
+        final RequestMappingInfo requestMappingInfo = new RequestMappingInfo(HttpMethod.GET, path, new UserListController());
 
         Controller controller = requestMapper.mapping(requestMappingInfo);
 

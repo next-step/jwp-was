@@ -28,11 +28,12 @@ public class Cookie {
         this.value = value;
     }
 
-    public static Map<String, Cookie> createCookie(String cookie, String path) {
+    public static Map<String, Cookie> createCookie(HttpHeader header) {
+        String cookie = header.getValue("Cookie");
+
         if (cookie == null || cookie.isEmpty()) {
             return new HashMap<>();
         }
-
         return Arrays.stream(cookie.split("; "))
                 .map(item -> new Cookie(item.split("=")[0], item.split("=")[1]))
                 .collect(Collectors.toMap(Cookie::getName, self -> self));

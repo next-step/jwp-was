@@ -46,6 +46,6 @@ public class RequestLineTest {
 
         final RequestLine requestLine = new RequestLine(request);
 
-        assertThat(requestLine.getRequestParams().getOneValue("userId")).isEqualTo("javajigi");
+        assertThat(requestLine.getRequestParams("userId")).isEqualTo("javajigi");
     }
 }

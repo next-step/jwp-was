@@ -4,58 +4,44 @@ import model.*;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.RequestLine;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
+import java.io.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserListControllerTest {
     private static final Logger logger = LoggerFactory.getLogger(UserListControllerTest.class);
+    String testDirectory = "./src/test/resources/";
 
     @Test
     void 로그인_쿠키_존재시_정상응답() throws Exception {
 
-        final HttpRequest httpRequest = createHttpRequest(true);
+        final HttpRequest httpRequest = createHttpRequest();
         final UserListController controller = new UserListController();
-        final HttpResponse response = controller.process(httpRequest);
+        final HttpResponse httpResponse = createHttpResponse();
+        controller.service(httpRequest, httpResponse);
 
-        logger.debug("respnse: {}", response);
+        logger.debug("respnse: {}", httpResponse);
     }
 
     @Test
     void 로그인_쿠키_없을경우_리다이렉트() throws Exception {
 
-        final HttpRequest httpRequest = createHttpRequest(false);
+        final HttpRequest httpRequest = createHttpRequest();
         final UserListController controller = new UserListController();
-        final HttpResponse response = controller.process(httpRequest);
+        final HttpResponse httpResponse = createHttpResponse();
+        controller.service(httpRequest, httpResponse);
 
-        logger.debug("respnse: {}", response);
+        logger.debug("respnse: {}", httpResponse);
     }
 
-    private User createUser() throws UnsupportedEncodingException {
-        final String data = "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
-        final RequestBody body = new RequestBody(data);
-
-        return new User(body.getOneValue("userId"), body.getOneValue("password"), body.getOneValue("name"), body.getOneValue("email"));
+    private HttpRequest createHttpRequest() throws IOException {
+        InputStream in = new FileInputStream(new File(testDirectory + "Http_GET.txt"));
+        return new HttpRequest(in);
     }
 
-    private HttpRequest createHttpRequest(boolean cookie) throws UnsupportedEncodingException {
-        final String data = "GET /user/list HTTP/1.1\n" +
-                "Host: localhost:8080\n" +
-                "Connection: keep-alive\n" +
-                "Accept: */*\n" +
-                "Cookie: logined=" + cookie;
-
-        return new HttpRequest(new HttpHeader(headers(cookie)), "");
-    }
-
-    private List<String> headers(boolean cookie) {
-        return Arrays.asList( "GET /user/list HTTP/1.1\n",
-                "Cookie: logined=" + cookie);
+    private HttpResponse createHttpResponse() throws FileNotFoundException {
+        final OutputStream outputStream = new FileOutputStream(new File(testDirectory + "Http_response.txt"));
+        return new HttpResponse(outputStream);
     }
 }

@@ -12,19 +12,23 @@ public class UserListController implements Controller{
     public static final String COOKIE_NAME_LOGINED = "logined";
 
     @Override
-    public HttpResponse process(HttpRequest request) throws Exception {
+    public void service(HttpRequest request, HttpResponse response) throws Exception {
 
         final Cookie cookie = request.getCookie(COOKIE_NAME_LOGINED);
         final String s = HandlebarsUtils.makeUserListTemplate();
 
         if (isLogin(cookie)) {
-            return HttpResponse.success(new ResponseBody(s.getBytes()), CONTENT_TYPE);
+            response.success(new ResponseBody(s.getBytes()), CONTENT_TYPE);
+            response.writeResponse();
+            return;
         }
-        return HttpResponse.redirect(USER_LOGIN_PATH);
+        response.redirect(USER_LOGIN_PATH);
+        response.writeResponse();
+
     }
 
     private boolean isLogin(Cookie cookie) {
-        if (cookie.isEmpty()) {
+        if (cookie == null || cookie.isEmpty()) {
             return false;
         }
         return cookie.getName().equals(COOKIE_NAME_LOGINED) && cookie.getValue().equals("true");

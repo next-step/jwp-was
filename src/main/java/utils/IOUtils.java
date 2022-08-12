@@ -27,23 +27,16 @@ public class IOUtils {
         return String.copyValueOf(body);
     }
 
-    public static String readRequestData(InputStream is) {
-        List<String> data = new ArrayList<>();
+    public static String readRequestData(BufferedReader br) {
 
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            String line = br.readLine();
+            return br.readLine();
 
-            while (line != null && !line.isEmpty()) {
-                data.add(line);
-                line = br.readLine();
-            }
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-        final int firstIndex = 0;
 
-        return data.get(firstIndex);
+        throw new IllegalArgumentException("RequestLine을 읽는데 실패했습니다.");
     }
 
     public static List<String> readHeaderData(BufferedReader br) {
