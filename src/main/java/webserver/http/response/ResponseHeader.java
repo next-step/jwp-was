@@ -19,7 +19,6 @@ public class ResponseHeader {
     private static final String CHARSET = "charset=UTF-8";
 
     private static final Map<String, String> BASE_HEADERS = Map.of(
-//            CONNECTION, "Keep-Alive",
             CONTENT_TYPE,  ContentType.HTML.type + HEADER_DELIMITER + CHARSET
     );
 

@@ -27,6 +27,7 @@ public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private static final String END_OF_LINE = "";
+    private static final String BLANK_LINE = "\r\n";
 
     private final Socket connection;
     private final Router router;
@@ -116,6 +117,7 @@ public class RequestHandler implements Runnable {
 
     private void writeResponseBody(DataOutputStream dos, byte[] body) {
         try {
+            dos.writeBytes(BLANK_LINE);
             dos.write(body, 0, body.length);
             dos.flush();
         } catch (IOException e) {
