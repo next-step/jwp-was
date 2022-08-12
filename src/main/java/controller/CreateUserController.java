@@ -17,7 +17,7 @@ public class CreateUserController implements Controller {
     }
 
     @Override
-    public HttpResponse execute(HttpRequest request) {
+    public HttpResponse execute(HttpRequest request, HttpResponse response) {
         User user = new User(
                 request.getParameter("userId"),
                 request.getParameter("password"),
@@ -25,7 +25,6 @@ public class CreateUserController implements Controller {
                 request.getParameter("email")
         );
         DataBase.addUser(user);
-
-        return HttpResponse.found("/index.html");
+        return response.sendRedirect("/index.html");
     }
 }

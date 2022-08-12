@@ -6,6 +6,7 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Set;
@@ -30,18 +31,18 @@ public class DispatchController {
         return new Handlebars(loader);
     }
 
-    public HttpResponse handleRequest(HttpRequest request) {
+    public HttpResponse handleRequest(HttpRequest request, DataOutputStream dos) {
         return controllers.stream()
                 .filter(controller -> controller.match(request))
                 .findAny()
-                .map(controller -> execute(controller, request))
+                .map(controller -> execute(controller, request, dos))
                 .orElseGet(HttpResponse::notFound);
     }
 
-    private HttpResponse execute(Controller controller, HttpRequest request) {
-        HttpResponse response;
+    private HttpResponse execute(Controller controller, HttpRequest request, DataOutputStream dos) {
+        HttpResponse response = HttpResponse.of(dos);
         try {
-            response = controller.execute(request);
+            response = controller.execute(request, response);
         } catch (IOException | URISyntaxException e) {
             return HttpResponse.error();
         }

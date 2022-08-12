@@ -8,6 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -36,11 +38,15 @@ class UserListControllerTest {
                 HttpRequestBody.empty()
         );
 
-        HttpResponse response = userListController.execute(request);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+        HttpResponse response = HttpResponse.of(dataOutputStream);
+
+        HttpResponse result = userListController.execute(request, response);
 
         assertAll(
-                () -> assertThat(response.getHttpResponseCode()).isEqualTo("200 OK"),
-                () -> assertThat(response.getHeaders()).contains(
+                () -> assertThat(result.getHttpResponseCode()).isEqualTo("200 OK"),
+                () -> assertThat(result.getHeaders()).contains(
                         Map.entry(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8"))
         );
     }
@@ -54,11 +60,15 @@ class UserListControllerTest {
                 HttpRequestBody.empty()
         );
 
-        HttpResponse response = userListController.execute(request);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+        HttpResponse response = HttpResponse.of(dataOutputStream);
+
+        HttpResponse result = userListController.execute(request, response);
 
         assertAll(
-                () -> assertThat(response.getHttpResponseCode()).isEqualTo("302 FOUND"),
-                () -> assertThat(response.getHeaders()).contains(
+                () -> assertThat(result.getHttpResponseCode()).isEqualTo("302 FOUND"),
+                () -> assertThat(result.getHeaders()).contains(
                         Map.entry(HttpHeaders.LOCATION, "/user/login.html"))
         );
     }

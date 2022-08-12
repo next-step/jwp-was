@@ -9,5 +9,5 @@ import java.net.URISyntaxException;
 public interface Controller {
     boolean match(HttpRequest request);
 
-    HttpResponse execute(HttpRequest request) throws IOException, URISyntaxException;
+    HttpResponse execute(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException;
 }

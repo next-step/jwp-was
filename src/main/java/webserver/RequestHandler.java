@@ -33,37 +33,14 @@ public class RequestHandler implements Runnable {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
              DataOutputStream dos = new DataOutputStream(connection.getOutputStream())) {
             HttpRequest request = HttpRequest.of(bufferedReader);
-            HttpResponse httpResponse = handle(request);
-            writeHttpResponse(httpResponse, dos);
+            handle(request,dos);
         } catch (IOException | URISyntaxException | ResourceNotFoundException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private HttpResponse handle(HttpRequest request) throws IOException, URISyntaxException {
-        return dispatchController.handleRequest(request);
-    }
-
-    private void writeHttpResponse(HttpResponse httpResponse, DataOutputStream dos) throws IOException {
-        writeHttpHeaders(httpResponse, dos);
-        dos.writeBytes("\r\n");
-        writeBody(dos, httpResponse.getBody());
-    }
-
-    private void writeHttpHeaders(HttpResponse httpResponse, DataOutputStream dos) throws IOException {
-        dos.writeBytes(String.format("HTTP/1.1 %s \r\n", httpResponse.getHttpResponseCode()));
-        for (Map.Entry<HttpHeaders, Object> header : httpResponse.getHeaders()) {
-            dos.writeBytes(String.format("%s: %s \r\n", header.getKey(), header.getValue()));
-        }
-
-        if (httpResponse.containsCookie()) {
-            dos.writeBytes(String.format("%s: %s \r\n", HttpHeaders.SET_COOKIE, httpResponse.getCookie()));
-        }
-    }
-
-    private void writeBody(DataOutputStream dos, byte[] body) throws IOException {
-        dos.write(body, 0, body.length);
-        dos.flush();
+    private void handle(HttpRequest request, DataOutputStream dos) throws IOException, URISyntaxException {
+        dispatchController.handleRequest(request, dos);
     }
 
 }

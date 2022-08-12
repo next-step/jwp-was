@@ -3,8 +3,12 @@ package controller;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import utils.FileIoUtils;
 import webserver.http.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -38,12 +42,16 @@ class StaticControllerTest {
 
     @Test
     void response() throws IOException, URISyntaxException {
-        HttpResponse response = staticController.execute(request);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+        HttpResponse response = HttpResponse.of(dataOutputStream);
+
+        HttpResponse result = staticController.execute(request, response);
         assertAll(
-                () -> assertThat(response.getHttpResponseCode()).isEqualTo("200 OK"),
-                () -> assertThat(response.getHeaders()).contains(
+                () -> assertThat(result.getHttpResponseCode()).isEqualTo("200 OK"),
+                () -> assertThat(result.getHeaders()).contains(
                         Map.entry(HttpHeaders.CONTENT_TYPE, "text/css;charset=utf-8")),
-                () -> assertThat(response.getBody()).isNotNull()
+                () -> assertThat(result.getBody()).isNotNull()
         );
     }
 

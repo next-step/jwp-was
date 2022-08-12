@@ -55,4 +55,8 @@ public class ResponseHeader {
     public String getCookie() {
         return cookie.getValue();
     }
+
+    public void addCookie(String cookie) {
+        this.cookie = HttpCookie.of(cookie);
+    }
 }

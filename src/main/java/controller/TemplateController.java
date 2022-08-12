@@ -1,10 +1,8 @@
 package controller;
 
-import utils.FileIoUtils;
 import webserver.http.HttpMethod;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
-import webserver.http.ResponseHeader;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -18,10 +16,8 @@ public class TemplateController implements Controller {
     }
 
     @Override
-    public HttpResponse execute(HttpRequest request) throws IOException, URISyntaxException {
-        String path = addTemplatePath(request.getPath());
-        byte[] bytes = FileIoUtils.loadFileFromClasspath(path);
-        return HttpResponse.ok(ResponseHeader.text(bytes.length, request.getPath()), bytes);
+    public HttpResponse execute(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+        return response.forward(addTemplatePath(request.getPath()), request.getPath());
     }
 
     private String addTemplatePath(String path) {

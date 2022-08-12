@@ -2,12 +2,14 @@ package controller;
 
 import com.github.jknack.handlebars.Handlebars;
 import db.DataBase;
-import model.*;
-import webserver.http.*;
+import model.User;
+import webserver.http.HttpMethod;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.Path;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 
@@ -27,22 +29,16 @@ public class UserListController implements Controller {
     }
 
     @Override
-    public HttpResponse execute(HttpRequest request) throws IOException, URISyntaxException {
+    public HttpResponse execute(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
         if (!isLogin(request)) {
-            return HttpResponse.found("/user/login.html");
+            return response.sendRedirect("/user/login.html");
         }
 
         Collection<User> users = DataBase.findAll();
+        String body = handlebars.compile(USER_LIST_TEMPLATE)
+                .apply(Map.of("users", users));
 
-        return HttpResponse.ok(
-                ResponseHeader.of(
-                        Map.of(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8"),
-                        request.getCookie()
-                ),
-                handlebars.compile(USER_LIST_TEMPLATE)
-                        .apply(Map.of("users", users))
-                        .getBytes(StandardCharsets.UTF_8)
-        );
+        return response.forwardBody(body);
     }
 
     private boolean isLogin(HttpRequest request) {

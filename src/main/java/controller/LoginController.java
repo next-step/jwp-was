@@ -17,12 +17,12 @@ public class LoginController implements Controller {
     }
 
     @Override
-    public HttpResponse execute(HttpRequest request) {
+    public HttpResponse execute(HttpRequest request, HttpResponse response) {
         User user = DataBase.findUserById(request.getParameter("userId"));
         if (user == null || !validatePassword(request, user)) {
-            return HttpResponse.found("/user/login_failed.html", "logined=false; Path=/");
+            return response.sendRedirectWithCookie("/user/login_failed.html", "logined=false; Path=/");
         }
-        return HttpResponse.found("/index.html", "logined=true; Path=/");
+        return response.sendRedirectWithCookie("/index.html", "logined=true; Path=/");
     }
 
     private boolean validatePassword(HttpRequest request, User user) {
