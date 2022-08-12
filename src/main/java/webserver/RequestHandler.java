@@ -46,7 +46,7 @@ public class RequestHandler implements Runnable {
     }
 
     private String getResourcePath(String path) throws IOException, URISyntaxException {
-        if (path.endsWith("html")) {
+        if (path.endsWith("html") || path.endsWith("ico")) {
             return IOUtils.loadFileFromClasspath("./templates" + path);
         }
         return IOUtils.loadFileFromClasspath("./static" + path);
