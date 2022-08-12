@@ -1,8 +1,6 @@
 package http;
 
 import exception.Assert;
-import exception.NotFoundException;
-import http.response.HttpStatusCode;
 import org.apache.logging.log4j.util.Strings;
 import webserver.session.HttpSession;
 import webserver.session.HttpSessionStorage;
