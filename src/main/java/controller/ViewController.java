@@ -26,13 +26,13 @@ public class ViewController implements Controller{
         final String extension = request.getRequestLine().getExtension();
 
         if (isHtmlClassPath(extension)) {
-            response.success(
+            response.forward(
                     new ResponseBody(FileIoUtils.loadFileFromClasspath(HTML_CLASS_PATH + requestPath))
                     , extensionToContentType.get(extension));
             response.writeResponse();
             return;
         }
-        response.success(
+        response.forward(
                 new ResponseBody(FileIoUtils.loadFileFromClasspath(CLASS_Path + requestPath))
                 , extensionToContentType.get(extension));
         response.writeResponse();

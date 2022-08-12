@@ -10,16 +10,6 @@ import java.util.stream.Collectors;
 public class HttpHeader {
 
     public static final String DELIMITER = ": ";
-    public static final int NAME_INDEX = 0;
-    public static final int VALUE_INDEX = 1;
-    public static final int NO_CONTENT = 0;
-    public static final String CONTENT_LENGTH = "Content-Length";
-    public static final int REQUEST_LINE_INDEX = 0;
-    public static final String COOKIE = "Cookie";
-    public static final String NO_COOKIE = null;
-    public static final String HOST = "Host";
-    public static final int PORT_INDEX = 2;
-    public static final String DELIMETER = ": ";
 
     private Map<String, String> headers = new HashMap<>();
 
@@ -45,7 +35,6 @@ public class HttpHeader {
 
     public void addLocation(String location) {
         headers.put("Location", location);
-
     }
 
     public void addValue(String name, String value) {
@@ -68,12 +57,12 @@ public class HttpHeader {
         headers.keySet().stream()
                 .forEach(name -> {
                     try {
-                        dos.writeBytes(name + DELIMETER + getValue(name));
+                        dos.writeBytes(name + DELIMITER + getValue(name) + "\n");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
-        dos.writeBytes("\n\n");
+        dos.writeBytes("\n");
     }
 
     @Override

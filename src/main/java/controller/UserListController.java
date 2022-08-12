@@ -3,8 +3,6 @@ package controller;
 import model.*;
 import utils.HandlebarsUtils;
 
-import java.nio.charset.StandardCharsets;
-
 public class UserListController implements Controller{
 
     public static final String USER_LOGIN_PATH = "/user/login.html";
@@ -18,7 +16,7 @@ public class UserListController implements Controller{
         final String s = HandlebarsUtils.makeUserListTemplate();
 
         if (isLogin(cookie)) {
-            response.success(new ResponseBody(s.getBytes()), CONTENT_TYPE);
+            response.forward(new ResponseBody(s.getBytes()), CONTENT_TYPE);
             response.writeResponse();
             return;
         }

@@ -34,7 +34,7 @@ public class HttpResponse {
         this.header = httpHeader;
     }
 
-    public void success(ResponseBody body, String contentType) {
+    public void forward(ResponseBody body, String contentType) {
         final HttpHeader httpHeader = new HttpHeader();
         httpHeader.addContentType(contentType);
         httpHeader.addContentLength(body.getLength());

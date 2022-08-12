@@ -8,12 +8,12 @@ import java.net.URISyntaxException;
 
 public class LoginController implements Controller {
 
-    public static final String LOGIN_FAILED_PATH = "./templates/user/login_failed.html";
+    public static final String LOGIN_FAILED_PATH = "/user/login_failed.html";
     public static final String USER_ID = "userId";
-    public static final String LOGIN_SUCCESS_PATH = "./templates/index.html";
+    public static final String LOGIN_SUCCESS_PATH = "/index.html";
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+    public void service(HttpRequest request, HttpResponse response) throws IOException {
 
         final String userId = request.getBody().getFirstValue(USER_ID);
         final User findUser = DataBase.findUserById(userId);
