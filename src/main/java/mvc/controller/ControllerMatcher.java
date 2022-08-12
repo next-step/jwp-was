@@ -12,23 +12,22 @@ public class ControllerMatcher {
     private static Map<String, Controller> controllers = new HashMap<>();
 
     static {
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".html");
         controllers.put("/user/create", new UserCreateController());
         controllers.put("/user/login", new UserLoginController());
-        controllers.put("/user/list", new UserListController(new Handlebars(loader)));
+        controllers.put("/user/list", new UserListController());
         controllers.put("./static", new StaticController());
         controllers.put("./template", new TemplateController());
     }
 
     public static Controller matchController(String path) {
-        if (path.contains(".html")) {
+        Controller controller = controllers.get(path);
+        if (controller != null) {
+            return controller;
+        }
+
+        if (path.endsWith(".html")) {
             return controllers.get("./template");
         }
-        if (path.contains(".css")) {
-            return controllers.get("./static");
-        }
-        return controllers.get(path);
+        return controllers.get("./static");
     }
 }

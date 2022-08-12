@@ -1,0 +1,34 @@
+package mvc.view;
+
+import com.github.jknack.handlebars.Template;
+import http.HttpHeader;
+import http.request.HttpRequest;
+import http.request.protocol.Protocol;
+import http.response.HttpResponse;
+import http.response.HttpStatusCode;
+import http.response.StatusLine;
+import utils.FileIoUtils;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+
+public class TemplateView implements View {
+
+    private static final String TEMPLATE_PATH = "./templates";
+
+    private Template template;
+
+    public TemplateView(Template template) {
+        this.template = template;
+    }
+
+    @Override
+    public void render(HttpRequest request, HttpResponse response) throws IOException {
+        byte[] body = template.apply(response.getBodyAttributes()).getBytes(StandardCharsets.UTF_8);
+        response.buildResponse(StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.OK),
+                HttpHeader.from(Collections.singletonMap(HttpHeader.CONTENT_TYPE, "text/html;charset=utf-8")),
+                body);
+    }
+}

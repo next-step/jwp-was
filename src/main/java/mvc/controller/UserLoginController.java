@@ -1,34 +1,35 @@
-package webserver.controller;
+package mvc.controller;
 
 import db.DataBase;
 import exception.NotFoundException;
-import http.request.Protocol;
-import model.User;
-import webserver.HttpHeader;
-import webserver.request.HttpRequest;
-import webserver.response.HttpResponse;
-import webserver.response.HttpStatusCode;
-import webserver.response.StatusLine;
+import http.request.protocol.Protocol;
+import mvc.model.User;
+import http.HttpHeader;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
+import http.response.HttpStatusCode;
+import http.response.StatusLine;
 
 import java.util.Map;
 
-public class UserLoginController implements Controller {
+public class UserLoginController extends AbstractController {
 
     @Override
-    public HttpResponse service(HttpRequest request) {
-        return login(request);
+    public void doPost(HttpRequest request, HttpResponse response) {
+        login(request, response);
     }
 
-    private HttpResponse login(HttpRequest request) {
+    private void login(HttpRequest request, HttpResponse response) {
         if (isValidUserInfo(request)) {
-            return HttpResponse.of(
+            response.buildResponse(
                     StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.FOUND),
                     HttpHeader.from(Map.of(
                             HttpHeader.LOCATION, "/index.html",
                             HttpHeader.SET_COOKIE, "logined=true; Path=/"))
             );
+            return;
         }
-        return HttpResponse.of(
+        response.buildResponse(
                 StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.FOUND),
                 HttpHeader.from(Map.of(
                         HttpHeader.LOCATION, "/user/login_failed.html",
