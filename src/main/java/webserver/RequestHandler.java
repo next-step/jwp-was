@@ -38,8 +38,9 @@ public class RequestHandler implements Runnable {
 
     private void process(InputStream in, OutputStream out) throws Exception {
         HttpResponse response = new HttpResponse(out);
+        HttpRequest request = null;
         try {
-            HttpRequest request = new HttpRequest(in);
+            request = new HttpRequest(in);
 
             if (request.getCookies().getCookie("JSESSIONID") == null) {
                 response.addHeader("Set-Cookie", "JSESSIONID=" + UUID.randomUUID());
@@ -49,21 +50,21 @@ public class RequestHandler implements Runnable {
             controller.service(request, response);
         } catch (NotFoundException e) {
             logger.error(e.getMessage());
-            responseError(response, HttpStatus.NOT_FOUND);
+            responseError(request, response, HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
 
-            responseError(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            responseError(request, response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private void responseError(HttpResponse response, HttpStatus notFound) throws Exception {
+    private void responseError(HttpRequest request, HttpResponse response, HttpStatus notFound) throws Exception {
         response.updateStatus(notFound);
 
         ViewResolver viewResolver = new ErrorViewResolver();
         View view = viewResolver.resolveView("");
-        view.render(response);
+        view.render(request, response);
     }
 }

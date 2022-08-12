@@ -6,15 +6,15 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HttpSessionsTest {
+class SessionManagerTest {
 
     @Test
     void HTTP_세션생성_테스트() {
         String sessionId = UUID.randomUUID().toString();
 
-        HttpSession session = HttpSessions.getSession(sessionId);
+        HttpSession session = SessionManager.getSession(sessionId);
 
-        assertThat(session).isEqualTo(HttpSessions.getSession(sessionId));
+        assertThat(session).isEqualTo(SessionManager.getSession(sessionId));
         assertThat(session.getId()).isEqualTo(sessionId);
     }
 
@@ -23,7 +23,7 @@ class HttpSessionsTest {
         String userId = "hjjang87";
         String sessionId = UUID.randomUUID().toString();
 
-        HttpSession session = HttpSessions.getSession(sessionId);
+        HttpSession session = SessionManager.getSession(sessionId);
         session.setAttribute("userId", userId);
 
         assertThat(session.getAttribute("userId")).isEqualTo(userId);
@@ -34,7 +34,7 @@ class HttpSessionsTest {
         String userId = "hjjang87";
         String sessionId = UUID.randomUUID().toString();
 
-        HttpSession session = HttpSessions.getSession(sessionId);
+        HttpSession session = SessionManager.getSession(sessionId);
         session.setAttribute("userId", userId);
 
         session.removeAttribute("userId");
@@ -46,11 +46,11 @@ class HttpSessionsTest {
         String userId = "hjjang87";
         String sessionId = UUID.randomUUID().toString();
 
-        HttpSession session = HttpSessions.getSession(sessionId);
+        HttpSession session = SessionManager.getSession(sessionId);
         session.setAttribute("userId", userId);
         session.invalidate();
 
-        HttpSession invalidateSession = HttpSessions.getSession(sessionId);
+        HttpSession invalidateSession = SessionManager.getSession(sessionId);
         assertThat(invalidateSession.getAttribute("userId")).isNull();
     }
 }

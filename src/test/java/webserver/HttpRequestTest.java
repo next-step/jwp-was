@@ -3,11 +3,13 @@ package webserver;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.util.StopWatch;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,16 +18,26 @@ public class HttpRequestTest {
     @Test
     void request_resttemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080", String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        StopWatch sw = new StopWatch();
+        sw.start();
+        IntStream.rangeClosed(1, 100)
+                .parallel()
+                .mapToObj(i -> restTemplate.getForEntity("http://localhost:8080/index.html", String.class))
+                .allMatch(response -> response.getStatusCode().is2xxSuccessful());
+
+
+        sw.stop();
+        System.out.println(("Total Elaspsed:" + sw.getTotalTimeSeconds()));
     }
+
 
     @Test
     void 회원가입페이지_요청() {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Cookie", "JSESSIONID="+ UUID.randomUUID());
+        headers.set("Cookie", "JSESSIONID=" + UUID.randomUUID());
         HttpEntity<String> request = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(
                 "http://localhost:8080/user/form.html",
@@ -41,7 +53,7 @@ public class HttpRequestTest {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Cookie", "JSESSIONID="+ UUID.randomUUID());
+        headers.set("Cookie", "JSESSIONID=" + UUID.randomUUID());
         HttpEntity<String> request = new HttpEntity<>("userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net", headers);
         ResponseEntity<String> response = restTemplate.exchange(
                 "http://localhost:8080/user/create",
@@ -58,7 +70,7 @@ public class HttpRequestTest {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Cookie", "JSESSIONID="+ UUID.randomUUID());
+        headers.set("Cookie", "JSESSIONID=" + UUID.randomUUID());
         HttpEntity<String> request = new HttpEntity<>("userId=user1&password=1234", headers);
         ResponseEntity<String> response = restTemplate.exchange(
                 "http://localhost:8080/user/login",
@@ -76,7 +88,7 @@ public class HttpRequestTest {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Cookie", "JSESSIONID="+ UUID.randomUUID());
+        headers.set("Cookie", "JSESSIONID=" + UUID.randomUUID());
         HttpEntity<String> request = new HttpEntity<>("userId=user4&password=1234", headers);
         ResponseEntity<String> response = restTemplate.exchange(
                 "http://localhost:8080/user/login",
@@ -103,7 +115,7 @@ public class HttpRequestTest {
         String jSessionId = UUID.randomUUID().toString();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Cookie", "JSESSIONID="+ jSessionId);
+        headers.set("Cookie", "JSESSIONID=" + jSessionId);
         HttpEntity<String> loginRequest = new HttpEntity<>("userId=user1&password=1234", headers);
         ResponseEntity<String> loginResponse = restTemplate.exchange(
                 "http://localhost:8080/user/login",
@@ -114,7 +126,7 @@ public class HttpRequestTest {
         assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         assertThat(loginResponse.getHeaders().get("Location")).contains("/index.html");
 
-        headers.set("Cookie", "logined=true; JSESSIONID="+jSessionId);
+        headers.set("Cookie", "logined=true; JSESSIONID=" + jSessionId);
         HttpEntity<String> request = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(
                 "http://localhost:8080/user/list",

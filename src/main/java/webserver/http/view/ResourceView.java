@@ -2,6 +2,7 @@ package webserver.http.view;
 
 import utils.FileIoUtils;
 import webserver.http.HttpContentType;
+import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
 public class ResourceView implements View {
@@ -13,7 +14,7 @@ public class ResourceView implements View {
     }
 
     @Override
-    public void render(HttpResponse response) throws Exception {
+    public void render(HttpRequest request, HttpResponse response) throws Exception {
         HttpContentType contentType = HttpContentType.of(getFileExtension(resourcePath));
         byte[] body = FileIoUtils.loadFileFromClasspath(contentType.getResourcePath() + resourcePath);
         response.addHeader("Content-Type", contentType.getValue());

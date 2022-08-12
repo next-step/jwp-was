@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public class HttpResponse {
@@ -16,7 +14,6 @@ public class HttpResponse {
 
     private DataOutputStream dos;
     private ResponseHeader headers;
-    private final Map<String, Object> attributes = new HashMap<>();
 
     public HttpResponse(OutputStream out) {
         this.dos = new DataOutputStream(out);
@@ -74,13 +71,5 @@ public class HttpResponse {
         for (String key : keys) {
             dos.writeBytes(key + ": " + headers.getHeader(key) + "\r\n");
         }
-    }
-
-    public void addAttribute(String key, Object value) {
-        this.attributes.put(key, value);
-    }
-
-    public Map<String, Object> getAttributes() {
-        return attributes;
     }
 }

@@ -30,6 +30,7 @@ public class HttpSession {
     }
 
     public void invalidate() {
-        HttpSessions.remove(id);
+        sessions.clear();
+        SessionManager.remove(id);
     }
 }

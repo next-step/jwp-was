@@ -23,10 +23,10 @@ public class ListUserController extends AbstractController {
                     .map(user -> new UserDto(user.getUserId(), user.getName(), user.getEmail()))
                     .collect(Collectors.toList());
 
-            response.addAttribute("user", userDtos);
+            request.addAttribute("user", userDtos);
             ViewResolver viewResolver = new TemplateViewResolver();
             View view = viewResolver.resolveView("user/list");
-            view.render(response);
+            view.render(request, response);
 
             return;
         }

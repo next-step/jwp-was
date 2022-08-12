@@ -27,16 +27,16 @@ public abstract class AbstractController implements Controller {
 
             targetMethod.invoke(this, request, response);
         } catch (RequestProcessException e) {
-            error(response, e.getStatus());
+            error(request, response, e.getStatus());
         }
     }
 
-    protected void error(HttpResponse response, HttpStatus status) throws Exception {
+    protected void error(HttpRequest request, HttpResponse response, HttpStatus status) throws Exception {
         response.updateStatus(status);
 
         ViewResolver viewResolver = new ErrorViewResolver();
         View view = viewResolver.resolveView("");
-        view.render(response);
+        view.render(request, response);
     }
 
     private boolean isSameMethod(String classMethodName, String httpMethodName) {

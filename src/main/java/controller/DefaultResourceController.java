@@ -15,7 +15,7 @@ public class DefaultResourceController extends AbstractController {
         ViewResolver viewResolver = new ResourceViewResolver();
         View view = viewResolver.resolveView(getDefaultPath(request.getPath()));
 
-        view.render(response);
+        view.render(request, response);
     }
 
     private String getDefaultPath(String path) {

@@ -7,6 +7,6 @@ public class ErrorController extends AbstractController {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) throws Exception {
-        error(response, response.getStatus());
+        error(request, response, response.getStatus());
     }
 }

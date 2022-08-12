@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpRequest {
 
@@ -13,6 +15,8 @@ public class HttpRequest {
     private RequestLine requestLine;
     private RequestHeader requestHeader = new RequestHeader();
     private RequestBody requestBody;
+
+    private final Map<String, Object> attributes = new HashMap<>();
 
     public HttpRequest(InputStream in) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
@@ -59,5 +63,13 @@ public class HttpRequest {
 
     public HttpSession getSession() {
         return requestHeader.getSession();
+    }
+
+    public void addAttribute(String key, Object value) {
+        this.attributes.put(key, value);
+    }
+
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 }
