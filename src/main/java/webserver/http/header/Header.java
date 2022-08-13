@@ -91,7 +91,9 @@ public class Header {
         validateCookieString(cookieString);
         String[] cookieElements = cookieString.split(COOKIE_DELIMITER);
         if (!cookieString.isEmpty()) {
-            this.cookie = new Cookie(cookieElements[KEY_INDEX], cookieElements[VALUE_INDEX]);
+            Map<String, String> cookies = new HashMap<>();
+            cookies.put(cookieElements[KEY_INDEX], cookieElements[VALUE_INDEX]);
+            this.cookie = new Cookie(cookies);
         }
     }
 
@@ -104,7 +106,7 @@ public class Header {
     }
 
     public boolean isLogin() {
-        return Boolean.parseBoolean(this.cookie.getValue());
+        return Boolean.parseBoolean(this.cookie.getValue("logined"));
     }
 
     public boolean isHeaderValueEqual(HeaderKey key, String value) {

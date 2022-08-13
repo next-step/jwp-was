@@ -1,22 +1,30 @@
 package webserver.http.header;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Cookie {
     private static final String EMPTY_STRING = "";
 
-    private String key;
-    private String value;
+    private Map<String, String> cookies;
+
+    public Cookie(Map<String, String> cookies) {
+        validateCookies(cookies);
+        this.cookies = cookies;
+    }
+
+    private void validateCookies(Map<String, String> cookies) {
+        if (cookies == null) {
+            throw new IllegalArgumentException("cookies 값이 null 일 수 없습니다.");
+        }
+    }
 
     public Cookie() {
-        this(EMPTY_STRING, EMPTY_STRING);
+        this(new HashMap<>());
     }
 
-    public Cookie(String key, String value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    public String getValue() {
-        return this.value;
+    public String getValue(String key) {
+        return this.cookies.getOrDefault(key, EMPTY_STRING);
     }
 
     @Override
@@ -26,14 +34,11 @@ public class Cookie {
 
         Cookie cookie = (Cookie) o;
 
-        if (!key.equals(cookie.key)) return false;
-        return value.equals(cookie.value);
+        return cookies.equals(cookie.cookies);
     }
 
     @Override
     public int hashCode() {
-        int result = key.hashCode();
-        result = 31 * result + value.hashCode();
-        return result;
+        return cookies.hashCode();
     }
 }

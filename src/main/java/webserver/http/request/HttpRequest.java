@@ -73,7 +73,7 @@ public class HttpRequest {
         while (!isEmpty(line = br.readLine())) {
             this.header.addField(line);
         }
-        header.setCookie(header.getCookieValue());
+        this.header.setCookie(this.header.getCookieValue());
     }
 
     private static boolean isEmpty(String line) {
