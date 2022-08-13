@@ -1,4 +1,4 @@
-package webserver.controller;
+package user.controller;
 
 import webserver.http.model.request.HttpMethod;
 import webserver.http.model.request.HttpRequest;
@@ -7,11 +7,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 public enum ControllerEnum {
-    CREATE_USER_GET(HttpMethod.GET, "/user/create", UserController.of(), "createUserGet", false),
-    CREATE_USER_POST(HttpMethod.POST, "/user/create", UserController.of(), "createUserPost", false),
-    LOGIN(HttpMethod.POST, "/user/login", UserController.of(), "login", false),
-    USER_LIST(HttpMethod.GET, "/user/list", UserController.of(), "retrieveUsers", true),
-    INDEX(HttpMethod.GET, "/index.html", UserController.of(), "index", false);
+    CREATE_USER_GET(HttpMethod.GET, "/user/create", new CreateUserController(), "createUserGet", false),
+    CREATE_USER_POST(HttpMethod.POST, "/user/create", new CreateUserController(), "createUserPost", false),
+    LOGIN(HttpMethod.POST, "/user/login", new LoginController(), "login", false),
+    USER_LIST(HttpMethod.GET, "/user/list", new ListUserController(), "retrieveUsers", true);
 
     private final HttpMethod httpMethod;
     private final String path;
@@ -28,9 +27,10 @@ public enum ControllerEnum {
     }
 
     public static Object handlerMapping(HttpRequest httpRequest) {
-        ControllerEnum controllerEnum = Arrays.stream(values()).filter(controllerEnumEnum -> controllerEnumEnum.httpMethod == httpRequest.getRequestLine().getMethod())
+        ControllerEnum controllerEnum = Arrays.stream(values())
+                .filter(controllerEnumEnum -> controllerEnumEnum.httpMethod == httpRequest.getRequestLine().getMethod())
                 .filter(controllerEnumEnum -> controllerEnumEnum.path.equals(httpRequest.getPath()))
-                .findFirst().orElse(ControllerEnum.INDEX);
+                .findFirst().orElse(ControllerEnum.LOGIN);
 
         Object instance = controllerEnum.classObject;
         Class<?> instanceClass = instance.getClass();
@@ -46,5 +46,13 @@ public enum ControllerEnum {
         return Arrays.stream(values()).filter(controllerEnum -> controllerEnum.httpMethod == httpRequest.getRequestLine().getMethod())
                 .filter(controllerEnumEnum -> controllerEnumEnum.path.equals(httpRequest.getPath()))
                 .map(controllerEnumEnum -> controllerEnumEnum.accessibleAfterLogin).findFirst().orElse(true);
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public Object getClassObject() {
+        return classObject;
     }
 }

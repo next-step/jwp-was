@@ -1,4 +1,4 @@
-package webserver.controller;
+package user.controller;
 
 import webserver.http.model.request.HttpMethod;
 import webserver.http.model.request.HttpRequest;
@@ -17,11 +17,7 @@ public abstract class AbstractController implements Controller {
         doGet(request, response);
     }
 
-    public void doPost(HttpRequest request, HttpResponse response) throws IOException {
+    public abstract void doPost(HttpRequest request, HttpResponse response) throws IOException;
 
-    }
-
-    public void doGet(HttpRequest request, HttpResponse response) throws IOException {
-
-    }
+    public abstract void doGet(HttpRequest request, HttpResponse response) throws IOException;
 }

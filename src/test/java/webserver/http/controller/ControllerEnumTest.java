@@ -2,7 +2,7 @@ package webserver.http.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.controller.ControllerEnum;
+import user.controller.ControllerEnum;
 import webserver.http.model.request.HttpRequest;
 import webserver.http.model.request.RequestBody;
 import webserver.http.model.request.RequestLine;

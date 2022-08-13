@@ -1,6 +1,6 @@
-package webserver.controller;
+package user.controller;
 
-import db.DataBase;
+import user.service.RetrieveUserService;
 import webserver.http.model.Model;
 import webserver.http.model.request.HttpRequest;
 import webserver.http.model.response.HttpResponse;
@@ -16,15 +16,20 @@ public class ListUserController extends AbstractController {
         Model model;
         if (isLogin(httpRequest)) {
             Map<String, Object> modelMap = new HashMap<>();
-            modelMap.put("users", DataBase.findAll());
+            modelMap.put("users", RetrieveUserService.retrieveUsers());
             model = new Model("user/list", modelMap);
         } else {
             model = new Model("/user/login.html", null);
         }
-        httpResponse.moveNotStaticResourcePage(httpResponse, model);
+        httpResponse.movePage(model);
     }
 
     public boolean isLogin(HttpRequest httpRequest) {
         return ControllerEnum.accessiblePagesAfterLogin(httpRequest) && "logined=true".equals(httpRequest.getRequestHeaders().get("Cookie"));
+    }
+
+    @Override
+    public void doPost(HttpRequest request, HttpResponse response) {
+
     }
 }

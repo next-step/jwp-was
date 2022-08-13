@@ -1,7 +1,7 @@
-package webserver.controller;
+package user.controller;
 
-import cookie.Cookie;
-import db.DataBase;
+import user.service.RetrieveUserService;
+import webserver.http.model.response.Cookie;
 import model.User;
 import webserver.http.model.request.HttpRequest;
 import webserver.http.model.response.HttpResponse;
@@ -11,21 +11,29 @@ import java.io.IOException;
 public class LoginController extends AbstractController {
 
     @Override
+    public void doGet(HttpRequest request, HttpResponse response) {
+
+    }
+
+    @Override
     public void doPost(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
         String userId = httpRequest.getRequestBody().getRequestBodyMap().get("userId");
         String password = httpRequest.getRequestBody().getRequestBodyMap().get("password");
-        User user = DataBase.findUserById(userId);
-        String pathAfterLogin = pathAfterLogin(password, user);
-        httpResponse.moveNotStaticResourcePage(httpResponse, pathAfterLogin);
+        User user = RetrieveUserService.retrieve(userId);
+
+        Cookie cookie = new Cookie("logined");
+        String pathAfterLogin = pathAfterLogin(password, user, cookie);
+        httpResponse.addCookie(cookie);
+
+        httpResponse.movePage(pathAfterLogin);
     }
 
-    private String pathAfterLogin(String password, User user) {
-        Cookie cookie = new Cookie();
+    private String pathAfterLogin(String password, User user, Cookie cookie) {
         if (user != null && user.getPassword().equals(password)) {
-            cookie.setCookie("logined=true");
+            cookie.setValue("true");
             return "/index.html";
         }
-        cookie.setCookie("logined=false");
+        cookie.setValue("false");
         return "/user/login_failed.html";
     }
 }

@@ -1,6 +1,6 @@
-package webserver.controller;
+package user.controller;
 
-import cookie.Cookie;
+import webserver.http.model.response.Cookie;
 import db.DataBase;
 import model.User;
 import webserver.http.model.Model;
@@ -9,6 +9,7 @@ import webserver.http.model.request.HttpRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class UserController {
     private static final UserController userController = new UserController();
 
@@ -26,6 +27,7 @@ public class UserController {
 
     public String createUserGet(HttpRequest httpRequest) {
         User user = new User(httpRequest.getQueryString().getQueryStringMap());
+        DataBase.addUser(user);
         return "/index.html";
     }
 
@@ -43,12 +45,12 @@ public class UserController {
     }
 
     private String pathAfterLogin(String password, User user) {
-        Cookie cookie = new Cookie();
+        Cookie cookie = new Cookie("logined");
         if (user.getPassword().equals(password)) {
-            cookie.setCookie("logined=true");
+            cookie.setValue("true");
             return "/index.html";
         }
-        cookie.setCookie("logined=false");
+        cookie.setValue("false");
         return "/user/login_failed.html";
     }
 
