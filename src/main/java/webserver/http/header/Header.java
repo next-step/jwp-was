@@ -4,6 +4,7 @@ import webserver.http.header.type.EntityHeader;
 import webserver.http.header.type.RequestHeader;
 import webserver.http.header.type.ResponseHeader;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -11,7 +12,8 @@ import java.util.Optional;
 public class Header {
     private static final String EMPTY_STRING = "";
     private static final String HEADER_FIELD_DELIMITER = ": ";
-    private static final String COOKIE_DELIMITER = "=";
+    private static final String COOKIES_DELIMITER = "; ";
+    private static final String COOKIE_KEY_VALUE_DELIMITER = "=";
     private static final String ZERO_STRING = "0";
     private static final int KEY_INDEX = 0;
     private static final int VALUE_INDEX = 1;
@@ -87,14 +89,15 @@ public class Header {
         fields.put(HeaderKey.valueOfKey(fieldElements[KEY_INDEX]), fieldElements[VALUE_INDEX]);
     }
 
-    public void setCookie(String cookieString) {
+    public void setCookies(String cookieString) {
         validateCookieString(cookieString);
-        String[] cookieElements = cookieString.split(COOKIE_DELIMITER);
-        if (!cookieString.isEmpty()) {
-            Map<String, String> cookies = new HashMap<>();
+        String[] multiCookies = cookieString.split(COOKIES_DELIMITER);
+        Map<String, String> cookies = new HashMap<>();
+        Arrays.stream(multiCookies).filter(cookie -> !cookie.isEmpty()).forEach(cookie -> {
+            String[] cookieElements = cookie.split(COOKIE_KEY_VALUE_DELIMITER);
             cookies.put(cookieElements[KEY_INDEX], cookieElements[VALUE_INDEX]);
-            this.cookie = new Cookie(cookies);
-        }
+        });
+        this.cookie = new Cookie(cookies);
     }
 
     public int getContentLength() {

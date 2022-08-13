@@ -33,7 +33,7 @@ class HeaderTest {
     @DisplayName("Cookie 셋팅 요청 값이 null 일 경우 예외가 발생한다.")
     void throw_exception_setCookie_null(String cookieString) {
         Header header = new Header();
-        assertThatThrownBy(() -> header.setCookie(cookieString)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> header.setCookies(cookieString)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
