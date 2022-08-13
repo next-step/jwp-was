@@ -2,10 +2,12 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URISyntaxException;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -41,12 +43,20 @@ public class RequestHandler implements Runnable {
                 httpHeader.addHeader(line);
             }
 
+
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World22".getBytes();
+
+            if (path.equals("/index.html")) {
+                body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
+            }
+
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
     }
 
