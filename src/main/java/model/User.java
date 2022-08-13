@@ -1,7 +1,6 @@
 package model;
 
-import webserver.http.model.QueryStrings;
-import webserver.http.model.RequestBody;
+import java.util.Map;
 
 public class User {
     private String userId;
@@ -9,14 +8,8 @@ public class User {
     private String name;
     private String email;
 
-    public User(QueryStrings queryStrings) {
-        this(queryStrings.queryStringValue("userId"), queryStrings.queryStringValue("password"),
-                queryStrings.queryStringValue("name"), queryStrings.queryStringValue("email"));
-    }
-
-    public User(RequestBody requestBody) {
-        this(requestBody.getRequestBodyMap().get("userId"), requestBody.getRequestBodyMap().get("password"),
-                requestBody.getRequestBodyMap().get("name"), requestBody.getRequestBodyMap().get("email"));
+    public User(Map<String, String> userDataMap) {
+        this(userDataMap.get("userId"), userDataMap.get("password"), userDataMap.get("name"), userDataMap.get("email"));
     }
 
     public User(String userId, String password, String name, String email) {
