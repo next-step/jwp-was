@@ -29,3 +29,7 @@
 - [o] BufferedReader api를 이용해 모든 Request Header 출력하기
 - [o] 첫 번째 Request Line 에서 요청 URL 추출하기
 - [o] path에 해당하는 파일을 읽어서 응답하기
+
+### 요구사항 2
+- [] 회원가입 메뉴를 클릭하면 http://localhost:8080/user/form.html 로 이동하고 회원가입
+- [] 쿼리스트링으로 들어오는 사용자의 입력값을 파싱해서 model.User 클래스에 저장하기  
