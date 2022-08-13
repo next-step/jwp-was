@@ -15,7 +15,6 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private final Socket connection;
-    private FrontController frontController = new FrontController();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -30,7 +29,7 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = new HttpRequest(in);
             HttpResponse httpResponse = new HttpResponse(out);
 
-            Controller controller = frontController.findMatchController(httpRequest);
+            Controller controller = FrontController.findMatchController(httpRequest);
 
             controller.process(httpRequest, httpResponse);
 

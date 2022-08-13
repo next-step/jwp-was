@@ -17,4 +17,13 @@ public class HttpRequestHeader {
         }
     }
 
+    public boolean hasBody() {
+        return requestHeaderValues.containsKey("Content-Length");
+    }
+
+    public int getContentLength() {
+        String contentLength = requestHeaderValues.get("Content-Length");
+
+        return Integer.parseInt(contentLength);
+    }
 }

@@ -1,6 +1,6 @@
 package webserver.http.request.start_line;
 
-import webserver.http.StaticContentType;
+import webserver.http.HttpContentType;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -47,8 +47,8 @@ public class RequestPath {
 	}
 
 	public boolean isStaticContentType() {
-		return Arrays.stream(StaticContentType.values())
-				.anyMatch(staticContentType -> path.contains(staticContentType.getType()));
+		return Arrays.stream(HttpContentType.values())
+				.anyMatch(httpContentType -> path.contains(httpContentType.getType()));
 	}
 
 }

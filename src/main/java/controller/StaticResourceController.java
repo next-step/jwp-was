@@ -7,6 +7,10 @@ public class StaticResourceController implements Controller {
 
     @Override
     public void process(final HttpRequest request, final HttpResponse response) {
+        if (request.getPathValue().equals("/")) {
+            response.forward("/index.html");
+            return;
+        }
         response.forward(request.getPathValue());
     }
 }
