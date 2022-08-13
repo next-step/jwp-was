@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class UrlPath {
 
-    private static final List<String> SESSION_CHECK_EXCLUDE_URLS = List.of("/");
+    private static final List<String> SESSION_CHECK_EXCLUDE_URLS = List.of("/", "/request-test");
     private static final List<String> FILE_EXTENSIONS = List.of(".html");
     private static final String HTML_EXTENSION = ".html";
     private final String path;

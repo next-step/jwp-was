@@ -2,9 +2,9 @@ package types;
 
 public enum MediaType {
 
-    TEXT_HTML("text/html"), TEXT_CSS("text/css");
+    TEXT_HTML("text/html"), TEXT_CSS("text/css"), APPLICATION_JSON("application/json");
 
-    private String value;
+    private final String value;
 
     MediaType(String value) {
         this.value = value;

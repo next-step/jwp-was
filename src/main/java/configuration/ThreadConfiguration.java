@@ -15,4 +15,12 @@ public class ThreadConfiguration {
             new LinkedBlockingQueue<>(100)
     );
 
+//    public static final Executor serviceThreadPool = new ThreadPoolExecutor(
+//            5,
+//            5,
+//            0,
+//            TimeUnit.MILLISECONDS,
+//            new LinkedBlockingQueue<>(2)
+//    );
+
 }

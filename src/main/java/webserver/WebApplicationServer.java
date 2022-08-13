@@ -16,11 +16,7 @@ public class WebApplicationServer {
         try (ServerSocket listenSocket = new ServerSocket(getPort(args))) {
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Socket acceptedConnection = connection;
-                ThreadConfiguration.serviceThreadPool.execute(() -> {
-                    RequestHandler requestHandler = new RequestHandler(acceptedConnection);
-                    requestHandler.run();
-                });
+                ThreadConfiguration.serviceThreadPool.execute(new RequestHandler(connection));
             }
         }
     }
