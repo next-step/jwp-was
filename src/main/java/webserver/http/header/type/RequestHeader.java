@@ -19,7 +19,9 @@ public enum RequestHeader implements HeaderKey {
     UPGRADE_INSECURE_REQUESTS("Upgrade-Insecure-Requests"),
     REFERER("Referer"),
     ORIGIN("Origin"),
-    PURPOSE("Purpose");
+    PURPOSE("Purpose"),
+    IF_NONE_MATCH("If-None-Match"),
+    IF_MODIFIED_SINCE("If-Modified-Since");
 
     private final String headerKey;
 
