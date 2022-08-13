@@ -26,6 +26,6 @@
 ## step 2 - HTTP 웹 서버 구현
 
 ### 요구사항 1 
-- [] BufferedReader api를 이용해 모든 Request Header 출력하기
-- [] 첫 번째 Request Line 에서 요청 URL 추출하기
-- [] path에 해당하는 파일을 읽어서 응답하기
+- [o] BufferedReader api를 이용해 모든 Request Header 출력하기
+- [o] 첫 번째 Request Line 에서 요청 URL 추출하기
+- [o] path에 해당하는 파일을 읽어서 응답하기
