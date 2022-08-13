@@ -18,6 +18,10 @@ public class RequestBody {
         this.contents = contents;
     }
 
+    public static RequestBody emptyInstance(){
+        return new RequestBody(Collections.EMPTY_MAP);
+    }
+
     public static RequestBody parseFrom(final String body) {
         if (body.isEmpty() || body.isBlank() || body == null) {
             return new RequestBody(Collections.EMPTY_MAP);

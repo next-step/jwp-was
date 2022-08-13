@@ -19,6 +19,7 @@ public class UserListController extends AbstractController {
     public static final String LOGIN_PAGE = "/user/login.html";
     public static final String LOGIN_TRUE = "true";
 
+    // TODO: isLoggedIn 위치를 (Controller 말고) 더 알맞은 곳으로 위치시키기
     private Boolean isLoggedIn(RequestHeader requestHeader) {
         String cookies = requestHeader.getCookie();
         Cookie cookie = Cookie.parseFrom(cookies);

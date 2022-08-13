@@ -7,26 +7,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.IOUtils;
 import webserver.http.request.HttpRequest;
-import webserver.http.request.RequestBody;
-import webserver.http.request.RequestHeader;
-import webserver.http.request.RequestLine;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.ResponseBody;
 import webserver.http.response.ResponseHeader;
 import webserver.http.response.ResponseLine;
 
+
 public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final String END_OF_LINE = "";
     private static final String BLANK_LINE = "\r\n";
 
     private final Socket connection;
@@ -41,8 +36,10 @@ public class RequestHandler implements Runnable {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
-        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            final HttpRequest httpRequest = convertStreamToHttpRequest(in);
+        try (InputStream is = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+            final BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            final HttpRequest httpRequest = HttpRequest.parseFrom(br);
+            logger.debug(httpRequest.toString());
 
             HttpResponse httpResponse = route(httpRequest);
 
@@ -61,33 +58,6 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    private HttpRequest convertStreamToHttpRequest(InputStream is) throws IOException {
-        final BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-        String line = br.readLine();
-
-        final RequestLine requestLine = RequestLine.parseFrom(line);
-        logger.info(requestLine.toString());
-
-        final RequestHeader requestHeader = new RequestHeader();
-        while (! line.equals(END_OF_LINE) || line == null) {
-            logger.info(line);
-            line = br.readLine();
-            requestHeader.add(line);
-        }
-
-        RequestBody requestBody;
-        if (requestHeader.getContentLength().isEmpty()) {
-            requestBody = new RequestBody(Collections.EMPTY_MAP);
-        } else {
-            requestBody = RequestBody.parseFrom(
-                    IOUtils.readData(br, requestHeader.getContentLength().get())
-            );
-        }
-        logger.info(requestBody.toString());
-
-        return new HttpRequest(requestLine, requestHeader, requestBody);
     }
 
     private HttpResponse route(final HttpRequest httpRequest){

@@ -1,8 +1,13 @@
 package webserver.http.request;
 
 import exception.InvalidHeaderException;
+import utils.IOUtils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -26,6 +31,15 @@ public class RequestHeader {
 
     public RequestHeader() {}
 
+    public static RequestHeader parseFrom(BufferedReader br) throws IOException {
+        final RequestHeader requestHeader = new RequestHeader();
+
+        IOUtils.readLines(br)
+                .forEach(string -> requestHeader.add(string));
+
+        return requestHeader;
+    }
+
     public void add (final String header){
         if (header.isEmpty() || header.isBlank() || header == null) {
             return;
@@ -37,6 +51,10 @@ public class RequestHeader {
         }
 
         headers.put(splitHeader[0], splitHeader[1]);
+    }
+
+    public boolean hasBody() {
+        return this.getContentLength().isEmpty();
     }
 
     public String getUserAgent() {
