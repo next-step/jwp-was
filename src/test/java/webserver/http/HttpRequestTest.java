@@ -1,6 +1,5 @@
 package webserver.http;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -88,19 +87,5 @@ class HttpRequestTest {
         assertThat(request.getHeader("Connection")).isEqualTo("keep-alive");
         assertThat(request.getParameter("id")).isEqualTo("1");
         assertThat(request.getParameter("userId")).isEqualTo("javajigi");
-    }
-
-    @DisplayName("HttpSession 은 한번 초기화되면, 다시 초기화 될 수 없다.")
-    @Test
-    void initSessionTest() {
-        // given
-        HttpRequest httpRequest = new HttpRequest("POST /user/create HTTP/1.1");
-        httpRequest.initHttpSession(new HttpSession("test"));
-
-        // when // then
-        Assertions.assertThatThrownBy(() -> httpRequest.initHttpSession(new HttpSession("test")))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("이미 HttpSession 이 초기화 되었습니다.");
-
     }
 }

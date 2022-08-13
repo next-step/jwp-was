@@ -13,11 +13,8 @@ import java.util.ArrayList;
 
 class LoginMemberHandlerTest {
 
-    private LoginMemberHandler loginMemberHandler;
-
     @BeforeEach
     void setup() {
-        loginMemberHandler = new LoginMemberHandler();
         DataBase.clear();
     }
 
@@ -27,8 +24,9 @@ class LoginMemberHandlerTest {
         // given
         DataBase.addUser(new User("testUser", "testPw", "test", "test@test.com"));
         HttpSession httpSession = new HttpSession("TEST");
+        LoginMemberHandler loginMemberHandler = new LoginMemberHandler((httpRequest, httpResponse) -> httpSession);
+
         HttpRequest httpRequest = createLoginRequest("userId=testUser&password=testPw");
-        httpRequest.initHttpSession(httpSession);
         HttpResponse httpResponse = new HttpResponse();
 
         // when
@@ -44,8 +42,8 @@ class LoginMemberHandlerTest {
     void loginFailTest() {
         // given
         HttpSession httpSession = new HttpSession("TEST");
+        LoginMemberHandler loginMemberHandler = new LoginMemberHandler((httpRequest, httpResponse) -> httpSession);
         HttpRequest httpRequest = createLoginRequest("userId=testUser&password=testPw");
-        httpRequest.initHttpSession(httpSession);
         HttpResponse httpResponse = new HttpResponse();
 
         // when

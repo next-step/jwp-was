@@ -19,11 +19,8 @@ import java.util.List;
 
 class ListMemberHandlerTest {
 
-    private ListMemberHandler listMemberHandler;
-
     @BeforeEach
     void setup() {
-        listMemberHandler = new ListMemberHandler();
         DataBase.clear();
     }
 
@@ -31,8 +28,8 @@ class ListMemberHandlerTest {
     @Test
     void redirectLoginPageTest() {
         // given
+        ListMemberHandler listMemberHandler = new ListMemberHandler((req, res) -> new HttpSession("TEST"));
         HttpRequest httpRequest = new HttpRequest(RequestLine.parseOf("GET /user/list HTTP/1.1"));
-        httpRequest.initHttpSession(new HttpSession("TEST"));
         HttpResponse httpResponse = new HttpResponse();
 
         // when
@@ -48,10 +45,8 @@ class ListMemberHandlerTest {
         // given
         HttpSession httpSession = new HttpSession("TEST");
         httpSession.setAttribute("logined", true);
-
+        ListMemberHandler listMemberHandler = new ListMemberHandler((req, res) -> httpSession);
         HttpRequest httpRequest = new HttpRequest(RequestLine.parseOf("GET /user/list HTTP/1.1"));
-        httpRequest.initHttpSession(httpSession);
-
         HttpResponse httpResponse = new HttpResponse();
         List<User> currentUsers = addUsers();
 

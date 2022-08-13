@@ -24,6 +24,10 @@ class MemoryHttpSessionStore implements HttpSessionStore {
         this(new ConcurrentHashMap<>(store), new RandomUuidGenerator());
     }
 
+    MemoryHttpSessionStore() {
+        this(new ConcurrentHashMap<>(), new RandomUuidGenerator());
+    }
+
     public HttpSession createHttpSession() {
         HttpSession httpSession = new HttpSession(idGenerator.generate());
 

@@ -21,8 +21,6 @@ public class HttpRequest {
 
     private final List<Cookie> cookies;
 
-    private HttpSession httpSession;
-
     public HttpRequest(RequestLine requestLine, Headers headers, RequestBody body) {
         this.requestLine = requireNonNull(requestLine, "");
         this.headers = requireNonNull(headers, "");
@@ -56,10 +54,6 @@ public class HttpRequest {
         RequestBody requestBody = readRequestBody(reader, headers);
 
         return new HttpRequest(requestLine, headers, requestBody);
-    }
-
-    public HttpSession getSession() {
-        return this.httpSession;
     }
 
     private static Headers readHeaders(BufferedReader reader) throws IOException {
@@ -130,14 +124,6 @@ public class HttpRequest {
         }
 
         return body.getParameter(name);
-    }
-
-    public void initHttpSession(HttpSession httpSession) {
-        if (this.httpSession != null) {
-            throw new IllegalStateException("이미 HttpSession 이 초기화 되었습니다. " + httpSession.getId());
-        }
-
-        this.httpSession = httpSession;
     }
 
     @Override
