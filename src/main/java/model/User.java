@@ -33,4 +33,8 @@ public class User {
     public String toString() {
         return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
     }
+
+    public boolean matchPassword(String inputPassword) {
+        return password.equals(inputPassword);
+    }
 }

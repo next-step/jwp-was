@@ -27,8 +27,16 @@ public class HttpResponseHeader {
         return httpResponseHeader;
     }
 
+    public static HttpResponseHeader empty() {
+        return new HttpResponseHeader();
+    }
+
 
     public Map<String, String> getHeaders() {
         return headers;
+    }
+
+    public void addHeader(String key, String value) {
+        headers.put(key, value);
     }
 }

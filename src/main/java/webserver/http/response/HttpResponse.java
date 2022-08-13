@@ -1,7 +1,5 @@
 package webserver.http.response;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import utils.FileIoUtils;
 import webserver.http.HttpContentType;
@@ -17,8 +15,6 @@ import java.util.Map;
 
 public class HttpResponse {
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
-
     private final DataOutputStream dos;
 
     private HttpResponseStatusLine responseStatusLine;
@@ -27,6 +23,9 @@ public class HttpResponse {
 
     public HttpResponse(final OutputStream out) {
         this.dos = new DataOutputStream(out);
+        this.responseStatusLine = HttpResponseStatusLine.empty();
+        this.responseHeader = HttpResponseHeader.empty();
+        this.responseBody = HttpResponseBody.empty();
     }
 
     public void forward(final String pathValue) {
@@ -43,12 +42,8 @@ public class HttpResponse {
     }
 
     public void redirect(final StatusCode statusCode, final String path) {
-        HttpContentType contentType = HttpContentType.fromRequestPath(path);
-//        byte[] bytes = FileIoUtils.loadFileFromClasspath(contentType.getPath() + path);
-
         this.responseStatusLine = new HttpResponseStatusLine("HTTP/1.1 " + statusCode.getValue() + " " + statusCode.name());
         this.responseHeader = HttpResponseHeader.fromLocation(path);
-//        this.responseBody = new HttpResponseBody(bytes);
         this.responseBody = HttpResponseBody.empty();
 
         responseHeader();
@@ -80,4 +75,7 @@ public class HttpResponse {
         }
     }
 
+    public void addHeader(String key, String value) {
+        responseHeader.addHeader(key, value);
+    }
 }
