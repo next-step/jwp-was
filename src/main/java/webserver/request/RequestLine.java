@@ -27,7 +27,7 @@ public class RequestLine {
     }
 
     private static void validateRequestLine(String requestLine) {
-        if (requestLine.isBlank()) {
+        if (requestLine == null || requestLine.isBlank()) {
             throw new StringEmptyException("requestLine is empty");
         }
     }

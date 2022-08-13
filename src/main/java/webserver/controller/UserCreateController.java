@@ -6,19 +6,14 @@ import webserver.request.HttpRequest;
 import webserver.request.RequestBody;
 import webserver.response.HttpResponse;
 
-import java.io.IOException;
 import java.util.Map;
 
 public class UserCreateController extends PostController {
 
     @Override
-    public void doPost(HttpRequest request, HttpResponse response) {
+    public HttpResponse doPost(HttpRequest request) {
         createUser(request);
-        try {
-            response.redirect("/index.html");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return HttpResponse.sendRedirect("/index.html", "");
     }
 
     private void createUser(HttpRequest request) {

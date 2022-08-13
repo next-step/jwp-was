@@ -12,7 +12,9 @@ public class Header {
     private static final int HEADER_NAME_IDX = 0;
     private static final int HEADER_VALUE_IDX = 1;
 
-    private Map<String, String> headerMap;
+    private Map<String, String> headerMap = new HashMap<>();
+
+    public Header() {}
 
     public Header(Map<String, String> headerMap) {
         this.headerMap = headerMap;
@@ -35,7 +37,16 @@ public class Header {
         return new Header(headerMap);
     }
 
+    public void addHeader(String value) {
+        String[] arr = value.split(DELIMITER);
+        headerMap.put(arr[0], arr[1]);
+    }
+
     public String getHeader(String header) {
         return headerMap.get(header);
+    }
+
+    public Map<String, String> getHeaderMap() {
+        return headerMap;
     }
 }

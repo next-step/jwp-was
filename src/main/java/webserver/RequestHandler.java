@@ -30,25 +30,14 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             if (in != null) {
                 HttpRequest httpRequest = new HttpRequest(in);
-                HttpResponse httpResponse = new HttpResponse(out);
+                //HttpResponse httpResponse = new HttpResponse(out);
                 Controller controller = RequestMapping.getController(httpRequest.getPath());
-                if (controller != null) {
-                    controller.service(httpRequest, httpResponse);
-                } else {
-                    String path = httpRequest.getPath();
-                    httpResponse.forward(getResourcePath(path), ContentType.from(path).getMediaType());
-                }
+                HttpResponse httpResponse = controller.service(httpRequest);
+                httpResponse.write(out);
             }
-
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private String getResourcePath(String path) throws IOException, URISyntaxException {
-        if (path.endsWith("html")) {
-            return IOUtils.loadFileFromClasspath("./templates" + path);
-        }
-        return IOUtils.loadFileFromClasspath("./static" + path);
-    }
 }

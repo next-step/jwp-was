@@ -17,6 +17,6 @@ public class RequestMapping {
         if (map.containsKey(path)) {
             return map.get(path);
         }
-        return null;
+        return new StaticResourceController();
     }
 }

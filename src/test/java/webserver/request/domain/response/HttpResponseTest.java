@@ -2,6 +2,7 @@ package webserver.request.domain.response;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import webserver.response.StatusLine;
 
 class HttpResponseTest {
 
