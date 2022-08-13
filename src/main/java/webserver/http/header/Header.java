@@ -4,7 +4,6 @@ import webserver.http.header.type.EntityHeader;
 import webserver.http.header.type.RequestHeader;
 import webserver.http.header.type.ResponseHeader;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -12,8 +11,6 @@ import java.util.Optional;
 public class Header {
     private static final String EMPTY_STRING = "";
     private static final String HEADER_FIELD_DELIMITER = ": ";
-    private static final String COOKIES_DELIMITER = "; ";
-    private static final String COOKIE_KEY_VALUE_DELIMITER = "=";
     private static final String ZERO_STRING = "0";
     private static final int KEY_INDEX = 0;
     private static final int VALUE_INDEX = 1;
@@ -90,14 +87,7 @@ public class Header {
     }
 
     public void setCookies(String cookieString) {
-        validateCookieString(cookieString);
-        String[] multiCookies = cookieString.split(COOKIES_DELIMITER);
-        Map<String, String> cookies = new HashMap<>();
-        Arrays.stream(multiCookies).filter(cookie -> !cookie.isEmpty()).forEach(cookie -> {
-            String[] cookieElements = cookie.split(COOKIE_KEY_VALUE_DELIMITER);
-            cookies.put(cookieElements[KEY_INDEX], cookieElements[VALUE_INDEX]);
-        });
-        this.cookie = new Cookie(cookies);
+        this.cookie = Cookie.parse(cookieString);
     }
 
     public int getContentLength() {
@@ -119,12 +109,6 @@ public class Header {
     private void validateHeaderString(String headerString) {
         if (headerString == null || headerString.isEmpty()) {
             throw new IllegalArgumentException("요청된 HTTP Header 는 비어있거나 null 일 수 없습니다.");
-        }
-    }
-
-    private void validateCookieString(String cookieString) {
-        if (cookieString == null) {
-            throw new IllegalArgumentException("요청된 HTTP Header 의 cookie 는 null 일 수 없습니다.");
         }
     }
 
