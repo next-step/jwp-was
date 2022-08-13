@@ -1,11 +1,17 @@
 package webserver.http.model.request;
 
+import webserver.http.model.session.HttpSession;
+import webserver.http.model.session.HttpSessions;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+
+import static constant.GlobalConstant.COOKIE;
+import static constant.GlobalConstant.JSSESSION_ID;
 
 public class HttpRequest {
 
@@ -72,6 +78,19 @@ public class HttpRequest {
             return requestLine.getQueryStringMap().get(parameter);
         }
         return value;
+    }
+
+    public HttpSession getHttpSession(String sessionId) {
+        String cookie = getHeader(COOKIE);
+        if (cookie == null) {
+            return null;
+        }
+
+        String[] splitCookie = cookie.split("=");
+        if (splitCookie.length < 2 || !splitCookie[0].equals(sessionId)) {
+            return null;
+        }
+        return HttpSessions.getHttpSessionMap().get(splitCookie[1]);
     }
 
     public boolean isStaticResource() {

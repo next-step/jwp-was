@@ -3,11 +3,13 @@ package user.controller;
 import webserver.http.model.response.Cookie;
 import db.DataBase;
 import model.User;
-import webserver.http.model.Model;
+import webserver.http.model.response.Model;
 import webserver.http.model.request.HttpRequest;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static constant.GlobalConstant.COOKIE;
 
 @Deprecated
 public class UserController {
@@ -55,7 +57,8 @@ public class UserController {
     }
 
     public Model retrieveUsers(HttpRequest httpRequest) {
-        if (ControllerEnum.accessiblePagesAfterLogin(httpRequest) && "logined=true".equals(httpRequest.getRequestHeaders().get("Cookie"))) {
+        if (ControllerEnum.accessiblePagesAfterLogin(httpRequest)
+                && "logined=true".equals(httpRequest.getRequestHeaders().get(COOKIE))) {
             Map<String, Object> modelMap = new HashMap<>();
             modelMap.put("users", DataBase.findAll());
             return new Model("user/list", modelMap);

@@ -1,6 +1,9 @@
 package user.controller;
 
+import exception.UnsupportedMethodException;
 import user.service.RetrieveUserService;
+import webserver.http.model.session.HttpSession;
+import webserver.http.model.session.HttpSessions;
 import webserver.http.model.response.Cookie;
 import model.User;
 import webserver.http.model.request.HttpRequest;
@@ -8,11 +11,13 @@ import webserver.http.model.response.HttpResponse;
 
 import java.io.IOException;
 
+import static constant.GlobalConstant.JSSESSION_ID;
+
 public class LoginController extends AbstractController {
 
     @Override
     public void doGet(HttpRequest request, HttpResponse response) {
-
+        throw new UnsupportedMethodException();
     }
 
     @Override
@@ -21,7 +26,7 @@ public class LoginController extends AbstractController {
         String password = httpRequest.getRequestBody().getRequestBodyMap().get("password");
         User user = RetrieveUserService.retrieve(userId);
 
-        Cookie cookie = new Cookie("logined");
+        Cookie cookie = new Cookie(JSSESSION_ID);
         String pathAfterLogin = pathAfterLogin(password, user, cookie);
         httpResponse.addCookie(cookie);
 
@@ -29,11 +34,16 @@ public class LoginController extends AbstractController {
     }
 
     private String pathAfterLogin(String password, User user, Cookie cookie) {
+        HttpSession httpSession = new HttpSession();
         if (user != null && user.getPassword().equals(password)) {
-            cookie.setValue("true");
+            httpSession.setAttribute("login", "true");
+            HttpSessions.setSingleHttpSession(httpSession);
+            cookie.setValue(httpSession.getId());
             return "/index.html";
         }
-        cookie.setValue("false");
+        httpSession.setAttribute("login", "false");
+        HttpSessions.setSingleHttpSession(httpSession);
+        cookie.setValue(httpSession.getId());
         return "/user/login_failed.html";
     }
 }

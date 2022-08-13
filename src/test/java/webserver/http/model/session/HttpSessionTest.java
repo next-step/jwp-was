@@ -3,6 +3,7 @@ package webserver.http.model.session;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static constant.GlobalConstant.JSSESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpSessionTest {
@@ -11,12 +12,12 @@ public class HttpSessionTest {
 
     @BeforeEach
     void setUp() {
-        httpSession = new HttpSession("JSESSIONID");
+        httpSession = new HttpSession(JSSESSION_ID);
     }
 
     @Test
     void getId() {
-        assertThat(httpSession.getId()).isEqualTo("JSESSIONID");
+        assertThat(httpSession.getId()).isEqualTo(JSSESSION_ID);
     }
 
     @Test
