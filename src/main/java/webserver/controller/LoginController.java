@@ -5,21 +5,14 @@ import model.User;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
-import java.io.IOException;
-
 public class LoginController implements Controller {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
-        try {
-            if (isLogin(request)) {
-                response.redirect("/index.html", "logined=true; Path=/");
-            } else {
-                response.redirect("/user/login_failed.html", "logined=false");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public HttpResponse service(HttpRequest request) {
+        if (isLogin(request)) {
+            return HttpResponse.sendRedirect("/index.html", "logined=true; Path=/");
         }
+        return HttpResponse.sendRedirect("/user/login_failed.html", "logined=false");
     }
 
     private boolean isLogin(HttpRequest httpRequest) {

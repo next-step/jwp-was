@@ -6,55 +6,67 @@ import webserver.request.Header;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 
 public class HttpResponse {
 
     private static final String CRLF = "\r\n";
 
-//    private StatusLine statusLine;
-//    private Header header;
-//    private ResponseBody responseBody;
+    private StatusLine statusLine;
+    private Header header;
+    private ResponseBody responseBody;
 
     private DataOutputStream dos;
 
-//    public HttpResponse(StatusLine statusLine, Header header, ResponseBody responseBody) {
-//        this.statusLine = statusLine;
-//        this.header = header;
-//        this.responseBody = responseBody;
-//    }
+    private HttpResponse(StatusLine statusLine, Header header, ResponseBody responseBody) {
+        this.statusLine = statusLine;
+        this.header = header;
+        this.responseBody = responseBody;
+    }
 
     public HttpResponse(OutputStream outputStream) {
         dos = new DataOutputStream(outputStream);
     }
 
-    public void forward(String path, String mediaType) throws IOException {
-        int lengthOfBodyContent = path.length();
+    public static HttpResponse forward(String body, String mediaType) {
+        StatusLine statusLine = StatusLine.parse("HTTP/1.1 200 OK");
 
-        dos.writeBytes("HTTP/1.1 200 OK \r\n");
-        dos.writeBytes("Content-Type: " + mediaType + "\r\n");
-        dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-        dos.writeBytes("\r\n");
+        Header header = new Header();
+        header.addHeader("Content-Type: " + mediaType);
+        header.addHeader("Content-Length: " + body.length());
 
-        responseBody(path.getBytes());
+        ResponseBody responseBody = ResponseBody.parse(body);
+
+        return new HttpResponse(statusLine, header, responseBody);
     }
 
-//    public void redirect(String path) throws IOException {
-//        dos.writeBytes("HTTP/1.1 302 Found \r\n");
-//        dos.writeBytes("Location: " + path + "\r\n");
-//        dos.writeBytes("\r\n");
-//    }
+    public static HttpResponse sendRedirect(String path, String cookie) {
+        StatusLine statusLine = StatusLine.parse("HTTP/1.1 302 Found");
 
-    public void redirect(String path, String setCookie) throws IOException {
-        dos.writeBytes("HTTP/1.1 302 Found \r\n");
-        dos.writeBytes("Location: " + path + "\r\n");
-        if (setCookie != null) {
-            dos.writeBytes("Set-Cookie: " + setCookie + "\r\n");
+        Header header = new Header();
+        header.addHeader("Location: " + path);
+        if (!cookie.isEmpty()) {
+            header.addHeader("Set-Cookie: " + cookie);
         }
-        dos.writeBytes("\r\n");
+
+        return new HttpResponse(statusLine, header, ResponseBody.parse(""));
     }
 
-    private void responseBody(byte[] body) throws IOException {
-        dos.write(body, 0, body.length);
+    public static HttpResponse notFound(String path) {
+        return sendRedirect(path, "");
+    }
+
+    public void write(OutputStream outputStream) throws IOException {
+        dos = new DataOutputStream(outputStream);
+        dos.writeBytes(statusLine.getStatusLine() + CRLF);
+
+        Map<String, String> map = header.getHeaderMap();
+        for (String key : map.keySet()) {
+            dos.writeBytes(key + ": " + map.get(key) + CRLF);
+        }
+        dos.writeBytes(CRLF);
+
+        dos.write(responseBody.getBody(), 0, responseBody.getBody().length);
         dos.flush();
     }
 }

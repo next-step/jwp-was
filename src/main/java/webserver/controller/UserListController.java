@@ -21,24 +21,25 @@ public class UserListController extends GetController {
     private static final String DELIMITER2 = "=";
 
     @Override
-    public void doGet(HttpRequest request, HttpResponse response) {
+    public HttpResponse doGet(HttpRequest request) {
         Map<String, String> cookiesMap = parseCookies(request);
 
         try {
             String path = "";
             if (isNotLogin(cookiesMap)) {
                 path = IOUtils.loadFileFromClasspath("./templates/user/login.html");
-                response.forward(path, ContentType.from(path).getMediaType());
+                return HttpResponse.forward(path, ContentType.from(path).getMediaType());
             }
 
             HandlebarsObject handlebarObj = HandlebarsObject.createHandlebarObject("/templates", ".html");
             Collection<User> users = DataBase.findAll();
             path = handlebarObj.applyTemplate("user/list", users);
-            response.forward(path, ContentType.from(path).getMediaType());
-
+            return HttpResponse.forward(path, ContentType.from(path).getMediaType());
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
+
+        return HttpResponse.notFound("/index.html");
     }
 
     private boolean isNotLogin(Map<String, String> cookiesMap) {

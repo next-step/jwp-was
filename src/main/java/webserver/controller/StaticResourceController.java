@@ -11,13 +11,10 @@ import java.net.URISyntaxException;
 public class StaticResourceController implements Controller {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    public HttpResponse service(HttpRequest request) throws IOException, URISyntaxException {
         String path = request.getPath();
-        try {
-            response.forward(getResourcePath(path), ContentType.from(path).getMediaType());
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
+
+        return HttpResponse.forward(getResourcePath(path), ContentType.from(path).getMediaType());
     }
 
     private String getResourcePath(String path) throws IOException, URISyntaxException {

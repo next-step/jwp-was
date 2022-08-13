@@ -16,7 +16,7 @@ public class RequestBody {
     private Map<String, String> map = new HashMap();
 
     public RequestBody(String value) {
-        if(StringUtils.hasText(value)) {
+        if (StringUtils.hasText(value)) {
             splitBody(value);
         }
     }
@@ -24,7 +24,12 @@ public class RequestBody {
     private void splitBody(String value) {
         String[] arr = value.split(DELIMITER1);
 
-        Arrays.stream(arr).map(str -> str.split(DELIMITER2)).forEach(strings -> map.put(strings[0], strings[1]));
+        Arrays.stream(arr).map(str -> str.split(DELIMITER2)).forEach(strings ->
+        {
+            if(strings.length == 2) {
+                map.put(strings[0], strings[1]);
+            }
+        });
     }
 
     public String getParameter(String parameter) {
