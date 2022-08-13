@@ -4,7 +4,6 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import cookie.Cookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.model.Model;
@@ -22,8 +21,8 @@ public class HttpResponse {
     private final DataOutputStream dataOutputStream;
     private StatusLine statusLine;
     private ResponseHeaders responseHeaders;
-
     private String responseBody;
+    private Cookie cookie;
 
     public HttpResponse(OutputStream outputStream) {
         dataOutputStream = new DataOutputStream(outputStream);
@@ -44,29 +43,26 @@ public class HttpResponse {
         responseBody = forwardPath;
     }
 
-    public void responseStaticResource(HttpRequest httpRequest, HttpResponse httpResponse, byte[] body) {
-        responseHeader(httpRequest, httpResponse, body);
+    public void responseStaticResource(HttpRequest httpRequest, byte[] body) {
+        responseHeader(httpRequest, body);
         responseBody(body);
     }
 
-    public void responseHeader(HttpRequest httpRequest, HttpResponse httpResponse, byte[] body) {
+    public void responseHeader(HttpRequest httpRequest, byte[] body) {
         if (Extension.CSS == Extension.getEnum(httpRequest.getPath())) {
-            httpResponse.response200CssHeader(body.length);
+            responseHeader(StatusCode.OK, ContentType.CSS, body.length);
             return;
         }
-        httpResponse.response200Header(body.length);
+        response200Header(body.length);
     }
 
-    public void response200Header(int lengthOfBodyContent) {
-        statusLine = new StatusLine(StatusCode.OK);
-        responseHeaders.getResponseHeaderMap().put("Content-Type", "text/html;charset=utf-8");
-        responseHeaders.getResponseHeaderMap().put("Content-Length", String.valueOf(lengthOfBodyContent));
-        processHeaders();
+    private void response200Header(int lengthOfBodyContent) {
+        responseHeader(StatusCode.OK, ContentType.HTML, lengthOfBodyContent);
     }
 
-    public void response200CssHeader(int lengthOfBodyContent) {
-        statusLine = new StatusLine(StatusCode.OK);
-        responseHeaders.getResponseHeaderMap().put("Content-Type", "text/css;charset=utf-8");
+    private void responseHeader(StatusCode statusCode, ContentType contentType, int lengthOfBodyContent) {
+        statusLine = new StatusLine(statusCode);
+        responseHeaders.getResponseHeaderMap().put("Content-Type", contentType.getType() + ";charset=utf-8");
         responseHeaders.getResponseHeaderMap().put("Content-Length", String.valueOf(lengthOfBodyContent));
         processHeaders();
     }
@@ -86,23 +82,23 @@ public class HttpResponse {
         processHeaders();
     }
 
-    public void moveNotStaticResourcePage(HttpResponse httpResponse, Object handlerMapping) throws IOException {
+    public void movePage(Object handlerMapping) throws IOException {
         if (handlerMapping instanceof Model) {
-            movePageForModelType(httpResponse, (Model) handlerMapping);
+            movePageForModelType((Model) handlerMapping);
             return;
         }
-        httpResponse.sendRedirect(String.valueOf(handlerMapping));
+        sendRedirect(String.valueOf(handlerMapping));
     }
 
-    private void movePageForModelType(HttpResponse httpResponse, Model model) throws IOException {
+    private void movePageForModelType(Model model) throws IOException {
         if (model.getModelMap() == null) {
-            httpResponse.sendRedirect(String.valueOf(model.getPath()));
+            sendRedirect(String.valueOf(model.getPath()));
             return;
         }
-        movePageWithModel(httpResponse, model);
+        movePageWithModel(model);
     }
 
-    private void movePageWithModel(HttpResponse httpResponse, Model model) throws IOException {
+    private void movePageWithModel(Model model) throws IOException {
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix("/templates");
         loader.setSuffix(".html");
@@ -111,8 +107,8 @@ public class HttpResponse {
 
         String page = template.apply(model.getModelMap());
         byte[] body = page.getBytes(StandardCharsets.UTF_8);
-        httpResponse.response200Header(body.length);
-        httpResponse.responseBody(body);
+        response200Header(body.length);
+        responseBody(body);
     }
 
     public void processHeaders() {
@@ -121,8 +117,8 @@ public class HttpResponse {
             for (String key : responseHeaders.getResponseHeaderMap().keySet()) {
                 dataOutputStream.writeBytes(key + ": " + responseHeaders.getResponseHeaderMap().get(key) + " \r\n");
             }
-            if (Cookie.exists()) {
-                dataOutputStream.writeBytes(Cookie.getResponseCookie() + "\r\n");
+            if (cookie != null) {
+                dataOutputStream.writeBytes(cookie + "\r\n");
             }
             dataOutputStream.writeBytes("\r\n");
             if (responseBody != null) {
@@ -132,5 +128,9 @@ public class HttpResponse {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    public void addCookie(Cookie cookie) {
+        this.cookie = cookie;
     }
 }

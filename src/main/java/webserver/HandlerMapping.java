@@ -1,16 +1,16 @@
-package webserver.http.model;
+package webserver;
 
-import webserver.controller.Controller;
-import webserver.controller.CreateUserController;
-import webserver.controller.ListUserController;
-import webserver.controller.LoginController;
+import user.controller.Controller;
+import user.controller.ControllerEnum;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HandlerMapping {
-    private final Map<String, Controller> controllerMap;
+    private Map<String, Controller> controllerMap;
 
     public HandlerMapping() {
         controllerMap = new HashMap<>();
@@ -18,9 +18,8 @@ public class HandlerMapping {
     }
 
     private void initialize() {
-        controllerMap.put("/user/create", new CreateUserController());
-        controllerMap.put("/user/login", new LoginController());
-        controllerMap.put("/user/list", new ListUserController());
+        controllerMap = Arrays.stream(ControllerEnum.values()).collect(Collectors.toUnmodifiableMap(ControllerEnum::getPath,
+                        ControllerEnum -> (Controller) ControllerEnum.getClassObject(), (p1, p2) -> p1));
     }
 
     public HandlerMapping(Map<String, Controller> controllerMap) {
