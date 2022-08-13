@@ -88,3 +88,15 @@
     - [x] Http_Redirect.txt 결과는 응답 header에 Location 정보가 /index.html로 포함되어 있어야 한다.
 - [x] Controller 인터페이스를 구현하는 AbstractController 추상클래스를 추가해 중복을 제거하고, service() 메소드에서 GET과 POST HTTP 메소드에 따라 doGet(),
   doPost() 메소드를 호출하도록 한다.
+
+----
+
+## 4단계 - 세션구현하기
+
+- [ ] HttpSession API 메소드 구현하기
+- [ ] 세션 객체 생성하기
+  - [ ] getId() = 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환
+  - [ ] setAttribute(String name, Object value) = 현재 세션에 value 인자로 전달되는 객체를 name 인자 이름으로 저장
+  - [ ] getAttribute(String name) = 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환
+  - [ ] removeAttribute(String name) = 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
+  - [ ] invalidate( = 현재 세션에 저장되어 있는 모든 값을 삭제
