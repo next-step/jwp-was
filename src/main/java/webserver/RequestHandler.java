@@ -47,8 +47,8 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World22".getBytes();
 
-            if (path.equals("/index.html")) {
-                body = FileIoUtils.loadFileFromClasspath("./templates/index.html");
+            if (path.endsWith(".html")) {
+                body = FileIoUtils.loadFileFromClasspath("./templates"+path);
             }
 
             response200Header(dos, body.length);
