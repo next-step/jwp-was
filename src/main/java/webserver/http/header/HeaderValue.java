@@ -8,6 +8,7 @@ public class HeaderValue {
     public static final String KEEP_ALIVE = "keep-alive";
     public static final String APPLICATION_HTML_FORM = "application/x-www-form-urlencoded";
     public static final String ALL_MIME_TYPE = "*/*";
+    public static final String JSESSION_ID = "JSESSIONID=%s; Path=/";
 
     private HeaderValue() {
     }

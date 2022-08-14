@@ -49,30 +49,33 @@ public class Header {
         }
     }
 
-    public static Header templateResponse() {
+    public static Header templateResponse(String sessionId) {
         Map<HeaderKey, String> fields = new HashMap<>();
-        fields.put(EntityHeader.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8);
+        setContentTypeAndCookie(fields, HeaderValue.TEXT_HTML_UTF8, sessionId);
         return new Header(fields);
     }
 
-    public static Header staticResponse() {
+    public static Header staticResponse(String sessionId) {
         Map<HeaderKey, String> fields = new HashMap<>();
-        fields.put(EntityHeader.CONTENT_TYPE, HeaderValue.TEXT_CSS_UTF8);
+        setContentTypeAndCookie(fields, HeaderValue.TEXT_CSS_UTF8, sessionId);
         return new Header(fields);
     }
 
-    public static Header loginFailResponse() {
+    public static Header loginFailResponse(String sessionId) {
         Map<HeaderKey, String> fields = new HashMap<>();
-        fields.put(EntityHeader.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8);
-        fields.put(ResponseHeader.SET_COOKIE, HeaderValue.LOGINED_FALSE_ALL_PATH);
+        setContentTypeAndCookie(fields, HeaderValue.TEXT_HTML_UTF8, sessionId);
         return new Header(fields);
     }
 
-    public static Header loginSuccessResponse() {
+    public static Header loginSuccessResponse(String sessionId) {
         Map<HeaderKey, String> fields = new HashMap<>();
-        fields.put(EntityHeader.CONTENT_TYPE, HeaderValue.TEXT_HTML_UTF8);
-        fields.put(ResponseHeader.SET_COOKIE, HeaderValue.LOGINED_TRUE_ALL_PATH);
+        setContentTypeAndCookie(fields, HeaderValue.TEXT_HTML_UTF8, sessionId);
         return new Header(fields);
+    }
+
+    private static void setContentTypeAndCookie(Map<HeaderKey, String> fields, String contentType, String sessionId) {
+        fields.put(EntityHeader.CONTENT_TYPE, contentType);
+        fields.put(ResponseHeader.SET_COOKIE, String.format(HeaderValue.JSESSION_ID, sessionId));
     }
 
     public Header add(HeaderKey key, String value) {
@@ -83,11 +86,19 @@ public class Header {
     public void addField(String headerString) {
         validateHeaderString(headerString);
         String[] fieldElements = headerString.split(HEADER_FIELD_DELIMITER);
-        fields.put(HeaderKey.valueOfKey(fieldElements[KEY_INDEX]), fieldElements[VALUE_INDEX]);
+        this.fields.put(HeaderKey.valueOfKey(fieldElements[KEY_INDEX]), fieldElements[VALUE_INDEX]);
+    }
+
+    public void addField(HeaderKey key, String value) {
+        this.fields.put(key, value);
     }
 
     public void setCookies(String cookieString) {
         this.cookie = Cookie.parse(cookieString);
+    }
+
+    public void setCookie(String key, String value) {
+        this.cookie.setCookie(key, value);
     }
 
     public int getContentLength() {
@@ -98,8 +109,8 @@ public class Header {
         return this.fields.getOrDefault(RequestHeader.COOKIE, EMPTY_STRING);
     }
 
-    public boolean isLogin() {
-        return Boolean.parseBoolean(this.cookie.getValue("logined"));
+    public String getCookieValue(String key) {
+        return this.cookie.getValue(key);
     }
 
     public boolean isHeaderValueEqual(HeaderKey key, String value) {

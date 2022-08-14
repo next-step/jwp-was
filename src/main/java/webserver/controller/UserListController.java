@@ -25,12 +25,12 @@ public class UserListController extends MethodController {
         if (httpRequest.isLogin()) {
             Template template = getTemplate(httpRequest);
             return HttpResponse.ok(
-                    Header.loginSuccessResponse(),
+                    Header.loginSuccessResponse(httpRequest.getSessionId()),
                     template.apply(Map.of(TEMPLATE_ENGINE_USERS_KEY, DataBase.findAll())).getBytes());
         }
 
         return HttpResponse.redirect("/user/login.html",
-               Header.loginFailResponse()
+               Header.loginFailResponse(httpRequest.getSessionId())
         );
     }
 

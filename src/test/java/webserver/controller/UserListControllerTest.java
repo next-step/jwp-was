@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import webserver.http.HttpSession;
 import webserver.http.header.Header;
 import webserver.http.header.HeaderValue;
 import webserver.http.header.type.ResponseHeader;
@@ -43,9 +44,12 @@ class UserListControllerTest {
     @DisplayName("사용자 목록 조회 성공 테스트")
     void userListSuccess() throws IOException, URISyntaxException {
         // given
-        DataBase.addUser(new User("test_id", "test_password", "test_name", "test@test.com"));
+        User user = new User("test_id", "test_password", "test_name", "test_test@test.com");
+        DataBase.addUser(user);
         HttpRequest httpRequest = RequestTestUtil.readTestRequest("user_list_success.txt");
-
+        HttpSession session = httpRequest.getSession();
+        String sessionId = session.getId();
+        httpRequest.getSession().setAttribute("user", user);
         // when
         HttpResponse httpResponse = controller.process(httpRequest);
         String body = new String(httpResponse.getBody());
@@ -53,12 +57,13 @@ class UserListControllerTest {
         // then
         assertAll(
                 () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.OK)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.SET_COOKIE, HeaderValue.LOGINED_TRUE_ALL_PATH)).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.SET_COOKIE, String.format(HeaderValue.JSESSION_ID, sessionId))).isTrue(),
+                () -> assertThat(session.getAttribute("user")).isEqualTo(user),
                 () -> assertAll(
-                        () -> assertThat(body.contains("test_id")),
-                        () -> assertThat(body.contains("test_password")),
-                        () -> assertThat(body.contains("test_name")),
-                        () -> assertThat(body.contains("test_test@test.com"))
+                        () -> assertThat(body).contains("test_id"),
+                        () -> assertThat(body).contains("test_password"),
+                        () -> assertThat(body).contains("test_name"),
+                        () -> assertThat(body).contains("test_test@test.com")
                 )
         );
     }
@@ -75,7 +80,6 @@ class UserListControllerTest {
         // then
         assertAll(
                 () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.SET_COOKIE, HeaderValue.LOGINED_FALSE_ALL_PATH)).isTrue(),
                 () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.LOCATION, "/user/login.html")).isTrue()
         );
     }

@@ -2,6 +2,7 @@ package webserver.controller;
 
 import db.DataBase;
 import model.User;
+import webserver.http.HttpSession;
 import webserver.http.header.Header;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.requestline.Path;
@@ -17,15 +18,21 @@ public class UserLoginController extends MethodController {
     public HttpResponse processPost(HttpRequest httpRequest) {
         User user = DataBase.findUserById(httpRequest.getParam("userId"));
 
-        if (user == null || !user.isPasswordCorrect(httpRequest.getParam("password"))) {
+        if (isLoginFail(httpRequest, user)) {
             return HttpResponse.redirect("/user/login_failed.html",
-                    Header.loginFailResponse()
+                    Header.loginFailResponse(httpRequest.getSessionId())
             );
         }
 
+        HttpSession session = httpRequest.getSession();
+        String sessionId = session.getId();
         return HttpResponse.redirect("/index.html",
-                Header.loginSuccessResponse()
+                Header.loginSuccessResponse(sessionId)
         );
+    }
+
+    private static boolean isLoginFail(HttpRequest httpRequest, User user) {
+        return user == null || !user.isPasswordCorrect(httpRequest.getParam("password"));
     }
 
     @Override

@@ -14,7 +14,7 @@ public class TemplateController extends MethodController {
     @Override
     public HttpResponse processGet(HttpRequest httpRequest) throws IOException, URISyntaxException {
         return HttpResponse.ok(
-                Header.templateResponse(),
+                Header.templateResponse(httpRequest.getSessionId()),
                 FileIoUtils.loadFileFromClasspath(TEMPLATE_PATH + httpRequest.getPath())
         );
     }

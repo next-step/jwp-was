@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import webserver.http.HttpSession;
 import webserver.http.header.Header;
 import webserver.http.header.HeaderValue;
 import webserver.http.header.type.ResponseHeader;
@@ -37,17 +38,22 @@ class UserLoginControllerTest {
     @DisplayName("로그인 성공 테스트")
     void loginSuccess() throws IOException, URISyntaxException {
         // given
-        DataBase.addUser(new User("test_id", "test_password", "test_name", "test@test.com"));
+        User user = new User("test_id", "test_password", "test_name", "test@test.com");
+        DataBase.addUser(user);
         HttpRequest httpRequest = RequestTestUtil.readTestRequest("login.txt");
+        String sessionId = httpRequest.getSessionId();
 
         // when
         HttpResponse httpResponse = controller.process(httpRequest);
+        HttpSession session = httpRequest.getSession();
+        session.setAttribute("user", user);
 
         // then
         assertAll(
                 () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.SET_COOKIE, HeaderValue.LOGINED_TRUE_ALL_PATH)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.LOCATION, "/index.html")).isTrue()
+                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.SET_COOKIE, String.format(HeaderValue.JSESSION_ID, sessionId))).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.LOCATION, "/index.html")).isTrue(),
+                () -> assertThat(session.getAttribute("user")).isEqualTo(user)
         );
     }
 
@@ -63,8 +69,7 @@ class UserLoginControllerTest {
 
         // then
         assertAll(
-                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.SET_COOKIE, HeaderValue.LOGINED_FALSE_ALL_PATH)).isTrue()
+                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue()
         );
     }
 
