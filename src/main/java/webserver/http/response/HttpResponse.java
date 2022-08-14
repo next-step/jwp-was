@@ -1,6 +1,8 @@
 package webserver.http.response;
 
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Optional;
 
 public class HttpResponse {
@@ -59,6 +61,20 @@ public class HttpResponse {
                 ResponseHeader.baseResponseHeader(),
                 Optional.empty()
         );
+    }
+
+    public void write(DataOutputStream dos) throws IOException {
+        responseLine.write(dos);
+
+        final Optional<ResponseBody> responseBody = getResponseBody();
+        if (responseBody.isEmpty()) {
+            responseHeader.write(dos, 0);
+            return;
+        }
+
+        final byte[] body = responseBody.get().getBody();
+        responseHeader.write(dos, body.length);
+        responseBody.get().write(dos, body);
     }
 
     public ResponseLine getResponseLine() {

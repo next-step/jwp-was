@@ -2,6 +2,9 @@ package webserver.http.response;
 
 import webserver.http.ProtocolVersion;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class ResponseLine {
 
     private final ProtocolVersion protocolVersion = ProtocolVersion.ofServerProtocolVersion();
@@ -18,6 +21,10 @@ public class ResponseLine {
     }
 
     public static ResponseLine of404() { return new ResponseLine(StatusCode.NOT_FOUND); }
+
+    public void write(final DataOutputStream dos) throws IOException {
+        dos.writeBytes(this.toPrint());
+    }
 
     public ProtocolVersion getProtocolVersion() {
         return protocolVersion;

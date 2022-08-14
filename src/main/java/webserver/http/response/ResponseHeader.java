@@ -1,7 +1,11 @@
 package webserver.http.response;
 
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +25,8 @@ public class ResponseHeader {
     private static final Map<String, String> BASE_HEADERS = Map.of(
             CONTENT_TYPE,  ContentType.HTML.type + HEADER_DELIMITER + CHARSET
     );
+
+    private static final Logger logger = LoggerFactory.getLogger(ResponseHeader.class);
 
     private Map<String, String> headers = new HashMap<>();
 
@@ -54,6 +60,17 @@ public class ResponseHeader {
 
     public void setContentType(ContentType contentType) {
         this.headers.put(CONTENT_TYPE, contentType.type +  HEADER_DELIMITER + CHARSET);
+    }
+
+    public void write(final DataOutputStream dos, final int lengthOfBodyContent) {
+        setContentLength(Integer.toString(lengthOfBodyContent));
+        toPrint().forEach(header -> {
+            try {
+                dos.writeBytes(header);
+            } catch (IOException e) {
+                logger.debug(e.getMessage());
+            }
+        });
     }
 
     public List<String> toPrint() {
