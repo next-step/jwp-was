@@ -2,10 +2,7 @@ package mvc.view;
 
 import http.HttpHeader;
 import http.request.HttpRequest;
-import http.request.protocol.Protocol;
 import http.response.HttpResponse;
-import http.response.HttpStatusCode;
-import http.response.StatusLine;
 import utils.FileIoUtils;
 
 import java.io.IOException;
@@ -18,9 +15,11 @@ public class StaticView implements View {
 
     @Override
     public void render(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-        response.buildResponse(StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.OK),
-                HttpHeader.from(Collections.singletonMap(HttpHeader.CONTENT_TYPE, String.format("text/%s; charset=utf-8",
-                        fileExtension(request)))), FileIoUtils.loadFileFromClasspath(staticPath(request)));
+        response.responseOk(
+                HttpHeader.from(Collections.singletonMap(
+                        HttpHeader.CONTENT_TYPE, String.format("text/%s; charset=utf-8",
+                        fileExtension(request)))), FileIoUtils.loadFileFromClasspath(staticPath(request))
+        );
     }
 
     private String fileExtension(HttpRequest request) {
