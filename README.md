@@ -47,3 +47,6 @@
 - 요구사항 7
   - [] GET `./css/style.css` 구현하기
     - [X] 정적파일 요청에 대해 ContentType 응답 헤더 추가하기
+### STEP 3
+- [X] RequestHandler의 역할 분리
+- [X] 테스트 코드 보충
