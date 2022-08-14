@@ -22,7 +22,7 @@ class HandlerMappingTest {
         // given
         HandlerMapping handlerMapping = new HandlerMapping(
                 new RequestMappingRegistration("/user/create", POST, new CreateMemberHandler()),
-                new RequestMappingRegistration("/user/login", POST, new LoginMemberHandler())
+                new RequestMappingRegistration("/user/login", POST, new LoginMemberHandler(new JwpSessionHandler()))
         );
         RequestLine requestLine = RequestLine.parseOf("POST /user/create HTTP/1.1");
         HttpRequest httpRequest = new HttpRequest(requestLine);
@@ -37,7 +37,7 @@ class HandlerMappingTest {
     void duplicateHandlerTest() {
         assertThatThrownBy(() -> new HandlerMapping(
                         new RequestMappingRegistration("/user/create", POST, new CreateMemberHandler()),
-                        new RequestMappingRegistration("/user/create", POST, new LoginMemberHandler())
+                        new RequestMappingRegistration("/user/create", POST, new LoginMemberHandler(new JwpSessionHandler()))
                 ))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이미 등록된 매핑정보 입니다.");

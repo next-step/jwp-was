@@ -7,7 +7,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.ModelAndView;
-import webserver.http.*;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
+import webserver.http.RequestLine;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,11 +19,8 @@ import java.util.List;
 
 class ListMemberHandlerTest {
 
-    private ListMemberHandler listMemberHandler;
-
     @BeforeEach
     void setup() {
-        listMemberHandler = new ListMemberHandler();
         DataBase.clear();
     }
 
@@ -28,6 +28,7 @@ class ListMemberHandlerTest {
     @Test
     void redirectLoginPageTest() {
         // given
+        ListMemberHandler listMemberHandler = new ListMemberHandler((req, res) -> new HttpSession("TEST"));
         HttpRequest httpRequest = new HttpRequest(RequestLine.parseOf("GET /user/list HTTP/1.1"));
         HttpResponse httpResponse = new HttpResponse();
 
@@ -42,8 +43,10 @@ class ListMemberHandlerTest {
     @Test
     void loginListPageTest() {
         // given
-        Header cookieHeader = new Header("cookie", "logined=true");
-        HttpRequest httpRequest = new HttpRequest(RequestLine.parseOf("GET /user/list HTTP/1.1"), Headers.of(cookieHeader));
+        HttpSession httpSession = new HttpSession("TEST");
+        httpSession.setAttribute("logined", true);
+        ListMemberHandler listMemberHandler = new ListMemberHandler((req, res) -> httpSession);
+        HttpRequest httpRequest = new HttpRequest(RequestLine.parseOf("GET /user/list HTTP/1.1"));
         HttpResponse httpResponse = new HttpResponse();
         List<User> currentUsers = addUsers();
 

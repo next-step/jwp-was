@@ -44,7 +44,6 @@ public class HttpRequest {
         this(RequestLine.parseOf(requestLine));
     }
 
-
     public static HttpRequest create(InputStream in) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 

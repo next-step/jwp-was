@@ -18,17 +18,19 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.List;
 
-;
-
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+
+    private static final HttpSessionStore SESSION_STORE = new MemoryHttpSessionStore(new RandomUuidGenerator());
+
+    private final HttpSessionHandler httpSessionHandler = new JwpSessionHandler(SESSION_STORE);
 
     private final Socket connection;
 
     private final HandlerMapping handlerMapping = new HandlerMapping(List.of(
             new RequestMappingRegistration("/user/create", HttpMethod.POST, new CreateMemberHandler()),
-            new RequestMappingRegistration("/user/list", HttpMethod.GET, new ListMemberHandler()),
-            new RequestMappingRegistration("/user/login", HttpMethod.POST, new LoginMemberHandler())),
+            new RequestMappingRegistration("/user/list", HttpMethod.GET, new ListMemberHandler(httpSessionHandler)),
+            new RequestMappingRegistration("/user/login", HttpMethod.POST, new LoginMemberHandler(httpSessionHandler))),
             new StaticFileHandler());
 
     private final ViewResolver viewResolver = new ViewResolver("/templates", ".html");
