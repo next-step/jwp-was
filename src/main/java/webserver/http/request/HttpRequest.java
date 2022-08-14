@@ -90,7 +90,7 @@ public class HttpRequest {
     }
 
     public String getSessionId() {
-        return getSession().getId();
+        return Optional.ofNullable(getSession()).map(HttpSession::getId).orElse(EMPTY_STRING);
     }
 
     private void initSession() {

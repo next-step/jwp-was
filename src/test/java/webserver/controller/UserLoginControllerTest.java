@@ -22,6 +22,7 @@ import webserver.http.response.statusline.StatusCode;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -43,17 +44,18 @@ class UserLoginControllerTest {
         HttpRequest httpRequest = RequestTestUtil.readTestRequest("login.txt");
         String sessionId = httpRequest.getSessionId();
 
+        HttpSession expectedSession = new HttpSession(sessionId, Map.of("user", user));
+
         // when
         HttpResponse httpResponse = controller.process(httpRequest);
-        HttpSession session = httpRequest.getSession();
-        session.setAttribute("user", user);
+        HttpSession actualSession = httpRequest.getSession();
 
         // then
         assertAll(
                 () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue(),
                 () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.SET_COOKIE, String.format(HeaderValue.JSESSION_ID, sessionId))).isTrue(),
                 () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.LOCATION, "/index.html")).isTrue(),
-                () -> assertThat(session.getAttribute("user")).isEqualTo(user)
+                () -> assertThat(expectedSession.getAttribute("user")).isEqualTo(actualSession.getAttribute("user"))
         );
     }
 

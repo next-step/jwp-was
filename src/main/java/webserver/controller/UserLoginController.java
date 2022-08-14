@@ -25,9 +25,9 @@ public class UserLoginController extends MethodController {
         }
 
         HttpSession session = httpRequest.getSession();
-        String sessionId = session.getId();
+        session.setAttribute("user", user);
         return HttpResponse.redirect("/index.html",
-                Header.loginSuccessResponse(sessionId)
+                Header.loginSuccessResponse(session.getId())
         );
     }
 
