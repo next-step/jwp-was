@@ -11,8 +11,6 @@ import webserver.http.model.response.HttpResponse;
 
 import java.io.IOException;
 
-import static constant.GlobalConstant.JSSESSION_ID;
-
 public class LoginController extends AbstractController {
 
     @Override
@@ -26,7 +24,7 @@ public class LoginController extends AbstractController {
         String password = httpRequest.getRequestBody().getRequestBodyMap().get("password");
         User user = RetrieveUserService.retrieve(userId);
 
-        Cookie cookie = new Cookie(JSSESSION_ID);
+        Cookie cookie = Cookie.createSessionIdToStore();
         String pathAfterLogin = pathAfterLogin(password, user, cookie);
         httpResponse.addCookie(cookie);
 

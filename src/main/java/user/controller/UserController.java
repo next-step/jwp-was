@@ -9,8 +9,6 @@ import webserver.http.model.request.HttpRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-import static constant.GlobalConstant.COOKIE;
-
 @Deprecated
 public class UserController {
     private static final UserController userController = new UserController();
@@ -57,12 +55,16 @@ public class UserController {
     }
 
     public Model retrieveUsers(HttpRequest httpRequest) {
-        if (ControllerEnum.accessiblePagesAfterLogin(httpRequest)
-                && "logined=true".equals(httpRequest.getRequestHeaders().get(COOKIE))) {
+        if (isLogin(httpRequest)) {
             Map<String, Object> modelMap = new HashMap<>();
             modelMap.put("users", DataBase.findAll());
             return new Model("user/list", modelMap);
         }
         return new Model("/user/login.html", null);
+    }
+
+    private boolean isLogin(HttpRequest httpRequest) {
+        return ControllerEnum.accessiblePagesAfterLogin(httpRequest)
+                && "logined=true".equals(httpRequest.getRequestHeaders().get("Cookie"));
     }
 }

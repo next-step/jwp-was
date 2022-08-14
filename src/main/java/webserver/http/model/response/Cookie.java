@@ -1,6 +1,7 @@
 package webserver.http.model.response;
 
 public class Cookie {
+    private static final String SESSION_ID = "JSESSIONID";
     private final String name;
     private String value;
 
@@ -14,6 +15,10 @@ public class Cookie {
         }
         this.name = name;
         this.value = value;
+    }
+
+    public static Cookie createSessionIdToStore() {
+        return new Cookie(SESSION_ID);
     }
 
     public void setValue(String value) {

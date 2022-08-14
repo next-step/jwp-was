@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static constant.GlobalConstant.JSSESSION_ID;
-
 public class ListUserController extends AbstractController {
 
     @Override
@@ -30,7 +28,7 @@ public class ListUserController extends AbstractController {
     }
 
     private boolean isLogin(HttpRequest httpRequest) {
-        HttpSession httpSession = httpRequest.getHttpSession(JSSESSION_ID);
+        HttpSession httpSession = httpRequest.getHttpSession();
         if (httpSession == null) {
             return false;
         }

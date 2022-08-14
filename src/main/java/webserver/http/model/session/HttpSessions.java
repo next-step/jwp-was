@@ -9,7 +9,7 @@ public class HttpSessions {
     private static Map<String, HttpSession> httpSessionMap = Maps.newHashMap();
 
     public static void create(HttpSession httpSession) {
-        httpSessionMap.put(UUID.randomUUID().toString(), httpSession);
+        httpSessionMap.put(httpSession.getId(), httpSession);
     }
 
     public static Map<String, HttpSession> getHttpSessionMap() {

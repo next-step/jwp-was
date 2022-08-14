@@ -10,10 +10,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import static constant.GlobalConstant.COOKIE;
-import static constant.GlobalConstant.JSSESSION_ID;
-
 public class HttpRequest {
+    private static final String SESSION_ID = "JSESSIONID";
+    private static final String COOKIE = "Cookie";
 
     private final RequestLine requestLine;
     private final RequestHeaders requestHeaders;
@@ -80,17 +79,21 @@ public class HttpRequest {
         return value;
     }
 
-    public HttpSession getHttpSession(String sessionId) {
-        String cookie = getHeader(COOKIE);
+    public HttpSession getHttpSession() {
+        String cookie = getCookie();
         if (cookie == null) {
             return null;
         }
 
         String[] splitCookie = cookie.split("=");
-        if (splitCookie.length < 2 || !splitCookie[0].equals(sessionId)) {
+        if (splitCookie.length < 2 || !splitCookie[0].equals(SESSION_ID)) {
             return null;
         }
         return HttpSessions.getHttpSessionMap().get(splitCookie[1]);
+    }
+
+    private String getCookie() {
+        return requestHeaders.getRequestHeadersMap().get(COOKIE);
     }
 
     public boolean isStaticResource() {
