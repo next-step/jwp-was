@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import model.User;
 import org.slf4j.Logger;
@@ -48,13 +47,17 @@ public class RequestHandler implements Runnable {
                 httpHeader.addHeader(line);
             }
 
+            RequestBody requestBody = new RequestBody();
 
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World22".getBytes();
             if (path.endsWith(".html")) {
                 body = FileIoUtils.loadFileFromClasspath("./templates"+path);
             } else if (path.equals("/user/create")) {
-                User user = createUser(queryString);
+                requestBody.toBody(br, httpHeader);
+                Map<String, String> parameters = requestBody.getParameters(requestBody.getBody());
+
+                User user = createUser(parameters);
                 logger.debug("createdUserId : {}", user.getUserId());
             }
 
