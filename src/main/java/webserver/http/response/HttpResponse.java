@@ -41,14 +41,6 @@ public class HttpResponse {
         }
     }
 
-    public static HttpResponse of(StatusLine statusLine, Header header, byte[] body) {
-        return new HttpResponse(statusLine, header, body);
-    }
-
-    public static HttpResponse of(StatusLine statusLine, Header header) {
-        return new HttpResponse(statusLine, header, new byte[0]);
-    }
-
     public static HttpResponse ok(Header header, byte[] body) {
         return new HttpResponse(StatusLine.ofHttpV11Ok(), header, body);
     }
