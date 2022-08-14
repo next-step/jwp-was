@@ -8,9 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,11 +19,6 @@ public class HttpResponse {
     private StatusLine statusLine;
     private HttpHeader responseHeader;
     private ResponseBody responseBody;
-    private DataOutputStream dos;
-
-    public HttpResponse(OutputStream out) {
-        this.dos = new DataOutputStream(out);
-    }
 
     public void buildResponse(StatusLine statusLine, HttpHeader responseHeader) {
         Assert.notNull(statusLine, "StatusLine은 null이어선 안됩니다.");
@@ -53,6 +46,13 @@ public class HttpResponse {
         this.responseBody = new ResponseBody(body.getBytes(StandardCharsets.UTF_8));
     }
 
+    public void responseOk(HttpHeader responseHeader, byte[] body) {
+        Assert.notNull(responseHeader, "Header는 null이어선 안됩니다.");
+        Assert.notNull(body, "ResonseBody는 null이어선 안됩니다.");
+        this.responseHeader = responseHeader;
+        this.responseBody = new ResponseBody(body);
+    }
+
     public HttpStatusCode getHttpStatusCode() {
         return statusLine.getHttpStatusCode();
     }
@@ -77,24 +77,24 @@ public class HttpResponse {
         return responseHeader.getCookies();
     }
 
-    public void writeResponse() {
+    public void writeResponse(DataOutputStream dos) {
         try {
             dos.writeBytes(String.format("%s %s \r%n", statusLine.getProtocolToString(), getHttpStatusCode()));
-            writeHeader();
-            writeCookies();
-            writeBody();
+            writeHeader(dos);
+            writeCookies(dos);
+            writeBody(dos);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void writeHeader() throws IOException {
+    private void writeHeader(DataOutputStream dos) throws IOException {
         for (Map.Entry<String, String> entry : headerEntries()) {
             dos.writeBytes(String.format("%s: %s\r%n", entry.getKey(), entry.getValue()));
         }
     }
 
-    private void writeCookies() throws IOException {
+    private void writeCookies(DataOutputStream dos) throws IOException {
         if (cookieEntries().isEmpty()) {
             return;
         }
@@ -105,7 +105,7 @@ public class HttpResponse {
         dos.writeBytes("\r\n");
     }
 
-    private void writeBody() throws IOException {
+    private void writeBody(DataOutputStream dos) throws IOException {
         dos.write(body(), 0, getContentLength());
         dos.flush();
     }
@@ -129,16 +129,5 @@ public class HttpResponse {
     public void notFound() {
         buildResponse(StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.NOT_FOUND),
                 HttpHeader.empty());
-    }
-
-    public void addBodyAttribute(String name, Object value) {
-        responseBody.addAttribute(name, value);
-    }
-
-    public Map<String, Object> getBodyAttributes() {
-        if (responseBody == null) {
-            return Collections.emptyMap();
-        }
-        return responseBody.getBodyAttributes();
     }
 }

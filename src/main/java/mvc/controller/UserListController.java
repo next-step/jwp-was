@@ -14,7 +14,7 @@ public class UserListController extends AbstractController {
     @Override
     public void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
         if (isLogin(request.getSession())) {
-            response.addBodyAttribute("users", DataBase.findAll());
+            request.addBodyAttribute("users", DataBase.findAll());
             render(request, response, USER_LIST_TEMPLATE);
             return;
         }

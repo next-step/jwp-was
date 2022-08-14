@@ -10,6 +10,7 @@ import http.response.HttpResponse;
 import http.response.HttpStatusCode;
 import webserver.WasTestTemplate;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.*;
@@ -20,18 +21,20 @@ class UserCreateControllerTest {
 
     private WasTestTemplate testTemplate;
     private UserCreateController controller;
+    private HttpResponse response;
 
     @BeforeEach
     void initEach() {
         testTemplate = new WasTestTemplate();
         controller = new UserCreateController();
+        response = new HttpResponse();
     }
 
     @DisplayName("회원가입시 index.html로 리다이랙트")
     @Test
     void redirect() throws IOException {
         HttpRequest request = testTemplate.request("Http_POST.txt");
-        HttpResponse response = new HttpResponse(testTemplate.createOutputStream("Http_POST.txt"));
+        DataOutputStream dos = new DataOutputStream(testTemplate.createOutputStream("Http_POST.txt"));
 
         controller.doPost(request, response);
 
