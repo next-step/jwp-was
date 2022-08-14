@@ -14,6 +14,7 @@ public enum RequestHeader implements HeaderKey {
     SEC_CH_UA_PLATFORM("sec-ch-ua-platform"),
     SEC_FETCH_USER("Sec-Fetch-User"),
     SEC_FETCH_MODE("Sec-Fetch-Mode"),
+    SEC_PURPOSE("Sec-Purpose"),
     USER_AGENT("User-Agent"),
     COOKIE("Cookie"),
     UPGRADE_INSECURE_REQUESTS("Upgrade-Insecure-Requests"),
