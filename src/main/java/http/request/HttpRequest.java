@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class HttpRequest {
@@ -88,5 +90,16 @@ public class HttpRequest {
 
     public HttpSession getSession() {
         return requestHeader.getSession();
+    }
+
+    public void addBodyAttribute(String name, Object value) {
+        requestBody.addAttribute(name, value);
+    }
+
+    public Map<String, Object> getBodyAttributes() {
+        if (requestBody == null) {
+            return Collections.emptyMap();
+        }
+        return requestBody.getBodyAttributes();
     }
 }
