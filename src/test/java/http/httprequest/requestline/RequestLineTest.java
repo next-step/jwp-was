@@ -1,4 +1,4 @@
-package webserver.http;
+package http.httprequest.requestline;
 
 import http.httprequest.requestline.Path;
 import http.httprequest.requestline.Protocol;

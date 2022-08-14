@@ -24,6 +24,14 @@ public class RequestLine {
         this.protocol = protocol;
     }
 
+    public HttpMethod getHttpMethod() {
+        return httpMethod;
+    }
+
+    public String getPath() {
+        return path.getPath();
+    }
+
     public static RequestLine from(String requestLine) {
         Matcher matcher = HTTP_REQUEST_PATTERN.matcher(requestLine);
 

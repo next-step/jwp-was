@@ -6,19 +6,21 @@ public class Path {
     public static final String QUERY_STRING_DELIMITER = "?";
     public static final String EMPTY = "";
     private final String path;
+    private final RequestParams requestParams;
 
-    private final Params params;
-
-    public Path(String path,
-                Params params) {
+    public Path(String path, RequestParams requestParams) {
         this.path = path;
-        this.params = params;
+        this.requestParams = requestParams;
+    }
+
+    public String getPath() {
+        return path;
     }
 
     public static Path from(String pathWithQueryString) {
         String path = getPath(pathWithQueryString);
-        Params params = Params.from(findQueryString(pathWithQueryString));
-        return new Path(path ,params);
+        RequestParams requestParams = RequestParams.from(findQueryString(pathWithQueryString));
+        return new Path(path , requestParams);
     }
 
     private static String getPath(String pathWithQueryString) {
@@ -42,12 +44,12 @@ public class Path {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Path path1 = (Path) o;
-        return path.equals(path1.path) && params.equals(path1.params);
+        return path.equals(path1.path) && requestParams.equals(path1.requestParams);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(path, params);
+        return Objects.hash(path, requestParams);
     }
 }
 
