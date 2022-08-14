@@ -1,5 +1,6 @@
 package webserver.http.request;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import webserver.http.HttpMethod;
 
@@ -16,6 +17,7 @@ public class HttpRequestTest {
 
     private String testDirectory = "./src/test/resources/";
 
+    @DisplayName("GET 요청으로부터 HttpRequest 객체를 생성한다.")
     @Test
     public void requestGET() throws Exception {
         HttpRequest request = HttpRequest.parseFrom(createBufferedReader("Http_GET.txt"));
@@ -26,6 +28,7 @@ public class HttpRequestTest {
         assertEquals("javajigi", request.getRequestLine().getUrl().getQueryParameter().getParameter("userId"));
     }
 
+    @DisplayName("POST 요청으로부터 HttpRequest 객체를 생성한다.")
     @Test
     public void requestPOST() throws Exception {
         HttpRequest request = HttpRequest.parseFrom(createBufferedReader("Http_POST.txt"));
