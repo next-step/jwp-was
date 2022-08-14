@@ -4,7 +4,9 @@ import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Objects;
 
+import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,20 +46,20 @@ public class RequestHandler implements Runnable {
                 httpHeader.addHeader(line);
             }
 
-            RequestBody requestBody = new RequestBody();
-
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World22".getBytes();
             if (path.endsWith(".html")) {
                 body = FileIoUtils.loadFileFromClasspath("./templates"+path);
             } else if (path.equals("/user/create")) {
-                requestBody.toBody(br, httpHeader);
-                Map<String, String> parameters = requestBody.getParameters(requestBody.getBody());
 
-                User user = createUser(parameters);
-                logger.debug("createdUserId : {}", user.getUserId());
-                response302Header(dos, "/index.html");
+                Map<String, String> parameters = getParameters(br, httpHeader);
+                createUser(parameters, dos);
+
                 return;
+            } else if (path.equals("/user/login")) {
+                Map<String, String> parameters = getParameters(br, httpHeader);
+                loginUser(parameters, dos);
+
             }
 
             response200Header(dos, body.length);
@@ -69,13 +71,32 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    public User createUser(Map<String, String> queryString) {
-        return new User(
+    public Map<String, String> getParameters(BufferedReader br, HttpHeader httpHeader) throws IOException {
+        final RequestBody requestBody = new RequestBody();
+        requestBody.toBody(br, httpHeader);
+        return requestBody.getParameters(requestBody.getBody());
+    }
+
+    public void createUser(Map<String, String> queryString, DataOutputStream dos) {
+        User user = new User(
                 queryString.get("userId"),
                 queryString.get("password"),
                 queryString.get("name"),
                 queryString.get("email")
         );
+
+        DataBase.addUser(user);
+        logger.debug("createdUserId : {}", user.getUserId());
+
+        response302Header(dos, "/index.html");
+
+    }
+
+    public void loginUser(Map<String, String> parameters, DataOutputStream dos) {
+        User loginUser = DataBase.findUserById(parameters.get("userId"));
+        boolean isLogin = !Objects.isNull(loginUser) && parameters.get("password").equals(loginUser.getPassword());
+        response302Header(dos, isLogin ? "/index.html" : "/login_failed.html");
+        responseHeader(dos, "logined", String.valueOf(isLogin));
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
@@ -103,6 +124,14 @@ public class RequestHandler implements Runnable {
         try {
             dos.write(body, 0, body.length);
             dos.flush();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void responseHeader(DataOutputStream dos, String key, String bool) {
+        try {
+            dos.writeBytes("Set-Cookie: " + key + "=" + bool + "; " + "Path" + "=" + "/");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
