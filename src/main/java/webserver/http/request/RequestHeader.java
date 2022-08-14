@@ -88,10 +88,10 @@ public class RequestHeader {
         return headers.get(CONTENT_TYPE);
     }
 
-    public String getCookie() {
+    public Cookie getCookie() {
         if(!headers.containsKey(COOKIE)) {
-            return EMPTY_VALUE;
+            return Cookie.emptyCookie();
         }
-        return headers.get(COOKIE);
+        return Cookie.parseFrom(headers.get(COOKIE));
     }
 }

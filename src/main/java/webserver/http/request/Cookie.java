@@ -34,6 +34,10 @@ public class Cookie {
         );
     }
 
+    public static Cookie emptyCookie() {
+        return new Cookie(Collections.EMPTY_MAP);
+    }
+
     public String getLogined() {
         if (!cookies.containsKey(LOGINED)) {
             return EMPTY_VALUE;
