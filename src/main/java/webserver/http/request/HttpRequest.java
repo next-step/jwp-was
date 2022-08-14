@@ -94,7 +94,7 @@ public class HttpRequest {
     }
 
     private void initSession() {
-        if (this.header.getCookieValue(JSESSION_ID).isEmpty()) {
+        if (this.header.getCookieValue(JSESSION_ID).isEmpty() && !isStaticFilePath()) {
             String newId = UUID.randomUUID().toString();
             SessionDatabase.save(newId, new HttpSession(newId));
             this.header.setCookie(JSESSION_ID, newId);
