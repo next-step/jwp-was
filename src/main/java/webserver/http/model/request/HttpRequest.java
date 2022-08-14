@@ -1,5 +1,8 @@
 package webserver.http.model.request;
 
+import webserver.http.model.session.HttpSession;
+import webserver.http.model.session.HttpSessions;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class HttpRequest {
+    private static final String SESSION_ID = "JSESSIONID";
+    private static final String COOKIE = "Cookie";
 
     private final RequestLine requestLine;
     private final RequestHeaders requestHeaders;
@@ -72,6 +77,23 @@ public class HttpRequest {
             return requestLine.getQueryStringMap().get(parameter);
         }
         return value;
+    }
+
+    public HttpSession getHttpSession() {
+        String cookie = getCookie();
+        if (cookie == null) {
+            return null;
+        }
+
+        String[] splitCookie = cookie.split("=");
+        if (splitCookie.length < 2 || !splitCookie[0].equals(SESSION_ID)) {
+            return null;
+        }
+        return HttpSessions.getHttpSessionMap().get(splitCookie[1]);
+    }
+
+    private String getCookie() {
+        return requestHeaders.getRequestHeadersMap().get(COOKIE);
     }
 
     public boolean isStaticResource() {

@@ -3,7 +3,7 @@ package user.controller;
 import webserver.http.model.response.Cookie;
 import db.DataBase;
 import model.User;
-import webserver.http.model.Model;
+import webserver.http.model.response.Model;
 import webserver.http.model.request.HttpRequest;
 
 import java.util.HashMap;
@@ -55,11 +55,16 @@ public class UserController {
     }
 
     public Model retrieveUsers(HttpRequest httpRequest) {
-        if (ControllerEnum.accessiblePagesAfterLogin(httpRequest) && "logined=true".equals(httpRequest.getRequestHeaders().get("Cookie"))) {
+        if (isLogin(httpRequest)) {
             Map<String, Object> modelMap = new HashMap<>();
             modelMap.put("users", DataBase.findAll());
             return new Model("user/list", modelMap);
         }
         return new Model("/user/login.html", null);
+    }
+
+    private boolean isLogin(HttpRequest httpRequest) {
+        return ControllerEnum.accessiblePagesAfterLogin(httpRequest)
+                && "logined=true".equals(httpRequest.getRequestHeaders().get("Cookie"));
     }
 }
