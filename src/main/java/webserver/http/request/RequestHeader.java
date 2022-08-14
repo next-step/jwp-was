@@ -41,7 +41,7 @@ public class RequestHeader {
     }
 
     public void add (final String header){
-        if (header.isEmpty() || header.isBlank() || header == null) {
+        if (header == null || header.isEmpty() || header.isBlank()) {
             return;
         }
 

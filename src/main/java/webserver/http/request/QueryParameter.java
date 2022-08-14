@@ -6,6 +6,7 @@ import webserver.http.Url;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class QueryParameter {
@@ -35,5 +36,12 @@ public class QueryParameter {
 
     public Map<String, String> getParameters() {
         return parameters;
+    }
+
+    public String getParameter(String key) {
+        if (!parameters.containsKey(key)) {
+            throw new NoSuchElementException();
+        }
+        return parameters.get(key);
     }
 }

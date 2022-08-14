@@ -5,6 +5,7 @@ import utils.DecoderUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class RequestBody {
@@ -36,6 +37,13 @@ public class RequestBody {
 
     public Map<String, String> getContents() {
         return contents;
+    }
+
+    public String getContent(String key) {
+        if (!contents.containsKey(key)) {
+            throw new NoSuchElementException();
+        }
+        return contents.get(key);
     }
 
     @Override

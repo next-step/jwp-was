@@ -17,7 +17,6 @@ import webserver.http.response.HttpResponse;
 public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final String BLANK_LINE = "\r\n";
 
     private final Socket connection;
     private final Router router;

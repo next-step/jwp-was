@@ -29,7 +29,7 @@ public class IOUtils {
         List<String> strings = new ArrayList();
         String line = br.readLine();
 
-        while (! line.equals(END_OF_LINE) || line == null) {
+        while (line != null && !line.equals(END_OF_LINE)) {
             line = br.readLine();
             strings.add(line);
         }
