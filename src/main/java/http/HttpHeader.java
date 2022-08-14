@@ -74,7 +74,7 @@ public class HttpHeader {
     }
 
     public String getCookieValue(String key) {
-        return cookies.getCookieValue(key).orElseGet(() -> Strings.EMPTY);
+        return cookies.getCookieValue(key);
     }
 
     public Set<Map.Entry<String, String>> getCookies() {

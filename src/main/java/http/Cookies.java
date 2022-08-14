@@ -37,8 +37,8 @@ public class Cookies {
         return Map.entry(splitValues[0].trim(), splitValues[1].trim());
     }
 
-    public Optional<String> getCookieValue(String key) {
-        return Optional.ofNullable(cookies.get(key));
+    public String getCookieValue(String key) {
+        return cookies.getOrDefault(key, "");
     }
 
     public Set<Map.Entry<String, String>> getCookies() {
