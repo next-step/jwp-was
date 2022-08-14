@@ -15,6 +15,7 @@ public class SessionManager {
         if (sessions == null) {
             sessions = new HashMap<>();
         }
+
         return sessions;
     }
 }
