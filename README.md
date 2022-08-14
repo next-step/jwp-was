@@ -69,3 +69,8 @@
 * 세션 구현하기
 1. HttpSession 클래스를 생성하고, 세션 관리를 위해 Map<String, HttpSession> 구조를 만든다. 
 2. 쿠키와 세션을 사용하여 로그인을 처리한다.
+
+## step5 기능 요구사항
+* Thread Pool 적용
+1. WAS에 ThreadPool을 적용한다. 최대 ThreadPool 크기는 250, 모든 Thread가 사용중인 상태이면 100명까지 대기 상태가 되도록 구현한다.
+2. 서버의 ThreadPool보다 많은 요청을 동시에 보내, 어떤 현상이 발생하는지 확인한다.
