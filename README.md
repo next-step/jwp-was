@@ -38,5 +38,12 @@
 - [o] 회원가입 기능을 get 에서 post 로 수정하기
 - [o] 수정 후에도 정상적으로 User 객체 생성하기
 
-### 요구사항 4목
-- [] 회원가입이 완료되면 302 리다이렉트를 이용해서 /index.html 로 이동
+### 요구사항 4
+- [o] 회원가입이 완료되면 302 리다이렉트를 이용해서 /index.html 로 이동
+
+### 요구사항 5
+- [] 회원가입때 생성한 User 객체를 DataBase.addUser() 메서드를 활용해 RAM 메모리에 저장
+- [] 클라이언트에서 로그인을 성공하면 index.html, 실패하면 /user/login_failed.html 로 이동
+- [] 로그인 시, 아이디와 비밀번호가 같은지 확인하고 성공하면 header의 set-Cookie 값을 logined=true, 실패하면 logined=false로 설정
+- [] Set-Cookie 설정시 모든 요청에 대해 Cookie 처리가 가능하도록 Path 설정 값을 /(Path=/)로 설정
+- [] 응답 header에 Set-Cookie값을 설정한 후 요청 header에 Cookie이 전달되는지 확인
