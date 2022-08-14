@@ -23,13 +23,14 @@ public class WebApplicationServer {
         try (ServerSocket listenSocket = new ServerSocket(port)) {
             logger.info("Web Application Server started {} port.", port);
 
-            BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(10);
-            ExecutorService executorService = new ThreadPoolExecutor(10, 20, 60, TimeUnit.SECONDS, workQueue);
+            BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(5);
+            ExecutorService executorService = new ThreadPoolExecutor(5, 10, 60, TimeUnit.SECONDS, workQueue);
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
                 executorService.execute(new RequestHandler(connection));
             }
+            executorService.shutdown();
         }
     }
 }

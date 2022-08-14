@@ -32,7 +32,7 @@ public class HttpRequestTest {
     @DisplayName("rest template을 통해 threadPool이 5로 되어있는 환경에 10개의 스레드 요청을 한다.")
     @Test
     void executeMultiRequest() throws ExecutionException, InterruptedException {
-        ExecutorService executorService = Executors.newFixedThreadPool(100);
+        ExecutorService executorService = Executors.newFixedThreadPool(15);
 
         Future<?> future = null;
         for (int i = 0; i < 100; i++) {
