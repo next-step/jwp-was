@@ -1,7 +1,5 @@
 package webserver.session;
 
-import exception.Assert;
-
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,12 +8,7 @@ public class HttpSessionStorage {
 
     public static final String JSESSIONID = "JSESSIONID";
 
-    private static Map<String, HttpSession> httpSessions;
-
-    public HttpSessionStorage(Map<String, HttpSession> httpSessions) {
-        Assert.notNull(httpSessions, "httpSessions는 null이어선 안됩니다.");
-        HttpSessionStorage.httpSessions = new ConcurrentHashMap<>(httpSessions);
-    }
+    private static Map<String, HttpSession> httpSessions = new ConcurrentHashMap<>();
 
     public static String generateRandomId() {
         return UUID.randomUUID().toString();
@@ -29,7 +22,7 @@ public class HttpSessionStorage {
         return session;
     }
 
-    public void addSession(HttpSession session) {
+    public static void addSession(HttpSession session) {
         httpSessions.put(session.getId(), session);
     }
 
@@ -39,7 +32,11 @@ public class HttpSessionStorage {
         return session;
     }
 
-    public void remove(String id) {
+    public static void remove(String id) {
         httpSessions.remove(id);
+    }
+
+    public static void invalidate() {
+        httpSessions.clear();
     }
 }

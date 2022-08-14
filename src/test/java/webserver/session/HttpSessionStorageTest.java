@@ -4,20 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("HttpSession 저장소 테스트")
 class HttpSessionStorageTest {
-
-    @DisplayName("HttpSessionStorage 생성")
-    @Test
-    void create() {
-        assertThatNoException().isThrownBy(
-                () -> new HttpSessionStorage(Collections.emptyMap()));
-    }
 
     @DisplayName("세션 조회시에")
     @Nested
@@ -45,9 +36,8 @@ class HttpSessionStorageTest {
             @DisplayName("세션을 반환한다.")
             @Test
             void returnSession() {
-                HttpSessionStorage sessionStorage = new HttpSessionStorage(Collections.emptyMap());
                 HttpSession session = new HttpSession("key");
-                sessionStorage.addSession(session);
+                HttpSessionStorage.addSession(session);
 
                 HttpSession targetSession = HttpSessionStorage.getSession("key");
 
@@ -60,10 +50,26 @@ class HttpSessionStorageTest {
     @Test
     void add() {
         HttpSession session = new HttpSession("id");
-        HttpSessionStorage sessionStorage = new HttpSessionStorage(Map.of(session.getId(), session));
+        HttpSessionStorage.addSession(session);
 
-        sessionStorage.remove("id");
+        HttpSessionStorage.remove("id");
 
         assertThat(HttpSessionStorage.getSession(session.getId())).isNotEqualTo(session);
+    }
+
+    @DisplayName("세션 저장소 비우기")
+    @Test
+    void invalidate() {
+        HttpSession sessionA = new HttpSession("idA");
+        HttpSession sessionB = new HttpSession("idB");
+        HttpSessionStorage.addSession(sessionA);
+        HttpSessionStorage.addSession(sessionB);
+
+        HttpSessionStorage.invalidate();
+
+        assertAll(
+                () -> assertThat(HttpSessionStorage.getSession(sessionA.getId())).isNotEqualTo(sessionA),
+                () -> assertThat(HttpSessionStorage.getSession(sessionB.getId())).isNotEqualTo(sessionB)
+        );
     }
 }
