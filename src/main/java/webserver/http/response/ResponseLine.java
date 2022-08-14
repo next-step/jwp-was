@@ -23,7 +23,7 @@ public class ResponseLine {
     public static ResponseLine of404() { return new ResponseLine(StatusCode.NOT_FOUND); }
 
     public void write(final DataOutputStream dos) throws IOException {
-        dos.writeBytes(this.toPrint());
+        dos.writeBytes(toPrint());
     }
 
     public ProtocolVersion getProtocolVersion() {

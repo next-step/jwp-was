@@ -40,7 +40,7 @@ public class HttpResponseTest {
 
     @Test
     void redirectIsStatusCode302(){
-        final String redirectUrl = "/index.html";
+        final String redirectUrl = "/templates/index.html";
 
         HttpResponse httpResponse = HttpResponse.redirect(redirectUrl);
 
