@@ -3,8 +3,10 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.Map;
 import java.util.stream.Stream;
 
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -33,6 +35,9 @@ public class RequestHandler implements Runnable {
             String path = requestLine.getPath().getPath();
             logger.debug("request path : {}", path);
 
+            Map<String, String> queryString = requestLine.getPath().getQueryString().getQueryData();
+            logger.debug("request queryString : {}", queryString);
+
             String method = requestLine.getMethod();
             logger.debug("request method : {}", method);
 
@@ -46,9 +51,11 @@ public class RequestHandler implements Runnable {
 
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World22".getBytes();
-
             if (path.endsWith(".html")) {
                 body = FileIoUtils.loadFileFromClasspath("./templates"+path);
+            } else if (path.equals("/user/create")) {
+                User user = createUser(queryString);
+                logger.debug("createdUserId : {}", user.getUserId());
             }
 
             response200Header(dos, body.length);
@@ -58,6 +65,15 @@ public class RequestHandler implements Runnable {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public User createUser(Map<String, String> queryString) {
+        return new User(
+                queryString.get("userId"),
+                queryString.get("password"),
+                queryString.get("name"),
+                queryString.get("email")
+        );
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
