@@ -34,10 +34,7 @@ public class RequestHandler implements Runnable {
             String path = requestLine.getPath().getPath();
             logger.debug("request path : {}", path);
 
-            Map<String, String> queryString = requestLine.getPath().getQueryString().getQueryData();
-            logger.debug("request queryString : {}", queryString);
-
-            String method = requestLine.getMethod();
+            HttpMethod method = requestLine.getMethod();
             logger.debug("request method : {}", method);
 
             HttpHeader httpHeader = new HttpHeader();
