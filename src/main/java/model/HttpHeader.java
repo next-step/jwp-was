@@ -13,8 +13,6 @@ public class HttpHeader {
 
     private Map<String, String> headers = new HashMap<>();
 
-    public HttpHeader() {}
-
     public HttpHeader(Map<String, String> headers) {
         this.headers = headers;
     }
@@ -37,31 +35,11 @@ public class HttpHeader {
         return Integer.parseInt(value);
     }
 
-    public void addLocation(String location) {
-        headers.put("Location", location);
-    }
-
-    public void addValue(String name, String value) {
-        headers.put(name, value);
-    }
-
-    public void addContentLength(int length) {
-        headers.put("Content-Length", String.valueOf(length));
-    }
-
-    public void addContentType(String contentType) {
-        headers.put("Content-Type", contentType + ";charset=utf-8");
-    }
-
-    public void addCookie(String name, String value) {
-        headers.put("Set-Cookie", name + "=" + value);
-    }
-
     public void writeOutput(DataOutputStream dos) throws IOException {
-        headers.keySet().stream()
-                .forEach(name -> {
+        headers.entrySet().stream()
+                .forEach(entry -> {
                     try {
-                        dos.writeBytes(name + DELIMITER + getValue(name) + "\n");
+                        dos.writeBytes(entry.getKey() + DELIMITER + entry.getValue() + "\n");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -77,7 +55,6 @@ public class HttpHeader {
     }
 
     public static class HttpHeaderBuilder {
-
         private static Map<String, String> headers = new HashMap<>();
 
         public HttpHeaderBuilder addLocation(String location) {
@@ -94,6 +71,7 @@ public class HttpHeader {
             headers.put("Content-Type", contentType + ";charset=utf-8");
             return this;
         }
+
         public HttpHeaderBuilder addCookie(String name, String value) {
             headers.put("Set-Cookie", name + "=" + value);
             return this;
