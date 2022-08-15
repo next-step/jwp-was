@@ -50,3 +50,5 @@
 ### STEP 3
 - [X] RequestHandler의 역할 분리
 - [X] 테스트 코드 보충
+### STEP 4
+- [] HttpSession과 API 구현
