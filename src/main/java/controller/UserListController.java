@@ -17,12 +17,9 @@ public class UserListController extends AbstractController{
 
         if (isLogin(cookie)) {
             response.forward(new ResponseBody(s.getBytes()), CONTENT_TYPE);
-            response.writeResponse();
             return;
         }
         response.redirect(USER_LOGIN_PATH);
-        response.writeResponse();
-
     }
 
     private boolean isLogin(Cookie cookie) {

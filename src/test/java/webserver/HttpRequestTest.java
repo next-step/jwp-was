@@ -20,7 +20,7 @@ public class HttpRequestTest {
 
     @Test
     public void request_GET() throws Exception {
-        InputStream in = new FileInputStream(new File(testDirectory + "Http_GET.txt"));
+        InputStream in = new FileInputStream(new File(testDirectory + "Http_GET.http"));
         HttpRequest request = new HttpRequest(in);
 
         assertEquals(HttpMethod.GET, request.getMethod());
@@ -31,7 +31,7 @@ public class HttpRequestTest {
 
     @Test
     public void request_POST() throws Exception {
-        InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.txt"));
+        InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.http"));
         HttpRequest request = new HttpRequest(in);
 
         assertEquals(HttpMethod.POST, request.getMethod());

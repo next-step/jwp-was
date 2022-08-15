@@ -29,11 +29,14 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
             final HttpRequest httpRequest = new HttpRequest(in);
-            final HttpResponse response = new HttpResponse(out);
+            final HttpResponse response = new HttpResponse();
+            final DataOutputStream dataOutputStream = new DataOutputStream(out);
+
             logger.debug("request : {}", httpRequest);
 
             Controller controller = mapper.mapping(new RequestMappingInfo(httpRequest));
             controller.service(httpRequest, response);
+            response.writeResponse(dataOutputStream);
 
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());

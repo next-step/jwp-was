@@ -36,12 +36,11 @@ public class UserListControllerTest {
     }
 
     private HttpRequest createHttpRequest() throws IOException {
-        InputStream in = new FileInputStream(new File(testDirectory + "Http_GET.txt"));
+        InputStream in = new FileInputStream(new File(testDirectory + "Http_GET.http"));
         return new HttpRequest(in);
     }
 
     private HttpResponse createHttpResponse() throws FileNotFoundException {
-        final OutputStream outputStream = new FileOutputStream(new File(testDirectory + "Http_response.txt"));
-        return new HttpResponse(outputStream);
+        return new HttpResponse();
     }
 }

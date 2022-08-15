@@ -16,6 +16,5 @@ public class UserCreateController extends AbstractController{
         DataBase.addUser(user);
 
         response.redirect(REDIRECT_PATH);
-        response.writeResponse();
     }
 }

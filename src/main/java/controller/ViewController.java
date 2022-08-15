@@ -29,13 +29,11 @@ public class ViewController implements Controller{
             response.forward(
                     new ResponseBody(FileIoUtils.loadFileFromClasspath(HTML_CLASS_PATH + requestPath))
                     , extensionToContentType.get(extension));
-            response.writeResponse();
             return;
         }
         response.forward(
                 new ResponseBody(FileIoUtils.loadFileFromClasspath(CLASS_Path + requestPath))
                 , extensionToContentType.get(extension));
-        response.writeResponse();
     }
 
     private boolean isHtmlClassPath(String extension) {

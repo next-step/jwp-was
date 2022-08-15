@@ -7,11 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoginControllerTest {
 
@@ -51,12 +46,11 @@ public class LoginControllerTest {
     }
 
     private HttpRequest createHttpRequest(String userId) throws IOException {
-        InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.txt"));
+        InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.http"));
         return new HttpRequest(in);
     }
 
     private HttpResponse createHttpResponse() throws FileNotFoundException {
-        final OutputStream outputStream = new FileOutputStream(new File(testDirectory + "Http_response.txt"));
-        return new HttpResponse(outputStream);
+        return new HttpResponse();
     }
 }

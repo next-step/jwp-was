@@ -18,12 +18,6 @@ public class HttpResponse {
     private ResponseLine responseLine;
     private HttpHeader header;
     private ResponseBody body;
-    private OutputStream outputStream;
-
-    public HttpResponse(OutputStream outputStream) {
-        this.outputStream = outputStream;
-        this.body = ResponseBody.empty();
-    }
 
     public void redirect(String location) {
         final HttpHeader httpHeader = new HttpHeader();
@@ -53,8 +47,7 @@ public class HttpResponse {
         this.responseLine = ResponseLine.redirect();
     }
 
-    public void writeResponse() throws IOException {
-        DataOutputStream dos = new DataOutputStream(outputStream);
+    public void writeResponse(DataOutputStream dos) throws IOException {
         try {
             responseLine.writeOutput(dos);
             header.writeOutput(dos);
@@ -72,17 +65,5 @@ public class HttpResponse {
                 "header=" + header +
                 ", body=" + body +
                 '}';
-    }
-
-    public void forward(String location) throws IOException, URISyntaxException {
-        body = new ResponseBody(FileIoUtils.loadFileFromClasspath(location));
-    }
-
-    public void sendRedirect(String location) {
-        header.addValue("Location", location);
-    }
-
-    public void addHeader(String name, String value) {
-        header.addValue(name, value);
     }
 }
