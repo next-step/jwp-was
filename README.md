@@ -47,3 +47,10 @@
 - [o] 로그인 시, 아이디와 비밀번호가 같은지 확인하고 성공하면 header의 set-Cookie 값을 logined=true, 실패하면 logined=false로 설정
 - [o] Set-Cookie 설정시 모든 요청에 대해 Cookie 처리가 가능하도록 Path 설정 값을 /(Path=/)로 설정
 - [o] 응답 header에 Set-Cookie값을 설정한 후 요청 header에 Cookie이 전달되는지 확인
+
+### 요구사항 6
+- [o] 접근하는 사용자가 "로그인" 상태일 경우, "/user/list" 로 접근했을 때, 사용자 목록 출력
+- [o] 로그인 하지 않을 시, "login.html" 페이지로 이동
+
+### 요구사항 7
+- [] stylesheet 파일을 지원하도록 구현하기
