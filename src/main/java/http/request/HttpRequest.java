@@ -1,14 +1,19 @@
 package http.request;
 
+import com.google.common.base.Strings;
 import utils.IOUtils;
 import http.HttpHeader;
+import webserver.session.HttpSession;
+import webserver.session.HttpSessionStorage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class HttpRequest {
@@ -76,5 +81,25 @@ public class HttpRequest {
 
     public String getCookieValue(String key) {
         return requestHeader.getCookieValue(key);
+    }
+
+    public boolean sessionIdPresentInCookie() {
+        String sessionValue = getCookieValue(HttpSessionStorage.JSESSIONID);
+        return !Strings.isNullOrEmpty(sessionValue);
+    }
+
+    public HttpSession getSession() {
+        return requestHeader.getSession();
+    }
+
+    public void addBodyAttribute(String name, Object value) {
+        requestBody.addAttribute(name, value);
+    }
+
+    public Map<String, Object> getBodyAttributes() {
+        if (requestBody == null) {
+            return Collections.emptyMap();
+        }
+        return requestBody.getBodyAttributes();
     }
 }

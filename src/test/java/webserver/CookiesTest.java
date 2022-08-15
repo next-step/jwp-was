@@ -17,11 +17,11 @@ class CookiesTest {
         Cookies cookies = Cookies.from("PHPSESSID=298zf09hf012fh2; csrftoken=u32t4o3tb3gg43; _gat=1");
 
         assertAll(
-                () -> assertThat(cookie.getCookieValue("logined").get()).isEqualTo("true"),
+                () -> assertThat(cookie.getCookieValue("logined")).isEqualTo("true"),
 
-                () -> assertThat(cookies.getCookieValue("PHPSESSID").get()).isEqualTo("298zf09hf012fh2"),
-                () -> assertThat(cookies.getCookieValue("csrftoken").get()).isEqualTo("u32t4o3tb3gg43"),
-                () -> assertThat(cookies.getCookieValue("_gat").get()).isEqualTo("1")
+                () -> assertThat(cookies.getCookieValue("PHPSESSID")).isEqualTo("298zf09hf012fh2"),
+                () -> assertThat(cookies.getCookieValue("csrftoken")).isEqualTo("u32t4o3tb3gg43"),
+                () -> assertThat(cookies.getCookieValue("_gat")).isEqualTo("1")
         );
     }
 

@@ -25,16 +25,18 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class HttpResponseTest {
 
     private WasTestTemplate testTemplate;
+    private HttpResponse response;
 
     @BeforeEach
     void setUp() {
         testTemplate = new WasTestTemplate();
+        response = new HttpResponse();
     }
 
     @DisplayName("Http Response 생성")
     @Test
     void createHttpResponse() throws FileNotFoundException {
-        HttpResponse response = new HttpResponse(testTemplate.createOutputStream("Http_Forward.txt"));
+        DataOutputStream dos = new DataOutputStream(testTemplate.createOutputStream("Http_Forward.txt"));
         StatusLine statusLine = StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.OK);
 
         assertAll(
@@ -50,7 +52,7 @@ class HttpResponseTest {
     @DisplayName("Http Response 생성 실패")
     @Test
     void createHttpResponse_FAIL() throws FileNotFoundException {
-        HttpResponse response = new HttpResponse(testTemplate.createOutputStream("Http_Forward.txt"));
+        DataOutputStream dos = new DataOutputStream(testTemplate.createOutputStream("Http_Forward.txt"));
         StatusLine statusLine = StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.OK);
 
         assertAll(
@@ -64,7 +66,7 @@ class HttpResponseTest {
     @DisplayName("Content-Length 테스트")
     @Test
     void checkContentLength() throws FileNotFoundException {
-        HttpResponse response = new HttpResponse(testTemplate.createOutputStream("Http_Forward.txt"));
+        DataOutputStream dos = new DataOutputStream(testTemplate.createOutputStream("Http_Forward.txt"));
         StatusLine statusLine = StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.OK);
         String body = "body";
 
@@ -77,7 +79,7 @@ class HttpResponseTest {
     @DisplayName("Http 포워딩")
     @Test
     public void responseForward() throws IOException {
-        HttpResponse response = new HttpResponse(testTemplate.createOutputStream("Http_Body.txt"));
+        DataOutputStream dos = new DataOutputStream(testTemplate.createOutputStream("Http_Body.txt"));
         StatusLine statusLine = StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.OK);
 
         response.buildResponse(statusLine, HttpHeader.empty(), loadHtml().getBytes(StandardCharsets.UTF_8));
@@ -86,14 +88,15 @@ class HttpResponseTest {
     @DisplayName("Http 리다이렉션")
     @Test
     public void responseRedirect() throws FileNotFoundException {
-        HttpResponse response = new HttpResponse(testTemplate.createOutputStream("Http_Redirect.txt"));
+        DataOutputStream dos = new DataOutputStream(testTemplate.createOutputStream("Http_Redirect.txt"));
         response.sendRedirect("/index.html");
     }
 
     @DisplayName("쿠키값 추가")
     @Test
     public void responseCookies() throws FileNotFoundException {
-        HttpResponse response = new HttpResponse(testTemplate.createOutputStream("Http_Cookie.txt"));
+        DataOutputStream dos = new DataOutputStream(testTemplate.createOutputStream("Http_Cookie.txt"));
+
         response.addHeader("Set-Cookie", "logined=true");
         response.sendRedirect("/index.html");
     }

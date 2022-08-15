@@ -12,7 +12,7 @@ public final class Assert {
         }
     }
 
-    public static void hasTest(String text, String message) {
+    public static void hasText(String text, String message) {
         if (text == null || text.isBlank()) {
             throw new IllegalArgumentException(message);
         }
