@@ -101,4 +101,12 @@ public class HttpRequestMessage {
     public HttpMethod getHttpMethod() {
         return requestLine.getHttpMethod();
     }
+
+    public Boolean hasSession() {
+        return httpHeader.hasSession();
+    }
+
+    public String getSessionId() {
+        return httpHeader.getSessionId();
+    }
 }

@@ -10,6 +10,7 @@ import model.response.ResponseLine;
 import service.UserService;
 import utils.FileIoUtils;
 import utils.HandleBarCompiler;
+import utils.SessionManager;
 
 import java.util.Collection;
 import java.util.Map;
@@ -109,13 +110,14 @@ public class UserHandler extends AbstractHandler {
         }
 
         if (httpRequestMessage.isEqualPath(LOGIN)) {
-            return login(httpRequestMessage.getRequestBody());
+            return login(httpRequestMessage);
         }
 
         return new HttpResponseMessage(ResponseLine.httpBadRequest(), null, new byte[0]);
     }
 
-    private HttpResponseMessage login(Map<String, String> requestBody) {
+    private HttpResponseMessage login(HttpRequestMessage httpRequestMessage) {
+        Map<String, String> requestBody = httpRequestMessage.getRequestBody();
         String userId = requestBody.get("userId");
         String password = requestBody.get("password");
 
@@ -126,7 +128,9 @@ public class UserHandler extends AbstractHandler {
         }
 
         if (user.login(userId, password)) {
-            return new HttpResponseMessage(ResponseLine.httpFound(), createLoginSuccessHttpHeader(), new byte[0]);
+            String sessionId = setUserSession(httpRequestMessage, user);
+
+            return new HttpResponseMessage(ResponseLine.httpFound(), createLoginSuccessHttpHeader(sessionId), new byte[0]);
         }
 
         return new HttpResponseMessage(ResponseLine.httpFound(), createLoginFailHttpHeader(), new byte[0]);
@@ -141,12 +145,28 @@ public class UserHandler extends AbstractHandler {
             .build();
     }
 
-    private HttpHeader createLoginSuccessHttpHeader() {
+    private HttpHeader createLoginSuccessHttpHeader(String sessionId) {
 
         return new HttpHeader.Builder()
             .addHeader("Content-Type: text/html;charset=utf-8")
             .addHeader("Set-Cookie: logined=true; Path=/")
             .sendRedirect("/index.html")
+            .addSession(sessionId)
             .build();
+    }
+
+    private String setUserSession(HttpRequestMessage httpRequestMessage, User user) {
+        SessionManager.getSessions();
+
+        if (httpRequestMessage.hasSession()) {
+            String sessionId = httpRequestMessage.getSessionId();
+            SessionManager.setSession(sessionId, "userInfo", user);
+
+            return sessionId;
+        }
+
+        String sessionId = SessionManager.setSession("userInfo", user);
+
+        return sessionId;
     }
 }
