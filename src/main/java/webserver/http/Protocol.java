@@ -2,7 +2,6 @@ package webserver.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import exception.InvalidRequestException;
-import webserver.http.request.Version;
 
 import java.util.Objects;
 

@@ -12,13 +12,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static model.Constant.SET_COOKIE;
+
 public class LoginController extends AbstractController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     public static final String ROOT_PATH = "/";
     public static final String ROOT_FILE = "/index.html";
     private static final String USER_LOGIN_FAIL_PATH = "/user/login_failed.html";
-
 
     @Override
     public HttpResponse doPost(HttpRequest httpRequest) {
@@ -28,20 +29,17 @@ public class LoginController extends AbstractController {
                 .map(user -> StringUtils.equals(user.getPassword(), httpRequest.getParameter("password")))
                 .orElse(false);
 
-        Map<String, String> cookieMap = new HashMap<String, String>();
+        Map<String, String> cookieMap = new HashMap<>();
         cookieMap.put("path", ROOT_PATH);
         if (isLogin) {
-            cookieMap.put("logined", "true");
+            cookieMap.put(SET_COOKIE, "logined=true; Path=" + ROOT_PATH);
 
             HttpResponse httpResponse = HttpResponse.sendRedirect(ROOT_FILE, cookieMap);
-//            httpResponse.setCookie(new Cookie("logined", "true", ROOT_PATH));
-//            httpResponse.setCookie(new Cookie(cookieMap));
 
             return httpResponse;
         }
-        cookieMap.put("logined", "false");
+        cookieMap.put(SET_COOKIE, "logined=false; Path=" + ROOT_PATH);
         HttpResponse httpResponse = HttpResponse.sendRedirect(USER_LOGIN_FAIL_PATH, cookieMap);
-//        httpResponse.setCookie(new Cookie(cookieMap));
 
         return httpResponse;
     }

@@ -11,7 +11,7 @@ import webserver.http.request.RequestHeader;
 import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.stream.Stream;
 
@@ -26,16 +26,15 @@ public class UserListController extends AbstractController {
 
 
     @Override
-    public HttpResponse doGet(HttpRequest httpRequest) throws IOException, URISyntaxException {
+    public HttpResponse doGet(HttpRequest httpRequest) throws IOException {
         logger.debug("UserListController : {}", httpRequest.getRequestPath());
 
         if (!isLoginStatus(httpRequest.getHeader())) {
             return HttpResponse.sendRedirect(ROOT_PATH);
         }
-
         Collection<User> users = DataBase.findAll();
 
-        return HttpResponse.forward(USER_LIST_PATH, loader(users));
+        return HttpResponse.forward(USER_LIST_PATH, loader(users).getBytes(StandardCharsets.UTF_8));
     }
 
     private boolean isLoginStatus(RequestHeader requestHeader) {

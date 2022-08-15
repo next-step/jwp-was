@@ -7,6 +7,7 @@ import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestMapping;
 import webserver.http.response.HttpResponse;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,11 +28,12 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = new HttpRequest(in);
+            DataOutputStream dos = new DataOutputStream(out);
 
             Controller controller = RequestMapping.mapping(httpRequest.getRequestPath());
             HttpResponse httpResponse = controller.service(httpRequest);
 
-            httpResponse.process(out);
+            httpResponse.process(dos);
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (Exception e) {

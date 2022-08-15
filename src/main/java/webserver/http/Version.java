@@ -1,4 +1,4 @@
-package webserver.http.request;
+package webserver.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import exception.InvalidRequestException;

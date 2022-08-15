@@ -1,5 +1,6 @@
 package controller;
 
+import webserver.http.HttpStatus;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
@@ -19,11 +20,10 @@ public abstract class AbstractController implements Controller {
     }
 
     public HttpResponse doPost(HttpRequest httpRequest) {
-        return HttpResponse.sendRedirect(ROOT_FILE);
+        throw new IllegalArgumentException(HttpStatus.NOT_FOUND.name());
     }
 
     public HttpResponse doGet(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        // TODO: forward로 수정해야됨.
-        return HttpResponse.sendRedirect(httpRequest.getRequestPath());
+        throw new IllegalArgumentException(HttpStatus.NOT_FOUND.name());
     }
 }

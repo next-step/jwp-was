@@ -9,8 +9,8 @@ public class Cookie {
         this.cookie = cookie;
     }
 
-    public String getCookieAsString() {
-        return cookie.toString();
+    public String getCookie(String key) {
+        return cookie.get(key);
     }
 
     public Map<String, String> getCookie() {
