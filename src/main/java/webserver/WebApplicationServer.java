@@ -1,6 +1,5 @@
 package webserver;
 
-import java.net.HttpCookie;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -14,8 +13,8 @@ public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
     private static final int DEFAULT_PORT = 8080;
 
-    private static final int CORE_POOL_SIZE = 100;
-    private static final int MAXIMUM_POOL_SIZE = 250;
+    private static final int CORE_POOL_SIZE = 5;
+    private static final int MAXIMUM_POOL_SIZE = 10;
     private static final long KEEP_ALIVE_TIME = 0L;
 
     public static void main(String args[]) throws Exception {

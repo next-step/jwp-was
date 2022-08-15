@@ -170,4 +170,5 @@ Set-Cookie: logined=true; Path=/
 ### 요구사항 1
 - [X] Java에서 제공하는 ThreadPoolExecutor를 활용하여 ThreadPool 기능을 추가한다.
   - 최대 ThradPool의 크기는 250, 모든 Thread가 사용 중인(Busy) 상태이면 100명까지 대기 상태가 되도록 구현한다.
-- 
+- [X] Spring에서 제공하는 RestTemplate을 활용해 서버의 ThreadPool 수보다 많은 요청을 동시에 보내는 테스트를 작성해본다.
+  - 예를 들어 서버의 최대 Thread Pool 수를 5로 설정하고, ExecutorsTest의 Executors.newFixedThreadPool(10)과 같이 설정해 동시에 10개의 요청이 발생하도록 구현해 본다.
