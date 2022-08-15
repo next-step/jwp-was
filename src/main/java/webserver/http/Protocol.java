@@ -1,7 +1,8 @@
-package webserver.http.request;
+package webserver.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import exception.InvalidRequestException;
+import webserver.http.request.Version;
 
 import java.util.Objects;
 
@@ -23,6 +24,10 @@ public class Protocol {
     public Protocol(String protocol, String version) {
         this.protocol = protocol;
         this.version = new Version(version);
+    }
+
+    public String getProtocolAndVersion() {
+        return protocol + PROTOCOL_AND_VALUE_SEPARATOR + version.getVersion();
     }
 
     @Override

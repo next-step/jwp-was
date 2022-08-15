@@ -6,11 +6,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.request.Request;
+import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.request.RequestHeader;
 import webserver.http.request.RequestLine;
-import webserver.http.response.Response;
+import webserver.http.response.HttpResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
@@ -34,11 +34,11 @@ class CreateUserControllerTest {
         RequestHeader requestHeader = new RequestHeader(Map.of("Host", "localhost:8080", "Connection", "keep-alive", "Content-Length", "59", "Content-Type", "applcation/x-www-form-urlencoded", "Accept", "*/*"));
         RequestBody requestBody = new RequestBody("userId=aaaa&password=aaaa&name=aaaa&email=aaaa%40aaaa.com");
 
-        Request request = new Request(requestLine, requestHeader, requestBody);
+        HttpRequest httpRequest = new HttpRequest(requestLine, requestHeader, requestBody);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Response response = new Response(out);
+        HttpResponse httpResponse = new HttpResponse(out);
 
-        controller.service(request, response);
+        controller.service(httpRequest);
 
         assertThat(out.toString()).contains("HTTP/1.1 302 Found");
         assertThat(out.toString()).contains("Location: /index.html");

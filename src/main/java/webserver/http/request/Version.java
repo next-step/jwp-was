@@ -20,6 +20,10 @@ public class Version {
         }
     }
 
+    public String getVersion() {
+        return version;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

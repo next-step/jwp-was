@@ -1,28 +1,19 @@
 package webserver.http;
 
+import java.util.Map;
+
 public class Cookie {
+    private final Map<String, String> cookie;
 
-    private final String name;
-
-    private final String value;
-
-    private final String path;
-
-    public Cookie(String name, String value, String path) {
-        this.name = name;
-        this.value = value;
-        this.path = path;
+    public Cookie(Map<String, String> cookie) {
+        this.cookie = cookie;
     }
 
-    public String getName() {
-        return name;
+    public String getCookieAsString() {
+        return cookie.toString();
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public String getPath() {
-        return path;
+    public Map<String, String> getCookie() {
+        return cookie;
     }
 }
