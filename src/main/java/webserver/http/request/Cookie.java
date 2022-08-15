@@ -12,7 +12,7 @@ public class Cookie {
     private static final String KEY_VALUE_DELIMITER = "=";
     private static final String EMPTY_VALUE = "";
 
-    private static final String LOGINED = "logined";
+    public static final String LOGINED = "logined";
 
     private final Map<String, String> cookies;
 
@@ -38,10 +38,7 @@ public class Cookie {
         return new Cookie(Collections.EMPTY_MAP);
     }
 
-    public String getLogined() {
-        if (!cookies.containsKey(LOGINED)) {
-            return EMPTY_VALUE;
-        }
-        return cookies.get(LOGINED);
+    public Map<String, String> getCookies() {
+        return cookies;
     }
 }

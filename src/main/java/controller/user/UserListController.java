@@ -12,16 +12,23 @@ import webserver.http.response.HttpResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static webserver.http.request.Cookie.LOGINED;
 
 public class UserListController extends AbstractController {
 
-    public static final String URL = "/user/list";
+    public static final String URL = "/user/list.html";
+    public static final String TEMPLATE_URL = "/user/list";
     public static final String LOGIN_PAGE = "/user/login.html";
     public static final String LOGIN_TRUE = "true";
 
     private Boolean isLoggedIn(RequestHeader requestHeader) {
-        Cookie cookie = requestHeader.getCookie();
-        return cookie.getLogined().equals(LOGIN_TRUE);
+        Map<String, String> cookies = requestHeader.getCookie().getCookies();
+        if (!cookies.containsKey(LOGINED)) {
+            return false;
+        }
+        return cookies.get(LOGINED).equals(LOGIN_TRUE);
     }
 
     @Override
@@ -34,7 +41,7 @@ public class UserListController extends AbstractController {
 
         List<User> users = new ArrayList<>(DataBase.findAll());
 
-        String userListTemplate = HandlebarsUtils.getUserListTemplate(URL, users);
+        String userListTemplate = HandlebarsUtils.getUserListTemplate(TEMPLATE_URL, users);
         return HttpResponse.getDynamicView(userListTemplate);
     }
 }
