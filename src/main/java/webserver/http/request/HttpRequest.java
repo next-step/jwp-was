@@ -51,12 +51,24 @@ public class HttpRequest {
         return requestLine.getQueryStringWithoutPathFromPath();
     }
 
+    public String getMethod() {
+        return requestLine.getHttpMethod().name();
+    }
+
+    public String getPath() {
+        return requestLine.getPath().getPath();
+    }
+
     private String getRedirectUrl() {
         return ROOT_FILE;
     }
 
-    public RequestHeader getHeader() {
+    public RequestHeader getHeaders() {
         return header;
+    }
+
+    public String getHeader(String key) {
+        return header.getHeaders().get(key);
     }
 
     public HttpMethod getHttpMethod() {
@@ -72,7 +84,11 @@ public class HttpRequest {
     }
 
     public String getParameter(String key) {
-        return requestBody.getRequestBodyMap().get(key);
+        String value = requestLine.getQueryStringWithoutPathFromPath().get(key);
+        if (value == null) {
+            value = requestBody.getRequestBodyMap().get(key);
+        }
+        return value;
     }
 
     @Override

@@ -29,7 +29,7 @@ public class UserListController extends AbstractController {
     public HttpResponse doGet(HttpRequest httpRequest) throws IOException {
         logger.debug("UserListController : {}", httpRequest.getRequestPath());
 
-        if (!isLoginStatus(httpRequest.getHeader())) {
+        if (!isLoginStatus(httpRequest.getHeaders())) {
             return HttpResponse.sendRedirect(ROOT_PATH);
         }
         Collection<User> users = DataBase.findAll();

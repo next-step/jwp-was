@@ -43,6 +43,4 @@ class HttpResponseTest {
 
         assertThat(actualResponse).isEqualTo(HttpResponse.sendRedirect("/index.html", cookieMap));
     }
-
-
 }

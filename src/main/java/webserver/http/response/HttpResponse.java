@@ -9,6 +9,7 @@ import webserver.http.HttpStatus;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Map;
@@ -53,6 +54,10 @@ public class HttpResponse {
         this.responseHeader = responseHeader;
         this.responseBody = responseBody;
         this.cookie = new Cookie(Collections.emptyMap());
+    }
+
+    public HttpResponse(OutputStream outputStream) {
+
     }
 
     public static HttpResponse sendRedirect(String path, Map<String, String> cookieMap) {
