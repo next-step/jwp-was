@@ -3,6 +3,8 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -61,6 +63,10 @@ public class RequestHandler implements Runnable {
                 loginUser(parameters, dos);
 
                 return;
+            } else if (path.equals("/user/list")) {
+                listUser(httpHeader, dos);
+
+                return;
             }
 
             response200Header(dos, body.length);
@@ -99,8 +105,21 @@ public class RequestHandler implements Runnable {
         response302Header(dos, isLogin ? "/index.html" : "/login_failed.html", setCookie(String.valueOf(isLogin)));
     }
 
-    public void listUser() {
+    public void listUser(HttpHeader httpHeader, DataOutputStream dos) throws IOException {
+        String cookie = httpHeader.getValue("Cookie");
 
+        if (!cookie.equals("logined=true")) {
+            response302Header(dos, "/login.html");
+            return;
+        }
+
+        List<User> users = new ArrayList<>(DataBase.findAll());
+        byte[] loaded = HandleBarsTemplate.load("user/list", users).getBytes();
+
+        response200Header(dos, loaded.length);
+        responseBody(dos, loaded);
+
+        return;
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
