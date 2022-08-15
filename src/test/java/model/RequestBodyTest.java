@@ -14,6 +14,6 @@ public class RequestBodyTest {
         final String data = "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
         final RequestBody body = new RequestBody(data);
 
-        assertThat(body.getOneValue("userId")).isEqualTo("javajigi");
+        assertThat(body.getFirstValue("userId")).isEqualTo("javajigi");
     }
 }

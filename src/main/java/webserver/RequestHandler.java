@@ -5,12 +5,10 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 
 import controller.Controller;
-import model.HttpHeader;
-import model.HttpRequest;
-import model.HttpResponse;
-import model.RequestMappingInfo;
+import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestHeader;
 import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
@@ -29,23 +27,21 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            final DataOutputStream dataOutputStream = new DataOutputStream(out);
 
+            final RequestLine requestLine = new RequestLine(IOUtils.readRequestData(bufferedReader));
+            final HttpHeader httpHeader = new HttpHeader(IOUtils.readHeaderData(bufferedReader));
+            final RequestBody body = new RequestBody(IOUtils.readData(bufferedReader, httpHeader.getValueToInt("Content-Length")));
 
-            DataOutputStream dos = new DataOutputStream(out);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-
-            final HttpHeader httpHeader = new HttpHeader(IOUtils.readHeaderData(br));
-            final RequestLine requestLine = new RequestLine(httpHeader.getRequestLine());
-            final String requestBody = IOUtils.readData(br, httpHeader.getContentLength());
-            final HttpRequest httpRequest = new HttpRequest(httpHeader, requestBody);
+            final HttpRequest httpRequest = new HttpRequest(httpHeader, requestLine, body);
+            final HttpResponse response = new HttpResponse();
 
             logger.debug("request : {}", httpRequest);
 
-            Controller controller = mapper.mapping(new RequestMappingInfo(requestLine.getMethod(), requestLine.getRequestPath()));
-            HttpResponse response = controller.process(httpRequest);
-            response.writeResponse(dos);
-
-            dos.flush();
+            Controller controller = mapper.mapping(new RequestMappingInfo(httpRequest));
+            controller.service(httpRequest, response);
+            response.writeResponse(dataOutputStream);
 
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());

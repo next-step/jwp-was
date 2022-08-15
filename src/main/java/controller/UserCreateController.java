@@ -2,22 +2,19 @@ package controller;
 
 import db.DataBase;
 import model.*;
-import utils.FileIoUtils;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
-public class UserCreateController implements Controller{
-
+public class UserCreateController extends AbstractController{
 
     public static final String REDIRECT_PATH = "/index.html";
 
     @Override
-    public HttpResponse process(HttpRequest request) throws IOException, URISyntaxException {
+    public void doPost(HttpRequest request, HttpResponse response) throws IOException{
         RequestBody body = request.getBody();
-        final User user = new User(body.getOneValue("userId"), body.getOneValue("password"), body.getOneValue("name"), body.getOneValue("email"));
+        final User user = new User(body.getFirstValue("userId"), body.getFirstValue("password"), body.getFirstValue("name"), body.getFirstValue("email"));
         DataBase.addUser(user);
 
-        return HttpResponse.redirect(REDIRECT_PATH);
+        response.redirect(REDIRECT_PATH);
     }
 }

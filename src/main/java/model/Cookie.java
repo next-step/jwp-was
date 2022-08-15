@@ -1,8 +1,10 @@
 package model;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Cookie {
 
@@ -26,13 +28,19 @@ public class Cookie {
         this.value = value;
     }
 
-    public static Cookie createCookie(String cookie, String path) {
+    public static Map<String, Cookie> createCookie(HttpHeader header) {
+        String cookie = header.getValue("Cookie");
+
         if (cookie == null || cookie.isEmpty()) {
-            return new Cookie();
+            return new HashMap<>();
         }
-        String name = cookie.split(DELIMITER)[NAME_INDEX];
-        String value = cookie.split(DELIMITER)[VALUE_INDEX];
-        return new Cookie(name, value, path);
+        return Arrays.stream(cookie.split("; "))
+                .map(item -> {
+                    final String[] items = item.split("=");
+
+                    return new Cookie(items[0], items[1]);
+                })
+                .collect(Collectors.toMap(Cookie::getName, self -> self));
     }
 
     public String getName() {
@@ -69,14 +77,7 @@ public class Cookie {
                 '}';
     }
 
-    public boolean isLogin() {
-        if (isEmpty()) {
-            return false;
-        }
-        return name.equals("logined") && value.equals("true");
-    }
-
-    private boolean isEmpty() {
+    public boolean isEmpty() {
         return name == null || value == null;
     }
 }

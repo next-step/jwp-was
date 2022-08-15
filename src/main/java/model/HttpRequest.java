@@ -1,21 +1,28 @@
 package model;
 
+import utils.IOUtils;
 import webserver.RequestLine;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.util.Map;
 
 public class HttpRequest {
 
     private HttpHeader header;
     private RequestLine requestLine;
     private RequestBody body;
-    private Cookie cookie;
+    private Map<String, Cookie> cookie;
 
-    public HttpRequest(HttpHeader header, String body) throws UnsupportedEncodingException {
+    public HttpRequest(HttpHeader header, RequestLine line, RequestBody body) throws IOException {
+
+        this.requestLine = line;
         this.header = header;
-        this.requestLine = new RequestLine(header.getRequestLine());
-        this.cookie = Cookie.createCookie(header.getCookie(), requestLine.getFullRequestPath());
-        this.body = new RequestBody(body);
+        this.cookie = Cookie.createCookie(header);
+        this.body = body;
+    }
+
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
     }
 
     public RequestLine getRequestLine() {
@@ -26,12 +33,12 @@ public class HttpRequest {
         return body;
     }
 
-    public Cookie getCookie() {
-        return cookie;
+    public Cookie getCookie(String name) {
+        return cookie.get(name);
     }
 
-    public HttpHeader getHeader() {
-        return header;
+    public String getHeader(String name) {
+        return header.getValue(name);
     }
 
     @Override
@@ -41,5 +48,16 @@ public class HttpRequest {
                 ", body=" + body +
                 ", cookie=" + cookie +
                 '}';
+    }
+
+    public String getPath() {
+        return requestLine.getRequestPath();
+    }
+
+    public String getParameter(String param) {
+        if (requestLine.getMethod() == HttpMethod.GET) {
+            return requestLine.getRequestParams(param);
+        }
+        return body.getFirstValue(param);
     }
 }

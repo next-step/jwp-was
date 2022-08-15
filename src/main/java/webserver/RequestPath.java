@@ -25,8 +25,8 @@ public class RequestPath {
         return path;
     }
 
-    public RequestParams getParams() {
-        return params;
+    public String getParameter(String key) {
+        return params.getFirstValue(key);
     }
 
     @Override

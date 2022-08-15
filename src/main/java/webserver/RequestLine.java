@@ -52,8 +52,8 @@ public class RequestLine {
         return split[split.length - 1];
     }
 
-    public RequestParams getRequestParams() {
-        return request.getParams();
+    public String getRequestParams(String key) {
+        return request.getParameter(key);
     }
 
     public String getProtocol() {

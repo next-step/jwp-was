@@ -21,16 +21,17 @@ public class ViewController implements Controller{
             "ico", "image/x-icon");
 
     @Override
-    public HttpResponse process(HttpRequest request) throws IOException, URISyntaxException {
+    public void service(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
         final String requestPath = request.getRequestLine().getFullRequestPath();
         final String extension = request.getRequestLine().getExtension();
 
         if (isHtmlClassPath(extension)) {
-            return HttpResponse.success(
+            response.forward(
                     new ResponseBody(FileIoUtils.loadFileFromClasspath(HTML_CLASS_PATH + requestPath))
                     , extensionToContentType.get(extension));
+            return;
         }
-        return HttpResponse.success(
+        response.forward(
                 new ResponseBody(FileIoUtils.loadFileFromClasspath(CLASS_Path + requestPath))
                 , extensionToContentType.get(extension));
     }

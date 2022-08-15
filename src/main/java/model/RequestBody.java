@@ -9,7 +9,7 @@ import java.net.URLDecoder;
 
 public class RequestBody {
 
-    public static final int ONE_VALUE = 0;
+    public static final int FIRST_VALUE = 0;
     public static final String DELIMITER = "?";
     private MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 
@@ -18,8 +18,8 @@ public class RequestBody {
         this.body = UriComponentsBuilder.fromUriString(DELIMITER + body).build().getQueryParams();
     }
 
-    public String getOneValue(String key) throws UnsupportedEncodingException {
-        return body.get(key).get(ONE_VALUE);
+    public String getFirstValue(String key) {
+        return body.get(key).get(FIRST_VALUE);
     }
 
     @Override
