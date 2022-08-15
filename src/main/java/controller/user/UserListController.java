@@ -20,8 +20,7 @@ public class UserListController extends AbstractController {
     public static final String LOGIN_TRUE = "true";
 
     private Boolean isLoggedIn(RequestHeader requestHeader) {
-        String cookies = requestHeader.getCookie();
-        Cookie cookie = Cookie.parseFrom(cookies);
+        Cookie cookie = requestHeader.getCookie();
         return cookie.getLogined().equals(LOGIN_TRUE);
     }
 
