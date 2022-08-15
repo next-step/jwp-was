@@ -20,30 +20,26 @@ public class HttpResponse {
     private ResponseBody body;
 
     public void redirect(String location) {
-        final HttpHeader httpHeader = new HttpHeader();
-        final ResponseLine responseLine = ResponseLine.redirect();
-        httpHeader.addLocation(location);
-
-        this.responseLine = responseLine;
-        this.header = httpHeader;
+        this.responseLine = ResponseLine.redirect();
+        this.header = new HttpHeader.HttpHeaderBuilder()
+                .addLocation(location)
+                .build();
     }
 
     public void forward(ResponseBody body, String contentType) {
-        final HttpHeader httpHeader = new HttpHeader();
-        httpHeader.addContentType(contentType);
-        httpHeader.addContentLength(body.getLength());
-
         this.body = body;
-        this.header = httpHeader;
+        this.header = new HttpHeader.HttpHeaderBuilder()
+                .addContentLength(body.getLength())
+                .addContentType(contentType)
+                .build();
         this.responseLine = ResponseLine.success();
     }
 
     public void loginRedirect(String location, Boolean loginValue) {
-        final HttpHeader httpHeader = new HttpHeader();
-        httpHeader.addLocation(location);
-        httpHeader.addCookie("logined", loginValue.toString());
-
-        this.header = httpHeader;
+        this.header = new HttpHeader.HttpHeaderBuilder()
+                .addCookie("logined", loginValue.toString())
+                .addLocation(location)
+                .build();
         this.responseLine = ResponseLine.redirect();
     }
 
