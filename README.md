@@ -95,9 +95,16 @@
 
 - [x] HttpSession API 메소드 구현하기
 - [x] 세션 객체 생성하기
-  - [x] getId() = 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환
-  - [x] setAttribute(String name, Object value) = 현재 세션에 value 인자로 전달되는 객체를 name 인자 이름으로 저장
-  - [x] getAttribute(String name) = 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환
-  - [x] removeAttribute(String name) = 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
-  - [x] invalidate() = 현재 세션에 저장되어 있는 모든 값을 삭제
+    - [x] getId() = 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환
+    - [x] setAttribute(String name, Object value) = 현재 세션에 value 인자로 전달되는 객체를 name 인자 이름으로 저장
+    - [x] getAttribute(String name) = 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환
+    - [x] removeAttribute(String name) = 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
+    - [x] invalidate() = 현재 세션에 저장되어 있는 모든 값을 삭제
 - [x] 유저의 최초 Login 요청시 세션 할당하고 쿠키로 세션 관리하기
+
+-----
+
+## 5단계 - ThreadPool 구현하기
+
+-[x] 최대 ThradPool의 크기는 250, 모든 Thread가 사용 중인(Busy) 상태이면 100명까지 대기 상태가 되도록 구현
+-[ ] 서버의 최대 Thread Pool 수를 5로 설정하고 동시에 10개의 요청이 발생하도록 테스트 구현
