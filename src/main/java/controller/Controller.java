@@ -1,7 +1,7 @@
 package controller;
 
-import model.HttpRequest;
-import model.HttpResponse;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -9,5 +9,5 @@ import java.net.URISyntaxException;
 public interface Controller {
     boolean match(HttpRequest request);
 
-    HttpResponse execute(HttpRequest request) throws IOException, URISyntaxException;
+    HttpResponse execute(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException;
 }

@@ -1,5 +1,9 @@
-package model;
+package webserver.http;
 
+import utils.IOUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -22,19 +26,24 @@ public class HttpRequest {
         this.body = body;
     }
 
-    public static HttpRequest of(List<String> requestLines) {
-        return new HttpRequest(
+    public static HttpRequest of(BufferedReader bufferedReader) throws IOException {
+        List<String> requestLines = IOUtils.readLines(bufferedReader);
+        HttpRequest request = new HttpRequest(
                 RequestLineFactory.parsing(requestLines.get(REQUEST_LINE)),
                 HttpRequestHeader.of(requestLines.subList(REQUEST_HEADER_START, requestLines.size())),
                 HttpRequestBody.empty()
         );
+        if (request.hasContent()) {
+            return request.writeBody(HttpRequestBody.of(IOUtils.readData(bufferedReader, request.getContentLength())));
+        }
+        return request;
     }
 
     public static HttpRequest of(RequestLine requestLine, HttpRequestHeader header, HttpRequestBody body) {
         return new HttpRequest(requestLine, header, body);
     }
 
-    public Map<String, String> getHeader() {
+    public Map<HttpHeaders, String> getHeader() {
         return header.getHeaders();
     }
 
@@ -70,7 +79,7 @@ public class HttpRequest {
         return body;
     }
 
-    public String getBodyValue(String value) {
+    public String getParameter(String value) {
         return body.getValue(value);
     }
 
@@ -80,5 +89,9 @@ public class HttpRequest {
 
     public boolean isLogin() {
         return header.containsLoginCookie();
+    }
+
+    public HttpCookie getCookie() {
+        return header.getCookie();
     }
 }

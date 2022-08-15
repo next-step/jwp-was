@@ -1,14 +1,19 @@
 package controller;
 
 import db.DataBase;
-import model.*;
-import org.junit.jupiter.api.*;
+import model.User;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import webserver.http.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("LoginController 테스트")
 class LoginControllerTest {
@@ -18,7 +23,7 @@ class LoginControllerTest {
     @BeforeAll
     static void setUp() {
         loginController = new LoginController();
-        DataBase.addUser(new User("javajigi","password","JaeSung","koola976@gmail.com"));
+        DataBase.addUser(new User("javajigi", "password", "JaeSung", "koola976@gmail.com"));
     }
 
     @DisplayName("로그인 성공")
@@ -30,14 +35,17 @@ class LoginControllerTest {
                 HttpRequestBody.of("userId=javajigi&password=password&name=JaeSung&email=koola976@gmail.com")
         );
 
-        HttpResponse response = loginController.execute(request);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+        HttpResponse response = HttpResponse.of(dataOutputStream);
+
+        HttpResponse result = loginController.execute(request, response);
 
         assertAll(
-                () -> assertThat(response.getHttpResponseCode()).isEqualTo("302 FOUND"),
-                () -> assertThat(response.getHeaders()).contains(
-                        Map.entry(HttpHeaders.LOCATION, "/index.html"),
-                        Map.entry(HttpHeaders.SET_COOKIE, "logined=true; Path=/")
-                )
+                () -> assertThat(result.getHttpResponseCode()).isEqualTo("302 FOUND"),
+                () -> assertThat(result.getHeaders()).contains(
+                        Map.entry(HttpHeaders.LOCATION, "/index.html")),
+                () -> assertThat(result.getCookie()).isEqualTo("logined=true; Path=/")
         );
     }
 
@@ -50,14 +58,18 @@ class LoginControllerTest {
                 HttpRequestBody.of("userId=javajigi&password=pass1234&name=JaeSung&email=koola976@gmail.com")
         );
 
-        HttpResponse response = loginController.execute(request);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+        HttpResponse response = HttpResponse.of(dataOutputStream);
+
+        HttpResponse result = loginController.execute(request, response);
 
         assertAll(
-                () -> assertThat(response.getHttpResponseCode()).isEqualTo("302 FOUND"),
-                () -> assertThat(response.getHeaders()).contains(
-                        Map.entry(HttpHeaders.LOCATION, "/user/login_failed.html"),
-                        Map.entry(HttpHeaders.SET_COOKIE, "logined=false; Path=/")
-                )
+                () -> assertThat(result.getHttpResponseCode()).isEqualTo("302 FOUND"),
+                () -> assertThat(result.getHeaders()).contains(
+                        Map.entry(HttpHeaders.LOCATION, "/user/login_failed.html")
+                ),
+                () -> assertThat(result.getCookie()).isEqualTo("logined=false; Path=/")
         );
     }
 

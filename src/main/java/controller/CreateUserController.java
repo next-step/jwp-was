@@ -2,6 +2,10 @@ package controller;
 
 import db.DataBase;
 import model.*;
+import webserver.http.HttpMethod;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
+import webserver.http.Path;
 
 public class CreateUserController implements Controller {
 
@@ -13,15 +17,14 @@ public class CreateUserController implements Controller {
     }
 
     @Override
-    public HttpResponse execute(HttpRequest request) {
+    public HttpResponse execute(HttpRequest request, HttpResponse response) {
         User user = new User(
-                request.getBodyValue("userId"),
-                request.getBodyValue("password"),
-                request.getBodyValue("name"),
-                request.getBodyValue("email")
+                request.getParameter("userId"),
+                request.getParameter("password"),
+                request.getParameter("name"),
+                request.getParameter("email")
         );
         DataBase.addUser(user);
-
-        return HttpResponse.found("/index.html");
+        return response.sendRedirect("/index.html");
     }
 }

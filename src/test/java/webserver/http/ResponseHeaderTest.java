@@ -1,4 +1,4 @@
-package model;
+package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,8 +20,8 @@ class ResponseHeaderTest {
         ResponseHeader responseHeader = ResponseHeader.text(contentsBytes.length, "/index.html");
 
         assertThat(responseHeader.getHeaders()).contains(
-                Map.entry("Content-Type", "text/html;charset=utf-8"),
-                Map.entry("Content-Length", contentsBytes.length)
+                Map.entry(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8"),
+                Map.entry(HttpHeaders.CONTENT_LENGTH, contentsBytes.length)
         );
 
     }

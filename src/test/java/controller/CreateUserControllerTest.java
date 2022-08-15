@@ -1,10 +1,12 @@
 package controller;
 
-import model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -37,11 +39,15 @@ class CreateUserControllerTest {
     @DisplayName("302 코드, Location 헤더를 응답한다.")
     @Test
     void response() {
-        HttpResponse response = createUserController.execute(request);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+        HttpResponse response = HttpResponse.of(dataOutputStream);
+
+        HttpResponse result = createUserController.execute(request, response);
         assertAll(
-                () -> assertThat(response.getHttpResponseCode()).isEqualTo("302 FOUND"),
-                () -> assertThat(response.getHeaders()).contains(
-                        Map.entry("Location", "/index.html")
+                () -> assertThat(result.getHttpResponseCode()).isEqualTo("302 FOUND"),
+                () -> assertThat(result.getHeaders()).contains(
+                        Map.entry(HttpHeaders.LOCATION, "/index.html")
                 )
         );
 

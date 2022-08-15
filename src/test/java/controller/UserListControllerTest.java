@@ -3,16 +3,18 @@ package controller;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import model.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("UserListController 테스트")
 class UserListControllerTest {
@@ -32,15 +34,19 @@ class UserListControllerTest {
     void success() throws Exception {
         HttpRequest request = HttpRequest.of(
                 RequestLine.of(HttpMethod.GET, Path.of("/user/list"), new String[]{"HTTP", "1.1"}),
-                HttpRequestHeader.of(List.of("Set-Cookie: logined=true; Path=/")),
+                HttpRequestHeader.of(List.of("Host: www.nowhere123.com", "Accept-Language: en-us", "Set-Cookie: logined=true; Path=/")),
                 HttpRequestBody.empty()
         );
 
-        HttpResponse response = userListController.execute(request);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+        HttpResponse response = HttpResponse.of(dataOutputStream);
+
+        HttpResponse result = userListController.execute(request, response);
 
         assertAll(
-                () -> assertThat(response.getHttpResponseCode()).isEqualTo("200 OK"),
-                () -> assertThat(response.getHeaders()).contains(
+                () -> assertThat(result.getHttpResponseCode()).isEqualTo("200 OK"),
+                () -> assertThat(result.getHeaders()).contains(
                         Map.entry(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8"))
         );
     }
@@ -54,11 +60,15 @@ class UserListControllerTest {
                 HttpRequestBody.empty()
         );
 
-        HttpResponse response = userListController.execute(request);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+        HttpResponse response = HttpResponse.of(dataOutputStream);
+
+        HttpResponse result = userListController.execute(request, response);
 
         assertAll(
-                () -> assertThat(response.getHttpResponseCode()).isEqualTo("302 FOUND"),
-                () -> assertThat(response.getHeaders()).contains(
+                () -> assertThat(result.getHttpResponseCode()).isEqualTo("302 FOUND"),
+                () -> assertThat(result.getHeaders()).contains(
                         Map.entry(HttpHeaders.LOCATION, "/user/login.html"))
         );
     }

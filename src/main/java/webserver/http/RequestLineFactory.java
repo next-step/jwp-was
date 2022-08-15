@@ -1,7 +1,7 @@
-package model;
+package webserver.http;
 
-import exception.HttpMethodExceptionMessage;
-import exception.NotFoundHttpMethodException;
+import webserver.http.exception.HttpMethodExceptionMessage;
+import webserver.http.exception.NotFoundHttpMethodException;
 
 import static utils.DelimiterConstants.SLASH;
 import static utils.DelimiterConstants.SPACE;

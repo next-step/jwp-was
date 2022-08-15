@@ -1,7 +1,8 @@
 package controller;
 
-import model.*;
-import utils.FileIoUtils;
+import webserver.http.HttpMethod;
+import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -16,10 +17,8 @@ public class StaticController implements Controller {
     }
 
     @Override
-    public HttpResponse execute(HttpRequest request) throws IOException, URISyntaxException {
-        String path = addStaticPath(request.getPath());
-        byte[] bytes = FileIoUtils.loadFileFromClasspath(path);
-        return HttpResponse.of(HttpStatusCode.OK, ResponseHeader.text(bytes.length, request.getPath()), bytes);
+    public HttpResponse execute(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+        return response.forward(addStaticPath(request.getPath()), request.getPath());
     }
 
     private boolean existsFile(HttpRequest request) {
