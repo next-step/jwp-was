@@ -45,7 +45,7 @@ public class RequestService {
             return getHtmlResponse(requestLine);
         }
 
-        logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpRequestMessage.toStringHttpMessage());
+        // logger.info("Request data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n" + httpRequestMessage.toStringHttpMessage());
         AuthService.getInstance().setUserCredential(httpRequestMessage.getRequestHeaders());
 
         HttpResponseMessage httpResponseMessage = HandlerAdapter.getInstance().invoke(httpRequestMessage);
