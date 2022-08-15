@@ -168,5 +168,6 @@ Set-Cookie: logined=true; Path=/
 
 ## 5단계: ThreadPool 적용
 ### 요구사항 1
-- [ ] Java에서 제공하는 ThreadPoolExecutor를 활용하여 ThreadPool 기능을 추가한다.
+- [X] Java에서 제공하는 ThreadPoolExecutor를 활용하여 ThreadPool 기능을 추가한다.
   - 최대 ThradPool의 크기는 250, 모든 Thread가 사용 중인(Busy) 상태이면 100명까지 대기 상태가 되도록 구현한다.
+- 
