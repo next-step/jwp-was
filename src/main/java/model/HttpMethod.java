@@ -11,4 +11,11 @@ public enum HttpMethod {
                 .findFirst()
                 .orElseThrow(UnSupportMethodType::new);
     }
+
+    public static void validationMethod(HttpMethod method) {
+        Arrays.stream(HttpMethod.values())
+            .filter(type -> type == method)
+            .findFirst()
+            .orElseThrow(UnSupportMethodType::new);
+    }
 }
