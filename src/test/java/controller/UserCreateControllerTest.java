@@ -1,9 +1,13 @@
 package controller;
 
 import db.DataBase;
+import model.HttpHeader;
 import model.HttpRequest;
 import model.HttpResponse;
+import model.RequestBody;
 import org.junit.jupiter.api.Test;
+import utils.IOUtils;
+import webserver.RequestLine;
 
 import java.io.*;
 
@@ -14,12 +18,21 @@ public class UserCreateControllerTest {
 
     @Test
     void 회원가입시_user_정보_저장() throws Exception {
-        InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.http"));
         final UserCreateController controller = new UserCreateController();
-        final HttpRequest httpRequest = new HttpRequest(in);
+        final HttpRequest httpRequest = createRequest("Http_POST.http");
         controller.service(httpRequest, new HttpResponse());
 
         assertThat(DataBase.findAll().size() > 0 ).isTrue();
     }
 
+    private HttpRequest createRequest(String fileName) throws IOException {
+        InputStream in = new FileInputStream(new File(testDirectory + fileName));
+
+        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+        final RequestLine requestLine = new RequestLine(IOUtils.readRequestData(bufferedReader));
+        final HttpHeader httpHeader = new HttpHeader(IOUtils.readHeaderData(bufferedReader));
+        final RequestBody body = new RequestBody(IOUtils.readData(bufferedReader, httpHeader.getValueToInt("Content-Length")));
+
+        return new HttpRequest(httpHeader, requestLine, body);
+    }
 }

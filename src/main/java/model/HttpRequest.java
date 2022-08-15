@@ -13,21 +13,16 @@ public class HttpRequest {
     private RequestBody body;
     private Map<String, Cookie> cookie;
 
-    public HttpRequest(InputStream in) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+    public HttpRequest(HttpHeader header, RequestLine line, RequestBody body) throws IOException {
 
-        this.requestLine = new RequestLine(IOUtils.readRequestData(br));
-        this.header = new HttpHeader(IOUtils.readHeaderData(br));
+        this.requestLine = line;
+        this.header = header;
         this.cookie = Cookie.createCookie(header);
-        this.body = new RequestBody(getBody(br, header.getValueToInt("Content-Length")));
+        this.body = body;
     }
 
     public HttpMethod getMethod() {
         return requestLine.getMethod();
-    }
-
-    private String getBody(BufferedReader br, int contentLength) throws IOException {
-        return IOUtils.readData(br, contentLength);
     }
 
     public RequestLine getRequestLine() {
@@ -59,7 +54,7 @@ public class HttpRequest {
         return requestLine.getRequestPath();
     }
 
-    public String getParameter(String param) throws UnsupportedEncodingException {
+    public String getParameter(String param) {
         if (requestLine.getMethod() == HttpMethod.GET) {
             return requestLine.getRequestParams(param);
         }

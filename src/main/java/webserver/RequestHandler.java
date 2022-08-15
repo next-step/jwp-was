@@ -5,11 +5,11 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 
 import controller.Controller;
-import model.HttpRequest;
-import model.HttpResponse;
-import model.RequestMappingInfo;
+import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestHeader;
+import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -27,10 +27,15 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-
-            final HttpRequest httpRequest = new HttpRequest(in);
-            final HttpResponse response = new HttpResponse();
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             final DataOutputStream dataOutputStream = new DataOutputStream(out);
+
+            final RequestLine requestLine = new RequestLine(IOUtils.readRequestData(bufferedReader));
+            final HttpHeader httpHeader = new HttpHeader(IOUtils.readHeaderData(bufferedReader));
+            final RequestBody body = new RequestBody(IOUtils.readData(bufferedReader, httpHeader.getValueToInt("Content-Length")));
+
+            final HttpRequest httpRequest = new HttpRequest(httpHeader, requestLine, body);
+            final HttpResponse response = new HttpResponse();
 
             logger.debug("request : {}", httpRequest);
 

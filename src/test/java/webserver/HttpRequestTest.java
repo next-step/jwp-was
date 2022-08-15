@@ -1,15 +1,16 @@
 package webserver;
 
+import model.HttpHeader;
 import model.HttpMethod;
 import model.HttpRequest;
+import model.RequestBody;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import utils.IOUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,8 +21,8 @@ public class HttpRequestTest {
 
     @Test
     public void request_GET() throws Exception {
-        InputStream in = new FileInputStream(new File(testDirectory + "Http_GET.http"));
-        HttpRequest request = new HttpRequest(in);
+
+        HttpRequest request = createRequest("Http_GET.http");
 
         assertEquals(HttpMethod.GET, request.getMethod());
         assertEquals("/user/create", request.getPath());
@@ -31,12 +32,22 @@ public class HttpRequestTest {
 
     @Test
     public void request_POST() throws Exception {
-        InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.http"));
-        HttpRequest request = new HttpRequest(in);
+        HttpRequest request = createRequest("Http_POST.http");
 
         assertEquals(HttpMethod.POST, request.getMethod());
         assertEquals("/user/create", request.getPath());
         assertEquals("keep-alive", request.getHeader("Connection"));
         assertEquals("javajigi", request.getParameter("userId"));
+    }
+
+    private HttpRequest createRequest(String fileName) throws IOException {
+        InputStream in = new FileInputStream(new File(testDirectory + fileName));
+
+        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+        final RequestLine requestLine = new RequestLine(IOUtils.readRequestData(bufferedReader));
+        final HttpHeader httpHeader = new HttpHeader(IOUtils.readHeaderData(bufferedReader));
+        final RequestBody body = new RequestBody(IOUtils.readData(bufferedReader, httpHeader.getValueToInt("Content-Length")));
+
+        return new HttpRequest(httpHeader, requestLine, body);
     }
 }
