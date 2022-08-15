@@ -49,6 +49,9 @@ public class RequestHandler implements Runnable {
             }
 
             DataOutputStream dos = new DataOutputStream(out);
+            String fileExtension = FileIoUtils.getFileExtension(requestLine.getPath().getPath());
+            String contentType = ContentType.selectContent(fileExtension);
+
             byte[] body = "Hello World22".getBytes();
             if (path.endsWith(".html")) {
                 body = FileIoUtils.loadFileFromClasspath("./templates"+path);
@@ -64,12 +67,14 @@ public class RequestHandler implements Runnable {
 
                 return;
             } else if (path.equals("/user/list")) {
-                listUser(httpHeader, dos);
+                listUser(httpHeader, dos, contentType);
 
                 return;
             }
 
-            response200Header(dos, body.length);
+
+
+            response200Header(dos, body.length, contentType);
             responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -105,7 +110,7 @@ public class RequestHandler implements Runnable {
         response302Header(dos, isLogin ? "/index.html" : "/login_failed.html", setCookie(String.valueOf(isLogin)));
     }
 
-    public void listUser(HttpHeader httpHeader, DataOutputStream dos) throws IOException {
+    public void listUser(HttpHeader httpHeader, DataOutputStream dos, String contentType) throws IOException {
         String cookie = httpHeader.getValue("Cookie");
 
         if (!cookie.equals("logined=true")) {
@@ -116,16 +121,16 @@ public class RequestHandler implements Runnable {
         List<User> users = new ArrayList<>(DataBase.findAll());
         byte[] loaded = HandleBarsTemplate.load("user/list", users).getBytes();
 
-        response200Header(dos, loaded.length);
+        response200Header(dos, loaded.length, contentType);
         responseBody(dos, loaded);
 
         return;
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dos, int lengthOfBodyContent, String contentType) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Type: " + contentType + "\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
