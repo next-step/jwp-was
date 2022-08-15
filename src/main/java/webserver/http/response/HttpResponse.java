@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 import static model.Constant.*;
 
@@ -72,6 +73,11 @@ public class HttpResponse {
         return new HttpResponse(new ResponseLine(PROTOCOL_VERSION_ONE_ONE, HttpStatus.OK), new ResponseHeader(), new ResponseBody(body));
     }
 
+    public static HttpResponse notfound() {
+        return new HttpResponse(new ResponseLine(PROTOCOL_VERSION_ONE_ONE, HttpStatus.NOT_FOUND), new ResponseHeader());
+
+    }
+
     public void process(DataOutputStream out) {
         this.out = out;
 
@@ -106,6 +112,7 @@ public class HttpResponse {
     }
 
     private void writeResponseHeader(ResponseHeader responseHeader) throws IOException {
+        out.writeBytes(CONTENT_TYPE + HEADER_KEY_VALUE_SEPARATOR + responseHeader.getHeader(LOCATION) + LINE_SEPARATOR);
         for (Map.Entry<String, Object> entry : responseHeader.getHeaders().entrySet()) {
             out.writeBytes(entry.getKey() + HEADER_KEY_VALUE_SEPARATOR + entry.getValue() + LINE_SEPARATOR);
             logger.debug("responseHeader : {}", entry.getKey() + HEADER_KEY_VALUE_SEPARATOR + entry.getValue() + LINE_SEPARATOR);
@@ -126,5 +133,29 @@ public class HttpResponse {
 
     private String getStatus(ResponseLine responseLine) {
         return responseLine.getHttpStatus().getCode() + HEADER_SEPARATOR + responseLine.getHttpStatus().getMessage();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HttpResponse that = (HttpResponse) o;
+        return Objects.equals(out, that.out) && Objects.equals(responseLine, that.responseLine) && Objects.equals(responseHeader, that.responseHeader) && Objects.equals(responseBody, that.responseBody) && Objects.equals(cookie, that.cookie);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(out, responseLine, responseHeader, responseBody, cookie);
+    }
+
+    @Override
+    public String toString() {
+        return "HttpResponse{" +
+                "out=" + out +
+                ", responseLine=" + responseLine +
+                ", responseHeader=" + responseHeader +
+                ", responseBody=" + responseBody +
+                ", cookie=" + cookie +
+                '}';
     }
 }

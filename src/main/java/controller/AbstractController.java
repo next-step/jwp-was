@@ -1,6 +1,5 @@
 package controller;
 
-import webserver.http.HttpStatus;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
@@ -20,10 +19,10 @@ public abstract class AbstractController implements Controller {
     }
 
     public HttpResponse doPost(HttpRequest httpRequest) {
-        throw new IllegalArgumentException(HttpStatus.NOT_FOUND.name());
+        return HttpResponse.notfound();
     }
 
     public HttpResponse doGet(HttpRequest httpRequest) throws IOException, URISyntaxException {
-        throw new IllegalArgumentException(HttpStatus.NOT_FOUND.name());
+        return HttpResponse.notfound();
     }
 }

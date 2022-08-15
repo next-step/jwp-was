@@ -28,6 +28,10 @@ public class ResponseHeader {
         return headers;
     }
 
+    public Object getHeader(String key) {
+        return headers.get(key);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
