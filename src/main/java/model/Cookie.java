@@ -35,7 +35,11 @@ public class Cookie {
             return new HashMap<>();
         }
         return Arrays.stream(cookie.split("; "))
-                .map(item -> new Cookie(item.split("=")[0], item.split("=")[1]))
+                .map(item -> {
+                    final String[] items = item.split("=");
+
+                    return new Cookie(items[0], items[1]);
+                })
                 .collect(Collectors.toMap(Cookie::getName, self -> self));
     }
 
