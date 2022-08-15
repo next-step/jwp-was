@@ -60,6 +60,7 @@ public class RequestHandler implements Runnable {
                 Map<String, String> parameters = getParameters(br, httpHeader);
                 loginUser(parameters, dos);
 
+                return;
             }
 
             response200Header(dos, body.length);
@@ -95,8 +96,11 @@ public class RequestHandler implements Runnable {
     public void loginUser(Map<String, String> parameters, DataOutputStream dos) {
         User loginUser = DataBase.findUserById(parameters.get("userId"));
         boolean isLogin = !Objects.isNull(loginUser) && parameters.get("password").equals(loginUser.getPassword());
-        response302Header(dos, isLogin ? "/index.html" : "/login_failed.html");
-        responseHeader(dos, "logined", String.valueOf(isLogin));
+        response302Header(dos, isLogin ? "/index.html" : "/login_failed.html", setCookie(String.valueOf(isLogin)));
+    }
+
+    public void listUser() {
+
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
@@ -119,6 +123,16 @@ public class RequestHandler implements Runnable {
             logger.error(e.getMessage());
         }
     }
+    private void response302Header(DataOutputStream dos, final String location, final String setCookie) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Location: " + location + "\r\n");
+            dos.writeBytes(setCookie);
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
 
     private void responseBody(DataOutputStream dos, byte[] body) {
         try {
@@ -129,11 +143,7 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void responseHeader(DataOutputStream dos, String key, String bool) {
-        try {
-            dos.writeBytes("Set-Cookie: " + key + "=" + bool + "; " + "Path" + "=" + "/");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+    private String setCookie(String bool) {
+        return "Set-Cookie: " + "logined=" + bool + "; " + "Path" + "=" + "/";
     }
 }
