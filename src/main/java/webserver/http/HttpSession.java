@@ -12,4 +12,5 @@ public class HttpSession {
     public UUID getSessionId() {
         return sessionId;
     }
+
 }
