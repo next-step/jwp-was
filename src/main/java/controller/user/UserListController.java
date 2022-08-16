@@ -6,9 +6,9 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.request.Request;
+import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestHeader;
-import webserver.http.response.Response;
+import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -26,17 +26,15 @@ public class UserListController extends AbstractController {
 
 
     @Override
-    public void doGet(Request request, Response response) throws IOException {
-        logger.debug("UserListController : {}", request.getRequestPath());
+    public HttpResponse doGet(HttpRequest httpRequest) throws IOException {
+        logger.debug("UserListController : {}", httpRequest.getRequestPath());
 
-        if (!isLoginStatus(request.getHeader())) {
-            response.sendRedirect(ROOT_PATH);
-            return;
+        if (!isLoginStatus(httpRequest.getHeaders())) {
+            return HttpResponse.sendRedirect(ROOT_PATH);
         }
         Collection<User> users = DataBase.findAll();
-        String loadData = loader(users);
 
-        response.forward(USER_LIST_PATH, loadData.getBytes(StandardCharsets.UTF_8));
+        return HttpResponse.forward(USER_LIST_PATH, loader(users).getBytes(StandardCharsets.UTF_8));
     }
 
     private boolean isLoginStatus(RequestHeader requestHeader) {

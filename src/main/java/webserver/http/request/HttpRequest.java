@@ -3,6 +3,7 @@ package webserver.http.request;
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.HttpMethod;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,9 +17,9 @@ import java.util.Objects;
 import static utils.IOUtils.readData;
 import static utils.IOUtils.readLines;
 
-public class Request {
+public class HttpRequest {
 
-    private static final Logger logger = LoggerFactory.getLogger(Request.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
 
     public static final String ROOT_PATH = "/";
     public static final String ROOT_FILE = "/index.html";
@@ -27,7 +28,7 @@ public class Request {
     private final RequestHeader header;
     private final RequestBody requestBody;
 
-    public Request(InputStream in) throws IOException {
+    public HttpRequest(InputStream in) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         List<String> requests = readLines(br);
         this.requestLine = new RequestLine(requests.get(0));
@@ -36,7 +37,7 @@ public class Request {
         this.requestBody = new RequestBody(readData(br, this.header.getContentLength()));
     }
 
-    public Request(RequestLine requestLine, RequestHeader header, RequestBody requestBody) {
+    public HttpRequest(RequestLine requestLine, RequestHeader header, RequestBody requestBody) {
         this.requestLine = requestLine;
         this.header = header;
         this.requestBody = requestBody;
@@ -50,12 +51,24 @@ public class Request {
         return requestLine.getQueryStringWithoutPathFromPath();
     }
 
+    public String getMethod() {
+        return requestLine.getHttpMethod().name();
+    }
+
+    public String getPath() {
+        return requestLine.getPath().getPath();
+    }
+
     private String getRedirectUrl() {
         return ROOT_FILE;
     }
 
-    public RequestHeader getHeader() {
+    public RequestHeader getHeaders() {
         return header;
+    }
+
+    public String getHeader(String key) {
+        return header.getHeaders().get(key);
     }
 
     public HttpMethod getHttpMethod() {
@@ -71,20 +84,24 @@ public class Request {
     }
 
     public String getParameter(String key) {
-        return requestBody.getRequestBodyMap().get(key);
+        String value = requestLine.getQueryStringWithoutPathFromPath().get(key);
+        if (value == null) {
+            value = requestBody.getRequestBodyMap().get(key);
+        }
+        return value;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Request request = (Request) o;
-        return Objects.equals(requestLine, request.requestLine) && Objects.equals(header, request.header);
+        HttpRequest httpRequest = (HttpRequest) o;
+        return Objects.equals(requestLine, httpRequest.requestLine) && Objects.equals(header, httpRequest.header);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(requestLine, header);
     }
-    
+
 }

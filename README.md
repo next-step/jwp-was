@@ -30,3 +30,14 @@
   Cookie header 값이 logined=false로 전달되어야 한다.
 - [x] 요구사항 6 - 접근하고 있는 사용자가 “로그인” 상태일 경우(Cookie 값이 logined=true) 경우 http://localhost:8080/user/list 로 접근했을 때 사용자 목록을 출력한다. 만약 로그인하지 않은 상태라면 로그인 페이지(login.html)로 이동한다. 동적으로 html을 생성하기 위해 handlebars.java template engine을 활용한다.
 - [x] 요구사항 7 - 지금까지 구현한 소스 코드는 stylesheet 파일을 지원하지 못하고 있다. Stylesheet 파일을 지원하도록 구현하도록 한다.
+
+### 3단계 - HTTP 웹 서버 리팩토링
+
+- 요구사항
+    - [x] WAS 기능, HTTP 요청/응답 처리 기능은 애플리케이션 개발자가 신경쓰지 않아도 재사용이 가능한 구조가 되도록 한다.
+    - [x] HTTP 요청 Header/Body 처리, 응답 Header/Body 처리만을 담당하는 역할을 분리해 재사용 가능하도록 한다.
+    - [x] 클라이언트 요청 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpRequest)
+    - [x] 클라이언트 응답 데이터를 처리하는 로직을 별도의 클래스로 분리한다.(HttpResponse)
+    - [x] 다형성을 활용해 클라이언트 요청 URL에 대한 분기 처리를 제거한다.
+    - [x] 추가 요구사항이나 변경이 발생하는 경우
+

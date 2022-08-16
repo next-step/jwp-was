@@ -1,4 +1,4 @@
-package webserver.http.request;
+package webserver.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import exception.InvalidRequestException;
@@ -15,7 +15,7 @@ public class Protocol {
         if (StringUtils.isEmpty(value)) {
             throw new InvalidRequestException("Protocol");
         }
-        String[] protocols = value.split(PROTOCOL_AND_VALUE_SEPARATOR);
+        String[] protocols = value.trim().split(PROTOCOL_AND_VALUE_SEPARATOR);
         this.protocol = protocols[0];
         this.version = new Version(protocols[1]);
     }
@@ -23,6 +23,10 @@ public class Protocol {
     public Protocol(String protocol, String version) {
         this.protocol = protocol;
         this.version = new Version(version);
+    }
+
+    public String getProtocolAndVersion() {
+        return protocol + PROTOCOL_AND_VALUE_SEPARATOR + version.getVersion();
     }
 
     @Override

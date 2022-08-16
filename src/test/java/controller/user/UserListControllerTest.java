@@ -8,13 +8,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.request.Request;
+import webserver.http.request.HttpRequest;
 import webserver.http.request.RequestBody;
 import webserver.http.request.RequestHeader;
 import webserver.http.request.RequestLine;
-import webserver.http.response.Response;
+import webserver.http.response.HttpResponse;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,11 +38,11 @@ class UserListControllerTest {
         RequestHeader requestHeader = new RequestHeader(Map.of("Host", "localhost:8080", "Connection", "keep-alive", "Cookie", "logined=true", "Accept", "*/*"));
         RequestBody requestBody = new RequestBody();
 
-        Request request = new Request(requestLine, requestHeader, requestBody);
+        HttpRequest httpRequest = new HttpRequest(requestLine, requestHeader, requestBody);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Response response = new Response(out);
 
-        controller.service(request, response);
+        HttpResponse httpResponse = controller.service(httpRequest);
+        httpResponse.process(new DataOutputStream(out));
 
         assertThat(out.toString()).contains("HTTP/1.1 200 OK");
         assertThat(out.toString()).contains("Content-Type: text/html");
@@ -54,11 +55,11 @@ class UserListControllerTest {
         RequestHeader requestHeader = new RequestHeader(Map.of("Host", "localhost:8080", "Connection", "keep-alive", "Accept", "*/*"));
         RequestBody requestBody = new RequestBody();
 
-        Request request = new Request(requestLine, requestHeader, requestBody);
+        HttpRequest httpRequest = new HttpRequest(requestLine, requestHeader, requestBody);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Response response = new Response(out);
 
-        controller.service(request, response);
+        HttpResponse httpResponse = controller.service(httpRequest);
+        httpResponse.process(new DataOutputStream(out));
 
         assertThat(out.toString()).contains("HTTP/1.1 302 Found");
         assertThat(out.toString()).contains("Location: /");

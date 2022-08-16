@@ -21,9 +21,4 @@ public enum HttpStatus {
     public String getMessage() {
         return message;
     }
-
-    public static String getStatus(HttpStatus httpStatus) {
-        return httpStatus.getCode() + " " + httpStatus.getMessage();
-    }
-
 }

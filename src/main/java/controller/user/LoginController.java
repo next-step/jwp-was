@@ -5,35 +5,42 @@ import controller.AbstractController;
 import db.DataBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.Cookie;
-import webserver.http.request.Request;
-import webserver.http.response.Response;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+
+import static model.Constant.SET_COOKIE;
 
 public class LoginController extends AbstractController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-    public static final String ROOT_FILE = "/index.html";
     public static final String ROOT_PATH = "/";
+    public static final String ROOT_FILE = "/index.html";
     private static final String USER_LOGIN_FAIL_PATH = "/user/login_failed.html";
 
-
     @Override
-    public void doPost(Request request, Response response) {
-        logger.debug("LoginController : {}", request.getRequestPath());
+    public HttpResponse doPost(HttpRequest httpRequest) {
+        logger.debug("LoginController : {}", httpRequest.getRequestPath());
 
-        Boolean isLogin = Optional.ofNullable(DataBase.findUserById(request.getParameter("userId")))
-                .map(user -> StringUtils.equals(user.getPassword(), request.getParameter("password")))
+        Boolean isLogin = Optional.ofNullable(DataBase.findUserById(httpRequest.getParameter("userId")))
+                .map(user -> StringUtils.equals(user.getPassword(), httpRequest.getParameter("password")))
                 .orElse(false);
 
+        Map<String, String> cookieMap = new HashMap<>();
+        cookieMap.put("path", ROOT_PATH);
         if (isLogin) {
-            response.setCookie(new Cookie("logined", "true", ROOT_PATH));
-            response.sendRedirect(ROOT_FILE);
-            return;
-        }
+            cookieMap.put(SET_COOKIE, "logined=true; Path=" + ROOT_PATH);
 
-        response.setCookie(new Cookie("logined", "false", ROOT_PATH));
-        response.sendRedirect(USER_LOGIN_FAIL_PATH);
+            HttpResponse httpResponse = HttpResponse.sendRedirect(ROOT_FILE, cookieMap);
+
+            return httpResponse;
+        }
+        cookieMap.put(SET_COOKIE, "logined=false; Path=" + ROOT_PATH);
+        HttpResponse httpResponse = HttpResponse.sendRedirect(USER_LOGIN_FAIL_PATH, cookieMap);
+
+        return httpResponse;
     }
 }

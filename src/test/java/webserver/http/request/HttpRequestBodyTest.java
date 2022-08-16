@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RequestBodyTest {
+class HttpRequestBodyTest {
 
     @DisplayName("RequestBody 가 들어왔을 때")
     @Test

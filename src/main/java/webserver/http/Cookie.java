@@ -1,28 +1,40 @@
 package webserver.http;
 
+import java.util.Map;
+import java.util.Objects;
+
 public class Cookie {
+    private final Map<String, String> cookie;
 
-    private final String name;
-
-    private final String value;
-
-    private final String path;
-
-    public Cookie(String name, String value, String path) {
-        this.name = name;
-        this.value = value;
-        this.path = path;
+    public Cookie(Map<String, String> cookie) {
+        this.cookie = cookie;
     }
 
-    public String getName() {
-        return name;
+    public String getCookie(String key) {
+        return cookie.get(key);
     }
 
-    public String getValue() {
-        return value;
+    public Map<String, String> getCookie() {
+        return cookie;
     }
 
-    public String getPath() {
-        return path;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cookie cookie1 = (Cookie) o;
+        return Objects.equals(cookie, cookie1.cookie);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cookie);
+    }
+
+    @Override
+    public String toString() {
+        return "Cookie{" +
+                "cookie=" + cookie +
+                '}';
     }
 }

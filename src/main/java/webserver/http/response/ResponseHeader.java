@@ -5,18 +5,31 @@ import java.util.Map;
 import java.util.Objects;
 
 public class ResponseHeader {
-    private final Map<String, String> headers;
+    private final Map<String, Object> headers;
 
     public ResponseHeader() {
         this.headers = new HashMap<>();
     }
 
-    public void add(String name, String value) {
+    public ResponseHeader(Map<String, Object> headers) {
+        this.headers = headers;
+    }
+
+    public ResponseHeader(String key, String value) {
+        this.headers = new HashMap<>();
+        this.headers.put(key, value);
+    }
+
+    public void add(String name, Object value) {
         this.headers.put(name, value);
     }
 
-    public Map<String, String> getHeaders() {
+    public Map<String, Object> getHeaders() {
         return headers;
+    }
+
+    public Object getHeader(String key) {
+        return headers.get(key);
     }
 
     @Override

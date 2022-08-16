@@ -1,7 +1,7 @@
 package controller;
 
-import webserver.http.request.Request;
-import webserver.http.response.Response;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -11,21 +11,18 @@ public abstract class AbstractController implements Controller {
     public static final String ROOT_FILE = "/index.html";
 
     @Override
-    public void service(Request request, Response response) throws IOException, URISyntaxException {
-        if (request.isPost()) {
-            doPost(request, response);
+    public HttpResponse service(HttpRequest httpRequest) throws IOException, URISyntaxException {
+        if (httpRequest.isPost()) {
+            return doPost(httpRequest);
         }
-        
-        if (request.isGet()) {
-            doGet(request, response);
-        }
+        return doGet(httpRequest);
     }
 
-    public void doPost(Request request, Response response) {
-        response.sendRedirect(ROOT_FILE);
+    public HttpResponse doPost(HttpRequest httpRequest) {
+        return HttpResponse.notfound();
     }
 
-    public void doGet(Request request, Response response) throws IOException, URISyntaxException {
-        response.forward(request.getRequestPath());
+    public HttpResponse doGet(HttpRequest httpRequest) throws IOException, URISyntaxException {
+        return HttpResponse.notfound();
     }
 }

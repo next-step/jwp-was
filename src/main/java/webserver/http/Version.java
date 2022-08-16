@@ -1,4 +1,4 @@
-package webserver.http.request;
+package webserver.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import exception.InvalidRequestException;
@@ -18,6 +18,10 @@ public class Version {
         if (StringUtils.isEmpty(version) || !StringUtils.contains(version, ".")) {
             throw new InvalidRequestException("version");
         }
+    }
+
+    public String getVersion() {
+        return version;
     }
 
     @Override

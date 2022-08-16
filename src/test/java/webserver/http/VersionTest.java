@@ -1,4 +1,4 @@
-package webserver.http.request;
+package webserver.http;
 
 import exception.InvalidRequestException;
 import org.assertj.core.api.Assertions;

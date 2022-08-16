@@ -5,8 +5,8 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.request.Request;
-import webserver.http.response.Response;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
 public class CreateUserController extends AbstractController {
     private static final Logger logger = LoggerFactory.getLogger(CreateUserController.class);
@@ -14,11 +14,15 @@ public class CreateUserController extends AbstractController {
     public static final String ROOT_FILE = "/index.html";
 
     @Override
-    public void doPost(Request request, Response response) {
-        logger.debug("CreateUserController : {}", request.getRequestPath());
+    public HttpResponse doPost(HttpRequest httpRequest) {
+        logger.debug("CreateUserController : {}", httpRequest.getRequestPath());
 
-        User user = new User(request.getParameter("userId"), request.getParameter("password"), request.getParameter("name"), request.getParameter("email"));
-        DataBase.addUser(user);
-        response.sendRedirect(ROOT_FILE);
+        DataBase.addUser(new User(
+                httpRequest.getParameter("userId"),
+                httpRequest.getParameter("password"),
+                httpRequest.getParameter("name"),
+                httpRequest.getParameter("email")
+        ));
+        return HttpResponse.sendRedirect(ROOT_FILE);
     }
 }
