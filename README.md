@@ -192,15 +192,25 @@
 
 ### Domain
 
-- HttpSessionStorage
-  - HttpSession 객체를 저장하는 일급 컬렉션.
-  - HttpSession의 Id와 HttpSession 객체를 맵핑해서 key-value 형태로 저장.
-  - 특정 Id의 HttpSession을 추가, 삭제, 조회 가능.
+* HttpSessionStorage
+  * HttpSession 객체를 저장하는 일급 컬렉션.
+  * HttpSession의 Id와 HttpSession 객체를 맵핑해서 key-value 형태로 저장.
+  * 특정 Id의 HttpSession을 추가, 삭제, 조회 가능.
 
-- HttpSession
-  - 고유한 랜덤 Id와 를 포함.
-  - `request.getSession()`이 호출되는 순간 생성된 세션이 없다면 세션을 생성.
+  * HttpSession
+    * 고유한 랜덤 Id와 를 포함.
+    * `request.getSession()`이 호출되는 순간 생성된 세션이 없다면 세션을 생성.
 
-- SessionInterceptor
-  - Controller의 `servie()` 메서드 수행 이전에 요청을 가로채서 로그인 여부를 판단.
-  - `HttpSessionStorage`에 해당 사용자 객체가 없다면 로그인 페이지로 리다이랙트
+    * SessionInterceptor
+      * Controller의 `servie()` 메서드 수행 이전에 요청을 가로채서 로그인 여부를 판단.
+      * `HttpSessionStorage`에 해당 사용자 객체가 없다면 로그인 페이지로 리다이랙트
+
+## 5단계 - Thread Pool 적용
+
+### 기능 요구사항
+
+* `Thread Pool`을 적용해서 WAS가 동시 접속자를 안정적으로 처리하도록 한다.
+  * 최대 Thread Pool의 크기를 `250`으로 한다.
+  * 모든 Thread가 Busy 상태이면 `100명`까지 대기 상태가 되도록 한다.
+
+* `RestTemplate`을 활용하여 최대 Thread Pool 수 보다 많은 동시 요청을 보내본다.
