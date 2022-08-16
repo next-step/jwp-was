@@ -7,14 +7,14 @@ import webserver.http.ContentType;
 import webserver.http.Cookie;
 import webserver.http.HttpStatus;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
-import static model.Constant.*;
+import static model.Constant.LOCATION;
+import static model.Constant.PROTOCOL_VERSION_ONE_ONE;
 
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
@@ -22,13 +22,7 @@ public class HttpResponse {
     private static final String RESOURCES_TEMPLATES = "./templates";
     private static final String RESOURCES_STATIC = "./static";
     public final static String EXTENSION_SPERATOR = ".";
-    public static final String CONTENT_LENGTH = "Content-Length";
-    public static final String HEADER_KEY_VALUE_SEPARATOR = ": ";
-    public static final String LINE_SEPARATOR = "\r\n";
-    public static final String HEADER_SEPARATOR = " ";
 
-
-    private DataOutputStream out;
     private ResponseLine responseLine;
     private ResponseHeader responseHeader;
     private ResponseBody responseBody;
@@ -79,51 +73,6 @@ public class HttpResponse {
 
     }
 
-    public void process(DataOutputStream out) {
-        this.out = out;
-
-        try {
-            isResponseBody(responseBody, responseHeader);
-            isExistCookie(cookie);
-
-            writeResponseLine(responseLine);
-            writeResponseHeader(responseHeader);
-            writeResponseBody(responseBody);
-            out.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void isExistCookie(Cookie cookie) {
-        if (!cookie.getCookie().isEmpty()) {
-            responseHeader.add(SET_COOKIE, cookie.getCookie(SET_COOKIE));
-        }
-    }
-
-    private void isResponseBody(ResponseBody responseBody, ResponseHeader responseHeader) {
-        if (responseBody.getContentLength() > 0) {
-            responseHeader.add(CONTENT_LENGTH, responseBody.getContentLength());
-        }
-    }
-
-    private void writeResponseBody(ResponseBody responseBody) throws IOException {
-        out.writeBytes(LINE_SEPARATOR);
-        out.write(responseBody.getResponseBody(), 0, responseBody.getContentLength());
-    }
-
-    private void writeResponseHeader(ResponseHeader responseHeader) throws IOException {
-        out.writeBytes(CONTENT_TYPE + HEADER_KEY_VALUE_SEPARATOR + responseHeader.getHeader(LOCATION) + LINE_SEPARATOR);
-        for (Map.Entry<String, Object> entry : responseHeader.getHeaders().entrySet()) {
-            out.writeBytes(entry.getKey() + HEADER_KEY_VALUE_SEPARATOR + entry.getValue() + LINE_SEPARATOR);
-            logger.debug("responseHeader : {}", entry.getKey() + HEADER_KEY_VALUE_SEPARATOR + entry.getValue() + LINE_SEPARATOR);
-        }
-    }
-
-    private void writeResponseLine(ResponseLine responseLine) throws IOException {
-        out.writeBytes(responseLine.getProtocolAndVersion() + getStatus(responseLine) + LINE_SEPARATOR);
-    }
-
     private static String addPrefixPath(String path) {
         String extension = path.substring(path.lastIndexOf(EXTENSION_SPERATOR) + 1);
         if (!ContentType.isStaticExtension(extension)) {
@@ -132,8 +81,36 @@ public class HttpResponse {
         return RESOURCES_STATIC.concat(path);
     }
 
-    private String getStatus(ResponseLine responseLine) {
-        return responseLine.getHttpStatus().getCode() + HEADER_SEPARATOR + responseLine.getHttpStatus().getMessage();
+    public int getContentLength() {
+        return responseBody.getContentLength();
+    }
+
+    public void setHeader(String key, Object value) {
+        responseHeader.add(key, value);
+    }
+
+    public boolean isExistCookie() {
+        return cookie.getCookie().isEmpty();
+    }
+
+    public Object getCookie(String key) {
+        return cookie.getCookie(key);
+    }
+
+    public ResponseLine getResponseLine() {
+        return responseLine;
+    }
+
+    public ResponseHeader getResponseHeader() {
+        return responseHeader;
+    }
+
+    public ResponseBody getResponseBody() {
+        return responseBody;
+    }
+
+    public Cookie getCookie() {
+        return cookie;
     }
 
     @Override
@@ -141,19 +118,18 @@ public class HttpResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HttpResponse that = (HttpResponse) o;
-        return Objects.equals(out, that.out) && Objects.equals(responseLine, that.responseLine) && Objects.equals(responseHeader, that.responseHeader) && Objects.equals(responseBody, that.responseBody) && Objects.equals(cookie, that.cookie);
+        return Objects.equals(responseLine, that.responseLine) && Objects.equals(responseHeader, that.responseHeader) && Objects.equals(responseBody, that.responseBody) && Objects.equals(cookie, that.cookie);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(out, responseLine, responseHeader, responseBody, cookie);
+        return Objects.hash(responseLine, responseHeader, responseBody, cookie);
     }
 
     @Override
     public String toString() {
         return "HttpResponse{" +
-                "out=" + out +
-                ", responseLine=" + responseLine +
+                "responseLine=" + responseLine +
                 ", responseHeader=" + responseHeader +
                 ", responseBody=" + responseBody +
                 ", cookie=" + cookie +

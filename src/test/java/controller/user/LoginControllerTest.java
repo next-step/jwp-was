@@ -13,9 +13,9 @@ import webserver.http.request.RequestBody;
 import webserver.http.request.RequestHeader;
 import webserver.http.request.RequestLine;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.ResponseWriter;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,7 +42,7 @@ class LoginControllerTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         HttpResponse httpResponse = controller.service(httpRequest);
-        httpResponse.process(new DataOutputStream(out));
+        new ResponseWriter(out).process(httpResponse);
 
         assertThat(out.toString()).contains("HTTP/1.1 302 Found");
         assertThat(out.toString()).contains("Location: /index.html");
@@ -60,7 +60,7 @@ class LoginControllerTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         HttpResponse httpResponse = controller.service(httpRequest);
-        httpResponse.process(new DataOutputStream(out));
+        new ResponseWriter(out).process(httpResponse);
 
         assertThat(out.toString()).contains("HTTP/1.1 302 Found");
         assertThat(out.toString()).contains("/user/login_failed.html");

@@ -21,7 +21,7 @@ public class UserListController extends AbstractController {
     private static final Logger logger = LoggerFactory.getLogger(UserListController.class);
 
     private static final String USER_LIST_PATH = "/user/list.html";
-    public static final String ROOT_PATH = "/";
+    public static final String ROOT_FILE = "/index.html";
     public static final String COOKIE = "Cookie";
 
 
@@ -30,7 +30,7 @@ public class UserListController extends AbstractController {
         logger.debug("UserListController : {}", httpRequest.getRequestPath());
 
         if (!isLoginStatus(httpRequest.getHeaders())) {
-            return HttpResponse.sendRedirect(ROOT_PATH);
+            return HttpResponse.sendRedirect(ROOT_FILE);
         }
         Collection<User> users = DataBase.findAll();
 

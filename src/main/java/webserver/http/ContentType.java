@@ -29,7 +29,7 @@ public enum ContentType {
         return staticFiles().contains(getContentTypeFromExtension(extension));
     }
 
-    private static ContentType getContentTypeFromExtension(String extension) {
+    public static ContentType getContentTypeFromExtension(String extension) {
         return Arrays.stream(values())
                 .filter(contentType -> contentType.getExtension().equals(extension))
                 .findFirst().get();

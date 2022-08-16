@@ -1,5 +1,8 @@
 package webserver.http.request;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.RequestHandler;
 import webserver.http.HttpMethod;
 import webserver.http.Protocol;
 
@@ -7,6 +10,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class RequestLine {
+    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+
     public static final String VALUE_SEPARATOR = " ";
 
     private final HttpMethod httpMethod;
