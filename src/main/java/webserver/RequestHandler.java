@@ -11,7 +11,6 @@ import mvc.controller.Controller;
 import mvc.controller.ControllerMatcher;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import org.springframework.web.servlet.HandlerInterceptor;
 import webserver.session.Interceptor;
 import webserver.session.InterceptorRegistry;
 

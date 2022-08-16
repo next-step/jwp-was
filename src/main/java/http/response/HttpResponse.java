@@ -49,6 +49,7 @@ public class HttpResponse {
     public void responseOk(HttpHeader responseHeader, byte[] body) {
         Assert.notNull(responseHeader, "Header는 null이어선 안됩니다.");
         Assert.notNull(body, "ResonseBody는 null이어선 안됩니다.");
+        this.statusLine = StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.OK);
         this.responseHeader = responseHeader;
         this.responseBody = new ResponseBody(body);
     }
