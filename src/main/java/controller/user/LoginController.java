@@ -1,8 +1,8 @@
 package controller.user;
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import controller.AbstractController;
 import db.DataBase;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.HttpRequest;
@@ -25,22 +25,18 @@ public class LoginController extends AbstractController {
     public HttpResponse doPost(HttpRequest httpRequest) {
         logger.debug("LoginController : {}", httpRequest.getRequestPath());
 
-        Boolean isLogin = Optional.ofNullable(DataBase.findUserById(httpRequest.getParameter("userId")))
-                .map(user -> StringUtils.equals(user.getPassword(), httpRequest.getParameter("password")))
-                .orElse(false);
+        User user = Optional.ofNullable(DataBase.findUserById(httpRequest.getParameter("userId")))
+                .orElse(null);
 
         Map<String, String> cookieMap = new HashMap<>();
         cookieMap.put("path", ROOT_PATH);
-        if (isLogin) {
+        if (user != null && user.matchPassword(httpRequest.getParameter("password"))) {
             cookieMap.put(SET_COOKIE, "logined=true; Path=" + ROOT_PATH);
 
-            HttpResponse httpResponse = HttpResponse.sendRedirect(ROOT_FILE, cookieMap);
-
-            return httpResponse;
+            return HttpResponse.sendRedirect(ROOT_FILE, cookieMap);
         }
         cookieMap.put(SET_COOKIE, "logined=false; Path=" + ROOT_PATH);
-        HttpResponse httpResponse = HttpResponse.sendRedirect(USER_LOGIN_FAIL_PATH, cookieMap);
 
-        return httpResponse;
+        return HttpResponse.sendRedirect(USER_LOGIN_FAIL_PATH, cookieMap);
     }
 }

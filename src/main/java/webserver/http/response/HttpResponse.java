@@ -9,7 +9,6 @@ import webserver.http.HttpStatus;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Map;
@@ -36,17 +35,11 @@ public class HttpResponse {
     private Cookie cookie;
 
     public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader) {
-        this.responseLine = responseLine;
-        this.responseHeader = responseHeader;
-        this.responseBody = new ResponseBody(new byte[0]);
-        this.cookie = new Cookie(Collections.emptyMap());
+        this(responseLine, responseHeader, new ResponseBody(new byte[0]), new Cookie(Collections.emptyMap()));
     }
 
     public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader, Cookie cookie) {
-        this.responseLine = responseLine;
-        this.responseHeader = responseHeader;
-        this.responseBody = new ResponseBody(new byte[0]);
-        this.cookie = cookie;
+        this(responseLine, responseHeader, new ResponseBody(new byte[0]), cookie);
     }
 
     public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader, ResponseBody responseBody) {
@@ -56,8 +49,11 @@ public class HttpResponse {
         this.cookie = new Cookie(Collections.emptyMap());
     }
 
-    public HttpResponse(OutputStream outputStream) {
-
+    public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader, ResponseBody responseBody, Cookie cookie) {
+        this.responseLine = responseLine;
+        this.responseHeader = responseHeader;
+        this.responseBody = responseBody;
+        this.cookie = cookie;
     }
 
     public static HttpResponse sendRedirect(String path, Map<String, String> cookieMap) {
