@@ -1,7 +1,11 @@
 package webserver.http.request;
 
 import utils.IOUtils;
+import webserver.http.HttpSession;
+import webserver.http.SessionDatabase;
 import webserver.http.header.Header;
+import webserver.http.header.HeaderValue;
+import webserver.http.header.type.RequestHeader;
 import webserver.http.request.requestline.Method;
 import webserver.http.request.requestline.Path;
 import webserver.http.request.requestline.QueryString;
@@ -9,9 +13,12 @@ import webserver.http.request.requestline.RequestLine;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Optional;
+import java.util.UUID;
 
 public class HttpRequest {
     private static final String EMPTY_STRING = "";
+    private static final String JSESSION_ID = "JSESSIONID";
 
     private RequestLine requestLine;
     private Header header = new Header();
@@ -21,6 +28,7 @@ public class HttpRequest {
         initRequestLine(br);
         initHeader(br);
         initBody(br);
+        initSession();
     }
 
     public HttpRequest(RequestLine requestLine, Header header, QueryString body) {
@@ -73,7 +81,25 @@ public class HttpRequest {
         while (!isEmpty(line = br.readLine())) {
             this.header.addField(line);
         }
-        header.setCookie(header.getCookieValue());
+        this.header.setCookies(this.header.getCookieValue());
+    }
+
+    public HttpSession getSession() {
+        String jSessionId = this.header.getCookieValue(JSESSION_ID);
+        return SessionDatabase.findById(jSessionId);
+    }
+
+    public String getSessionId() {
+        return Optional.ofNullable(getSession()).map(HttpSession::getId).orElse(EMPTY_STRING);
+    }
+
+    private void initSession() {
+        if (this.header.getCookieValue(JSESSION_ID).isEmpty() && !isStaticFilePath()) {
+            String newId = UUID.randomUUID().toString();
+            SessionDatabase.save(newId, new HttpSession(newId));
+            this.header.setCookie(JSESSION_ID, newId);
+            this.header.addField(RequestHeader.COOKIE, String.format(HeaderValue.JSESSION_ID, newId));
+        }
     }
 
     private static boolean isEmpty(String line) {
@@ -109,7 +135,8 @@ public class HttpRequest {
     }
 
     public boolean isLogin() {
-        return this.header.isLogin();
+        Object user = getSession().getAttribute("user");
+        return Optional.ofNullable(user).isPresent();
     }
 
     @Override

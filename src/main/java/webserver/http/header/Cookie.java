@@ -1,22 +1,63 @@
 package webserver.http.header;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Cookie {
     private static final String EMPTY_STRING = "";
+    private static final String COOKIES_DELIMITER = "; ";
+    private static final String COOKIE_KEY_VALUE_DELIMITER = "=";
+    private static final int KEY_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+    private static final int ELEMENT_COUNT = 1;
 
-    private String key;
-    private String value;
+    private Map<String, String> cookies;
+
+    public Cookie(Map<String, String> cookies) {
+        validateCookies(cookies);
+        this.cookies = cookies;
+    }
+
+    public void setCookie(String key, String value) {
+        this.cookies.put(key, value);
+    }
+
+    public static Cookie parse(String cookieString) {
+        validateCookieString(cookieString);
+        String[] multiCookies = cookieString.split(COOKIES_DELIMITER);
+        Map<String, String> cookies = new HashMap<>();
+        Arrays.stream(multiCookies).filter(cookie -> !cookie.isEmpty()).forEach(cookie -> setCookies(cookies, cookie));
+        return new Cookie(cookies);
+    }
+
+    private static void setCookies(Map<String, String> cookies, String cookie) {
+        String[] cookieElements = cookie.split(COOKIE_KEY_VALUE_DELIMITER);
+        if (cookieElements.length == ELEMENT_COUNT) {
+            cookies.put(cookieElements[KEY_INDEX], EMPTY_STRING);
+            return;
+        }
+        cookies.put(cookieElements[KEY_INDEX], cookieElements[VALUE_INDEX]);
+    }
+
+    private static void validateCookieString(String cookieString) {
+        if (cookieString == null) {
+            throw new IllegalArgumentException("요청된 HTTP Header 의 cookie 는 null 일 수 없습니다.");
+        }
+    }
+
+    private void validateCookies(Map<String, String> cookies) {
+        if (cookies == null) {
+            throw new IllegalArgumentException("cookies 값이 null 일 수 없습니다.");
+        }
+    }
 
     public Cookie() {
-        this(EMPTY_STRING, EMPTY_STRING);
+        this(new HashMap<>());
     }
 
-    public Cookie(String key, String value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    public String getValue() {
-        return this.value;
+    public String getValue(String key) {
+        return this.cookies.getOrDefault(key, EMPTY_STRING);
     }
 
     @Override
@@ -26,14 +67,11 @@ public class Cookie {
 
         Cookie cookie = (Cookie) o;
 
-        if (!key.equals(cookie.key)) return false;
-        return value.equals(cookie.value);
+        return cookies.equals(cookie.cookies);
     }
 
     @Override
     public int hashCode() {
-        int result = key.hashCode();
-        result = 31 * result + value.hashCode();
-        return result;
+        return cookies.hashCode();
     }
 }

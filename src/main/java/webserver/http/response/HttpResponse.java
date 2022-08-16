@@ -41,30 +41,22 @@ public class HttpResponse {
         }
     }
 
-    public static HttpResponse of(StatusLine statusLine, Header header, byte[] body) {
-        return new HttpResponse(statusLine, header, body);
-    }
-
-    public static HttpResponse of(StatusLine statusLine, Header header) {
-        return new HttpResponse(statusLine, header, new byte[0]);
-    }
-
     public static HttpResponse ok(Header header, byte[] body) {
-        return new HttpResponse(StatusLine.ofHttp_V1_1_Ok(), header, body);
+        return new HttpResponse(StatusLine.ofHttpV11Ok(), header, body);
     }
 
     public static HttpResponse notFound() {
-        return new HttpResponse(StatusLine.ofHttp_V1_1_NotFound(), new Header(new HashMap<>()), new byte[0]);
+        return new HttpResponse(StatusLine.ofHttpV11NotFound(), new Header(new HashMap<>()), new byte[0]);
     }
 
     public static HttpResponse redirect(String path) {
         Map<HeaderKey, String> fields = new HashMap<>();
         fields.put(ResponseHeader.LOCATION, path);
-        return new HttpResponse(StatusLine.ofHttp_V1_1_Found(), new Header(fields), new byte[0]);
+        return new HttpResponse(StatusLine.ofHttpV11Found(), new Header(fields), new byte[0]);
     }
 
     public static HttpResponse redirect(String path, Header header) {
-        return new HttpResponse(StatusLine.ofHttp_V1_1_Found(), header.add(ResponseHeader.LOCATION, path), new byte[0]);
+        return new HttpResponse(StatusLine.ofHttpV11Found(), header.add(ResponseHeader.LOCATION, path), new byte[0]);
     }
 
     public String response() {

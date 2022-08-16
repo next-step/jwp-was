@@ -33,7 +33,7 @@ public class Protocol {
         }
     }
 
-    public static Protocol ofHttp_V1_1() {
+    public static Protocol ofHttpV11() {
         return new Protocol(ProtocolType.HTTP, Version.ONE_ONE);
     }
 

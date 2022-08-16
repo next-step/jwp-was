@@ -75,6 +75,21 @@ GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1
 - WAS 기능, HTTP 요청/응답 처리, 개발자가 구현할 애플리케이션 기능이 혼재되어있는 것을 각각 역할을 분리해 재사용 가능하도록 개선한다.
 - WAS 기능, HTTP 요청/응답 처리 기능은 애플리케이션 개발자가 신경쓰지 않아도 재사용이 가능한 구조가 되도록 한다.
 
+# 기능 요구사항 (세션 구현하기)
+- 서블릿에서 지원하는 HttpSession API의 일부를 지원해야 한다.
+- HttpSession API 중 구현할 메소드는 getId(), setAttribute(String name, Object value), getAttribute(String name), removeAttribute(String name), invalidate() 5개 이다.
+- HttpSession 의 가장 중요하고 핵심이 되는 메소드이다.
+
+각 메소드의 역할은 다음과 같다.
+- String getId() : 현재 세션에 할당되어 있는 고유한 세션 아이디를 반환
+- void setAttribute(String name, Object value) : 현재 세션에 value 인자로 저장되어 있는 객체 값을 찾아 반환
+- Object getAttribute(String name) : 현재 세션에 name 인자로 저장되어 있는 객체 값을 찾아 반환
+- void removeAttribute(String name) : 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
+- void invalidate() : 현재 세션에 저장되어 있는 모든 값을 삭제
+
+세션은 클라이언트와 서버 간에 상태 값을 공유하기 위해 고유한 아이디를 활용하고, 이 고유한 아이디는 쿠키를 활용해 공유한다.
+
+
 ## 기능 목록
 
 ### * 요청 객체
@@ -100,7 +115,7 @@ GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1
   - Header 객체
     - header key, value Map 필드를 가진다.
     - Cookie 객체를 필드로 가진다.
-      - key, value 를 필드로 가진다. (value => logined=false or logined=true 값을 가진다.)
+      - key, value Map 을 필드로 가진다. (value => logined=false or logined=true 값을 가진다.)
   - QueryString 객체
     - HttpRequest 의 body 역할을 한다.
   
@@ -119,6 +134,22 @@ GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1
       - Header Key 에 대한 상수 값을 가진다.
   - body (byte[]) 필드
     - responseBody 에 대한 byte[] 를 가진다.
+
+### * 세션 객체
+- HttpSession 객체
+  - 접속 브라우저 (유저) 에 대한 unique id, attribute 값을 관리한다.
+  - unique id 는 UUID 를 이용하여 식별한다.
+  - attribute 값은 해당 유저를 식별할 수 있는 데이터를 value 에 저장한다. (key 값을 통해 유저의 데이터를 가져올 수 있다.)
+  - id 값을 가져올 수 있다.
+  - attribute 값을 저장 & 조회 & 삭제 할 수 있다.
+  - invalidate() 메서드를 통해 세션을 비활성화 시킬 수 있다.
+    - attribute 값을 제거한 뒤, SessionDatabase 에서 해당 세션의 id 값을 제거한다.
+- SessionDatabase 객체
+  - 여러 접속 브라우저 (유저) 에 대한 세션 값을 저장하는 데이터베이스이다.
+  - 특정 세션의 id 를 키로 가지고, 그 key 에 대한 세션을 value 로 저장한다.
+  - session id 로 특정 세션을 조회할 수 있다.
+  - session id 와 함께 특정 세션을 저장할 수 있다.
+  - session id 로 특정 세션을 삭제할 수 있다.
 
 ### * 컨트롤러
 - Controller 인터페이스
@@ -155,3 +186,4 @@ GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1
 - RequestMapping 객체
   - 요청 Method, 요청 Path, path 의 file 유무로 매핑되는 컨트롤러를 찾는다.
   - 매핑 되는 컨트롤러를 찾지 못하거나 컨트롤러 처리중 path 로 인한 데이터를 읽지 못할 경우 Not Found 를 반환한다.
+

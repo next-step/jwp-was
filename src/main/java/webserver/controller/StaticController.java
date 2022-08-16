@@ -14,7 +14,7 @@ public class StaticController extends MethodController {
     @Override
     public HttpResponse processGet(HttpRequest httpRequest) throws URISyntaxException, IOException {
         return HttpResponse.ok(
-                Header.staticResponse(),
+                Header.staticResponse(httpRequest.getSessionId()),
                 FileIoUtils.loadFileFromClasspath(STATIC_PATH + httpRequest.getPath())
         );
     }

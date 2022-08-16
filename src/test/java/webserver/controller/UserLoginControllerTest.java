@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import webserver.http.HttpSession;
 import webserver.http.header.Header;
 import webserver.http.header.HeaderValue;
 import webserver.http.header.type.ResponseHeader;
@@ -21,6 +22,7 @@ import webserver.http.response.statusline.StatusCode;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -37,17 +39,23 @@ class UserLoginControllerTest {
     @DisplayName("로그인 성공 테스트")
     void loginSuccess() throws IOException, URISyntaxException {
         // given
-        DataBase.addUser(new User("test_id", "test_password", "test_name", "test@test.com"));
+        User user = new User("test_id", "test_password", "test_name", "test@test.com");
+        DataBase.addUser(user);
         HttpRequest httpRequest = RequestTestUtil.readTestRequest("login.txt");
+        String sessionId = httpRequest.getSessionId();
+
+        HttpSession expectedSession = new HttpSession(sessionId, Map.of("user", user));
 
         // when
         HttpResponse httpResponse = controller.process(httpRequest);
+        HttpSession actualSession = httpRequest.getSession();
 
         // then
         assertAll(
                 () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.SET_COOKIE, HeaderValue.LOGINED_TRUE_ALL_PATH)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.LOCATION, "/index.html")).isTrue()
+                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.SET_COOKIE, String.format(HeaderValue.JSESSION_ID, sessionId))).isTrue(),
+                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.LOCATION, "/index.html")).isTrue(),
+                () -> assertThat(expectedSession.getAttribute("user")).isEqualTo(actualSession.getAttribute("user"))
         );
     }
 
@@ -63,8 +71,7 @@ class UserLoginControllerTest {
 
         // then
         assertAll(
-                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue(),
-                () -> assertThat(httpResponse.isHeaderValueEqual(ResponseHeader.SET_COOKIE, HeaderValue.LOGINED_FALSE_ALL_PATH)).isTrue()
+                () -> assertThat(httpResponse.isStatusCodeEqual(StatusCode.FOUND)).isTrue()
         );
     }
 
@@ -74,7 +81,7 @@ class UserLoginControllerTest {
             "GET, PUT, DELETE, PATCH"
     })
     void throw_exception_exceptGetMethod(Method method) throws IOException, URISyntaxException {
-        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path("/user/login", new QueryString()), Protocol.ofHttp_V1_1()), new Header(), new QueryString());
+        HttpRequest httpRequest = new HttpRequest(new RequestLine(method, new Path("/user/login", new QueryString()), Protocol.ofHttpV11()), new Header(), new QueryString());
         assertThat(controller.process(httpRequest)).isEqualTo(HttpResponse.notFound());
     }
 
@@ -85,7 +92,7 @@ class UserLoginControllerTest {
             "/user/logins, false",
     })
     void isMatchRequest(String path, boolean trueOrFalse) {
-        HttpRequest httpRequest = new HttpRequest(new RequestLine(Method.GET, new Path(path, new QueryString()), Protocol.ofHttp_V1_1()), new Header(), new QueryString());
+        HttpRequest httpRequest = new HttpRequest(new RequestLine(Method.GET, new Path(path, new QueryString()), Protocol.ofHttpV11()), new Header(), new QueryString());
         assertThat(controller.isMatchPath(httpRequest)).isEqualTo(trueOrFalse);
     }
 }

@@ -16,16 +16,16 @@ public class StatusLine {
         return new StatusLine(protocol, statusCode);
     }
 
-    public static StatusLine ofHttp_V1_1_Ok() {
-        return new StatusLine(Protocol.ofHttp_V1_1(), StatusCode.OK);
+    public static StatusLine ofHttpV11Ok() {
+        return new StatusLine(Protocol.ofHttpV11(), StatusCode.OK);
     }
 
-    public static StatusLine ofHttp_V1_1_Found() {
-        return new StatusLine(Protocol.ofHttp_V1_1(), StatusCode.FOUND);
+    public static StatusLine ofHttpV11Found() {
+        return new StatusLine(Protocol.ofHttpV11(), StatusCode.FOUND);
     }
 
-    public static StatusLine ofHttp_V1_1_NotFound() {
-        return new StatusLine(Protocol.ofHttp_V1_1(), StatusCode.FOUND);
+    public static StatusLine ofHttpV11NotFound() {
+        return new StatusLine(Protocol.ofHttpV11(), StatusCode.FOUND);
     }
 
     public boolean isStatusCodeEqual(StatusCode statusCode) {
