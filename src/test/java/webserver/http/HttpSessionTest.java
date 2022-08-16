@@ -56,12 +56,10 @@ class HttpSessionTest {
     @DisplayName("HttpSession 세션을 비활성화 시킨다.")
     @Test
     void invalidateSession() {
-        // given
-        String sessionId = UUID.randomUUID().toString();
-        HttpSession httpSession = new HttpSession(sessionId, new HashMap<>());
+        // given & when
         User user = new User("test_id", "test_password", "test_name", "test@test.com");
-        // when
-        SessionDatabase.save(sessionId, httpSession);
+        String sessionId = SessionDatabase.save();
+        HttpSession httpSession = SessionDatabase.findById(sessionId);
         httpSession.setAttribute("user", user);
         httpSession.invalidate();
         // then

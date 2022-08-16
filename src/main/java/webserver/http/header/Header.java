@@ -11,6 +11,7 @@ import java.util.Optional;
 public class Header {
     private static final String EMPTY_STRING = "";
     private static final String HEADER_FIELD_DELIMITER = ": ";
+    private static final String JSESSION_ID = "JSESSIONID";
     private static final String ZERO_STRING = "0";
     private static final int KEY_INDEX = 0;
     private static final int VALUE_INDEX = 1;
@@ -111,6 +112,10 @@ public class Header {
 
     public String getCookieValue(String key) {
         return this.cookie.getValue(key);
+    }
+
+    public boolean hasJsessionId() {
+        return getCookieValue(JSESSION_ID).isEmpty();
     }
 
     public boolean isHeaderValueEqual(HeaderKey key, String value) {
