@@ -21,8 +21,7 @@ public class ThreadPoolManager {
 
     public static void execute(Socket connection) {
         threadPoolExecutor.execute(() -> {
-            Thread thread = new Thread(new RequestHandler(connection));
-            thread.start();
+            new RequestHandler(connection).run();
         });
     }
 }
