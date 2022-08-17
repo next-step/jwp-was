@@ -7,15 +7,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class HttpRequest {
     private final RequestLine requestLine;
     private final HttpHeaders headers;
     private final Cookie cookie;
     private final Parameters parameters;
+    private final Map<String, Object> attributes = new HashMap<>();
 
     private HttpRequest(RequestLine requestLine, HttpHeaders headers, Cookie cookie, Parameters parameters) {
         this.requestLine = requestLine;
@@ -71,5 +70,17 @@ public class HttpRequest {
 
     public String getParameter(String parameter) {
         return parameters.get(parameter);
+    }
+
+    public void setAttribute(String key, Object value) {
+        attributes.put(key, value);
+    }
+
+    public Object getAttribute(String key) {
+        return attributes.get(key);
+    }
+
+    public Map<String, Object> getAttributes() {
+        return new HashMap<>(attributes);
     }
 }
