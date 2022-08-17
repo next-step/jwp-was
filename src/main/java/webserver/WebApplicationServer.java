@@ -39,5 +39,7 @@ public class WebApplicationServer {
                 threadPoolExecutor.execute(new RequestHandler(connection));
             }
         }
+        threadPoolExecutor.shutdown();
+        threadPoolExecutor.awaitTermination(100, TimeUnit.SECONDS);
     }
 }
