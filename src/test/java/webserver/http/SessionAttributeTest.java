@@ -28,12 +28,14 @@ class SessionAttributeTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("attribute 값이 같은지 테스트")
     @Test
     void testSessionAttribute_GetAttribute() {
         assertThat(new SessionAttribute(attribute).getAttribute("userId"))
                 .isEqualTo(attribute.get("userId"));
     }
 
+    @DisplayName("attribute 세팅이 정상적으로 되는지 테스트")
     @Test
     void testSessionAttribute_SetAttribute() {
         String name = "password";
@@ -45,6 +47,7 @@ class SessionAttributeTest {
                 .isEqualTo(value);
     }
 
+    @DisplayName("특정 attribute 가 삭제되는지 테스트")
     @Test
     void testSessionAttribute_removeAttribute() {
         SessionAttribute sessionAttribute = new SessionAttribute(attribute);
@@ -53,10 +56,12 @@ class SessionAttributeTest {
         assertThat(sessionAttribute.getAttribute("userId")).isNull();
     }
 
+    @DisplayName("전체 attribute 가 삭제되는지 테스트")
     @Test
     void testSessionAttribute_invalidate() {
         SessionAttribute sessionAttribute = new SessionAttribute(attribute);
         sessionAttribute.invalidate();
+        
         assertThat(sessionAttribute.getAllAttribute().isEmpty()).isTrue();
     }
 }
