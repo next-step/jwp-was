@@ -10,7 +10,7 @@ public class Path {
     private static final String QUERY_DELIMITER = "?";
     private static final String QUERY_REGEX_DELIMITER = "\\?";
     private static final String HTML_FILE_EXTENSION = ".html";
-    private static final Set<String> STATIC_FILE_EXTENSION = Set.of(".css", ".eot", ".svg", "ttf", "woff", "woff2", ".png", ".js");
+    private static final Set<String> STATIC_FILE_EXTENSION = Set.of(".css", ".eot", ".svg", "ttf", "woff", "woff2", ".png", ".js", "ico");
 
     private String path;
     private QueryString queryString;
