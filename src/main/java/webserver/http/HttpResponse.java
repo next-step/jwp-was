@@ -1,6 +1,5 @@
 package webserver.http;
 
-import utils.EnumMapUtils;
 import utils.FileIoUtils;
 import webserver.http.exception.WriteOutputStreamException;
 
@@ -19,6 +18,7 @@ public class HttpResponse {
 
     private HttpResponse(DataOutputStream dos) {
         this.dos = dos;
+        this.header = ResponseHeader.empty();
     }
 
     private HttpResponse(HttpStatusCode httpStatusCode, ResponseHeader responseHeader, byte[] body) {
@@ -40,15 +40,19 @@ public class HttpResponse {
 
     public HttpResponse sendRedirect(String path) {
         this.code = HttpStatusCode.FOUND;
-        this.header = ResponseHeader.of(EnumMapUtils.of(Map.of(HttpHeaders.LOCATION, path)));
+        this.header.addHeader(HttpHeaders.LOCATION, path);
         this.body = new byte[0];
         writeResponse();
         return this;
     }
 
-    public HttpResponse sendRedirectWithCookie(String path, String cookie) {
+    public HttpResponse sendRedirectWithCookie(String path, String cookies) {
         this.code = HttpStatusCode.FOUND;
-        this.header = ResponseHeader.of(EnumMapUtils.of(Map.of(HttpHeaders.LOCATION, path)), cookie);
+        this.header.addHeader(HttpHeaders.LOCATION, path);
+        for (String cookie : cookies.split("; ") ) {
+            String[] split = cookie.split("=");
+            this.header.addCookie(split[0], split[1]);
+        }
         this.body = new byte[0];
         writeResponse();
         return this;
@@ -57,7 +61,8 @@ public class HttpResponse {
     public HttpResponse forward(String filePath, String path) throws IOException, URISyntaxException {
         this.code = HttpStatusCode.OK;
         this.body = FileIoUtils.loadFileFromClasspath(filePath);
-        this.header = ResponseHeader.text(body.length, path);
+        this.header.addHeader(HttpHeaders.CONTENT_TYPE, String.format("text/%s;charset=utf-8", fileExtension(path)));
+        this.header.addHeader(HttpHeaders.CONTENT_LENGTH, body.length);
         writeResponse();
         return this;
     }
@@ -65,11 +70,8 @@ public class HttpResponse {
     public HttpResponse forwardBody(String body) {
         this.code = HttpStatusCode.OK;
         this.body = body.getBytes(StandardCharsets.UTF_8);
-        this.header = ResponseHeader.of(
-                Map.of(
-                        HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8",
-                        HttpHeaders.CONTENT_LENGTH, body.length())
-        );
+        this.header.addHeader(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8");
+        this.header.addHeader(HttpHeaders.CONTENT_LENGTH, body.length());
         writeResponse();
         return this;
     }
@@ -84,6 +86,10 @@ public class HttpResponse {
 
     public static HttpResponse of(DataOutputStream dos) {
         return new HttpResponse(dos);
+    }
+
+    private static String fileExtension(String path) {
+        return path.substring(path.lastIndexOf('.') + 1);
     }
 
     private void writeHttpHeaders() throws IOException {
@@ -122,4 +128,7 @@ public class HttpResponse {
         return header.getCookie();
     }
 
+    public void addCookie(String cookieKey, String cookieValue) {
+        header.addCookie(cookieKey,cookieValue);
+    }
 }

@@ -3,13 +3,13 @@ package controller;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import webserver.http.HttpRequest;
-import webserver.http.HttpResponse;
+import webserver.http.*;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Set;
+import java.util.UUID;
 
 public class DispatchController {
     private static final Set<Controller> controllers;
@@ -41,6 +41,10 @@ public class DispatchController {
 
     private HttpResponse execute(Controller controller, HttpRequest request, DataOutputStream dos) {
         HttpResponse response = HttpResponse.of(dos);
+
+        HttpCookie cookie = request.getCookie();
+        response.addCookie("JESSIONID", cookie.getSessionId());
+
         try {
             response = controller.execute(request, response);
         } catch (IOException | URISyntaxException e) {
@@ -48,4 +52,5 @@ public class DispatchController {
         }
         return response;
     }
+
 }

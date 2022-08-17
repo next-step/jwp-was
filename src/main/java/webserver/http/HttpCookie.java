@@ -1,31 +1,56 @@
 package webserver.http;
 
-import utils.EnumMapUtils;
-
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class HttpCookie {
-    private final Map<HttpHeaders, String> cookieMap;
+    private final Map<String, Object> cookieMap;
 
-    public HttpCookie(Map<HttpHeaders, String> cookieMap) {
+    private HttpCookie() {
+        cookieMap = new HashMap<>();
+    }
+
+    private HttpCookie(Map<String, Object> cookieMap) {
         this.cookieMap = cookieMap;
     }
 
-    public static HttpCookie of(String value) {
-        return new HttpCookie(EnumMapUtils.of(Map.of(HttpHeaders.SET_COOKIE, value)));
+    public static HttpCookie of(String cookies) {
+        Map<String, Object> map = new HashMap<>();
+        String[] split = cookies.split("; ");
+        for (String cookie : split) {
+            String[] splitCookie = cookie.split("=");
+            map.put(splitCookie[0], splitCookie[1]);
+        }
+        return new HttpCookie(map);
     }
 
-    public static HttpCookie of(Map<HttpHeaders, String> cookieMap) {
-        return new HttpCookie(cookieMap);
+    public static HttpCookie empty() {
+        return new HttpCookie();
     }
 
     public boolean contains(String value) {
-        return cookieMap.values()
+        return cookieMap.keySet()
                 .stream()
                 .anyMatch(cookie -> cookie.contains(value));
     }
 
-    public String getValue() {
-        return String.join(",", cookieMap.values());
+    public String cookieList() {
+        return cookieMap.entrySet().stream()
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining("; "));
+    }
+
+    public void add(String cookieKey, Object cookieValue) {
+        this.cookieMap.put(cookieKey, cookieValue);
+    }
+
+    public String getSessionId() {
+        String id = (String) cookieMap.get("JESSIONID");
+        if (id == null) {
+            return UUID.randomUUID().toString();
+        }
+        return id;
     }
 }

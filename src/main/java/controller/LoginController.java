@@ -1,11 +1,8 @@
 package controller;
 
 import db.DataBase;
-import model.*;
-import webserver.http.HttpMethod;
-import webserver.http.HttpRequest;
-import webserver.http.HttpResponse;
-import webserver.http.Path;
+import model.User;
+import webserver.http.*;
 
 public class LoginController implements Controller {
 
@@ -22,6 +19,8 @@ public class LoginController implements Controller {
         if (user == null || !validatePassword(request, user)) {
             return response.sendRedirectWithCookie("/user/login_failed.html", "logined=false; Path=/");
         }
+        HttpSession httpSession = request.getHttpSession();
+        httpSession.setAttribute("user", user);
         return response.sendRedirectWithCookie("/index.html", "logined=true; Path=/");
     }
 

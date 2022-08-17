@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class HttpRequest {
     private static final int REQUEST_LINE = 0;
@@ -88,10 +89,22 @@ public class HttpRequest {
     }
 
     public boolean isLogin() {
-        return header.containsLoginCookie();
+        HttpSession httpSession = getHttpSession();
+        Object user = httpSession.getAttribute("user");
+        if (user == null) {
+            return false;
+        }
+        return true;
     }
 
     public HttpCookie getCookie() {
         return header.getCookie();
+    }
+
+    public HttpSession getHttpSession() {
+        HttpCookie cookie = header.getCookie();
+        String sessionId = cookie.getSessionId();
+        HttpSession session = HttpSessions.getSession(sessionId);
+        return session;
     }
 }

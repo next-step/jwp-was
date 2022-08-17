@@ -3,7 +3,7 @@ package webserver.http;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,16 +14,14 @@ class ResponseHeaderTest {
     @DisplayName("textHtml Header 생성 테스트")
     @Test
     void textHtml() {
-        String contents = "contents";
-        byte[] contentsBytes = contents.getBytes(StandardCharsets.UTF_8);
+        Map<HttpHeaders, Object> map = new HashMap<>();
+        map.put(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8");
 
-        ResponseHeader responseHeader = ResponseHeader.text(contentsBytes.length, "/index.html");
+        ResponseHeader result = ResponseHeader.of(map);
 
-        assertThat(responseHeader.getHeaders()).contains(
-                Map.entry(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8"),
-                Map.entry(HttpHeaders.CONTENT_LENGTH, contentsBytes.length)
+        assertThat(result.getHeaders()).contains(
+                Map.entry(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8")
         );
-
     }
 
 }
