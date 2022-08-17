@@ -25,7 +25,7 @@ public class StatusLine {
     }
 
     public static StatusLine ofHttpV11NotFound() {
-        return new StatusLine(Protocol.ofHttpV11(), StatusCode.FOUND);
+        return new StatusLine(Protocol.ofHttpV11(), StatusCode.NOT_FOUND);
     }
 
     public boolean isStatusCodeEqual(StatusCode statusCode) {
