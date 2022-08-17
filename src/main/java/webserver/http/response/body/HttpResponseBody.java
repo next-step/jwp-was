@@ -2,7 +2,7 @@ package webserver.http.response.body;
 
 public class HttpResponseBody {
 
-    private final byte[] body;
+    private byte[] body;
 
     public HttpResponseBody(byte[] body) {
         this.body = body;
@@ -14,5 +14,9 @@ public class HttpResponseBody {
 
     public byte[] getBody() {
         return body;
+    }
+
+    public void addBody(byte[] bytes) {
+        this.body = bytes;
     }
 }

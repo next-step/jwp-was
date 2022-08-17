@@ -36,7 +36,13 @@ public class HttpResponseHeader {
         return headers;
     }
 
+    //add cookie
     public void addHeader(String key, String value) {
         headers.put(key, value);
     }
+
+    //add conetent
+
+
+    //add location
 }

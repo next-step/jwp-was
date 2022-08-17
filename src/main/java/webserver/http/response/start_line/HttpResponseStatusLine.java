@@ -4,7 +4,7 @@ import org.apache.logging.log4j.util.Strings;
 
 public class HttpResponseStatusLine {
 
-    private final String statusLine;
+    private String statusLine;
 
     public HttpResponseStatusLine(final String statusLine) {
         this.statusLine = statusLine;
@@ -16,5 +16,9 @@ public class HttpResponseStatusLine {
 
     public String getStatusLine() {
         return statusLine;
+    }
+
+    public void addStatusLine(String statusLine) {
+        this.statusLine = statusLine;
     }
 }

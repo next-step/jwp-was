@@ -33,18 +33,18 @@ public class HttpResponse {
 
         byte[] bytes = FileIoUtils.loadFileFromClasspath(contentType.getPath() + pathValue);
 
-        this.responseStatusLine = new HttpResponseStatusLine("HTTP/1.1 " + HttpStatus.OK.value() + " " + HttpStatus.OK.name());
-        this.responseHeader = HttpResponseHeader.fromContent(contentType.getContentType(), bytes.length);
-        this.responseBody = new HttpResponseBody(bytes);
+        responseStatusLine.addStatusLine("HTTP/1.1 " + HttpStatus.OK.value() + " " + HttpStatus.OK.name());
+        responseHeader.addHeader("content-type", contentType.getContentType());
+        responseHeader.addHeader("content-length", String.valueOf(bytes.length));
+        responseBody.addBody(bytes);
 
         responseHeader();
         responseBody();
     }
 
     public void redirect(final StatusCode statusCode, final String path) {
-        this.responseStatusLine = new HttpResponseStatusLine("HTTP/1.1 " + statusCode.getValue() + " " + statusCode.name());
-        this.responseHeader = HttpResponseHeader.fromLocation(path);
-        this.responseBody = HttpResponseBody.empty();
+        responseStatusLine.addStatusLine("HTTP/1.1 " + statusCode.getValue() + " " + statusCode.name());
+        responseHeader.addHeader("location", path);
 
         responseHeader();
         responseBody();
