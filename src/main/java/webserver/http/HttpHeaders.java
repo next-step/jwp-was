@@ -7,6 +7,7 @@ public enum HttpHeaders {
     CONTENT_TYPE("Content-Type"),
     LOCATION("Location"),
     SET_COOKIE("Set-Cookie"),
+    COOKIE("Cookie"),
     HOST("Host"),
     ACCEPT("Accept"),
     ACCEPT_LANGUAGE("Accept-Language"),

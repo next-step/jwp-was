@@ -3,6 +3,7 @@ package controller;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
+import model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -20,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class UserListControllerTest {
 
     private static UserListController userListController;
+    private final String sessionId = UUID.randomUUID().toString();
 
     @BeforeAll
     static void setUp() {
@@ -34,9 +37,11 @@ class UserListControllerTest {
     void success() throws Exception {
         HttpRequest request = HttpRequest.of(
                 RequestLine.of(HttpMethod.GET, Path.of("/user/list"), new String[]{"HTTP", "1.1"}),
-                HttpRequestHeader.of(List.of("Host: www.nowhere123.com", "Accept-Language: en-us", "Set-Cookie: logined=true; Path=/")),
+                HttpRequestHeader.of(List.of("Host: www.nowhere123.com", "Accept-Language: en-us", "Cookie: JESSIONID=" + sessionId)),
                 HttpRequestBody.empty()
         );
+        HttpSession httpSession = request.getHttpSession();
+        httpSession.setAttribute("user", new User("jdragon","1234","jdragonName","jd@email.com"));
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
@@ -56,7 +61,7 @@ class UserListControllerTest {
     void failed() throws Exception {
         HttpRequest request = HttpRequest.of(
                 RequestLine.of(HttpMethod.GET, Path.of("/user/list"), new String[]{"HTTP", "1.1"}),
-                HttpRequestHeader.of(List.of("Host: www.nowhere123.com", "Accept: image/gif, image/jpeg, */*", "Accept-Language: en-us")),
+                HttpRequestHeader.of(List.of("Host: www.nowhere123.com", "Accept-Language: en-us")),
                 HttpRequestBody.empty()
         );
 

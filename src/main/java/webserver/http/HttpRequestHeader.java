@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class HttpRequestHeader {
     private static final String DEFAULT_CONTENT_LENGTH = "0";
@@ -13,6 +14,7 @@ public class HttpRequestHeader {
 
     private HttpRequestHeader(Map<HttpHeaders, String> headers) {
         this.headers = headers;
+        this.httpCookie = HttpCookie.empty();
     }
 
     private HttpRequestHeader(Map<HttpHeaders, String> headers, HttpCookie httpCookie) {
@@ -21,33 +23,19 @@ public class HttpRequestHeader {
     }
 
     public static HttpRequestHeader of(List<String> headers) {
-        HttpRequestHeader httpRequestHeader = new HttpRequestHeader(createHeaderMap(headers, equalsCookie().negate()));
-        if (hasCookie(headers)) {
-            HttpCookie cookie = HttpCookie.of(createHeaderMap(headers, equalsCookie()));
-            return httpRequestHeader.withCookie(cookie);
+        Map<HttpHeaders, String> headerMap = createHeaderMap(headers);
+        if (headerMap.containsKey(HttpHeaders.COOKIE)) {
+            String cookie = headerMap.get(HttpHeaders.COOKIE);
+            HttpCookie httpCookie = HttpCookie.of(cookie);
+            return new HttpRequestHeader(headerMap, httpCookie);
         }
-        return httpRequestHeader;
+        return new HttpRequestHeader(headerMap);
     }
 
-    private static Predicate<String[]> equalsCookie() {
-        return (header) -> HttpHeaders.SET_COOKIE.equals(header[0]);
-    }
-
-    private static Map<HttpHeaders, String> createHeaderMap(List<String> headers, Predicate<String[]> equalsCookie) {
+    private static Map<HttpHeaders, String> createHeaderMap(List<String> headers) {
         return headers.stream()
                 .map(header -> header.split(": "))
-                .filter(equalsCookie)
                 .collect(Collectors.toMap(key -> HttpHeaders.of(key[0]), value -> value[1]));
-    }
-
-    private static boolean hasCookie(List<String> headers) {
-        return headers.stream()
-                .map(header -> header.split(": "))
-                .anyMatch(header -> HttpHeaders.SET_COOKIE.equals(header[0]));
-    }
-
-    private HttpRequestHeader withCookie(HttpCookie cookie) {
-        return new HttpRequestHeader(this.headers, cookie);
     }
 
     public Map<HttpHeaders, String> getHeaders() {

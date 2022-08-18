@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -25,7 +26,7 @@ class CreateUserControllerTest {
         request = HttpRequest.of(
                 RequestLine.of(HttpMethod.POST, Path.of("/user/create"), new String[]{"HTTP", "1.1"}),
                 HttpRequestHeader.of(List.of("Host: www.nowhere123.com", "Accept: image/gif, image/jpeg, */*", "Accept-Language: en-us")),
-                HttpRequestBody.of("userId=javajigi&password=password&name=JaeSung&email=koola976@gmail.com")
+                HttpRequestBody.of("userId=koola976&password=password&name=JaeSung&email=koola976@gmail.com")
         );
     }
 
@@ -44,6 +45,7 @@ class CreateUserControllerTest {
         HttpResponse response = HttpResponse.of(dataOutputStream);
 
         HttpResponse result = createUserController.execute(request, response);
+
         assertAll(
                 () -> assertThat(result.getHttpResponseCode()).isEqualTo("302 FOUND"),
                 () -> assertThat(result.getHeaders()).contains(
