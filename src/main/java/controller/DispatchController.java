@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class DispatchController {
+    private static final String JESSIONID = "JESSIONID";
     private static final Set<Controller> controllers;
 
     static {
@@ -43,7 +44,7 @@ public class DispatchController {
         HttpResponse response = HttpResponse.of(dos);
 
         HttpCookie cookie = request.getCookie();
-        response.addCookie("JESSIONID", cookie.getSessionId());
+        response.addCookie(JESSIONID, cookie.getSessionId());
 
         try {
             response = controller.execute(request, response);

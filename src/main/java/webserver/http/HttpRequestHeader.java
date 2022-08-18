@@ -2,9 +2,9 @@ package webserver.http;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static utils.DelimiterConstants.HEADER_VALUE_DELIMITER;
 
 public class HttpRequestHeader {
     private static final String DEFAULT_CONTENT_LENGTH = "0";
@@ -34,7 +34,7 @@ public class HttpRequestHeader {
 
     private static Map<HttpHeaders, String> createHeaderMap(List<String> headers) {
         return headers.stream()
-                .map(header -> header.split(": "))
+                .map(header -> header.split(HEADER_VALUE_DELIMITER))
                 .collect(Collectors.toMap(key -> HttpHeaders.of(key[0]), value -> value[1]));
     }
 
@@ -44,10 +44,6 @@ public class HttpRequestHeader {
 
     public int getContentLength() {
         return Integer.parseInt(headers.getOrDefault(HttpHeaders.CONTENT_LENGTH, DEFAULT_CONTENT_LENGTH));
-    }
-
-    public boolean containsLoginCookie() {
-        return httpCookie != null && httpCookie.contains("logined=true");
     }
 
     public HttpCookie getCookie() {
