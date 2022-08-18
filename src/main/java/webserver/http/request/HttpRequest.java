@@ -14,7 +14,6 @@ import webserver.http.request.requestline.RequestLine;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.UUID;
 
 public class HttpRequest {
     private static final String EMPTY_STRING = "";
@@ -94,9 +93,8 @@ public class HttpRequest {
     }
 
     private void initSession() {
-        if (this.header.getCookieValue(JSESSION_ID).isEmpty() && !isStaticFilePath()) {
-            String newId = UUID.randomUUID().toString();
-            SessionDatabase.save(newId, new HttpSession(newId));
+        if (this.header.hasJsessionId() && !isStaticFilePath()) {
+            String newId = SessionDatabase.save();
             this.header.setCookie(JSESSION_ID, newId);
             this.header.addField(RequestHeader.COOKIE, String.format(HeaderValue.JSESSION_ID, newId));
         }

@@ -89,6 +89,23 @@ GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1
 
 세션은 클라이언트와 서버 간에 상태 값을 공유하기 위해 고유한 아이디를 활용하고, 이 고유한 아이디는 쿠키를 활용해 공유한다.
 
+# 기능 요구사항 (Thread Pool 적용)
+## 요구사항 1
+현재 구현되어 있는 웹 애플리케이션 서버(이하 WAS)는 사용자 요청이 있을 떄마다 Thread 를 생성해 사용자 요청을 처리한다. WAS 가 이와 같이 처리할 경우 다음과 같은 문제가 발생할 가능성이 있다.
+- 사용자 요청이 있을 때마다 Thread 를 생성해야 하기 때문에 Thread 생성 비용이 발생해 성능이 떨어진다.
+- 동시 접속자가 많아질 경우, WAS 가 메모리 자원의 한계, Context Switching 비용의 증가로 다운될 가능성이 높다.
+
+WAS 는 많은 동시 접속자를 처리하는 것도 중요하지만 동시 접속자가 많더라도 다운되지 않으면서 안정적으로 서비스하는 것이 더 중요하다. WAS 에 Thread Pool 을 적용해 안정적인 서비스가 가능하도록 한다.
+
+Java 에서 기본으로 제공하는 ThreadPoolExecutor 를 활용해 ThreadPool 기능을 추가한다.
+
+최대 ThreadPool 의 크기는 250, 모든 Thread 가 사용 중인(Busy) 상태이면 100명까지 대기 상태가 되도록 구현한다.
+
+## 요구사항 2
+src/test/java 의 webserver.ExecutorsTest 는 100개의 Thread 가 동시에 실행하도록 구현한 테스트 코드이다.
+Spring 에서 제공하는 RestTemplate 을 활용해 서버의 ThreadPool 수보다 많은 요청을 동시에 보내본다.
+
+예를 들어 서버의 최대 Thread Pool 수를 5로 설정하고, ExecutorsTest 의 `Executors.newFixedThreadPool(10)`과 같이 설정해 동시에 10개의 요청이 발생하도록 구현해 본다.
 
 ## 기능 목록
 

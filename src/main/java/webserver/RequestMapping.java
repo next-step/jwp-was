@@ -4,6 +4,7 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import webserver.controller.Controller;
+import webserver.controller.HomeController;
 import webserver.controller.StaticController;
 import webserver.controller.TemplateController;
 import webserver.controller.UserCreateController;
@@ -26,6 +27,7 @@ public class RequestMapping {
         loader.setSuffix(".html");
         CONTROLLERS.addAll(
                 Set.of(
+                        new HomeController(),
                         new StaticController(),
                         new TemplateController(),
                         new UserCreateController(),

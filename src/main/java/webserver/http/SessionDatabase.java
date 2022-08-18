@@ -1,6 +1,7 @@
 package webserver.http;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionDatabase {
@@ -9,8 +10,10 @@ public class SessionDatabase {
     private SessionDatabase() {
     }
 
-    public static void save(String id, HttpSession httpSession) {
-        sessions.put(id, httpSession);
+    public static String save() {
+        String newId = UUID.randomUUID().toString();
+        sessions.put(newId, new HttpSession(newId));
+        return newId;
     }
 
     public static HttpSession findById(String id) {
