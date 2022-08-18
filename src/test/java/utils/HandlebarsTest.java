@@ -17,7 +17,7 @@ public class HandlebarsTest {
     private static final Logger log = LoggerFactory.getLogger(HandlebarsTest.class);
 
     @Test
-    void name() throws Exception {
+    void 프로필_랜더링() throws Exception {
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix("/templates");
         loader.setSuffix(".html");
@@ -34,7 +34,7 @@ public class HandlebarsTest {
     }
 
     @Test
-    void list() throws Exception {
+    void 회원목록_랜더링() throws Exception {
         TemplateLoader loader = new ClassPathTemplateLoader();
         loader.setPrefix("/templates");
         loader.setSuffix(".html");

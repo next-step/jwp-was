@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ParametersTest {
     @Test
-    void 쿼리_스트링_파싱() {
+    void 파라미터_문자열_파싱() {
         String key1 = "id";
         String key2 = "password";
         String key3 = "name";
@@ -27,7 +27,7 @@ class ParametersTest {
 
     @ParameterizedTest
     @EmptySource
-    void 쿼리_스트링이_없을_경우(String queryString) {
+    void 파라미터_문자열이_없을_경우(String queryString) {
         Parameters parameters = Parameters.from(queryString);
 
         assertThat(parameters.get("key")).isNull();
