@@ -1,8 +1,5 @@
 package webserver;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
 import controller.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,15 +12,6 @@ import java.net.Socket;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final Handlebars handlebars;
-
-    static {
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".html");
-        handlebars = new Handlebars(loader);
-    }
-
     private final Socket connection;
     private final RequestMapper requestMapper;
 
@@ -38,6 +26,7 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest request = HttpRequest.from(in);
             HttpResponse response = HttpResponse.from(out);
+
 
             Controller controller = requestMapper.getController(request.getPath());
             controller.service(request, response);
