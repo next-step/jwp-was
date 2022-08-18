@@ -46,7 +46,9 @@ public class HttpRequest {
             requestBody = IOUtils.readData(br, contentLength);
         }
 
-        Parameters parameters = HttpMethod.GET.equals(method) ? path.getQueries() : Parameters.from(requestBody);
+        Parameters queryParameters = path.getQueries();
+        Parameters bodyParameters = Parameters.from(requestBody);
+        Parameters parameters = Parameters.from(queryParameters, bodyParameters);
 
         return new HttpRequest(requestLine, headers, cookie, parameters);
     }
