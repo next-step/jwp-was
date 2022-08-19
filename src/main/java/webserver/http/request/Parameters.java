@@ -1,9 +1,6 @@
 package webserver.http.request;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Parameters {
     public static final String QUERY_STRING_DELIMITER = "&";
@@ -23,6 +20,17 @@ public class Parameters {
         Arrays.stream(queryString.split(QUERY_STRING_DELIMITER))
                 .map(qs -> qs.split(KEY_VALUE_DELIMITER))
                 .forEach(parameters::put);
+
+        return parameters;
+    }
+
+    public static Parameters from(Parameters... parametersList) {
+        Parameters parameters = new Parameters();
+
+        Arrays.stream(parametersList)
+                .map(params -> params.parametersByKey.entrySet())
+                .flatMap(Collection::stream)
+                .forEach(entry -> parameters.parametersByKey.put(entry.getKey(), entry.getValue()));
 
         return parameters;
     }
