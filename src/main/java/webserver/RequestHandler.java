@@ -30,26 +30,11 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            String line = br.readLine();
-            RequestLine requestLine = RequestLine.parse(line);
-            logger.debug("request line : {}", requestLine);
-
-            String path = requestLine.getPath().getPath();
-            logger.debug("request path : {}", path);
-
-            HttpMethod method = requestLine.getMethod();
-            logger.debug("request method : {}", method);
-
-            HttpHeader httpHeader = new HttpHeader();
-            while (!"".equals(line)) {
-                line = br.readLine();
-                logger.debug("header : {}", line);
-                httpHeader.addHeader(line);
-            }
+            HttpRequest httpRequest = new HttpRequest(in);
+            String path = httpRequest.getPath();
 
             DataOutputStream dos = new DataOutputStream(out);
-            String fileExtension = FileIoUtils.getFileExtension(requestLine.getPath().getPath());
+            String fileExtension = FileIoUtils.getFileExtension(path);
             String contentType = ContentType.selectContent(fileExtension);
 
             byte[] body = "Hello World22".getBytes();
@@ -57,17 +42,17 @@ public class RequestHandler implements Runnable {
                 body = FileIoUtils.loadFileFromClasspath("./templates"+path);
             } else if (path.equals("/user/create")) {
 
-                Map<String, String> parameters = getParameters(br, httpHeader);
+                Map<String, String> parameters = httpRequest.getBody().getParameter();
                 createUser(parameters, dos);
 
                 return;
             } else if (path.equals("/user/login")) {
-                Map<String, String> parameters = getParameters(br, httpHeader);
+                Map<String, String> parameters = httpRequest.getBody().getParameter();
                 loginUser(parameters, dos);
 
                 return;
             } else if (path.equals("/user/list")) {
-                listUser(httpHeader, dos, contentType);
+                listUser(httpRequest.getCookie(), dos, contentType);
 
                 return;
             }
@@ -86,7 +71,7 @@ public class RequestHandler implements Runnable {
     public Map<String, String> getParameters(BufferedReader br, HttpHeader httpHeader) throws IOException {
         final RequestBody requestBody = new RequestBody();
         requestBody.toBody(br, httpHeader);
-        return requestBody.getParameters(requestBody.getBody());
+        return requestBody.createParameter(requestBody.getBody());
     }
 
     public void createUser(Map<String, String> queryString, DataOutputStream dos) {
@@ -110,10 +95,9 @@ public class RequestHandler implements Runnable {
         response302Header(dos, isLogin ? "/index.html" : "/login_failed.html", setCookie(String.valueOf(isLogin)));
     }
 
-    public void listUser(HttpHeader httpHeader, DataOutputStream dos, String contentType) throws IOException {
-        String cookie = httpHeader.getValue("Cookie");
+    public void listUser(Cookie cookie, DataOutputStream dos, String contentType) throws IOException {
 
-        if (!cookie.equals("logined=true")) {
+        if (!Boolean.parseBoolean(cookie.getValue("logined"))) {
             response302Header(dos, "/login.html");
             return;
         }
