@@ -25,18 +25,10 @@ public class UserLoginController extends AbstractController {
             User user = DataBase.findUserById(extractRequiredBody(request, "userId"));
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-            response.buildResponse(
-                    StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.FOUND),
-                    HttpHeader.from(Map.of(
-                            HttpHeader.LOCATION, "/index.html"))
-            );
+            response.sendRedirect("/index.html");
             return;
         }
-        response.buildResponse(
-                StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.FOUND),
-                HttpHeader.from(Map.of(
-                        HttpHeader.LOCATION, "/user/login_failed.html"))
-        );
+        response.sendRedirect("/user/login_failed.html");
     }
 
     private boolean isValidUserInfo(HttpRequest request) {
