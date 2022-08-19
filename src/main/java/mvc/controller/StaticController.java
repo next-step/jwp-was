@@ -12,7 +12,7 @@ import java.net.URISyntaxException;
 public class StaticController extends AbstractController {
 
     @Override
-    public void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+    protected void doGet(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
         ViewResolver viewResolver = new StaticViewResolver();
         View view = viewResolver.resolveViewName(request.getPath());
         view.render(request, response);

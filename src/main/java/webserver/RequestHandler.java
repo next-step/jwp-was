@@ -34,6 +34,7 @@ public class RequestHandler implements Runnable {
             HttpResponse response = new HttpResponse();
             String path = getDefaultPath(request.getPath());
             Controller controller = ControllerMatcher.matchController(path);
+            logger.debug("Controller : {}", controller);
             if (controller == null) {
                 response.notFound();
                 response.writeResponse(dos);

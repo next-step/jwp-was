@@ -107,6 +107,8 @@ public class HttpResponse {
     }
 
     private void writeBody(DataOutputStream dos) throws IOException {
+        logger.debug("contentLength : {}", getContentLength());
+        logger.debug("body size : {}", body().length);
         dos.write(body(), 0, getContentLength());
         dos.flush();
     }

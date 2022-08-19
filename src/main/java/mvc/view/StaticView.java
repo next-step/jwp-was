@@ -22,8 +22,9 @@ public class StaticView implements View {
         logger.debug("fileExtension: {}", fileExtension(request));
         response.responseOk(
                 HttpHeader.from(Collections.singletonMap(
-                        HttpHeader.CONTENT_TYPE, String.format("text/%s;charset=utf-8",
-                        fileExtension(request)))), FileIoUtils.loadFileFromClasspath(staticPath(request))
+                        HttpHeader.CONTENT_TYPE, String.format("text/%s; charset=utf-8", fileExtension(request))
+                )),
+                FileIoUtils.loadFileFromClasspath(staticPath(request))
         );
     }
 
