@@ -83,6 +83,7 @@ public class HttpResponse {
             dos.writeBytes(String.format("%s %s \r%n", statusLine.getProtocolToString(), getHttpStatusCode()));
             writeHeader(dos);
             writeCookies(dos);
+            dos.writeBytes("\r\n");
             writeBody(dos);
         } catch (IOException e) {
             logger.error(e.getMessage());
