@@ -1,7 +1,8 @@
 package http;
 
 import exception.Assert;
-import org.apache.logging.log4j.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.session.HttpSession;
 import webserver.session.HttpSessionStorage;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class HttpHeader {
+    private static final Logger logger = LoggerFactory.getLogger(HttpHeader.class);
 
     public static final String LOCATION = "Location";
     public static final String SET_COOKIE = "Set-Cookie";
@@ -32,6 +34,7 @@ public class HttpHeader {
 
     private static Map.Entry<String, String> parseToEntry(String pair) {
         String[] splitPair = pair.split(DELIMITER, 2);
+        logger.debug("Header: {}", splitPair[0].trim() + ": " + splitPair[1].trim());
         return Map.entry(
                 splitPair[0].trim(),
                 splitPair[1].trim());
