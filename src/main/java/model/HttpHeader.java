@@ -43,9 +43,23 @@ public class HttpHeader {
         }
 
         public Builder sendRedirect(String path) {
-            keyToValue.put("Location: ", "http://localhost:8080" + path);
+            keyToValue.put("Location", "http://localhost:8080" + path);
 
             return this;
+        }
+
+        public Builder addSession(String sessionId) {
+            String cookie = keyToValue.get("Set-Cookie");
+
+            if (keyToValue.get("Set-Cookie") == null) {
+                keyToValue.put("Set-Cookie", "JSESSIONID=" + sessionId + COOKIE_SEPARATOR);
+
+                return this;
+            }
+
+            keyToValue.replace("Set-Cookie", "JSESSIONID=" + sessionId + COOKIE_SEPARATOR + cookie);
+            return this;
+
         }
 
         public HttpHeader build() {
@@ -68,5 +82,24 @@ public class HttpHeader {
     public boolean hasCookie(String cookie) {
         return Arrays.asList(getValueByKey("Cookie").split(COOKIE_SEPARATOR))
             .contains(cookie);
+    }
+
+    public boolean hasSession() {
+        if (getValueByKey("Cookie") != null) {
+
+            return Arrays.asList(getValueByKey("Cookie").split(COOKIE_SEPARATOR))
+                .contains("JSESSIONID");
+        }
+
+        return false;
+    }
+
+    public String getSessionId() {
+        return Arrays.stream(getValueByKey("Cookie")
+                .split(COOKIE_SEPARATOR))
+            .filter(it -> it.contains("JSESSIONID"))
+            .findFirst()
+            .orElse("")
+            .replace("JSESSIONID=", "");
     }
 }
