@@ -11,7 +11,6 @@ import mvc.controller.Controller;
 import mvc.controller.ControllerMatcher;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import org.springframework.web.servlet.HandlerInterceptor;
 import webserver.session.Interceptor;
 import webserver.session.InterceptorRegistry;
 
@@ -35,6 +34,7 @@ public class RequestHandler implements Runnable {
             HttpResponse response = new HttpResponse();
             String path = getDefaultPath(request.getPath());
             Controller controller = ControllerMatcher.matchController(path);
+            logger.debug("Controller : {}", controller);
             if (controller == null) {
                 response.notFound();
                 response.writeResponse(dos);

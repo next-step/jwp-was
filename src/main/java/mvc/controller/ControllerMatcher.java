@@ -9,13 +9,13 @@ import java.util.Map;
 public class ControllerMatcher {
     private static final Logger logger = LoggerFactory.getLogger(ControllerMatcher.class);
     private static Map<String, Controller> controllers = new HashMap<>();
+    private static Controller templateController = new TemplateController();
+    private static Controller staticController = new StaticController();
 
     static {
         controllers.put("/user/create", new UserCreateController());
         controllers.put("/user/login", new UserLoginController());
         controllers.put("/user/list", new UserListController());
-        controllers.put("./static", new StaticController());
-        controllers.put("./template", new TemplateController());
     }
 
     public static Controller matchController(String path) {
@@ -26,8 +26,8 @@ public class ControllerMatcher {
         }
 
         if (path.endsWith(".html")) {
-            return controllers.get("./template");
+            return templateController;
         }
-        return controllers.get("./static");
+        return staticController;
     }
 }

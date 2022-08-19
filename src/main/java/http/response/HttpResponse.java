@@ -49,6 +49,7 @@ public class HttpResponse {
     public void responseOk(HttpHeader responseHeader, byte[] body) {
         Assert.notNull(responseHeader, "Header는 null이어선 안됩니다.");
         Assert.notNull(body, "ResonseBody는 null이어선 안됩니다.");
+        this.statusLine = StatusLine.of(Protocol.from("HTTP/1.1"), HttpStatusCode.OK);
         this.responseHeader = responseHeader;
         this.responseBody = new ResponseBody(body);
     }
@@ -82,6 +83,7 @@ public class HttpResponse {
             dos.writeBytes(String.format("%s %s \r%n", statusLine.getProtocolToString(), getHttpStatusCode()));
             writeHeader(dos);
             writeCookies(dos);
+            dos.writeBytes("\r\n");
             writeBody(dos);
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -106,6 +108,8 @@ public class HttpResponse {
     }
 
     private void writeBody(DataOutputStream dos) throws IOException {
+        logger.debug("contentLength : {}", getContentLength());
+        logger.debug("body size : {}", body().length);
         dos.write(body(), 0, getContentLength());
         dos.flush();
     }

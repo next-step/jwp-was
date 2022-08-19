@@ -36,6 +36,7 @@ public class HttpSession {
 
     public void invalidate() {
         attributes.clear();
+        HttpSessionStorage.remove(id);
     }
 
     public boolean contains(String key) {

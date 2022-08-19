@@ -3,8 +3,11 @@ package http.request;
 import http.HttpMethod;
 import http.request.path.Path;
 import http.request.protocol.Protocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RequestLine {
+    private static final Logger logger = LoggerFactory.getLogger(RequestLine.class);
 
     private static final String REQUEST_LINE_DELIMITER = " ";
     private static final int HTTP_INDEX = 0;
@@ -16,6 +19,7 @@ public class RequestLine {
     private Protocol protocol;
 
     public RequestLine (String url) {
+        logger.debug("Request line : {}", url);
         String[] splits = url.split(REQUEST_LINE_DELIMITER);
         validateHttpMethod(splits[HTTP_INDEX]);
 
