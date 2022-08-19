@@ -3,6 +3,7 @@ package mvc.view;
 import http.HttpHeader;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -14,6 +15,7 @@ import java.util.Collections;
 
 public class StaticView implements View {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+
     private final static String STATIC_PATH = "./static";
 
     @Override
