@@ -1,7 +1,6 @@
 package webserver.request;
 
 import http.request.HttpRequest;
-import http.response.HttpResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -13,12 +12,11 @@ import org.springframework.web.client.RestTemplate;
 import webserver.ExecutorsTest;
 
 import java.io.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.IntConsumer;
-import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -83,6 +81,7 @@ public class HttpRequestTest {
     @Test
     void request_index_html_at_the_same_time() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(100);
+        CountDownLatch latch = new CountDownLatch(100);
         RestTemplate restTemplate = new RestTemplate();
         AtomicInteger counter = new AtomicInteger(0);
         StopWatch sw = new StopWatch();
@@ -90,6 +89,7 @@ public class HttpRequestTest {
 
         for (int i = 0; i < 100; i++) {
             executorService.execute(() -> {
+                latch.countDown();
                 int index = counter.addAndGet(1);
                 restTemplate.getForEntity("http://localhost:8080", String.class);
                 logger.info("Thread '{}'", index);
@@ -97,7 +97,7 @@ public class HttpRequestTest {
         }
         sw.stop();
         executorService.shutdown();
-        executorService.awaitTermination(100, TimeUnit.MILLISECONDS);
+        latch.await(100, TimeUnit.MILLISECONDS);
         logger.info("Total Elapsed: '{}'", sw.getTotalTimeMillis());
     }
 }
