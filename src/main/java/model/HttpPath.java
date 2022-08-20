@@ -13,15 +13,7 @@ public class HttpPath {
 		this.queryString = queryString;
 	}
 
-	public String getPath() {
-		return path;
-	}
-
-	public RequestPathQueryString getQueryString() {
-		return queryString;
-	}
-
-	public static HttpPath of(String path) {
+	public HttpPath (String path) {
 		RequestPathQueryString requestPathQueryString = new RequestPathQueryString();
 		if(path.contains("?")) {
 			String[] parsingPath = path.split(QUERY_STRING_DELIMITER);
@@ -29,7 +21,17 @@ public class HttpPath {
 			String stringQuery = parsingPath[1];
 			requestPathQueryString = parsingQueryString(stringQuery);
 		}
-		return new HttpPath(path, requestPathQueryString);
+
+		this.path = path;
+		this.queryString = requestPathQueryString;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public RequestPathQueryString getQueryString() {
+		return queryString;
 	}
 
 	private static RequestPathQueryString parsingQueryString(String path) {

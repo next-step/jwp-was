@@ -12,19 +12,20 @@ public class HttpProtocol {
 		this.version = version;
 	}
 
+	public HttpProtocol(String httpProtocol) {
+		String[] parsingProtocolVersion = httpProtocol.split(PROTOCOL_VERSION_DELIMITER);
+		validateProtocolVersionParsingResult(parsingProtocolVersion);
+
+		this.protocol = parsingProtocolVersion[0];
+		this.version = parsingProtocolVersion[1];
+	}
+
 	public String getProtocol() {
 		return protocol;
 	}
 
 	public String getVersion() {
 		return version;
-	}
-
-	public static HttpProtocol of(String httpProtocol) {
-		String[] parsingProtocolVersion = httpProtocol.split(PROTOCOL_VERSION_DELIMITER);
-		validateProtocolVersionParsingResult(parsingProtocolVersion);
-
-		return new HttpProtocol(parsingProtocolVersion[0], parsingProtocolVersion[1]);
 	}
 
 	private static void validateProtocolVersionParsingResult(String[] parsingProtocolVersion) {

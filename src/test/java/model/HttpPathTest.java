@@ -14,7 +14,7 @@ class HttpPathTest {
 	    String path = "/users?userId=javajigi&password=password&name=JaeSung";
 
 	    // when
-		HttpPath httpPath = HttpPath.of(path);
+		HttpPath httpPath = new HttpPath(path);
 
 	    // then
 		assertAll(
