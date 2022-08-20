@@ -1,5 +1,9 @@
 package webserver;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import db.DataBase;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -93,6 +97,22 @@ public class RequestHandler implements Runnable {
 
                 response302Header(dos, location);
                 responseHeader(dos, Cookie.RESPONSE_COOKIE_HEADER, cookie.getResponseCookie());
+            } else if ("/user/list".equals(path)) {
+                if (!Boolean.parseBoolean(cookie.get("logined"))) {
+                    response302Header(dos, "user/login.html");
+                    return;
+                }
+
+                List<User> users = new ArrayList<>(DataBase.findAll());
+                TemplateLoader templateLoader = new ClassPathTemplateLoader();
+                templateLoader.setPrefix("/templates");
+                templateLoader.setSuffix(".html");
+                Handlebars handlebars = new Handlebars(templateLoader);
+                Template template = handlebars.compile("user/list");
+                byte[] listPage = template.apply(users).getBytes();
+
+                response200Header(dos, listPage.length);
+                responseBody(dos, listPage);
             }
 
             byte[] body = "Hello World".getBytes();

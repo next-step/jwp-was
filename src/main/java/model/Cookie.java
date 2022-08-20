@@ -44,4 +44,8 @@ public class Cookie {
 
         return String.join(COOKIE_DELIMITER, valuesOfCookie) + COOKIE_DELIMITER + PATH_KEY + KEY_VALUE_DELIMITER + "/";
     }
+
+    public String get(String key) {
+        return values.get(key);
+    }
 }
