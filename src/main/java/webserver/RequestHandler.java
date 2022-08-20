@@ -30,6 +30,7 @@ import utils.IOUtils;
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private static final String PATH_DELIMITER = "/";
+    private static final String CSS_PATH = "/css";
 
     private Socket connection;
 
@@ -113,6 +114,16 @@ public class RequestHandler implements Runnable {
 
                 response200Header(dos, listPage.length);
                 responseBody(dos, listPage);
+            } else if (isStaticPath(path)) {
+                String prefix = "static";
+                if (path.contains(".html") || path.contains(".ico")) {
+                    prefix = "templates";
+                }
+
+                byte[] responseBody = FileIoUtils.loadFileFromClasspath("./" + prefix + "/" + path);
+
+                response200Header(dos, responseBody.length);
+                responseBody(dos, responseBody);
             }
 
             byte[] body = "Hello World".getBytes();
@@ -123,6 +134,10 @@ public class RequestHandler implements Runnable {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean isStaticPath(String path) {
+        return path.startsWith(CSS_PATH);
     }
 
     private boolean isLogin(User loginUser, Map<String, String> parameters) {
