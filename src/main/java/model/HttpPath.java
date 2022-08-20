@@ -4,6 +4,8 @@ import webserver.RequestPathQueryString;
 
 public class HttpPath {
 	private static final String QUERY_STRING_DELIMITER = "\\?";
+	private static final int PATH_POSITION = 0;
+	private static final int STRING_QUERY_POSITION = 1;
 
 	private String path;
 	private RequestPathQueryString queryString;
@@ -17,8 +19,8 @@ public class HttpPath {
 		RequestPathQueryString requestPathQueryString = new RequestPathQueryString();
 		if(path.contains("?")) {
 			String[] parsingPath = path.split(QUERY_STRING_DELIMITER);
-			path = parsingPath[0];
-			String stringQuery = parsingPath[1];
+			path = parsingPath[PATH_POSITION];
+			String stringQuery = parsingPath[STRING_QUERY_POSITION];
 			requestPathQueryString = parsingQueryString(stringQuery);
 		}
 

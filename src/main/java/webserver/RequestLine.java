@@ -28,8 +28,8 @@ public class RequestLine {
 		String[] parsingRequest = request.split(REQUEST_DELIMITER);
 		validateParsingResult(parsingRequest);
 
-		return new RequestLine(HttpMethod.valueOf(parsingRequest[0]), HttpPath.of(parsingRequest[1]),
-			HttpProtocol.of(parsingRequest[2]));
+		return new RequestLine(HttpMethod.valueOf(parsingRequest[0]), new HttpPath(parsingRequest[1]),
+			new HttpProtocol(parsingRequest[2]));
 	}
 
 	private void validateParsingResult(String[] parsingRequest) {

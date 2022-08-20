@@ -3,6 +3,8 @@ package model;
 public class HttpProtocol {
 	private static final String PROTOCOL_VERSION_DELIMITER = "/";
 	private static final int PROTOCOL_VERSION_PARSING_NUMBER = 2;
+	private static final int PROTOCOL_POSITION = 0;
+	private static final int VERSION_POSITION = 1;
 
 	private String protocol;
 	private String version;
@@ -16,8 +18,8 @@ public class HttpProtocol {
 		String[] parsingProtocolVersion = httpProtocol.split(PROTOCOL_VERSION_DELIMITER);
 		validateProtocolVersionParsingResult(parsingProtocolVersion);
 
-		this.protocol = parsingProtocolVersion[0];
-		this.version = parsingProtocolVersion[1];
+		this.protocol = parsingProtocolVersion[PROTOCOL_POSITION];
+		this.version = parsingProtocolVersion[VERSION_POSITION];
 	}
 
 	public String getProtocol() {
