@@ -117,4 +117,26 @@ public class RequestLineTest {
 			() -> assertThat(queryString.get("name")).isEqualTo("JaeSung")
 		);
 	}
+
+	@DisplayName("회원가입의 유효한 요청에 대해 path와 query string 파싱이 정상적으로 이루어졋다.")
+	@Test
+	void joinMemberParsingPathAndQueryParameterSuccess() {
+		// given
+		String request = "GET /user/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net HTTP/1.1";
+		RequestLine requestLine = new RequestLine(request);
+
+		// when
+		RequestLine result = requestLine.parse();
+
+		// then
+		Map<String, String> queryString = result.getRequestPathQueryString().getQueryStringOfPath();
+		assertAll(
+				() -> assertThat(result.getHttpPath().getPath()).isEqualTo("/user/create"),
+				() -> assertThat(queryString).hasSize(4),
+				() -> assertThat(queryString.get("userId")).isEqualTo("javajigi"),
+				() -> assertThat(queryString.get("password")).isEqualTo("password"),
+				() -> assertThat(queryString.get("name")).isEqualTo("%EB%B0%95%EC%9E%AC%EC%84%B1"),
+				() -> assertThat(queryString.get("email")).isEqualTo("javajigi%40slipp.net")
+		);
+	}
 }
