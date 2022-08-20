@@ -14,7 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import utils.HttpMethod;
 
 public class RequestLineTest {
-	private RequestLine requestLine = new RequestLine();
+//	private RequestLine requestLine = new RequestLine();
 
 	@DisplayName("GET 요청에 대한 RequestLine을 통해 정상적 파싱되었다.")
 	@Test
@@ -25,8 +25,10 @@ public class RequestLineTest {
 		String version = "1.1";
 		String request = "GET /users HTTP/1.1";
 
+		RequestLine requestLine = new RequestLine(request);
+
 		// when
-		RequestLine result = requestLine.parse(request);
+		RequestLine result = requestLine.parse();
 
 		// then
 		assertAll(
@@ -41,7 +43,8 @@ public class RequestLineTest {
 	@NullAndEmptySource
 	void exceptionRequestIsNullOrEmpty(String request) {
 		// when & then
-		assertThatThrownBy(() -> requestLine.parse(request))
+		RequestLine requestLine = new RequestLine(request);
+		assertThatThrownBy(requestLine::parse)
 			.isInstanceOf(IllegalArgumentException.class);
 	}
 
@@ -49,7 +52,8 @@ public class RequestLineTest {
 	@ValueSource(strings = {"GET /users", "GET /users HTTP/1.1GET /users HTTP/1.1", "POST /users", "POST /users HTTP/1.1GET /users HTTP/1.1"})
 	void exceptionRequestNotFitPropertyNumber(String request) {
 		// when & then
-		assertThatThrownBy(() -> requestLine.parse(request))
+		RequestLine requestLine = new RequestLine(request);
+		assertThatThrownBy(requestLine::parse)
 			.isInstanceOf(IllegalArgumentException.class);
 	}
 
@@ -57,7 +61,8 @@ public class RequestLineTest {
 	@ValueSource(strings = {"GAT /users HTTP/1.1", "PAST /users HTTP/1.1"})
 	void exceptionRequestMethodNotMatchedHttpMethod(String request) {
 		// when & then
-		assertThatThrownBy(() -> requestLine.parse(request))
+		RequestLine requestLine = new RequestLine(request);
+		assertThatThrownBy(requestLine::parse)
 			.isInstanceOf(IllegalArgumentException.class);
 	}
 
@@ -65,7 +70,8 @@ public class RequestLineTest {
 	@ValueSource(strings = {"GET /users HTTP1.1", "GET /users HTTP/1.1/1.2/1.3", "POST /users HTTP1.1", "POST /users HTTP/1.1/1.2/1.3"})
 	void exceptoinProtocolAndVersionNotFitNumber(String request) {
 		// when & then
-		assertThatThrownBy(() -> requestLine.parse(request))
+		RequestLine requestLine = new RequestLine(request);
+		assertThatThrownBy(requestLine::parse)
 			.isInstanceOf(IllegalArgumentException.class);
 	}
 
@@ -78,8 +84,10 @@ public class RequestLineTest {
 		String version = "1.1";
 		String request = "POST /users HTTP/1.1";
 
+		RequestLine requestLine = new RequestLine(request);
+
 		// when
-		RequestLine result = requestLine.parse(request);
+		RequestLine result = requestLine.parse();
 
 		// then
 		assertAll(
@@ -95,9 +103,10 @@ public class RequestLineTest {
 	void parsingQueryParameter() {
 	    // given
 		String request = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+		RequestLine requestLine = new RequestLine(request);
 
 	    // when
-		RequestLine result = requestLine.parse(request);
+		RequestLine result = requestLine.parse();
 
 	    // then
 		Map<String, String> queryString = result.getRequestPathQueryString().getQueryStringOfPath();
