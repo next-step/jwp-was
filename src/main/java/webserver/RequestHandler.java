@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import model.HttpHeaders;
 import model.User;
 import org.slf4j.Logger;
@@ -72,10 +73,23 @@ public class RequestHandler implements Runnable {
                 response200Header(dos, body.length);
                 responseBody(dos, body);
             } else if ("/user/create".equals(path)) {
-                User user = new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"), parameters.get("email"));
+                User user = new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"),
+                        parameters.get("email"));
                 DataBase.addUser(user);
 
                 response302Header(dos, "index.html");
+            } else if ("/user/login".equals(path)) {
+                User loginUser = DataBase.findUserById(parameters.get("userId"));
+                boolean loginResult = isLogin(loginUser, parameters);
+
+                String location = "";
+                if(loginResult) {
+                    location = "index.html";
+                } else {
+                    location = "user/login_failed.html";
+                }
+
+                response302Header(dos, location);
             }
 
             byte[] body = "Hello World".getBytes();
@@ -86,6 +100,10 @@ public class RequestHandler implements Runnable {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean isLogin(User loginUser, Map<String, String> parameters) {
+        return !Objects.isNull(loginUser) && loginUser.isPassword(parameters.get("password"));
     }
 
     private void response302Header(DataOutputStream dos, String location) {
