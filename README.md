@@ -30,13 +30,13 @@
   - [X] HTTP method인 GET, POST를 enum으로 구현한다.
 
 ### 2단계 HTTP 웹 서버 구현 - 구현할 기능 목록
-- [ ] http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
-  - [ ] 입력으로 들어온 classpath의 resource(index.html 파일)를 읽을 수 있다.
-  - [ ] HttpRequestParser는 입력으로 들어온 모든 RequestLine을 라인별로 분리할 수 있다.
-  - [ ] HttpHeaderParser는 입력으로 들어온 Header 리스트들을 HttpHeader 객체로 변환 할 수 있다.
-- [ ] “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다.
-    - [ ] Header의 첫 번째 라인에서 요청 URL을 추출한다.
-    - [ ] URL은 encoding 된 형태로 넘어오기 때문에 decoding 한다.
+- [X] http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
+  - [X] 입력으로 들어온 classpath의 resource(index.html 파일)를 읽을 수 있다.
+  - [X] HttpRequestParser는 입력으로 들어온 모든 RequestLine을 라인별로 분리할 수 있다.
+  - [X] HttpHeaderParser는 입력으로 들어온 Header 리스트들을 HttpHeader 객체로 변환 할 수 있다.
+- [X] “회원가입” 메뉴를 클릭하면 http://localhost:8080/user/form.html 으로 이동하면서 회원가입할 수 있다.
+    - [X] Header의 첫 번째 라인에서 요청 URL을 추출한다.
+    - [X] URL은 encoding 된 형태로 넘어오기 때문에 decoding 한다.
 - [ ] http://localhost:8080/user/form.html 파일의 form 태그 method를 get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.
   - [ ] POST method로 데이터를 전달할 경우 전달하는 데이터는 HTTP Body에 담긴다.
   - [ ] 회원가입시 입력한 모든 데이터를 추출해 User 객체를 생성한다.
