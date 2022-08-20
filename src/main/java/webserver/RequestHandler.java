@@ -10,11 +10,16 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import model.HttpHeaders;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import utils.HttpMethod;
+import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -36,7 +41,10 @@ public class RequestHandler implements Runnable {
             logger.debug("request line : {}", line);
             RequestLine requestLine = new RequestLine(line);
             requestLine = requestLine.parse();
+            List<String> headerLine = new ArrayList<>();
+            line = br.readLine();
             while (!line.equals("")) {
+                headerLine.add(line);
                 line = br.readLine();
                 logger.debug("header : {}", line);
             }
@@ -46,15 +54,25 @@ public class RequestHandler implements Runnable {
             String path = requestLine.getHttpPath().getPath();
             logger.debug("http path : {}", path);
 
-            RequestPathQueryString requestPathQueryString = requestLine.getRequestPathQueryString();
-            Map<String, String> queryStringOfPath = requestPathQueryString.getQueryStringOfPath();
+            HttpHeaders httpHeaders = new HttpHeaders(String.join("\n", headerLine));
+
+            RequestParameters requestParameters = new RequestParameters();
+            if (HttpMethod.POST.equals(requestLine.getMethod())) {
+                String requestBody = IOUtils.readData(br, Integer.parseInt(httpHeaders.get("Content-Length")));
+                requestParameters = new RequestParameters(requestBody);
+            } else if (HttpMethod.GET.equals(requestLine.getMethod())) {
+                requestParameters = requestLine.getRequestParameters();
+            }
+
+            Map<String, String> parameters = requestParameters.getRequestParameters();
+
             if (path.endsWith(".html")) {
                 path = "./templates" + path;
                 byte[] body = FileIoUtils.loadFileFromClasspath(path);
                 response200Header(dos, body.length);
                 responseBody(dos, body);
             } else if ("/user/create".equals(path)) {
-                User user = new User(queryStringOfPath.get("userId"), queryStringOfPath.get("password"), queryStringOfPath.get("name"), queryStringOfPath.get("email"));
+                User user = new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"), parameters.get("email"));
                 DataBase.addUser(user);
 
                 response302Header(dos, "index.html");

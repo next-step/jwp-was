@@ -64,7 +64,7 @@ public class RequestLine {
 		return this.protocol;
 	}
 
-	public RequestPathQueryString getRequestPathQueryString() {
-		return this.path.getQueryString();
+	public RequestParameters getRequestParameters() {
+		return this.path.getRequestParameters();
 	}
 }

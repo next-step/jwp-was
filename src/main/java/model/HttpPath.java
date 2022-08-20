@@ -1,6 +1,6 @@
 package model;
 
-import webserver.RequestPathQueryString;
+import webserver.RequestParameters;
 
 public class HttpPath {
 	private static final String QUERY_STRING_DELIMITER = "\\?";
@@ -8,15 +8,15 @@ public class HttpPath {
 	private static final int STRING_QUERY_POSITION = 1;
 
 	private String path;
-	private RequestPathQueryString queryString;
+	private RequestParameters requestParameters;
 
-	public HttpPath(String path, RequestPathQueryString queryString) {
+	public HttpPath(String path, RequestParameters getRequestParameters) {
 		this.path = path;
-		this.queryString = queryString;
+		this.requestParameters = getRequestParameters;
 	}
 
 	public HttpPath (String path) {
-		RequestPathQueryString requestPathQueryString = new RequestPathQueryString();
+		RequestParameters requestPathQueryString = new RequestParameters();
 		if(path.contains("?")) {
 			String[] parsingPath = path.split(QUERY_STRING_DELIMITER);
 			path = parsingPath[PATH_POSITION];
@@ -25,18 +25,18 @@ public class HttpPath {
 		}
 
 		this.path = path;
-		this.queryString = requestPathQueryString;
+		this.requestParameters = requestPathQueryString;
 	}
 
 	public String getPath() {
 		return path;
 	}
 
-	public RequestPathQueryString getQueryString() {
-		return queryString;
+	public RequestParameters getRequestParameters() {
+		return requestParameters;
 	}
 
-	private static RequestPathQueryString parsingQueryString(String path) {
-		return new RequestPathQueryString(path);
+	private static RequestParameters parsingQueryString(String path) {
+		return new RequestParameters(path);
 	}
 }

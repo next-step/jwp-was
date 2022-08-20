@@ -7,20 +7,20 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class RequestPathQueryString {
+public class RequestParameters {
 	private static final String ELEMENT_DELIMITER = "&";
 	private static final String KEY_VALUE_DELIMITER = "=";
 	private static final int KEY_INDEX = 0;
 	private static final int VALUE_INDEX = 1;
 
-	private Map<String, String> queryStringOfPath = new HashMap<>();
+	private Map<String, String> parameters = new HashMap<>();
 
-	public RequestPathQueryString(String queryString) {
+	public RequestParameters(String queryString) {
 		validateNullOrEmpty(queryString);
-		this.queryStringOfPath = parsingQueryString(queryString);
+		this.parameters = parsingQueryString(queryString);
 	}
 
-	public RequestPathQueryString() {
+	public RequestParameters() {
 
 	}
 
@@ -40,7 +40,7 @@ public class RequestPathQueryString {
 		}
 	}
 
-	public Map<String, String> getQueryStringOfPath() {
-		return queryStringOfPath;
+	public Map<String, String> getRequestParameters() {
+		return parameters;
 	}
 }
