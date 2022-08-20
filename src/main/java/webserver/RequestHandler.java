@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import model.Cookie;
 import model.HttpHeaders;
 import model.User;
 import org.slf4j.Logger;
@@ -66,7 +67,7 @@ public class RequestHandler implements Runnable {
             }
 
             Map<String, String> parameters = requestParameters.getRequestParameters();
-
+            Cookie cookie = Cookie.from(httpHeaders.get(Cookie.REQUEST_COOKIE_HEADER));
             if (path.endsWith(".html")) {
                 path = "./templates" + path;
                 byte[] body = FileIoUtils.loadFileFromClasspath(path);
@@ -83,13 +84,15 @@ public class RequestHandler implements Runnable {
                 boolean loginResult = isLogin(loginUser, parameters);
 
                 String location = "";
-                if(loginResult) {
+                if (loginResult) {
                     location = "index.html";
                 } else {
                     location = "user/login_failed.html";
                 }
+                cookie.put("logined", String.valueOf(loginResult));
 
                 response302Header(dos, location);
+                responseHeader(dos, Cookie.RESPONSE_COOKIE_HEADER, cookie.getResponseCookie());
             }
 
             byte[] body = "Hello World".getBytes();
