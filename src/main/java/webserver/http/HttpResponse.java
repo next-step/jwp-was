@@ -1,5 +1,6 @@
 package webserver.http;
 
+import utils.CookieUtils;
 import utils.FileIoUtils;
 import webserver.http.exception.WriteOutputStreamException;
 
@@ -54,11 +55,8 @@ public class HttpResponse {
     public HttpResponse sendRedirectWithCookie(String path, String cookies) {
         this.code = HttpStatusCode.FOUND;
         this.header.addHeader(HttpHeaders.LOCATION, path);
-        String[] splitCookies = cookies.split(COOKIE_VALUE_DELIMITER);
-        for (String cookie : splitCookies) {
-            String[] split = cookie.split(PARAMETER_KEY_VALUE_DELIMITER);
-            this.header.addCookie(split[0], split[1]);
-        }
+        Map<String, Object> cookieMap = CookieUtils.createCookieMap(cookies);
+        cookieMap.forEach((key, value) -> this.header.addCookie(key, String.valueOf(value)));
         this.body = new byte[0];
         writeResponse();
         return this;
@@ -131,7 +129,7 @@ public class HttpResponse {
     }
 
     public String getCookie() {
-        return header.getCookie();
+        return header.getCookieList();
     }
 
     public void addCookie(String cookieKey, String cookieValue) {

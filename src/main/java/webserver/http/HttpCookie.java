@@ -1,5 +1,7 @@
 package webserver.http;
 
+import utils.CookieUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -22,13 +24,7 @@ public class HttpCookie {
     }
 
     public static HttpCookie of(String cookies) {
-        Map<String, Object> map = new HashMap<>();
-        String[] split = cookies.split(COOKIE_VALUE_DELIMITER);
-        for (String cookie : split) {
-            String[] splitCookie = cookie.split(PARAMETER_KEY_VALUE_DELIMITER);
-            map.put(splitCookie[0], splitCookie[1]);
-        }
-        return new HttpCookie(map);
+        return new HttpCookie(CookieUtils.createCookieMap(cookies));
     }
 
     public static HttpCookie empty() {

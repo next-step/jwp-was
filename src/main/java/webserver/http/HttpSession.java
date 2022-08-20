@@ -31,8 +31,8 @@ public class HttpSession {
         map.remove(name);
     }
 
-    public void invalidate(String id) {
-        HttpSessions.remove(id);
+    public void invalidate() {
+        HttpSessions.remove(this.id);
     }
 
 }
