@@ -1,5 +1,7 @@
 package webserver;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,7 +27,11 @@ public class RequestPathQueryString {
 	private Map<String, String> parsingQueryString(String queryString) {
 		return Stream.of(queryString.split(ELEMENT_DELIMITER))
 			.map(elements -> elements.split(KEY_VALUE_DELIMITER))
-			.collect(Collectors.toMap(element -> element[KEY_INDEX], element -> element[VALUE_INDEX]));
+			.collect(Collectors.toMap(element -> element[KEY_INDEX], element -> decodeElement(element[VALUE_INDEX])));
+	}
+
+	private String decodeElement(String value) {
+		return URLDecoder.decode(value, StandardCharsets.UTF_8);
 	}
 
 	private void validateNullOrEmpty(String queryString) {
