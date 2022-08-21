@@ -18,7 +18,8 @@ import webserver.http.session.SessionId;
 import java.util.ArrayList;
 import java.util.List;
 
-import static webserver.http.session.SessionAttributes.SESSION_LOGIN_KEY;
+import static webserver.http.session.SessionAttributes.SESSION_KEY_LOGIN;
+import static webserver.http.session.SessionAttributes.SESSION_VALUE_LOGIN;
 
 
 public class UserListController extends AbstractController {
@@ -28,15 +29,14 @@ public class UserListController extends AbstractController {
     public static final String URL = "/user/list.html";
     public static final String TEMPLATE_URL = "/user/list";
     public static final String LOGIN_PAGE = "/user/login.html";
-    public static final String LOGIN_TRUE = "true";
 
     private Boolean isLoggedIn(RequestHeader requestHeader) {
         Cookie cookie = requestHeader.getCookie();
         try {
             SessionId sessionId = cookie.getSessionId();
             HttpSession session = LocalSessionStorage.getSession(sessionId);
-            Object attribute = session.getAttribute(SESSION_LOGIN_KEY);
-            return attribute.equals(LOGIN_TRUE);
+            Object attribute = session.getAttribute(SESSION_KEY_LOGIN);
+            return attribute.equals(SESSION_VALUE_LOGIN);
         } catch (Exception e) {
             logger.debug("로그인하지 않은 사용자 입니다.");
             return false;
