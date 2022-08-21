@@ -18,4 +18,4 @@ Host: localhost:8080
 Connection: keep-alive
 Accept: */*
 ```
-- [ ] Header의 첫 번째 라인에서 요청 URL 추출.
+- [X] Header의 첫 번째 라인에서 요청 URL 추출.

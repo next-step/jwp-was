@@ -2,6 +2,8 @@ package model.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import webserver.http.Method;
 import webserver.http.Type;
 import webserver.http.Version;
@@ -12,20 +14,16 @@ import static org.assertj.core.api.Assertions.entry;
 @DisplayName("HTTP 요청 파싱 테스트")
 class RequestLineTest {
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"GET /users HTTP/1.1", "GET /index.html HTTP/1.1"})
     @DisplayName("Get 요청을 파싱한다.")
-    void parseGetRequest() {
-        // Arrange
-        final String input = "GET /users HTTP/1.1";
-
-        // Act
+    void parseGetRequest(String input) {
         final RequestLine actual = RequestLine.parse(input);
 
-        // Assert
         assertThat(actual.getMethod()).isEqualTo(Method.GET);
         assertThat(actual.getProtocolType()).isEqualTo(Type.HTTP);
         assertThat(actual.getProtocolVersion()).isEqualTo(Version.VERSION1_1);
-        assertThat(actual.getPathValue()).isEqualTo("/users");
+        assertThat(actual.getPathValue()).containsAnyOf("/users", "/index.html");
     }
 
     @Test
