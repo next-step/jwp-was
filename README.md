@@ -7,3 +7,15 @@
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+
+# 2단계 - HTTP 웹 서버 구현
+## 기능 요구사항1
+> http://localhost:8080/index.html 로 접속했을 때 webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
+
+```text
+GET /index.html HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Accept: */*
+```
+- [ ] Header의 첫 번째 라인에서 요청 URL 추출.
