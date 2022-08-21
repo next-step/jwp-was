@@ -5,11 +5,17 @@ import java.util.Objects;
 
 public class HttpSession {
 
+    public static final String KEY = "JSESSIONID";
+
     private final SessionId id;
     private final SessionAttributes attributes = new SessionAttributes();
 
     public HttpSession() {
         this.id = SessionId.newInstance();
+    }
+
+    public SessionId getSessionId(){
+        return id;
     }
 
     public String getId(){

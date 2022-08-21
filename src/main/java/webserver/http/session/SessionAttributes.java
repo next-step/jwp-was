@@ -7,6 +7,8 @@ import java.util.Objects;
 
 public class SessionAttributes {
 
+    public static final String SESSION_LOGIN_KEY = "LOGIN";
+
     private final Map<String, Object> attributes = new HashMap<>();
 
     public Object getAttribute(String name) {

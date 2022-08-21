@@ -1,9 +1,13 @@
 package webserver.http.request;
 
 
+import webserver.http.session.HttpSession;
+import webserver.http.session.SessionId;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class Cookie {
@@ -40,5 +44,12 @@ public class Cookie {
 
     public Map<String, String> getCookies() {
         return cookies;
+    }
+
+    public SessionId getSessionId() {
+        if (!cookies.containsKey(HttpSession.KEY)) {
+            throw new NoSuchElementException();
+        }
+        return new SessionId(cookies.get(HttpSession.KEY));
     }
 }
