@@ -14,7 +14,7 @@ class HttpProtocolTest {
 		String protocol = "HTTP/1.1";
 
 	    // when
-		HttpProtocol httpProtocol = HttpProtocol.of(protocol);
+		HttpProtocol httpProtocol = new HttpProtocol(protocol);
 
 	    // then
 		assertAll(

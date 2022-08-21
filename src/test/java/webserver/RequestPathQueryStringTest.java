@@ -16,7 +16,7 @@ class RequestPathQueryStringTest {
 	@NullAndEmptySource
 	void exceptionQueryStringIsNullOrEmpty(String queryString) {
 		// when & then
-		assertThatThrownBy(() -> new RequestPathQueryString(queryString))
+		assertThatThrownBy(() -> new RequestParameters(queryString))
 			.isInstanceOf(IllegalArgumentException.class);
 	}
 
@@ -27,7 +27,7 @@ class RequestPathQueryStringTest {
 		String queryString = "userId=javajigi&password=password&name=JaeSung";
 
 		// when
-		RequestPathQueryString requestPathQueryString = new RequestPathQueryString(queryString);
+		RequestParameters requestPathQueryString = new RequestParameters(queryString);
 
 		// then
 		Map<String, String> result = requestPathQueryString.getQueryStringOfPath();

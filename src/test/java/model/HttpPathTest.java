@@ -14,15 +14,15 @@ class HttpPathTest {
 	    String path = "/users?userId=javajigi&password=password&name=JaeSung";
 
 	    // when
-		HttpPath httpPath = HttpPath.of(path);
+		HttpPath httpPath = new HttpPath(path);
 
 	    // then
 		assertAll(
 			() -> assertThat(httpPath.getPath()).isEqualTo("/users"),
-			() -> assertThat(httpPath.getQueryString().getQueryStringOfPath()).hasSize(3),
-			() -> assertThat(httpPath.getQueryString().getQueryStringOfPath().get("userId")).isEqualTo("javajigi"),
-			() -> assertThat(httpPath.getQueryString().getQueryStringOfPath().get("password")).isEqualTo("password"),
-			() -> assertThat(httpPath.getQueryString().getQueryStringOfPath().get("name")).isEqualTo("JaeSung")
+			() -> assertThat(httpPath.getRequestParameters().getRequestParameters()).hasSize(3),
+			() -> assertThat(httpPath.getRequestParameters().getRequestParameters().get("userId")).isEqualTo("javajigi"),
+			() -> assertThat(httpPath.getRequestParameters().getRequestParameters().get("password")).isEqualTo("password"),
+			() -> assertThat(httpPath.getRequestParameters().getRequestParameters().get("name")).isEqualTo("JaeSung")
 		);
 	}
 }

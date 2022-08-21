@@ -11,9 +11,10 @@ public class RequestLine {
 	private HttpMethod method;
 	private HttpPath path;
 	private HttpProtocol protocol;
+	private String requestLine;
 
-	protected RequestLine() {
-
+	public RequestLine(String requestLine) {
+		this.requestLine = requestLine;
 	}
 
 	private RequestLine(HttpMethod method, HttpPath path, HttpProtocol protocol) {
@@ -22,14 +23,14 @@ public class RequestLine {
 		this.protocol = protocol;
 	}
 
-	public RequestLine parse(String request) {
-		validateRequestNull(request);
+	public RequestLine parse() {
+		validateRequestNull(requestLine);
 
-		String[] parsingRequest = request.split(REQUEST_DELIMITER);
+		String[] parsingRequest = requestLine.split(REQUEST_DELIMITER);
 		validateParsingResult(parsingRequest);
 
-		return new RequestLine(HttpMethod.valueOf(parsingRequest[0]), HttpPath.of(parsingRequest[1]),
-			HttpProtocol.of(parsingRequest[2]));
+		return new RequestLine(HttpMethod.valueOf(parsingRequest[0]), new HttpPath(parsingRequest[1]),
+			new HttpProtocol(parsingRequest[2]));
 	}
 
 	private void validateParsingResult(String[] parsingRequest) {
@@ -63,7 +64,7 @@ public class RequestLine {
 		return this.protocol;
 	}
 
-	public RequestPathQueryString getRequestPathQueryString() {
-		return this.path.getQueryString();
+	public RequestParameters getRequestParameters() {
+		return this.path.getRequestParameters();
 	}
 }
