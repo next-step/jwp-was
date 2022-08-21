@@ -36,7 +36,7 @@ class HttpResponseTest {
     @DisplayName("로그인 성공 테스트")
     @Test
     void testHttpResponseWithSuccessLogin() {
-        Map<String, String> cookieMap = new HashMap<>();
+        Map<String, Object> cookieMap = new HashMap<>();
         cookieMap.put("set-cookie", "logined=true; Path=/");
 
         HttpResponse actualResponse = new HttpResponse(new ResponseLine(PROTOCOL_VERSION_ONE_ONE, HttpStatus.FOUND), new ResponseHeader(LOCATION, "/index.html"), new Cookie(cookieMap));

@@ -1,6 +1,8 @@
-package webserver.http;
+package webserver.http.session;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class HttpSession {
     private String id;
@@ -9,6 +11,14 @@ public class HttpSession {
     public HttpSession(String id, SessionAttribute attribute) {
         this.id = id;
         this.attribute = attribute;
+    }
+
+    public HttpSession(Map<String, Object> attribute) {
+        this(generateSessionId(), new SessionAttribute(attribute));
+    }
+
+    private static String generateSessionId() {
+        return String.valueOf(UUID.randomUUID());
     }
 
     public String getId() {

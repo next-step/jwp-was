@@ -28,13 +28,16 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = new HttpRequest(in);
+
             Controller controller = RequestMapping.mapping(httpRequest.getRequestPath());
             HttpResponse httpResponse = controller.service(httpRequest);
 
             new ResponseWriter(out).process(httpResponse);
         } catch (IOException e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
         }
     }

@@ -1,21 +1,38 @@
 package webserver.http;
 
+import webserver.http.session.HttpSession;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class Cookie {
-    private final Map<String, String> cookie;
+import static model.Constant.JSESSIONID;
 
-    public Cookie(Map<String, String> cookie) {
+public class Cookie {
+    private final Map<String, Object> cookie;
+
+    public Cookie() {
+        cookie = new HashMap<>();
+    }
+
+    public Cookie(Map<String, Object> cookie) {
         this.cookie = cookie;
     }
 
-    public String getCookie(String key) {
-        return cookie.get(key);
+    public void setCookie(String key, Object value) {
+        cookie.put(key, value);
     }
 
-    public Map<String, String> getCookie() {
+    public String getCookie(String key) {
+        return (String) cookie.getOrDefault(key, "");
+    }
+
+    public Map<String, Object> getCookie() {
         return cookie;
+    }
+
+    public String getSessionId() {
+        return (String) cookie.getOrDefault(JSESSIONID, new HttpSession(new HashMap<>()).getId());
     }
 
     @Override

@@ -8,9 +8,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
+import java.util.Optional;
 
-import static model.Constant.LOCATION;
-import static model.Constant.SET_COOKIE;
+import static model.Constant.*;
 
 public class ResponseWriter {
 
@@ -61,7 +61,11 @@ public class ResponseWriter {
     }
 
     private void writeResponseHeader(ResponseHeader responseHeader) throws IOException {
-        ContentType contentType = getContentType((String) responseHeader.getHeader(LOCATION));
+        Optional<Object> locationHeader = Optional.ofNullable(responseHeader.getHeader(LOCATION));
+        if (locationHeader.isPresent()) {
+            out.writeBytes(CONTENT_TYPE + HEADER_KEY_VALUE_SEPARATOR + getContentType((String) locationHeader.get()).getValue() + LINE_SEPARATOR);
+        }
+
         for (Map.Entry<String, Object> entry : responseHeader.getHeaders().entrySet()) {
             out.writeBytes(entry.getKey() + HEADER_KEY_VALUE_SEPARATOR + entry.getValue() + LINE_SEPARATOR);
             logger.debug("responseHeader : {}", entry.getKey() + HEADER_KEY_VALUE_SEPARATOR + entry.getValue() + LINE_SEPARATOR);

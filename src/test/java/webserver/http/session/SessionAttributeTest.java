@@ -1,4 +1,4 @@
-package webserver.http;
+package webserver.http.session;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -61,7 +61,7 @@ class SessionAttributeTest {
     void testSessionAttribute_invalidate() {
         SessionAttribute sessionAttribute = new SessionAttribute(attribute);
         sessionAttribute.invalidate();
-        
+
         assertThat(sessionAttribute.getAllAttribute().isEmpty()).isTrue();
     }
 }

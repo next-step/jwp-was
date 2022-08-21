@@ -10,6 +10,7 @@ import webserver.http.HttpStatus;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -40,7 +41,7 @@ public class HttpResponse {
         this.responseLine = responseLine;
         this.responseHeader = responseHeader;
         this.responseBody = responseBody;
-        this.cookie = new Cookie(Collections.emptyMap());
+        this.cookie = new Cookie(new HashMap<>());
     }
 
     public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader, ResponseBody responseBody, Cookie cookie) {
@@ -50,7 +51,7 @@ public class HttpResponse {
         this.cookie = cookie;
     }
 
-    public static HttpResponse sendRedirect(String path, Map<String, String> cookieMap) {
+    public static HttpResponse sendRedirect(String path, Map<String, Object> cookieMap) {
         return new HttpResponse(new ResponseLine(PROTOCOL_VERSION_ONE_ONE, HttpStatus.FOUND), new ResponseHeader(LOCATION, path), new Cookie(cookieMap));
     }
 
@@ -107,6 +108,10 @@ public class HttpResponse {
 
     public ResponseBody getResponseBody() {
         return responseBody;
+    }
+
+    public void addCookie(String key, String value) {
+        cookie.setCookie(key, value);
     }
 
     public Cookie getCookie() {

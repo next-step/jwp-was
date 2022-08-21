@@ -1,9 +1,10 @@
-package webserver.http;
+package webserver.http.session;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -64,7 +65,15 @@ class HttpSessionTest {
     void testHttpSession_invalidate() {
         HttpSession httpSession = new HttpSession(uuid.toString(), sessionAttribute);
         httpSession.invalidate();
-        
+
         assertThat(httpSession.getAttribute("userId")).isNull();
+    }
+
+    @Test
+    void name() {
+        boolean b = Arrays.asList("a", "a", "a").stream()
+                .allMatch(a -> a.equals("a"));
+
+        System.out.println(b);
     }
 }

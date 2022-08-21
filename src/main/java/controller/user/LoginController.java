@@ -7,10 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.http.session.HttpSession;
+import webserver.http.session.SessionManagement;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static model.Constant.SET_COOKIE;
 
@@ -25,12 +26,15 @@ public class LoginController extends AbstractController {
     public HttpResponse doPost(HttpRequest httpRequest) {
         logger.debug("LoginController : {}", httpRequest.getRequestPath());
 
-        User user = Optional.ofNullable(DataBase.findUserById(httpRequest.getParameter("userId")))
-                .orElse(null);
+        User user = DataBase.findUserById(httpRequest.getParameter("userId"));
 
-        Map<String, String> cookieMap = new HashMap<>();
+        Map<String, Object> cookieMap = new HashMap<>();
         cookieMap.put("path", ROOT_PATH);
+
         if (user != null && user.matchPassword(httpRequest.getParameter("password"))) {
+            HttpSession httpSession = SessionManagement.createSession();
+            httpSession.setAttribute("user", user);
+
             cookieMap.put(SET_COOKIE, "logined=true; Path=" + ROOT_PATH);
 
             return HttpResponse.sendRedirect(ROOT_FILE, cookieMap);

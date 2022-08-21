@@ -1,31 +1,45 @@
 package webserver.http.request;
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import webserver.http.Cookie;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 public class RequestHeader {
-    private final Map<String, String> headers;
+    private static final String HEADER_SEPARATOR = ": ";
+
+    private final Map<String, Object> headers;
+    private final Cookie cookie;
 
     public RequestHeader(List<String> headerMap) {
         this.headers = headerMap.stream()
-                .map(request -> request.split(": "))
-                .collect(Collectors.toMap(s -> s[0], s -> s[1]));
+                .map(request -> request.split(HEADER_SEPARATOR))
+                .collect(toMap(s -> s[0], s -> s[1]));
+        this.cookie = new Cookie();
     }
 
-    public RequestHeader(Map<String, String> header) {
+    public RequestHeader(Map<String, Object> header) {
         this.headers = header;
+        this.cookie = new Cookie();
     }
 
-    public Map<String, String> getHeaders() {
+    public Map<String, Object> getHeaders() {
         return headers;
     }
 
+    public void addHeader(String key, Object value) {
+        this.headers.put(key, value);
+    }
+
     public int getContentLength() {
-        return StringUtils.isEmpty(headers.get("Content-Length")) ? 0 : Integer.parseInt(headers.get("Content-Length"));
+        return headers.get("Content-Length") == null ? 0 : Integer.parseInt(headers.get("Content-Length").toString());
+    }
+
+    public String getCookieValue(String key) {
+        return this.cookie.getCookie(key);
     }
 
     @Override
@@ -39,5 +53,9 @@ public class RequestHeader {
     @Override
     public int hashCode() {
         return Objects.hash(headers);
+    }
+
+    public void setCookie(String key, Object value) {
+        this.cookie.setCookie(key, value);
     }
 }
