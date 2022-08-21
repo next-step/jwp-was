@@ -19,7 +19,11 @@ public class HttpHeader {
     }
 
     public String getValue(String name) {
-        return headers.get(name).trim();
+        if (headers.get(name) != null) {
+            return headers.get(name).trim();
+        }
+
+        return "";
     }
 
     public boolean hasHeader(String headerLine) {

@@ -41,13 +41,15 @@ public class HttpRequest {
             requestBody.createParameter(requestBody.getBody());
         }
 
-
-        Cookie cookie = Cookie.parse(httpHeader.getValue(Cookie.COOKIE));
+        if (httpHeader.getValue(Cookie.COOKIE).length() > 1) {
+            Cookie cookie = Cookie.parse(httpHeader.getValue(Cookie.COOKIE));
+            this.cookie = cookie;
+        }
 
         this.header = httpHeader;
         this.requestLine = requestLine;
         this.body = requestBody;
-        this.cookie = cookie;
+
     }
 
     public HttpMethod getMethod() {
