@@ -25,6 +25,7 @@ public class QueryString {
                 .map(queryData -> (queryData.split(KEY_VALUE_DELIMITER)))
                 .collect(Collectors.toMap(queryData -> queryData[KEY_IDX], queryData -> queryData[VALUE_IDX]));
 
+
         return new QueryString(data);
     }
 

@@ -34,6 +34,7 @@ public class RequestLine {
 
     public HttpMethod getMethod() {
         return method;
+
     }
 
     public Path getPath() {
