@@ -1,5 +1,6 @@
 package webserver;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -9,7 +10,8 @@ import static org.assertj.core.api.Assertions.*;
 public class HttpHeaderTest {
 
     @Test
-    void 잘되는지_확인() {
+    @DisplayName("잘되는지_확인")
+    void  success() {
         //given
         HttpHeader httpHeader = new HttpHeader();
         List<String> requestHeaders = List.of(
