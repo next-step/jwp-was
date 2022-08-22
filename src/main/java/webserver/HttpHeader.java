@@ -2,12 +2,14 @@ package webserver;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class HttpHeader {
 
     private static final String HEADER_DELIMITER = ": ";
     private static final int NAME_IDX = 0;
     private static final int VALUE_IDX = 1;
+    public static final String CONTENT_TYPE = "Content-Type";
 
     private Map<String, String> headers = new HashMap<>();
 
@@ -35,4 +37,13 @@ public class HttpHeader {
     public HttpHeader() {
         this.headers = headers;
     }
+
+    public void add(String key, String value) {
+        headers.put(key, value);
+    }
+
+    public Set<String> getKeySet() {
+        return headers.keySet();
+    }
+
 }

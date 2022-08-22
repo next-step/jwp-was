@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public class Cookie {
 
     public static final String COOKIE = "Cookie";
-    private static final String SET_COOKIE = "Set-Cookie";
+    public static final String SET_COOKIE = "Set-Cookie";
     private static final String COOKIE_PATH = "Path";
     private static final String COOKIE_DELIMITER = "; ";
     private static final String KEY_VALUE_DELIMITER = "=";
@@ -24,7 +24,6 @@ public class Cookie {
 
     public static Cookie parse(String cookieString) {
         String[] datas = cookieString.split(COOKIE_DELIMITER);
-        System.out.println("datas = " + datas);
         Map<String, String> data = Arrays.stream(datas)
                 .map(cookie -> (cookie.split(KEY_VALUE_DELIMITER)))
                 .collect(Collectors.toMap(s -> s[KEY_IDX], s -> s[VALUE_IDX]));
@@ -44,7 +43,8 @@ public class Cookie {
     }
 
 
-    private String setCookie(String bool) {
-        return "Set-Cookie: " + "logined=" + bool + "; " + "Path" + "=" + "/";
+    public static String setLoginCookie(String bool) {
+        return "logined" + KEY_VALUE_DELIMITER + bool +
+                COOKIE_DELIMITER + COOKIE_PATH + KEY_VALUE_DELIMITER + "/";
     }
 }

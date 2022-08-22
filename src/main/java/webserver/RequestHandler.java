@@ -31,6 +31,7 @@ public class RequestHandler implements Runnable {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
 
             HttpRequest httpRequest = new HttpRequest(in);
+            HttpResponse httpResponse = new HttpResponse(out);
             String path = httpRequest.getPath();
 
             DataOutputStream dos = new DataOutputStream(out);
@@ -38,29 +39,22 @@ public class RequestHandler implements Runnable {
             String contentType = ContentType.selectContent(fileExtension);
 
             byte[] body = "Hello World22".getBytes();
-            if (path.endsWith(".html")) {
-                body = FileIoUtils.loadFileFromClasspath("./templates"+path);
-            } else if (path.equals("/user/create")) {
-
+            if (path.equals("/user/create")) {
                 Map<String, String> parameters = httpRequest.getBody().getParameter();
-                createUser(parameters, dos);
+                createUser(parameters, dos, httpResponse);
 
                 return;
             } else if (path.equals("/user/login")) {
                 Map<String, String> parameters = httpRequest.getBody().getParameter();
-                loginUser(parameters, dos);
+                loginUser(parameters, dos, httpResponse);
 
                 return;
             } else if (path.equals("/user/list")) {
-                listUser(httpRequest.getCookie(), dos, contentType);
+                listUser(httpRequest.getCookie(), dos, contentType, httpResponse);
 
                 return;
             }
-
-
-
-            response200Header(dos, body.length, contentType);
-            responseBody(dos, body);
+            httpResponse.forward(path);
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (URISyntaxException e) {
@@ -68,13 +62,7 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    public Map<String, String> getParameters(BufferedReader br, HttpHeader httpHeader) throws IOException {
-        final RequestBody requestBody = new RequestBody();
-        requestBody.toBody(br, httpHeader);
-        return requestBody.createParameter(requestBody.getBody());
-    }
-
-    public void createUser(Map<String, String> queryString, DataOutputStream dos) {
+    public void createUser(Map<String, String> queryString, DataOutputStream dos,HttpResponse httpResponse) {
         User user = new User(
                 queryString.get("userId"),
                 queryString.get("password"),
@@ -85,73 +73,33 @@ public class RequestHandler implements Runnable {
         DataBase.addUser(user);
         logger.debug("createdUserId : {}", user.getUserId());
 
-        response302Header(dos, "/index.html");
+        System.out.println("012321312312312312");
+
+        httpResponse.sendRedirect("/index.html");
 
     }
 
-    public void loginUser(Map<String, String> parameters, DataOutputStream dos) {
+    public void loginUser(Map<String, String> parameters, DataOutputStream dos, HttpResponse httpResponse) {
         User loginUser = DataBase.findUserById(parameters.get("userId"));
         boolean isLogin = !Objects.isNull(loginUser) && parameters.get("password").equals(loginUser.getPassword());
-        response302Header(dos, isLogin ? "/index.html" : "/login_failed.html", setCookie(String.valueOf(isLogin)));
+
+        httpResponse.getHeaders().add(Cookie.SET_COOKIE, Cookie.setLoginCookie(String.valueOf(isLogin)));
+        httpResponse.sendRedirect(isLogin ? "/index.html" : "/login_failed.html");
+
     }
 
-    public void listUser(Cookie cookie, DataOutputStream dos, String contentType) throws IOException {
+    public void listUser(Cookie cookie, DataOutputStream dos, String contentType, HttpResponse httpResponse) throws IOException {
 
         if (!Boolean.parseBoolean(cookie.getValue("logined"))) {
-            response302Header(dos, "/login.html");
+            httpResponse.sendRedirect("/login.html");
             return;
         }
 
         List<User> users = new ArrayList<>(DataBase.findAll());
         byte[] loaded = HandleBarsTemplate.load("user/list", users).getBytes();
 
-        response200Header(dos, loaded.length, contentType);
-        responseBody(dos, loaded);
-
+        httpResponse.forwardBody(loaded);
         return;
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent, String contentType) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: " + contentType + "\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response302Header(DataOutputStream dos, final String location) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: " + location + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-    private void response302Header(DataOutputStream dos, final String location, final String setCookie) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: " + location + "\r\n");
-            dos.writeBytes(setCookie);
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private String setCookie(String bool) {
-        return "Set-Cookie: " + "logined=" + bool + "; " + "Path" + "=" + "/";
-    }
 }
