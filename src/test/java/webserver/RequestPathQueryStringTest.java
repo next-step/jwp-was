@@ -27,10 +27,10 @@ class RequestPathQueryStringTest {
 		String queryString = "userId=javajigi&password=password&name=JaeSung";
 
 		// when
-		RequestParameters requestPathQueryString = new RequestParameters(queryString);
+		RequestParameters requestParameters = new RequestParameters(queryString);
 
 		// then
-		Map<String, String> result = requestPathQueryString.getQueryStringOfPath();
+		Map<String, String> result = requestParameters.getRequestParameters();
 		assertAll(
 			() -> assertThat(result).hasSize(3),
 			() -> assertThat(result.get("userId")).isEqualTo("javajigi"),
