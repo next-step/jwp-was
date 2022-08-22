@@ -22,11 +22,11 @@ public class UserListController extends GetController {
 
     @Override
     public HttpResponse doGet(HttpRequest request) {
-        Map<String, String> cookiesMap = parseCookies(request);
+        Map<String, String> cookiesByName = parseCookies(request);
 
         try {
             String path = "";
-            if (isNotLogin(cookiesMap)) {
+            if (isNotLogin(cookiesByName)) {
                 path = IOUtils.loadFileFromClasspath("./templates/user/login.html");
                 return HttpResponse.forward(path, ContentType.from(path).getMediaType());
             }

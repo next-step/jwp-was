@@ -56,17 +56,17 @@ public class HttpResponse {
         return sendRedirect(path, "");
     }
 
-    public void write(OutputStream outputStream) throws IOException {
-        dos = new DataOutputStream(outputStream);
-        dos.writeBytes(statusLine.getStatusLine() + CRLF);
+    public byte[] getBytes() {
+        String response = statusLine.getStatusLine() + CRLF;
 
         Map<String, String> map = header.getHeaderMap();
         for (String key : map.keySet()) {
-            dos.writeBytes(key + ": " + map.get(key) + CRLF);
+            response += key + ": " + map.get(key) + CRLF;
         }
-        dos.writeBytes(CRLF);
+        response += CRLF;
 
-        dos.write(responseBody.getBody(), 0, responseBody.getBody().length);
-        dos.flush();
+        response += responseBody.getBody();
+
+        return response.getBytes();
     }
 }

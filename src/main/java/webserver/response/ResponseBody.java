@@ -2,17 +2,17 @@ package webserver.response;
 
 public class ResponseBody {
 
-    private byte[] body;
+    private String body;
 
-    public ResponseBody(byte[] body) {
+    public ResponseBody(String body) {
         this.body = body;
     }
 
     public static ResponseBody parse(String value) {
-        return new ResponseBody(value.getBytes());
+        return new ResponseBody(value);
     }
 
-    public byte[] getBody() {
+    public String getBody() {
         return body;
     }
 }
