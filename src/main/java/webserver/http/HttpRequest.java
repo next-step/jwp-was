@@ -85,4 +85,8 @@ public class HttpRequest {
     public Map<String, Object> getAttributes() {
         return new HashMap<>(attributes);
     }
+
+    public HttpSession getSession(UUID sessionId) {
+        return HttpSessionStorage.getSession(sessionId);
+    }
 }
