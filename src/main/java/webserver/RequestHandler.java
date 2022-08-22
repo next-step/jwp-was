@@ -63,12 +63,10 @@ public class RequestHandler implements Runnable {
 
             HttpHeaders httpHeaders = new HttpHeaders(String.join("\n", headerLine));
 
-            RequestParameters requestParameters = new RequestParameters();
+            RequestParameters requestParameters = requestLine.getRequestParameters();
             if (HttpMethod.POST.equals(requestLine.getMethod())) {
                 String requestBody = IOUtils.readData(br, Integer.parseInt(httpHeaders.get("Content-Length")));
                 requestParameters = new RequestParameters(requestBody);
-            } else if (HttpMethod.GET.equals(requestLine.getMethod())) {
-                requestParameters = requestLine.getRequestParameters();
             }
 
             Map<String, String> parameters = requestParameters.getRequestParameters();
