@@ -1,9 +1,13 @@
 package webserver.http.request;
 
 
+import webserver.http.session.HttpSession;
+import webserver.http.session.SessionId;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class Cookie {
@@ -12,7 +16,7 @@ public class Cookie {
     private static final String KEY_VALUE_DELIMITER = "=";
     private static final String EMPTY_VALUE = "";
 
-    private static final String LOGINED = "logined";
+    public static final String LOGINED = "logined";
 
     private final Map<String, String> cookies;
 
@@ -38,10 +42,14 @@ public class Cookie {
         return new Cookie(Collections.EMPTY_MAP);
     }
 
-    public String getLogined() {
-        if (!cookies.containsKey(LOGINED)) {
-            return EMPTY_VALUE;
+    public Map<String, String> getCookies() {
+        return cookies;
+    }
+
+    public SessionId getSessionId() {
+        if (!cookies.containsKey(HttpSession.KEY)) {
+            throw new NoSuchElementException();
         }
-        return cookies.get(LOGINED);
+        return new SessionId(cookies.get(HttpSession.KEY));
     }
 }

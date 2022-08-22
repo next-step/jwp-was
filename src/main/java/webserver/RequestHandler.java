@@ -35,7 +35,7 @@ public class RequestHandler implements Runnable {
             final HttpRequest httpRequest = HttpRequest.parseFrom(br);
             logger.debug(httpRequest.toString());
 
-            HttpResponse httpResponse = route(httpRequest);
+            HttpResponse httpResponse = router.execute(httpRequest);
 
             final DataOutputStream dos = new DataOutputStream(out);
             httpResponse.write(dos);

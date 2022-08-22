@@ -45,8 +45,14 @@
     - [X] 쿠키로 로그인 상태 판별하여 비로그인 상태면 로그인 페이지로 리다이렉트하기
     - [X] Handlebars로 동적뷰 만들어서 리턴하기
 - 요구사항 7
-  - [] GET `./css/style.css` 구현하기
+  - [X] GET `./css/style.css` 구현하기
     - [X] 정적파일 요청에 대해 ContentType 응답 헤더 추가하기
 ### STEP 3
 - [X] RequestHandler의 역할 분리
 - [X] 테스트 코드 보충
+### STEP 4
+- [X] HttpSession과 API 구현
+  - [X] ConcurrentHashMap을 이용하여 SessionStorage 구현
+  - [X] HttpSession, SessionId, SessionAttribute 구현
+  - [X] 로그인 시 세션과 쿠키 세팅하도록 수정
+  - [X] UserListController 에서 쿠키를 통해 세션 정보 확인하도록 수정

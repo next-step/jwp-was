@@ -5,8 +5,13 @@ import db.DataBase;
 import model.User;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.http.session.HttpSession;
+import webserver.http.session.LocalSessionStorage;
 
 import java.util.Map;
+
+import static webserver.http.session.SessionAttributes.SESSION_KEY_LOGIN;
+import static webserver.http.session.SessionAttributes.SESSION_VALUE_LOGIN;
 
 public class LogInController extends AbstractController {
 
@@ -14,8 +19,13 @@ public class LogInController extends AbstractController {
     public static final String successRedirectPath = "/index.html";
     public static final String failRedirectPath = "/user/login_failed.html";
 
-    public static final String LOGIN_SUCCESS_COOKIE = "logined=true; Path=/";
-    public static final String LOGIN_FAIL_COOKIE = "logined=false; Path=/";
+    private void setLoginSession(HttpResponse httpResponse){
+        HttpSession httpSession = new HttpSession();
+        httpSession.setAttribute(SESSION_KEY_LOGIN, SESSION_VALUE_LOGIN);
+
+        LocalSessionStorage.addSession(httpSession);
+        httpResponse.getResponseHeader().setCookie(HttpSession.KEY + "=" + httpSession.getId() + "; Path=/");
+    }
 
     @Override
     public HttpResponse doPost(HttpRequest httpRequest) {
@@ -27,12 +37,11 @@ public class LogInController extends AbstractController {
 
         if (user.getPassword().equals(password)) {
             HttpResponse successResponse = HttpResponse.redirect(successRedirectPath);
-            successResponse.getResponseHeader().setCookie(LOGIN_SUCCESS_COOKIE);
+            setLoginSession(successResponse);
             return successResponse;
         }
 
         HttpResponse failResponse = HttpResponse.redirect(failRedirectPath);
-        failResponse.getResponseHeader().setCookie(LOGIN_FAIL_COOKIE);
         return failResponse;
     }
 }

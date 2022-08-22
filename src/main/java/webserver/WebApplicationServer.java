@@ -20,7 +20,7 @@ public class WebApplicationServer {
         }
 
         // Router 를 생성한다.
-        Router router = new Router();
+        final Router router = new Router();
 
         // 서버소켓을 생성한다. 웹서버는 기본적으로 8080번 포트를 사용한다.
         try (ServerSocket listenSocket = new ServerSocket(port)) {
