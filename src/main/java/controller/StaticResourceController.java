@@ -9,6 +9,7 @@ import webserver.http.request.Path;
 public class StaticResourceController extends AbstractController {
     @Override
     void doPost(HttpRequest request, HttpResponse response) throws Exception {
+        response.response404();
     }
 
     @Override

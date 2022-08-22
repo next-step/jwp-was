@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class ListUserController extends AbstractController {
     @Override
     void doPost(HttpRequest request, HttpResponse response) throws Exception {
+        response.response404();
     }
 
     @Override
