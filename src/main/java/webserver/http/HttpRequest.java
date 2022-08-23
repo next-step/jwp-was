@@ -28,5 +28,8 @@ public class HttpRequest {
 	public HttpCookie getCookie() {
 		return httpHeaders.getCookie();
 	}
+	public String getHeader(String name) {
+		return httpHeaders.get(name);
+	}
 
 }
