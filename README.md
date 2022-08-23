@@ -108,3 +108,13 @@ Location: http://www.iana.org/domains/example/
 ### 기능 요구사항 7
 > 지금까지 구현한 소스 코드는 stylesheet 파일을 지원하지 못하고 있다. Stylesheet 파일을 지원하도록 구현하도록 한다.
 * css 파일에 관련한 요청인 경우 HTTP Response Header에서 Accept 값을 text/css로 전송한다.
+
+## 3단계 - HTTP 웹 서버 리팩토링
+### HttpRequest 클래스와 HttpResponse 클래스를 만들어 책임을 분리해보자
+* HttpRequest 클래스가 아래의 멤버 변수들을 갖도록 구현
+  * RequestLine
+  * HttpHeaders
+  * RequestParameters
+* HttpRequest 클래스 내에서 위 멤버 변수들을 초기화 하기 위한 소스 코드가 길어지게 된다.
+  * BufferedRequestToHttpRequest 클래스에서 HttpRequest 를 생성하도록 구현
+
