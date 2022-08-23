@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.http.BufferedReaderToHttpRequest;
 import webserver.http.HttpRequest;
+import webserver.http.HttpResponse;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,25 +33,23 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReaderToHttpRequest bufferedReaderToHttpRequest = new BufferedReaderToHttpRequest(in);
+
 			HttpRequest httpRequest = bufferedReaderToHttpRequest.parsed();
-            DataOutputStream dos = new DataOutputStream(out);
+			HttpResponse httpResponse = new HttpResponse(out);
 
 			String path = httpRequest.getPath();
             logger.debug("path : {}", path);
 
-            HttpMethod method = httpRequest.getMethod();
-            logger.debug("method : {}", method);
-
             if (path.endsWith(".html")) {
-                processPageRequest(dos, path);
+                processPageRequest(httpResponse, path);
             } else if (containsStaticPath(path)) {
-                processStaticRequest(dos, path);
+                processStaticRequest(httpResponse, path);
             } else if (path.startsWith("/user/create")) {
-                join(httpRequest, dos);
+                join(httpRequest, httpResponse);
             } else if (path.startsWith("/user/login")) {
-                login(httpRequest, dos);
+                login(httpRequest, httpResponse);
             } else if (path.startsWith("/user/list")) {
-                list(httpRequest, dos);
+                list(httpRequest, httpResponse);
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -60,29 +58,29 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void processPageRequest(DataOutputStream dos, String path) throws IOException, URISyntaxException {
+    private void processPageRequest(HttpResponse httpResponse, String path) throws IOException, URISyntaxException {
         path = "./templates" + path;
         byte[] body = FileIoUtils.loadFileFromClasspath(path);
-        response200Header(dos, body.length);
-        responseBody(dos, body);
+		httpResponse.response200Header(body.length);
+		httpResponse.responseBody(body);
     }
 
     private boolean containsStaticPath(String path) {
         return path.startsWith("/css") || path.startsWith("/js") || path.startsWith("/font") || path.startsWith("/images");
     }
 
-    private void processStaticRequest(DataOutputStream dos, String path) throws IOException, URISyntaxException {
+    private void processStaticRequest(HttpResponse httpResponse, String path) throws IOException, URISyntaxException {
         path = "./static" + path;
         byte[] body = FileIoUtils.loadFileFromClasspath(path);
         if (path.startsWith("./static/css")) {
-            response200CssHeader(dos, body.length);
+			httpResponse.response200CssHeader(body.length);
         } else {
-            response200Header(dos, body.length);
+			httpResponse.response200Header(body.length);
         }
-        responseBody(dos, body);
+		httpResponse.responseBody(body);
     }
 
-    private void login(HttpRequest httpRequest, DataOutputStream dos) throws IOException, URISyntaxException {
+    private void login(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException, URISyntaxException {
         User loginUser = DataBase.findUserById(httpRequest.getParameter("userId"));
         logger.debug("로그인 사용자: {}", loginUser);
 
@@ -94,25 +92,19 @@ public class RequestHandler implements Runnable {
             logined = true;
             location = "/index.html";
         }
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found\r\n");
-            dos.writeBytes("Set-Cookie: logined=" + logined + "; Path=/\r\n");
-            dos.writeBytes("Location: " + location + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+		httpResponse.response302LoginedHeader(logined, location);
     }
 
-    private void join(HttpRequest request, DataOutputStream dos) {
+    private void join(HttpRequest request, HttpResponse httpResponse) {
         User newUser = new User(request.getParameter("userId"), request.getParameter("password"), request.getParameter("name"), request.getParameter("email"));
         logger.debug("회원가입 사용자 : {}", newUser);
         DataBase.addUser(newUser);
 
-        response302Header(dos);
+		httpResponse.response302Header();
     }
 
-    private void list(HttpRequest httpRequest, DataOutputStream dos) throws IOException, URISyntaxException {
+    private void list(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException, URISyntaxException {
         byte[] body = FileIoUtils.loadFileFromClasspath("./templates/user/login.html");
 
 		if (httpRequest.getCookie().get("logined").equals("true")) {
@@ -129,48 +121,7 @@ public class RequestHandler implements Runnable {
 
             body = profilePage.getBytes();
         }
-        response200Header(dos, body.length);
-        responseBody(dos, body);
-    }
-
-    private void response302Header(DataOutputStream dos) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found\r\n");
-            dos.writeBytes("Location: /index.html\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200CssHeader(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+		httpResponse.response200Header(body.length);
+		httpResponse.responseBody(body);
     }
 }

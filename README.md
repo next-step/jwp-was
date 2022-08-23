@@ -117,4 +117,10 @@ Location: http://www.iana.org/domains/example/
   * RequestParameters
 * HttpRequest 클래스 내에서 위 멤버 변수들을 초기화 하기 위한 소스 코드가 길어지게 된다.
   * BufferedRequestToHttpRequest 클래스에서 HttpRequest 를 생성하도록 구현
+* 실제 WAS를 실행시켜서 테스트하지 않고, test resource에 요청을 mocking 할 수 있도록 txt 파일을 만들어 테스트할 수 있도록 테스트 케이스 추가 작성
 
+<br>
+
+* HttpResponse 클래스가 아래의 멤버 변수를 갖도록 구현
+  * DataOutputStream
+* 실제 WAS를 실행시켜서 테스트하지 않고, test resource에 응답 결과를 txt 파일로 확인할 수 있도록 테스트 케이스 추가
