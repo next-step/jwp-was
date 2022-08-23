@@ -44,7 +44,8 @@ public class Cookie {
     }
 
     public UUID getSessionId() {
-        return UUID.fromString(get(HttpSession.SESSION_ID_KEY));
+        String sessionId = get(HttpSession.SESSION_ID_KEY);
+        return !Objects.isNull(sessionId) ? UUID.fromString(sessionId) : null;
     }
 
     public void setSessionId(UUID sessionId) {
