@@ -1,7 +1,5 @@
 package model;
 
-import webserver.RequestParameters;
-
 public class HttpPath {
     private static final String QUERY_STRING_DELIMITER = "\\?";
     private static final int PATH_POSITION = 0;

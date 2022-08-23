@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import model.Cookie;
 import model.HttpHeaders;
+import model.RequestParameters;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

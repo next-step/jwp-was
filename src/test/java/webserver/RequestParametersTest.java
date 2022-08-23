@@ -5,12 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map;
 
+import model.RequestParameters;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
-class RequestPathQueryStringTest {
+class RequestParametersTest {
 
 	@ParameterizedTest(name = "요청의 값이 null 또는 비어있는 경우, 예외처리 된다.")
 	@NullAndEmptySource
