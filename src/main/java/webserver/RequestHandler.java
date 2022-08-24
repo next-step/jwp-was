@@ -25,6 +25,7 @@ import model.response.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
+import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -44,7 +45,7 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
             RequestLine requestLine = (new RequestLine(br.readLine())).parse();
-            HttpHeaders httpHeaders = createHttpHeaders(br);
+            HttpHeaders httpHeaders = new HttpHeaders(String.join("\n", IOUtils.readHeaderData(br)));
             RequestBody requestBody = new RequestBody(br, httpHeaders);
             Cookie cookie = Cookie.from(httpHeaders.get(Cookie.REQUEST_COOKIE_HEADER));
             HttpRequest httpRequest = new HttpRequest(httpHeaders, requestLine, requestBody, cookie);
@@ -82,17 +83,6 @@ public class RequestHandler implements Runnable {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-    }
-
-    private HttpHeaders createHttpHeaders(BufferedReader br) throws IOException {
-        List<String> headerLine = new ArrayList<>();
-        String line = br.readLine();
-        while (!line.equals("")) {
-            headerLine.add(line);
-            line = br.readLine();
-        }
-
-        return new HttpHeaders(String.join("\n", headerLine));
     }
 
     private boolean isStaticPath(String path) {
