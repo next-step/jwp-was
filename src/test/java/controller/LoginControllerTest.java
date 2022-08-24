@@ -71,6 +71,6 @@ class LoginControllerTest {
         HttpHeaders httpHeaders = new HttpHeaders(String.join("\n", IOUtils.readHeaderData(br)));
         RequestBody requestBody = new RequestBody(br, httpHeaders);
 
-        return new HttpRequest(httpHeaders, requestLine, requestBody);
+        return new HttpRequest(httpHeaders, requestLine, requestBody, null);
     }
 }

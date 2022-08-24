@@ -19,10 +19,6 @@ public class HttpRequest {
         this.cookie = cookie;
     }
 
-    public HttpRequest(HttpHeaders httpHeaders, RequestLine requestLine, RequestBody requestBody) {
-        this(httpHeaders, requestLine, requestBody, Cookie.from(""));
-    }
-
     public HttpHeaders getHttpHeaders() {
         return httpHeaders;
     }
