@@ -4,6 +4,7 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
+import controller.LoginController;
 import controller.UserCreateController;
 import db.DataBase;
 import java.io.BufferedReader;
@@ -65,19 +66,8 @@ public class RequestHandler implements Runnable {
                 UserCreateController userCreateController = new UserCreateController();
                 userCreateController.doPost(httpRequest, httpResponse);
             } else if ("/user/login".equals(path)) {
-                User loginUser = DataBase.findUserById(parameters.get("userId"));
-                boolean loginResult = isLogin(loginUser, parameters);
-
-                String location = "";
-                if (loginResult) {
-                    location = "index.html";
-                } else {
-                    location = "user/login_failed.html";
-                }
-                cookie.put("logined", String.valueOf(loginResult));
-
-                response302Header(dos, location);
-                responseHeader(dos, Cookie.RESPONSE_COOKIE_HEADER, cookie.getResponseCookie());
+                LoginController loginController = new LoginController();
+                loginController.doPost(httpRequest, httpResponse);
             } else if ("/user/list".equals(path)) {
                 if (!Boolean.parseBoolean(cookie.get("logined"))) {
                     response302Header(dos, "user/login.html");

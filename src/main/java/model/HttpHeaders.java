@@ -41,4 +41,9 @@ public class HttpHeaders {
         this.header.put("Location", location);
         return this;
     }
+
+    public HttpHeaders addCookie(String name, String value) {
+        this.header.put(Cookie.REQUEST_COOKIE_HEADER, name + "=" + value);
+        return this;
+    }
 }

@@ -13,6 +13,16 @@ public class HttpResponse {
         this.httpProtocol = new HttpProtocol("HTTP/1.1");
         this.status = "302";
         this.message = "OK";
-        this.httpHeaders = new HttpHeaders().addLocation(location);
+        this.httpHeaders = new HttpHeaders();
+        this.httpHeaders.addLocation(location);
+    }
+
+    public void loginRedirect(String location, boolean login) {
+        this.httpProtocol = new HttpProtocol("HTTP/1.1");
+        this.status = "302";
+        this.message = "OK";
+        this.httpHeaders = new HttpHeaders();
+        this.httpHeaders.addCookie("logined", String.valueOf(login));
+        this.httpHeaders.addLocation(location);
     }
 }
