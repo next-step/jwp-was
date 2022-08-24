@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.nio.channels.MembershipKey;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ import model.Cookie;
 import model.HttpHeaders;
 import model.RequestParameters;
 import model.User;
+import model.request.HttpRequest;
+import model.request.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
@@ -45,33 +48,16 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            String line = br.readLine();
-            logger.debug("request line : {}", line);
-            RequestLine requestLine = new RequestLine(line);
-            requestLine = requestLine.parse();
-            List<String> headerLine = new ArrayList<>();
-            line = br.readLine();
-            while (!line.equals("")) {
-                headerLine.add(line);
-                line = br.readLine();
-                logger.debug("header : {}", line);
-            }
+
+            RequestLine requestLine = (new RequestLine(br.readLine())).parse();
+            HttpHeaders httpHeaders = createHttpHeaders(br);
+            RequestBody requestBody = new RequestBody(br, httpHeaders);
+            Cookie cookie = Cookie.from(httpHeaders.get(Cookie.REQUEST_COOKIE_HEADER));
+            HttpRequest httpRequest = new HttpRequest(httpHeaders, requestLine, requestBody, cookie);
 
             DataOutputStream dos = new DataOutputStream(out);
-
-            String path = requestLine.getHttpPath().getPath();
-            logger.debug("http path : {}", path);
-
-            HttpHeaders httpHeaders = new HttpHeaders(String.join("\n", headerLine));
-
-            RequestParameters requestParameters = requestLine.getRequestParameters();
-            if (HttpMethod.POST.equals(requestLine.getMethod())) {
-                String requestBody = IOUtils.readData(br, Integer.parseInt(httpHeaders.get("Content-Length")));
-                requestParameters = new RequestParameters(requestBody);
-            }
-
-            Map<String, String> parameters = requestParameters.getRequestParameters();
-            Cookie cookie = Cookie.from(httpHeaders.get(Cookie.REQUEST_COOKIE_HEADER));
+            String path = httpRequest.getHttpPath();
+            Map<String, String> parameters = httpRequest.getRequestParameters().getRequestParameters();
             if (path.endsWith(".html")) {
                 path = "./templates" + path;
                 byte[] body = FileIoUtils.loadFileFromClasspath(path);
@@ -133,6 +119,17 @@ public class RequestHandler implements Runnable {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    private HttpHeaders createHttpHeaders(BufferedReader br) throws IOException {
+        List<String> headerLine = new ArrayList<>();
+        String line = br.readLine();
+        while (!line.equals("")) {
+            headerLine.add(line);
+            line = br.readLine();
+        }
+
+        return new HttpHeaders(String.join("\n", headerLine));
     }
 
     private boolean isStaticPath(String path) {
