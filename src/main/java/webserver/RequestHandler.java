@@ -6,6 +6,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import controller.LoginController;
 import controller.UserCreateController;
+import controller.UserListController;
 import db.DataBase;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -69,21 +70,8 @@ public class RequestHandler implements Runnable {
                 LoginController loginController = new LoginController();
                 loginController.doPost(httpRequest, httpResponse);
             } else if ("/user/list".equals(path)) {
-                if (!Boolean.parseBoolean(cookie.get("logined"))) {
-                    response302Header(dos, "user/login.html");
-                    return;
-                }
-
-                List<User> users = new ArrayList<>(DataBase.findAll());
-                TemplateLoader templateLoader = new ClassPathTemplateLoader();
-                templateLoader.setPrefix("/templates");
-                templateLoader.setSuffix(".html");
-                Handlebars handlebars = new Handlebars(templateLoader);
-                Template template = handlebars.compile("user/list");
-                byte[] listPage = template.apply(users).getBytes();
-
-                response200Header(dos, listPage.length);
-                responseBody(dos, listPage);
+                UserListController userListController = new UserListController();
+                userListController.doGet(httpRequest, httpResponse);
             } else if (isStaticPath(path)) {
                 String prefix = "static";
                 if (path.contains(".html") || path.contains(".ico")) {

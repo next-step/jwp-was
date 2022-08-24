@@ -18,7 +18,7 @@ public class HttpHeaders {
 
     }
 
-    public HttpHeaders (String headers) {
+    public HttpHeaders(String headers) {
         Arrays.stream(headers.split(NEXT_LINE))
                 .map(HttpHeaders::parse)
                 .forEach(value -> header.put(value.get(0), value.get(1)));
@@ -44,6 +44,16 @@ public class HttpHeaders {
 
     public HttpHeaders addCookie(String name, String value) {
         this.header.put(Cookie.REQUEST_COOKIE_HEADER, name + "=" + value);
+        return this;
+    }
+
+    public HttpHeaders addContentType(String contentType) {
+        this.header.put("Content-Type", contentType + ";charset=utf-8");
+        return this;
+    }
+
+    public HttpHeaders addContentLength(int length) {
+        this.header.put("Content-Length", String.valueOf(length));
         return this;
     }
 }

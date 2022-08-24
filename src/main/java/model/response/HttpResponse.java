@@ -8,6 +8,7 @@ public class HttpResponse {
     private HttpHeaders httpHeaders;
     private String status;
     private String message;
+    private ResponseBody responseBody;
 
     public void redirect(String location) {
         this.httpProtocol = new HttpProtocol("HTTP/1.1");
@@ -24,5 +25,15 @@ public class HttpResponse {
         this.httpHeaders = new HttpHeaders();
         this.httpHeaders.addCookie("logined", String.valueOf(login));
         this.httpHeaders.addLocation(location);
+    }
+
+    public void forward(ResponseBody responseBody, String contentType) {
+        this.responseBody = responseBody;
+        this.httpProtocol = new HttpProtocol("HTTP/1.1");
+        this.status = "200";
+        this.message = "OK";
+        this.httpHeaders = new HttpHeaders();
+        this.httpHeaders.addContentType(contentType);
+        this.httpHeaders.addContentLength(responseBody.getLength());
     }
 }
