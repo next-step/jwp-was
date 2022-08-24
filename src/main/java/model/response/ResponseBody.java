@@ -1,5 +1,8 @@
 package model.response;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class ResponseBody {
     private byte[] body;
 
@@ -8,6 +11,11 @@ public class ResponseBody {
     }
 
     public int getLength() {
-        return body.length;
+        return this.body.length;
+    }
+
+    public void writeOutput(DataOutputStream dos) throws IOException {
+        dos.write(this.body, 0, this.body.length);
+        dos.flush();
     }
 }

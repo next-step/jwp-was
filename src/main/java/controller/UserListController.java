@@ -16,7 +16,7 @@ import model.response.ResponseBody;
 
 public class UserListController extends AbstractController {
     private static final String USER_LOGIN_PATH = "user/login.html";
-    private static final String CONTENT_TYPE = "text/html";
+    public static final String CONTENT_TYPE = "text/html";
 
     @Override
     public void doGet(HttpRequest request, HttpResponse response) throws IOException {

@@ -1,5 +1,7 @@
 package model;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -55,5 +57,16 @@ public class HttpHeaders {
     public HttpHeaders addContentLength(int length) {
         this.header.put("Content-Length", String.valueOf(length));
         return this;
+    }
+
+    public void writeOutput(DataOutputStream dos) throws IOException {
+        this.header.forEach((key, value) -> {
+            try {
+                dos.writeBytes(key + HEADER_DELIMITER + value + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        dos.writeBytes("\n");
     }
 }

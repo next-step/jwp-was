@@ -1,13 +1,10 @@
 package webserver;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
+import static controller.UserListController.CONTENT_TYPE;
+
 import controller.LoginController;
 import controller.UserCreateController;
 import controller.UserListController;
-import db.DataBase;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -19,24 +16,21 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import model.Cookie;
 import model.HttpHeaders;
-import model.User;
 import model.request.HttpRequest;
 import model.request.RequestBody;
 import model.response.HttpResponse;
+import model.response.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final String PATH_DELIMITER = "/";
     private static final String CSS_PATH = "/css";
 
-    private Socket connection;
+    private final Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -57,12 +51,10 @@ public class RequestHandler implements Runnable {
             HttpResponse httpResponse = new HttpResponse();
             DataOutputStream dos = new DataOutputStream(out);
             String path = httpRequest.getHttpPath();
-            Map<String, String> parameters = httpRequest.getRequestParameters().getRequestParameters();
             if (path.endsWith(".html")) {
                 path = "./templates" + path;
                 byte[] body = FileIoUtils.loadFileFromClasspath(path);
-                response200Header(dos, body.length);
-                responseBody(dos, body);
+                httpResponse.forward(new ResponseBody(body), CONTENT_TYPE);
             } else if ("/user/create".equals(path)) {
                 UserCreateController userCreateController = new UserCreateController();
                 userCreateController.doPost(httpRequest, httpResponse);
@@ -78,15 +70,13 @@ public class RequestHandler implements Runnable {
                     prefix = "templates";
                 }
 
-                byte[] responseBody = FileIoUtils.loadFileFromClasspath("./" + prefix + "/" + path);
-
-                response200Header(dos, responseBody.length);
-                responseBody(dos, responseBody);
+                byte[] body = FileIoUtils.loadFileFromClasspath("./" + prefix + "/" + path);
+                httpResponse.forward(new ResponseBody(body), CONTENT_TYPE);
             }
 
             byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            httpResponse.forward(new ResponseBody(body), CONTENT_TYPE);
+            httpResponse.writeResponse(dos);
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (URISyntaxException e) {
@@ -107,46 +97,5 @@ public class RequestHandler implements Runnable {
 
     private boolean isStaticPath(String path) {
         return path.startsWith(CSS_PATH);
-    }
-
-    private boolean isLogin(User loginUser, Map<String, String> parameters) {
-        return !Objects.isNull(loginUser) && loginUser.isPassword(parameters.get("password"));
-    }
-
-    private void response302Header(DataOutputStream dos, String location) {
-        try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            responseHeader(dos, "Location", PATH_DELIMITER + location);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseHeader(DataOutputStream dos, String key, String value) {
-        try {
-            dos.writeBytes(key + ": " + value + "\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
     }
 }
