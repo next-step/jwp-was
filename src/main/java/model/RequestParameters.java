@@ -43,4 +43,8 @@ public class RequestParameters {
 	public Map<String, String> getRequestParameters() {
 		return parameters;
 	}
+
+	public String getValue(String key) {
+		return parameters.get(key);
+	}
 }

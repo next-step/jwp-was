@@ -4,6 +4,7 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
+import controller.UserCreateController;
 import db.DataBase;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -13,7 +14,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.nio.channels.MembershipKey;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +21,13 @@ import java.util.Map;
 import java.util.Objects;
 import model.Cookie;
 import model.HttpHeaders;
-import model.RequestParameters;
 import model.User;
 import model.request.HttpRequest;
 import model.request.RequestBody;
+import model.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import utils.HttpMethod;
-import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -54,7 +52,7 @@ public class RequestHandler implements Runnable {
             RequestBody requestBody = new RequestBody(br, httpHeaders);
             Cookie cookie = Cookie.from(httpHeaders.get(Cookie.REQUEST_COOKIE_HEADER));
             HttpRequest httpRequest = new HttpRequest(httpHeaders, requestLine, requestBody, cookie);
-
+            HttpResponse httpResponse = new HttpResponse();
             DataOutputStream dos = new DataOutputStream(out);
             String path = httpRequest.getHttpPath();
             Map<String, String> parameters = httpRequest.getRequestParameters().getRequestParameters();
@@ -64,11 +62,8 @@ public class RequestHandler implements Runnable {
                 response200Header(dos, body.length);
                 responseBody(dos, body);
             } else if ("/user/create".equals(path)) {
-                User user = new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"),
-                        parameters.get("email"));
-                DataBase.addUser(user);
-
-                response302Header(dos, "index.html");
+                UserCreateController userCreateController = new UserCreateController();
+                userCreateController.doPost(httpRequest, httpResponse);
             } else if ("/user/login".equals(path)) {
                 User loginUser = DataBase.findUserById(parameters.get("userId"));
                 boolean loginResult = isLogin(loginUser, parameters);

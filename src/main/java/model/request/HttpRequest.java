@@ -1,6 +1,5 @@
 package model.request;
 
-import java.util.Map;
 import model.Cookie;
 import model.HttpHeaders;
 import model.RequestParameters;

@@ -14,6 +14,10 @@ public class HttpHeaders {
 
     private final Map<String, String> header = new HashMap<>();
 
+    public HttpHeaders() {
+
+    }
+
     public HttpHeaders (String headers) {
         Arrays.stream(headers.split(NEXT_LINE))
                 .map(HttpHeaders::parse)
@@ -31,5 +35,10 @@ public class HttpHeaders {
 
     public String get(String key) {
         return header.get(key);
+    }
+
+    public HttpHeaders addLocation(String location) {
+        this.header.put("Location", location);
+        return this;
     }
 }
