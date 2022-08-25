@@ -34,7 +34,7 @@ public class RequestHandler implements Runnable {
              DataOutputStream dos = new DataOutputStream(connection.getOutputStream())) {
             HttpRequest request = HttpRequest.of(bufferedReader);
             handle(request,dos);
-        } catch (IOException | URISyntaxException | ResourceNotFoundException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }

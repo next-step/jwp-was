@@ -41,7 +41,7 @@ public class ResponseHeader {
         return cookie != null;
     }
 
-    public String getCookie() {
+    public String getCookieList() {
         return cookie.cookieList();
     }
 
@@ -51,5 +51,9 @@ public class ResponseHeader {
 
     public void addCookie(String cookieKey, String cookieValue) {
         this.cookie.add(cookieKey,cookieValue);
+    }
+
+    public HttpCookie getCookie() {
+        return cookie;
     }
 }

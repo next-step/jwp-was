@@ -11,7 +11,9 @@ public enum HttpHeaders {
     HOST("Host"),
     ACCEPT("Accept"),
     ACCEPT_LANGUAGE("Accept-Language"),
-    CONNECTION("Connection");
+    CONNECTION("Connection"),
+    USER_AGENT("User-Agent")
+    ;
 
     private String header;
 

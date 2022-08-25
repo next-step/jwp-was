@@ -1,11 +1,18 @@
 package webserver.http;
 
+import utils.CookieUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static utils.DelimiterConstants.COOKIE_VALUE_DELIMITER;
+import static utils.DelimiterConstants.PARAMETER_KEY_VALUE_DELIMITER;
+
 public class HttpCookie {
+    private static final String JESSIONID = "JESSIONID";
+
     private final Map<String, Object> cookieMap;
 
     private HttpCookie() {
@@ -17,13 +24,7 @@ public class HttpCookie {
     }
 
     public static HttpCookie of(String cookies) {
-        Map<String, Object> map = new HashMap<>();
-        String[] split = cookies.split("; ");
-        for (String cookie : split) {
-            String[] splitCookie = cookie.split("=");
-            map.put(splitCookie[0], splitCookie[1]);
-        }
-        return new HttpCookie(map);
+        return new HttpCookie(CookieUtils.createCookieMap(cookies));
     }
 
     public static HttpCookie empty() {
@@ -38,8 +39,8 @@ public class HttpCookie {
 
     public String cookieList() {
         return cookieMap.entrySet().stream()
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.joining("; "));
+                .map(entry -> entry.getKey() + PARAMETER_KEY_VALUE_DELIMITER + entry.getValue())
+                .collect(Collectors.joining(COOKIE_VALUE_DELIMITER));
     }
 
     public void add(String cookieKey, Object cookieValue) {
@@ -47,7 +48,7 @@ public class HttpCookie {
     }
 
     public String getSessionId() {
-        String id = (String) cookieMap.get("JESSIONID");
+        String id = (String) cookieMap.get(JESSIONID);
         if (id == null) {
             return UUID.randomUUID().toString();
         }
