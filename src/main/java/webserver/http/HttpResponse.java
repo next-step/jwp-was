@@ -60,4 +60,14 @@ public class HttpResponse {
             }
         });
     }
+
+    public void response404() {
+        try {
+            dos.writeBytes("HTTP/1.1 404 Not Found \r\n");
+            responseHeader();
+            dos.flush();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
 }

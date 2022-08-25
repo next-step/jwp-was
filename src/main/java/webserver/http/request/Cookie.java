@@ -42,4 +42,13 @@ public class Cookie {
                 .collect(Collectors.toList());
         return String.join(COOKIE_DELIMITER, cookieStrings) + COOKIE_DELIMITER + PATH_KEY + KEY_VALUE_DELIMITER + "/";
     }
+
+    public UUID getSessionId() {
+        String sessionId = get(HttpSession.SESSION_ID_KEY);
+        return !Objects.isNull(sessionId) ? UUID.fromString(sessionId) : null;
+    }
+
+    public void setSessionId(UUID sessionId) {
+        set(HttpSession.SESSION_ID_KEY, String.valueOf(sessionId));
+    }
 }

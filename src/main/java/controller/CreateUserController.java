@@ -16,5 +16,6 @@ public class CreateUserController extends AbstractController {
 
     @Override
     void doGet(HttpRequest request, HttpResponse response) throws Exception {
+        response.response404();
     }
 }
