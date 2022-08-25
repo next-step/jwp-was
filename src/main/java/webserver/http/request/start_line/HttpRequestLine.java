@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http.request.start_line;
 
 import org.springframework.http.HttpMethod;
 
@@ -13,6 +13,7 @@ public class HttpRequestLine {
 
     public HttpRequestLine(final String requestLine) {
         final String[] split = requestLine.split(" ");
+
         this.httpMethod = HttpMethod.resolve(split[0]);
         this.path = new RequestPath(split[1]);
         this.protocol = new Protocol(split[2].split(DELIMITER)[0]);
@@ -34,4 +35,5 @@ public class HttpRequestLine {
     public HttpVersion getVersion() {
         return version;
     }
+
 }

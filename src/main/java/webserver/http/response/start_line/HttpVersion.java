@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http.response.start_line;
 
 import java.util.Objects;
 
