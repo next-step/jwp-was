@@ -8,9 +8,9 @@ public class Cookie {
 
     public static final String COOKIE = "Cookie";
     public static final String SET_COOKIE = "Set-Cookie";
-    private static final String COOKIE_PATH = "Path";
-    private static final String COOKIE_DELIMITER = "; ";
-    private static final String KEY_VALUE_DELIMITER = "=";
+    public static final String COOKIE_PATH = "Path";
+    public static final String COOKIE_DELIMITER = "; ";
+    public static final String KEY_VALUE_DELIMITER = "=";
     private static final int KEY_IDX = 0;
     private static final int VALUE_IDX = 1;
     private Map<String, String> cookieData;
@@ -42,9 +42,4 @@ public class Cookie {
         cookieData.put(key, value);
     }
 
-
-    public static String setLoginCookie(String bool) {
-        return "logined" + KEY_VALUE_DELIMITER + bool +
-                COOKIE_DELIMITER + COOKIE_PATH + KEY_VALUE_DELIMITER + "/";
-    }
 }

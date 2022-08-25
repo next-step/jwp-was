@@ -42,11 +42,8 @@ public class HttpResponse {
     }
 
     public void forward(String path) throws IOException, URISyntaxException {
-        System.out.println("path = " + path);
         String fileExtension = FileIoUtils.getFileExtension(path);
         String contentType = ContentType.selectContent(fileExtension);
-        System.out.println("contentType = " + contentType);
-        System.out.println("headers = " + headers);
         headers.add(HttpHeader.CONTENT_TYPE, contentType);
 
         byte[] bytes = FileIoUtils.loadFileFromClasspath("./templates" + path);
@@ -82,10 +79,9 @@ public class HttpResponse {
     public void sendRedirect(String location) {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: " + location + "\r\n");
+            headers.add("Location",location);
             processHeaders();
             dos.writeBytes("\r\n");
-            System.out.println("11111");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

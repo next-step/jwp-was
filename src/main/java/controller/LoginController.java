@@ -9,6 +9,8 @@ import webserver.HttpResponse;
 
 import java.util.Objects;
 
+import static webserver.Cookie.*;
+
 public class LoginController extends AbstractController {
 
     @Override
@@ -16,7 +18,10 @@ public class LoginController extends AbstractController {
         User loginUser = DataBase.findUserById(request.getBodyParameter("userId"));
         boolean isLogin = !Objects.isNull(loginUser) && request.getBodyParameter("password").equals(loginUser.getPassword());
 
-        response.getHeaders().add(Cookie.SET_COOKIE, Cookie.setLoginCookie(String.valueOf(isLogin)));
+        response.getHeaders().add(
+                Cookie.SET_COOKIE,
+                "logined" + KEY_VALUE_DELIMITER + String.valueOf(isLogin) + COOKIE_DELIMITER + COOKIE_PATH + KEY_VALUE_DELIMITER + "/"
+        );
         response.sendRedirect(isLogin ? "/index.html" : "/login_failed.html");
 
     }
