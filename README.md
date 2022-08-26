@@ -17,6 +17,23 @@ refactor
 test (when adding missing tests)
 chore (maintain)
 ```
+## 요구 사항
+-[x] request를 분석할 수 있다. 
+  - Request Line을 파싱한다. 
+  - Method, Path, Protocol, Version을 파싱한다. 
+  - Path에서 Query를 분리하여 파싱한다.
+
+-[ ] 사용자가 접속하면 /index.html view를 볼 수 있다.
+  - Headers를 파싱한다.
+  - path에 해당하는 위치를 찾는다
+  - 해당 위치에 /index.html을 읽어서 응답에 포함시킨다.
+  - 해당위치에 리소스가 존재하지 않는 경우 404를 반환한다.
+-[ ] 회원가입을 요청하면 사용자는 회원가입을 할 수 있다.
+-[ ] 회원가입을 완료하면 /index.html로 리다이렉션 되어야 한다.
+-[ ] 사용자는 /user/login.html을 통하여 로그인이 가능하다.
+-[ ] /user/list에서 사용자 목록을 볼 수 있다. 로그인 상태가 아니라면 login.html로 리다이렉션 된다.
+-[ ] stylesheet 파일을 지원한다.
+
 ## 기능 정의
 ### Step1. HTTP Header를 파싱한다.
   ```text/plain
@@ -56,14 +73,7 @@ HttpHeaderParser
   - 기본 Request가 있으며 사용자에 의해 교체 가능 해야 한다.
     - 필수 입력 파라미터가 존재한다.(ex. uri, method)
 
-
-
-
-
-
-
-
-
+  
 
 - HTTP 요청을 받거나 응답을 보낸다.
 - 요청 메시지는 request line, headers, contents로 나누어 진다.
