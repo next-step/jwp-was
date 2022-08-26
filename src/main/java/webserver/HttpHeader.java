@@ -14,6 +14,12 @@ public class HttpHeader {
     private Map<String, String> headers = new HashMap<>();
     private Cookie cookie;
 
+    private HttpStatus httpStatus;
+
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
+    }
+
     public Cookie getCookie() {
         return cookie;
     }
