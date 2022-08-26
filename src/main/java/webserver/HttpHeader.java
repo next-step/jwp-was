@@ -12,6 +12,15 @@ public class HttpHeader {
     public static final String CONTENT_TYPE = "Content-Type";
 
     private Map<String, String> headers = new HashMap<>();
+    private Cookie cookie;
+
+    public Cookie getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(Cookie cookie) {
+        this.cookie = cookie;
+    }
 
     public void addHeader(String headerLine) {
         if (hasHeader(headerLine)) {

@@ -8,7 +8,6 @@ public class HttpRequest {
     private HttpHeader header;
     private RequestLine requestLine;
     private RequestBody body;
-    private Cookie cookie;
 
     public HttpRequest(HttpHeader header, RequestLine requestLine) {
         this.header = header;
@@ -19,7 +18,6 @@ public class HttpRequest {
         this.header = header;
         this.requestLine = requestLine;
         this.body = body;
-        this.cookie = cookie;
     }
 
     public HttpRequest(InputStream in) throws IOException {
@@ -43,7 +41,7 @@ public class HttpRequest {
 
         if (httpHeader.getValue(Cookie.COOKIE).length() > 1) {
             Cookie cookie = Cookie.parse(httpHeader.getValue(Cookie.COOKIE));
-            this.cookie = cookie;
+            httpHeader.setCookie(cookie);
         }
 
         this.header = httpHeader;
@@ -78,7 +76,7 @@ public class HttpRequest {
     }
 
     public Cookie getCookie() {
-        return cookie;
+        return header.getCookie();
     }
 
 
