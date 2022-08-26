@@ -22,7 +22,13 @@ public class LoginController extends AbstractController {
                 Cookie.SET_COOKIE,
                 "logined" + KEY_VALUE_DELIMITER + String.valueOf(isLogin) + COOKIE_DELIMITER + COOKIE_PATH + KEY_VALUE_DELIMITER + "/"
         );
-        response.sendRedirect(isLogin ? "/index.html" : "/login_failed.html");
+
+        if (isLogin) {
+            response.sendRedirect("/index.html");
+        }
+        if (!isLogin) {
+            response.sendRedirect("/login_failed.html");
+        }
 
     }
 
