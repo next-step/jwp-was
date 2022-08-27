@@ -1,5 +1,7 @@
 package webserver.request;
 
+import webserver.cookie.Cookie;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -43,10 +45,17 @@ public class Header {
     }
 
     public String getHeader(String header) {
+        if(!headerMap.containsKey(header)) {
+            return null;
+        }
         return headerMap.get(header);
     }
 
     public Map<String, String> getHeaderMap() {
         return headerMap;
+    }
+
+    public void addCookie(Cookie cookie) {
+        addHeader("Set-Cookie:" + cookie.cookiesToString());
     }
 }

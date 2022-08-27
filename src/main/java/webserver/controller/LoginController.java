@@ -2,17 +2,41 @@ package webserver.controller;
 
 import db.DataBase;
 import model.User;
+import webserver.cookie.Cookie;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
+import webserver.session.HttpSession;
+import webserver.session.HttpSessionRepository;
+
+import java.util.UUID;
 
 public class LoginController implements Controller {
 
     @Override
     public HttpResponse service(HttpRequest request) {
+        Cookie cookie = new Cookie();
+        HttpSession session = initSession();
+
         if (isLogin(request)) {
-            return HttpResponse.sendRedirect("/index.html", "logined=true; Path=/");
+            session.setAttribute("logined", "true;");
+            session.setAttribute("Path","/");
+
+            cookie.addCookie("sessionId", session.getId());
+
+            return HttpResponse.sendRedirect("/index.html", cookie);
         }
-        return HttpResponse.sendRedirect("/user/login_failed.html", "logined=false");
+
+        session.setAttribute("logined", "false");
+
+        cookie.addCookie("sessionId", session.getId());
+
+        return HttpResponse.sendRedirect("/user/login_failed.html", cookie);
+    }
+
+    private HttpSession initSession() {
+        UUID uuid = UUID.randomUUID();
+        HttpSession httpSession = HttpSessionRepository.addSession(String.valueOf(uuid));
+        return httpSession;
     }
 
     private boolean isLogin(HttpRequest httpRequest) {

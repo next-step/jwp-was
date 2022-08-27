@@ -13,7 +13,7 @@ public class UserCreateController extends PostController {
     @Override
     public HttpResponse doPost(HttpRequest request) {
         createUser(request);
-        return HttpResponse.sendRedirect("/index.html", "");
+        return HttpResponse.sendRedirect("/index.html", null);
     }
 
     private void createUser(HttpRequest request) {

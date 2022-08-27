@@ -57,4 +57,15 @@
 
 - Cookie 클래스 분리
 
+## Step4
+- HttpSession 클래스 구현
+- HttpSession을 관리하는 HttpSessionRepository 클래스 구현
+- Session 로그인 로직
+  1. 사용자가 로그인 시도를 하면 db에서 유저가 존재하는지 확인하고, 존재한다면 session 을 생성한다.
+  2. Session에 로그인했다는 logined 라는 Attribute true로 설정한다.
+  3. 1에서 만든 session의 ID를 Set-Cookie에 설정하고 브라우저에 응답 한다.
+  4. 다음 요청에서 Cookie에 sessionId가 있다면 해당 id의 세션을 찾는다.
+  5. 찾은 세션에서 logined 가 설정되어있다면 해당 요청한 유저는 로그인 된 상태다.
+  
+
 

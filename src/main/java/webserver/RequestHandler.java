@@ -8,6 +8,7 @@ import webserver.controller.RequestMapping;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,14 +31,20 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             if (in != null) {
                 HttpRequest httpRequest = new HttpRequest(in);
-                //HttpResponse httpResponse = new HttpResponse(out);
                 Controller controller = RequestMapping.getController(httpRequest.getPath());
                 HttpResponse httpResponse = controller.service(httpRequest);
-                httpResponse.write(out);
+
+                write(out, httpResponse);
             }
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private void write(OutputStream out, HttpResponse httpResponse) throws IOException {
+        DataOutputStream dos = new DataOutputStream(out);
+        dos.write(httpResponse.getBytes());
+        dos.flush();
     }
 
 }
