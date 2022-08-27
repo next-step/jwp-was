@@ -11,6 +11,7 @@ public class HttpSession {
 
 
     public HttpSession() {
+        this.id = UUID.randomUUID().toString();
     }
     public HttpSession(String id) {
         this.id = id;
@@ -38,7 +39,8 @@ public class HttpSession {
     }
 
     public void invalidate() {
-        Map<String, Object> attributes = getAttributes();
+        Map<String, HttpSession> sessionMap = HttpSessionStorage.getSessionMap();
+        sessionMap.remove(id);
         attributes.clear();
     }
 }

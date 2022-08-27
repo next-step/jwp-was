@@ -16,7 +16,7 @@ public class SessionStorageTest {
     void add_get() {
         HttpSessionStorage sessionStorage = new HttpSessionStorage();
 
-        HttpSession session = new HttpSession(UUID.randomUUID().toString());
+        HttpSession session = new HttpSession();
         sessionStorage.addSession(session);
 
         assertThat(sessionStorage.getSession(session.getId())).isEqualTo(session);
@@ -27,7 +27,7 @@ public class SessionStorageTest {
     void remove() {
         HttpSessionStorage sessionStorage = new HttpSessionStorage();
 
-        HttpSession session = new HttpSession(UUID.randomUUID().toString());
+        HttpSession session = new HttpSession();
         sessionStorage.addSession(session);
 
         sessionStorage.removeSession(session.getId());
@@ -40,8 +40,8 @@ public class SessionStorageTest {
     void invalidate() {
         HttpSessionStorage sessionStorage = new HttpSessionStorage();
 
-        HttpSession session = new HttpSession(UUID.randomUUID().toString());
-        HttpSession session2 = new HttpSession(UUID.randomUUID().toString());
+        HttpSession session = new HttpSession();
+        HttpSession session2 = new HttpSession();
         sessionStorage.addSession(session);
         sessionStorage.addSession(session2);
 

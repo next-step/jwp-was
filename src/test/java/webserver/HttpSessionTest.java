@@ -12,7 +12,7 @@ public class HttpSessionTest {
 
     @Test
     void getId() {
-        HttpSession httpSession = new HttpSession(UUID.randomUUID().toString());
+        HttpSession httpSession = new HttpSession();
 
         assertThat(httpSession.getId()).isNotEqualTo(UUID.randomUUID().toString());
     }
@@ -21,7 +21,7 @@ public class HttpSessionTest {
     @Test
     @DisplayName("set,getAttribute TDD")
     void set_get_Attribute() {
-        HttpSession httpSession = new HttpSession(UUID.randomUUID().toString());
+        HttpSession httpSession = new HttpSession();
 
         String testName = "testName";
         Object testValue = "testObject";
@@ -33,7 +33,7 @@ public class HttpSessionTest {
     @Test
     @DisplayName("removeAttribute TDD")
     void remove_Attribute() {
-        HttpSession httpSession = new HttpSession(UUID.randomUUID().toString());
+        HttpSession httpSession = new HttpSession();
 
         String testName = "testName";
         Object testValue = "testObject";
@@ -46,7 +46,7 @@ public class HttpSessionTest {
     @Test
     @DisplayName("invalidate TDD")
     void invalidate() {
-        HttpSession httpSession = new HttpSession(UUID.randomUUID().toString());
+        HttpSession httpSession = new HttpSession();
 
         String testName = "testName";
         Object testValue = "testObject";
@@ -55,6 +55,9 @@ public class HttpSessionTest {
         String testName2 = "testName2";
         Object testValue2 = "testObject2";
         httpSession.setAttribute(testName2, testValue2);
+
+        HttpSessionStorage httpSessionStorage = new HttpSessionStorage();
+        httpSessionStorage.addSession(httpSession);
 
         httpSession.invalidate();
 
