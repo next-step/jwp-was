@@ -41,7 +41,10 @@ public class LoginControllerTest {
         HttpRequest httpRequest = new HttpRequest(createInputStream("Http_Login_Success.txt"));
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+
         HttpResponse httpResponse = new HttpResponse(dataOutputStream);
+        Cookie cookie = new Cookie();
+        httpResponse.getHeaders().setCookie(cookie);
 
         // when
         controller.doPost(httpRequest, httpResponse);
@@ -49,7 +52,7 @@ public class LoginControllerTest {
         // then
         assertAll(
                 () -> assertThat(httpResponse.getHeaders().getValue("Location")).isEqualTo("/index.html"),
-                () -> assertThat(httpResponse.getHeaders().getValue(Cookie.SET_COOKIE).split(";")[0]).isEqualTo("logined=true")
+                () -> assertThat(httpResponse.getHeaders().getCookie().getValue(Cookie.SET_COOKIE).split(";")[0]).isEqualTo("logined=true")
         );
     }
 

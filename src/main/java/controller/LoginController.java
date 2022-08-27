@@ -18,18 +18,17 @@ public class LoginController extends AbstractController {
         User loginUser = DataBase.findUserById(request.getBodyParameter("userId"));
         boolean isLogin = !Objects.isNull(loginUser) && request.getBodyParameter("password").equals(loginUser.getPassword());
 
-        response.getHeaders().add(
+        response.getHeaders().getCookie().setCookie(
                 Cookie.SET_COOKIE,
                 "logined" + KEY_VALUE_DELIMITER + String.valueOf(isLogin) + COOKIE_DELIMITER + COOKIE_PATH + KEY_VALUE_DELIMITER + "/"
         );
 
-        if (isLogin) {
-            response.sendRedirect("/index.html");
-        }
         if (!isLogin) {
             response.sendRedirect("/login_failed.html");
+            return;
         }
 
+        response.sendRedirect("/index.html");
     }
 
     @Override
