@@ -13,22 +13,17 @@ import java.util.Set;
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private HttpStatus httpStatus;
     private HttpHeader headers = new HttpHeader();
     private byte[] bytesBody;
     private DataOutputStream dos;
 
-    public HttpResponse(HttpStatus httpStatus) {
-        this.httpStatus = httpStatus;
-    }
 
-    public HttpResponse(HttpStatus httpStatus, HttpHeader headers) {
-        this.httpStatus = httpStatus;
+
+    public HttpResponse(HttpHeader headers) {
         this.headers = headers;
     }
 
-    public HttpResponse(HttpStatus httpStatus, HttpHeader headers, byte[] bytesBody) {
-        this.httpStatus = httpStatus;
+    public HttpResponse(HttpHeader headers, byte[] bytesBody) {
         this.headers = headers;
         this.bytesBody = bytesBody;
     }
@@ -100,7 +95,7 @@ public class HttpResponse {
     }
 
     public HttpStatus getHttpStatus() {
-        return httpStatus;
+        return headers.getHttpStatus();
     }
 
     public HttpHeader getHeaders() {

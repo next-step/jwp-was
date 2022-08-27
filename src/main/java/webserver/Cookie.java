@@ -1,6 +1,7 @@
 package webserver;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,7 @@ public class Cookie {
     public static final String KEY_VALUE_DELIMITER = "=";
     private static final int KEY_IDX = 0;
     private static final int VALUE_IDX = 1;
-    private Map<String, String> cookieData;
+    private Map<String, String> cookieData = new HashMap<>();
 
     public Cookie() {
     }
@@ -38,8 +39,9 @@ public class Cookie {
         return cookieData.get(Cookie.COOKIE_PATH);
 
     }
-    public void setCookie(String key, String value) {
-        cookieData.put(key, value);
+    public void setCookie(String value, HttpHeader header) {
+        this.cookieData.put(SET_COOKIE, value);
+        header.putCookie(this.cookieData);
     }
 
 }

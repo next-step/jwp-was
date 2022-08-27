@@ -12,6 +12,21 @@ public class HttpHeader {
     public static final String CONTENT_TYPE = "Content-Type";
 
     private Map<String, String> headers = new HashMap<>();
+    private Cookie cookie;
+
+    private HttpStatus httpStatus;
+
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
+    }
+
+    public Cookie getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(Cookie cookie) {
+        this.cookie = cookie;
+    }
 
     public void addHeader(String headerLine) {
         if (hasHeader(headerLine)) {
@@ -46,4 +61,9 @@ public class HttpHeader {
         return headers.keySet();
     }
 
+    public void putCookie(Map<String, String> cookieData) {
+        for (String key : cookieData.keySet()) {
+            headers.put(key, cookie.getValue(key));
+        }
+    }
 }
