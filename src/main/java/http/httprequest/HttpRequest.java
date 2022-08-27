@@ -4,7 +4,6 @@ import http.HttpSession;
 import http.httprequest.requestbody.RequestBody;
 import http.httprequest.requestheader.RequestHeader;
 import http.httprequest.requestline.RequestLine;
-import org.springframework.util.CollectionUtils;
 import utils.IOUtils;
 
 import java.io.BufferedReader;
@@ -26,31 +25,17 @@ public class HttpRequest {
         this.requestBody = requestBody;
     }
 
-    public static HttpRequest from(List<String> request) {
-        if (CollectionUtils.isEmpty(request)) {
-            throw new IllegalArgumentException("request must not be empty");
-        }
-
-        RequestLine requestLine = RequestLine.from(request.get(0));
-        RequestHeader requestHeader = RequestHeader.from(request.subList(0, request.size()));
+    public static HttpRequest from(BufferedReader br) throws IOException {
+        List<String> input = IOUtils.readLines(br);
+        RequestLine requestLine = RequestLine.from(input.get(0));
+        RequestHeader requestHeader = RequestHeader.from(input.subList(0, input.size()));
+        RequestBody requestBody = new RequestBody(IOUtils.readData(br, requestHeader.getContentLength()));
 
         return new HttpRequest(
-                requestLine, requestHeader, RequestBody.empty()
+                requestLine,
+                requestHeader,
+                requestBody
         );
-    }
-
-    public static HttpRequest from(BufferedReader br) throws IOException {
-        HttpRequest request = HttpRequest.from(IOUtils.readLines(br));
-
-        if (request.getContentLength() > 0) {
-            return new HttpRequest(
-                    request.requestLine,
-                    request.httpRequestHeader,
-                    new RequestBody(IOUtils.readData(br, request.getContentLength()))
-            );
-        }
-
-        return request;
     }
 
     public RequestLine getRequestLine() {

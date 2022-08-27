@@ -17,7 +17,7 @@ class HttpResponseTest {
     @DisplayName("생성 잘 되는지 확인")
     void create() {
         HttpResponse httpResponse = new HttpResponse(
-                HttpStatusCode.OK,
+                new StatusLine(HttpStatusCode.OK),
                 new ResponseHeader(Collections.singletonMap(HttpHeaders.SET_COOKIE, "logined=true; Path=/"))
         );
 

@@ -7,6 +7,7 @@ import http.httpresponse.HttpHeaders;
 import http.httpresponse.HttpResponse;
 import http.httpresponse.HttpStatusCode;
 import http.httpresponse.ResponseHeader;
+import http.httpresponse.StatusLine;
 import utils.FileIoUtils;
 
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class TemplateController implements Controller {
     @Override
     public HttpResponse execute(HttpRequest httpRequest) throws IOException, URISyntaxException {
         return new HttpResponse(
-                HttpStatusCode.OK,
+                new StatusLine(HttpStatusCode.OK),
                 new ResponseHeader(Collections.singletonMap(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8")),
                 FileIoUtils.loadFileFromClasspath((getTemplatePath(httpRequest.getRequestLine().getPath())))
         );

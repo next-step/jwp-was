@@ -29,17 +29,20 @@ public class RequestHeader {
 
     public static RequestHeader from(List<String> headerStrings) {
         if(CollectionUtils.isEmpty(headerStrings)) {
-            return from(Collections.emptyMap());
+            return new RequestHeader(Collections.emptyMap());
         }
 
-        return from(
-                headerStrings.stream().filter(string -> string.contains(KEY_VALUE_DELIMITER))
-                .map(keyValue -> {
-                    String[] keyValuePair = keyValue.split(KEY_VALUE_DELIMITER);
-                    return Map.entry(keyValuePair[KEY_INDEX].trim(), keyValuePair[VALUE_INDEX].trim());
-                })
-                .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue))
-        );
+        Map<String, String> headers = headerStrings.stream()
+                .filter(string -> string.contains(KEY_VALUE_DELIMITER))
+                .map(RequestHeader::parseToEntry)
+                .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return from(headers);
+    }
+
+    private static Map.Entry<String, String> parseToEntry(String keyValue) {
+        String[] keyValuePair = keyValue.split(KEY_VALUE_DELIMITER);
+        return Map.entry(keyValuePair[KEY_INDEX].trim(), keyValuePair[VALUE_INDEX].trim());
     }
 
     public int getContentLength() {

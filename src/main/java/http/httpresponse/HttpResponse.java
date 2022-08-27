@@ -9,55 +9,54 @@ import java.util.Map;
 import java.util.Objects;
 
 public class HttpResponse {
-    private static final HttpResponse NOT_FOUND = new HttpResponse(HttpStatusCode.NOT_FOUND, ResponseHeader.empty());
-    private static final HttpResponse INTERNAL_SERVER_ERROR = new HttpResponse(HttpStatusCode.INTERNAL_SERVER_ERROR, ResponseHeader.empty());
+    private static final HttpResponse NOT_FOUND = new HttpResponse(new StatusLine(HttpStatusCode.NOT_FOUND), ResponseHeader.empty());
+    private static final HttpResponse INTERNAL_SERVER_ERROR = new HttpResponse(new StatusLine(HttpStatusCode.INTERNAL_SERVER_ERROR), ResponseHeader.empty());
 
-    private final HttpStatusCode httpStatusCode;
+    private final StatusLine statusLine;
     private final ResponseHeader responseHeader;
     private final byte[] body;
     private final SessionAttribute sessionAttribute;
 
-    public HttpResponse(HttpStatusCode httpStatusCode,
+    public HttpResponse(StatusLine statusLine,
                         ResponseHeader responseHeader,
                         byte[] body,
                         SessionAttribute sessionAttribute) {
-        this.httpStatusCode = httpStatusCode;
+        this.statusLine = statusLine;
         this.responseHeader = responseHeader;
         this.body = body;
         this.sessionAttribute = sessionAttribute;
     }
 
     public HttpResponse(HttpStatusCode httpStatusCode, ResponseHeader responseHeader) {
-        this(httpStatusCode, responseHeader, new byte[0], SessionAttribute.empty());
+        this(new StatusLine(httpStatusCode), responseHeader, new byte[0], SessionAttribute.empty());
     }
 
-    public HttpResponse(HttpStatusCode httpStatusCode,
+    public HttpResponse(StatusLine statusLine,
                         ResponseHeader responseHeader,
                         String body) {
-        this(httpStatusCode, responseHeader, body.getBytes(StandardCharsets.UTF_8), SessionAttribute.empty());
+        this(statusLine, responseHeader, body.getBytes(StandardCharsets.UTF_8), SessionAttribute.empty());
     }
 
-    public HttpResponse(HttpStatusCode httpStatusCode,
+    public HttpResponse(StatusLine statusLine,
                         ResponseHeader responseHeader,
                         byte[] body) {
-        this(httpStatusCode, responseHeader, body, SessionAttribute.empty());
+        this(statusLine, responseHeader, body, SessionAttribute.empty());
     }
-
 
     public static HttpResponse sendRedirect(String path) {
         return  sendRedirect(path, new ResponseHeader(Collections.emptyMap()));
     }
 
     public static HttpResponse sendRedirect(String path, ResponseHeader responseHeader) {
-        return new HttpResponse(HttpStatusCode.FOUND, responseHeader.add(HttpHeaders.LOCATION, path));
+        return new HttpResponse(new StatusLine(HttpStatusCode.FOUND), responseHeader.add(HttpHeaders.LOCATION, path));
     }
 
     public static HttpResponse sendRedirect(String path, SessionAttribute sessionAttribute) {
-        return new HttpResponse(HttpStatusCode.FOUND, new ResponseHeader(Map.of(HttpHeaders.LOCATION, path)), new byte[0], sessionAttribute);
+        return new HttpResponse(new StatusLine(HttpStatusCode.FOUND), new ResponseHeader(Map.of(HttpHeaders.LOCATION, path)), new byte[0], sessionAttribute);
     }
 
     public HttpStatusCode getHttpStatusCode() {
-        return httpStatusCode;
+        return statusLine.getHttpStatusCode();
     }
 
     public ResponseHeader getResponseHeader() {
@@ -89,7 +88,7 @@ public class HttpResponse {
     }
 
     public HttpResponse addHeader(String name, Object value) {
-        return new HttpResponse(httpStatusCode, responseHeader.add(name, value), body, sessionAttribute);
+        return new HttpResponse(statusLine, responseHeader.add(name, value), body, sessionAttribute);
     }
 
     @Override
@@ -97,12 +96,12 @@ public class HttpResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HttpResponse that = (HttpResponse) o;
-        return httpStatusCode == that.httpStatusCode && responseHeader.equals(that.responseHeader) && Arrays.equals(body, that.body);
+        return statusLine.equals(that.statusLine) && responseHeader.equals(that.responseHeader) && Arrays.equals(body, that.body);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(httpStatusCode, responseHeader);
+        int result = Objects.hash(statusLine, responseHeader);
         result = 31 * result + Arrays.hashCode(body);
         return result;
     }
