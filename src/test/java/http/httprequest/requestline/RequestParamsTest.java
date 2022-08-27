@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ParamsTest {
+class RequestParamsTest {
 
     @Test
     @DisplayName("QueryString을 주면 정상적으로 parsing 하고 객체가 생성되는지 확인")

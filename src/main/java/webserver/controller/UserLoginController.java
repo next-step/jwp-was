@@ -6,8 +6,6 @@ import http.httprequest.requestline.HttpMethod;
 import http.httpresponse.HttpResponse;
 import utils.AuthUtil;
 
-import java.io.IOException;
-
 public class UserLoginController implements Controller {
 
     private static final String PATH = "/user/login";

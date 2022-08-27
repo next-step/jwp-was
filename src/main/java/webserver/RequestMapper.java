@@ -9,7 +9,6 @@ import webserver.controller.UserCreateController;
 import webserver.controller.UserListController;
 import webserver.controller.UserLoginController;
 
-import java.util.Optional;
 import java.util.Set;
 
 public class RequestMapper {
@@ -24,10 +23,11 @@ public class RequestMapper {
         throw new AssertionError("'Assert' can not be instanced");
     }
 
-    public static Optional<Controller> getController(HttpRequest httpRequest) {
+    public static Controller getController(HttpRequest httpRequest) {
         RequestLine requestLine = httpRequest.getRequestLine();
         return CONTROLLERS.stream()
                 .filter(it -> it.isMatch(requestLine.getHttpMethod(), requestLine.getPath()))
-                .findFirst();
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 }

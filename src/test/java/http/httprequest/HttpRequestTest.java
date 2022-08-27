@@ -7,9 +7,15 @@ import http.httprequest.requestline.RequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,15 +25,21 @@ class HttpRequestTest {
 
     @Test
     @DisplayName("정상적으로 잘 생성되는지 확인")
-    void create() {
-        HttpRequest httpRequest = HttpRequest.from(
-                Arrays.asList(
-                        "GET /index.html HTTP/1.1",
-                        "Host: localhost:8080",
-                        "Connection: keep-alive",
-                        "Cookie: logined=false"
-                )
-        );
+    void create() throws IOException {
+        StringBuilder buffer = new StringBuilder();
+
+        for (String current : Arrays.asList(
+                "GET /index.html HTTP/1.1\n",
+                "Host: localhost:8080\n",
+                "Connection: keep-alive\n",
+                "Cookie: logined=false\n"
+        )) {
+            buffer.append(current);
+        }
+
+        BufferedReader br = new BufferedReader(new StringReader(buffer.toString()));
+
+        HttpRequest httpRequest = HttpRequest.from(br);
 
         assertAll(
                 () -> assertThat(httpRequest.getRequestLine()).isEqualTo(RequestLine.from("GET /index.html HTTP/1.1")),

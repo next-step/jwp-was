@@ -6,6 +6,7 @@ import http.httprequest.HttpRequest;
 import http.httpresponse.HttpResponse;
 import http.httpresponse.HttpStatusCode;
 import http.httpresponse.ResponseHeader;
+import http.httpresponse.StatusLine;
 import model.User;
 
 import java.util.Collections;
@@ -21,7 +22,7 @@ public class AuthUtil {
 
         if(user == null || user.isNotMatchPassword(httpRequest.getBodyValue("password")) ) {
             return new HttpResponse(
-                    HttpStatusCode.FOUND,
+                    new StatusLine(HttpStatusCode.FOUND),
                     new ResponseHeader(Map.of(
                             HttpHeaders.LOCATION, "/user/login_failed.html",
                             HttpHeaders.SET_COOKIE, "logined=false; Path=/"
@@ -37,7 +38,7 @@ public class AuthUtil {
 
     public HttpResponse logout(HttpRequest httpRequest) {
         return new HttpResponse(
-                HttpStatusCode.FOUND,
+                new StatusLine(HttpStatusCode.FOUND),
                 new ResponseHeader(Map.of(
                         HttpHeaders.LOCATION, "/index.html",
                         HttpHeaders.SET_COOKIE, "logined=false; Path=/"

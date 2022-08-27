@@ -14,7 +14,6 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.Optional;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -33,25 +32,22 @@ public class RequestHandler implements Runnable {
              DataOutputStream dos = new DataOutputStream(connection.getOutputStream())) {
 
             HttpRequest httpRequest = HttpRequest.from(br);
-            Optional<Controller> controller = RequestMapper.getController(httpRequest);
 
-            HttpResponse httpResponse = getHttpResponseSafety(httpRequest, controller);
+            HttpResponse httpResponse = getHttpResponseSafety(httpRequest);
             writeResponse(dos, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private HttpResponse getHttpResponseSafety(HttpRequest httpRequest,
-                                               Optional<Controller> controller) {
-        if (controller.isEmpty()) {
-            return HttpResponse.notFound();
-        }
-
+    private HttpResponse getHttpResponseSafety(HttpRequest httpRequest) {
         try {
-            return controller.get().serve(httpRequest);
+            Controller controller = RequestMapper.getController(httpRequest);
+            return controller.serve(httpRequest);
         } catch (IOException | URISyntaxException e) {
-            return HttpResponse.internpalServerError();
+            return HttpResponse.internalServerError();
+        } catch (IllegalArgumentException e) {
+            return HttpResponse.notFound();
         }
     }
 

@@ -11,6 +11,7 @@ import http.httpresponse.HttpHeaders;
 import http.httpresponse.HttpResponse;
 import http.httpresponse.HttpStatusCode;
 import http.httpresponse.ResponseHeader;
+import http.httpresponse.StatusLine;
 import utils.AuthUtil;
 
 import java.io.IOException;
@@ -51,13 +52,13 @@ public class UserListController implements Controller {
     public HttpResponse serve(HttpRequest httpRequest) throws IOException {
         if (!AuthUtil.isLoggedIn(httpRequest)) {
             return new HttpResponse(
-                    HttpStatusCode.UNAUTHORIZED,
+                    new StatusLine(HttpStatusCode.UNAUTHORIZED),
                     new ResponseHeader(Collections.singletonMap(HttpHeaders.LOCATION, "/user/login.html"))
             );
         }
 
         return new HttpResponse(
-                HttpStatusCode.OK,
+                new StatusLine(HttpStatusCode.OK),
                 new ResponseHeader(Collections.singletonMap(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8")),
                 userListBody()
         );

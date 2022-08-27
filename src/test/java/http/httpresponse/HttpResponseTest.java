@@ -17,7 +17,7 @@ class HttpResponseTest {
     @DisplayName("생성 잘 되는지 확인")
     void create() {
         HttpResponse httpResponse = new HttpResponse(
-                HttpStatusCode.OK,
+                new StatusLine(HttpStatusCode.OK),
                 new ResponseHeader(Collections.singletonMap(HttpHeaders.SET_COOKIE, "logined=true; Path=/"))
         );
 
@@ -50,7 +50,7 @@ class HttpResponseTest {
     @Test
     @DisplayName("internalServerError Status가 정상인지 확인")
     void internalServerError() {
-        HttpResponse httpResponse = HttpResponse.internpalServerError();
+        HttpResponse httpResponse = HttpResponse.internalServerError();
 
         assertThat(httpResponse.getHttpStatusCode()).isEqualTo(HttpStatusCode.INTERNAL_SERVER_ERROR);
     }

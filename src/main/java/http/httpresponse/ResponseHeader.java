@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class ResponseHeader {
     private static final Map<String, String> EMPTY_MAP = Collections.emptyMap();
-    Map<String, String> headers;
+    private final Map<String, String> headers;
 
     public ResponseHeader(Map<String, String> headers) {
         if (CollectionUtils.isEmpty(headers)){

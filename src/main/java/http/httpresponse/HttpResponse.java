@@ -6,30 +6,30 @@ import java.util.Collections;
 import java.util.Objects;
 
 public class HttpResponse {
-    private static final HttpResponse NOT_FOUND = new HttpResponse(HttpStatusCode.NOT_FOUND, ResponseHeader.empty());
-    private static final HttpResponse INTERNAL_SERVER_ERROR = new HttpResponse(HttpStatusCode.INTERNAL_SERVER_ERROR, ResponseHeader.empty());
+    private static final HttpResponse NOT_FOUND = new HttpResponse(new StatusLine(HttpStatusCode.NOT_FOUND), ResponseHeader.empty());
+    private static final HttpResponse INTERNAL_SERVER_ERROR = new HttpResponse(new StatusLine(HttpStatusCode.INTERNAL_SERVER_ERROR), ResponseHeader.empty());
 
-    private final HttpStatusCode httpStatusCode;
+    private final StatusLine statusLine;
     private final ResponseHeader responseHeader;
     private final byte[] body;
 
-    public HttpResponse(HttpStatusCode httpStatusCode,
+    public HttpResponse(StatusLine statusLine,
                         ResponseHeader responseHeader,
                         byte[] body) {
-        this.httpStatusCode = httpStatusCode;
+        this.statusLine = statusLine;
         this.responseHeader = responseHeader;
         this.body = body;
     }
 
-    public HttpResponse(HttpStatusCode httpStatusCode, ResponseHeader responseHeader) {
-        this(httpStatusCode, responseHeader, new byte[0]);
+    public HttpResponse(StatusLine statusLine, ResponseHeader responseHeader) {
+        this(statusLine, responseHeader, new byte[0]);
     }
 
-    public HttpResponse(HttpStatusCode httpStatusCode,
+    public HttpResponse(StatusLine statusLine,
                         ResponseHeader responseHeader,
                         String body) {
 
-        this(httpStatusCode, responseHeader, body.getBytes(StandardCharsets.UTF_8));
+        this(statusLine, responseHeader, body.getBytes(StandardCharsets.UTF_8));
     }
 
     public static HttpResponse sendRedirect(String path) {
@@ -37,11 +37,11 @@ public class HttpResponse {
     }
 
     public static HttpResponse sendRedirect(String path, ResponseHeader responseHeader) {
-        return new HttpResponse(HttpStatusCode.FOUND, responseHeader.add(HttpHeaders.LOCATION, path));
+        return new HttpResponse(new StatusLine(HttpStatusCode.FOUND), responseHeader.add(HttpHeaders.LOCATION, path));
     }
 
     public HttpStatusCode getHttpStatusCode() {
-        return httpStatusCode;
+        return statusLine.getHttpStatusCode();
     }
 
     public ResponseHeader getResponseHeader() {
@@ -60,7 +60,7 @@ public class HttpResponse {
         return NOT_FOUND;
     }
 
-    public static HttpResponse internpalServerError() {
+    public static HttpResponse internalServerError() {
         return INTERNAL_SERVER_ERROR;
     }
 
@@ -69,12 +69,12 @@ public class HttpResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HttpResponse that = (HttpResponse) o;
-        return httpStatusCode == that.httpStatusCode && responseHeader.equals(that.responseHeader) && Arrays.equals(body, that.body);
+        return statusLine.equals(that.statusLine) && responseHeader.equals(that.responseHeader) && Arrays.equals(body, that.body);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(httpStatusCode, responseHeader);
+        int result = Objects.hash(statusLine, responseHeader);
         result = 31 * result + Arrays.hashCode(body);
         return result;
     }
