@@ -18,7 +18,7 @@ public class LoginController implements Controller {
         HttpSession session = initSession();
 
         if (isLogin(request)) {
-            session.setAttribute("logined", "true;");
+            session.setAttribute("logined", "true");
             session.setAttribute("Path","/");
 
             cookie.addCookie("sessionId", session.getId());
@@ -34,8 +34,7 @@ public class LoginController implements Controller {
     }
 
     private HttpSession initSession() {
-        UUID uuid = UUID.randomUUID();
-        HttpSession httpSession = HttpSessionRepository.addSession(String.valueOf(uuid));
+        HttpSession httpSession = HttpSessionRepository.addSession();
         return httpSession;
     }
 

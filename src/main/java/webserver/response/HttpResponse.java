@@ -58,16 +58,17 @@ public class HttpResponse {
     }
 
     public byte[] getBytes() {
-        String response = statusLine.getStatusLine() + CRLF;
+        StringBuilder response = new StringBuilder();
+        response.append(statusLine.getStatusLine() + CRLF);
 
         Map<String, String> map = header.getHeaderMap();
         for (String key : map.keySet()) {
-            response += key + ": " + map.get(key) + CRLF;
+            response.append(key + ": " + map.get(key) + CRLF);
         }
-        response += CRLF;
+        response.append(CRLF);
 
-        response += responseBody.getBody();
+        response.append(responseBody.getBody());
 
-        return response.getBytes();
+        return response.toString().getBytes();
     }
 }

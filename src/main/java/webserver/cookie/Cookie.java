@@ -1,5 +1,7 @@
 package webserver.cookie;
 
+import org.apache.logging.log4j.util.Strings;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,10 +27,10 @@ public class Cookie {
     }
 
     public String cookiesToString() {
-        String result = "";
+        String result = Strings.EMPTY;
         for (String str : cookiesByName.keySet()) {
             Object o = cookiesByName.get(str);
-            result += " " + (str + "=" + o);
+            result += " " + (str + "=" + o) + ";";
         }
 
         return result;

@@ -26,19 +26,15 @@ public class HttpSession {
     }
 
     public Object getAttribute(String name) {
-        if(notAttribute(name)) {
+        if(!attributesByName.containsKey(name)) {
             return null;
         }
 
         return attributesByName.get(name);
     }
 
-    private boolean notAttribute(String name) {
-        return !attributesByName.containsKey(name);
-    }
-
     public void removeAttribute(String name) {
-        if(notAttribute(name)) {
+        if(!attributesByName.containsKey(name)) {
             throw new IllegalArgumentException("삭제할 Attribute가 없습니다");
         }
 
