@@ -27,7 +27,7 @@ public class HttpSession {
 
     public Object getAttribute(String name) {
         if(notAttribute(name)) {
-            throw new IllegalArgumentException("요청한 Attribute가 없습니다");
+            return null;
         }
 
         return attributesByName.get(name);

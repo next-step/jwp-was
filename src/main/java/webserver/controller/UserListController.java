@@ -6,6 +6,8 @@ import utils.IOUtils;
 import webserver.ContentType;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
+import webserver.session.HttpSession;
+import webserver.session.HttpSessionRepository;
 import webserver.util.HandlebarsObject;
 
 import java.io.IOException;
@@ -43,7 +45,16 @@ public class UserListController extends GetController {
     }
 
     private boolean isNotLogin(Map<String, String> cookiesMap) {
-        return !cookiesMap.containsKey("logined") || cookiesMap.get("logined").equals("false");
+        String sessionId = cookiesMap.get("sessionId");
+
+        HttpSession httpSession = HttpSessionRepository.getSession(sessionId);
+        Object logined = httpSession.getAttribute("logined");
+
+        if(logined == null) {
+            return true;
+        }
+
+        return logined.equals("false");
     }
 
     private Map<String, String> parseCookies(HttpRequest request) {

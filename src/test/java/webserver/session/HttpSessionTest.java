@@ -25,9 +25,7 @@ class HttpSessionTest {
         UUID uuid = UUID.randomUUID();
         HttpSession session = HttpSession.createSession(String.valueOf(uuid));
 
-        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> {
-           session.getAttribute("kim");
-        });
+        Assertions.assertThat(session.getAttribute("kim")).isEqualTo(null);
 
         org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> {
             session.removeAttribute("kim");

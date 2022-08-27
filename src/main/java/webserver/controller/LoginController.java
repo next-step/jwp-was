@@ -15,24 +15,28 @@ public class LoginController implements Controller {
     @Override
     public HttpResponse service(HttpRequest request) {
         Cookie cookie = new Cookie();
-        if (isLogin(request)) {
-            String sessionId = initSession();
+        HttpSession session = initSession();
 
-            cookie.addCookie("logined", "true;");
-            cookie.addCookie("Path","/");
+        if (isLogin(request)) {
+            session.setAttribute("logined", "true;");
+            session.setAttribute("Path","/");
+
+            cookie.addCookie("sessionId", session.getId());
 
             return HttpResponse.sendRedirect("/index.html", cookie);
         }
-        cookie.addCookie("logined", "false");
+
+        session.setAttribute("logined", "false");
+
+        cookie.addCookie("sessionId", session.getId());
+
         return HttpResponse.sendRedirect("/user/login_failed.html", cookie);
     }
 
-    private String initSession() {
+    private HttpSession initSession() {
         UUID uuid = UUID.randomUUID();
         HttpSession httpSession = HttpSessionRepository.addSession(String.valueOf(uuid));
-        httpSession.setAttribute("logined", "true");
-
-        return httpSession.getId();
+        return httpSession;
     }
 
     private boolean isLogin(HttpRequest httpRequest) {
