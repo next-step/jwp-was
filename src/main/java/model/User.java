@@ -1,16 +1,30 @@
 package model;
 
+import exception.ValidateException;
+
 public class User {
-    private String userId;
-    private String password;
-    private String name;
-    private String email;
+
+    private static final int INVALID_ARGUMENT_LENGTH = 0;
+
+    private final String userId;
+    private final String password;
+    private final String name;
+    private final String email;
 
     public User(String userId, String password, String name, String email) {
+        validate(userId, password, name, email);
         this.userId = userId;
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    private void validate(String... arguments) {
+        for (String argument : arguments) {
+            if (argument == null || argument.trim().length() == INVALID_ARGUMENT_LENGTH) {
+                throw new ValidateException(argument);
+            }
+        }
     }
 
     public String getUserId() {
@@ -28,6 +42,7 @@ public class User {
     public String getEmail() {
         return email;
     }
+
 
     @Override
     public String toString() {
