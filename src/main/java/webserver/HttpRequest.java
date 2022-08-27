@@ -27,6 +27,9 @@ public class HttpRequest {
         RequestLine requestLine = RequestLine.parse(line);
 
         HttpHeader httpHeader = new HttpHeader();
+        if (line == null) {
+            throw new IOException();
+        }
         while (!"".equals(line)) {
             line = br.readLine();
             httpHeader.addHeader(line);

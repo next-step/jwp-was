@@ -40,7 +40,6 @@ public class ListUserControllerTest {
         listUserController.doGet(httpRequest, httpResponse);
 
         // then
-        assertThat(cookie.getValue("logined")).isEqualTo("true");
         assertThat(httpResponse.getHeaders().getValue("Location")).isEqualTo("user/list");
     }
 
