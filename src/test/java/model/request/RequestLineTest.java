@@ -29,32 +29,26 @@ class RequestLineTest {
     @Test
     @DisplayName("Get 요청과 QeuryString을 파싱한다.")
     void parseGetRequestWithQueryString() {
-        // Arrange
-        final String input = "GET /users?userId=javajigi&password=password&name=JaeSung HTTP/1.1";
+        final String input = "GET /user/create?userId=javajigi&password=password&name=JaeSung&email=javajigi@slipp.net HTTP/1.1";
 
-        // Act
         final RequestLine actual = RequestLine.parse(input);
 
-        // Assert
         assertThat(actual.getMethod()).isEqualTo(Method.GET);
         assertThat(actual.getProtocolType()).isEqualTo(Type.HTTP);
         assertThat(actual.getProtocolVersion()).isEqualTo(Version.VERSION1_1);
-        assertThat(actual.getPathValue()).isEqualTo("/users");
+        assertThat(actual.getPathValue()).isEqualTo("/user/create");
         assertThat(actual.getQueryString()).contains(
-                entry("userId", "javajigi"), entry("password", "password"), entry("name", "JaeSung")
+                entry("userId", "javajigi"), entry("password", "password"), entry("name", "JaeSung"), entry("email", "javajigi@slipp.net")
         );
     }
 
     @Test
     @DisplayName("Post 요청을 파싱한다.")
     void parsePostRequest() {
-        // Arrange
         final String input = "POST /users HTTP/1.1";
 
-        // Act
         final RequestLine actual = RequestLine.parse(input);
 
-        // Assert
         assertThat(actual.getMethod()).isEqualTo(Method.POST);
         assertThat(actual.getProtocolType()).isEqualTo(Type.HTTP);
         assertThat(actual.getProtocolVersion()).isEqualTo(Version.VERSION1_1);
