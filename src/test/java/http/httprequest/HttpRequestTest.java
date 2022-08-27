@@ -1,15 +1,20 @@
 package http.httprequest;
 
 
+import http.HttpSession;
+import http.SessionAttribute;
+import http.SessionStorage;
 import http.httprequest.requestbody.RequestBody;
 import http.httprequest.requestheader.RequestHeader;
 import http.httprequest.requestline.RequestLine;
+import http.httpresponse.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +36,7 @@ class HttpRequestTest {
 
         assertAll(
                 () -> assertThat(httpRequest.getRequestLine()).isEqualTo(RequestLine.from("GET /index.html HTTP/1.1")),
-                () -> assertThat(httpRequest.getCookie()).isEqualTo("logined=false")
+                () -> assertThat(httpRequest.getCookieValue("logined")).isEqualTo(Optional.of("false"))
         );
     }
 
@@ -57,5 +62,35 @@ class HttpRequestTest {
         );
 
         assertThat(httpRequest.getContentLength()).isEqualTo(75);
+    }
+
+    @Test
+    @DisplayName("정상적으로 쿠키값을 가져오는지 확인")
+    void getCookieValue() {
+        HttpRequest httpRequest = HttpRequest.from(
+                Arrays.asList(
+                        "GET /index.html HTTP/1.1",
+                        "Host: localhost:8080",
+                        "Connection: keep-alive",
+                        "Cookie: logined=false"
+                )
+        );
+        assertThat(httpRequest.getCookieValue("logined")).isEqualTo(Optional.of("false"));
+    }
+
+    @Test
+    @DisplayName("정상적으로 세션값을 가져오는지 확인")
+    void getSession() {
+        HttpRequest httpRequest = HttpRequest.from(
+                Arrays.asList(
+                        "GET /index.html HTTP/1.1",
+                        "Host: localhost:8080",
+                        "Connection: keep-alive",
+                        "Cookie: JSESSIONID=1234"
+                )
+        );
+        SessionStorage.getInstance().add(new HttpSession("1234", new SessionAttribute(Map.of("test", "test"))));
+
+        assertThat(httpRequest.getSession()).isEqualTo(new HttpSession("1234", new SessionAttribute(Map.of("test", "test"))));
     }
 }

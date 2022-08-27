@@ -38,7 +38,7 @@ public class StaticController implements Controller {
     }
 
     @Override
-    public HttpResponse serve(HttpRequest httpRequest) throws IOException, URISyntaxException {
+    public HttpResponse execute(HttpRequest httpRequest) throws IOException, URISyntaxException {
         return new HttpResponse(
                 HttpStatusCode.OK,
                 new ResponseHeader(Collections.singletonMap(HttpHeaders.CONTENT_TYPE, String.format("text/%s;charset=utf-8", fileExtension(httpRequest.getPath())))),

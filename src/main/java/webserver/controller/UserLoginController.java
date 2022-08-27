@@ -6,8 +6,6 @@ import http.httprequest.requestline.HttpMethod;
 import http.httpresponse.HttpResponse;
 import utils.AuthUtil;
 
-import java.io.IOException;
-
 public class UserLoginController implements Controller {
 
     private static final String PATH = "/user/login";
@@ -33,7 +31,7 @@ public class UserLoginController implements Controller {
     }
 
     @Override
-    public HttpResponse serve(HttpRequest httpRequest) {
+    public HttpResponse execute(HttpRequest httpRequest) {
         return AuthUtil.login(httpRequest);
     }
 }

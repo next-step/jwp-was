@@ -28,7 +28,7 @@ public class IOUtils {
         String line;
         
         while ((line = br.readLine()) != null && !line.isEmpty()) {
-            lines.add(line);
+            lines.add(line.trim());
         }
         
         return lines;

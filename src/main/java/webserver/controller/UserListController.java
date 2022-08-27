@@ -48,8 +48,8 @@ public class UserListController implements Controller {
     }
 
     @Override
-    public HttpResponse serve(HttpRequest httpRequest) throws IOException {
-        if (!AuthUtil.isLoggedIn(httpRequest)) {
+    public HttpResponse execute(HttpRequest httpRequest) throws IOException {
+        if (AuthUtil.isNotLoggedIn(httpRequest)) {
             return new HttpResponse(
                     HttpStatusCode.UNAUTHORIZED,
                     new ResponseHeader(Collections.singletonMap(HttpHeaders.LOCATION, "/user/login.html"))

@@ -9,10 +9,10 @@ import java.util.Objects;
 import java.util.Set;
 
 public class ResponseHeader {
-    private static final Map<String, String> EMPTY_MAP = Collections.emptyMap();
-    Map<String, String> headers;
+    private static final Map<String, Object> EMPTY_MAP = Collections.emptyMap();
+    Map<String, Object> headers;
 
-    public ResponseHeader(Map<String, String> headers) {
+    public ResponseHeader(Map<String, Object> headers) {
         if (CollectionUtils.isEmpty(headers)){
            headers = EMPTY_MAP;
         }
@@ -20,7 +20,7 @@ public class ResponseHeader {
         this.headers = Collections.unmodifiableMap(headers);
     }
 
-    public Set<Map.Entry<String, String>> getHeaderEntries() {
+    public Set<Map.Entry<String, Object>> getHeaderEntries() {
         return headers.entrySet();
     }
 
@@ -28,8 +28,8 @@ public class ResponseHeader {
         return new ResponseHeader(EMPTY_MAP);
     }
 
-    public ResponseHeader add(String header, String value) {
-        HashMap<String, String> newHeader = new HashMap<>(headers);
+    public ResponseHeader add(String header, Object value) {
+        HashMap<String, Object> newHeader = new HashMap<>(headers);
         newHeader.put(header, value);
         return new ResponseHeader(newHeader);
     }

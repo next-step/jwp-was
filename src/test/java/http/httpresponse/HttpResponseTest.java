@@ -50,7 +50,7 @@ class HttpResponseTest {
     @Test
     @DisplayName("internalServerError Status가 정상인지 확인")
     void internalServerError() {
-        HttpResponse httpResponse = HttpResponse.internpalServerError();
+        HttpResponse httpResponse = HttpResponse.internalServerError();
 
         assertThat(httpResponse.getHttpStatusCode()).isEqualTo(HttpStatusCode.INTERNAL_SERVER_ERROR);
     }
