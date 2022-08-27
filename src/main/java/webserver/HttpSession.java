@@ -6,6 +6,10 @@ import java.util.UUID;
 
 public class HttpSession {
 
+    private static final String SESSION_ID = "JSESSIONID";
+    private static final String KEY_VALUE_DELIMITER = "=";
+
+
     private String id;
     private Map<String, Object> attributes = new HashMap<>();
 
@@ -42,5 +46,9 @@ public class HttpSession {
         Map<String, HttpSession> sessionMap = HttpSessionStorage.getSessionMap();
         sessionMap.remove(id);
         attributes.clear();
+    }
+
+    public String setSessionId() {
+        return SESSION_ID + KEY_VALUE_DELIMITER + this.id;
     }
 }
