@@ -47,10 +47,6 @@ public class HttpRequest {
         return requestBody.getParameter(parameter);
     }
 
-    public RequestBody getQueryString() {
-        return requestLine.getQueryString();
-    }
-
     public RequestBody getBody() {
         return requestBody;
     }

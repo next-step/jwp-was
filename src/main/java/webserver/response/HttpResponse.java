@@ -1,6 +1,7 @@
 package webserver.response;
 
 import webserver.ContentType;
+import webserver.cookie.Cookie;
 import webserver.request.Header;
 
 import java.io.DataOutputStream;
@@ -40,20 +41,20 @@ public class HttpResponse {
         return new HttpResponse(statusLine, header, responseBody);
     }
 
-    public static HttpResponse sendRedirect(String path, String cookie) {
+    public static HttpResponse sendRedirect(String path, Cookie cookie) {
         StatusLine statusLine = StatusLine.parse("HTTP/1.1 302 Found");
 
         Header header = new Header();
         header.addHeader("Location: " + path);
-        if (!cookie.isEmpty()) {
-            header.addHeader("Set-Cookie: " + cookie);
+        if(cookie != null && cookie.isEmpty() == false) {
+            header.addCookie(cookie);
         }
 
         return new HttpResponse(statusLine, header, ResponseBody.parse(""));
     }
 
     public static HttpResponse notFound(String path) {
-        return sendRedirect(path, "");
+        return sendRedirect(path, null);
     }
 
     public byte[] getBytes() {
