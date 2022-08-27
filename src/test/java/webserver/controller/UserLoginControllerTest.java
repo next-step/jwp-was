@@ -48,7 +48,7 @@ class UserLoginControllerTest {
                 new RequestBody(Map.of("userId", "test","password", "1234"))
         );
 
-        HttpResponse httpResponse = controller.serve(httpRequest);
+        HttpResponse httpResponse = controller.execute(httpRequest);
 
         assertAll(
                 () -> assertThat(httpResponse.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND),

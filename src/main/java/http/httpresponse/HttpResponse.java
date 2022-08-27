@@ -27,8 +27,8 @@ public class HttpResponse {
         this.sessionAttribute = sessionAttribute;
     }
 
-    public HttpResponse(HttpStatusCode httpStatusCode, ResponseHeader responseHeader) {
-        this(new StatusLine(httpStatusCode), responseHeader, new byte[0], SessionAttribute.empty());
+    public HttpResponse(StatusLine statusLine, ResponseHeader responseHeader) {
+        this(statusLine, responseHeader, new byte[0], SessionAttribute.empty());
     }
 
     public HttpResponse(StatusLine statusLine,
