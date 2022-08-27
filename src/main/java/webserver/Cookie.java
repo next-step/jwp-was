@@ -39,8 +39,8 @@ public class Cookie {
         return cookieData.get(Cookie.COOKIE_PATH);
 
     }
-    public void setCookie(String key, String value) {
-        cookieData.put(key, value);
+    public void setCookie(String value) {
+        cookieData.put(SET_COOKIE, value);
     }
 
 }

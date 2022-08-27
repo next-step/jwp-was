@@ -3,9 +3,7 @@ package controller;
 import db.DataBase;
 import exception.InvalidHttpMethodException;
 import model.User;
-import webserver.Cookie;
-import webserver.HttpRequest;
-import webserver.HttpResponse;
+import webserver.*;
 
 import java.util.Objects;
 
@@ -19,9 +17,9 @@ public class LoginController extends AbstractController {
         boolean isLogin = !Objects.isNull(loginUser) && request.getBodyParameter("password").equals(loginUser.getPassword());
 
         response.getHeaders().getCookie().setCookie(
-                Cookie.SET_COOKIE,
                 "logined" + KEY_VALUE_DELIMITER + String.valueOf(isLogin) + COOKIE_DELIMITER + COOKIE_PATH + KEY_VALUE_DELIMITER + "/"
         );
+
 
         if (!isLogin) {
             response.sendRedirect("/login_failed.html");
