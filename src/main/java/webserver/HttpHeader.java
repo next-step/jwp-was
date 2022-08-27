@@ -61,4 +61,9 @@ public class HttpHeader {
         return headers.keySet();
     }
 
+    public void putCookie(Map<String, String> cookieData) {
+        for (String key : cookieData.keySet()) {
+            headers.put(key, cookie.getValue(key));
+        }
+    }
 }
