@@ -2,16 +2,9 @@ package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import webserver.HttpMethod;
-import webserver.http.BufferedReaderToHttpRequest;
-import webserver.http.HttpRequest;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;

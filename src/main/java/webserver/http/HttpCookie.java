@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http;
 
 import utils.ParamsUtils;
 

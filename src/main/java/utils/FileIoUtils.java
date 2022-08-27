@@ -16,4 +16,16 @@ public class FileIoUtils {
         Path path = Paths.get(FileIoUtils.class.getClassLoader().getResource(filePath).toURI());
         return Files.readAllBytes(path);
     }
+
+	public static boolean containsHtml(String path) {
+		return path.endsWith(".html");
+	}
+
+	public static boolean containsStaticPath(String path) {
+		return path.startsWith("/css") || path.startsWith("/js") || path.startsWith("/font") || path.startsWith("/images");
+	}
+
+	public static boolean isStatic(String path) {
+		return containsHtml(path) || containsStaticPath(path);
+	}
 }

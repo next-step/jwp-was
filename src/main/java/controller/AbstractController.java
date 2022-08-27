@@ -1,6 +1,6 @@
 package controller;
 
-import webserver.HttpMethod;
+import webserver.http.HttpMethod;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 

@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,6 @@ class HttpHeadersTest {
         String header = "Content-Length: 59";
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(header);
-        assertThat(httpHeaders.get("Content-Length")).isEqualTo(59);
+        assertThat(httpHeaders.getInt("Content-Length")).isEqualTo(59);
     }
 }

@@ -3,8 +3,6 @@ package webserver.http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.IOUtils;
-import webserver.HttpHeaders;
-import webserver.RequestLine;
 
 import java.io.*;
 

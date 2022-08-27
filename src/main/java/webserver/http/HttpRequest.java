@@ -1,10 +1,5 @@
 package webserver.http;
 
-import webserver.HttpCookie;
-import webserver.HttpHeaders;
-import webserver.HttpMethod;
-import webserver.RequestLine;
-
 public class HttpRequest {
 	private RequestLine requestLine;
 	private HttpHeaders httpHeaders;
