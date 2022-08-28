@@ -13,10 +13,11 @@ public class RequestHeader {
 
     private final Map<String, String> headers = new HashMap<>();
 
-    public void addRequestHeaders(String url, BufferedReader br) throws IOException {
-        while (StringUtils.hasText(url)) {
-            addHeader(url);
-            url = br.readLine();
+    public void addRequestHeaders(BufferedReader br) throws IOException {
+        String header = br.readLine();
+        while (StringUtils.hasText(header)) {
+            addHeader(header);
+            header = br.readLine();
         }
     }
 

@@ -34,14 +34,19 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             String url = br.readLine();
             RequestHeader requestHeader = new RequestHeader();
-            requestHeader.addRequestHeaders(url, br);
+            requestHeader.addRequestHeaders(br);
 
             RequestUrl requestUrl = new RequestUrl(url);
             byte[] body = checkIndex(requestUrl);
             body = checkSignUpForm(body, requestUrl);
-            checkSignUp(requestUrl, br, requestHeader);
+            boolean signUpComplete = checkSignUp(requestUrl, br, requestHeader);
 
             DataOutputStream dos = new DataOutputStream(out);
+
+            if (signUpComplete) {
+                response302Header(dos, "/index.html");
+            }
+
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
@@ -63,7 +68,7 @@ public class RequestHandler implements Runnable {
         return body;
     }
 
-    private void checkSignUp(RequestUrl requestUrl, BufferedReader br, RequestHeader requestHeader) throws IOException, URISyntaxException {
+    private boolean checkSignUp(RequestUrl requestUrl, BufferedReader br, RequestHeader requestHeader) throws IOException, URISyntaxException {
         if (requestUrl.isPostMethod() && requestUrl.samePath("/user/create")) {
             String body = IOUtils.readData(br, Integer.parseInt(requestHeader.getValue("Content-Length")));
             RequestBody requestBody = new RequestBody(body);
@@ -73,7 +78,10 @@ public class RequestHandler implements Runnable {
             DataBase.addUser(new User(userId, bodies.get("password"), bodies.get("name"), bodies.get("email")));
 
             logger.debug(DataBase.findUserById(userId).toString());
+            return true;
         }
+
+        return false;
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
@@ -81,6 +89,16 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(DataOutputStream dos, final String location) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Location: " + location + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
