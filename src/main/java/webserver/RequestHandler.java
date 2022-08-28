@@ -4,13 +4,11 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 import utils.FileIoUtils;
 import utils.IOUtils;
 import webserver.http.domain.RequestBody;
 import webserver.http.domain.RequestHeader;
-import webserver.http.domain.RequestLine;
-import webserver.http.enums.HTTPMethod;
+import webserver.http.domain.RequestUrl;
 
 import java.io.*;
 import java.net.Socket;
@@ -34,18 +32,14 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            String line = br.readLine();
-            RequestLine requestLine = new RequestLine(line);
-
+            String url = br.readLine();
             RequestHeader requestHeader = new RequestHeader();
-            while (StringUtils.hasText(line)) {
-                line = br.readLine();
-                requestHeader.addHeader(line);
-            }
+            requestHeader.addRequestHeaders(url, br);
 
-            byte[] body = checkIndex(requestLine);
-            body = checkSignUpForm(body, requestLine);
-            checkSignUp(requestLine, br, requestHeader);
+            RequestUrl requestUrl = new RequestUrl(url);
+            byte[] body = checkIndex(requestUrl);
+            body = checkSignUpForm(body, requestUrl);
+            checkSignUp(requestUrl, br, requestHeader);
 
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length);
@@ -55,22 +49,22 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private byte[] checkIndex(RequestLine requestLine) throws IOException, URISyntaxException {
-        if (requestLine.path().equals("/index.html")) {
+    private byte[] checkIndex(RequestUrl requestUrl) throws IOException, URISyntaxException {
+        if (requestUrl.isGetMethod() && requestUrl.samePath("/index.html")) {
             return FileIoUtils.loadFileFromClasspath("./templates/index.html");
         }
         return HELLO_WORLD;
     }
 
-    private byte[] checkSignUpForm(byte[] body, RequestLine requestLine) throws IOException, URISyntaxException {
-        if (requestLine.path().equals("/user/form.html")) {
+    private byte[] checkSignUpForm(byte[] body, RequestUrl requestUrl) throws IOException, URISyntaxException {
+        if (requestUrl.isGetMethod() && requestUrl.samePath("/user/form.html")) {
             return FileIoUtils.loadFileFromClasspath("./templates/user/form.html");
         }
         return body;
     }
 
-    private void checkSignUp(RequestLine requestLine, BufferedReader br, RequestHeader requestHeader) throws IOException, URISyntaxException {
-        if (requestLine.method().equals(HTTPMethod.POST) && requestLine.samePath("/user/create")) {
+    private void checkSignUp(RequestUrl requestUrl, BufferedReader br, RequestHeader requestHeader) throws IOException, URISyntaxException {
+        if (requestUrl.isPostMethod() && requestUrl.samePath("/user/create")) {
             String body = IOUtils.readData(br, Integer.parseInt(requestHeader.getValue("Content-Length")));
             RequestBody requestBody = new RequestBody(body);
             Map<String, String> bodies = requestBody.bodies();
