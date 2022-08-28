@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class RequestHeader {
 
-    private static final String HEADER_DELIMITER = ":";
+    private static final String HEADER_DELIMITER = ": ";
 
     private final Map<String, String> headers = new HashMap<>();
 
@@ -21,9 +21,9 @@ public class RequestHeader {
         }
     }
 
-    private void addHeader(String header) {
+    public void addHeader(String header) {
         String[] split = header.split(HEADER_DELIMITER);
-        this.headers.put(split[0], split[1].trim());
+        this.headers.put(split[0], split[1]);
     }
 
     public String getValue(String name) {
