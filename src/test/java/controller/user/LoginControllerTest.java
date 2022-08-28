@@ -14,6 +14,8 @@ import webserver.http.request.RequestHeader;
 import webserver.http.request.RequestLine;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.ResponseWriter;
+import webserver.http.session.HttpSession;
+import webserver.http.session.SessionManagement;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
@@ -43,10 +45,11 @@ class LoginControllerTest {
 
         HttpResponse httpResponse = controller.service(httpRequest);
         new ResponseWriter(out).process(httpResponse);
+        HttpSession httpSession = SessionManagement.getSession(httpResponse.getCookie().getSessionId());
 
         assertThat(out.toString()).contains("HTTP/1.1 302 Found");
         assertThat(out.toString()).contains("Location: /index.html");
-        assertThat(out.toString()).contains("logined=true; Path=/");
+        assertThat(httpSession.getAttribute().toString()).contains("logined=true");
     }
 
     @Test
@@ -61,10 +64,11 @@ class LoginControllerTest {
 
         HttpResponse httpResponse = controller.service(httpRequest);
         new ResponseWriter(out).process(httpResponse);
+        HttpSession httpSession = SessionManagement.getSession(httpResponse.getCookie().getSessionId());
 
         assertThat(out.toString()).contains("HTTP/1.1 302 Found");
         assertThat(out.toString()).contains("/user/login_failed.html");
-        assertThat(out.toString()).contains("logined=false; Path=/");
+        assertThat(httpSession.getAttribute().toString()).contains("logined=false");
     }
 
 }

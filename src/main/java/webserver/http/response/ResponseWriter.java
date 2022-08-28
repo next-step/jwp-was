@@ -45,7 +45,7 @@ public class ResponseWriter {
 
     private void isExistCookie(HttpResponse httpResponse) {
         if (!httpResponse.isExistCookie()) {
-            httpResponse.setHeader(SET_COOKIE, httpResponse.getCookie(SET_COOKIE));
+            httpResponse.setHeader(SET_COOKIE, String.format(JSESSIONID + "=%s; Path=/", httpResponse.getCookie().getSessionId()));
         }
     }
 

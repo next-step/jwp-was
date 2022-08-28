@@ -3,21 +3,15 @@ package webserver.http.request;
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.ContentType;
 import webserver.http.HttpMethod;
-import webserver.http.session.HttpSession;
-import webserver.http.session.SessionManagement;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-import static model.Constant.JSESSIONID;
 import static utils.IOUtils.readData;
 import static utils.IOUtils.readLines;
 
@@ -27,31 +21,10 @@ public class HttpRequest {
 
     public static final String ROOT_PATH = "/";
     public static final String ROOT_FILE = "/index.html";
-    public final static String EXTENSION_SEPARATOR = ".";
-    private static final String COOKIE = "Cookie";
 
-    private final RequestLine requestLine;
-    private final RequestHeader requestHeader;
-    private final RequestBody requestBody;
-
-    public HttpRequest(InputStream in) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-        List<String> requests = readLines(br);
-        this.requestLine = new RequestLine(requests.get(0));
-        requests.remove(0);
-        this.requestHeader = new RequestHeader(requests);
-        this.requestBody = new RequestBody(readData(br, this.requestHeader.getContentLength()));
-        initializedSession();
-    }
-
-    private void initializedSession() {
-        String extension = getRequestPath().substring(getRequestPath().lastIndexOf(EXTENSION_SEPARATOR) + 1);
-        if (this.requestHeader.getCookieValue(JSESSIONID).isEmpty() && !ContentType.isStaticExtension(extension)) {
-            HttpSession httpSession = SessionManagement.createSession();
-            this.requestHeader.setCookie(JSESSIONID, httpSession.getId());
-            this.requestHeader.addHeader(COOKIE, String.format(JSESSIONID, "%s; Path=/", httpSession.getId()));
-        }
-    }
+    private RequestLine requestLine;
+    private RequestHeader requestHeader;
+    private RequestBody requestBody;
 
     public HttpRequest(RequestLine requestLine, RequestHeader header, RequestBody requestBody) {
         this.requestLine = requestLine;
@@ -59,8 +32,27 @@ public class HttpRequest {
         this.requestBody = requestBody;
     }
 
-    public String getRequestPath() {
-        return StringUtils.equals(requestLine.getPathWithoutQueryString(), ROOT_PATH) ? getRedirectUrl() : requestLine.getPathWithoutQueryString();
+    public HttpRequest(InputStream in) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+        initializedRequestLine(br);
+        initializedRequestHeader(br);
+        initializedRequestBody(br);
+    }
+
+    private void initializedRequestBody(BufferedReader br) throws IOException {
+        this.requestBody = new RequestBody(readData(br, this.requestHeader.getContentLength()));
+    }
+
+    private void initializedRequestHeader(BufferedReader br) throws IOException {
+        this.requestHeader = new RequestHeader(readLines(br));
+    }
+
+    private void initializedRequestLine(BufferedReader br) throws IOException {
+        String line = br.readLine();
+        if (line == null) {
+            return;
+        }
+        this.requestLine = new RequestLine(line);
     }
 
     public String getMethod() {
@@ -69,10 +61,6 @@ public class HttpRequest {
 
     public String getPath() {
         return requestLine.getPath().getPath();
-    }
-
-    private String getRedirectUrl() {
-        return ROOT_FILE;
     }
 
     public RequestHeader getHeaders() {
@@ -87,6 +75,14 @@ public class HttpRequest {
         return requestLine.getHttpMethod();
     }
 
+    public String getRequestPath() {
+        return StringUtils.equals(requestLine.getPathWithoutQueryString(), ROOT_PATH) ? getRedirectUrl() : requestLine.getPathWithoutQueryString();
+    }
+
+    private String getRedirectUrl() {
+        return ROOT_FILE;
+    }
+
     public boolean isPost() {
         return getHttpMethod() == HttpMethod.POST;
     }
@@ -95,21 +91,16 @@ public class HttpRequest {
         return getHttpMethod() == HttpMethod.GET;
     }
 
-    public HttpSession getHttpSession() {
-        return SessionManagement.getSession(this.requestHeader.getCookieValue(JSESSIONID));
-    }
-
-    public boolean isLogin() {
-        return Optional.ofNullable(getHttpSession().getAttribute("user"))
-                .isPresent();
-    }
-
     public String getParameter(String key) {
         String value = requestLine.getQueryStringWithoutPathFromPath().get(key);
         if (value == null) {
             value = requestBody.getRequestBodyMap().get(key);
         }
         return value;
+    }
+
+    public String getSessionId() {
+        return this.requestHeader.getSessionId();
     }
 
     @Override

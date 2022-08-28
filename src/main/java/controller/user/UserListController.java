@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.http.session.HttpSession;
+import webserver.http.session.SessionManagement;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -19,8 +21,6 @@ public class UserListController extends AbstractController {
 
     private static final String USER_LIST_PATH = "/user/list.html";
     public static final String ROOT_FILE = "/index.html";
-    public static final String COOKIE = "Cookie";
-
 
     @Override
     public HttpResponse doGet(HttpRequest httpRequest) throws IOException {
@@ -35,6 +35,12 @@ public class UserListController extends AbstractController {
     }
 
     private boolean isLogin(HttpRequest httpRequest) {
-        return httpRequest.isLogin();
+        HttpSession httpSession = SessionManagement.getSession(httpRequest.getSessionId());
+        String isLogin = String.valueOf(httpSession.getAttribute("logined"));
+        
+        if (isLogin == null || isLogin.equals("false")) {
+            return false;
+        }
+        return isLogin.equals("true");
     }
 }

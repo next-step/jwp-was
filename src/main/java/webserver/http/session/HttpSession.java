@@ -41,6 +41,10 @@ public class HttpSession {
         attribute.invalidate();
     }
 
+    public Map<String, Object> getAttribute() {
+        return attribute.getAllAttribute();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

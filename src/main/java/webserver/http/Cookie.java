@@ -1,7 +1,5 @@
 package webserver.http;
 
-import webserver.http.session.HttpSession;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -9,15 +7,7 @@ import java.util.Objects;
 import static model.Constant.JSESSIONID;
 
 public class Cookie {
-    private final Map<String, Object> cookie;
-
-    public Cookie() {
-        cookie = new HashMap<>();
-    }
-
-    public Cookie(Map<String, Object> cookie) {
-        this.cookie = cookie;
-    }
+    private Map<String, Object> cookie = new HashMap<>();
 
     public void setCookie(String key, Object value) {
         cookie.put(key, value);
@@ -32,7 +22,10 @@ public class Cookie {
     }
 
     public String getSessionId() {
-        return (String) cookie.getOrDefault(JSESSIONID, new HttpSession(new HashMap<>()).getId());
+        if (!cookie.containsKey(JSESSIONID)) {
+            return "";
+        }
+        return (String) cookie.get(JSESSIONID);
     }
 
     @Override

@@ -9,9 +9,6 @@ import webserver.http.HttpStatus;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import static model.Constant.LOCATION;
@@ -22,27 +19,11 @@ public class HttpResponse {
 
     private static final String RESOURCES_TEMPLATES = "./templates";
     private static final String RESOURCES_STATIC = "./static";
-    public final static String EXTENSION_SPERATOR = ".";
 
     private ResponseLine responseLine;
     private ResponseHeader responseHeader;
     private ResponseBody responseBody;
     private Cookie cookie;
-
-    public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader) {
-        this(responseLine, responseHeader, new ResponseBody(new byte[0]), new Cookie(Collections.emptyMap()));
-    }
-
-    public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader, Cookie cookie) {
-        this(responseLine, responseHeader, new ResponseBody(new byte[0]), cookie);
-    }
-
-    public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader, ResponseBody responseBody) {
-        this.responseLine = responseLine;
-        this.responseHeader = responseHeader;
-        this.responseBody = responseBody;
-        this.cookie = new Cookie(new HashMap<>());
-    }
 
     public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader, ResponseBody responseBody, Cookie cookie) {
         this.responseLine = responseLine;
@@ -51,8 +32,22 @@ public class HttpResponse {
         this.cookie = cookie;
     }
 
-    public static HttpResponse sendRedirect(String path, Map<String, Object> cookieMap) {
-        return new HttpResponse(new ResponseLine(PROTOCOL_VERSION_ONE_ONE, HttpStatus.FOUND), new ResponseHeader(LOCATION, path), new Cookie(cookieMap));
+    public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader, ResponseBody responseBody) {
+        this.responseLine = responseLine;
+        this.responseHeader = responseHeader;
+        this.responseBody = responseBody;
+    }
+
+    public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader) {
+        this(responseLine, responseHeader, new ResponseBody(new byte[0]));
+    }
+
+    public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader, Cookie cookie) {
+        this(responseLine, responseHeader, new ResponseBody(new byte[0]), cookie);
+    }
+
+    public static HttpResponse sendRedirect(String path, Cookie cookie) {
+        return new HttpResponse(new ResponseLine(PROTOCOL_VERSION_ONE_ONE, HttpStatus.FOUND), new ResponseHeader(LOCATION, path), cookie);
     }
 
     public static HttpResponse sendRedirect(String path) {
@@ -66,7 +61,7 @@ public class HttpResponse {
     public static HttpResponse forward(String path) throws IOException, URISyntaxException {
         String prefixConcatPath = addPrefixPath(path);
         byte[] body = FileIoUtils.loadFileFromClasspath(prefixConcatPath);
-        return new HttpResponse(new ResponseLine(PROTOCOL_VERSION_ONE_ONE, HttpStatus.OK), new ResponseHeader(), new ResponseBody(body));
+        return new HttpResponse(new ResponseLine(PROTOCOL_VERSION_ONE_ONE, HttpStatus.OK), new ResponseHeader(LOCATION, path), new ResponseBody(body));
     }
 
     public static HttpResponse notfound() {
@@ -75,8 +70,7 @@ public class HttpResponse {
     }
 
     private static String addPrefixPath(String path) {
-        String extension = path.substring(path.lastIndexOf(EXTENSION_SPERATOR) + 1);
-        if (!ContentType.isStaticExtension(extension)) {
+        if (!ContentType.isStaticExtension(path)) {
             return RESOURCES_TEMPLATES.concat(path);
         }
         return RESOURCES_STATIC.concat(path);
@@ -87,15 +81,11 @@ public class HttpResponse {
     }
 
     public void setHeader(String key, Object value) {
-        responseHeader.add(key, value);
+        responseHeader.setHeader(key, value);
     }
 
     public boolean isExistCookie() {
-        return cookie.getCookie().isEmpty();
-    }
-
-    public Object getCookie(String key) {
-        return cookie.getCookie(key);
+        return cookie == null;
     }
 
     public ResponseLine getResponseLine() {
@@ -108,10 +98,6 @@ public class HttpResponse {
 
     public ResponseBody getResponseBody() {
         return responseBody;
-    }
-
-    public void addCookie(String key, String value) {
-        cookie.setCookie(key, value);
     }
 
     public Cookie getCookie() {

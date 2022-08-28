@@ -15,12 +15,12 @@ public class ResponseHeader {
         this.headers = headers;
     }
 
-    public ResponseHeader(String key, String value) {
+    public ResponseHeader(String key, Object value) {
         this.headers = new HashMap<>();
         this.headers.put(key, value);
     }
 
-    public void add(String name, Object value) {
+    public void setHeader(String name, Object value) {
         this.headers.put(name, value);
     }
 
@@ -36,12 +36,19 @@ public class ResponseHeader {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ResponseHeader header1 = (ResponseHeader) o;
-        return Objects.equals(headers, header1.headers);
+        ResponseHeader that = (ResponseHeader) o;
+        return Objects.equals(headers, that.headers);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(headers);
+    }
+
+    @Override
+    public String toString() {
+        return "ResponseHeader{" +
+                "headers=" + headers +
+                '}';
     }
 }

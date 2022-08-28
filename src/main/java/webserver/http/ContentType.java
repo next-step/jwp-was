@@ -25,8 +25,11 @@ public enum ContentType {
         this.value = value;
     }
 
-    public static boolean isStaticExtension(String extension) {
-        return staticFiles().stream().anyMatch(_extension -> extension.endsWith(_extension.getValue()));
+    public static boolean isStaticExtension(String path) {
+        List<ContentType> contentTypes = staticFiles();
+
+        return contentTypes.stream()
+                .anyMatch(_extension -> path.endsWith(_extension.getExtension()));
     }
 
     public static ContentType getContentTypeFromExtension(String extension) {
