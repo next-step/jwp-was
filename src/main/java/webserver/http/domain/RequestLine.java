@@ -46,6 +46,10 @@ public class RequestLine {
         return path.requestParams();
     }
 
+    public boolean samePath(String path) {
+        return path().equals(path);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
