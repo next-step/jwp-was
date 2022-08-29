@@ -19,7 +19,7 @@ public class HttpSessionTest {
 
 
     @Test
-    @DisplayName("set,getAttribute TDD")
+    @DisplayName("set,getAttribute")
     void set_get_Attribute() {
         HttpSession httpSession = new HttpSession();
 
@@ -31,7 +31,7 @@ public class HttpSessionTest {
     }
 
     @Test
-    @DisplayName("removeAttribute TDD")
+    @DisplayName("removeAttribute")
     void remove_Attribute() {
         HttpSession httpSession = new HttpSession();
 
@@ -44,7 +44,7 @@ public class HttpSessionTest {
     }
 
     @Test
-    @DisplayName("invalidate TDD")
+    @DisplayName("invalidate")
     void invalidate() {
         HttpSession httpSession = new HttpSession();
 
