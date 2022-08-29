@@ -22,6 +22,7 @@ public class ResponseLine {
     }
 
     public ResponseLine(String protocol, HttpStatus httpStatus) {
+        logger.debug("protocol : {}", protocol);
         this.protocol = new Protocol(protocol);
         this.httpStatus = httpStatus;
     }

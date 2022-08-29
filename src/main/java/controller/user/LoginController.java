@@ -1,18 +1,17 @@
 package controller.user;
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import controller.AbstractController;
 import db.DataBase;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.Cookie;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.http.session.HttpSession;
+import webserver.http.session.SessionManagement;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import static model.Constant.SET_COOKIE;
+import static model.Constant.JSESSIONID;
 
 public class LoginController extends AbstractController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -23,24 +22,31 @@ public class LoginController extends AbstractController {
 
     @Override
     public HttpResponse doPost(HttpRequest httpRequest) {
-        logger.debug("LoginController : {}", httpRequest.getRequestPath());
+        logger.debug("LoginController : {}", httpRequest);
 
-        Boolean isLogin = Optional.ofNullable(DataBase.findUserById(httpRequest.getParameter("userId")))
-                .map(user -> StringUtils.equals(user.getPassword(), httpRequest.getParameter("password")))
-                .orElse(false);
+        HttpSession httpSession = SessionManagement.save();
+        Cookie cookie = new Cookie();
 
-        Map<String, String> cookieMap = new HashMap<>();
-        cookieMap.put("path", ROOT_PATH);
-        if (isLogin) {
-            cookieMap.put(SET_COOKIE, "logined=true; Path=" + ROOT_PATH);
+        if (isLogin(httpRequest)) {
+            httpSession.setAttribute("logined", "true");
+            httpSession.setAttribute("Path", "/");
 
-            HttpResponse httpResponse = HttpResponse.sendRedirect(ROOT_FILE, cookieMap);
-
-            return httpResponse;
+            cookie.setCookie(JSESSIONID, httpSession.getId());
+            return HttpResponse.sendRedirect(ROOT_FILE, cookie);
         }
-        cookieMap.put(SET_COOKIE, "logined=false; Path=" + ROOT_PATH);
-        HttpResponse httpResponse = HttpResponse.sendRedirect(USER_LOGIN_FAIL_PATH, cookieMap);
 
-        return httpResponse;
+        httpSession.setAttribute("logined", "false");
+        cookie.setCookie(JSESSIONID, httpSession.getId());
+        return HttpResponse.sendRedirect(USER_LOGIN_FAIL_PATH, cookie);
+    }
+
+    private boolean isLogin(HttpRequest httpRequest) {
+        User user = DataBase.findUserById(httpRequest.getParameter("userId"));
+
+        if (user == null) {
+            return false;
+        }
+
+        return user.matchPassword(httpRequest.getParameter("password"));
     }
 }

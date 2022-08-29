@@ -7,9 +7,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 public abstract class AbstractController implements Controller {
-
-    public static final String ROOT_FILE = "/index.html";
-
     @Override
     public HttpResponse service(HttpRequest httpRequest) throws IOException, URISyntaxException {
         if (httpRequest.isPost()) {

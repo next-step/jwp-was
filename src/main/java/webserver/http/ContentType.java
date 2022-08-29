@@ -25,11 +25,14 @@ public enum ContentType {
         this.value = value;
     }
 
-    public static boolean isStaticExtension(String extension) {
-        return staticFiles().contains(getContentTypeFromExtension(extension));
+    public static boolean isStaticExtension(String path) {
+        List<ContentType> contentTypes = staticFiles();
+
+        return contentTypes.stream()
+                .anyMatch(_extension -> path.endsWith(_extension.getExtension()));
     }
 
-    private static ContentType getContentTypeFromExtension(String extension) {
+    public static ContentType getContentTypeFromExtension(String extension) {
         return Arrays.stream(values())
                 .filter(contentType -> contentType.getExtension().equals(extension))
                 .findFirst().get();

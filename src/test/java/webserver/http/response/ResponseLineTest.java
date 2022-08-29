@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ResponseLineTest {
 
     @Test
-    void tesetResponseLine_WithHttpStatusOk() {
+    void testResponseLine_WithHttpStatusOk() {
         assertThat(new ResponseLine(PROTOCOL_VERSION_ONE_ONE, HttpStatus.OK))
                 .isEqualTo(new ResponseLine("HTTP/1.1 OK"));
     }

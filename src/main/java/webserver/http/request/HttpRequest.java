@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static utils.IOUtils.readData;
@@ -24,31 +22,37 @@ public class HttpRequest {
     public static final String ROOT_PATH = "/";
     public static final String ROOT_FILE = "/index.html";
 
-    private final RequestLine requestLine;
-    private final RequestHeader header;
-    private final RequestBody requestBody;
-
-    public HttpRequest(InputStream in) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-        List<String> requests = readLines(br);
-        this.requestLine = new RequestLine(requests.get(0));
-        requests.remove(0);
-        this.header = new RequestHeader(requests);
-        this.requestBody = new RequestBody(readData(br, this.header.getContentLength()));
-    }
+    private RequestLine requestLine;
+    private RequestHeader requestHeader;
+    private RequestBody requestBody;
 
     public HttpRequest(RequestLine requestLine, RequestHeader header, RequestBody requestBody) {
         this.requestLine = requestLine;
-        this.header = header;
+        this.requestHeader = header;
         this.requestBody = requestBody;
     }
 
-    public String getRequestPath() {
-        return StringUtils.equals(requestLine.getPathWithoutQueryString(), ROOT_PATH) ? getRedirectUrl() : requestLine.getPathWithoutQueryString();
+    public HttpRequest(InputStream in) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+        initializedRequestLine(br);
+        initializedRequestHeader(br);
+        initializedRequestBody(br);
     }
 
-    public Map<String, String> getRequestQueryString() {
-        return requestLine.getQueryStringWithoutPathFromPath();
+    private void initializedRequestBody(BufferedReader br) throws IOException {
+        this.requestBody = new RequestBody(readData(br, this.requestHeader.getContentLength()));
+    }
+
+    private void initializedRequestHeader(BufferedReader br) throws IOException {
+        this.requestHeader = new RequestHeader(readLines(br));
+    }
+
+    private void initializedRequestLine(BufferedReader br) throws IOException {
+        String line = br.readLine();
+        if (line == null) {
+            return;
+        }
+        this.requestLine = new RequestLine(line);
     }
 
     public String getMethod() {
@@ -59,20 +63,24 @@ public class HttpRequest {
         return requestLine.getPath().getPath();
     }
 
-    private String getRedirectUrl() {
-        return ROOT_FILE;
-    }
-
     public RequestHeader getHeaders() {
-        return header;
+        return requestHeader;
     }
 
     public String getHeader(String key) {
-        return header.getHeaders().get(key);
+        return (String) requestHeader.getHeaders().get(key);
     }
 
     public HttpMethod getHttpMethod() {
         return requestLine.getHttpMethod();
+    }
+
+    public String getRequestPath() {
+        return StringUtils.equals(requestLine.getPathWithoutQueryString(), ROOT_PATH) ? getRedirectUrl() : requestLine.getPathWithoutQueryString();
+    }
+
+    private String getRedirectUrl() {
+        return ROOT_FILE;
     }
 
     public boolean isPost() {
@@ -91,17 +99,20 @@ public class HttpRequest {
         return value;
     }
 
+    public String getSessionId() {
+        return this.requestHeader.getSessionId();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HttpRequest httpRequest = (HttpRequest) o;
-        return Objects.equals(requestLine, httpRequest.requestLine) && Objects.equals(header, httpRequest.header);
+        return Objects.equals(requestLine, httpRequest.requestLine) && Objects.equals(requestHeader, httpRequest.requestHeader);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestLine, header);
+        return Objects.hash(requestLine, requestHeader);
     }
-
 }

@@ -15,7 +15,7 @@ public class Protocol {
         if (StringUtils.isEmpty(value)) {
             throw new InvalidRequestException("Protocol");
         }
-        String[] protocols = value.trim().split(PROTOCOL_AND_VALUE_SEPARATOR);
+        String[] protocols = value.split(PROTOCOL_AND_VALUE_SEPARATOR);
         this.protocol = protocols[0];
         this.version = new Version(protocols[1]);
     }
@@ -40,5 +40,13 @@ public class Protocol {
     @Override
     public int hashCode() {
         return Objects.hash(protocol, version);
+    }
+
+    @Override
+    public String toString() {
+        return "Protocol{" +
+                "protocol='" + protocol + '\'' +
+                ", version=" + version +
+                '}';
     }
 }

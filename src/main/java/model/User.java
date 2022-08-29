@@ -1,5 +1,7 @@
 package model;
 
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
+
 import java.util.Objects;
 
 public class User {
@@ -29,6 +31,10 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public boolean matchPassword(String password) {
+        return StringUtils.equals(this.password, password);
     }
 
     @Override
