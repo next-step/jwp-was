@@ -50,3 +50,8 @@
 - [x] void removeAttribute(String name): 현재 세션에 name 인자로 저장되어 있는 객체 값을 삭제
 - [x] void invalidate(): 현재 세션에 저장되어 있는 모든 값을 삭제
 - [x] 세션은 클라이언트와 서버 간에 상태 값을 공유하기 위해 고유한 아이디를 활용하고, 이 고유한 아이디는 쿠키를 활용해 공유한다.
+
+### 5단계 - Thread Pool 적용
+
+- [ ] 현재 구현되어 있는 웹 애플리케이션 서버(이하 WAS)는 사용자 요청이 있을 때마다 Thread를 생성해 사용자 요청을 처리한다.
+- [ ] src/test/java의 webserver.ExecutorsTest는 100개의 Thread가 동시에 실행하도록 구현한 테스트 코드이다. Spring에서 제공하는 RestTemplate을 활용해 서버의 ThreadPool 수보다 많은 요청을 동시에 보내본다.
