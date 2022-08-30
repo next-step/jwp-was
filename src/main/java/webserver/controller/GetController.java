@@ -8,14 +8,14 @@ public abstract class GetController implements Controller {
 
     @Override
     public HttpResponse service(HttpRequest request) {
-        if (notGet(request)) {
+        if (isNotGet(request)) {
             throw new NotFoundMethod("해당 메서드는 지원하지않습니다.");
         }
 
         return doGet(request);
     }
 
-    private boolean notGet(HttpRequest request) {
+    private boolean isNotGet(HttpRequest request) {
         return !request.isGet();
     }
 

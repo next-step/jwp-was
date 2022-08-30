@@ -67,5 +67,8 @@
   4. 다음 요청에서 Cookie에 sessionId가 있다면 해당 id의 세션을 찾는다.
   5. 찾은 세션에서 logined 가 설정되어있다면 해당 요청한 유저는 로그인 된 상태다.
   
+## Step5
+- ThreadPoolExecutor를 활용해 ThreadPool 기능을 추가한다.
+- restTemplate을 활용해 서버의 ThreadPool 수보다 많은 요청을 동시에 보내본다.
 
 

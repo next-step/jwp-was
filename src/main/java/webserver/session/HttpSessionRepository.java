@@ -2,12 +2,16 @@ package webserver.session;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class HttpSessionRepository {
 
     private static final Map<String, HttpSession> sessionsById = new HashMap<>();
 
-    public static HttpSession addSession(String uuid) {
+    public static HttpSession addSession() {
+
+        String uuid = String.valueOf(UUID.randomUUID());
+
         HttpSession httpSession = HttpSession.createSession(uuid);
 
         sessionsById.put(uuid, httpSession);
