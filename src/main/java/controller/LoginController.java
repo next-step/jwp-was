@@ -20,8 +20,8 @@ public class LoginController extends AbstractController {
         response.getHeaders().setCookie(cookie);
 
         // session 변경
-        HttpSession session = new HttpSession();
-        HttpSessionStorage httpSessionStorage = new HttpSessionStorage();
+        HttpSession session = request.createHttpSession();
+        HttpSessionStorage httpSessionStorage = request.getSessionStorage();
 
         session.setAttribute("logined", String.valueOf(isLogin));
         httpSessionStorage.addSession(session);
