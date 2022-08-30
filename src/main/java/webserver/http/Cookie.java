@@ -13,14 +13,6 @@ public class Cookie {
         cookie.put(key, value);
     }
 
-    public String getCookie(String key) {
-        return (String) cookie.getOrDefault(key, "");
-    }
-
-    public Map<String, Object> getCookie() {
-        return cookie;
-    }
-
     public String getSessionId() {
         if (!cookie.containsKey(JSESSIONID)) {
             return "";

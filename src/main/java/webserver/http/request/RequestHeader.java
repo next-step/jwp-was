@@ -1,7 +1,5 @@
 package webserver.http.request;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import webserver.http.Cookie;
 
 import java.util.Arrays;
@@ -13,8 +11,6 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toMap;
 
 public class RequestHeader {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHeader.class);
-
     private static final String HEADER_SEPARATOR = ": ";
     private static final String COOKIE = "Cookie";
     public static final String HEADER_TO_COOKIE_SEPARATOR = "; ";
@@ -41,11 +37,7 @@ public class RequestHeader {
             return;
         }
 
-        logger.debug("headerValue : {}", headerValue);
-
         String[] cookies = headerValue.split(HEADER_TO_COOKIE_SEPARATOR);
-
-        logger.debug("cookies : {}", cookies);
 
         Map<String, Object> map = Arrays.stream(cookies).
                 map(cookie -> cookie.split(MAP_KEY_VALUE_SEPARATOR)).
@@ -64,10 +56,6 @@ public class RequestHeader {
         return headers.get("Content-Length") == null ? 0 : Integer.parseInt(headers.get("Content-Length").toString());
     }
 
-    public void setHeader(String key, Object value) {
-        this.headers.put(key, value);
-    }
-
     public String getSessionId() {
         return this.cookie.getSessionId();
     }
@@ -76,12 +64,20 @@ public class RequestHeader {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RequestHeader header1 = (RequestHeader) o;
-        return Objects.equals(headers, header1.headers);
+        RequestHeader that = (RequestHeader) o;
+        return Objects.equals(headers, that.headers) && Objects.equals(cookie, that.cookie);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(headers);
+        return Objects.hash(headers, cookie);
+    }
+
+    @Override
+    public String toString() {
+        return "RequestHeader{" +
+                "headers=" + headers +
+                ", cookie=" + cookie +
+                '}';
     }
 }

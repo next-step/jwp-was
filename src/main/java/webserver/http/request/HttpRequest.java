@@ -1,8 +1,6 @@
 package webserver.http.request;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import webserver.http.HttpMethod;
 
 import java.io.BufferedReader;
@@ -16,9 +14,6 @@ import static utils.IOUtils.readData;
 import static utils.IOUtils.readLines;
 
 public class HttpRequest {
-
-    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
-
     public static final String ROOT_PATH = "/";
     public static final String ROOT_FILE = "/index.html";
 
@@ -79,10 +74,6 @@ public class HttpRequest {
         return StringUtils.equals(requestLine.getPathWithoutQueryString(), ROOT_PATH) ? getRedirectUrl() : requestLine.getPathWithoutQueryString();
     }
 
-    private String getRedirectUrl() {
-        return ROOT_FILE;
-    }
-
     public boolean isPost() {
         return getHttpMethod() == HttpMethod.POST;
     }
@@ -99,6 +90,10 @@ public class HttpRequest {
         return value;
     }
 
+    private String getRedirectUrl() {
+        return ROOT_FILE;
+    }
+
     public String getSessionId() {
         return this.requestHeader.getSessionId();
     }
@@ -107,12 +102,21 @@ public class HttpRequest {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        HttpRequest httpRequest = (HttpRequest) o;
-        return Objects.equals(requestLine, httpRequest.requestLine) && Objects.equals(requestHeader, httpRequest.requestHeader);
+        HttpRequest that = (HttpRequest) o;
+        return Objects.equals(requestLine, that.requestLine) && Objects.equals(requestHeader, that.requestHeader) && Objects.equals(requestBody, that.requestBody);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestLine, requestHeader);
+        return Objects.hash(requestLine, requestHeader, requestBody);
+    }
+
+    @Override
+    public String toString() {
+        return "HttpRequest{" +
+                "requestLine=" + requestLine +
+                ", requestHeader=" + requestHeader +
+                ", requestBody=" + requestBody +
+                '}';
     }
 }
