@@ -1,40 +1,39 @@
 package webserver.http;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpRequestTest {
-	private String testDirectory = "./src/test/resources/";
+	private final String testDirectory = "./src/test/resources/";
+	private HttpRequest httpRequest;
 
-	@DisplayName("GET 요청 테스트")
-	@Test
-	void request_GET() throws Exception {
-		InputStream in = new FileInputStream(new File(testDirectory + "Http_GET.txt"));
-		BufferedReaderToHttpRequest bufferedReaderToHttpRequest = new BufferedReaderToHttpRequest(in);
-		HttpRequest httpRequest = bufferedReaderToHttpRequest.parsed();
-
-		assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.GET);
+	@AfterEach
+	private void validateUserCreateRequest() {
 		assertThat(httpRequest.getPath()).isEqualTo("/user/create");
 		assertThat(httpRequest.getHeader("Connection")).isEqualTo("keep-alive");
 		assertThat(httpRequest.getParameter("userId")).isEqualTo("javajigi");
 	}
 
-	@DisplayName("POST 요청 테스트")
-	@Test
-	public void request_POST() throws Exception {
-		InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.txt"));
+	@ParameterizedTest(name = "{0} 요청 테스트")
+	@ValueSource(strings = {"GET", "POST"})
+	public void request(String httpMethod) throws Exception {
+		InputStream in = new FileInputStream(testFileName(httpMethod));
 		BufferedReaderToHttpRequest bufferedReaderToHttpRequest = new BufferedReaderToHttpRequest(in);
-		HttpRequest httpRequest = bufferedReaderToHttpRequest.parsed();
+		httpRequest = bufferedReaderToHttpRequest.parsed();
 
-		assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.POST);
-		assertThat(httpRequest.getPath()).isEqualTo("/user/create");
-		assertThat(httpRequest.getHeader("Connection")).isEqualTo("keep-alive");
-		assertThat(httpRequest.getParameter("userId")).isEqualTo("javajigi");
+		assertThat(httpRequest.getMethod()).isEqualTo(HttpMethod.valueOf(httpMethod));
+	}
+
+	private String testFileName(String httpMethod) {
+		if (httpMethod.equals("GET")) {
+			return testDirectory + "Http_GET.txt";
+		}
+		return testDirectory + "Http_POST.txt";
 	}
 }
