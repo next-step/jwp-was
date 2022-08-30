@@ -105,5 +105,9 @@ public class HttpResponse {
     public byte[] getBytesBody() {
         return bytesBody;
     }
+
+    public String getCookieValue(String key) {
+        return headers.getCookie().getValue(key);
+    }
 }
 
