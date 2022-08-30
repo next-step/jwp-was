@@ -4,12 +4,10 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
-import webserver.RequestHandler;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
@@ -20,7 +18,7 @@ public class ListUserController extends AbstractController {
 	void doGet(HttpRequest request, HttpResponse response) throws Exception {
 		byte[] body = FileIoUtils.loadFileFromClasspath("./templates/user/login.html");
 
-		if (request.getCookie().get("logined").equals("true")) {
+		if (isLogin(request)) {
 			TemplateLoader loader = new ClassPathTemplateLoader();
 			loader.setPrefix("/templates");
 			loader.setSuffix(".html");
@@ -36,5 +34,9 @@ public class ListUserController extends AbstractController {
 		}
 		response.response200Header(body.length);
 		response.responseBody(body);
+	}
+
+	private boolean isLogin(HttpRequest request) {
+		return request.getCookie().get("logined").equals("true");
 	}
 }
