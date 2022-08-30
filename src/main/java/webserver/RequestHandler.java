@@ -1,12 +1,8 @@
 package webserver;
 
-import controller.CreateUserController;
-import controller.ListUserController;
-import controller.LoginController;
-import controller.StaticController;
+import controller.FrontController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import webserver.http.BufferedReaderToHttpRequest;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
@@ -31,22 +27,9 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReaderToHttpRequest bufferedReaderToHttpRequest = new BufferedReaderToHttpRequest(in);
 
-			HttpRequest httpRequest = bufferedReaderToHttpRequest.parsed();
-			HttpResponse httpResponse = new HttpResponse(out);
-
-			String path = httpRequest.getPath();
-            logger.debug("path : {}", path);
-
-            if (FileIoUtils.isStatic(httpRequest.getPath())) {
-                new StaticController().service(httpRequest, httpResponse);
-            } else if (path.startsWith("/user/create")) {
-				new CreateUserController().service(httpRequest, httpResponse);
-            } else if (path.startsWith("/user/login")) {
-                new LoginController().service(httpRequest, httpResponse);
-            } else if (path.startsWith("/user/list")) {
-                new ListUserController().service(httpRequest, httpResponse);
-            }
-
+			HttpRequest request = bufferedReaderToHttpRequest.parsed();
+			HttpResponse response = new HttpResponse(out);
+			new FrontController().service(request, response);
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (Exception e) {

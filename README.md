@@ -125,3 +125,5 @@ Location: http://www.iana.org/domains/example/
 <br/><br/>
 * Controller 를 통해 RequestHandler에서의 각 요청과 응답에 대한 처리를 담당하도록 책임 분리
   * Controller 인터페이스 -> AbstractController 추상클래스
+  * 이렇게 생성한 Controller 구현체를 Map<String, Controller>에 저장한다. 
+    * Map의 key에 해당하는 String은 요청 URL, value에 해당하는 Controller는 Controller 구현체이다.
