@@ -1,5 +1,6 @@
 package webserver.http.request;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,6 +24,17 @@ class HttpRequestTest {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @DisplayName("Maximum 요청보다 더 많은 요청을 했을 때 정상응답에 대한 테스트")
+    @Test
+    void testRequestBeyondMaximumPool() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        IntStream.range(0, 999)
+                .parallel()
+                .mapToObj(thread -> restTemplate.getForEntity("http://localhost:8080/index.html", String.class).getStatusCode())
+                .forEach(httpStatus -> assertThat(httpStatus).isEqualTo(HttpStatus.OK));
     }
 
     @Test

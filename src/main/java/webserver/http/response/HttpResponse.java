@@ -11,14 +11,14 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
-import static model.Constant.LOCATION;
-import static model.Constant.PROTOCOL_VERSION_ONE_ONE;
+import static model.Constant.*;
 
 public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
     private static final String RESOURCES_TEMPLATES = "./templates";
     private static final String RESOURCES_STATIC = "./static";
+    public static final String CONTENT_LENGTH = "Content-Length";
 
     private ResponseLine responseLine;
     private ResponseHeader responseHeader;
@@ -30,12 +30,16 @@ public class HttpResponse {
         this.responseHeader = responseHeader;
         this.responseBody = responseBody;
         this.cookie = cookie;
+
+        setCookieInHeader(cookie);
     }
 
     public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader, ResponseBody responseBody) {
         this.responseLine = responseLine;
         this.responseHeader = responseHeader;
         this.responseBody = responseBody;
+
+        setContentLengthOfResponseBody(responseBody);
     }
 
     public HttpResponse(ResponseLine responseLine, ResponseHeader responseHeader) {
@@ -66,26 +70,6 @@ public class HttpResponse {
 
     public static HttpResponse notfound() {
         return new HttpResponse(new ResponseLine(PROTOCOL_VERSION_ONE_ONE, HttpStatus.NOT_FOUND), new ResponseHeader());
-
-    }
-
-    private static String addPrefixPath(String path) {
-        if (!ContentType.isStaticExtension(path)) {
-            return RESOURCES_TEMPLATES.concat(path);
-        }
-        return RESOURCES_STATIC.concat(path);
-    }
-
-    public int getContentLength() {
-        return responseBody.getContentLength();
-    }
-
-    public void setHeader(String key, Object value) {
-        responseHeader.setHeader(key, value);
-    }
-
-    public boolean isExistCookie() {
-        return cookie == null;
     }
 
     public ResponseLine getResponseLine() {
@@ -103,6 +87,30 @@ public class HttpResponse {
     public Cookie getCookie() {
         return cookie;
     }
+
+    private static String addPrefixPath(String path) {
+        if (!ContentType.isStaticExtension(path)) {
+            return RESOURCES_TEMPLATES.concat(path);
+        }
+        return RESOURCES_STATIC.concat(path);
+    }
+
+    private int getContentLength() {
+        return responseBody.getContentLength();
+    }
+
+    private void setHeader(String key, Object value) {
+        responseHeader.setHeader(key, value);
+    }
+
+    private void setContentLengthOfResponseBody(ResponseBody responseBody) {
+        setHeader(CONTENT_LENGTH, getContentLength());
+    }
+
+    private void setCookieInHeader(Cookie cookie) {
+        setHeader(SET_COOKIE, String.format(JSESSIONID + "=%s; Path=/", cookie.getSessionId()));
+    }
+
 
     @Override
     public boolean equals(Object o) {

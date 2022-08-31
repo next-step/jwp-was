@@ -34,10 +34,8 @@ public class RequestHandler implements Runnable {
 
             new ResponseWriter(out).process(httpResponse);
         } catch (IOException e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
         }
     }

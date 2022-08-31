@@ -10,7 +10,7 @@ import java.util.Objects;
 public class ResponseLine {
 
     private static final Logger logger = LoggerFactory.getLogger(ResponseLine.class);
-
+    public static final String PROTOCOL_SEPARATOR = " ";
     public static final String VALUE_SEPARATOR = " ";
 
     private final Protocol protocol;
@@ -22,7 +22,6 @@ public class ResponseLine {
     }
 
     public ResponseLine(String protocol, HttpStatus httpStatus) {
-        logger.debug("protocol : {}", protocol);
         this.protocol = new Protocol(protocol);
         this.httpStatus = httpStatus;
     }
@@ -36,18 +35,30 @@ public class ResponseLine {
         this(makeResponseLine(value));
     }
 
-    private static ResponseLine makeResponseLine(String value) {
-        String[] values = value.split(VALUE_SEPARATOR);
-        return new ResponseLine(new Protocol(values[0]), HttpStatus.valueOf(values[1]));
-    }
-
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
 
     public String getProtocolAndVersion() {
-        logger.debug("Protocol : {}", protocol.getProtocolAndVersion());
         return protocol.getProtocolAndVersion();
+    }
+
+    public String getResponseLine() {
+        StringBuffer sb = new StringBuffer();
+
+        sb.append(getProtocolAndVersion())
+                .append(PROTOCOL_SEPARATOR)
+                .append(getHttpStatus().getCode())
+                .append(PROTOCOL_SEPARATOR)
+                .append(getHttpStatus().getMessage())
+                .append(System.lineSeparator());
+
+        return sb.toString();
+    }
+
+    private static ResponseLine makeResponseLine(String value) {
+        String[] values = value.split(VALUE_SEPARATOR);
+        return new ResponseLine(new Protocol(values[0]), HttpStatus.valueOf(values[1]));
     }
 
     @Override
