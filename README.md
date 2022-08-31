@@ -36,8 +36,8 @@ Host: localhost:8080
 Connection: keep-alive
 Accept: */*
 ```
-- [ ] 추출한 요청 URL에서 `접근 경로와 이름=값`을 추출하여 User 클래스에 담는다.
-- [ ] 단위 테스트를 진행하며 개발한다.
+- [X] 추출한 요청 URL에서 `접근 경로와 이름=값`을 추출하여 User 클래스에 담는다.
+- [X] 단위 테스트를 진행하며 개발한다.
 
 ## 기능 요구사항3
 > http://localhost:8080/user/form.html 파일의 form 태그 method를 get에서 post로 수정한 후 회원가입 기능이 정상적으로 동작하도록 구현한다.

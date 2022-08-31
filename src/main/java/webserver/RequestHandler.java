@@ -29,7 +29,6 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = new HttpRequest(in);
-            logger.debug("httpRequest: {}", httpRequest.toString());
 
             DataOutputStream dos = new DataOutputStream(out);
             String filePath = DEFAULT_VIEW_RESOURCES_PATH + httpRequest.getRequestLine().getPathValue();
