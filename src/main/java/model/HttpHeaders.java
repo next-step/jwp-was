@@ -13,6 +13,7 @@ public class HttpHeaders {
     private static final String HEADER_DELIMITER = ": ";
     private static final Pattern HEADER_PATTERN = Pattern.compile("(.*)" + HEADER_DELIMITER + "(.*)");
     private static final String NEXT_LINE = "\n";
+    private static final String REDIRECT_PATH = "Location";
 
     private final Map<String, String> header = new HashMap<>();
 
@@ -40,7 +41,7 @@ public class HttpHeaders {
     }
 
     public HttpHeaders addLocation(String location) {
-        this.header.put("Location", location);
+        this.header.put(REDIRECT_PATH, location);
         return this;
     }
 
