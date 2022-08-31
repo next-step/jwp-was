@@ -8,7 +8,6 @@ import utils.HttpMethod;
 public abstract class AbstractController implements Controller {
     @Override
     public void service(HttpRequest request, HttpResponse response) throws IOException {
-        ;
         if (request.getRequestLine().getMethod() == HttpMethod.GET) {
             doGet(request, response);
 

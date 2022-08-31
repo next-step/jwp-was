@@ -26,13 +26,18 @@ public class UserListController extends AbstractController {
             return;
         }
 
+        byte[] listPage = makeUserListTemplate();
+        response.forward(new ResponseBody(listPage), CONTENT_TYPE);
+    }
+
+    private byte[] makeUserListTemplate() throws IOException {
         List<User> users = new ArrayList<>(DataBase.findAll());
         TemplateLoader templateLoader = new ClassPathTemplateLoader();
         templateLoader.setPrefix("/templates");
         templateLoader.setSuffix(".html");
         Handlebars handlebars = new Handlebars(templateLoader);
         Template template = handlebars.compile("user/list");
-        byte[] listPage = template.apply(users).getBytes();
-        response.forward(new ResponseBody(listPage), CONTENT_TYPE);
+
+        return template.apply(users).getBytes();
     }
 }
