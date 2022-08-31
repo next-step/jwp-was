@@ -8,6 +8,7 @@ import db.DataBase;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import model.Cookie;
 import model.User;
 import model.request.HttpRequest;
@@ -21,13 +22,21 @@ public class UserListController extends AbstractController {
     @Override
     public void doGet(HttpRequest request, HttpResponse response) throws IOException {
         Cookie cookie = request.getCookie();
-        if (!Boolean.parseBoolean(cookie.get("logined"))) {
+        if (!isLogined(cookie)) {
             response.redirect(USER_LOGIN_PATH);
             return;
         }
 
         byte[] listPage = makeUserListTemplate();
         response.forward(new ResponseBody(listPage), CONTENT_TYPE);
+    }
+
+    private boolean isLogined(Cookie cookie) {
+        if (Objects.isNull(cookie) || cookie.isEmpty()) {
+            return false;
+        }
+
+        return !Boolean.parseBoolean(cookie.get("logined"));
     }
 
     private byte[] makeUserListTemplate() throws IOException {

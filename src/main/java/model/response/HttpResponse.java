@@ -18,31 +18,29 @@ public class HttpResponse {
     private String message;
     private ResponseBody responseBody;
 
-    public void redirect(String location) {
-        this.httpProtocol = new HttpProtocol("HTTP/1.1");
-        this.status = "302";
-        this.message = "OK";
-        this.httpHeaders = new HttpHeaders();
-        this.httpHeaders.addLocation(location);
+    private HttpResponse(HttpProtocol httpProtocol, String status, String message, HttpHeaders httpHeaders) {
+        this.httpProtocol = httpProtocol;
+        this.status = status;
+        this.message = message;
+        this.httpHeaders = httpHeaders;
     }
 
-    public void loginRedirect(String location, boolean login) {
-        this.httpProtocol = new HttpProtocol("HTTP/1.1");
-        this.status = "302";
-        this.message = "Found";
-        this.httpHeaders = new HttpHeaders();
-        this.httpHeaders.addCookie("logined", String.valueOf(login));
-        this.httpHeaders.addLocation(location);
+    public static HttpResponse redirect(String location) {
+        return new HttpResponse(new HttpProtocol("HTTP/1.1"), "302", "OK", new HttpHeaders().addLocation(location));
     }
 
-    public void forward(ResponseBody responseBody, String contentType) {
-        this.responseBody = responseBody;
-        this.httpProtocol = new HttpProtocol("HTTP/1.1");
-        this.status = "200";
-        this.message = "OK";
-        this.httpHeaders = new HttpHeaders();
-        this.httpHeaders.addContentType(contentType);
-        this.httpHeaders.addContentLength(responseBody.getLength());
+    public static HttpResponse loginRedirect(String location, boolean login) {
+        return new HttpResponse(new HttpProtocol("HTTP/1.1"), "302", "Found",
+                new HttpHeaders().addCookie("logined", String.valueOf(login)).addLocation(location));
+    }
+
+    public static HttpResponse forward(ResponseBody responseBody, String contentType) {
+        return new HttpResponse(new HttpProtocol("HTTP/1.1"), "200", "OK",
+                new HttpHeaders().addContentType(contentType).addContentLength(responseBody.getLength()));
+    }
+
+    public static HttpResponse init() {
+        return new HttpResponse(new HttpProtocol("HTTP/1.1"), "400", "Bad Request", new HttpHeaders());
     }
 
     public void writeResponse(DataOutputStream dos) throws IOException {

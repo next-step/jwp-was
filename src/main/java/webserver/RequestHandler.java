@@ -14,8 +14,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import model.Cookie;
 import model.HttpHeaders;
 import model.request.HttpRequest;
@@ -49,13 +47,13 @@ public class RequestHandler implements Runnable {
             RequestBody requestBody = new RequestBody(br, httpHeaders);
             Cookie cookie = Cookie.from(httpHeaders.get(Cookie.REQUEST_COOKIE_HEADER));
             HttpRequest httpRequest = new HttpRequest(httpHeaders, requestLine, requestBody, cookie);
-            HttpResponse httpResponse = new HttpResponse();
+            HttpResponse httpResponse = HttpResponse.init();
             DataOutputStream dos = new DataOutputStream(out);
             String path = httpRequest.getHttpPath();
             if (path.endsWith(".html")) {
                 path = "./templates" + path;
                 byte[] body = FileIoUtils.loadFileFromClasspath(path);
-                httpResponse.forward(new ResponseBody(body), CONTENT_TYPE);
+                HttpResponse.forward(new ResponseBody(body), CONTENT_TYPE);
             } else if ("/user/create".equals(path)) {
                 UserCreateController userCreateController = new UserCreateController();
                 userCreateController.doPost(httpRequest, httpResponse);
@@ -72,11 +70,11 @@ public class RequestHandler implements Runnable {
                 }
 
                 byte[] body = FileIoUtils.loadFileFromClasspath("./" + prefix + "/" + path);
-                httpResponse.forward(new ResponseBody(body), CONTENT_TYPE);
+                HttpResponse.forward(new ResponseBody(body), CONTENT_TYPE);
             }
 
             byte[] body = "Hello World".getBytes();
-            httpResponse.forward(new ResponseBody(body), CONTENT_TYPE);
+            HttpResponse.forward(new ResponseBody(body), CONTENT_TYPE);
             httpResponse.writeResponse(dos);
         } catch (IOException e) {
             logger.error(e.getMessage());

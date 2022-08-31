@@ -26,7 +26,7 @@ class UserCreateControllerTest {
     void createUserSuccess() throws Exception {
         UserCreateController userCreateController = new UserCreateController();
         HttpRequest httpRequest = createRequest("Http_POST.http");
-        userCreateController.service(httpRequest, new HttpResponse());
+        userCreateController.service(httpRequest, HttpResponse.init());
 
         assertThat(DataBase.findAll().size()).isNotZero();
     }

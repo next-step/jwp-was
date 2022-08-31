@@ -60,7 +60,7 @@ class LoginControllerTest {
     }
 
     private HttpResponse createHttpResponse() {
-        return new HttpResponse();
+        return HttpResponse.init();
     }
 
     private HttpRequest createRequest(String fileName) throws IOException {
