@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import model.HttpHeaders;
 import model.RequestParameters;
 import model.User;
@@ -26,7 +27,7 @@ class LoginControllerTest {
 
     @DisplayName("로그인 성공")
     @Test
-    void loginSuccess() throws IOException {
+    void loginSuccess() throws IOException, URISyntaxException {
         // given
         LoginController loginController = new LoginController();
         HttpRequest httpRequest = createRequest("Http_POST.http");
@@ -41,7 +42,7 @@ class LoginControllerTest {
 
     @DisplayName("로그인 실패")
     @Test
-    void loginFail() throws IOException {
+    void loginFail() throws IOException, URISyntaxException {
         LoginController loginController = new LoginController();
         HttpRequest httpRequest = createRequest("Http_POST.http");
         HttpResponse httpResponse = createHttpResponse();

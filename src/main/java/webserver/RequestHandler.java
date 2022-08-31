@@ -2,9 +2,8 @@ package webserver;
 
 import static controller.UserListController.CONTENT_TYPE;
 
-import controller.LoginController;
-import controller.UserCreateController;
-import controller.UserListController;
+import controller.Controller;
+import controller.RequestMapper;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -22,7 +21,6 @@ import model.response.HttpResponse;
 import model.response.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.FileIoUtils;
 import utils.IOUtils;
 
 public class RequestHandler implements Runnable {
@@ -50,28 +48,9 @@ public class RequestHandler implements Runnable {
             HttpResponse httpResponse = HttpResponse.init();
             DataOutputStream dos = new DataOutputStream(out);
             String path = httpRequest.getHttpPath();
-            if (path.endsWith(".html")) {
-                path = "./templates" + path;
-                byte[] body = FileIoUtils.loadFileFromClasspath(path);
-                HttpResponse.forward(new ResponseBody(body), CONTENT_TYPE);
-            } else if ("/user/create".equals(path)) {
-                UserCreateController userCreateController = new UserCreateController();
-                userCreateController.doPost(httpRequest, httpResponse);
-            } else if ("/user/login".equals(path)) {
-                LoginController loginController = new LoginController();
-                loginController.doPost(httpRequest, httpResponse);
-            } else if ("/user/list".equals(path)) {
-                UserListController userListController = new UserListController();
-                userListController.doGet(httpRequest, httpResponse);
-            } else if (isStaticPath(path)) {
-                String prefix = "static";
-                if (path.contains(".html") || path.contains(".ico")) {
-                    prefix = "templates";
-                }
-
-                byte[] body = FileIoUtils.loadFileFromClasspath("./" + prefix + "/" + path);
-                HttpResponse.forward(new ResponseBody(body), CONTENT_TYPE);
-            }
+            RequestMapper requestMapper = new RequestMapper();
+            Controller controller = requestMapper.getController(path);
+            controller.service(httpRequest, httpResponse);
 
             byte[] body = "Hello World".getBytes();
             HttpResponse.forward(new ResponseBody(body), CONTENT_TYPE);
