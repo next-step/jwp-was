@@ -1,5 +1,7 @@
 package model;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -11,10 +13,15 @@ public class HttpHeaders {
     private static final String HEADER_DELIMITER = ": ";
     private static final Pattern HEADER_PATTERN = Pattern.compile("(.*)" + HEADER_DELIMITER + "(.*)");
     private static final String NEXT_LINE = "\n";
+    private static final String REDIRECT_PATH = "Location";
 
     private final Map<String, String> header = new HashMap<>();
 
-    public HttpHeaders (String headers) {
+    public HttpHeaders() {
+
+    }
+
+    public HttpHeaders(String headers) {
         Arrays.stream(headers.split(NEXT_LINE))
                 .map(HttpHeaders::parse)
                 .forEach(value -> header.put(value.get(0), value.get(1)));
@@ -31,5 +38,36 @@ public class HttpHeaders {
 
     public String get(String key) {
         return header.get(key);
+    }
+
+    public HttpHeaders addLocation(String location) {
+        this.header.put(REDIRECT_PATH, location);
+        return this;
+    }
+
+    public HttpHeaders addCookie(String name, String value) {
+        this.header.put(Cookie.REQUEST_COOKIE_HEADER, name + "=" + value);
+        return this;
+    }
+
+    public HttpHeaders addContentType(String contentType) {
+        this.header.put("Content-Type", contentType + ";charset=utf-8");
+        return this;
+    }
+
+    public HttpHeaders addContentLength(int length) {
+        this.header.put("Content-Length", String.valueOf(length));
+        return this;
+    }
+
+    public void writeOutput(DataOutputStream dos) throws IOException {
+        this.header.forEach((key, value) -> {
+            try {
+                dos.writeBytes(key + HEADER_DELIMITER + value + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        dos.writeBytes("\n");
     }
 }

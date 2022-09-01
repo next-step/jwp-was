@@ -109,12 +109,12 @@ public class RequestLineTest {
 		RequestLine result = requestLine.parse();
 
 	    // then
-		Map<String, String> queryString = result.getRequestPathQueryString().getQueryStringOfPath();
+		Map<String, String> parameters = result.getRequestParameters().getRequestParameters();
 		assertAll(
-			() -> assertThat(queryString).hasSize(3),
-			() -> assertThat(queryString.get("userId")).isEqualTo("javajigi"),
-			() -> assertThat(queryString.get("password")).isEqualTo("password"),
-			() -> assertThat(queryString.get("name")).isEqualTo("JaeSung")
+			() -> assertThat(parameters).hasSize(3),
+			() -> assertThat(parameters.get("userId")).isEqualTo("javajigi"),
+			() -> assertThat(parameters.get("password")).isEqualTo("password"),
+			() -> assertThat(parameters.get("name")).isEqualTo("JaeSung")
 		);
 	}
 
@@ -129,14 +129,14 @@ public class RequestLineTest {
 		RequestLine result = requestLine.parse();
 
 		// then
-		Map<String, String> queryString = result.getRequestPathQueryString().getQueryStringOfPath();
+		Map<String, String> parameters = result.getRequestParameters().getRequestParameters();
 		assertAll(
 				() -> assertThat(result.getHttpPath().getPath()).isEqualTo("/user/create"),
-				() -> assertThat(queryString).hasSize(4),
-				() -> assertThat(queryString.get("userId")).isEqualTo("javajigi"),
-				() -> assertThat(queryString.get("password")).isEqualTo("password"),
-				() -> assertThat(queryString.get("name")).isEqualTo("%EB%B0%95%EC%9E%AC%EC%84%B1"),
-				() -> assertThat(queryString.get("email")).isEqualTo("javajigi%40slipp.net")
+				() -> assertThat(parameters).hasSize(4),
+				() -> assertThat(parameters.get("userId")).isEqualTo("javajigi"),
+				() -> assertThat(parameters.get("password")).isEqualTo("password"),
+				() -> assertThat(parameters.get("name")).isEqualTo("박재성"),
+				() -> assertThat(parameters.get("email")).isEqualTo("javajigi@slipp.net")
 		);
 	}
 }

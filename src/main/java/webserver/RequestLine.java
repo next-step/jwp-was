@@ -2,6 +2,7 @@ package webserver;
 
 import model.HttpPath;
 import model.HttpProtocol;
+import model.RequestParameters;
 import utils.HttpMethod;
 
 public class RequestLine {
