@@ -17,7 +17,7 @@ public class ListUserController extends AbstractController {
 
     @Override
     void doGet(HttpRequest request, HttpResponse response) throws Exception {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getJSession();
 
         if (!request.isLogined(session)) {
             response.sendRedirect("/login.html");

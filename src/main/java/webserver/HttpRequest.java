@@ -86,7 +86,7 @@ public class HttpRequest {
         return new HttpSessionStorage();
     }
 
-    public HttpSession getSession() {
+    public HttpSession getJSession() {
         String jssessionid = header.getCookie().getValue(HttpSession.JSESSION_ID);
         HttpSession session = getSessionStorage().getSession(jssessionid);
         return session;
@@ -97,7 +97,7 @@ public class HttpRequest {
         return Boolean.parseBoolean((String) attribute);
     }
 
-    public HttpSession createHttpSession() {
-        return new HttpSession();
+    public HttpSession getSession() {
+       return header.getCookie().createSession();
     }
 }
