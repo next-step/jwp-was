@@ -108,3 +108,22 @@ Location: http://www.iana.org/domains/example/
 ### 기능 요구사항 7
 > 지금까지 구현한 소스 코드는 stylesheet 파일을 지원하지 못하고 있다. Stylesheet 파일을 지원하도록 구현하도록 한다.
 * css 파일에 관련한 요청인 경우 HTTP Response Header에서 Accept 값을 text/css로 전송한다.
+
+## 3단계 - HTTP 웹 서버 리팩토링
+### HttpRequest 클래스와 HttpResponse 클래스를 만들어 책임을 분리해보자
+* HttpRequest 클래스가 아래의 멤버 변수들을 갖도록 구현
+  * RequestLine
+  * HttpHeaders
+  * RequestParameters
+* HttpRequest 클래스 내에서 위 멤버 변수들을 초기화 하기 위한 소스 코드가 길어지게 된다.
+  * BufferedRequestToHttpRequest 클래스에서 HttpRequest 를 생성하도록 구현
+* 실제 WAS를 실행시켜서 테스트하지 않고, test resource에 요청을 mocking 할 수 있도록 txt 파일을 만들어 테스트할 수 있도록 테스트 케이스 추가 작성
+<br/><br/>
+* HttpResponse 클래스가 아래의 멤버 변수를 갖도록 구현
+  * DataOutputStream
+* 실제 WAS를 실행시켜서 테스트하지 않고, test resource에 응답 결과를 txt 파일로 확인할 수 있도록 테스트 케이스 추가
+<br/><br/>
+* Controller 를 통해 RequestHandler에서의 각 요청과 응답에 대한 처리를 담당하도록 책임 분리
+  * Controller 인터페이스 -> AbstractController 추상클래스
+  * 이렇게 생성한 Controller 구현체를 Map<String, Controller>에 저장한다. 
+    * Map의 key에 해당하는 String은 요청 URL, value에 해당하는 Controller는 Controller 구현체이다.
