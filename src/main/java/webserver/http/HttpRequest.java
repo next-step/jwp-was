@@ -1,5 +1,7 @@
 package webserver.http;
 
+import java.util.Objects;
+
 public class HttpRequest {
 	private RequestLine requestLine;
 	private HttpHeaders httpHeaders;
@@ -27,4 +29,25 @@ public class HttpRequest {
 		return httpHeaders.get(name);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		HttpRequest that = (HttpRequest) o;
+		return Objects.equals(requestLine, that.requestLine) && Objects.equals(httpHeaders, that.httpHeaders) && Objects.equals(requestParams, that.requestParams);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(requestLine, httpHeaders, requestParams);
+	}
+
+	@Override
+	public String toString() {
+		return "HttpRequest{" +
+			"requestLine=" + requestLine +
+			", httpHeaders=" + httpHeaders +
+			", requestParams=" + requestParams +
+			'}';
+	}
 }

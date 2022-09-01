@@ -24,6 +24,7 @@ public class LoginController extends AbstractController {
 			location = "/index.html";
 		}
 
-		response.response302LoginedHeader(logined, location);
+		response.addHeader("Set-Cookie", "logined=" + logined + "; Path=/");
+		response.sendRedirect(location);
 	}
 }

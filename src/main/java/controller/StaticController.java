@@ -16,9 +16,9 @@ public class StaticController extends AbstractController {
 	void doGet(HttpRequest request, HttpResponse response) throws Exception {
 		String path = request.getPath();
 
-		if (FileIoUtils.containsHtml(path)) {
+		if (FileIoUtils.needsTemplatesPath(path)) {
 			processPageRequest(request, response);
-		} else if (FileIoUtils.containsStaticPath(path)) {
+		} else if (FileIoUtils.needsStaticPath(path)) {
 			processStaticRequest(request, response);
 		}
 	}
@@ -26,7 +26,7 @@ public class StaticController extends AbstractController {
 	private void processPageRequest(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
 		String path = "./templates" + request.getPath();
 		byte[] body = FileIoUtils.loadFileFromClasspath(path);
-		response.response200Header(body.length);
+		response.addHeader("Content-Type", "text/html;charset=utf-8");
 		response.responseBody(body);
 	}
 
@@ -34,9 +34,9 @@ public class StaticController extends AbstractController {
 		String path = "./static" + request.getPath();
 		byte[] body = FileIoUtils.loadFileFromClasspath(path);
 		if (path.startsWith("./static/css")) {
-			response.response200CssHeader(body.length);
+			response.addHeader("Content-Type", "text/css;charset=utf-8");
 		} else {
-			response.response200Header(body.length);
+			response.addHeader("Content-Type", "text/html;charset=utf-8");
 		}
 		response.responseBody(body);
 	}

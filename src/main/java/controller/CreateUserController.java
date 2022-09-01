@@ -15,6 +15,6 @@ public class CreateUserController extends AbstractController {
 		User newUser = new User(request.getParameter("userId"), request.getParameter("password"), request.getParameter("name"), request.getParameter("email"));
 		logger.debug("회원가입 사용자 : {}", newUser);
 		DataBase.addUser(newUser);
-		response.response302Header();
+		response.sendRedirect("/index.html");
 	}
 }

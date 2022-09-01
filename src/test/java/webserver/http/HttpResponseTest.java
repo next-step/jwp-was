@@ -8,20 +8,23 @@ class HttpResponseTest {
 	private String testDirectory = "./src/test/resources/";
 
 	@Test
-	public void response200Header() throws Exception {
+	public void response() throws Exception {
 		HttpResponse response = new HttpResponse(new FileOutputStream(testDirectory + "Http_200.txt"));
-		response.response200Header(59);
+		response.addHeader("Content-Type", "text/html;charset=utf-8");
+		response.responseBody("TEST".getBytes());
 	}
 
 	@Test
-	public void response200CssHeader() throws Exception {
+	public void response_css() throws Exception {
 		HttpResponse response = new HttpResponse(new FileOutputStream(testDirectory + "Http_200_css.txt"));
-		response.response200CssHeader(59);
+		response.addHeader("Content-Type", "text/css;charset=utf-8");
+		response.responseBody("TEST".getBytes());
 	}
 
 	@Test
-	public void response302LoginedHeader() throws Exception {
+	public void sendRedirectTest() throws Exception {
 		HttpResponse response = new HttpResponse(new FileOutputStream(testDirectory + "Http_302_logined.txt"));
-		response.response302LoginedHeader(true, "/index.html");
+		response.addHeader("Set-Cookie", "logined=" + true);
+		response.sendRedirect("/index.html");
 	}
 }

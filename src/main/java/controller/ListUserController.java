@@ -32,7 +32,7 @@ public class ListUserController extends AbstractController {
 
 			body = profilePage.getBytes();
 		}
-		response.response200Header(body.length);
+		response.addHeader("Content-Type", "text/html;charset=utf-8");
 		response.responseBody(body);
 	}
 

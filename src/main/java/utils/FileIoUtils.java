@@ -17,15 +17,15 @@ public class FileIoUtils {
         return Files.readAllBytes(path);
     }
 
-	public static boolean containsHtml(String path) {
-		return path.endsWith(".html");
+	public static boolean needsTemplatesPath(String path) {
+		return path.endsWith(".html") || path.endsWith(".ico");
 	}
 
-	public static boolean containsStaticPath(String path) {
+	public static boolean needsStaticPath(String path) {
 		return path.startsWith("/css") || path.startsWith("/js") || path.startsWith("/font") || path.startsWith("/images");
 	}
 
 	public static boolean isStatic(String path) {
-		return containsHtml(path) || containsStaticPath(path);
+		return needsTemplatesPath(path) || needsStaticPath(path);
 	}
 }
