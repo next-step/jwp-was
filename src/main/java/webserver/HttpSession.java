@@ -6,21 +6,16 @@ import java.util.UUID;
 
 public class HttpSession {
 
-    private static final String SESSION_ID = "JSESSIONID";
-    private static final String KEY_VALUE_DELIMITER = "=";
+    public static final String ATTRIBUTE_LOGINED = "logined";
 
+    public static final String JSESSION_ID = "JSESSIONID";
+    private static final String KEY_VALUE_DELIMITER = "=";
 
     private String id;
     private Map<String, Object> attributes = new HashMap<>();
-
-
     public HttpSession() {
         this.id = UUID.randomUUID().toString();
     }
-    public HttpSession(String id) {
-        this.id = id;
-    }
-
     public String getId() {
         return id;
     }
@@ -49,6 +44,6 @@ public class HttpSession {
     }
 
     public String setSessionId() {
-        return SESSION_ID + KEY_VALUE_DELIMITER + this.id;
+        return JSESSION_ID + KEY_VALUE_DELIMITER + this.id;
     }
 }

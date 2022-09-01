@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SessionStorageTest {
 
     @Test
-    @DisplayName("add,get SessionStorage TDD")
+    @DisplayName("add,get SessionStorage")
     void add_get() {
         HttpSessionStorage sessionStorage = new HttpSessionStorage();
 
@@ -23,7 +23,7 @@ public class SessionStorageTest {
     }
 
     @Test
-    @DisplayName("remove SessionStorage TDD")
+    @DisplayName("remove SessionStorage")
     void remove() {
         HttpSessionStorage sessionStorage = new HttpSessionStorage();
 
@@ -36,7 +36,7 @@ public class SessionStorageTest {
     }
 
     @Test
-    @DisplayName("invalidate SessionStorage TDD")
+    @DisplayName("invalidate SessionStorage")
     void invalidate() {
         HttpSessionStorage sessionStorage = new HttpSessionStorage();
 

@@ -82,5 +82,22 @@ public class HttpRequest {
         return header.getCookie();
     }
 
+    public HttpSessionStorage getSessionStorage() {
+        return new HttpSessionStorage();
+    }
 
+    public HttpSession getJSession() {
+        String jssessionid = header.getCookie().getValue(HttpSession.JSESSION_ID);
+        HttpSession session = getSessionStorage().getSession(jssessionid);
+        return session;
+    }
+
+    public Boolean isLogined(HttpSession session) {
+        Object attribute = session.getAttribute(HttpSession.ATTRIBUTE_LOGINED);
+        return Boolean.parseBoolean((String) attribute);
+    }
+
+    public HttpSession getSession() {
+       return header.getCookie().createSession();
+    }
 }

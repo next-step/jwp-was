@@ -52,7 +52,7 @@ public class LoginControllerTest {
         // then
         assertAll(
                 () -> assertThat(httpResponse.getHeaders().getValue("Location")).isEqualTo("/index.html"),
-                () -> assertThat(httpResponse.getHeaders().getCookie().getValue(Cookie.SET_COOKIE).split(";")[0]).isEqualTo("logined=true")
+                () -> assertThat(httpResponse.getCookieValue(Cookie.SET_COOKIE).split(";")[0]).isEqualTo("logined=true")
         );
     }
 
@@ -70,7 +70,7 @@ public class LoginControllerTest {
         // then
         assertAll(
                 () -> assertThat(httpResponse.getHeaders().getValue("Location")).isEqualTo("/login_failed.html"),
-                () -> assertThat(httpResponse.getHeaders().getValue(Cookie.SET_COOKIE).split(";")[0]).isEqualTo("logined=false")
+                () -> assertThat(httpResponse.getCookieValue(Cookie.SET_COOKIE).split(";")[0]).isEqualTo("logined=false")
         );
     }
 }

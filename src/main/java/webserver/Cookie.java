@@ -44,4 +44,7 @@ public class Cookie {
         header.putCookie(this.cookieData);
     }
 
+    public HttpSession createSession() {
+        return new HttpSession();
+    }
 }
