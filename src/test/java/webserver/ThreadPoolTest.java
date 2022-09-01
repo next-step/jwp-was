@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StopWatch;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.*;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -60,5 +62,15 @@ public class ThreadPoolTest {
                 }
             });
         }
+    }
+
+    @Test
+    void additional() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        IntStream.rangeClosed(1, 250)
+                .parallel()
+                .mapToObj(i -> restTemplate.getForEntity("http://localhost:8080/index.html", String.class))
+                .allMatch(res -> res.getStatusCode().is2xxSuccessful());
     }
 }
