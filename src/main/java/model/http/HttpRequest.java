@@ -1,6 +1,7 @@
-package model;
+package model.http;
 
-import utils.IOUtils;
+import model.Cookie;
+import model.request.RequestBody;
 import webserver.RequestLine;
 
 import java.io.*;

@@ -1,6 +1,9 @@
 package controller;
 
 import model.*;
+import model.http.HttpRequest;
+import model.http.HttpResponse;
+import model.response.ResponseBody;
 import utils.HandlebarsUtils;
 
 public class UserListController extends AbstractController{

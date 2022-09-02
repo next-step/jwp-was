@@ -1,5 +1,7 @@
-package model;
+package model.http;
 
+import model.response.ResponseBody;
+import model.response.ResponseLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

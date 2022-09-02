@@ -2,9 +2,8 @@ package controller;
 
 import db.DataBase;
 import model.*;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
+import model.http.HttpRequest;
+import model.http.HttpResponse;
 
 public class LoginController extends AbstractController {
 

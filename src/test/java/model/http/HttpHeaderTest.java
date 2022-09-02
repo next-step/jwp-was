@@ -1,5 +1,6 @@
-package model;
+package model.http;
 
+import model.http.HttpHeader;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

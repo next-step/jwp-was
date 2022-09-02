@@ -1,8 +1,8 @@
 package webserver;
 
 import controller.*;
-import model.HttpMethod;
-import model.RequestMappingInfo;
+import model.http.HttpMethod;
+import model.request.RequestMappingInfo;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

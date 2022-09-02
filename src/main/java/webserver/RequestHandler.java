@@ -5,10 +5,13 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 
 import controller.Controller;
-import model.*;
+import model.http.HttpHeader;
+import model.http.HttpRequest;
+import model.http.HttpResponse;
+import model.request.RequestBody;
+import model.request.RequestMappingInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestHeader;
 import utils.IOUtils;
 
 public class RequestHandler implements Runnable {

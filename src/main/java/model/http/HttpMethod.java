@@ -1,4 +1,6 @@
-package model;
+package model.http;
+
+import model.UnSupportMethodType;
 
 import java.util.Arrays;
 

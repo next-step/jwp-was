@@ -1,11 +1,10 @@
 package webserver;
 
 import controller.*;
-import model.HttpMethod;
-import model.RequestMappingInfo;
+import model.http.HttpMethod;
+import model.request.RequestMappingInfo;
 
 import java.util.List;
-import java.util.Map;
 
 public class RequestMapper {
 
