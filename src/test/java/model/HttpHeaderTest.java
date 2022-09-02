@@ -13,8 +13,8 @@ public class HttpHeaderTest {
         int contentLength = 10;
 
         final HttpHeader result = new HttpHeader.HttpHeaderBuilder()
-                .addContentType(contentType)
-                .addContentLength(contentLength)
+                .contentType(contentType)
+                .contentLength(contentLength)
                 .build();
 
         assertThat(result.getValue("Content-Type")).isEqualTo(contentType + ";charset=utf-8");

@@ -14,8 +14,6 @@ public enum HttpMethod {
 
     public static void validationMethod(HttpMethod method) {
         Arrays.stream(HttpMethod.values())
-            .filter(type -> type == method)
-            .findFirst()
-            .orElseThrow(UnSupportMethodType::new);
+            .noneMatch(type -> type == method);
     }
 }
