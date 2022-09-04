@@ -63,13 +63,19 @@ public class RequestHandler implements Runnable {
                 String userId = bodies.get("userId");
                 User user = DataBase.findUserById(userId);
 
-                if (user.getPassword().equals(bodies.get("password"))) {
-                    response302Header(dos, "/index.html");
-                    responseCookie(dos, "logined", "true");
+                if (user != null && user.samePassword(bodies.get("password"))) {
+                    responseLoginSuccess(dos);
+                    responseBody(dos, body);
                     return;
                 }
-                response302Header(dos, "/login_failed.html");
-                responseCookie(dos, "logined", "false");
+
+                responseLoginFail(dos);
+                responseBody(dos, body);
+
+            } else if(checkLoginFailHtml(requestUrl)) {
+                body = loadFileFromClasspath("./templates/user/login_failed.html");
+                response200Header(dos, body.length);
+                responseBody(dos, body);
             }
 
         } catch (IOException | URISyntaxException e) {
@@ -95,6 +101,10 @@ public class RequestHandler implements Runnable {
 
     private boolean checkLogin(RequestUrl requestUrl) throws IOException {
         return requestUrl.isPostMethod() && requestUrl.samePath("/user/login");
+    }
+
+    private boolean checkLoginFailHtml(RequestUrl requestUrl) {
+        return requestUrl.isGetMethod() && requestUrl.samePath("/user/login_failed.html");
     }
 
     private Map<String, String> bodies(BufferedReader br, RequestHeader requestHeader) throws IOException {
@@ -124,15 +134,28 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void responseCookie(DataOutputStream dos, String key, String value) {
+    private void responseLoginSuccess(DataOutputStream dos) {
         try {
-            String cookie = "Set-Cookie: " + key + "=" + value + "; Path=/";
-            logger.debug(cookie);
-            dos.writeBytes(cookie);
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Set-Cookie: logined=true; Path=/ \r\n");
+            dos.writeBytes("Location: /index.html\r\n");
+            dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
+
+    private void responseLoginFail(DataOutputStream dos) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Set-Cookie: logined=false; Path=/ \r\n");
+            dos.writeBytes("Location: /user/login_failed.html\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
 
     private void responseBody(DataOutputStream dos, byte[] body) {
         try {
