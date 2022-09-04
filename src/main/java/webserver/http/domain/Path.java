@@ -33,6 +33,14 @@ public class Path {
         return requestParams.params();
     }
 
+    public boolean startsWith(String prefix) {
+        return this.path.startsWith(prefix);
+    }
+
+    public boolean endsWith(String suffix) {
+        return path.endsWith(suffix);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

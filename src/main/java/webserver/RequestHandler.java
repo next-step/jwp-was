@@ -4,6 +4,7 @@ import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.FileIoUtils;
 import utils.IOUtils;
 import webserver.http.domain.RequestBody;
 import webserver.http.domain.RequestHeader;
@@ -90,6 +91,14 @@ public class RequestHandler implements Runnable {
                     return;
                 }
                 response302Header(dos, "/user/login.html");
+            } else if (requestUrl.endsWith("css")) {
+                body = FileIoUtils.loadFileFromClasspath("./static" + requestUrl.path());
+                responseCssHeader(dos, body.length);
+                responseBody(dos, body);
+            }
+            else if (requestUrl.endsWith("js") || requestUrl.startsWith("/fonts")) {
+                body = FileIoUtils.loadFileFromClasspath("./static" + requestUrl.path());
+                responseBody(dos, body);
             }
 
         } catch (IOException | URISyntaxException e) {
@@ -174,6 +183,16 @@ public class RequestHandler implements Runnable {
         }
     }
 
+    private void responseCssHeader(DataOutputStream dos, int contentLength) {
+        try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/css\r\n");
+            dos.writeBytes("Content-Length: " + contentLength + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
 
     private void responseBody(DataOutputStream dos, byte[] body) {
         try {
