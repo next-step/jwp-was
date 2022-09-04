@@ -30,4 +30,9 @@ public class RequestHeader {
         return headers.get(name).trim();
     }
 
+    public boolean loginCheck() {
+        String cookieValue = headers.get("Cookie");
+        return cookieValue != null && cookieValue.contains("logined=true");
+    }
+
 }

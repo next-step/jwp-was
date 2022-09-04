@@ -8,11 +8,14 @@ import utils.IOUtils;
 import webserver.http.domain.RequestBody;
 import webserver.http.domain.RequestHeader;
 import webserver.http.domain.RequestUrl;
+import webserver.http.template.UserList;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 import static utils.FileIoUtils.*;
@@ -72,10 +75,21 @@ public class RequestHandler implements Runnable {
                 responseLoginFail(dos);
                 responseBody(dos, body);
 
-            } else if(checkLoginFailHtml(requestUrl)) {
+            } else if (checkLoginFailHtml(requestUrl)) {
                 body = loadFileFromClasspath("./templates/user/login_failed.html");
                 response200Header(dos, body.length);
                 responseBody(dos, body);
+            } else if (checkUserList(requestUrl)) {
+                if (requestHeader.loginCheck()) {
+                    Collection<User> users = DataBase.findAll();
+                    UserList userList = new UserList(new ArrayList<>(users));
+                    String template = userList.generateUserListTemplate();
+                    body = template.getBytes();
+                    response200Header(dos, body.length);
+                    responseBody(dos, body);
+                    return;
+                }
+                response302Header(dos, "/user/login.html");
             }
 
         } catch (IOException | URISyntaxException e) {
@@ -105,6 +119,10 @@ public class RequestHandler implements Runnable {
 
     private boolean checkLoginFailHtml(RequestUrl requestUrl) {
         return requestUrl.isGetMethod() && requestUrl.samePath("/user/login_failed.html");
+    }
+
+    private boolean checkUserList(RequestUrl requestUrl) {
+        return requestUrl.isGetMethod() && requestUrl.samePath("/user/list");
     }
 
     private Map<String, String> bodies(BufferedReader br, RequestHeader requestHeader) throws IOException {
