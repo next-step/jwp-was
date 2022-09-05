@@ -11,7 +11,6 @@ public class HttpHeaders {
 
     private static final String DELIMITER = ": ";
     private static final int HEADER_PAIR_LIMIT = 2;
-    private static final String HEADER_CONTENT_LENGTH = "Content-Length";
     private static final int KEY = 0;
     private static final int VALUE = 1;
 
@@ -43,13 +42,13 @@ public class HttpHeaders {
 
     public int getContentLength() {
         if (containsContentLength()) {
-            return Integer.parseInt(headers.get(HEADER_CONTENT_LENGTH));
+            return Integer.parseInt(headers.get(HttpHeader.CONTENT_LENGTH));
         }
-        throw new NotFoundHttpHeaderException(HEADER_CONTENT_LENGTH);
+        throw new NotFoundHttpHeaderException(HttpHeader.CONTENT_LENGTH);
     }
 
     private boolean containsContentLength() {
-        return headers.containsKey(HEADER_CONTENT_LENGTH);
+        return headers.containsKey(HttpHeader.CONTENT_LENGTH);
     }
 
     public Map<String, String> getHeaders() {
