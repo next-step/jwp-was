@@ -21,6 +21,10 @@ public class User {
         return password;
     }
 
+    public boolean samePassword(String password) {
+        return this.password.equals(password);
+    }
+
     public String getName() {
         return name;
     }

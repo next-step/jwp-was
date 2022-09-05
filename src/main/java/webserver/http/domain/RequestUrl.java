@@ -5,7 +5,7 @@ import webserver.http.enums.HTTPMethod;
 import java.util.Map;
 import java.util.Objects;
 
-public class RequestLine {
+public class RequestUrl {
 
     public static final String REQUEST_SPLIT_SYMBOL = " ";
     private final HTTPMethod method;
@@ -13,13 +13,13 @@ public class RequestLine {
 
     private final Protocol protocol;
 
-    public RequestLine(HTTPMethod method, String path, Protocol protocol) {
+    public RequestUrl(HTTPMethod method, String path, Protocol protocol) {
         this.method = method;
         this.path = Path.create(path);
         this.protocol = protocol;
     }
 
-    public RequestLine(String request) {
+    public RequestUrl(String request) {
         String[] splitRequest = request.split(REQUEST_SPLIT_SYMBOL);
         this.method = HTTPMethod.httpMethod(splitRequest[0]);
         this.path = Path.create(splitRequest[1]);
@@ -46,11 +46,32 @@ public class RequestLine {
         return path.requestParams();
     }
 
+    public boolean samePath(String path) {
+        return path().equals(path);
+    }
+
+    public boolean isGetMethod() {
+        return method.equals(HTTPMethod.GET);
+    }
+
+    public boolean isPostMethod() {
+        return method.equals(HTTPMethod.POST);
+    }
+
+    public boolean startsWith(String prefix) {
+        return path.startsWith(prefix);
+    }
+
+    public boolean endsWith(String suffix) {
+        return path.endsWith(suffix);
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RequestLine that = (RequestLine) o;
+        RequestUrl that = (RequestUrl) o;
         return Objects.equals(method, that.method) && Objects.equals(path, that.path);
     }
 

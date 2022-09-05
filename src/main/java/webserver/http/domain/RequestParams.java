@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class RequestParams {
 
     private static final String PARAMETER_DELIMITER = "&";
-    private static final String KEY_VALUE_DELIMITER = "=";
+    public static final String KEY_VALUE_DELIMITER = "=";
     private final Map<String, String> params;
 
     public RequestParams() {
