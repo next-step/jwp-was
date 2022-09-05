@@ -1,5 +1,6 @@
 package model.http;
 
+import model.Cookie;
 import model.response.ResponseBody;
 import model.response.ResponseLine;
 import org.slf4j.Logger;
@@ -31,9 +32,9 @@ public class HttpResponse {
         this.responseLine = ResponseLine.success();
     }
 
-    public void loginRedirect(String location, Boolean loginValue) {
+    public void loginRedirect(String location, Cookie cookie) {
         this.header = new HttpHeader.HttpHeaderBuilder()
-                .cookie("logined", loginValue.toString())
+                .cookie(cookie.getName(), cookie.getValue())
                 .location(location)
                 .build();
         this.responseLine = ResponseLine.redirect();

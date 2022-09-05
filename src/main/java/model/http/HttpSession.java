@@ -6,14 +6,14 @@ import java.util.UUID;
 
 public class HttpSession {
 
-    private UUID id;
+    private String id;
     private Map<String, Object> values = new HashMap<>();
 
-    public HttpSession(UUID uuid) {
+    public HttpSession(String uuid) {
         id = uuid;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 

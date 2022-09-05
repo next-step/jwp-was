@@ -4,6 +4,9 @@ import db.DataBase;
 import model.*;
 import model.http.HttpRequest;
 import model.http.HttpResponse;
+import model.http.HttpSession;
+
+import java.util.UUID;
 
 public class LoginController extends AbstractController {
 
@@ -15,11 +18,30 @@ public class LoginController extends AbstractController {
     public void doPost(HttpRequest request, HttpResponse response) {
         final String userId = request.getBody().getFirstValue(USER_ID);
         final User findUser = DataBase.findUserById(userId);
+        final Cookie cookie = request.getCookie("sessionId");
+
+        String uuid = UUID.randomUUID().toString();
+        HttpSession httpSession = new HttpSession(uuid);
+
+        if (hasSessionCookie(cookie)) {
+            uuid = cookie.getValue();
+            if (DataBase.findSession(uuid) != null) {
+                httpSession = DataBase.findSession(uuid);
+            }
+        }
 
         if (findUser == null) {
-            response.loginRedirect(LOGIN_FAILED_PATH, false);
+            httpSession.setAttribute("logined", "false");
+            response.loginRedirect(LOGIN_FAILED_PATH, new Cookie("sessionId", uuid));
             return;
         }
-        response.loginRedirect(LOGIN_SUCCESS_PATH, true);
+
+        DataBase.addSession(httpSession);
+        httpSession.setAttribute("logined", "true");
+        response.loginRedirect(LOGIN_SUCCESS_PATH, new Cookie("sessionId", uuid));
+    }
+
+    private boolean hasSessionCookie(Cookie cookie) {
+        return cookie != null && !cookie.isEmpty();
     }
 }

@@ -10,7 +10,7 @@ public class HttpSessionTest {
 
     @Test
     void 세션_아이디를_반환한다() {
-        final UUID uuid = UUID.randomUUID();
+        final String uuid = UUID.randomUUID().toString();
         final HttpSession httpSession = new HttpSession(uuid);
 
         assertThat(httpSession.getId()).isEqualTo(uuid);
@@ -18,7 +18,8 @@ public class HttpSessionTest {
 
     @Test
     void 세션에_저장된_값을_찾을_수_있다() {
-        final UUID uuid = UUID.randomUUID();
+        final String uuid = UUID.randomUUID().toString();
+
         final HttpSession httpSession = new HttpSession(uuid);
 
         final String name = "test";
@@ -30,7 +31,8 @@ public class HttpSessionTest {
 
     @Test
     void 세션_name인자의_value_삭제한다() {
-        final UUID uuid = UUID.randomUUID();
+        final String uuid = UUID.randomUUID().toString();
+
         final HttpSession httpSession = new HttpSession(uuid);
 
         final String name = "test";
@@ -43,7 +45,8 @@ public class HttpSessionTest {
 
     @Test
     void 세션의_모든_값_삭제() {
-        final UUID uuid = UUID.randomUUID();
+        final String uuid = UUID.randomUUID().toString();
+
         final HttpSession httpSession = new HttpSession(uuid);
 
         final String name = "test";
