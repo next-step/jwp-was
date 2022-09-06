@@ -5,8 +5,7 @@ import model.*;
 import model.http.HttpRequest;
 import model.http.HttpResponse;
 import model.http.HttpSession;
-
-import java.util.UUID;
+import service.SessionUtils;
 
 public class LoginController extends AbstractController {
 
@@ -20,28 +19,32 @@ public class LoginController extends AbstractController {
         final User findUser = DataBase.findUserById(userId);
         final Cookie cookie = request.getCookie("sessionId");
 
-        String uuid = UUID.randomUUID().toString();
-        HttpSession httpSession = new HttpSession(uuid);
+        HttpSession httpSession = SessionUtils.getSessionInfo(cookie);
 
-        if (hasSessionCookie(cookie)) {
-            uuid = cookie.getValue();
-            if (DataBase.findSession(uuid) != null) {
-                httpSession = DataBase.findSession(uuid);
-            }
-        }
-
-        if (findUser == null) {
-            httpSession.setAttribute("logined", "false");
-            response.loginRedirect(LOGIN_FAILED_PATH, new Cookie("sessionId", uuid));
+        if (checkLogined(httpSession)) {
+            setSuccessResponse(response, httpSession, LOGIN_SUCCESS_PATH);
             return;
         }
 
-        DataBase.addSession(httpSession);
+        // 등록되지 않은 유저일 경우 로그인 실패 및 세션정보 등록
+        if (findUser == null) {
+            httpSession.setAttribute("logined", "false");
+            setSuccessResponse(response, httpSession, LOGIN_FAILED_PATH);
+
+            return;
+        }
+
+        // 등록된 유저일 경우 세션 정보 등록
         httpSession.setAttribute("logined", "true");
-        response.loginRedirect(LOGIN_SUCCESS_PATH, new Cookie("sessionId", uuid));
+        setSuccessResponse(response, httpSession, LOGIN_SUCCESS_PATH);
     }
 
-    private boolean hasSessionCookie(Cookie cookie) {
-        return cookie != null && !cookie.isEmpty();
+    private void setSuccessResponse(HttpResponse response, HttpSession httpSession, String resultPath) {
+        response.loginRedirect(resultPath, new Cookie("sessionId", httpSession.getId()));
     }
+
+    private boolean checkLogined(HttpSession httpSession) {
+        return httpSession.getAttribute("logined") != null && httpSession.getAttribute("logined").equals("true");
+    }
+
 }

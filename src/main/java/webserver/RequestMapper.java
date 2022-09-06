@@ -11,8 +11,8 @@ public class RequestMapper {
     private List<RequestMappingInfo> controllers = List.of(
             new RequestMappingInfo(HttpMethod.POST, "/user/create", new UserCreateController()),
             new RequestMappingInfo(HttpMethod.POST, "/user/login", new LoginController()),
-            new RequestMappingInfo(HttpMethod.GET, "/user/list", new LogoutController()),
-            new RequestMappingInfo(HttpMethod.GET, "/user/logout", new UserListController()),
+            new RequestMappingInfo(HttpMethod.GET, "/user/list", new UserListController()),
+            new RequestMappingInfo(HttpMethod.GET, "/user/logout", new LogoutController()),
             new RequestMappingInfo(HttpMethod.GET, "/.*", new ViewController())
             );
 

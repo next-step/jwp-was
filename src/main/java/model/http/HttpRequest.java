@@ -35,7 +35,12 @@ public class HttpRequest {
     }
 
     public Cookie getCookie(String name) {
-        return cookie.get(name);
+        Cookie cookie = this.cookie.get(name);
+
+        if (cookie == null) {
+            cookie = Cookie.empty();
+        }
+        return cookie;
     }
 
     public String getHeader(String name) {

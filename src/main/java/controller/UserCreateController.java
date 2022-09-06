@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class UserCreateController extends AbstractController{
 
-    public static final String REDIRECT_PATH = "/index.html";
+    private static final String REDIRECT_PATH = "/index.html";
 
     @Override
     public void doPost(HttpRequest request, HttpResponse response) throws IOException{

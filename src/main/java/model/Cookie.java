@@ -45,6 +45,10 @@ public class Cookie {
                 .collect(Collectors.toMap(Cookie::getName, self -> self, (x, y) -> x));
     }
 
+    public static Cookie empty() {
+        return new Cookie();
+    }
+
     public String getName() {
         return name;
     }

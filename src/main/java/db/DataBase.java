@@ -33,7 +33,7 @@ public class DataBase {
         sessions.put(session.getId(), session);
     }
 
-    public static void removeSession() {
-
+    public static void removeSession(String sessionId) {
+        sessions.remove(sessionId);
     }
 }

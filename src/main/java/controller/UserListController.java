@@ -31,11 +31,15 @@ public class UserListController extends AbstractController{
         if (cookie == null || cookie.isEmpty()) {
             return false;
         }
+
         final HttpSession session = DataBase.findSession(cookie.getValue());
+
+        if (session == null) {
+            return false;
+        }
 
         final Object logined = session.getAttribute("logined");
 
         return (logined != null && logined.equals("true"));
     }
-
 }
