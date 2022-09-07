@@ -1,4 +1,4 @@
-package model;
+package model.http;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -57,22 +57,22 @@ public class HttpHeader {
     public static class HttpHeaderBuilder {
         private static Map<String, String> headers = new HashMap<>();
 
-        public HttpHeaderBuilder addLocation(String location) {
+        public HttpHeaderBuilder location(String location) {
             headers.put("Location", location);
             return this;
         }
 
-        public HttpHeaderBuilder addContentLength(int length) {
+        public HttpHeaderBuilder contentLength(int length) {
             headers.put("Content-Length", String.valueOf(length));
             return this;
         }
 
-        public HttpHeaderBuilder addContentType(String contentType) {
+        public HttpHeaderBuilder contentType(String contentType) {
             headers.put("Content-Type", contentType + ";charset=utf-8");
             return this;
         }
 
-        public HttpHeaderBuilder addCookie(String name, String value) {
+        public HttpHeaderBuilder cookie(String name, String value) {
             headers.put("Set-Cookie", name + "=" + value);
             return this;
         }

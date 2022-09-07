@@ -2,13 +2,16 @@ package db;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 import com.google.common.collect.Maps;
 
 import model.User;
+import model.http.HttpSession;
 
 public class DataBase {
     private static Map<String, User> users = Maps.newHashMap();
+    private static Map<String, HttpSession> sessions = Maps.newHashMap();
 
     public static void addUser(User user) {
         users.put(user.getUserId(), user);
@@ -20,5 +23,17 @@ public class DataBase {
 
     public static Collection<User> findAll() {
         return users.values();
+    }
+
+    public static HttpSession findSession(String value) {
+        return sessions.get(value);
+    }
+
+    public static void addSession(HttpSession session) {
+        sessions.put(session.getId(), session);
+    }
+
+    public static void removeSession(String sessionId) {
+        sessions.remove(sessionId);
     }
 }

@@ -1,6 +1,11 @@
 package controller;
 
+import db.DataBase;
 import model.*;
+import model.http.HttpRequest;
+import model.http.HttpResponse;
+import model.http.HttpSession;
+import model.response.ResponseBody;
 import utils.HandlebarsUtils;
 
 public class UserListController extends AbstractController{
@@ -12,7 +17,7 @@ public class UserListController extends AbstractController{
     @Override
     public void doGet(HttpRequest request, HttpResponse response) throws Exception {
 
-        final Cookie cookie = request.getCookie(COOKIE_NAME_LOGINED);
+        final Cookie cookie = request.getCookie("sessionId");
         final String s = HandlebarsUtils.makeUserListTemplate();
 
         if (isLogin(cookie)) {
@@ -26,7 +31,15 @@ public class UserListController extends AbstractController{
         if (cookie == null || cookie.isEmpty()) {
             return false;
         }
-        return cookie.getName().equals(COOKIE_NAME_LOGINED) && cookie.getValue().equals("true");
-    }
 
+        final HttpSession session = DataBase.findSession(cookie.getValue());
+
+        if (session == null) {
+            return false;
+        }
+
+        final Object logined = session.getAttribute("logined");
+
+        return (logined != null && logined.equals("true"));
+    }
 }

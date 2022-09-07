@@ -1,6 +1,8 @@
-package model;
+package model.request;
 
 import controller.Controller;
+import model.http.HttpMethod;
+import model.http.HttpRequest;
 
 import java.util.Objects;
 

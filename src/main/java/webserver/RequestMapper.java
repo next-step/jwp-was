@@ -1,11 +1,10 @@
 package webserver;
 
 import controller.*;
-import model.HttpMethod;
-import model.RequestMappingInfo;
+import model.http.HttpMethod;
+import model.request.RequestMappingInfo;
 
 import java.util.List;
-import java.util.Map;
 
 public class RequestMapper {
 
@@ -13,6 +12,7 @@ public class RequestMapper {
             new RequestMappingInfo(HttpMethod.POST, "/user/create", new UserCreateController()),
             new RequestMappingInfo(HttpMethod.POST, "/user/login", new LoginController()),
             new RequestMappingInfo(HttpMethod.GET, "/user/list", new UserListController()),
+            new RequestMappingInfo(HttpMethod.GET, "/user/logout", new LogoutController()),
             new RequestMappingInfo(HttpMethod.GET, "/.*", new ViewController())
             );
 

@@ -1,7 +1,5 @@
 package utils;
 
-import model.ResponseBody;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;

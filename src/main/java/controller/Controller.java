@@ -1,12 +1,7 @@
 package controller;
 
-import model.HttpMethod;
-import model.HttpRequest;
-import model.HttpResponse;
-import model.RequestMappingInfo;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
+import model.http.HttpRequest;
+import model.http.HttpResponse;
 
 public interface Controller {
     void service(HttpRequest request, HttpResponse response) throws Exception;

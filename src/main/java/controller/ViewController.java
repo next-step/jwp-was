@@ -1,8 +1,8 @@
 package controller;
 
-import model.HttpRequest;
-import model.HttpResponse;
-import model.ResponseBody;
+import model.http.HttpRequest;
+import model.http.HttpResponse;
+import model.response.ResponseBody;
 import utils.FileIoUtils;
 
 import java.io.IOException;

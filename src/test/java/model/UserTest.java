@@ -1,5 +1,6 @@
 package model;
 
+import model.request.RequestBody;
 import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;

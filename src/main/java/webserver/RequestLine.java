@@ -1,6 +1,6 @@
 package webserver;
 
-import model.HttpMethod;
+import model.http.HttpMethod;
 
 public class RequestLine {
 

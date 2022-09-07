@@ -1,13 +1,10 @@
 package webserver;
 
-import model.HttpHeader;
-import model.HttpMethod;
-import model.HttpRequest;
-import model.RequestBody;
+import model.http.HttpHeader;
+import model.http.HttpMethod;
+import model.http.HttpRequest;
+import model.request.RequestBody;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 import utils.IOUtils;
 
 import java.io.*;

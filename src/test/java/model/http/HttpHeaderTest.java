@@ -1,5 +1,6 @@
-package model;
+package model.http;
 
+import model.http.HttpHeader;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,8 +14,8 @@ public class HttpHeaderTest {
         int contentLength = 10;
 
         final HttpHeader result = new HttpHeader.HttpHeaderBuilder()
-                .addContentType(contentType)
-                .addContentLength(contentLength)
+                .contentType(contentType)
+                .contentLength(contentLength)
                 .build();
 
         assertThat(result.getValue("Content-Type")).isEqualTo(contentType + ";charset=utf-8");

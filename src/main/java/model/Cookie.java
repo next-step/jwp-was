@@ -1,5 +1,7 @@
 package model;
 
+import model.http.HttpHeader;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +42,11 @@ public class Cookie {
 
                     return new Cookie(items[0], items[1]);
                 })
-                .collect(Collectors.toMap(Cookie::getName, self -> self));
+                .collect(Collectors.toMap(Cookie::getName, self -> self, (x, y) -> x));
+    }
+
+    public static Cookie empty() {
+        return new Cookie();
     }
 
     public String getName() {
@@ -60,7 +66,7 @@ public class Cookie {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cookie cookie = (Cookie) o;
-        return Objects.equals(name, cookie.name) && Objects.equals(value, cookie.value) && path.matches(cookie.path);
+        return Objects.equals(name, cookie.name) && Objects.equals(value, cookie.value);
     }
 
     @Override

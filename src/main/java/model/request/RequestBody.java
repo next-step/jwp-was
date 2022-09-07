@@ -1,4 +1,4 @@
-package model;
+package model.request;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;

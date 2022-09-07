@@ -1,10 +1,10 @@
 package controller;
 
 import db.DataBase;
-import model.HttpHeader;
-import model.HttpRequest;
-import model.HttpResponse;
-import model.RequestBody;
+import model.http.HttpHeader;
+import model.http.HttpRequest;
+import model.http.HttpResponse;
+import model.request.RequestBody;
 import org.junit.jupiter.api.Test;
 import utils.IOUtils;
 import webserver.RequestLine;
