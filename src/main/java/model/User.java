@@ -4,8 +4,6 @@ import exception.ValidateException;
 
 public class User {
 
-    private static final int INVALID_ARGUMENT_LENGTH = 0;
-
     private final String userId;
     private final String password;
     private final String name;
@@ -21,7 +19,7 @@ public class User {
 
     private void validate(String... arguments) {
         for (String argument : arguments) {
-            if (argument == null || argument.trim().length() == INVALID_ARGUMENT_LENGTH) {
+            if (argument == null || argument.trim().length() == 0) {
                 throw new ValidateException(argument);
             }
         }

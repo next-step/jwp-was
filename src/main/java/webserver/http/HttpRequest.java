@@ -13,6 +13,8 @@ import java.util.Map;
 public class HttpRequest {
 
     private RequestLine requestLine;
+    private HttpHeaders httpHeaders;
+    private HttpBody httpBody;
     private User user;
 
     public HttpRequest(InputStream inputStream) throws IOException {
@@ -24,8 +26,12 @@ public class HttpRequest {
         }
 
         requestLine = RequestLine.parse(line);
-        if (!requestLine.getQueryString().isEmpty()) {
-            user = generateUser(requestLine.getQueryString());
+        httpHeaders = new HttpHeaders(bufferedReader);
+
+        httpBody = HttpBody.of(bufferedReader, httpHeaders.getContentLength());
+
+        if (httpHeaders.hasContent()) {
+            user = generateUser(httpBody.getQueryStringMap());
         }
     }
 
@@ -39,6 +45,10 @@ public class HttpRequest {
 
     public RequestLine getRequestLine() {
         return requestLine;
+    }
+
+    public HttpHeaders getHttpHeaders() {
+        return httpHeaders;
     }
 
     public User getUser() {

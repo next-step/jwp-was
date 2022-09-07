@@ -41,13 +41,13 @@ public class HttpHeaders {
     }
 
     public int getContentLength() {
-        if (containsContentLength()) {
+        if (hasContent()) {
             return Integer.parseInt(headers.get(HttpHeader.CONTENT_LENGTH));
         }
         throw new NotFoundHttpHeaderException(HttpHeader.CONTENT_LENGTH);
     }
 
-    private boolean containsContentLength() {
+    public boolean hasContent() {
         return headers.containsKey(HttpHeader.CONTENT_LENGTH);
     }
 
