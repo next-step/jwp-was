@@ -16,7 +16,7 @@ public class SessionStore {
         sessions.put(session.getId(), session);
     }
 
-    public static void removeSession(String sessionId) {
-        sessions.remove(sessionId);
+    public static boolean existSession(String sessionId) {
+        return sessions.containsKey(sessionId);
     }
 }

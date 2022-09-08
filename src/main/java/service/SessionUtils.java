@@ -22,9 +22,7 @@ public class SessionUtils {
     }
 
     private static boolean checkContainSession(Cookie cookie) {
-        final HttpSession session = SessionStore.findSession(cookie.getValue());
-
-        return session != null;
+        return SessionStore.existSession(cookie.getValue());
     }
 
     private static boolean checkCookieEmpty(Cookie cookie) {
