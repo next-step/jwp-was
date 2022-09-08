@@ -1,6 +1,7 @@
 package controller;
 
 import db.DataBase;
+import db.SessionStore;
 import model.*;
 import model.http.HttpRequest;
 import model.http.HttpResponse;
@@ -32,7 +33,7 @@ public class UserListController extends AbstractController{
             return false;
         }
 
-        final HttpSession session = DataBase.findSession(cookie.getValue());
+        final HttpSession session = SessionStore.findSession(cookie.getValue());
 
         if (session == null) {
             return false;

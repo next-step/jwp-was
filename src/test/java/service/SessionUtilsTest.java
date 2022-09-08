@@ -1,6 +1,7 @@
 package service;
 
 import db.DataBase;
+import db.SessionStore;
 import model.Cookie;
 import model.http.HttpSession;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ public class SessionUtilsTest {
         final String id = UUID.randomUUID().toString();
         final HttpSession httpSession = new HttpSession(id);
         final Cookie cookie = new Cookie("sessionId", id);
-        DataBase.addSession(httpSession);
+        SessionStore.addSession(httpSession);
 
         final HttpSession sessionInfo = SessionUtils.getSessionInfo(cookie);
 
@@ -29,6 +30,6 @@ public class SessionUtilsTest {
         final HttpSession sessionInfo = SessionUtils.getSessionInfo(Cookie.empty());
 
         assertThat(sessionInfo != null).isTrue();
-        assertThat(DataBase.findSession(sessionInfo.getId())).isEqualTo(sessionInfo);
+        assertThat(SessionStore.findSession(sessionInfo.getId())).isEqualTo(sessionInfo);
     }
 }
