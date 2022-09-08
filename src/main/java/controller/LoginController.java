@@ -40,7 +40,8 @@ public class LoginController extends AbstractController {
     }
 
     private boolean checkLogined(HttpSession httpSession) {
-        return httpSession.getAttribute("logined") != null && httpSession.getAttribute("logined").equals("true");
+        return httpSession.getAttribute("logined") != null
+                && httpSession.getAttribute("logined").equals("true");
     }
 
 }

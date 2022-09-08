@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Cookie {
@@ -42,7 +43,7 @@ public class Cookie {
 
                     return new Cookie(items[0], items[1]);
                 })
-                .collect(Collectors.toMap(Cookie::getName, self -> self, (x, y) -> x));
+                .collect(Collectors.toMap(Cookie::getName, Function.identity(), (x, y) -> x));
     }
 
     public static Cookie empty() {

@@ -11,8 +11,8 @@ public class SessionUtils {
 
     public static HttpSession getSessionInfo(Cookie cookie) {
 
-        if (!validationSession(cookie)) {
-            final HttpSession httpSession = new HttpSession(UUID.randomUUID().toString());
+        if (checkCookieEmpty(cookie) || !checkContainSession(cookie)) {
+            final HttpSession httpSession = new HttpSession();
             SessionStore.addSession(httpSession);
 
             return httpSession;
@@ -21,13 +21,16 @@ public class SessionUtils {
         return SessionStore.findSession(cookie.getValue());
     }
 
-    private static boolean validationSession(Cookie cookie) {
-
-        if (cookie.isEmpty()) {
-            return false;
-        }
+    private static boolean checkContainSession(Cookie cookie) {
         final HttpSession session = SessionStore.findSession(cookie.getValue());
 
         return session != null;
+    }
+
+    private static boolean checkCookieEmpty(Cookie cookie) {
+        if (cookie.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 }
