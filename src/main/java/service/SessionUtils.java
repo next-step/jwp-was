@@ -26,9 +26,6 @@ public class SessionUtils {
     }
 
     private static boolean checkCookieEmpty(Cookie cookie) {
-        if (cookie.isEmpty()) {
-            return true;
-        }
-        return false;
+        return cookie == null || cookie.isEmpty();
     }
 }
