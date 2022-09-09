@@ -18,8 +18,8 @@ import webserver.http.session.SessionId;
 import java.util.ArrayList;
 import java.util.List;
 
-import static webserver.http.session.SessionAttributes.SESSION_KEY_LOGIN;
-import static webserver.http.session.SessionAttributes.SESSION_VALUE_LOGIN;
+import static webserver.http.request.Cookie.COOKIE_KEY_LOGIN;
+import static webserver.http.request.Cookie.COOKIE_VALUE_LOGIN;
 
 
 public class UserListController extends AbstractController {
@@ -35,8 +35,8 @@ public class UserListController extends AbstractController {
         try {
             SessionId sessionId = cookie.getSessionId();
             HttpSession session = LocalSessionStorage.getSession(sessionId);
-            Object attribute = session.getAttribute(SESSION_KEY_LOGIN);
-            return attribute.equals(SESSION_VALUE_LOGIN);
+            Object attribute = session.getAttribute(COOKIE_KEY_LOGIN);
+            return attribute.equals(COOKIE_VALUE_LOGIN);
         } catch (Exception e) {
             logger.debug("로그인하지 않은 사용자 입니다.");
             return false;

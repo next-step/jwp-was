@@ -14,6 +14,10 @@ public class HttpSession {
         this.id = SessionId.newInstance();
     }
 
+    public HttpSession(SessionIdGenerator generator) {
+        this.id = SessionId.generateFrom(generator);
+    }
+
     public SessionId getSessionId(){
         return id;
     }

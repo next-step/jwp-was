@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static webserver.http.request.Cookie.LOGINED;
+import static webserver.http.request.Cookie.COOKIE_KEY_LOGIN;
 
 public class CookieTest {
 
@@ -13,6 +13,6 @@ public class CookieTest {
     void parseAndGetLoginCookie() {
         Cookie cookie = Cookie.parseFrom("logined=true");
 
-        assertEquals("true", cookie.getCookies().get(LOGINED));
+        assertEquals("true", cookie.getCookies().get(COOKIE_KEY_LOGIN));
     }
 }

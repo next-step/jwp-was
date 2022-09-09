@@ -2,18 +2,16 @@ package webserver.http.session;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SessionIdTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(SessionIdTest.class);
 
     @DisplayName("sessionId 생성을 확인한다")
     @Test
     void createSessionId() {
-        SessionId sessionId = SessionId.newInstance();
+        SessionId sessionId = SessionId.generateFrom(() -> "test1234");
 
-        logger.debug(sessionId.getId());
+        assertEquals("test1234", sessionId.getId());
     }
 }
