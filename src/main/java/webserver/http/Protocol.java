@@ -23,6 +23,11 @@ public class Protocol {
         this.version = Version.from(suiteElements[INDEX_VERSION]);
     }
 
+    public Protocol(Type type, Version version) {
+        this.type = type;
+        this.version = version;
+    }
+
     private void validateProtocol(String[] suiteElements) {
         if (suiteElements.length != PROTOCOL_SUITE_SIZE) {
             throw new InvalidProtocolException(Arrays.toString(suiteElements));
@@ -52,9 +57,6 @@ public class Protocol {
 
     @Override
     public String toString() {
-        return "Protocol{" +
-                "type=" + type +
-                ", version=" + version +
-                '}';
+        return type.getLabel() + "/" + version.getLabel();
     }
 }

@@ -19,4 +19,9 @@ public enum HttpStatus {
     public String getReasonPhrase() {
         return reasonPhrase;
     }
+
+    @Override
+    public String toString() {
+        return value + " " + reasonPhrase;
+    }
 }
