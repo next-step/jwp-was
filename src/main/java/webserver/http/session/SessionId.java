@@ -11,6 +11,10 @@ public class SessionId {
         this.id = id;
     }
 
+    public static SessionId generateFrom(SessionIdGenerator generator) {
+        return new SessionId(generator.run());
+    }
+
     public static SessionId newInstance() {
         String uuid = UUID.randomUUID().toString();
         return new SessionId(uuid);

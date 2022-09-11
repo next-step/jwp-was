@@ -56,3 +56,7 @@
   - [X] HttpSession, SessionId, SessionAttribute 구현
   - [X] 로그인 시 세션과 쿠키 세팅하도록 수정
   - [X] UserListController 에서 쿠키를 통해 세션 정보 확인하도록 수정
+### STEP 5
+- [X] 최대 250 크기, 최대 대기 100의 스레드풀 구현
+- [X] RestTemplate 이용하여 스레드풀보다 적은 요청과 많은 요청을 발생시키는 t/c 작성
+- [X] FuntionalInterface 활용하여 제너레이터에 SessionId 구현할 수 있도록 리팩토링

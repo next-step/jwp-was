@@ -14,9 +14,9 @@ public class Cookie {
 
     private static final String COOKIE_DELIMITER = "; ";
     private static final String KEY_VALUE_DELIMITER = "=";
-    private static final String EMPTY_VALUE = "";
 
-    public static final String LOGINED = "logined";
+    public static final String COOKIE_KEY_LOGIN = "logined";
+    public static final String COOKIE_VALUE_LOGIN = "true";
 
     private final Map<String, String> cookies;
 

@@ -10,8 +10,9 @@ import webserver.http.session.LocalSessionStorage;
 
 import java.util.Map;
 
-import static webserver.http.session.SessionAttributes.SESSION_KEY_LOGIN;
-import static webserver.http.session.SessionAttributes.SESSION_VALUE_LOGIN;
+import static webserver.http.request.Cookie.COOKIE_KEY_LOGIN;
+import static webserver.http.request.Cookie.COOKIE_VALUE_LOGIN;
+
 
 public class LogInController extends AbstractController {
 
@@ -21,7 +22,7 @@ public class LogInController extends AbstractController {
 
     private void setLoginSession(HttpResponse httpResponse){
         HttpSession httpSession = new HttpSession();
-        httpSession.setAttribute(SESSION_KEY_LOGIN, SESSION_VALUE_LOGIN);
+        httpSession.setAttribute(COOKIE_KEY_LOGIN, COOKIE_VALUE_LOGIN);
 
         LocalSessionStorage.addSession(httpSession);
         httpResponse.getResponseHeader().setCookie(HttpSession.KEY + "=" + httpSession.getId() + "; Path=/");
