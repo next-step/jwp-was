@@ -25,15 +25,11 @@ public class LoginController extends AbstractController {
             setSuccessResponse(response, httpSession, LOGIN_SUCCESS_PATH);
             return;
         }
-
-        // 등록되지 않은 유저일 경우 로그인 실패 및 세션정보 등록
+        // 등록되지 않은 유저일 경우 로그인 실패
         if (findUser == null) {
-            httpSession.setAttribute("logined", "false");
             setSuccessResponse(response, httpSession, LOGIN_FAILED_PATH);
-
             return;
         }
-
         // 등록된 유저일 경우 세션 정보 등록
         httpSession.setAttribute("logined", "true");
         setSuccessResponse(response, httpSession, LOGIN_SUCCESS_PATH);
@@ -44,7 +40,8 @@ public class LoginController extends AbstractController {
     }
 
     private boolean checkLogined(HttpSession httpSession) {
-        return httpSession.getAttribute("logined") != null && httpSession.getAttribute("logined").equals("true");
+        return httpSession.getAttribute("logined") != null
+                && httpSession.getAttribute("logined").equals("true");
     }
 
 }

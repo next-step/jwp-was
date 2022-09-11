@@ -1,6 +1,7 @@
 package service;
 
 import db.DataBase;
+import db.SessionStore;
 import model.Cookie;
 import model.http.HttpSession;
 
@@ -10,23 +11,21 @@ public class SessionUtils {
 
     public static HttpSession getSessionInfo(Cookie cookie) {
 
-        if (!validationSession(cookie)) {
-            final HttpSession httpSession = new HttpSession(UUID.randomUUID().toString());
-            DataBase.addSession(httpSession);
+        if (checkCookieEmpty(cookie) || !checkContainSession(cookie)) {
+            final HttpSession httpSession = new HttpSession();
+            SessionStore.addSession(httpSession);
 
             return httpSession;
         }
 
-        return DataBase.findSession(cookie.getValue());
+        return SessionStore.findSession(cookie.getValue());
     }
 
-    private static boolean validationSession(Cookie cookie) {
+    private static boolean checkContainSession(Cookie cookie) {
+        return SessionStore.existSession(cookie.getValue());
+    }
 
-        if (cookie.isEmpty()) {
-            return false;
-        }
-        final HttpSession session = DataBase.findSession(cookie.getValue());
-
-        return session != null;
+    private static boolean checkCookieEmpty(Cookie cookie) {
+        return cookie == null || cookie.isEmpty();
     }
 }

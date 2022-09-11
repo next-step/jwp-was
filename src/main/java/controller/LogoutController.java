@@ -1,6 +1,7 @@
 package controller;
 
 import db.DataBase;
+import db.SessionStore;
 import model.Cookie;
 import model.http.HttpRequest;
 import model.http.HttpResponse;
@@ -20,7 +21,7 @@ public class LogoutController extends AbstractController {
             return;
         }
 
-        final HttpSession session = DataBase.findSession(cookie.getValue());
+        final HttpSession session = SessionStore.findSession(cookie.getValue());
         if (session == null) {
             return;
         }
