@@ -8,18 +8,19 @@ import utils.FileIoUtils;
 import utils.IOUtils;
 import webserver.http.domain.RequestBody;
 import webserver.http.domain.RequestHeader;
-import webserver.http.domain.RequestUrl;
+import webserver.http.domain.RequestLine;
 import webserver.http.template.UserList;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import static utils.FileIoUtils.*;
+import static utils.FileIoUtils.loadFileFromClasspath;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -41,28 +42,28 @@ public class RequestHandler implements Runnable {
             RequestHeader requestHeader = new RequestHeader();
             requestHeader.addRequestHeaders(br);
 
-            RequestUrl requestUrl = new RequestUrl(url);
+            RequestLine requestLine = new RequestLine(url);
             byte[] body = HELLO_WORLD;
             DataOutputStream dos = new DataOutputStream(out);
 
-            if (checkGetIndexHtml(requestUrl)) {
+            if (checkGetIndexHtml(requestLine)) {
                 body = loadFileFromClasspath("./templates/index.html");
                 response200Header(dos, body.length);
                 responseBody(dos, body);
-            } else if (checkGetFormHtml(requestUrl)) {
+            } else if (checkGetFormHtml(requestLine)) {
                 body = loadFileFromClasspath("./templates/user/form.html");
                 response200Header(dos, body.length);
                 responseBody(dos, body);
-            } else if (checkSignUp(requestUrl)) {
+            } else if (checkSignUp(requestLine)) {
                 Map<String, String> bodies = bodies(br, requestHeader);
                 String userId = bodies.get("userId");
                 DataBase.addUser(new User(userId, bodies.get("password"), bodies.get("name"), bodies.get("email")));
                 response302Header(dos, "/index.html");
-            } else if (checkLoginHtml(requestUrl)) {
+            } else if (checkLoginHtml(requestLine)) {
                 body = loadFileFromClasspath("./templates/user/login.html");
                 response200Header(dos, body.length);
                 responseBody(dos, body);
-            } else if (checkLogin(requestUrl)) {
+            } else if (checkLogin(requestLine)) {
                 Map<String, String> bodies = bodies(br, requestHeader);
                 String userId = bodies.get("userId");
                 User user = DataBase.findUserById(userId);
@@ -76,11 +77,11 @@ public class RequestHandler implements Runnable {
                 responseLoginFail(dos);
                 responseBody(dos, body);
 
-            } else if (checkLoginFailHtml(requestUrl)) {
+            } else if (checkLoginFailHtml(requestLine)) {
                 body = loadFileFromClasspath("./templates/user/login_failed.html");
                 response200Header(dos, body.length);
                 responseBody(dos, body);
-            } else if (checkUserList(requestUrl)) {
+            } else if (checkUserList(requestLine)) {
                 if (requestHeader.loginCheck()) {
                     Collection<User> users = DataBase.findAll();
                     UserList userList = new UserList(new ArrayList<>(users));
@@ -91,13 +92,13 @@ public class RequestHandler implements Runnable {
                     return;
                 }
                 response302Header(dos, "/user/login.html");
-            } else if (requestUrl.endsWith("css")) {
-                body = FileIoUtils.loadFileFromClasspath("./static" + requestUrl.path());
+            } else if (requestLine.endsWith("css")) {
+                body = FileIoUtils.loadFileFromClasspath("./static" + requestLine.path());
                 responseCssHeader(dos, body.length);
                 responseBody(dos, body);
             }
-            else if (requestUrl.endsWith("js") || requestUrl.startsWith("/fonts")) {
-                body = FileIoUtils.loadFileFromClasspath("./static" + requestUrl.path());
+            else if (requestLine.endsWith("js") || requestLine.startsWith("/fonts")) {
+                body = FileIoUtils.loadFileFromClasspath("./static" + requestLine.path());
                 responseBody(dos, body);
             }
 
@@ -106,38 +107,42 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private boolean checkGetIndexHtml(RequestUrl requestUrl) throws IOException, URISyntaxException {
-        return requestUrl.isGetMethod() && requestUrl.samePath("/index.html");
+    private boolean checkGetIndexHtml(RequestLine requestLine) throws IOException, URISyntaxException {
+        return requestLine.isGetMethod() && requestLine.samePath("/index.html");
     }
 
-    private boolean checkGetFormHtml(RequestUrl requestUrl) throws IOException, URISyntaxException {
-        return requestUrl.isGetMethod() && requestUrl.samePath("/user/form.html");
+    private boolean checkGetFormHtml(RequestLine requestLine) throws IOException, URISyntaxException {
+        return requestLine.isGetMethod() && requestLine.samePath("/user/form.html");
     }
 
-    private boolean checkSignUp(RequestUrl requestUrl) throws IOException, URISyntaxException {
-        return requestUrl.isPostMethod() && requestUrl.samePath("/user/create");
+    private boolean checkSignUp(RequestLine requestLine) throws IOException, URISyntaxException {
+        return requestLine.isPostMethod() && requestLine.samePath("/user/create");
     }
 
-    private boolean checkLoginHtml(RequestUrl requestUrl) throws IOException, URISyntaxException {
-        return requestUrl.isGetMethod() && requestUrl.samePath("/user/login.html");
+    private boolean checkLoginHtml(RequestLine requestLine) throws IOException, URISyntaxException {
+        return requestLine.isGetMethod() && requestLine.samePath("/user/login.html");
     }
 
-    private boolean checkLogin(RequestUrl requestUrl) throws IOException {
-        return requestUrl.isPostMethod() && requestUrl.samePath("/user/login");
+    private boolean checkLogin(RequestLine requestLine) throws IOException {
+        return requestLine.isPostMethod() && requestLine.samePath("/user/login");
     }
 
-    private boolean checkLoginFailHtml(RequestUrl requestUrl) {
-        return requestUrl.isGetMethod() && requestUrl.samePath("/user/login_failed.html");
+    private boolean checkLoginFailHtml(RequestLine requestLine) {
+        return requestLine.isGetMethod() && requestLine.samePath("/user/login_failed.html");
     }
 
-    private boolean checkUserList(RequestUrl requestUrl) {
-        return requestUrl.isGetMethod() && requestUrl.samePath("/user/list");
+    private boolean checkUserList(RequestLine requestLine) {
+        return requestLine.isGetMethod() && requestLine.samePath("/user/list");
     }
 
     private Map<String, String> bodies(BufferedReader br, RequestHeader requestHeader) throws IOException {
         String body = IOUtils.readData(br, Integer.parseInt(requestHeader.getValue("Content-Length")));
-        RequestBody requestBody = new RequestBody(body);
+        RequestBody requestBody = new RequestBody(decode(body));
         return requestBody.bodies();
+    }
+
+    private String decode(String value) {
+        return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {

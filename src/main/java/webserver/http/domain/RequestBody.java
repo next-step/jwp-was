@@ -1,7 +1,6 @@
 package webserver.http.domain;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static webserver.http.domain.RequestParams.KEY_VALUE_DELIMITER;
 
@@ -21,6 +20,10 @@ public class RequestBody {
 
     public Map<String, String> bodies() {
         return Collections.unmodifiableMap(bodies);
+    }
+
+    public String body(String key) {
+        return bodies.get(key);
     }
 
     private Map<String, String> create(String bodyString) {
