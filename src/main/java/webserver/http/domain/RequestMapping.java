@@ -24,9 +24,9 @@ public class RequestMapping {
             controllerMap.put("/user/form.html", new ForwardController(loadFileFromClasspath("./templates/user/form.html")));
             controllerMap.put("/user/login.html", new ForwardController(loadFileFromClasspath("./templates/user/login.html")));
             controllerMap.put("/user/login_failed.html", new ForwardController(loadFileFromClasspath("./templates/user/login_failed.html")));
-            controllerMap.put("/user/create", new SignUpController(requestBody));
-            controllerMap.put("/user/login", new LoginController(requestBody));
-            controllerMap.put("/user/list", new UserListController(requestHeader));
+            controllerMap.put("/user/create", new SignUpController());
+            controllerMap.put("/user/login", new LoginController());
+            controllerMap.put("/user/list", new UserListController());
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }

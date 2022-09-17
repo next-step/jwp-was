@@ -30,23 +30,23 @@ public class RequestHandler implements Runnable {
             String url = br.readLine();
             RequestHeader requestHeader = new RequestHeader();
             requestHeader.addRequestHeaders(br);
-            RequestMapping requestMapping = new RequestMapping(requestHeader, body(br, requestHeader));
+            RequestBody requestBody = body(br, requestHeader);
+            RequestMapping requestMapping = new RequestMapping(requestHeader, requestBody);
 
-            RequestLine requestLine = new RequestLine(url);
+            HttpRequest httpRequest = new HttpRequest(requestHeader, new RequestLine(url), requestBody);
             byte[] body;
             DataOutputStream dos = new DataOutputStream(out);
-            Controller controller = requestMapping.controller(requestLine.path());
+            Controller controller = requestMapping.controller(httpRequest.path());
             if (controller != null) {
-                controller.execute(requestLine, dos);
+                controller.execute(httpRequest, dos);
             }
 
-            if (requestLine.endsWith("css")) {
-                body = FileIoUtils.loadFileFromClasspath("./static" + requestLine.path());
+            if (httpRequest.endsWith("css")) {
+                body = FileIoUtils.loadFileFromClasspath("./static" + httpRequest.path());
                 responseCssHeader(dos, body.length);
                 responseBody(dos, body);
-            }
-            else if (requestLine.endsWith("js") || requestLine.startsWith("/fonts")) {
-                body = FileIoUtils.loadFileFromClasspath("./static" + requestLine.path());
+            } else if (httpRequest.endsWith("js") || httpRequest.startsWith("/fonts")) {
+                body = FileIoUtils.loadFileFromClasspath("./static" + httpRequest.path());
                 responseBody(dos, body);
             }
 
@@ -54,7 +54,6 @@ public class RequestHandler implements Runnable {
             logger.error(e.getMessage());
         }
     }
-
 
     private RequestBody body(BufferedReader br, RequestHeader requestHeader) throws IOException {
         String value = requestHeader.getValue("Content-Length");

@@ -7,19 +7,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Map;
 
 public class LoginController implements Controller {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-    private final RequestBody requestBody;
-    public LoginController(RequestBody requestBody) {
-        this.requestBody = requestBody;
-    }
-
     @Override
-    public void execute(RequestLine requestLine, DataOutputStream dos) {
+    public void execute(HttpRequest httpRequest, DataOutputStream dos) {
+        RequestBody requestBody = httpRequest.requestBody();
+
         String userId = requestBody.body("userId");
         User user = DataBase.findUserById(userId);
 
@@ -29,7 +25,6 @@ public class LoginController implements Controller {
                 dos.writeBytes("Set-Cookie: logined=true; Path=/ \r\n");
                 dos.writeBytes("Location: /index.html\r\n");
                 dos.writeBytes("\r\n");
-//                dos.write(body, 0, body.length);
                 dos.flush();
                 return;
             } catch (IOException e) {

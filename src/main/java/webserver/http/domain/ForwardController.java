@@ -17,7 +17,7 @@ public class ForwardController implements Controller {
     }
 
     @Override
-    public void execute(RequestLine requestLine, DataOutputStream dos) {
+    public void execute(HttpRequest httpRequest, DataOutputStream dos) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");

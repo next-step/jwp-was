@@ -7,19 +7,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Map;
 
 public class SignUpController implements Controller {
     private static final Logger logger = LoggerFactory.getLogger(SignUpController.class);
 
-    private final RequestBody requestBody;
-
-    public SignUpController(RequestBody requestBody) {
-        this.requestBody = requestBody;
-    }
-
     @Override
-    public void execute(RequestLine requestLine, DataOutputStream dos) {
+    public void execute(HttpRequest httpRequest, DataOutputStream dos) {
+        RequestBody requestBody = httpRequest.requestBody();
+
         String userId = requestBody.body("userId");
         DataBase.addUser(new User(userId, requestBody.body("password"), requestBody.body("name"), requestBody.body("email")));
         try {

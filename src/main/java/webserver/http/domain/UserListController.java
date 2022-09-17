@@ -10,20 +10,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 
 public class UserListController implements Controller {
 
     private static final Logger logger = LoggerFactory.getLogger(UserListController.class);
 
-    private final RequestHeader requestHeader;
-    public UserListController(RequestHeader requestHeader) {
-        this.requestHeader = requestHeader;
-    }
-
     @Override
-    public void execute(RequestLine requestLine, DataOutputStream dos) {
-        if (requestHeader.loginCheck()) {
+    public void execute(HttpRequest httpRequest, DataOutputStream dos) {
+        if (httpRequest.requestHeader().loginCheck()) {
             Collection<User> users = DataBase.findAll();
             UserList userList = new UserList(new ArrayList<>(users));
             String template = userList.generateUserListTemplate();
