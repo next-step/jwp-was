@@ -9,8 +9,12 @@ import static utils.FileIoUtils.loadFileFromClasspath;
 
 public class RequestMapping {
     private final Map<String, Controller> controllerMap = new HashMap<>();
+    private final RequestHeader requestHeader;
+    private final RequestBody requestBody;
 
-    public RequestMapping() {
+    public RequestMapping(RequestHeader requestHeader, RequestBody requestBody) {
+        this.requestHeader = requestHeader;
+        this.requestBody = requestBody;
         initMapping();
     }
 
@@ -20,6 +24,9 @@ public class RequestMapping {
             controllerMap.put("/user/form.html", new ForwardController(loadFileFromClasspath("./templates/user/form.html")));
             controllerMap.put("/user/login.html", new ForwardController(loadFileFromClasspath("./templates/user/login.html")));
             controllerMap.put("/user/login_failed.html", new ForwardController(loadFileFromClasspath("./templates/user/login_failed.html")));
+            controllerMap.put("/user/create", new SignUpController(requestBody));
+            controllerMap.put("/user/login", new LoginController(requestBody));
+            controllerMap.put("/user/list", new UserListController(requestHeader));
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
