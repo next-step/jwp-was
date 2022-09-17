@@ -6,9 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import utils.IOUtils;
-import webserver.http.domain.RequestBody;
-import webserver.http.domain.RequestHeader;
-import webserver.http.domain.RequestLine;
+import webserver.http.domain.*;
 import webserver.http.template.UserList;
 
 import java.io.*;
@@ -37,6 +35,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+            RequestMapping requestMapping = new RequestMapping();
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             String url = br.readLine();
             RequestHeader requestHeader = new RequestHeader();
@@ -45,25 +44,17 @@ public class RequestHandler implements Runnable {
             RequestLine requestLine = new RequestLine(url);
             byte[] body = HELLO_WORLD;
             DataOutputStream dos = new DataOutputStream(out);
+            Controller controller = requestMapping.controller(requestLine.path());
+            if (controller != null) {
+                controller.execute(requestLine, dos);
+            }
 
-            if (checkGetIndexHtml(requestLine)) {
-                body = loadFileFromClasspath("./templates/index.html");
-                response200Header(dos, body.length);
-                responseBody(dos, body);
-            } else if (checkGetFormHtml(requestLine)) {
-                body = loadFileFromClasspath("./templates/user/form.html");
-                response200Header(dos, body.length);
-                responseBody(dos, body);
-            } else if (checkSignUp(requestLine)) {
+            if (checkSignUp(requestLine)) {
                 Map<String, String> bodies = bodies(br, requestHeader);
                 String userId = bodies.get("userId");
                 DataBase.addUser(new User(userId, bodies.get("password"), bodies.get("name"), bodies.get("email")));
                 response302Header(dos, "/index.html");
-            } else if (checkLoginHtml(requestLine)) {
-                body = loadFileFromClasspath("./templates/user/login.html");
-                response200Header(dos, body.length);
-                responseBody(dos, body);
-            } else if (checkLogin(requestLine)) {
+            }else if (checkLogin(requestLine)) {
                 Map<String, String> bodies = bodies(br, requestHeader);
                 String userId = bodies.get("userId");
                 User user = DataBase.findUserById(userId);
@@ -77,10 +68,6 @@ public class RequestHandler implements Runnable {
                 responseLoginFail(dos);
                 responseBody(dos, body);
 
-            } else if (checkLoginFailHtml(requestLine)) {
-                body = loadFileFromClasspath("./templates/user/login_failed.html");
-                response200Header(dos, body.length);
-                responseBody(dos, body);
             } else if (checkUserList(requestLine)) {
                 if (requestHeader.loginCheck()) {
                     Collection<User> users = DataBase.findAll();
@@ -107,20 +94,8 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private boolean checkGetIndexHtml(RequestLine requestLine) throws IOException, URISyntaxException {
-        return requestLine.isGetMethod() && requestLine.samePath("/index.html");
-    }
-
-    private boolean checkGetFormHtml(RequestLine requestLine) throws IOException, URISyntaxException {
-        return requestLine.isGetMethod() && requestLine.samePath("/user/form.html");
-    }
-
     private boolean checkSignUp(RequestLine requestLine) throws IOException, URISyntaxException {
         return requestLine.isPostMethod() && requestLine.samePath("/user/create");
-    }
-
-    private boolean checkLoginHtml(RequestLine requestLine) throws IOException, URISyntaxException {
-        return requestLine.isGetMethod() && requestLine.samePath("/user/login.html");
     }
 
     private boolean checkLogin(RequestLine requestLine) throws IOException {
