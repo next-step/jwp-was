@@ -54,7 +54,7 @@ Accept: */*
 userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net
 ```
 - [X] form.html 파일의 form 태그 method를 get에서 post로 수정한다.
-- [ ] 회원가입 기능이 정상적으로 동작하도록 구현한다.
+- [X] 회원가입 기능이 정상적으로 동작하도록 구현한다.
 
 ## 기능 요구사항4
 > “회원가입”을 완료하면 /index.html 페이지로 이동하고 싶다.  

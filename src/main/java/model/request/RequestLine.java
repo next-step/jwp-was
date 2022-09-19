@@ -32,6 +32,10 @@ public class RequestLine {
         return new RequestLine(method, path, protocol);
     }
 
+    public boolean isStaticResource() {
+        return path.isStaticResource();
+    }
+
     public Method getMethod() {
         return method;
     }

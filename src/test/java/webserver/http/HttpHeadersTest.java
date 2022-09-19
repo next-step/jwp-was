@@ -42,17 +42,7 @@ class HttpHeadersTest {
 
         httpHeaders.addHeader("Content-Length: 59");
 
+        assertThat(httpHeaders.hasContent()).isTrue();
         assertThat(httpHeaders.getContentLength()).isEqualTo(59);
-    }
-
-    @Test
-    @DisplayName("Content-Length header 가 없을 경우 Not Found Http Header Exception 발생")
-    void getContentLengthFailed() {
-        assertThatExceptionOfType(NotFoundHttpHeaderException.class)
-                .isThrownBy(() -> {
-                    HttpHeaders httpHeaders = new HttpHeaders();
-                    httpHeaders.getContentLength();
-                })
-                .withMessage("not found http header: (Content-Length)");
     }
 }

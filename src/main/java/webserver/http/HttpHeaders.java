@@ -1,7 +1,5 @@
 package webserver.http;
 
-import exception.NotFoundHttpHeaderException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -41,10 +39,7 @@ public class HttpHeaders {
     }
 
     public int getContentLength() {
-        if (hasContent()) {
-            return Integer.parseInt(headers.get(HttpHeader.CONTENT_LENGTH));
-        }
-        throw new NotFoundHttpHeaderException(HttpHeader.CONTENT_LENGTH);
+        return Integer.parseInt(headers.get(HttpHeader.CONTENT_LENGTH));
     }
 
     public boolean hasContent() {

@@ -14,7 +14,6 @@ import java.net.URISyntaxException;
 
 public class RequestHandler implements Runnable {
 
-    private static final String DEFAULT_VIEW_RESOURCES_PATH = "./templates";
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
@@ -31,12 +30,16 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = new HttpRequest(in);
 
             DataOutputStream dos = new DataOutputStream(out);
-            String filePath = DEFAULT_VIEW_RESOURCES_PATH + httpRequest.getRequestLine().getPathValue();
-            logger.debug("filePath: {}", filePath);
 
-            byte[] body = FileIoUtils.loadFileFromClasspath(filePath);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            if (httpRequest.isStaticResource()) {
+                byte[] body = FileIoUtils.loadFileFromClasspath(httpRequest.getRequestLine().getPathValue());
+                response200Header(dos, body.length);
+                responseBody(dos, body);
+            } else {
+                byte[] body = FileIoUtils.loadFileFromClasspath("/index.html");
+                response200Header(dos, body.length);
+                responseBody(dos, body);
+            }
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }

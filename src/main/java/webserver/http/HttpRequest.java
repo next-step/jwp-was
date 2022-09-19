@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URLDecoder;
 import java.util.Map;
 
 public class HttpRequest {
@@ -28,9 +29,8 @@ public class HttpRequest {
         requestLine = RequestLine.parse(line);
         httpHeaders = new HttpHeaders(bufferedReader);
 
-        httpBody = HttpBody.of(bufferedReader, httpHeaders.getContentLength());
-
-        if (httpHeaders.hasContent()) {
+        if (requestLine.getMethod() == Method.POST && httpHeaders.hasContent()) {
+            httpBody = HttpBody.of(bufferedReader, httpHeaders.getContentLength());
             user = generateUser(httpBody.getQueryStringMap());
         }
     }
@@ -39,8 +39,16 @@ public class HttpRequest {
         final String userId = queryString.get("userId");
         final String password = queryString.get("password");
         final String name = queryString.get("name");
-        final String email = queryString.get("email");
+        final String email = decode(queryString.get("email"));
         return new User(userId, password, name, email);
+    }
+
+    private String decode(String input) {
+        return URLDecoder.decode(input, Charsets.UTF_8);
+    }
+
+    public boolean isStaticResource() {
+        return requestLine.isStaticResource();
     }
 
     public RequestLine getRequestLine() {
