@@ -1,4 +1,4 @@
-package model.response;
+package webserver.http.response;
 
 import webserver.http.HttpStatus;
 import webserver.http.Protocol;

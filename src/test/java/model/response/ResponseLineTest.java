@@ -6,6 +6,7 @@ import webserver.http.HttpStatus;
 import webserver.http.Protocol;
 import webserver.http.Type;
 import webserver.http.Version;
+import webserver.http.response.ResponseLine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
