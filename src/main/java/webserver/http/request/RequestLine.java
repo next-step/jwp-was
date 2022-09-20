@@ -1,4 +1,4 @@
-package model.request;
+package webserver.http.request;
 
 import webserver.http.*;
 

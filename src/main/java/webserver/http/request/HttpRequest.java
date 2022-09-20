@@ -1,8 +1,10 @@
-package webserver.http;
+package webserver.http.request;
 
 import com.google.common.base.Charsets;
 import model.User;
-import model.request.RequestLine;
+import webserver.http.HttpBody;
+import webserver.http.HttpHeaders;
+import webserver.http.Method;
 
 import java.io.BufferedReader;
 import java.io.IOException;
