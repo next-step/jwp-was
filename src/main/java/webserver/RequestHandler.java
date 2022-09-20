@@ -37,7 +37,7 @@ public class RequestHandler implements Runnable {
                 responseBody(dos, body);
             } else {
                 byte[] body = FileIoUtils.loadFileFromClasspath("/index.html");
-                response200Header(dos, body.length);
+                response302Header(dos, body.length);
                 responseBody(dos, body);
             }
         } catch (IOException | URISyntaxException e) {
@@ -48,6 +48,17 @@ public class RequestHandler implements Runnable {
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(DataOutputStream dos, int lengthOfBodyContent) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");

@@ -62,6 +62,8 @@ userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajig
 > 따라서 redirect 방식처럼 회원가입을 완료한 후 “index.html”로 이동해야 한다.  
 > 즉, 브라우저의 URL이 /index.html로 변경해야 한다.
 
+- [X] 회원가입 완료 시 302 Found StatusCode를 이용하여 index.html로 redirect 한다.
+
 ## 기능 요구사항5
 > “로그인” 메뉴를 클릭하면 http://localhost:8080/user/login.html 으로 이동해 로그인할 수 있다.  
 > 로그인이 성공하면 index.html로 이동하고, 로그인이 실패하면 /user/login_failed.html로 이동해야 한다.  
