@@ -57,6 +57,6 @@ public class Protocol {
 
     @Override
     public String toString() {
-        return type.getLabel() + "/" + version.getLabel();
+        return type.name() + "/" + version.getLabel();
     }
 }
