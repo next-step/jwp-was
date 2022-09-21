@@ -1,52 +1,38 @@
 package webserver.http.request;
 
 import com.google.common.base.Charsets;
-import model.User;
 import webserver.http.HttpBody;
 import webserver.http.HttpHeaders;
-import webserver.http.Method;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URLDecoder;
-import java.util.Map;
 
 public class HttpRequest {
 
-    private RequestLine requestLine;
-    private HttpHeaders httpHeaders;
-    private HttpBody httpBody;
-    private User user;
+    private final RequestLine requestLine;
+    private final HttpHeaders httpHeaders;
+    private final HttpBody httpBody;
 
-    public HttpRequest(InputStream inputStream) throws IOException {
+    private HttpRequest(RequestLine requestLine, HttpHeaders httpHeaders, HttpBody httpBody) {
+        this.requestLine = requestLine;
+        this.httpHeaders = httpHeaders;
+        this.httpBody = httpBody;
+    }
+
+    public static HttpRequest parseInputStream(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, Charsets.UTF_8));
         String line = bufferedReader.readLine();
 
-        if (line == null) {
-            return;
+        RequestLine requestLine = RequestLine.parse(line);
+        HttpHeaders httpHeaders = new HttpHeaders(bufferedReader);
+
+        if (httpHeaders.hasContent()) {
+            HttpBody httpBody = HttpBody.of(bufferedReader, httpHeaders.getContentLength());
+            return new HttpRequest(requestLine, httpHeaders, httpBody);
         }
-
-        requestLine = RequestLine.parse(line);
-        httpHeaders = new HttpHeaders(bufferedReader);
-
-        if (requestLine.getMethod() == Method.POST && httpHeaders.hasContent()) {
-            httpBody = HttpBody.of(bufferedReader, httpHeaders.getContentLength());
-            user = generateUser(httpBody.getQueryStringMap());
-        }
-    }
-
-    private User generateUser(Map<String, String> queryString) {
-        final String userId = queryString.get("userId");
-        final String password = queryString.get("password");
-        final String name = queryString.get("name");
-        final String email = decode(queryString.get("email"));
-        return new User(userId, password, name, email);
-    }
-
-    private String decode(String input) {
-        return URLDecoder.decode(input, Charsets.UTF_8);
+        return new HttpRequest(requestLine, httpHeaders, HttpBody.empty());
     }
 
     public boolean isStaticResource() {
@@ -61,8 +47,8 @@ public class HttpRequest {
         return httpHeaders;
     }
 
-    public User getUser() {
-        return user;
+    public HttpBody getHttpBody() {
+        return httpBody;
     }
 
     @Override
