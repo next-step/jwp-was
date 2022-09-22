@@ -12,9 +12,14 @@ public class HttpHeaders {
     private static final int KEY = 0;
     private static final int VALUE = 1;
 
-    private final Map<String, String> headers = new HashMap<>();
+    private Map<String, String> headers;
 
-    public HttpHeaders() {
+    private HttpHeaders(Map<String, String> headers) {
+        this.headers = headers;
+    }
+
+    public static HttpHeaders create() {
+        return new HttpHeaders(new HashMap<>());
     }
 
     public HttpHeaders(BufferedReader bufferedReader) throws IOException {
@@ -26,9 +31,12 @@ public class HttpHeaders {
         }
     }
 
-    public void redirect(String redirectUrl) {
+    public static HttpHeaders redirect(String redirectUrl) {
+        Map<String, String> headers = new HashMap<>();
         final String location = "http://localhost:8080";
         headers.put(HttpHeader.LOCATION, location + redirectUrl);
+
+        return new HttpHeaders(headers);
     }
 
 
@@ -50,6 +58,10 @@ public class HttpHeaders {
 
     public boolean hasContent() {
         return headers.containsKey(HttpHeader.CONTENT_LENGTH);
+    }
+
+    public boolean hasLocation() {
+        return headers.containsKey(HttpHeader.LOCATION);
     }
 
     public Map<String, String> getHeaders() {
