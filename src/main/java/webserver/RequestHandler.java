@@ -4,6 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
+import webserver.servlet.RequestMappingHandler;
+import webserver.servlet.ServletConfig;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -35,12 +38,18 @@ public class RequestHandler implements Runnable {
                 byte[] body = FileIoUtils.loadFileFromClasspath(httpRequest.getRequestLine().getPathValue());
                 response200Header(dos, body.length);
                 responseBody(dos, body);
-            } else {
-                byte[] body = FileIoUtils.loadFileFromClasspath("/index.html");
-                response302Header(dos, body.length);
-                responseBody(dos, body);
+                return;
             }
-        } catch (IOException | URISyntaxException e) {
+
+            RequestMappingHandler requestMappingHandler = new RequestMappingHandler(ServletConfig.servlets());
+            HttpResponse httpResponse = requestMappingHandler.doService(httpRequest);
+
+            String redirectFile = httpResponse.getRedirectFile();
+            byte[] body = FileIoUtils.loadFileFromClasspath(redirectFile);
+            response302Header(dos, httpResponse, body.length);
+            responseBody(dos, body);
+        } catch (IOException |
+                 URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
@@ -56,9 +65,9 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void response302Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response302Header(DataOutputStream dos, HttpResponse httpResponse, int lengthOfBodyContent) {
         try {
-            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes(httpResponse.getResponseLine() + "\r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
