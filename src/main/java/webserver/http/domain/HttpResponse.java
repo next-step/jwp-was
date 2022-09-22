@@ -27,6 +27,18 @@ public class HttpResponse {
         headers.put(key, value);
     }
 
+    public void staticForward(String path) {
+        try {
+            byte[] body = loadFileFromClasspath(path);
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            processHeaders();
+            dos.writeBytes("\r\n");
+            responseBody(body);
+        } catch (IOException | URISyntaxException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
     public void forward(String path) {
         try {
             byte[] body = loadFileFromClasspath(path);
@@ -38,8 +50,8 @@ public class HttpResponse {
     }
 
     public void forwardBody(String path) {
-        byte[] body = path.getBytes();
         try {
+            byte[] body = path.getBytes();
             response200Header(body.length);
             responseBody(body);
         } catch (IOException e) {
@@ -56,7 +68,7 @@ public class HttpResponse {
 
     public void sendRedirect(String redirectUrl) {
         try {
-            dos.writeBytes("HTTP/1.1 302 Found\r\n");
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
             processHeaders();
             dos.writeBytes("Location: " + redirectUrl + "\r\n");
             dos.writeBytes("\r\n");
@@ -65,8 +77,6 @@ public class HttpResponse {
             logger.error(e.getMessage());
         }
     }
-
-
 
     private void responseBody(byte[] body) {
         try {
@@ -80,7 +90,8 @@ public class HttpResponse {
     private void processHeaders() {
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             try {
-                dos.writeBytes(entry.getKey() + ": " + headers.get(entry.getValue()) + "\r\n");
+                String s = entry.getKey() + ": " + entry.getValue() + " \r\n";
+                dos.writeBytes(s);
             } catch (IOException e) {
                 logger.error(e.getMessage());
             }

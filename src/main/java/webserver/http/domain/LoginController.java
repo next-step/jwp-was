@@ -19,11 +19,12 @@ public class LoginController implements Controller {
         User user = DataBase.findUserById(userId);
 
         if (user != null && user.samePassword(requestBody.body("password"))) {
-            httpResponse.addHeader("Set-Cookie", "logined=true; Path=/ \r\n");
+            httpResponse.addHeader("Set-Cookie", "logined=true; Path=/");
             httpResponse.sendRedirect("/index.html");
+            return;
         }
 
-        httpResponse.addHeader("Set-Cookie", "logined=false; Path=/ \r\n");
+        httpResponse.addHeader("Set-Cookie", "logined=false; Path=/");
         httpResponse.sendRedirect("/user/login_failed.html");
     }
 }
