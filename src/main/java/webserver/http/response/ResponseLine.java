@@ -17,6 +17,14 @@ public class ResponseLine {
         this.httpStatus = httpStatus;
     }
 
+    public static ResponseLine ok() {
+        return new ResponseLine(HttpStatus.OK);
+    }
+
+    public static ResponseLine redirect() {
+        return new ResponseLine(HttpStatus.FOUND);
+    }
+
     public Protocol getProtocol() {
         return protocol;
     }

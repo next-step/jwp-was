@@ -26,6 +26,12 @@ public class HttpHeaders {
         }
     }
 
+    public void redirect(String redirectUrl) {
+        final String location = "http://localhost:8080";
+        headers.put(HttpHeader.LOCATION, location + redirectUrl);
+    }
+
+
     public void addHeader(String headerLine) {
         if (headerLine == null) {
             throw new IllegalArgumentException();
