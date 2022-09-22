@@ -1,11 +1,12 @@
-package webserver;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassRelativeResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import webserver.WebApplicationServer;
 
 public class HttpRequestTest {
     @Test
@@ -13,5 +14,10 @@ public class HttpRequestTest {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+    @Test
+    void classpathTest(){
+        ClassRelativeResourceLoader loader = new ClassRelativeResourceLoader(WebApplicationServer.class);
+        System.out.println(loader.getResource("./webapp/WEB-INF/classes/index.html"));
     }
 }

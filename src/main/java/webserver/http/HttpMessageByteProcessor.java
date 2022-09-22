@@ -5,11 +5,8 @@ import io.netty.util.ByteProcessor;
 public interface HttpMessageByteProcessor extends ByteProcessor {
 	byte EQUALS = (byte)'=';
 	byte AMPERSAND = (byte)'&';
-
 	byte QUESTION_MARK = (byte)'?';
-
 	byte SLASH = (byte)'/';
-
 	byte CR = (byte)'\r';
 	byte LF = (byte)'\n';
 	byte COLON = (byte)':';
@@ -21,10 +18,13 @@ public interface HttpMessageByteProcessor extends ByteProcessor {
 
 	ByteProcessor FIND_QUESTION_MARK = new IndexOfProcessor(QUESTION_MARK);
 
-	ByteProcessor IS_LINEAR_WHITESPACE = new ByteProcessor() {
+	// TODO: 스페이스로 스플릿
+	// 화이트 리스트로 스플릿해서
+	// charactorsequnce 돌려주는 파서
+	ByteProcessor FIND_WHITESPACE = new ByteProcessor() {
 		@Override
 		public boolean process(byte value) {
-			return value == SPACE || value == TAB;
+			return value != SPACE && value != TAB;
 		}
 	};
 
@@ -39,6 +39,13 @@ public interface HttpMessageByteProcessor extends ByteProcessor {
 		@Override
 		public boolean process(byte value) {
 			return value == CR;
+		}
+	};
+
+	ByteProcessor FIND_COLON = new ByteProcessor() {
+		@Override
+		public boolean process(byte value) {
+			return value != COLON;
 		}
 	};
 }

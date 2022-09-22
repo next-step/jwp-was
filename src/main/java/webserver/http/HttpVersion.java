@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http;
 
 import org.springframework.util.Assert;
 
@@ -20,16 +20,14 @@ public class HttpVersion {
 		this.rawVersion = rawVersion;
 	}
 
-	public static HttpVersion valueOf(String version) {
+	public static HttpVersion of(String version) {
 		Assert.notNull(version.trim(), "version must not be null");
-
 		if(HTTP_1_0.isSameAs(version)) {
 			return HTTP_1_0;
 		}
 		if(HTTP_1_1.isSameAs(version)) {
 			return HTTP_1_1;
 		}
-
 		throw new IllegalArgumentException("Unsupported HTTP version.");
 	}
 
