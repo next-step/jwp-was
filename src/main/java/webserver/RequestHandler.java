@@ -31,14 +31,15 @@ public class RequestHandler implements Runnable {
             RequestHeader requestHeader = new RequestHeader();
             requestHeader.addRequestHeaders(br);
             RequestBody requestBody = body(br, requestHeader);
-            RequestMapping requestMapping = new RequestMapping(requestHeader, requestBody);
+            RequestMapping requestMapping = new RequestMapping();
 
             HttpRequest httpRequest = new HttpRequest(requestHeader, new RequestLine(url), requestBody);
             byte[] body;
             DataOutputStream dos = new DataOutputStream(out);
             Controller controller = requestMapping.controller(httpRequest.path());
+            HttpResponse httpResponse = new HttpResponse(dos);
             if (controller != null) {
-                controller.execute(httpRequest, dos);
+                controller.execute(httpRequest, httpResponse);
             }
 
             if (httpRequest.endsWith("css")) {
