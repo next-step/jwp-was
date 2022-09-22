@@ -2,7 +2,10 @@ package webserver.http;
 
 public enum HttpStatus {
     OK(200, "OK"),
-    FOUND(302, "Found");
+    FOUND(302, "Found"),
+    BAD_REQUEST(400, "Bad Request"),
+    METHOD_NOT_ALLOWED(405, "Method Not Allowed"),
+    NOT_IMPLEMENTED(501, "Not Implemented");
 
     private final int value;
     private final String reasonPhrase;
