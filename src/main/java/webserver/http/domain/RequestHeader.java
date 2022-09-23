@@ -27,7 +27,11 @@ public class RequestHeader {
     }
 
     public String getValue(String name) {
-        return headers.get(name).trim();
+        String value = headers.get(name);
+        if (StringUtils.hasText(value)) {
+            return value.trim();
+        }
+        return "";
     }
 
     public boolean loginCheck() {

@@ -5,7 +5,7 @@ import webserver.http.enums.HTTPMethod;
 import java.util.Map;
 import java.util.Objects;
 
-public class RequestUrl {
+public class RequestLine {
 
     public static final String REQUEST_SPLIT_SYMBOL = " ";
     private final HTTPMethod method;
@@ -13,13 +13,13 @@ public class RequestUrl {
 
     private final Protocol protocol;
 
-    public RequestUrl(HTTPMethod method, String path, Protocol protocol) {
+    public RequestLine(HTTPMethod method, String path, Protocol protocol) {
         this.method = method;
         this.path = Path.create(path);
         this.protocol = protocol;
     }
 
-    public RequestUrl(String request) {
+    public RequestLine(String request) {
         String[] splitRequest = request.split(REQUEST_SPLIT_SYMBOL);
         this.method = HTTPMethod.httpMethod(splitRequest[0]);
         this.path = Path.create(splitRequest[1]);
@@ -71,7 +71,7 @@ public class RequestUrl {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RequestUrl that = (RequestUrl) o;
+        RequestLine that = (RequestLine) o;
         return Objects.equals(method, that.method) && Objects.equals(path, that.path);
     }
 
