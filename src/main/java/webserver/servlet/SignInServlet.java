@@ -38,13 +38,13 @@ public class SignInServlet extends HttpServlet {
 
         if (user.verifyPassword(signInUser.getPassword())) {
             HttpHeaders httpHeaders = HttpHeaders.redirect(SIGN_IN_SUCCESS_PATH);
-            httpHeaders.addHeader(HttpHeader.SET_COOKIE, SIGN_IN_SUCCESS_COOKIE);
+            httpHeaders.addResponseHeader(HttpHeader.SET_COOKIE, SIGN_IN_SUCCESS_COOKIE);
 
             return new HttpResponse(ResponseLine.redirect(), httpHeaders, HttpBody.empty());
         }
 
         HttpHeaders httpHeaders = HttpHeaders.redirect(SIGN_IN_FAILED_PATH);
-        httpHeaders.addHeader(HttpHeader.SET_COOKIE, SIGN_IN_FAILED_COOKIE);
+        httpHeaders.addResponseHeader(HttpHeader.SET_COOKIE, SIGN_IN_FAILED_COOKIE);
 
         return new HttpResponse(ResponseLine.redirect(), httpHeaders, HttpBody.empty());
     }

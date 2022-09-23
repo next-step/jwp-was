@@ -1,7 +1,5 @@
 package webserver.http;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -20,18 +18,8 @@ public class HttpHeaders {
         this.headers = headers;
     }
 
-    public static HttpHeaders create() {
+    public static HttpHeaders init() {
         return new HttpHeaders(new HashMap<>());
-    }
-
-    public HttpHeaders(BufferedReader bufferedReader) throws IOException {
-        this.headers = new HashMap<>();
-        String line = bufferedReader.readLine();
-
-        while (!line.isEmpty()) {
-            addHeader(line);
-            line = bufferedReader.readLine();
-        }
     }
 
     public static HttpHeaders redirect(String redirectUrl) {
@@ -43,8 +31,7 @@ public class HttpHeaders {
         return new HttpHeaders(headers);
     }
 
-
-    public void addHeader(String headerLine) {
+    public void addRequestHeader(String headerLine) {
         if (headerLine == null) {
             throw new IllegalArgumentException();
         }
@@ -56,7 +43,7 @@ public class HttpHeaders {
         }
     }
 
-    public void addHeader(String httpHeader, String value) {
+    public void addResponseHeader(String httpHeader, String value) {
         this.headers.put(httpHeader, value);
     }
 

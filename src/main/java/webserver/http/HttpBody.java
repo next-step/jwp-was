@@ -1,9 +1,5 @@
 package webserver.http;
 
-import utils.IOUtils;
-
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -22,9 +18,8 @@ public class HttpBody {
         this.contents = contents;
     }
 
-    public static HttpBody of(BufferedReader bufferedReader, int contentLength) throws IOException {
-        String request = IOUtils.readData(bufferedReader, contentLength);
-        return HttpBody.from(request);
+    public static HttpBody empty() {
+        return new HttpBody(Collections.emptyMap());
     }
 
     public static HttpBody from(String request) {
@@ -35,10 +30,6 @@ public class HttpBody {
                 .map(it -> it.split(DELIMITER_VALUE))
                 .collect(Collectors.toMap(e -> e[KEY], e -> e[VALUE]));
         return new HttpBody(contents);
-    }
-
-    public static HttpBody empty() {
-        return new HttpBody(Collections.emptyMap());
     }
 
     public Map<String, String> getContents() {

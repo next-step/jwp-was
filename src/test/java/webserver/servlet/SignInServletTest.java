@@ -55,12 +55,12 @@ class SignInServletTest {
 
     private HttpRequest createHttpRequest() {
         RequestLine requestLine = RequestLine.parse("POST /user/login HTTP/1.1");
-        HttpHeaders httpHeaders = HttpHeaders.create();
-        httpHeaders.addHeader("Host: localhost:8080");
-        httpHeaders.addHeader("Connection: keep-alive");
-        httpHeaders.addHeader("Content-Length: 29");
-        httpHeaders.addHeader("Content-Type: application/x-www-form-urlencoded");
-        httpHeaders.addHeader("Accept: */*");
+        HttpHeaders httpHeaders = HttpHeaders.init();
+        httpHeaders.addRequestHeader("Host: localhost:8080");
+        httpHeaders.addRequestHeader("Connection: keep-alive");
+        httpHeaders.addRequestHeader("Content-Length: 29");
+        httpHeaders.addRequestHeader("Content-Type: application/x-www-form-urlencoded");
+        httpHeaders.addRequestHeader("Accept: */*");
         HttpBody httpBody = HttpBody.from("userId=javajigi&password=1234");
 
         return new HttpRequest(requestLine, httpHeaders, httpBody);

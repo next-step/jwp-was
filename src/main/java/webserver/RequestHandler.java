@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileIoUtils;
 import webserver.http.request.HttpRequest;
+import webserver.http.request.HttpRequestFactory;
 import webserver.http.response.HttpResponse;
 import webserver.servlet.RequestMappingHandler;
 import webserver.servlet.ServletConfig;
@@ -19,7 +20,7 @@ public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private Socket connection;
+    private final Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -30,7 +31,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            HttpRequest httpRequest = HttpRequest.parseInputStream(in);
+            HttpRequest httpRequest = HttpRequestFactory.parse(in);
 
             DataOutputStream dos = new DataOutputStream(out);
 

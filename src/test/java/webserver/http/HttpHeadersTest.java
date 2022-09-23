@@ -24,9 +24,9 @@ class HttpHeadersTest {
     )
     @DisplayName("Http Header를 파싱한다.")
     void parseHeader(String headerLine) {
-        HttpHeaders httpHeaders = HttpHeaders.create();
+        HttpHeaders httpHeaders = HttpHeaders.init();
 
-        httpHeaders.addHeader(headerLine);
+        httpHeaders.addRequestHeader(headerLine);
 
         String[] expects = headerLine.split(": ");
 
@@ -39,9 +39,9 @@ class HttpHeadersTest {
     @Test
     @DisplayName("Content-Length header 가 있을 경우 본문 길이를 가져온다.")
     void getContentLength() {
-        HttpHeaders httpHeaders = HttpHeaders.create();
+        HttpHeaders httpHeaders = HttpHeaders.init();
 
-        httpHeaders.addHeader("Content-Length: 59");
+        httpHeaders.addRequestHeader("Content-Length: 59");
 
         assertThat(httpHeaders.hasContent()).isTrue();
         assertThat(httpHeaders.getContentLength()).isEqualTo(59);

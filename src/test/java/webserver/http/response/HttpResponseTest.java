@@ -15,7 +15,7 @@ class HttpResponseTest {
     @DisplayName("Response: 200 OK 일 경우")
     void ok() {
         ResponseLine responseLine200 = ResponseLine.ok();
-        HttpHeaders httpHeaders = HttpHeaders.create();
+        HttpHeaders httpHeaders = HttpHeaders.init();
         HttpBody httpBody = HttpBody.empty();
 
         HttpResponse actual = new HttpResponse(responseLine200, httpHeaders, httpBody);
@@ -43,7 +43,7 @@ class HttpResponseTest {
     @DisplayName("Response: 허용하지 않는 메서드일 경우")
     void methodNotSupported() {
         ResponseLine responseLine405 = new ResponseLine(HttpStatus.METHOD_NOT_ALLOWED);
-        HttpHeaders httpHeaders = HttpHeaders.create();
+        HttpHeaders httpHeaders = HttpHeaders.init();
         HttpBody httpBody = HttpBody.from("message=http.method_post_not_supported");
 
         HttpResponse actual = new HttpResponse(responseLine405, httpHeaders, httpBody);
