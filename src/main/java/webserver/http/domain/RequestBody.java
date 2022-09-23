@@ -1,6 +1,16 @@
 package webserver.http.domain;
 
-import java.util.*;
+import org.springframework.util.StringUtils;
+import utils.IOUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static webserver.http.domain.RequestParams.KEY_VALUE_DELIMITER;
 
@@ -10,20 +20,43 @@ public class RequestBody {
     public static final String EMPTY_STRING = "";
     private final Map<String, String> bodies;
 
-    public RequestBody() {
-        this.bodies = new HashMap<>();
-    }
-
     public RequestBody(String bodyString) {
         this.bodies = create(bodyString);
     }
 
-    public Map<String, String> bodies() {
-        return Collections.unmodifiableMap(bodies);
+    public RequestBody(BufferedReader br, RequestHeader requestHeader) {
+        String value = requestHeader.getValue("Content-Length");
+
+        if (StringUtils.hasText(value)) {
+            try {
+                String body = IOUtils.readData(br, Integer.parseInt(value));
+                create(decode(body));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        this.bodies = new HashMap<>();
     }
 
     public String body(String key) {
         return bodies.get(key);
+    }
+
+    public String userId() {
+        return bodies.get("userId");
+    }
+
+    public String password() {
+        return bodies.get("password");
+    }
+
+    public String name() {
+        return bodies.get("name");
+    }
+
+    public String email() {
+        return bodies.get("email");
     }
 
     private Map<String, String> create(String bodyString) {
@@ -42,6 +75,10 @@ public class RequestBody {
             return;
         }
         map.put(params[0], params[1]);
+    }
+
+    private String decode(String value) {
+        return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
 
     @Override

@@ -2,15 +2,15 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 import utils.FileIoUtils;
-import utils.IOUtils;
-import webserver.http.domain.*;
+import webserver.http.controller.Controller;
+import webserver.http.domain.HttpRequest;
+import webserver.http.domain.HttpResponse;
+import webserver.http.domain.RequestMapping;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
 public class RequestHandler implements Runnable {
@@ -27,13 +27,9 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            String url = br.readLine();
-            RequestHeader requestHeader = new RequestHeader();
-            requestHeader.addRequestHeaders(br);
-            RequestBody requestBody = body(br, requestHeader);
+            HttpRequest httpRequest = new HttpRequest(br);
             RequestMapping requestMapping = new RequestMapping();
 
-            HttpRequest httpRequest = new HttpRequest(requestHeader, new RequestLine(url), requestBody);
             byte[] body;
             DataOutputStream dos = new DataOutputStream(out);
             Controller controller = requestMapping.controller(httpRequest.path());
@@ -54,21 +50,6 @@ public class RequestHandler implements Runnable {
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    private RequestBody body(BufferedReader br, RequestHeader requestHeader) throws IOException {
-        String value = requestHeader.getValue("Content-Length");
-
-        if (StringUtils.hasText(value)) {
-            String body = IOUtils.readData(br, Integer.parseInt(value));
-            return new RequestBody(decode(body));
-        }
-
-        return new RequestBody();
-    }
-
-    private String decode(String value) {
-        return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
 
     private void responseCssHeader(DataOutputStream dos, int contentLength) {

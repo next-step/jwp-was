@@ -59,6 +59,10 @@ public class HttpResponse {
         }
     }
 
+    public void setLoginCookie(boolean isLogined, String path) {
+        this.addHeader("Set-Cookie", "logined=" + isLogined + "; Path=" + path);
+    }
+
     private void response200Header(int bodyLength) throws IOException {
         dos.writeBytes("HTTP/1.1 200 OK \r\n");
         dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
@@ -90,8 +94,7 @@ public class HttpResponse {
     private void processHeaders() {
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             try {
-                String s = entry.getKey() + ": " + entry.getValue() + " \r\n";
-                dos.writeBytes(s);
+                dos.writeBytes(entry.getKey() + ": " + entry.getValue() + " \r\n");
             } catch (IOException e) {
                 logger.error(e.getMessage());
             }

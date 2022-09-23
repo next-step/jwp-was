@@ -1,9 +1,11 @@
-package webserver.http.domain;
+package webserver.http.controller;
 
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.domain.HttpRequest;
+import webserver.http.domain.HttpResponse;
 import webserver.http.template.UserList;
 
 import java.util.ArrayList;

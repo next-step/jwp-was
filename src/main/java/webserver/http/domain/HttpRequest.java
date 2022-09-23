@@ -1,14 +1,25 @@
 package webserver.http.domain;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+
 public class HttpRequest {
     private final RequestHeader requestHeader;
     private final RequestLine requestLine;
     private final RequestBody requestBody;
 
-    public HttpRequest(RequestHeader requestHeader, RequestLine requestLine, RequestBody requestBody) {
-        this.requestHeader = requestHeader;
-        this.requestLine = requestLine;
-        this.requestBody = requestBody;
+    public HttpRequest(BufferedReader br) {
+        try {
+            String url = br.readLine();
+            RequestHeader requestHeader = new RequestHeader();
+            requestHeader.addRequestHeaders(br);
+
+            this.requestHeader = requestHeader;
+            this.requestLine = new RequestLine(url);
+            this.requestBody = new RequestBody(br, requestHeader);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public RequestHeader requestHeader() {

@@ -1,4 +1,7 @@
-package webserver.http.domain;
+package webserver.http.controller;
+
+import webserver.http.domain.HttpRequest;
+import webserver.http.domain.HttpResponse;
 
 import java.io.DataOutputStream;
 

@@ -1,7 +1,9 @@
-package webserver.http.domain;
+package webserver.http.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.domain.HttpRequest;
+import webserver.http.domain.HttpResponse;
 
 public class StaticForwardController implements Controller {
 

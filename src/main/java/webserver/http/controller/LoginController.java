@@ -1,11 +1,12 @@
-package webserver.http.domain;
+package webserver.http.controller;
 
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
+import webserver.http.domain.HttpRequest;
+import webserver.http.domain.HttpResponse;
+import webserver.http.domain.RequestBody;
 
 public class LoginController implements Controller {
 
@@ -19,12 +20,12 @@ public class LoginController implements Controller {
         User user = DataBase.findUserById(userId);
 
         if (user != null && user.samePassword(requestBody.body("password"))) {
-            httpResponse.addHeader("Set-Cookie", "logined=true; Path=/");
+            httpResponse.setLoginCookie(true, "/");
             httpResponse.sendRedirect("/index.html");
             return;
         }
 
-        httpResponse.addHeader("Set-Cookie", "logined=false; Path=/");
+        httpResponse.setLoginCookie(false, "/");
         httpResponse.sendRedirect("/user/login_failed.html");
     }
 }

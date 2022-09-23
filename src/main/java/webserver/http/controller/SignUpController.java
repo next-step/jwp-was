@@ -1,9 +1,12 @@
-package webserver.http.domain;
+package webserver.http.controller;
 
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.http.domain.HttpRequest;
+import webserver.http.domain.HttpResponse;
+import webserver.http.domain.RequestBody;
 
 public class SignUpController implements Controller {
     private static final Logger logger = LoggerFactory.getLogger(SignUpController.class);
@@ -12,8 +15,8 @@ public class SignUpController implements Controller {
     public void execute(HttpRequest httpRequest, HttpResponse httpResponse) {
         RequestBody requestBody = httpRequest.requestBody();
 
-        String userId = requestBody.body("userId");
-        DataBase.addUser(new User(userId, requestBody.body("password"), requestBody.body("name"), requestBody.body("email")));
+        DataBase.addUser(new User(requestBody.userId(), requestBody.password(),
+                requestBody.name(), requestBody.email()));
         httpResponse.sendRedirect("/index.html");
     }
 }
