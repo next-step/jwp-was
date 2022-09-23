@@ -5,7 +5,6 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.MultiValueMap;
-import webserver.http.QueryStringDecoder;
 
 class QueryStringDecoderTest {
 	@Test

@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -43,7 +43,7 @@ public class HttpRequestDecoder extends HttpMessageDecoder<HttpRequest> {
 
 		HttpMethod method = HttpMethod.of(requestLine.get(HTTP_METHOD_INDEX));
 		URI uri = URI.create(requestLine.get(HTTP_URI_INDEX));
-		HttpVersion httpVersion = HttpVersion.valueOf(findElement(requestLine, HTTP_VERSION_INDEX));
+		HttpVersion httpVersion = HttpVersion.of(findElement(requestLine, HTTP_VERSION_INDEX));
 		return new RequestLine(method, uri, httpVersion);
 	}
 	private String findElement(List<String> requestLine, int index) {

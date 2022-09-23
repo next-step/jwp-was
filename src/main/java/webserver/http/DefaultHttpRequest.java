@@ -3,6 +3,7 @@ package webserver.http;
 import java.net.URI;
 
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public class DefaultHttpRequest implements HttpRequest {
@@ -30,21 +31,6 @@ public class DefaultHttpRequest implements HttpRequest {
 	}
 
 	@Override
-	public MultiValueMap<String, String> getHeaders() {
-		return this.headers;
-	}
-
-	@Override
-	public HttpVersion getProtocol() {
-		return this.httpVersion;
-	}
-
-	@Override
-	public HttpMethod getMethod() {
-		return this.method;
-	}
-
-	@Override
 	public String getParameter(String name) {
 		if (CollectionUtils.isEmpty(queryParams)) {
 			this.queryParams = QueryStringDecoder.parseQueryString(uri.getQuery());
@@ -53,9 +39,38 @@ public class DefaultHttpRequest implements HttpRequest {
 	}
 
 	@Override
+	public MultiValueMap<String, String> getHeaders() {
+		return this.headers;
+	}
+
+	@Override
+	public HttpVersion getHttpVersion() {
+		return this.httpVersion;
+	}
+
+	@Override
+	public void setHttpVersion(HttpVersion httpVersion) {
+		this.httpVersion = httpVersion;
+	}
+
+	@Override
+	public HttpMethod getMethod() {
+		return this.method;
+	}
+
+	@Override
+	public void addHeader(String key, String value) {
+		if (headers == null) {
+			headers = new LinkedMultiValueMap<>();
+		}
+		headers.add(key, value);
+	}
+
+	@Override
 	public String getHeader(String key) {
 		return headers.getFirst(key);
 	}
+
 	@Override
 	public URI getURI() {
 		return this.uri;

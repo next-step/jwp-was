@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.util.MultiValueMap;
 
 import io.netty.buffer.Unpooled;
-import webserver.http.*;
 
 class HttpRequestDecoderTest {
 	String get = "GET /hello.html?key=value&page=1 HTTP/1.1\r\n"

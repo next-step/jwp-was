@@ -22,8 +22,4 @@ public class HttpResponseTest {
 
 		assertThat(httpResponse.toEncoded()).isEqualTo(expected);
 	}
-	// forward
-	// 조정되는 위치에 해당하는 서블릿을 찾는다.
-	// 요청의 path를 변경한다. 응답을 초기화 한다(쿠키는 그대로둔다).
-	// 해당 서블릿에 요청과 응답객체를 전달한다.
 }

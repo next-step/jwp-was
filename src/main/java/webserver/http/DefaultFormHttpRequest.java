@@ -4,6 +4,7 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public class DefaultFormHttpRequest implements HttpRequest {
@@ -24,6 +25,12 @@ public class DefaultFormHttpRequest implements HttpRequest {
 		this.httpVersion = requestLine.getHttpVersion();
 		this.content = content;
 	}
+
+	public boolean isFormRequest() {
+		return headers.containsKey("Content-Type") && headers.getFirst("Content-Type")
+			.equals(FORM_CONTENT_TYPE);
+	}
+
 	@Override
 	public MultiValueMap<String, String> getQueryParams() {
 		if (CollectionUtils.isEmpty(queryParams) && isFormRequest()) {
@@ -32,29 +39,39 @@ public class DefaultFormHttpRequest implements HttpRequest {
 		return this.queryParams;
 	}
 
-	public boolean isFormRequest() {
-		return headers.containsKey("Content-Type") && headers.getFirst("Content-Type")
-			.equals(FORM_CONTENT_TYPE);
-	}
-
 	@Override
 	public String getParameter(String name) {
 		if (CollectionUtils.isEmpty(queryParams) && isFormRequest()) {
-			this.queryParams =  QueryStringDecoder.parseQueryString(content);
+			this.queryParams = QueryStringDecoder.parseQueryString(content);
 		}
 		return queryParams.getFirst(name);
 	}
+
+	@Override
+	public void addHeader(String key, String value) {
+		if (headers == null) {
+			headers = new LinkedMultiValueMap<>();
+		}
+		headers.add(key, value);
+	}
+
 	@Override
 	public String getHeader(String key) {
 		return headers.getFirst(key);
 	}
+
 	@Override
 	public MultiValueMap<String, String> getHeaders() {
 		return this.headers;
 	}
 
 	@Override
-	public HttpVersion getProtocol() {
+	public void setHttpVersion(HttpVersion httpVersion) {
+		this.httpVersion = httpVersion;
+	}
+
+	@Override
+	public HttpVersion getHttpVersion() {
 		return this.httpVersion;
 	}
 

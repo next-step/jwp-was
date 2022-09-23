@@ -3,18 +3,15 @@ package webserver.http;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public class HttpResponse implements HttpMessage {
 	private HttpStatus httpStatus;
-	private HttpVersion protocol;
+	private HttpVersion httpVersion;
 	private MultiValueMap<String, String> headers;
 	private byte[] content;
-	private List<Cookie> cookies;
 	private DataOutputStream writer;
 
 	public HttpResponse(OutputStream outputStream) {
@@ -29,13 +26,11 @@ public class HttpResponse implements HttpMessage {
 		sendRedirect(location, HttpStatus.FOUND);
 	}
 
-	public void addCookie(Cookie cookie) {
-		if (cookies == null) {
-			cookies = new ArrayList<>();
-		}
-		cookies.add(cookie);
+	public void setHttpStatus(HttpStatus httpStatus) {
+		this.httpStatus = httpStatus;
 	}
 
+	@Override
 	public void addHeader(String key, String value) {
 		if (headers == null) {
 			headers = new LinkedMultiValueMap<>();
@@ -48,28 +43,19 @@ public class HttpResponse implements HttpMessage {
 		return headers.getFirst(key);
 	}
 
-	public void setProtocol(HttpVersion protocol) {
-		this.protocol = protocol;
-	}
-
-	public void setHttpStatus(HttpStatus httpStatus) {
-		this.httpStatus = httpStatus;
-	}
-
 	@Override
 	public MultiValueMap<String, String> getHeaders() {
-		return null;
+		return this.headers;
 	}
 
 	@Override
-	public HttpVersion getProtocol() {
-		return null;
+	public void setHttpVersion(HttpVersion httpVersion) {
+		this.httpVersion = httpVersion;
 	}
 
-	private void sendRedirect(String location, HttpStatus httpStatus) throws IOException {
-		setHttpStatus(httpStatus);
-		addHeader("Location", location);
-		writer.writeBytes(toEncoded());
+	@Override
+	public HttpVersion getHttpVersion() {
+		return this.httpVersion;
 	}
 
 	public String toEncoded() {
@@ -86,17 +72,13 @@ public class HttpResponse implements HttpMessage {
 				.append(headers.getFirst(key))
 				.append("\r\n");
 		}
-
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				builder.append("Set-Cookie: ")
-					.append(cookie.getName())
-					.append("=")
-					.append(cookie.getValue())
-					.append("\r\n");
-			}
-		}
 		builder.append("\r\n");
 		return builder.toString();
+	}
+
+	private void sendRedirect(String location, HttpStatus httpStatus) throws IOException {
+		setHttpStatus(httpStatus);
+		addHeader("Location", location);
+		writer.writeBytes(toEncoded());
 	}
 }

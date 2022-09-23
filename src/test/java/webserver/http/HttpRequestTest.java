@@ -1,3 +1,5 @@
+package webserver.http;
+
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -14,10 +16,5 @@ public class HttpRequestTest {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
-    @Test
-    void classpathTest(){
-        ClassRelativeResourceLoader loader = new ClassRelativeResourceLoader(WebApplicationServer.class);
-        System.out.println(loader.getResource("./webapp/WEB-INF/classes/index.html"));
     }
 }

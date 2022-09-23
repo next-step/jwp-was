@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http;
 
 import java.nio.ByteBuffer;
 import java.util.List;

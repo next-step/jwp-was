@@ -1,4 +1,4 @@
-package webserver;
+package webserver.http;
 
 import io.netty.util.ByteProcessor;
 
