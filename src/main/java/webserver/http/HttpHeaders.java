@@ -14,7 +14,7 @@ public class HttpHeaders {
     private static final int KEY = 0;
     private static final int VALUE = 1;
 
-    private Map<String, String> headers;
+    private final Map<String, String> headers;
 
     private HttpHeaders(Map<String, String> headers) {
         this.headers = headers;
@@ -38,6 +38,7 @@ public class HttpHeaders {
         Map<String, String> headers = new HashMap<>();
         final String location = "http://localhost:8080";
         headers.put(HttpHeader.LOCATION, location + redirectUrl);
+        headers.put(HttpHeader.CONTENT_TYPE, "text/html;charset=utf-8");
 
         return new HttpHeaders(headers);
     }
@@ -55,12 +56,18 @@ public class HttpHeaders {
         }
     }
 
+    public void addHeader(String httpHeader, String value) {
+        this.headers.put(httpHeader, value);
+    }
+
     public Optional<String> getRedirectFile() {
         if (hasLocation()) {
+            final String filePath = "/%s";
             String location = headers.get(HttpHeader.LOCATION);
             String[] locationElements = location.split(REDIRECT_PATH_DELIMITER);
             String redirectFile = locationElements[locationElements.length - 1];
-            return Optional.of("/" + redirectFile);
+
+            return Optional.of(String.format(filePath, redirectFile));
         }
         return Optional.empty();
     }
