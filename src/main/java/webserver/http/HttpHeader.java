@@ -6,8 +6,7 @@ public class HttpHeader {
     public static final String LOCATION = "Location";
     public static final String COOKIE = "Cookie";
     public static final String SET_COOKIE = "Set-Cookie";
-    public static final String CONTENT_TYPE = "text/html";
-
+    public static final String CONTENT_TYPE = "Content-Type";
 
     private HttpHeader() {
     }
