@@ -30,7 +30,7 @@ public class SignUpServlet extends HttpServlet {
 
         DataBase.addUser(user);
 
-        return new HttpResponse(ResponseLine.redirect(), HttpHeaders.redirect(REDIRECT_PATH), HttpBody.empty());
+        return new HttpResponse(ResponseLine.redirect(), HttpHeaders.redirect(REDIRECT_PATH));
     }
 
     private User convertRequestBodyToUser(Map<String, String> requestBody) {

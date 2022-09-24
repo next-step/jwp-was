@@ -2,7 +2,6 @@ package webserver.http.response;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.HttpBody;
 import webserver.http.HttpHeaders;
 import webserver.http.HttpStatus;
 
@@ -16,13 +15,11 @@ class HttpResponseTest {
     void ok() {
         ResponseLine responseLine200 = ResponseLine.ok();
         HttpHeaders httpHeaders = HttpHeaders.init();
-        HttpBody httpBody = HttpBody.empty();
 
-        HttpResponse actual = new HttpResponse(responseLine200, httpHeaders, httpBody);
+        HttpResponse actual = new HttpResponse(responseLine200, httpHeaders);
 
         assertThat(actual.getResponseLine().toString()).isEqualTo("HTTP/1.1 200 OK");
         assertThat(actual.getHttpHeaders().getHeaders()).isEmpty();
-        assertThat(actual.getHttpBody().getContents()).isEmpty();
     }
 
     @Test
@@ -30,13 +27,11 @@ class HttpResponseTest {
     void redirect() {
         ResponseLine responseLint302 = ResponseLine.redirect();
         HttpHeaders httpHeaders = HttpHeaders.redirect("/index.html");
-        HttpBody httpBody = HttpBody.empty();
 
-        HttpResponse actual = new HttpResponse(responseLint302, httpHeaders, httpBody);
+        HttpResponse actual = new HttpResponse(responseLint302, httpHeaders);
 
         assertThat(actual.getResponseLine().toString()).isEqualTo("HTTP/1.1 302 Found");
         assertThat(actual.getHttpHeaders().hasLocation()).isTrue();
-        assertThat(actual.getHttpBody().getContents()).isEmpty();
     }
 
     @Test
@@ -44,13 +39,10 @@ class HttpResponseTest {
     void methodNotSupported() {
         ResponseLine responseLine405 = new ResponseLine(HttpStatus.METHOD_NOT_ALLOWED);
         HttpHeaders httpHeaders = HttpHeaders.init();
-        HttpBody httpBody = HttpBody.from("message=http.method_post_not_supported");
 
-        HttpResponse actual = new HttpResponse(responseLine405, httpHeaders, httpBody);
+        HttpResponse actual = new HttpResponse(responseLine405, httpHeaders);
 
         assertThat(actual.getResponseLine().toString()).isEqualTo("HTTP/1.1 405 Method Not Allowed");
         assertThat(actual.getHttpHeaders().getHeaders()).isEmpty();
-        assertThat(actual.getHttpBody().getContents()).hasSize(1);
-        assertThat(actual.getHttpBody().getContents().get("message")).isEqualTo("http.method_post_not_supported");
     }
 }

@@ -44,7 +44,6 @@ class SignUpServletTest {
 
         assertThat(actual.getResponseLine().toString()).isEqualTo("HTTP/1.1 302 Found");
         assertThat(actual.getHttpHeaders().hasLocation()).isTrue();
-        assertThat(actual.getHttpBody().getContents()).isEmpty();
         assertThat(foundUser.isPresent()).isTrue();
     }
 }

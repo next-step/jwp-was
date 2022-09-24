@@ -28,7 +28,7 @@ public abstract class HttpServlet implements Servlet {
         ResponseLine responseLine = new ResponseLine(HttpStatus.NOT_IMPLEMENTED);
         String message = "http.method_not_implemented";
         String responseBody = String.format(HTTP_BODY_MESSAGE, message);
-        return new HttpResponse(responseLine, HttpHeaders.init(), HttpBody.from(responseBody));
+        return new HttpResponse(responseLine, HttpHeaders.init());
     }
 
     protected HttpResponse doGet(HttpRequest request) {
@@ -38,7 +38,7 @@ public abstract class HttpServlet implements Servlet {
         String message = "http.method_get_not_supported";
         String responseBody = String.format(HTTP_BODY_MESSAGE, message);
 
-        return new HttpResponse(responseLine, HttpHeaders.init(), HttpBody.from(responseBody));
+        return new HttpResponse(responseLine, HttpHeaders.init());
     }
 
     protected HttpResponse doPost(HttpRequest request) {
@@ -48,7 +48,7 @@ public abstract class HttpServlet implements Servlet {
         String message = "http.method_post_not_supported";
         String responseBody = String.format(HTTP_BODY_MESSAGE, message);
 
-        return new HttpResponse(responseLine, HttpHeaders.init(), HttpBody.from(responseBody));
+        return new HttpResponse(responseLine, HttpHeaders.init());
     }
 
     private HttpStatus validateNotAllowedMethod(HttpRequest request) {

@@ -4,7 +4,6 @@ import db.DataBase;
 import dto.SignInUser;
 import exception.NotFoundUserException;
 import model.User;
-import webserver.http.HttpBody;
 import webserver.http.HttpHeader;
 import webserver.http.HttpHeaders;
 import webserver.http.request.HttpRequest;
@@ -40,13 +39,13 @@ public class SignInServlet extends HttpServlet {
             HttpHeaders httpHeaders = HttpHeaders.redirect(SIGN_IN_SUCCESS_PATH);
             httpHeaders.addResponseHeader(HttpHeader.SET_COOKIE, SIGN_IN_SUCCESS_COOKIE);
 
-            return new HttpResponse(ResponseLine.redirect(), httpHeaders, HttpBody.empty());
+            return new HttpResponse(ResponseLine.redirect(), httpHeaders);
         }
 
         HttpHeaders httpHeaders = HttpHeaders.redirect(SIGN_IN_FAILED_PATH);
         httpHeaders.addResponseHeader(HttpHeader.SET_COOKIE, SIGN_IN_FAILED_COOKIE);
 
-        return new HttpResponse(ResponseLine.redirect(), httpHeaders, HttpBody.empty());
+        return new HttpResponse(ResponseLine.redirect(), httpHeaders);
     }
 
     private SignInUser convertRequestBodyToSignInUser(Map<String, String> requestBody) {

@@ -36,7 +36,6 @@ class SignInServletTest {
         assertThat(actual.getResponseLine().toString()).isEqualTo("HTTP/1.1 302 Found");
         assertThat(actual.getHttpHeaders().hasLocation()).isTrue();
         assertThat(actual.getHttpHeaders().getHeaders().get(HttpHeader.SET_COOKIE)).isEqualTo("logined=false; Path=/");
-        assertThat(actual.getHttpBody().getContents()).isEmpty();
     }
 
     @Test
@@ -50,7 +49,6 @@ class SignInServletTest {
         assertThat(actual.getResponseLine().toString()).isEqualTo("HTTP/1.1 302 Found");
         assertThat(actual.getHttpHeaders().hasLocation()).isTrue();
         assertThat(actual.getHttpHeaders().getHeaders().get(HttpHeader.SET_COOKIE)).isEqualTo("logined=false; Path=/");
-        assertThat(actual.getHttpBody().getContents()).isEmpty();
     }
 
     private HttpRequest createHttpRequest() {
