@@ -30,7 +30,8 @@ public class RequestBody {
         if (StringUtils.hasText(value)) {
             try {
                 String body = IOUtils.readData(br, Integer.parseInt(value));
-                create(decode(body));
+                this.bodies = create(decode(body));
+                return;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
