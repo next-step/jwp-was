@@ -43,22 +43,6 @@ public class RequestBody {
         return bodies.get(key);
     }
 
-    public String userId() {
-        return bodies.get("userId");
-    }
-
-    public String password() {
-        return bodies.get("password");
-    }
-
-    public String name() {
-        return bodies.get("name");
-    }
-
-    public String email() {
-        return bodies.get("email");
-    }
-
     private Map<String, String> create(String bodyString) {
         Map<String, String> map = new HashMap<>();
         Arrays.stream(bodyString.split(BODY_DELIMITER))

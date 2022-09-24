@@ -41,4 +41,8 @@ public class HttpRequest {
     public boolean endsWith(String suffix) {
         return this.requestLine.endsWith(suffix);
     }
+
+    public String body(String key) {
+        return requestBody().body(key);
+    }
 }
