@@ -3,7 +3,6 @@ package webserver.servlet;
 import com.google.common.base.Charsets;
 import db.DataBase;
 import model.User;
-import webserver.http.HttpBody;
 import webserver.http.HttpHeaders;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
@@ -24,7 +23,7 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     protected HttpResponse doPost(HttpRequest request) {
-        Map<String, String> requestBody = request.getHttpBody().getContents();
+        Map<String, String> requestBody = request.getBody().getContents();
 
         User user = convertRequestBodyToUser(requestBody);
 

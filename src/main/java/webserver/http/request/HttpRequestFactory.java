@@ -2,7 +2,6 @@ package webserver.http.request;
 
 import com.google.common.base.Charsets;
 import utils.IOUtils;
-import webserver.http.HttpBody;
 import webserver.http.HttpHeaders;
 
 import java.io.BufferedReader;
@@ -20,10 +19,10 @@ public class HttpRequestFactory {
         HttpHeaders httpHeaders = initRequestHeaders(bufferedReader);
 
         if (httpHeaders.hasContent()) {
-            HttpBody httpBody = initRequestBody(bufferedReader, httpHeaders.getContentLength());
-            return new HttpRequest(requestLine, httpHeaders, httpBody);
+            RequestBody requestBody = initRequestBody(bufferedReader, httpHeaders.getContentLength());
+            return new HttpRequest(requestLine, httpHeaders, requestBody);
         }
-        return new HttpRequest(requestLine, httpHeaders, HttpBody.empty());
+        return new HttpRequest(requestLine, httpHeaders, RequestBody.empty());
 
     }
 
@@ -39,8 +38,8 @@ public class HttpRequestFactory {
         return httpHeaders;
     }
 
-    private static HttpBody initRequestBody(BufferedReader bufferedReader, int contentLength) throws IOException {
+    private static RequestBody initRequestBody(BufferedReader bufferedReader, int contentLength) throws IOException {
         String request = IOUtils.readData(bufferedReader, contentLength);
-        return HttpBody.from(request);
+        return RequestBody.from(request);
     }
 }

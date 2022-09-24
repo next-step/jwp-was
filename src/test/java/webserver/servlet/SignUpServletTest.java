@@ -5,9 +5,9 @@ import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.HttpBody;
 import webserver.http.HttpHeaders;
 import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestBody;
 import webserver.http.request.RequestLine;
 import webserver.http.response.HttpResponse;
 
@@ -33,7 +33,7 @@ class SignUpServletTest {
         httpHeaders.addRequestHeader("Content-Length: 59");
         httpHeaders.addRequestHeader("Content-Type: application/x-www-form-urlencoded");
         httpHeaders.addRequestHeader("Accept: */*");
-        HttpBody httpBody = HttpBody.from("userId=javajigi&password=password&name=JaeSung&email=javajigi@slipp.net");
+        RequestBody httpBody = RequestBody.from("userId=javajigi&password=password&name=JaeSung&email=javajigi@slipp.net");
 
         HttpRequest httpRequest = new HttpRequest(requestLine, httpHeaders, httpBody);
 

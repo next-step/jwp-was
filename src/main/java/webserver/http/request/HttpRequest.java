@@ -1,18 +1,17 @@
 package webserver.http.request;
 
-import webserver.http.HttpBody;
 import webserver.http.HttpHeaders;
 
 public class HttpRequest {
 
     private final RequestLine requestLine;
     private final HttpHeaders httpHeaders;
-    private final HttpBody httpBody;
+    private final RequestBody requestBody;
 
-    public HttpRequest(RequestLine requestLine, HttpHeaders httpHeaders, HttpBody httpBody) {
+    public HttpRequest(RequestLine requestLine, HttpHeaders httpHeaders, RequestBody requestBody) {
         this.requestLine = requestLine;
         this.httpHeaders = httpHeaders;
-        this.httpBody = httpBody;
+        this.requestBody = requestBody;
     }
 
     public boolean isStaticResource() {
@@ -23,12 +22,12 @@ public class HttpRequest {
         return requestLine;
     }
 
-    public HttpHeaders getHttpHeaders() {
+    public HttpHeaders getHeaders() {
         return httpHeaders;
     }
 
-    public HttpBody getHttpBody() {
-        return httpBody;
+    public RequestBody getBody() {
+        return requestBody;
     }
 
     @Override

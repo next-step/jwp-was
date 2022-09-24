@@ -28,7 +28,7 @@ public class SignInServlet extends HttpServlet {
 
     @Override
     protected HttpResponse doPost(HttpRequest request) {
-        Map<String, String> requestBody = request.getHttpBody().getContents();
+        Map<String, String> requestBody = request.getBody().getContents();
 
         SignInUser signInUser = convertRequestBodyToSignInUser(requestBody);
 

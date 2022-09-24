@@ -1,11 +1,11 @@
-package webserver.http;
+package webserver.http.request;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class HttpBody {
+public class RequestBody {
 
     private static final String DELIMITER_KEY = "&";
     private static final String DELIMITER_VALUE = "=";
@@ -14,22 +14,22 @@ public class HttpBody {
 
     private final Map<String, String> contents;
 
-    private HttpBody(Map<String, String> contents) {
+    private RequestBody(Map<String, String> contents) {
         this.contents = contents;
     }
 
-    public static HttpBody empty() {
-        return new HttpBody(Collections.emptyMap());
+    public static RequestBody empty() {
+        return new RequestBody(Collections.emptyMap());
     }
 
-    public static HttpBody from(String request) {
+    public static RequestBody from(String request) {
         if (request == null || request.length() == 0) {
-            return HttpBody.empty();
+            return RequestBody.empty();
         }
         Map<String, String> contents = Arrays.stream(request.split(DELIMITER_KEY))
                 .map(it -> it.split(DELIMITER_VALUE))
                 .collect(Collectors.toMap(e -> e[KEY], e -> e[VALUE]));
-        return new HttpBody(contents);
+        return new RequestBody(contents);
     }
 
     public Map<String, String> getContents() {

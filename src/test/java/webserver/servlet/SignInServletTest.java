@@ -5,10 +5,10 @@ import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.http.HttpBody;
 import webserver.http.HttpHeader;
 import webserver.http.HttpHeaders;
 import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestBody;
 import webserver.http.request.RequestLine;
 import webserver.http.response.HttpResponse;
 
@@ -59,7 +59,7 @@ class SignInServletTest {
         httpHeaders.addRequestHeader("Content-Length: 29");
         httpHeaders.addRequestHeader("Content-Type: application/x-www-form-urlencoded");
         httpHeaders.addRequestHeader("Accept: */*");
-        HttpBody httpBody = HttpBody.from("userId=javajigi&password=1234");
+        RequestBody httpBody = RequestBody.from("userId=javajigi&password=1234");
 
         return new HttpRequest(requestLine, httpHeaders, httpBody);
     }
