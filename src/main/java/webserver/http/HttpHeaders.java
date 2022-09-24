@@ -1,8 +1,10 @@
 package webserver.http;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class HttpHeaders {
 
@@ -73,6 +75,13 @@ public class HttpHeaders {
 
     public Map<String, String> getHeaders() {
         return headers;
+    }
+
+    public List<String> getOutputHeaders() {
+        return headers.keySet()
+                .stream()
+                .map(key -> key + HTTP_HEADER_DELIMITER + headers.get(key))
+                .collect(Collectors.toList());
     }
 
     @Override
