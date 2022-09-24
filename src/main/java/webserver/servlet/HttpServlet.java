@@ -3,11 +3,10 @@ package webserver.servlet;
 import webserver.http.*;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.ResponseBody;
 import webserver.http.response.ResponseLine;
 
 public abstract class HttpServlet implements Servlet {
-
-    private static final String HTTP_BODY_MESSAGE = "message=%s";
 
     @Override
     public String getRequestPath() {
@@ -26,29 +25,21 @@ public abstract class HttpServlet implements Servlet {
         }
 
         ResponseLine responseLine = new ResponseLine(HttpStatus.NOT_IMPLEMENTED);
-        String message = "http.method_not_implemented";
-        String responseBody = String.format(HTTP_BODY_MESSAGE, message);
-        return new HttpResponse(responseLine, HttpHeaders.init());
+        return new HttpResponse(responseLine, HttpHeaders.init(), ResponseBody.empty());
     }
 
     protected HttpResponse doGet(HttpRequest request) {
         HttpStatus httpStatus = validateNotAllowedMethod(request);
         ResponseLine responseLine = new ResponseLine(httpStatus);
 
-        String message = "http.method_get_not_supported";
-        String responseBody = String.format(HTTP_BODY_MESSAGE, message);
-
-        return new HttpResponse(responseLine, HttpHeaders.init());
+        return new HttpResponse(responseLine, HttpHeaders.init(), ResponseBody.empty());
     }
 
     protected HttpResponse doPost(HttpRequest request) {
         HttpStatus httpStatus = validateNotAllowedMethod(request);
         ResponseLine responseLine = new ResponseLine(httpStatus);
 
-        String message = "http.method_post_not_supported";
-        String responseBody = String.format(HTTP_BODY_MESSAGE, message);
-
-        return new HttpResponse(responseLine, HttpHeaders.init());
+        return new HttpResponse(responseLine, HttpHeaders.init(), ResponseBody.empty());
     }
 
     private HttpStatus validateNotAllowedMethod(HttpRequest request) {

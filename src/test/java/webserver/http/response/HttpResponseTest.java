@@ -15,11 +15,13 @@ class HttpResponseTest {
     void ok() {
         ResponseLine responseLine200 = ResponseLine.ok();
         HttpHeaders httpHeaders = HttpHeaders.init();
+        ResponseBody responseBody = ResponseBody.empty();
 
-        HttpResponse actual = new HttpResponse(responseLine200, httpHeaders);
+        HttpResponse actual = new HttpResponse(responseLine200, httpHeaders, responseBody);
 
         assertThat(actual.getResponseLine().toString()).isEqualTo("HTTP/1.1 200 OK");
-        assertThat(actual.getHttpHeaders().getHeaders()).isEmpty();
+        assertThat(actual.getHeaders().getHeaders()).isEmpty();
+        assertThat(actual.getBody().getContents()).isEmpty();
     }
 
     @Test
@@ -27,11 +29,13 @@ class HttpResponseTest {
     void redirect() {
         ResponseLine responseLint302 = ResponseLine.redirect();
         HttpHeaders httpHeaders = HttpHeaders.redirect("/index.html");
+        ResponseBody responseBody = ResponseBody.empty();
 
-        HttpResponse actual = new HttpResponse(responseLint302, httpHeaders);
+        HttpResponse actual = new HttpResponse(responseLint302, httpHeaders, responseBody);
 
         assertThat(actual.getResponseLine().toString()).isEqualTo("HTTP/1.1 302 Found");
-        assertThat(actual.getHttpHeaders().hasLocation()).isTrue();
+        assertThat(actual.getHeaders().hasLocation()).isTrue();
+        assertThat(actual.getBody().getContents()).isEmpty();
     }
 
     @Test
@@ -39,10 +43,12 @@ class HttpResponseTest {
     void methodNotSupported() {
         ResponseLine responseLine405 = new ResponseLine(HttpStatus.METHOD_NOT_ALLOWED);
         HttpHeaders httpHeaders = HttpHeaders.init();
+        ResponseBody responseBody = ResponseBody.empty();
 
-        HttpResponse actual = new HttpResponse(responseLine405, httpHeaders);
+        HttpResponse actual = new HttpResponse(responseLine405, httpHeaders, responseBody);
 
         assertThat(actual.getResponseLine().toString()).isEqualTo("HTTP/1.1 405 Method Not Allowed");
-        assertThat(actual.getHttpHeaders().getHeaders()).isEmpty();
+        assertThat(actual.getHeaders().getHeaders()).isEmpty();
+        assertThat(actual.getBody().getContents()).isEmpty();
     }
 }

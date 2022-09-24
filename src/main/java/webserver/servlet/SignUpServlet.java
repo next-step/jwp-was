@@ -6,6 +6,7 @@ import model.User;
 import webserver.http.HttpHeaders;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.http.response.ResponseBody;
 import webserver.http.response.ResponseLine;
 
 import java.net.URLDecoder;
@@ -29,7 +30,7 @@ public class SignUpServlet extends HttpServlet {
 
         DataBase.addUser(user);
 
-        return new HttpResponse(ResponseLine.redirect(), HttpHeaders.redirect(REDIRECT_PATH));
+        return new HttpResponse(ResponseLine.redirect(), HttpHeaders.redirect(REDIRECT_PATH), ResponseBody.from(REDIRECT_PATH));
     }
 
     private User convertRequestBodyToUser(Map<String, String> requestBody) {

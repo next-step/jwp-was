@@ -43,7 +43,7 @@ class SignUpServletTest {
         Optional<User> foundUser = DataBase.findUserById("javajigi");
 
         assertThat(actual.getResponseLine().toString()).isEqualTo("HTTP/1.1 302 Found");
-        assertThat(actual.getHttpHeaders().hasLocation()).isTrue();
+        assertThat(actual.getHeaders().hasLocation()).isTrue();
         assertThat(foundUser.isPresent()).isTrue();
     }
 }
