@@ -99,6 +99,11 @@ Set-Cookie: logined=true; Path=/
 
 > 동적으로 html을 생성하기 위해 handlebars.java template engine을 활용한다.
 
+- [ ] index.html 에서 사용자 목록 페이지에 접근할 수 있도록 한다.
+- [ ] Handlebars.java template engine을 활용한다.
+- [ ] 사용자가 로그인 한 상태일 경우 사용자 목록 조회 기능을 구현한다.
+- [ ] 사용자가 로그인 하지않은 상태일 경우 로그인 페이지로 이동한다.
+
 ## 기능 요구사항7
 > 지금까지 구현한 소스 코드는 stylesheet 파일을 지원하지 못하고 있다.  
 > Stylesheet 파일을 지원하도록 구현하도록 한다.  
