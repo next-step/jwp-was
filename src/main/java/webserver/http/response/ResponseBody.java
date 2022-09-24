@@ -1,6 +1,9 @@
 package webserver.http.response;
 
-import java.nio.charset.StandardCharsets;
+import utils.FileIoUtils;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class ResponseBody {
 
@@ -21,11 +24,19 @@ public class ResponseBody {
         return new ResponseBody(response);
     }
 
-    public String getContents() {
-        return contents;
+    public byte[] toFile() {
+        try {
+            return FileIoUtils.loadFileFromClasspath(contents);
+        } catch (URISyntaxException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public int getContentLength() {
-        return contents.length();
+    public int getFileLength() {
+        return toFile().length;
+    }
+
+    public String getContents() {
+        return contents;
     }
 }

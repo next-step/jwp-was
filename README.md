@@ -88,8 +88,9 @@ Content-Type: text/html
 Set-Cookie: logined=true; Path=/
 ```
 
-- [ ] 회원가입, 로그인 기능을 분리한다.
-- [ ] Cookie 기능을 구현한다.
+- [X] 회원가입, 로그인 기능을 분리한다.
+- [X] Cookie 기능을 구현한다.
+- [X] 요청, 응답 책임을 추상화한다.
 
 ## 기능 요구사항6
 > 접근하고 있는 사용자가 “로그인” 상태일 경우(Cookie 값이 logined=true) 경우  
