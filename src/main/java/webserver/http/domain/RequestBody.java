@@ -30,7 +30,8 @@ public class RequestBody {
         if (StringUtils.hasText(value)) {
             try {
                 String body = IOUtils.readData(br, Integer.parseInt(value));
-                create(decode(body));
+                this.bodies = create(decode(body));
+                return;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -41,22 +42,6 @@ public class RequestBody {
 
     public String body(String key) {
         return bodies.get(key);
-    }
-
-    public String userId() {
-        return bodies.get("userId");
-    }
-
-    public String password() {
-        return bodies.get("password");
-    }
-
-    public String name() {
-        return bodies.get("name");
-    }
-
-    public String email() {
-        return bodies.get("email");
     }
 
     private Map<String, String> create(String bodyString) {

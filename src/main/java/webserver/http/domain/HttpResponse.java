@@ -23,10 +23,9 @@ public class HttpResponse {
         this.headers = new HashMap<>();
     }
 
-    public void addHeader(String key, String value){
+    public void addHeader(String key, String value) {
         headers.put(key, value);
     }
-
     public void staticForward(String path) {
         try {
             byte[] body = loadFileFromClasspath(path);
@@ -57,10 +56,6 @@ public class HttpResponse {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    public void setLoginCookie(boolean isLogined, String path) {
-        this.addHeader("Set-Cookie", "logined=" + isLogined + "; Path=" + path);
     }
 
     private void response200Header(int bodyLength) throws IOException {

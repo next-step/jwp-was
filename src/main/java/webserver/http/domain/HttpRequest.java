@@ -2,11 +2,14 @@ package webserver.http.domain;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
 
 public class HttpRequest {
     private final RequestHeader requestHeader;
     private final RequestLine requestLine;
     private final RequestBody requestBody;
+
+    private final Map<String, Cookie> cookie;
 
     public HttpRequest(BufferedReader br) {
         try {
@@ -17,6 +20,7 @@ public class HttpRequest {
             this.requestHeader = requestHeader;
             this.requestLine = new RequestLine(url);
             this.requestBody = new RequestBody(br, requestHeader);
+            this.cookie = Cookie.createCookie(requestHeader);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -40,5 +44,13 @@ public class HttpRequest {
 
     public boolean endsWith(String suffix) {
         return this.requestLine.endsWith(suffix);
+    }
+
+    public String body(String key) {
+        return requestBody().body(key);
+    }
+
+    public Cookie cookie(String key) {
+        return this.cookie.get(key);
     }
 }

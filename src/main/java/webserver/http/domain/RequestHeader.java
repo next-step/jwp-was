@@ -1,6 +1,10 @@
 package webserver.http.domain;
 
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.util.StringUtils;
+import webserver.http.domain.session.HttpSession;
+import webserver.http.domain.session.SessionId;
+import webserver.http.domain.session.SessionStorage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,8 +39,16 @@ public class RequestHeader {
     }
 
     public boolean loginCheck() {
-        String cookieValue = headers.get("Cookie");
-        return cookieValue != null && cookieValue.contains("logined=true");
+        Map<String, Cookie> cookieMap = Cookie.createCookie(this);
+        Cookie cookie = cookieMap.get("loginKey");
+
+        if (cookie == null) {
+            return false;
+        }
+
+        SessionId sessionId = SessionId.sessionId(cookie.value());
+        HttpSession session = SessionStorage.getSession(sessionId);
+        return session != null && session.getAttribute(sessionId.id()) != null;
     }
 
 }
