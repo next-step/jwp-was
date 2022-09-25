@@ -6,6 +6,7 @@ import webserver.http.HttpHeaders;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -13,8 +14,10 @@ public class ResponseViewFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(ResponseViewFactory.class);
 
-    public static void write(DataOutputStream dos, HttpResponse httpResponse) {
+    public static void write(OutputStream out, HttpResponse httpResponse) {
         try {
+            DataOutputStream dos = new DataOutputStream(out);
+
             writeResponseLine(dos, httpResponse.getResponseLine());
             writeResponseHeaders(dos, httpResponse.getHeaders());
             writeResponseBody(dos, httpResponse.getBody());
