@@ -2,8 +2,12 @@ package webserver.servlet;
 
 import java.io.IOException;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
+
 import db.DataBase;
-import model.User;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.HttpStatus;
@@ -20,26 +24,27 @@ public class UserListServlet implements Servlet {
 			return;
 		}
 
-		StringBuilder builder = new StringBuilder();
-		builder.append("<table border=\"1\">");
-		for (User user : DataBase.findAll()) {
-			builder.append("<tr>");
-			builder.append("<td>" + user.getUserId() + "</td>");
-			builder.append("<td>" + user.getName() + "</td>");
-			builder.append("<td>" + user.getEmail() + "</td>");
-			builder.append("</tr>");
-		}
-		builder.append("</table>");
-		byte[] body = builder.toString().getBytes();
+		TemplateLoader loader = new ClassPathTemplateLoader();
+		loader.setPrefix("/templates");
+		loader.setSuffix(".html");
+
+		Handlebars handlebars = new Handlebars(loader);
+
+		Template template  = handlebars.registerHelper("inc", (context, options) -> {
+			return Integer.parseInt(context.toString()) + 3;
+		}).compile("/user/list");
+
+
+		byte[] content = template.apply(DataBase.findAll()).getBytes();
 
 		response.setHttpVersion(HttpVersion.HTTP_1_1);
 		response.setHttpStatus(HttpStatus.OK);
 		response.addHeader("Content-Type", "text/html;charset=utf-8");
-		response.addHeader("Content-Length", String.valueOf(body.length));
+		response.addHeader("Content-Length", String.valueOf(content.length));
 
 		String message = response.toEncoded();
 		response.getWriter().writeBytes(message);
-		response.getWriter().write(body, 0, body.length);
+		response.getWriter().write(content, 0, content.length);
 		response.getWriter().flush();
 	}
 }
