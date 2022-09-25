@@ -28,11 +28,9 @@ public class HttpSession {
 
     public void removeAttribute(String name) {
         sessionAttributes.remove(name);
-        SessionStorage.remove(sessionId);
     }
 
     public void invalidate() {
         sessionAttributes.clear();
-        SessionStorage.invalidate();
     }
 }

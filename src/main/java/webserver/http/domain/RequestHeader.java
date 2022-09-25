@@ -48,7 +48,11 @@ public class RequestHeader {
 
         SessionId sessionId = SessionId.sessionId(cookie.value());
         HttpSession session = SessionStorage.getSession(sessionId);
-        return session != null && session.getAttribute(sessionId.id()) != null;
+        if (session == null) {
+            return false;
+        }
+        Object attribute = session.getAttribute(sessionId.id());
+        return attribute != null && attribute.toString().equals("true");
     }
 
 }

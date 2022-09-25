@@ -77,6 +77,10 @@ public class HttpResponse {
         }
     }
 
+    public void addLoginCookie(String sessionId) {
+        headers.put("Set-Cookie", "loginKey" + "=" + sessionId + "; ");
+    }
+
     private void responseBody(byte[] body) {
         try {
             dos.write(body, 0, body.length);
