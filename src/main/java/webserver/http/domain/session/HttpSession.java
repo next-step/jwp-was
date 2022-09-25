@@ -9,11 +9,6 @@ public class HttpSession {
         this.sessionAttributes = new SessionAttributes();
     }
 
-    public HttpSession(String sessionId) {
-        this.sessionId = new SessionId(sessionId);
-        this.sessionAttributes = new SessionAttributes();
-    }
-
     public SessionId sessionId() {
         return sessionId;
     }

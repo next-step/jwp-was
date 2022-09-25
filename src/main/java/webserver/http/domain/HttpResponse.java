@@ -23,10 +23,9 @@ public class HttpResponse {
         this.headers = new HashMap<>();
     }
 
-    public void addHeader(String key, String value){
+    public void addHeader(String key, String value) {
         headers.put(key, value);
     }
-
     public void staticForward(String path) {
         try {
             byte[] body = loadFileFromClasspath(path);

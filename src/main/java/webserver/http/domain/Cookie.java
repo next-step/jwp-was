@@ -1,41 +1,54 @@
 package webserver.http.domain;
 
-import webserver.http.domain.session.SessionId;
-
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Cookie {
 
-    private static final String KEY_VALUE_DELIMITER = "=";
-    private static final String EMPTY_VALUE = "";
+    public static final String COOKIE_SPLIT_SYMNOL = "; ";
+    public static final String COOKIE_KEY_VALUE_SPLIT_SYMBOL = "=";
+    private final String name;
+    private final String value;
+    private String path;
 
-    public static final String LOGINED = "logined";
-
-    private static final Cookie cookie = new Cookie();
-    private final Map<String, String> cookies = new HashMap<>();
-
-    private Cookie() {
-
+    public Cookie(String name, String value) {
+        this.name = name;
+        this.value = value;
     }
 
-    public static Cookie getInstance() {
-        return cookie;
-    }
+    public static Map<String, Cookie> createCookie(RequestHeader header) {
+        String cookie = header.getValue("Cookie");
 
-    public void addCookie(String key, String value) {
-        cookies.put(key, value);
-    }
-
-    public void setLoginCookie(boolean isLogined, String path) {
-        this.addCookie("Set-Cookie", "logined=" + isLogined + "; Path=" + path);
-    }
-
-    public SessionId sessionId(String key) {
-        if (!cookies.containsKey(key)) {
-            throw new NoSuchElementException();
+        if (cookie == null || cookie.isEmpty()) {
+            return new HashMap<>();
         }
-        return new SessionId(cookies.get(key));
+        return Arrays.stream(cookie.split(COOKIE_SPLIT_SYMNOL))
+                .map(item -> {
+                    String[] items = item.split(COOKIE_KEY_VALUE_SPLIT_SYMBOL);
+                    return new Cookie(items[0], items[1]);
+                })
+                .collect(Collectors.toMap(Cookie::name, Function.identity(), (x, y) -> x));
     }
+
+    public String name() {
+        return name;
+    }
+
+    public String value() {
+        return value;
+    }
+
+    public String path() {
+        return path;
+    }
+
+//    public SessionId sessionId(String key) {
+//        if (!cookies.containsKey(key)) {
+//            return null;
+//        }
+//        return sessionId(cookies.get(key));
+//    }
 }

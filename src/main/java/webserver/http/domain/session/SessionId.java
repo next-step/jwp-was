@@ -5,18 +5,21 @@ import java.util.UUID;
 
 public class SessionId {
 
-    public static String LOGIN_SESSION_ID = "LOGINED";
     private final String id;
-
-    public SessionId(String sessionId) {
-        this.id = sessionId;
-    }
     public SessionId() {
-        this(UUID.randomUUID().toString());
+        this.id = UUID.randomUUID().toString();
+    }
+
+    private SessionId(String sessionId) {
+        this.id = sessionId;
     }
 
     public String id() {
         return id;
+    }
+
+    public static SessionId sessionId(String sessionId) {
+        return new SessionId(sessionId);
     }
 
     @Override

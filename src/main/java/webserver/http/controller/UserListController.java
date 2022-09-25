@@ -13,8 +13,6 @@ import java.util.Collection;
 
 public class UserListController implements Controller {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserListController.class);
-
     @Override
     public void execute(HttpRequest httpRequest, HttpResponse httpResponse) {
         if (httpRequest.requestHeader().loginCheck()) {

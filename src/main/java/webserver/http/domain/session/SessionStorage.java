@@ -1,14 +1,13 @@
 package webserver.http.domain.session;
 
-import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionStorage {
     private static final ConcurrentHashMap<SessionId, HttpSession> storage = new ConcurrentHashMap<>();
 
     public static HttpSession getSession(SessionId sessionId) {
-        if (!storage.containsKey(sessionId)) {
-            throw new NoSuchElementException();
+        if (sessionId == null || !storage.containsKey(sessionId)) {
+            return null;
         }
         return storage.get(sessionId);
     }

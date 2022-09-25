@@ -10,7 +10,6 @@ import webserver.http.domain.HttpResponse;
 import webserver.http.domain.RequestBody;
 import webserver.http.domain.session.HttpSession;
 
-import static webserver.http.domain.session.SessionId.LOGIN_SESSION_ID;
 
 public class LoginController implements Controller {
 
@@ -22,17 +21,18 @@ public class LoginController implements Controller {
 
         String userId = requestBody.body("userId");
         User user = DataBase.findUserById(userId);
-        HttpSession session = new HttpSession(LOGIN_SESSION_ID);
-        Cookie cookie = Cookie.getInstance();
-        cookie.addCookie("loginKey", LOGIN_SESSION_ID);
+        HttpSession session = new HttpSession();
+        String sessionId = session.sessionId().id();
 
         if (user != null && user.samePassword(requestBody.body("password"))) {
-            session.setAttribute(LOGIN_SESSION_ID, true);
+            session.setAttribute(sessionId, true);
+            httpResponse.addHeader("Set-Cookie", "loginKey" + "=" + sessionId);
             httpResponse.sendRedirect("/index.html");
             return;
         }
 
-        session.setAttribute(LOGIN_SESSION_ID, false);
+        session.setAttribute(sessionId, false);
+        httpResponse.addHeader("Set-Cookie", "loginKey" + "=" + sessionId);
         httpResponse.sendRedirect("/user/login_failed.html");
     }
 }

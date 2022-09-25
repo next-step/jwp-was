@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static webserver.http.domain.session.SessionId.LOGIN_SESSION_ID;
-
 public class RequestHeader {
 
     private static final String HEADER_DELIMITER = ": ";
@@ -41,10 +39,16 @@ public class RequestHeader {
     }
 
     public boolean loginCheck() {
-        Cookie cookie = Cookie.getInstance();
-        SessionId sessionId = cookie.sessionId("loginKey");
+        Map<String, Cookie> cookieMap = Cookie.createCookie(this);
+        Cookie cookie = cookieMap.get("loginKey");
+
+        if (cookie == null) {
+            return false;
+        }
+
+        SessionId sessionId = SessionId.sessionId(cookie.value());
         HttpSession session = SessionStorage.getSession(sessionId);
-        return session != null && session.getAttribute(LOGIN_SESSION_ID) != null;
+        return session != null && session.getAttribute(sessionId.id()) != null;
     }
 
 }
