@@ -21,7 +21,7 @@ public class UserLoginServlet implements Servlet {
 		}
 
 		response.setHttpVersion(HttpVersion.HTTP_1_1);
-		response.addHeader("Set-Cookie", "logined=" + hasAuthenticated);
+		response.addHeader("Set-Cookie", "logined=" + hasAuthenticated + "; Path=/; Max-Age=60");
 		response.sendRedirect(location);
 	}
 }

@@ -30,7 +30,6 @@ public class HttpRequestDecoder extends HttpMessageDecoder<HttpRequest> {
 
 	protected RequestLine decodeFirstLine(ByteBuf buffer) {
 		List<String> requestLine = lineSplitter.split(buffer);
-		System.out.println(requestLine.size());
 		if (hasBlank(requestLine)) {
 			throw new IllegalArgumentException("Invalid separator. only a single space or horizontal tab allowed.");
 		}

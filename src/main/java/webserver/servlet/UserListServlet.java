@@ -13,6 +13,7 @@ public class UserListServlet implements Servlet {
 	@Override
 	public void service(HttpRequest request, HttpResponse response) throws IOException {
 		String cookie = request.getHeader("Cookie");
+
 		if (cookie == null || !cookie.contains("logined=true")) {
 			response.setHttpVersion(HttpVersion.HTTP_1_1);
 			response.sendRedirect("/user/login.html");

@@ -12,15 +12,16 @@ import webserver.http.HttpVersion;
 public class DefaultServlet implements Servlet {
 	public void service(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
 		String path = request.getURI().getPath();
-		String contentType = "text/css;charset=utf-8";
+		String contentType = "text/html;charset=utf-8";
 		if (path.equals("/")) {
 			path = "/index.html";
 		}
 
 		if (path.endsWith(".js")) {
 			contentType = "application/javascript;charset=utf-8";
-		} else if (path.endsWith(".html")) {
-			contentType = "text/html;charset=utf-8";
+		}
+		if (path.endsWith(".css")) {
+			contentType = "text/css;charset=utf-8";
 		}
 
 		byte[] body = loadResource(path);
@@ -34,11 +35,11 @@ public class DefaultServlet implements Servlet {
 		response.getWriter().write(body, 0, body.length);
 		response.getWriter().flush();
 	}
-	private byte[] loadResource(String resource) throws IOException, URISyntaxException {
-		if (resource.endsWith(".html")) {
-			return FileIoUtils.loadFileFromClasspath("templates" + resource);
 
+	private byte[] loadResource(String resource) throws IOException, URISyntaxException {
+		if (resource.startsWith("/js") || resource.startsWith("/css") || resource.startsWith("/fonts") || resource.startsWith("/images")) {
+			return FileIoUtils.loadFileFromClasspath("static" + resource);
 		}
-		return FileIoUtils.loadFileFromClasspath("static" + resource);
+		return FileIoUtils.loadFileFromClasspath("templates" + resource);
 	}
 }

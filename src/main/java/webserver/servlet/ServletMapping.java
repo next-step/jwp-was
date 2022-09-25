@@ -9,11 +9,7 @@ public class ServletMapping {
 		"/user/list", new UserListServlet()
 	);
 
-	public static Servlet match(String path){
-		return servlets.keySet().stream()
-			.filter(path::equals)
-			.map(servlets::get)
-			.findFirst()
-			.orElse(new DefaultServlet());
+	public static Servlet match(String path) {
+		return servlets.getOrDefault(path, new DefaultServlet());
 	}
 }
