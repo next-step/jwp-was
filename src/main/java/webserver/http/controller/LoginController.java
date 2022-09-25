@@ -26,13 +26,13 @@ public class LoginController implements Controller {
 
         if (user != null && user.samePassword(requestBody.body("password"))) {
             session.setAttribute(sessionId, true);
-            httpResponse.addHeader("Set-Cookie", "loginKey" + "=" + sessionId);
+            httpResponse.addLoginCookie(sessionId);
             httpResponse.sendRedirect("/index.html");
             return;
         }
 
         session.setAttribute(sessionId, false);
-        httpResponse.addHeader("Set-Cookie", "loginKey" + "=" + sessionId);
+        httpResponse.addLoginCookie(sessionId);
         httpResponse.sendRedirect("/user/login_failed.html");
     }
 }
