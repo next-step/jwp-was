@@ -10,7 +10,8 @@ public class ServletConfig {
     public static List<Servlet> servlets() {
         return List.of(
                 new SignUpServlet(),
-                new SignInServlet()
+                new SignInServlet(),
+                new UserListServlet()
         );
     }
 }
