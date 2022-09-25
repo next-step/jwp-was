@@ -20,4 +20,8 @@ public class SessionStorage {
     public static void remove(SessionId sessionId) {
         storage.remove(sessionId);
     }
+
+    public static void invalidate() {
+        storage.clear();
+    }
 }

@@ -42,7 +42,7 @@ public class RequestHeader {
 
     public boolean loginCheck() {
         Cookie cookie = Cookie.getInstance();
-        SessionId sessionId = cookie.sessionId(LOGIN_SESSION_ID);
+        SessionId sessionId = cookie.sessionId("loginKey");
         HttpSession session = SessionStorage.getSession(sessionId);
         return session != null && session.getAttribute(LOGIN_SESSION_ID) != null;
     }

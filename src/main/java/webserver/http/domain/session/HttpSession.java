@@ -28,13 +28,16 @@ public class HttpSession {
 
     public void setAttribute(String name, Object value) {
         sessionAttributes.put(name, value);
+        SessionStorage.add(this);
     }
 
     public void removeAttribute(String name) {
         sessionAttributes.remove(name);
+        SessionStorage.remove(sessionId);
     }
 
     public void invalidate() {
         sessionAttributes.clear();
+        SessionStorage.invalidate();
     }
 }
