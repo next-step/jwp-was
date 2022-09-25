@@ -36,7 +36,7 @@ public class ResponseViewFactory {
     }
 
     private static void writeResponseBody(DataOutputStream dos, ResponseBody responseBody) throws IOException, URISyntaxException {
-        dos.write(responseBody.toFile(), 0, responseBody.getFileLength());
+        dos.write(responseBody.getContents(), 0, responseBody.getContentsLength());
         dos.flush();
     }
 }

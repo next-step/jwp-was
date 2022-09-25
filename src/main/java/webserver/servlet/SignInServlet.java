@@ -8,8 +8,6 @@ import webserver.http.HttpHeader;
 import webserver.http.HttpHeaders;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
-import webserver.http.response.ResponseBody;
-import webserver.http.response.ResponseLine;
 
 import java.util.Map;
 
@@ -39,16 +37,14 @@ public class SignInServlet extends HttpServlet {
         if (user.verifyPassword(signInUser.getPassword())) {
             HttpHeaders httpHeaders = HttpHeaders.redirect(SIGN_IN_SUCCESS_PATH);
             httpHeaders.addResponseHeader(HttpHeader.SET_COOKIE, SIGN_IN_SUCCESS_COOKIE);
-            ResponseBody responseBody = ResponseBody.from(SIGN_IN_SUCCESS_PATH);
 
-            return new HttpResponse(ResponseLine.redirect(), httpHeaders, responseBody);
+            return HttpResponse.redirect(httpHeaders);
         }
 
         HttpHeaders httpHeaders = HttpHeaders.redirect(SIGN_IN_FAILED_PATH);
         httpHeaders.addResponseHeader(HttpHeader.SET_COOKIE, SIGN_IN_FAILED_COOKIE);
-        ResponseBody responseBody = ResponseBody.from(SIGN_IN_FAILED_PATH);
 
-        return new HttpResponse(ResponseLine.redirect(), httpHeaders, responseBody);
+        return HttpResponse.redirect(httpHeaders);
     }
 
     private SignInUser convertRequestBodyToSignInUser(Map<String, String> requestBody) {

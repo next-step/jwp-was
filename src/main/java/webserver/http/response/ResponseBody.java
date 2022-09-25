@@ -7,36 +7,44 @@ import java.net.URISyntaxException;
 
 public class ResponseBody {
 
-    private final String contents;
+    private final byte[] contents;
 
-    private ResponseBody(String contents) {
+    private ResponseBody(byte[] contents) {
         this.contents = contents;
     }
 
     public static ResponseBody empty() {
-        return new ResponseBody("");
+        return new ResponseBody(new byte[0]);
     }
 
-    public static ResponseBody from(String response) {
-        if (response == null || response.length() == 0) {
+    public static ResponseBody from(String filePath) {
+        if (filePath == null || filePath.length() == 0) {
             return ResponseBody.empty();
         }
-        return new ResponseBody(response);
+        byte[] responsePage = toFile(filePath);
+        return new ResponseBody(responsePage);
     }
 
-    public byte[] toFile() {
+    public static ResponseBody from(byte[] contents) {
+        if (contents == null || contents.length == 0) {
+            return ResponseBody.empty();
+        }
+        return new ResponseBody(contents);
+    }
+
+    private static byte[] toFile(String filePath) {
         try {
-            return FileIoUtils.loadFileFromClasspath(contents);
+            return FileIoUtils.loadFileFromClasspath(filePath);
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public int getFileLength() {
-        return toFile().length;
+    public int getContentsLength() {
+        return contents.length;
     }
 
-    public String getContents() {
+    public byte[] getContents() {
         return contents;
     }
 }

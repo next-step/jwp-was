@@ -1,7 +1,5 @@
 package webserver.http.response;
 
-import exception.NotFoundHttpHeaderException;
-import webserver.http.HttpHeader;
 import webserver.http.HttpHeaders;
 
 public class HttpResponse {
@@ -16,9 +14,8 @@ public class HttpResponse {
         this.responseBody = responseBody;
     }
 
-    public String getRedirectFile() {
-        return httpHeaders.getRedirectFile()
-                .orElseThrow(() -> new NotFoundHttpHeaderException(HttpHeader.LOCATION));
+    public static HttpResponse redirect(HttpHeaders httpHeaders) {
+        return new HttpResponse(ResponseLine.redirect(), httpHeaders, ResponseBody.empty());
     }
 
     public ResponseLine getResponseLine() {
