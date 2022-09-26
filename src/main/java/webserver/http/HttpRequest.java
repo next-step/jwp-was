@@ -5,11 +5,18 @@ import java.net.URI;
 import org.springframework.util.MultiValueMap;
 
 public interface HttpRequest extends HttpMessage {
-	public MultiValueMap<String, String> getQueryParams();
+	MultiValueMap<String, String> getQueryParams();
 
-	public HttpMethod getMethod();
+	HttpMethod getMethod();
 
 	String getParameter(String name);
 
-	public URI getURI();
+	URI getURI();
+
+	void setAttribute(String name, Object value);
+
+	Object getAttribute(String name);
+
+	void setSession(HttpSession httpSession);
+	HttpSession getSession();
 }

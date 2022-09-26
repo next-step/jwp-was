@@ -2,6 +2,8 @@ package webserver.http;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
@@ -14,7 +16,9 @@ public class DefaultFormHttpRequest implements HttpRequest {
 	private String path;
 	private MultiValueMap<String, String> queryParams;
 	private MultiValueMap<String, String> headers;
+	private Map<String, Object> attributes;
 	private HttpVersion httpVersion;
+	private HttpSession httpSession;
 	private ByteBuffer content;
 
 	public DefaultFormHttpRequest(RequestLine requestLine, MultiValueMap<String, String> headers, ByteBuffer content) {
@@ -83,5 +87,28 @@ public class DefaultFormHttpRequest implements HttpRequest {
 	@Override
 	public URI getURI() {
 		return this.uri;
+	}
+
+	@Override
+	public void setAttribute(String name, Object value) {
+		if(attributes == null) {
+			attributes = new HashMap<>();
+		}
+		attributes.put(name, value);
+	}
+
+	@Override
+	public Object getAttribute(String name) {
+		return attributes.get(name);
+	}
+
+	@Override
+	public void setSession(HttpSession httpSession) {
+		this.httpSession = httpSession;
+	}
+
+	@Override
+	public HttpSession getSession() {
+		return this.httpSession;
 	}
 }
