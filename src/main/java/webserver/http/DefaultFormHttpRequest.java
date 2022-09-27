@@ -4,12 +4,15 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public class DefaultFormHttpRequest implements HttpRequest {
+	private static final String SESSION_ID = "JSESSIONID";
 	private static final String FORM_CONTENT_TYPE = "application/x-www-form-urlencoded";
 	private HttpMethod method;
 	private URI uri;
@@ -19,6 +22,7 @@ public class DefaultFormHttpRequest implements HttpRequest {
 	private Map<String, Object> attributes;
 	private HttpVersion httpVersion;
 	private HttpSession httpSession;
+	private UUID sessionId;
 	private ByteBuffer content;
 
 	public DefaultFormHttpRequest(RequestLine requestLine, MultiValueMap<String, String> headers, ByteBuffer content) {
@@ -110,5 +114,28 @@ public class DefaultFormHttpRequest implements HttpRequest {
 	@Override
 	public HttpSession getSession() {
 		return this.httpSession;
+	}
+
+	@Override
+	public UUID getCookieSessionId() {
+		if (Objects.nonNull(sessionId)) {
+			return sessionId;
+		}
+		return generateSessionId();
+	}
+
+	private UUID generateSessionId() {
+		String cookie = getHeader("Cookie");
+		if (cookie!= null) {
+			String[] cookieTokens = cookie.split(";");
+			for (String cookieToken : cookieTokens) {
+				String[] keyValueToken = cookieToken.split("=");
+				if (keyValueToken[0].equals(SESSION_ID)) {
+					sessionId = UUID.fromString(keyValueToken[1]);
+					return sessionId;
+				}
+			}
+		}
+		return UUID.randomUUID();
 	}
 }

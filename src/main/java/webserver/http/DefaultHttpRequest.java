@@ -3,12 +3,15 @@ package webserver.http;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public class DefaultHttpRequest implements HttpRequest {
+	private static final String SESSION_ID = "JSESSIONID";
 	private HttpMethod method;
 	private URI uri;
 	private String path;
@@ -16,7 +19,8 @@ public class DefaultHttpRequest implements HttpRequest {
 	private MultiValueMap<String, String> headers;
 	private Map<String, Object> attributes;
 	private HttpVersion httpVersion;
-	public HttpSession httpSession;
+	private HttpSession httpSession;
+	private UUID sessionId;
 
 	public DefaultHttpRequest(RequestLine requestLine, MultiValueMap<String, String> headers) {
 		this.method = requestLine.getMethod();
@@ -82,7 +86,7 @@ public class DefaultHttpRequest implements HttpRequest {
 
 	@Override
 	public void setAttribute(String name, Object value) {
-		if(attributes == null) {
+		if (attributes == null) {
 			attributes = new HashMap<>();
 		}
 		attributes.put(name, value);
@@ -101,5 +105,28 @@ public class DefaultHttpRequest implements HttpRequest {
 	@Override
 	public HttpSession getSession() {
 		return this.httpSession;
+	}
+
+	@Override
+	public UUID getCookieSessionId() {
+		if (Objects.nonNull(sessionId)) {
+			return sessionId;
+		}
+		return generateSessionId();
+	}
+
+	private UUID generateSessionId() {
+		String cookie = getHeader("Cookie");
+		if (cookie!= null) {
+			String[] cookieTokens = cookie.split(";");
+			for (String cookieToken : cookieTokens) {
+				String[] keyValueToken = cookieToken.split("=");
+				if (keyValueToken[0].equals(SESSION_ID)) {
+					sessionId = UUID.fromString(keyValueToken[1]);
+					return sessionId;
+				}
+			}
+		}
+		return UUID.randomUUID();
 	}
 }

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ class HttpRequestDecoderTest {
 	String get = "GET /hello.html?key=value&page=1 HTTP/1.1\r\n"
 		+ "User-Agent : Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
 		+ "Host: www.tutorialspoint.com\r\n"
+		+ "Cookie: JSESSIONID=50f59aa2-3d3b-451c-9aaa-9b5d5d5db6d5\r\n"
 		+ "Accept-Language: en-us\r\n"
 		+ "Accept-Encoding: gzip, deflate\r\n"
 		+ "Connection: Keep-Alive\r\n"
@@ -98,5 +100,14 @@ class HttpRequestDecoderTest {
 		assertThat(httpRequest.getQueryParams())
 			.containsEntry("key", List.of("value"))
 			.containsEntry("page", List.of("1"));
+	}
+
+	@Test
+	public void getCookieSessionIdTest(){
+		UUID sessionID = UUID.fromString("50f59aa2-3d3b-451c-9aaa-9b5d5d5db6d5");
+		HttpRequest httpRequest = requestDecoder.decode(
+			Unpooled.wrappedBuffer(get.getBytes()));
+
+		assertThat(httpRequest.getCookieSessionId()).isEqualTo(sessionID);
 	}
 }

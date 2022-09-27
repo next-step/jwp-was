@@ -1,6 +1,7 @@
 package webserver.http;
 
 import java.net.URI;
+import java.util.UUID;
 
 import org.springframework.util.MultiValueMap;
 
@@ -19,4 +20,5 @@ public interface HttpRequest extends HttpMessage {
 
 	void setSession(HttpSession httpSession);
 	HttpSession getSession();
+	UUID getCookieSessionId();
 }

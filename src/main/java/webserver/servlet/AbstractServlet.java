@@ -1,27 +1,34 @@
 package webserver.servlet;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.UUID;
+
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
+import webserver.http.HttpSession;
+import webserver.http.HttpStatus;
+import webserver.http.SessionManager;
 
-public class AbstractClass {
-	// 응답과 요청 상태코드 맞추기
-	// 인증과 같은 필터
-	// 로깅
-	// 캐싱
-	// 압축
-	// 인코딩
-	// forward 처리와 같은 공통 로직
-	// - 서블릿을 찾는다.
-	// - 서블릿을 실행한다.
-	// 예외 처리
+public abstract class AbstractServlet implements Servlet {
+	private static final String SESSION_ID_PREFIX = "JSESSIONID=";
+	public void service(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+		SessionManager sessionManager = SessionManager.getInstance();
+		UUID sessionId = request.getCookieSessionId();
 
-	public void forward(HttpRequest request, HttpResponse response) {
-		// response.addHeader("Content-Length", String.valueOf(content.length));
-		//
-		// String httpHeader = response.toEncoded();
-		// response.getWriter().writeBytes(httpHeader);
-		//
-		// response.getWriter().write(content, 0, content.length);
-		// response.getWriter().flush();
+		if(!sessionManager.isSessionIdValid(sessionId)) {
+			sessionManager.createSession(sessionId);
+			response.addHeader("Set-Cookie", SESSION_ID_PREFIX + sessionId + "; Path=/; Max-Age=60");
+		}
+
+		HttpSession session = sessionManager.findSession(sessionId);
+		request.setSession(session);
+
+		response.setHttpVersion(request.getHttpVersion());
+		response.setHttpStatus(HttpStatus.OK);
+
+		doService(request, response);
 	}
+
+	protected abstract void doService(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException;
 }

@@ -1,6 +1,7 @@
 package webserver.servlet;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Objects;
 
 import com.github.jknack.handlebars.Handlebars;
@@ -12,14 +13,11 @@ import db.DataBase;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.HttpSession;
-import webserver.http.HttpStatus;
-import webserver.http.HttpVersion;
 
-public class UserListServlet implements Servlet {
+public class UserListServlet extends AbstractServlet {
 	@Override
-	public void service(HttpRequest request, HttpResponse response) throws IOException {
-		if(hasAuthorization(request)) {
-			response.setHttpVersion(HttpVersion.HTTP_1_1);
+	public void doService(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
+		if(!hasAuthorization(request)) {
 			response.sendRedirect("/user/login.html");
 			return;
 		}
@@ -35,16 +33,12 @@ public class UserListServlet implements Servlet {
 		}).compile("/user/list");
 
 		byte[] content = template.apply(DataBase.findAll()).getBytes();
+		int length = content.length;
 
-		response.setHttpVersion(HttpVersion.HTTP_1_1);
-		response.setHttpStatus(HttpStatus.OK);
 		response.addHeader("Content-Type", "text/html;charset=utf-8");
-
-		response.addHeader("Content-Length", String.valueOf(content.length));
-
-		String httpHeader = response.toEncoded();
-		response.getWriter().writeBytes(httpHeader);
-		response.getWriter().write(content, 0, content.length);
+		response.addHeader("Content-Length", String.valueOf(length));
+		response.getWriter().writeBytes(response.toEncoded());
+		response.getWriter().write(content, 0, length);
 		response.getWriter().flush();
 	}
 

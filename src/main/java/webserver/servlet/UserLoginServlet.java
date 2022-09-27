@@ -8,9 +8,8 @@ import model.User;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.HttpSession;
-import webserver.http.HttpVersion;
-public class UserLoginServlet implements Servlet {
-	public void service(HttpRequest request, HttpResponse response) throws IOException {
+public class UserLoginServlet extends AbstractServlet {
+	public void doService(HttpRequest request, HttpResponse response) throws IOException {
 		String userId = request.getParameter("userId");
 		String password = request.getParameter("password");
 		String location = "/index.html";
@@ -24,7 +23,6 @@ public class UserLoginServlet implements Servlet {
 			location = "/user/login_failed.html";
 		}
 
-		response.setHttpVersion(HttpVersion.HTTP_1_1);
 		response.sendRedirect(location);
 	}
 }
