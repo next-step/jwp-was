@@ -33,9 +33,9 @@ public class Path {
         return new Path(pathElements[INDEX_PATH_VALUE], pathElements[INDEX_QUERY_STRING]);
     }
 
-    public boolean isStaticResource() {
+    public String getStaticResourceExtension() {
         String[] valueElements = value.split(RESOURCE_DELIMITER);
-        return !valueElements[FIRST_INDEX].equals(value);
+        return valueElements[valueElements.length - 1];
     }
 
     public String getValue() {

@@ -32,8 +32,8 @@ public class RequestLine {
         return new RequestLine(method, path, protocol);
     }
 
-    public boolean isStaticResource() {
-        return path.isStaticResource();
+    public String getStaticResourceExtension() {
+        return path.getStaticResourceExtension();
     }
 
     public Method getMethod() {

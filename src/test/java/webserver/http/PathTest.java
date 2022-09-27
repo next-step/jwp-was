@@ -3,7 +3,7 @@ package webserver.http;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -37,30 +37,15 @@ class PathTest {
     }
 
     @ParameterizedTest
-    @ValueSource(
-            strings = {
-                    "/user/form.html",
-                    "/index.html",
-                    "js/jquery-2.2.0.min.js",
-            }
+    @CsvSource(
+            value = {"/user/form.html:html", "/index.html:html", "js/jquery-2.2.0.min.js:js"}, delimiter = ':'
     )
     @DisplayName("Static Resource를 호출할 경우 isStaticResource()는 true를 반환한다.")
-    void callStaticResource(String inputPath) {
+    void callStaticResource(String inputPath, String extension) {
         Path path = Path.from(inputPath);
 
-        boolean actual = path.isStaticResource();
+        String actual = path.getStaticResourceExtension();
 
-        assertThat(actual).isTrue();
-    }
-
-    @Test
-    @DisplayName("API를 호출할 경우 isStaticResource()는 false를 반환한다.")
-    void callApiResource() {
-        String inputPath = "user/create";
-        Path path = Path.from(inputPath);
-
-        boolean actual = path.isStaticResource();
-
-        assertThat(actual).isFalse();
+        assertThat(actual).isEqualTo(extension);
     }
 }
