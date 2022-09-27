@@ -17,11 +17,11 @@ public class ResponseBody {
         return new ResponseBody(new byte[0]);
     }
 
-    public static ResponseBody from(String filePath) {
+    public static ResponseBody from(String resourcesPath, String filePath) {
         if (filePath == null || filePath.length() == 0) {
             return ResponseBody.empty();
         }
-        byte[] responsePage = toFile(filePath);
+        byte[] responsePage = toFile(resourcesPath, filePath);
         return new ResponseBody(responsePage);
     }
 
@@ -32,9 +32,9 @@ public class ResponseBody {
         return new ResponseBody(contents);
     }
 
-    private static byte[] toFile(String filePath) {
+    private static byte[] toFile(String resourcesPath, String filePath) {
         try {
-            return FileIoUtils.loadFileFromClasspath(filePath);
+            return FileIoUtils.loadFileFromClasspath(resourcesPath, filePath);
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
         }

@@ -9,7 +9,7 @@ public class FileIoUtilsTest {
 
     @Test
     void loadFileFromClasspath() throws Exception {
-        byte[] body = FileIoUtils.loadFileFromClasspath("/index.html");
+        byte[] body = FileIoUtils.loadFileFromClasspath(FileIoUtils.VIEW_RESOURCES_PATH, "/index.html");
         log.debug("file : {}", new String(body));
     }
 }
