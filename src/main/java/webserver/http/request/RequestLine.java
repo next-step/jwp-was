@@ -1,4 +1,4 @@
-package model.request;
+package webserver.http.request;
 
 import webserver.http.*;
 
@@ -30,6 +30,10 @@ public class RequestLine {
         final Protocol protocol = new Protocol(requestElements[INDEX_PROTOCOL]);
 
         return new RequestLine(method, path, protocol);
+    }
+
+    public String getStaticResourceExtension() {
+        return path.getStaticResourceExtension();
     }
 
     public Method getMethod() {

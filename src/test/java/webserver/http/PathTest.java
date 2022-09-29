@@ -2,6 +2,8 @@ package webserver.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -12,13 +14,10 @@ class PathTest {
     @Test
     @DisplayName("Path에 QueryString이 존재하는 경우")
     void createWithQueryString() {
-        // Arrange
-        final String inputPath = "/users?userId=javajigi&password=password&name=JaeSung";
+        String inputPath = "/users?userId=javajigi&password=password&name=JaeSung";
 
-        // Act
-        final Path actual = Path.from(inputPath);
+        Path actual = Path.from(inputPath);
 
-        // Assert
         assertThat(actual.getValue()).isEqualTo("/users");
         assertThat(actual.getQueryStringMap()).hasSize(3);
         assertThat(actual.getQueryStringMap()).contains(
@@ -29,14 +28,24 @@ class PathTest {
     @Test
     @DisplayName("Path만 존재하는 경우")
     void create() {
-        // Arrange
-        final String inputPath = "/users";
+        String inputPath = "/users";
 
-        // Act
-        final Path actual = Path.from(inputPath);
+        Path actual = Path.from(inputPath);
 
-        // Assert
         assertThat(actual.getValue()).isEqualTo("/users");
         assertThat(actual.getQueryStringMap()).isNull();
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {"/user/form.html:html", "/index.html:html", "js/jquery-2.2.0.min.js:js"}, delimiter = ':'
+    )
+    @DisplayName("Static Resource를 호출할 경우 isStaticResource()는 true를 반환한다.")
+    void callStaticResource(String inputPath, String extension) {
+        Path path = Path.from(inputPath);
+
+        String actual = path.getStaticResourceExtension();
+
+        assertThat(actual).isEqualTo(extension);
     }
 }
