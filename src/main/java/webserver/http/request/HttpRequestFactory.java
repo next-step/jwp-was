@@ -2,6 +2,7 @@ package webserver.http.request;
 
 import com.google.common.base.Charsets;
 import utils.IOUtils;
+import utils.StringUtils;
 import webserver.http.HttpHeaders;
 
 import java.io.BufferedReader;
@@ -30,7 +31,7 @@ public class HttpRequestFactory {
         HttpHeaders httpHeaders = HttpHeaders.init();
         String line = bufferedReader.readLine();
 
-        while (!line.isEmpty()) {
+        while (!StringUtils.isNullAndBlank(line)) {
             httpHeaders.addRequestHeader(line);
             line = bufferedReader.readLine();
         }
