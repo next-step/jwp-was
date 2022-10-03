@@ -20,7 +20,6 @@ class HttpResponseTest {
         HttpResponse actual = new HttpResponse(responseLine200, httpHeaders, responseBody);
 
         assertThat(actual.getResponseLine().toString()).isEqualTo("HTTP/1.1 200 OK");
-        assertThat(actual.getHeaders().getHeaders()).isEmpty();
         assertThat(actual.getBody().getContents()).isEmpty();
     }
 
@@ -48,7 +47,6 @@ class HttpResponseTest {
         HttpResponse actual = new HttpResponse(responseLine405, httpHeaders, responseBody);
 
         assertThat(actual.getResponseLine().toString()).isEqualTo("HTTP/1.1 405 Method Not Allowed");
-        assertThat(actual.getHeaders().getHeaders()).isEmpty();
         assertThat(actual.getBody().getContents()).isEmpty();
     }
 }

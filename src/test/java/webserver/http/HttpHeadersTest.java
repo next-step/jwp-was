@@ -6,10 +6,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
 
 @DisplayName("Http Header 테스트")
 class HttpHeadersTest {
@@ -32,10 +30,7 @@ class HttpHeadersTest {
 
         String[] expects = headerLine.split(": ");
 
-        assertThat(httpHeaders.getHeaders()).hasSize(1);
-        assertThat(httpHeaders.getHeaders()).contains(
-                entry(expects[0], expects[1])
-        );
+        assertThat(httpHeaders.getHeader(expects[0])).isEqualTo(expects[1]);
     }
 
     @Test
@@ -56,9 +51,8 @@ class HttpHeadersTest {
 
         HttpHeaders actual = HttpHeaders.redirect(redirectUrl);
 
-        Map<String, String> headers = actual.getHeaders();
         assertThat(actual.hasLocation()).isTrue();
-        assertThat(headers.get(HttpHeader.LOCATION)).isEqualTo("http://localhost:8080/index.html");
+        assertThat(actual.getHeader(HttpHeader.LOCATION)).isEqualTo("http://localhost:8080/index.html");
     }
 
     @Test

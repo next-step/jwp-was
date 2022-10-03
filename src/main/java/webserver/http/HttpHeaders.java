@@ -51,6 +51,10 @@ public class HttpHeaders {
         return Integer.parseInt(headers.get(HttpHeader.CONTENT_LENGTH));
     }
 
+    public String getHeader(String key) {
+        return headers.get(key);
+    }
+
     public boolean hasContent() {
         return headers.containsKey(HttpHeader.CONTENT_LENGTH);
     }
@@ -61,10 +65,6 @@ public class HttpHeaders {
 
     public boolean hasCookie() {
         return headers.containsKey(HttpHeader.COOKIE);
-    }
-
-    public Map<String, String> getHeaders() {
-        return headers;
     }
 
     public List<String> getOutputHeaders() {

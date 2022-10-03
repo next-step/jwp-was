@@ -51,7 +51,7 @@ public class UserListServlet extends HttpServlet {
 
     public boolean isSignIn(HttpHeaders httpHeaders) {
         if (httpHeaders.hasCookie()) {
-            String cookieValue = httpHeaders.getHeaders().get(HttpHeader.COOKIE);
+            String cookieValue = httpHeaders.getHeader(HttpHeader.COOKIE);
             String[] cookies = cookieValue.split(";");
             return Arrays.stream(cookies)
                     .filter(e -> e.contains("logined"))
