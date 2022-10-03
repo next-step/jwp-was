@@ -1,44 +1,29 @@
 package webserver.servlet;
 
-import utils.FileIoUtils;
-import webserver.http.HttpHeader;
-import webserver.http.HttpHeaders;
 import webserver.http.MediaType;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
-import webserver.http.response.ResponseBody;
-import webserver.http.response.ResponseLine;
 
 public class ResourceServlet extends HttpServlet {
 
+    private static final String VIEW_RESOURCES_PATH = "./templates";
+    private static final String STATIC_RESOURCES_PATH = "./static";
+
     @Override
     protected HttpResponse doGet(HttpRequest request) {
-        String filePath = request.getRequestLine().getPathValue();
+        String fileName = request.getRequestLine().getPathValue();
         String staticResourceExtension = request.getRequestLine().getStaticResourceExtension();
 
-        ResponseLine responseLine = ResponseLine.ok();
-        return MediaType.from(staticResourceExtension)
-                .map(mediaType -> createStaticResourceResponse(filePath, responseLine, mediaType))
-                .orElseGet(() -> createViewResourceResponse(filePath, responseLine));
+        MediaType mediaType = MediaType.from(staticResourceExtension);
+        String resourcePath = getResourcePath(mediaType);
+
+        return HttpResponse.forward(mediaType, resourcePath, fileName);
     }
 
-    private HttpResponse createStaticResourceResponse(String filePath, ResponseLine responseLine, MediaType mediaType) {
-        ResponseBody responseBody = ResponseBody.from(FileIoUtils.STATIC_RESOURCES_PATH, filePath);
-
-        HttpHeaders httpHeaders = HttpHeaders.init();
-        httpHeaders.addResponseHeader(HttpHeader.CONTENT_TYPE, mediaType.getChemical());
-        httpHeaders.addResponseHeader(HttpHeader.CONTENT_LENGTH, String.valueOf(responseBody.getContentsLength()));
-
-        return new HttpResponse(responseLine, httpHeaders, responseBody);
-    }
-
-    private HttpResponse createViewResourceResponse(String filePath, ResponseLine responseLine) {
-        ResponseBody responseBody = ResponseBody.from(FileIoUtils.VIEW_RESOURCES_PATH, filePath);
-
-        HttpHeaders httpHeaders = HttpHeaders.init();
-        httpHeaders.addResponseHeader(HttpHeader.CONTENT_TYPE, "text/html;charset=utf-8");
-        httpHeaders.addResponseHeader(HttpHeader.CONTENT_LENGTH, String.valueOf(responseBody.getContentsLength()));
-
-        return new HttpResponse(responseLine, httpHeaders, responseBody);
+    private String getResourcePath(MediaType mediaType) {
+        if (mediaType.isHtml() || mediaType.isIco()) {
+            return VIEW_RESOURCES_PATH;
+        }
+        return STATIC_RESOURCES_PATH;
     }
 }

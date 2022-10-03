@@ -1,15 +1,18 @@
 package webserver.http;
 
+import exception.NotFoundMediaTypeException;
+
 import java.util.Arrays;
-import java.util.Optional;
 
 public enum MediaType {
     CSS("text/css"),
     JS("text/javascript"),
+    HTML("text/html;charset=utf-8"),
 
     PNG("image/png"),
     JPEG("image/jpeg"),
     SVG("image/svg+xml"),
+    ICO("image/x-icon"),
 
     EOT("application/vnd.ms-fontobject"),
     TTF("application/x-font-ttf"),
@@ -22,10 +25,19 @@ public enum MediaType {
         this.chemical = chemical;
     }
 
-    public static Optional<MediaType> from(String extension) {
+    public static MediaType from(String extension) {
         return Arrays.stream(values())
                 .filter(mediaType -> mediaType.name().equalsIgnoreCase(extension))
-                .findFirst();
+                .findFirst()
+                .orElseThrow(() -> new NotFoundMediaTypeException(extension));
+    }
+
+    public boolean isHtml() {
+        return this == HTML;
+    }
+
+    public boolean isIco() {
+        return this == ICO;
     }
 
     public String getChemical() {
