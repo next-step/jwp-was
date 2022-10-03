@@ -42,4 +42,19 @@ public class HttpRequestTest {
         assertThat(actual.getHttpHeaders().getHeader(ACCEPT)).isEqualTo("*/*");
         assertThat(actual.getRequestLine().getParameter("userId")).isEqualTo("javajigi");
     }
+
+    @Test
+    @DisplayName("Post 요청을 파싱한다.")
+    void request_POST() throws IOException {
+        File file = new File(String.format(TEST_RESOURCE_PATH, "Http_POST.txt"));
+        FileInputStream inputStream = new FileInputStream(file);
+
+        HttpRequest actual = HttpRequestFactory.parse(inputStream);
+
+        assertThat(actual.getRequestLine().getMethod().name()).isEqualTo("POST");
+        assertThat(actual.getRequestLine().getPathValue()).isEqualTo("/user/create");
+        assertThat(actual.getHttpHeaders().getHeader(CONNECTION)).isEqualTo("keep-alive");
+        assertThat(actual.getHttpHeaders().getHeader(ACCEPT)).isEqualTo("*/*");
+        assertThat(actual.getBody().getContents().get("userId")).isEqualTo("javajigi");
+    }
 }
