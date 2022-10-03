@@ -55,6 +55,6 @@ public class HttpRequestTest {
         assertThat(actual.getRequestLine().getPathValue()).isEqualTo("/user/create");
         assertThat(actual.getHttpHeaders().getHeader(CONNECTION)).isEqualTo("keep-alive");
         assertThat(actual.getHttpHeaders().getHeader(ACCEPT)).isEqualTo("*/*");
-        assertThat(actual.getBody().getContents().get("userId")).isEqualTo("javajigi");
+        assertThat(actual.getBody().getContent("userId")).isEqualTo("javajigi");
     }
 }

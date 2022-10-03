@@ -7,9 +7,8 @@ import model.User;
 import webserver.http.HttpHeader;
 import webserver.http.HttpHeaders;
 import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestBody;
 import webserver.http.response.HttpResponse;
-
-import java.util.Map;
 
 public class SignInServlet extends HttpServlet {
 
@@ -27,9 +26,7 @@ public class SignInServlet extends HttpServlet {
 
     @Override
     protected HttpResponse doPost(HttpRequest request) {
-        Map<String, String> requestBody = request.getBody().getContents();
-
-        SignInUser signInUser = convertRequestBodyToSignInUser(requestBody);
+        SignInUser signInUser = convertRequestBodyToSignInUser(request.getBody());
 
         User user = DataBase.findUserById(signInUser.getUserId())
                 .orElseThrow(() -> new NotFoundUserException(signInUser.getUserId()));
@@ -47,9 +44,9 @@ public class SignInServlet extends HttpServlet {
         return HttpResponse.redirect(httpHeaders);
     }
 
-    private SignInUser convertRequestBodyToSignInUser(Map<String, String> requestBody) {
-        String userId = requestBody.get("userId");
-        String password = requestBody.get("password");
+    private SignInUser convertRequestBodyToSignInUser(RequestBody requestBody) {
+        String userId = requestBody.getContent("userId");
+        String password = requestBody.getContent("password");
 
         return new SignInUser(userId, password);
     }
