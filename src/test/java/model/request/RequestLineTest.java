@@ -10,7 +10,7 @@ import webserver.http.Version;
 import webserver.http.request.RequestLine;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @DisplayName("HTTP 요청 파싱 테스트")
 class RequestLineTest {
@@ -38,8 +38,13 @@ class RequestLineTest {
         assertThat(actual.getProtocolType()).isEqualTo(Type.HTTP);
         assertThat(actual.getProtocolVersion()).isEqualTo(Version.VERSION1_1);
         assertThat(actual.getPathValue()).isEqualTo("/user/create");
-        assertThat(actual.getQueryString()).contains(
-                entry("userId", "javajigi"), entry("password", "password"), entry("name", "JaeSung"), entry("email", "javajigi@slipp.net")
+
+        assertSoftly(softAssertions -> {
+                    softAssertions.assertThat(actual.getParameter("userId")).isEqualTo("javajigi");
+                    softAssertions.assertThat(actual.getParameter("password")).isEqualTo("password");
+                    softAssertions.assertThat(actual.getParameter("name")).isEqualTo("JaeSung");
+                    softAssertions.assertThat(actual.getParameter("email")).isEqualTo("javajigi@slipp.net");
+                }
         );
     }
 
