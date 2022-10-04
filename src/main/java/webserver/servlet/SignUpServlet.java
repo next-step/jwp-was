@@ -5,10 +5,10 @@ import db.DataBase;
 import model.User;
 import webserver.http.HttpHeaders;
 import webserver.http.request.HttpRequest;
+import webserver.http.request.RequestBody;
 import webserver.http.response.HttpResponse;
 
 import java.net.URLDecoder;
-import java.util.Map;
 
 public class SignUpServlet extends HttpServlet {
 
@@ -22,9 +22,7 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     protected HttpResponse doPost(HttpRequest request) {
-        Map<String, String> requestBody = request.getBody().getContents();
-
-        User user = convertRequestBodyToUser(requestBody);
+        User user = convertRequestBodyToUser(request.getBody());
 
         DataBase.addUser(user);
 
@@ -32,11 +30,11 @@ public class SignUpServlet extends HttpServlet {
         return HttpResponse.redirect(httpHeaders);
     }
 
-    private User convertRequestBodyToUser(Map<String, String> requestBody) {
-        String userId = decode(requestBody.get("userId"));
-        String password = decode(requestBody.get("password"));
-        String name = decode(requestBody.get("name"));
-        String email = decode(requestBody.get("email"));
+    private User convertRequestBodyToUser(RequestBody requestBody) {
+        String userId = decode(requestBody.getContent("userId"));
+        String password = decode(requestBody.getContent("password"));
+        String name = decode(requestBody.getContent("name"));
+        String email = decode(requestBody.getContent("email"));
 
         return new User(userId, password, name, email);
     }

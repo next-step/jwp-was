@@ -2,7 +2,6 @@ package webserver.http.request;
 
 import webserver.http.*;
 
-import java.util.Map;
 import java.util.Objects;
 
 public class RequestLine {
@@ -44,8 +43,8 @@ public class RequestLine {
         return path.getValue();
     }
 
-    public Map<String, String> getQueryString() {
-        return path.getQueryStringMap();
+    public String getParameter(String key) {
+        return path.getQueryStringMap().get(key);
     }
 
     public Type getProtocolType() {

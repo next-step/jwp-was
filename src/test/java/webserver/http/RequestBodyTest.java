@@ -18,11 +18,10 @@ class RequestBodyTest {
 
         RequestBody actual = RequestBody.from(input);
 
-        assertThat(actual.getContents()).hasSize(4);
-        assertThat(actual.getContents().get("userId")).isEqualTo("javajigi");
-        assertThat(actual.getContents().get("password")).isEqualTo("password");
-        assertThat(actual.getContents().get("name")).isEqualTo("JaeSung");
-        assertThat(actual.getContents().get("email")).isEqualTo("javajigi@slipp.net");
+        assertThat(actual.getContent("userId")).isEqualTo("javajigi");
+        assertThat(actual.getContent("password")).isEqualTo("password");
+        assertThat(actual.getContent("name")).isEqualTo("JaeSung");
+        assertThat(actual.getContent("email")).isEqualTo("javajigi@slipp.net");
     }
 
     @ParameterizedTest
@@ -31,6 +30,6 @@ class RequestBodyTest {
     void parseFailedWhenInvalidInput(String input) {
         RequestBody actual = RequestBody.from(input);
 
-        assertThat(actual.getContents()).isEmpty();
+        assertThat(actual).isEqualTo(RequestBody.empty());
     }
 }

@@ -3,6 +3,7 @@ package webserver.http.request;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class RequestBody {
@@ -32,8 +33,21 @@ public class RequestBody {
         return new RequestBody(contents);
     }
 
-    public Map<String, String> getContents() {
-        return contents;
+    public String getContent(String key) {
+        return contents.get(key);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestBody that = (RequestBody) o;
+        return Objects.equals(contents, that.contents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(contents);
     }
 
     @Override
