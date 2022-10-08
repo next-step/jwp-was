@@ -17,7 +17,6 @@ public class SignInServlet extends HttpServlet {
     private static final String SIGN_IN_SUCCESS_COOKIE = "logined=true; Path=/";
 
     private static final String SIGN_IN_FAILED_PATH = "/user/login_failed.html";
-    private static final String SIGN_IN_FAILED_COOKIE = "logined=false; Path=/";
 
     @Override
     public String getRequestPath() {
@@ -39,7 +38,6 @@ public class SignInServlet extends HttpServlet {
         }
 
         HttpHeaders httpHeaders = HttpHeaders.redirect(SIGN_IN_FAILED_PATH);
-        httpHeaders.addResponseHeader(HttpHeader.SET_COOKIE, SIGN_IN_FAILED_COOKIE);
 
         return HttpResponse.redirect(httpHeaders);
     }
