@@ -11,7 +11,6 @@ import webserver.http.response.ResponseBody;
 import webserver.http.response.ResponseLine;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collection;
 
 public class UserListServlet extends HttpServlet {
@@ -50,16 +49,7 @@ public class UserListServlet extends HttpServlet {
     }
 
     public boolean isSignIn(HttpHeaders httpHeaders) {
-        if (httpHeaders.hasCookie()) {
-            String cookieValue = httpHeaders.getHeader(HttpHeader.COOKIE);
-            String[] cookies = cookieValue.split(";");
-            return Arrays.stream(cookies)
-                    .filter(e -> e.contains("logined"))
-                    .map(logined -> logined.split("="))
-                    .map(e -> e[LAST_INDEX].trim())
-                    .anyMatch(result -> result.equals("true"));
-        }
-        return false;
+        return httpHeaders.getCookies().hasSignIn();
     }
 
     private String applyHandlebars(Collection<User> users) {
