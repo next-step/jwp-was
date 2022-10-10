@@ -1,39 +1,45 @@
 package webserver.http.session;
 
 import java.util.Objects;
+import java.util.Optional;
 
-public class HttpSession {
+public class HttpSession implements Session {
 
-    private final SessionId id;
-    private final SessionAttributes attributes;
+    private final SessionId sessionId;
+    private final SessionAttributes sessionAttributes;
 
     public HttpSession() {
-        this.id = SessionId.generate();
-        this.attributes = new SessionAttributes();
+        this.sessionId = SessionId.generate();
+        this.sessionAttributes = new SessionAttributes();
     }
 
-    public SessionId getId() {
-        return id;
+    @Override
+    public String getId() {
+        return sessionId.getId();
     }
 
-    public Object getAttributes(String name) {
-        return attributes.getAttribute(name);
+    @Override
+    public Optional<Object> getAttribute(String name) {
+        return Optional.ofNullable(sessionAttributes.getAttribute(name));
     }
 
     public int getAttributesSize() {
-        return attributes.getAttributesSize();
+        return sessionAttributes.getAttributesSize();
     }
 
-    public void setAttributes(String name, Object value) {
-        attributes.setAttribute(name, value);
+    @Override
+    public void setAttribute(String name, Object value) {
+        sessionAttributes.setAttribute(name, value);
     }
 
+    @Override
     public void removeAttribute(String name) {
-        attributes.removeAttribute(name);
+        sessionAttributes.removeAttribute(name);
     }
 
+    @Override
     public void invalidate() {
-        attributes.invalidate();
+        sessionAttributes.invalidate();
     }
 
     @Override
@@ -41,19 +47,19 @@ public class HttpSession {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HttpSession that = (HttpSession) o;
-        return Objects.equals(id, that.id) && Objects.equals(attributes, that.attributes);
+        return Objects.equals(sessionId, that.sessionId) && Objects.equals(sessionAttributes, that.sessionAttributes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, attributes);
+        return Objects.hash(sessionId, sessionAttributes);
     }
 
     @Override
     public String toString() {
         return "HttpSession{" +
-                "id=" + id +
-                ", attributes=" + attributes +
+                "id=" + sessionId +
+                ", attributes=" + sessionAttributes +
                 '}';
     }
 }
