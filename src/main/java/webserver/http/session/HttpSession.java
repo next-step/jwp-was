@@ -8,8 +8,8 @@ public class HttpSession implements Session {
     private final SessionId sessionId;
     private final SessionAttributes sessionAttributes;
 
-    public HttpSession() {
-        this.sessionId = SessionId.generate();
+    public HttpSession(SessionId sessionId) {
+        this.sessionId = sessionId;
         this.sessionAttributes = new SessionAttributes();
     }
 

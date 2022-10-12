@@ -15,4 +15,13 @@ class SessionIdTest {
 
         assertThat(actual).isNotNull();
     }
+
+    @Test
+    @DisplayName("sessionId 의 동등성, 동일성을 검증한다.")
+    void equals() {
+        SessionId sessionId = SessionId.generate();
+        SessionId convertedSessionId = new SessionId(sessionId.getId());
+
+        assertThat(sessionId).isEqualTo(convertedSessionId);
+    }
 }

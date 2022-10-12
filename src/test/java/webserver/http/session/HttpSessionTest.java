@@ -11,7 +11,8 @@ class HttpSessionTest {
     @Test
     @DisplayName("HttpSession 객체를 생성한다.")
     void create() {
-        HttpSession actual = new HttpSession();
+        SessionId sessionId = SessionId.generate();
+        HttpSession actual = new HttpSession(sessionId);
 
         assertThat(actual.getId()).isNotNull();
     }
