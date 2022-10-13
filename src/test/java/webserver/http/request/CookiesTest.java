@@ -11,32 +11,22 @@ class CookiesTest {
     @Test
     @DisplayName("Request Cookie 를 파싱한다.")
     void parse() {
-        String cookie = "Cookie: logined=true; Path=/";
+        String cookie = "Cookie: JSESSIONID=7d2bc5b1-f71b-4c93-baeb-c03125c306f7; Path=/";
 
         Cookies actual = Cookies.parse(cookie);
 
-        assertThat(actual.getCookieValue("logined")).isEqualTo("true");
+        assertThat(actual.getCookieValue("JSESSIONID")).isEqualTo("7d2bc5b1-f71b-4c93-baeb-c03125c306f7");
         assertThat(actual.getCookieValue("Path")).isEqualTo("/");
     }
 
     @Test
-    @DisplayName("로그인을 했을 경우 true 를 리턴한다.")
+    @DisplayName("로그인을 하여 JSESSIONID 가 있을 경우 true 를 리턴한다.")
     void signInTrue() {
-        String cookie = "Cookie: logined=true;";
+        String cookie = "Cookie: JSESSIONID=7d2bc5b1-f71b-4c93-baeb-c03125c306f7;";
 
         Cookies actual = Cookies.parse(cookie);
 
         assertThat(actual.hasSignIn()).isTrue();
-    }
-
-    @Test
-    @DisplayName("로그인에 true가 아닌 값이 있을 경우 false 를 리턴한다.")
-    void signInFalse_1() {
-        String cookie = "Cookie: logined=false;";
-
-        Cookies actual = Cookies.parse(cookie);
-
-        assertThat(actual.hasSignIn()).isFalse();
     }
 
     @Test

@@ -1,6 +1,7 @@
 package webserver.http.request;
 
 import utils.StringUtils;
+import webserver.http.session.SessionManager;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -46,11 +47,7 @@ public class Cookies {
     }
 
     public boolean hasSignIn() {
-        if (!cookies.containsKey(LOGINED)) {
-            return false;
-        }
-        String signInResult = cookies.get(LOGINED);
-        return signInResult.trim().equalsIgnoreCase("true");
+        return cookies.containsKey(SessionManager.SESSION_KEY);
     }
 
     public String getCookieValue(String cookieKey) {
