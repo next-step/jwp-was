@@ -1,5 +1,7 @@
 package webserver.http;
 
+import webserver.http.request.Cookies;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,8 +65,12 @@ public class HttpHeaders {
         return headers.containsKey(HttpHeader.LOCATION);
     }
 
-    public boolean hasCookie() {
-        return headers.containsKey(HttpHeader.COOKIE);
+    public Cookies getCookies() {
+        if (headers.containsKey(HttpHeader.COOKIE)) {
+            String cookieValue = headers.get(HttpHeader.COOKIE);
+            return Cookies.parse(cookieValue);
+        }
+        return Cookies.empty();
     }
 
     public List<String> getOutputHeaders() {

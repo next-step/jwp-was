@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import webserver.http.request.Cookies;
 
 import java.util.List;
 
@@ -68,5 +69,26 @@ class HttpHeadersTest {
                 "Content-Type: text/html;charset=utf-8",
                 "Content-Length: 29"
         );
+    }
+
+    @Test
+    @DisplayName("요청 헤더에 Cookie 가 있을 경우 이를 파싱한 Cookies 를 리턴한다.")
+    void getCookies() {
+        HttpHeaders httpHeaders = HttpHeaders.init();
+        httpHeaders.addRequestHeader("Cookie: logined=true; Path=/");
+
+        Cookies actual = httpHeaders.getCookies();
+
+        assertThat(actual.getCookiesSize()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("요청 헤더에 Cookie 가 없을 경우 비어있는 Cookies를 리턴한다.")
+    void getEmptyCookies() {
+        HttpHeaders httpHeaders = HttpHeaders.init();
+
+        Cookies actual = httpHeaders.getCookies();
+
+        assertThat(actual.getCookiesSize()).isEqualTo(0);
     }
 }
