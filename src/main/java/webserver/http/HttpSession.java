@@ -1,18 +1,20 @@
 package webserver.http;
 
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class HttpSession {
-	private UUID sessionId;
-	private HashMap<String, Object> attributes;
+	public static final String SESSION_ID = "JSESSIONID";
+	private String sessionId;
+	private volatile boolean changed;
+	private final Map<String, Object> attributes = new ConcurrentHashMap<>();
 
-	public HttpSession(UUID sessionId) {
+	public HttpSession(String sessionId) {
 		this.sessionId = sessionId;
-		this.attributes = new HashMap<>();
 	}
 
-	public UUID getSessionId() {
+	public String getSessionId() {
 		return this.sessionId;
 	}
 
@@ -30,6 +32,29 @@ public class HttpSession {
 
 	public void invalidate() {
 		sessionId = null;
-		attributes = null;
+	}
+
+	public boolean setChanged(boolean changed) {
+		this.changed = changed;
+		return true;
+	}
+
+	public boolean hasChanged() {
+		return changed;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		HttpSession that = (HttpSession)o;
+		return Objects.equals(sessionId, that.sessionId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(sessionId);
 	}
 }

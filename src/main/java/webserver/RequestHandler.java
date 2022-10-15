@@ -9,8 +9,6 @@ import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import webserver.http.HttpRequest;
 import webserver.http.HttpRequestDecoder;
 import webserver.http.HttpResponse;
@@ -19,7 +17,6 @@ import webserver.servlet.ServletMapping;
 
 public class RequestHandler implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-	private static final int MAX_BUFFER_SIZE = 8192;
 	private Socket connection;
 	private HttpRequestDecoder httpRequestDecoder;
 
@@ -34,22 +31,16 @@ public class RequestHandler implements Runnable {
 
 		try (InputStream inputStream = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
-			ByteBuf buffer = ByteBufAllocator.DEFAULT.buffer();
-			buffer.writeBytes(inputStream, MAX_BUFFER_SIZE);
-
-			HttpRequest httpRequest = httpRequestDecoder.decode(buffer);
+			HttpRequest httpRequest = httpRequestDecoder.decode(inputStream);
 			HttpResponse httpResponse = new HttpResponse(out);
 
-			String path = httpRequest.getURI().getPath();
-			logger.debug("Request path = " + path);
+			String servletPath = httpRequest.getServletPath();
 
-			Servlet servlet = ServletMapping.match(path);
+			Servlet servlet = ServletMapping.match(servletPath);
 			servlet.service(httpRequest, httpResponse);
 
-		} catch (IOException e) {
-			logger.error(e.getMessage());
-		} catch (URISyntaxException e) {
-			logger.error(e.getMessage());
+		} catch (IOException | URISyntaxException exception) {
+			logger.error(exception.getMessage());
 		}
 	}
 }

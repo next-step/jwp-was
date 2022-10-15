@@ -1,5 +1,7 @@
 package webserver.http;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.function.Predicate;
@@ -10,17 +12,23 @@ import org.springframework.util.MultiValueMap;
 import com.google.common.collect.Lists;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 import io.netty.util.internal.AppendableCharSequence;
 
 public abstract class HttpMessageDecoder<T extends HttpMessage> {
+	private static final int MAX_BUFFER_SIZE = 8192;
 	protected LineSplitter lineSplitter = new LineSplitter(new AppendableCharSequence(1024));
 
-	public final T decode(ByteBuf buffer) {
+	public final T decode(InputStream inputStream) throws IOException {
+		ByteBuf buffer = ByteBufAllocator.DEFAULT.buffer();
+		buffer.writeBytes(inputStream, MAX_BUFFER_SIZE);
+
 		ByteBuf firstLine = readLine(buffer);
 		MultiValueMap<String, String> headers = decodeHeaders(buffer);
 		ByteBuf inboundBytes = buffer.readBytes(buffer.readableBytes());
-		return initMessage(firstLine, headers, inboundBytes);
+		return initialize(firstLine, headers, inboundBytes);
 	}
+
 
 	protected MultiValueMap<String, String> decodeHeaders(ByteBuf buffer) {
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -34,7 +42,7 @@ public abstract class HttpMessageDecoder<T extends HttpMessage> {
 		return headers;
 	}
 
-	protected abstract T initMessage(ByteBuf firstLine, MultiValueMap<String, String> headers, ByteBuf inboundBytes);
+	protected abstract T initialize(ByteBuf firstLine, MultiValueMap<String, String> headers, ByteBuf inboundBytes);
 
 	protected ByteBuf readLine(ByteBuf byteBuffer) {
 		return readSlice(byteBuffer, (byte)'\n');

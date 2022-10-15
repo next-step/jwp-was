@@ -1,7 +1,6 @@
 package webserver.http;
 
 import java.net.URI;
-import java.nio.ByteBuffer;
 import java.util.List;
 
 import org.apache.logging.log4j.util.Strings;
@@ -16,16 +15,9 @@ public class HttpRequestDecoder extends HttpMessageDecoder<HttpRequest> {
 	private static final int LINE_ELEMENT_SIZE = 3;
 
 	@Override
-	protected HttpRequest initMessage(ByteBuf firstLine, MultiValueMap<String, String> headers, ByteBuf inboundBytes) {
-		RequestLine requestLine = decodeFirstLine(firstLine);
-		HttpMethod method = requestLine.getMethod();
+	protected HttpRequest initialize(ByteBuf firstLine, MultiValueMap<String, String> headers, ByteBuf inboundBytes) {
 
-		ByteBuffer content = getBytes(inboundBytes);
-
-		if (method.equals(HttpMethod.POST)) {
-			return new DefaultFormHttpRequest(requestLine, headers, content);
-		}
-		return new DefaultHttpRequest(requestLine, headers);
+		return new DefaultRequest(decodeFirstLine(firstLine), headers, getBytes(inboundBytes));
 	}
 
 	protected RequestLine decodeFirstLine(ByteBuf buffer) {
@@ -51,6 +43,6 @@ public class HttpRequestDecoder extends HttpMessageDecoder<HttpRequest> {
 
 	private boolean hasBlank(List<String> requestLine) {
 		return requestLine.stream()
-			.anyMatch(line -> Strings.isBlank(line));
+			.anyMatch(Strings::isBlank);
 	}
 }

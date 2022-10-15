@@ -2,29 +2,27 @@ package webserver.http;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.MultiValueMap;
 
 import io.netty.buffer.Unpooled;
 
 class HttpRequestDecoderTest {
 	String get = "GET /hello.html?key=value&page=1 HTTP/1.1\r\n"
-		+ "User-Agent : Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+		+ "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
 		+ "Host: www.tutorialspoint.com\r\n"
-		+ "Cookie: JSESSIONID=50f59aa2-3d3b-451c-9aaa-9b5d5d5db6d5\r\n"
+		+ "Cookie: JSESSIONID=50f59aa2-3d3b-451c-9aaa-9b5d5d5db6d5; utma=9384732\r\n"
 		+ "Accept-Language: en-us\r\n"
 		+ "Accept-Encoding: gzip, deflate\r\n"
 		+ "Connection: Keep-Alive\r\n"
 		+ "\r\n";
 
-	String post = "POST /hello.html?key=value&page=1 HTTP/1.1\r\n"
-		+ "User-Agent : Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+	String post = "POST /hello.html HTTP/1.1\r\n"
+		+ "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
 		+ "Host: www.tutorialspoint.com\r\n"
 		+ "Accept-Language: en-us\r\n"
 		+ "Accept-Encoding: gzip, deflate\r\n"
@@ -42,25 +40,33 @@ class HttpRequestDecoderTest {
 	}
 
 	@Test
-	public void ows(){
+	void ows() {
+		String expectedMessage = "Invalid separator. only a single space or horizontal tab allowed.";
+		Class expectedException = IllegalArgumentException.class;
+
 		assertThatThrownBy(() -> {
-			requestDecoder.decodeFirstLine(Unpooled.wrappedBuffer("POST  /hello.html?key=value&page=1 HTTP/1.1\r\n".getBytes()));
-		}).isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("Invalid separator. only a single space or horizontal tab allowed.");
+			requestDecoder.decodeFirstLine(
+				Unpooled.wrappedBuffer("POST  /hello.html?key=value&page=1 HTTP/1.1\r\n".getBytes()));
+		}).isInstanceOf(expectedException)
+			.hasMessage(expectedMessage);
 	}
 
 	@Test
-	public void owsw(){
+	void owsw() {
+		String expectedMessage = "Invalid argument count exception. There must be 3 elements, but received";
+		Class expectedException = IllegalArgumentException.class;
+
 		assertThatThrownBy(() -> {
-			requestDecoder.decodeFirstLine(Unpooled.wrappedBuffer("POST/hello.html?key=value&page=1 HTTP/1.1\r\n".getBytes()));
-		}).isInstanceOf(IllegalArgumentException.class)
-			.hasMessageStartingWith("Invalid argument count exception. There must be 3 elements, but received");
+			requestDecoder.decodeFirstLine(
+				Unpooled.wrappedBuffer("POST/hello.html?key=value&page=1 HTTP/1.1\r\n".getBytes()));
+		}).isInstanceOf(expectedException)
+			.hasMessage(expectedMessage);
 	}
 
-
 	@Test
-	public void decodeRequestLine() {
-		RequestLine requestLine = requestDecoder.decodeFirstLine(Unpooled.wrappedBuffer("GET /hello.html?key=value&page=1 HTTP/1.1\r\n".getBytes()));
+	void decodeRequestLine() {
+		RequestLine requestLine = requestDecoder.decodeFirstLine(
+			Unpooled.wrappedBuffer("GET /hello.html?key=value&page=1 HTTP/1.1\r\n".getBytes()));
 
 		assertThat(requestLine.getHttpVersion()).isEqualTo(HttpVersion.HTTP_1_1);
 		assertThat(requestLine.getMethod()).isEqualTo(HttpMethod.GET);
@@ -69,45 +75,46 @@ class HttpRequestDecoderTest {
 	}
 
 	@Test
-	public void decodeGetHeaders(){
-		MultiValueMap<String, String> headers = requestDecoder.decodeHeaders(Unpooled.wrappedBuffer(get.getBytes()));
+	void decodeGetHeaders() throws IOException {
+		HttpRequest request = requestDecoder
+			.decode(new ByteArrayInputStream(get.getBytes()));
 
-		assertThat(headers)
-			.containsEntry("User-Agent ", List.of("Mozilla/4.0 (compatible; MSIE5.01; Windows NT)"))
-			.containsEntry("Host", List.of("www.tutorialspoint.com"))
-			.containsEntry("Accept-Language", List.of("en-us"))
-			.containsEntry("Accept-Encoding", List.of("gzip, deflate"))
-			.containsEntry("Connection", List.of("Keep-Alive"));
+		assertThat(request.getHeader("User-Agent")).isEqualTo("Mozilla/4.0 (compatible; MSIE5.01; Windows NT)");
+		assertThat(request.getHeader("Host")).isEqualTo("www.tutorialspoint.com");
+		assertThat(request.getHeader("Cookie")).isEqualTo(
+			"JSESSIONID=50f59aa2-3d3b-451c-9aaa-9b5d5d5db6d5; utma=9384732");
+		assertThat(request.getHeader("Accept-Language")).isEqualTo("en-us");
+		assertThat(request.getHeader("Accept-Encoding")).isEqualTo("gzip, deflate");
+		assertThat(request.getHeader("Connection")).isEqualTo("Keep-Alive");
 	}
 
 	@Test
-	public void decodePostHeaders(){
-		MultiValueMap<String, String> headers = requestDecoder.decodeHeaders(Unpooled.wrappedBuffer(post.getBytes()));
+	void form() throws IOException {
+		HttpRequest request = requestDecoder
+			.decode(new ByteArrayInputStream(post.getBytes()));
 
-		assertThat(headers)
-			.containsEntry("User-Agent ", List.of("Mozilla/4.0 (compatible; MSIE5.01; Windows NT)"))
-			.containsEntry("Host", List.of("www.tutorialspoint.com"))
-			.containsEntry("Accept-Language", List.of("en-us"))
-			.containsEntry("Accept-Encoding", List.of("gzip, deflate"))
-			.containsEntry("Connection", List.of("Keep-Alive"));
+		assertThat(request.getParameter("key")).isEqualTo("value");
+		assertThat(request.getParameter("page")).isEqualTo("1");
 	}
 
 	@Test
-	public void form() {
-		HttpRequest httpRequest = requestDecoder.decode(
-			Unpooled.wrappedBuffer(post.getBytes()));
+	void getCookie() throws IOException {
+		HttpRequest request = requestDecoder
+			.decode(new ByteArrayInputStream(get.getBytes()));
 
-		assertThat(httpRequest.getQueryParams())
-			.containsEntry("key", List.of("value"))
-			.containsEntry("page", List.of("1"));
+		assertThat(request.getCookies())
+			.containsValue(new Cookie("JSESSIONID", "50f59aa2-3d3b-451c-9aaa-9b5d5d5db6d5"))
+			.containsValue(new Cookie("utma", "9384732"));
 	}
 
 	@Test
-	public void getCookieSessionIdTest(){
-		UUID sessionID = UUID.fromString("50f59aa2-3d3b-451c-9aaa-9b5d5d5db6d5");
-		HttpRequest httpRequest = requestDecoder.decode(
-			Unpooled.wrappedBuffer(get.getBytes()));
+	void getSession() throws IOException {
+		String sessionId = "50f59aa2-3d3b-451c-9aaa-9b5d5d5db6d5";
+		HttpRequest request = requestDecoder
+			.decode(new ByteArrayInputStream(get.getBytes()));
 
-		assertThat(httpRequest.getCookieSessionId()).isEqualTo(sessionID);
+		HttpSession session = request.getSession();
+		assertThat(session.hasChanged()).isTrue();
+		assertThat(session.getSessionId()).isEqualTo(sessionId);
 	}
 }

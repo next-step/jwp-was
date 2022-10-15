@@ -3,16 +3,20 @@ package webserver.http;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public class HttpResponse implements HttpMessage {
+	private static final String SET_COOKIE = "Set-Cookie";
+	public static final String LOCATION = "Location";
 	private HttpStatus httpStatus;
 	private HttpVersion httpVersion;
 	private MultiValueMap<String, String> headers;
-	private byte[] content;
-	private DataOutputStream writer;
+	private final List<Cookie> cookies = new ArrayList<>();
+	private final DataOutputStream writer;
 
 	public HttpResponse(OutputStream outputStream) {
 		this.writer = new DataOutputStream(outputStream);
@@ -23,7 +27,9 @@ public class HttpResponse implements HttpMessage {
 	}
 
 	public void sendRedirect(String location) throws IOException {
-		sendRedirect(location, HttpStatus.FOUND);
+		setHttpStatus(HttpStatus.FOUND);
+		addHeader(LOCATION, location);
+		writer.writeBytes(toEncoded());
 	}
 
 	public void setHttpStatus(HttpStatus httpStatus) {
@@ -66,19 +72,18 @@ public class HttpResponse implements HttpMessage {
 			.append(" ")
 			.append(httpStatus.getReasonPhrase())
 			.append("\r\n");
-		for (String key : headers.keySet()) {
-			builder.append(key)
+		if (headers != null) {
+			headers.forEach((key, values) -> values.forEach(value -> builder.append(key)
 				.append(": ")
-				.append(headers.getFirst(key))
-				.append("\r\n");
+				.append(value)
+				.append("\r\n")));
 		}
 		builder.append("\r\n");
 		return builder.toString();
 	}
 
-	private void sendRedirect(String location, HttpStatus httpStatus) throws IOException {
-		setHttpStatus(httpStatus);
-		addHeader("Location", location);
-		writer.writeBytes(toEncoded());
+	public void addCookie(Cookie cookie) {
+		cookies.add(cookie);
+		addHeader(SET_COOKIE, cookie.toEncoded());
 	}
 }

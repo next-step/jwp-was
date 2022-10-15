@@ -9,7 +9,7 @@ import webserver.http.HttpResponse;
 
 public class DefaultServlet extends AbstractServlet {
 	public void doService(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-		String path = request.getURI().getPath();
+		String path = request.getServletPath();
 		byte[] content = loadResource(resolvePath(path));
 		int contentLength = content.length;
 
