@@ -20,15 +20,20 @@ public abstract class HttpMessageDecoder<T extends HttpMessage> {
 	protected LineSplitter lineSplitter = new LineSplitter(new AppendableCharSequence(1024));
 
 	public final T decode(InputStream inputStream) throws IOException {
-		ByteBuf buffer = ByteBufAllocator.DEFAULT.buffer();
-		buffer.writeBytes(inputStream, MAX_BUFFER_SIZE);
+		ByteBuf buffer = convertToByteBuf(inputStream);
 
 		ByteBuf firstLine = readLine(buffer);
 		MultiValueMap<String, String> headers = decodeHeaders(buffer);
 		ByteBuf inboundBytes = buffer.readBytes(buffer.readableBytes());
+
 		return initialize(firstLine, headers, inboundBytes);
 	}
 
+	private ByteBuf convertToByteBuf(InputStream inputStream) throws IOException {
+		ByteBuf buffer = ByteBufAllocator.DEFAULT.buffer();
+		buffer.writeBytes(inputStream, MAX_BUFFER_SIZE);
+		return buffer;
+	}
 
 	protected MultiValueMap<String, String> decodeHeaders(ByteBuf buffer) {
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -60,6 +65,7 @@ public abstract class HttpMessageDecoder<T extends HttpMessage> {
 		inboundBytes.release();
 		return contnet;
 	}
+
 	private boolean isEndOfHeader(ByteBuf buffer) {
 		if (buffer.getByte(buffer.readerIndex()) == 13) {
 			buffer.skipBytes(2);
@@ -78,6 +84,7 @@ public abstract class HttpMessageDecoder<T extends HttpMessage> {
 		private boolean isOWS(char character) {
 			return character == ' ' || character == '\t';
 		}
+
 		private void skipOWS() {
 			int length = header.length() - 1;
 			for (int index = length; index >= 0; index--) {
@@ -87,9 +94,10 @@ public abstract class HttpMessageDecoder<T extends HttpMessage> {
 				}
 			}
 		}
+
 		public List<String> split(ByteBuf buffer) {
 			List<String> fragments = Lists.newArrayList();
-			while(buffer.isReadable()){
+			while (buffer.isReadable()) {
 				fragments.add(slice(buffer, ch -> ch == ' ' || ch == '\t' || ch == '\n', false));
 			}
 			return fragments;

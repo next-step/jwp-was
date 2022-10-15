@@ -6,9 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionManager {
 	private static final SessionManager instance = new SessionManager();
 
-	private SessionManager() {
-	}
-
 	private final Map<String, HttpSession> sessions = new ConcurrentHashMap<>();
 
 	public static SessionManager getInstance() {

@@ -1,69 +1,91 @@
 package webserver.servlet;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import utils.FileIoUtils;
+import webserver.http.HttpMessage;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 
 public class DefaultServlet extends AbstractServlet {
-	public void doService(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-		String path = request.getServletPath();
-		byte[] content = loadResource(resolvePath(path));
+
+	public void doService(HttpRequest request, HttpResponse response) throws IOException {
+		String requestUri = getRequestPath(request);
+
+		ResourceType resourceType = ResourceType.of(requestUri);
+
+		byte[] content = loadResource(getResourcePath(requestUri, resourceType));
 		int contentLength = content.length;
 
-		response.addHeader("Content-Type", resolveType(path));
-		response.addHeader("Content-Length", String.valueOf(contentLength));
+		response.addHeader(HttpMessage.CONTENT_LENGTH, String.valueOf(contentLength));
+		response.addHeader(HttpMessage.CONTENT_TYPE, resourceType.getContentType());
 
 		response.getWriter().writeBytes(response.toEncoded());
 		response.getWriter().write(content, 0, contentLength);
 		response.getWriter().flush();
+		response.getWriter().close();
 	}
 
-	private byte[] loadResource(String resource) throws IOException, URISyntaxException {
-		return FileIoUtils.loadFileFromClasspath(resource);
-	}
-
-	private String resolvePath(String path) {
-		if (path.equals("/")) {
-			path = "templates/index.html";
-		} else if (path.startsWith("/js") || path.startsWith("/css") || path.startsWith("/fonts") || path.startsWith(
-			"/images")) {
-			path = "static" + path;
-		} else {
-			path = "templates" + path;
+	private byte[] loadResource(String resource) throws FileNotFoundException {
+		try {
+			return FileIoUtils.loadFileFromClasspath(resource);
+		} catch (Exception exception) {
+			throw new FileNotFoundException("The specified path does not exist in the classpath. [" + resource + "]");
 		}
-		return path;
+	}
+	private String getRequestPath(HttpRequest request) {
+		String requestUri = request.getRequestUri();
+
+		if (requestUri.equals("/")) {
+			requestUri = "/index.html";
+		}
+		return requestUri;
 	}
 
-	private String resolveType(String path) {
-		String contentType = "text/html;charset=utf-8";
-		if (path.endsWith(".css")) {
-			contentType = "text/css;charset=utf-8";
-		} else if (path.endsWith(".js")) {
-			contentType = "application/javascript;charset=utf-8";
-		} else if (path.endsWith(".png")) {
-			contentType = "image/png";
-		} else if (path.endsWith(".jpg")) {
-			contentType = "image/jpeg";
-		} else if (path.endsWith(".woff")) {
-			contentType = "application/font-woff";
-		} else if (path.endsWith(".woff2")) {
-			contentType = "application/font-woff2";
-		} else if (path.endsWith(".ttf")) {
-			contentType = "application/x-font-ttf";
-		} else if (path.endsWith(".svg")) {
-			contentType = "image/svg+xml";
-		} else if (path.endsWith(".ico")) {
-			contentType = "image/x-icon";
-		} else if (path.endsWith(".eot")) {
-			contentType = "application/vnd.ms-fontobject";
-		} else if (path.endsWith(".otf")) {
-			contentType = "application/x-font-opentype";
-		} else if (path.endsWith(".html")) {
-			contentType = "text/html;charset=utf-8";
+	private String getResourcePath(String requestUri, ResourceType resourceType) {
+		return resourceType.getResourceRootPath() + requestUri;
+	}
+
+	enum ResourceType {
+		HTML("text/html", ".html", ResourceType.TEMPLATES),
+		JS("application/javascript;charset=utf-8", ".js", ResourceType.STATIC),
+		CSS("text/css", ".css", ResourceType.STATIC),
+		ICO("image/x-icon", ".ico", ResourceType.STATIC),
+		PNG("image/png", ".png", ResourceType.STATIC),
+		JPG("image/jpeg", ".jpg", ResourceType.STATIC),
+		UNKNOWN("text/html", "", ResourceType.STATIC);
+
+		private static final String TEMPLATES = "templates";
+		public static final String STATIC = "static";
+		private String contentType;
+		private String extension;
+		private String resourceRootPath;
+
+		ResourceType(String contentType, String extension, String resourceRootPath) {
+			this.contentType = contentType;
+			this.extension = extension;
+			this.resourceRootPath = resourceRootPath;
 		}
-		return contentType;
+
+		public String getContentType() {
+			return contentType;
+		}
+
+		public String getExtension() {
+			return extension;
+		}
+
+		public String getResourceRootPath() {
+			return resourceRootPath;
+		}
+
+		public static ResourceType of(String requestUri) {
+			return Arrays.stream(values())
+				.filter(resourceType -> requestUri.endsWith(resourceType.getExtension()))
+				.findFirst()
+				.orElse(UNKNOWN);
+		}
 	}
 }

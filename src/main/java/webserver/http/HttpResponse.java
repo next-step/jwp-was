@@ -10,8 +10,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public class HttpResponse implements HttpMessage {
-	private static final String SET_COOKIE = "Set-Cookie";
-	public static final String LOCATION = "Location";
 	private HttpStatus httpStatus;
 	private HttpVersion httpVersion;
 	private MultiValueMap<String, String> headers;
@@ -30,6 +28,18 @@ public class HttpResponse implements HttpMessage {
 		setHttpStatus(HttpStatus.FOUND);
 		addHeader(LOCATION, location);
 		writer.writeBytes(toEncoded());
+		writer.close();
+	}
+
+	public void sendError(HttpStatus sendError) throws IOException {
+		setHttpStatus(sendError);
+		writer.writeBytes(toEncoded());
+		writer.close();
+	}
+
+	public void addCookie(Cookie cookie) {
+		cookies.add(cookie);
+		addHeader(SET_COOKIE, cookie.toEncoded());
 	}
 
 	public void setHttpStatus(HttpStatus httpStatus) {
@@ -80,10 +90,5 @@ public class HttpResponse implements HttpMessage {
 		}
 		builder.append("\r\n");
 		return builder.toString();
-	}
-
-	public void addCookie(Cookie cookie) {
-		cookies.add(cookie);
-		addHeader(SET_COOKIE, cookie.toEncoded());
 	}
 }

@@ -1,6 +1,5 @@
 package webserver.http;
 
-import java.net.URI;
 import java.util.Map;
 
 import org.springframework.util.MultiValueMap;
@@ -12,9 +11,10 @@ public interface HttpRequest extends HttpMessage {
 
 	String getParameter(String name);
 
-	URI getURI();
+	String getRequestUri();
 
 	String getServletPath();
+	String getQueryString();
 
 	void setAttribute(String name, Object value);
 

@@ -1,7 +1,6 @@
 package webserver.servlet;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Objects;
 
 import com.github.jknack.handlebars.Handlebars;
@@ -10,14 +9,15 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 
 import db.DataBase;
+import webserver.http.HttpMessage;
 import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.HttpSession;
 
 public class UserListServlet extends AbstractServlet {
 	@Override
-	public void doService(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-		if(!hasAuthorization(request)) {
+	public void doService(HttpRequest request, HttpResponse response) throws IOException {
+		if (!hasAuthorization(request)) {
 			response.sendRedirect("/user/login.html");
 			return;
 		}
@@ -28,18 +28,19 @@ public class UserListServlet extends AbstractServlet {
 
 		Handlebars handlebars = new Handlebars(loader);
 
-		Template template = handlebars.registerHelper("inc", (context, options) -> {
-			return Integer.parseInt(context.toString()) + 3;
-		}).compile("/user/list");
+		Template template = handlebars.registerHelper("inc",
+				(context, options) -> Integer.parseInt(context.toString()) + 3)
+			.compile("/user/list");
 
 		byte[] content = template.apply(DataBase.findAll()).getBytes();
 		int length = content.length;
 
-		response.addHeader("Content-Type", "text/html;charset=utf-8");
-		response.addHeader("Content-Length", String.valueOf(length));
+		response.addHeader(HttpMessage.CONTENT_TYPE, "text/html;charset=utf-8");
+		response.addHeader(HttpMessage.CONTENT_LENGTH, String.valueOf(length));
 		response.getWriter().writeBytes(response.toEncoded());
 		response.getWriter().write(content, 0, length);
 		response.getWriter().flush();
+		response.getWriter().close();
 	}
 
 	private boolean hasAuthorization(HttpRequest request) {

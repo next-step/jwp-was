@@ -1,7 +1,10 @@
 package webserver.servlet;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import webserver.http.Cookie;
 import webserver.http.HttpRequest;
@@ -10,8 +13,8 @@ import webserver.http.HttpSession;
 import webserver.http.HttpStatus;
 
 public abstract class AbstractServlet implements Servlet {
-	public void service(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException {
-
+	private static final Logger logger = LoggerFactory.getLogger(AbstractServlet.class);
+	public void service(HttpRequest request, HttpResponse response) throws IOException {
 		HttpSession session = request.getSession();
 		if (session.hasChanged() && session.setChanged(false)) {
 			Cookie cookie = new Cookie(HttpSession.SESSION_ID, session.getSessionId());
@@ -22,8 +25,12 @@ public abstract class AbstractServlet implements Servlet {
 		response.setHttpVersion(request.getHttpVersion());
 		response.setHttpStatus(HttpStatus.OK);
 
-		doService(request, response);
+		try {
+			doService(request, response);
+		} catch (FileNotFoundException exception) {
+			response.sendError(HttpStatus.NOT_FOUND);
+			logger.warn(exception.getMessage());
+		}
 	}
-
-	protected abstract void doService(HttpRequest request, HttpResponse response) throws IOException, URISyntaxException;
+	protected abstract void doService(HttpRequest request, HttpResponse response) throws IOException;
 }

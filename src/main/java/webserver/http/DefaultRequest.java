@@ -4,6 +4,7 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -17,10 +18,11 @@ public class DefaultRequest implements HttpRequest {
 	private static final String SESSION_ID = "JSESSIONID";
 	private static final String COOKIE = "Cookie";
 	private static final String FORM_CONTENT_TYPE = "application/x-www-form-urlencoded";
-	public static final String CONTENT_TYPE = "Content-Type";
 	private HttpMethod method;
 	private URI uri;
+	private String requestUri;
 	private String servletPath;
+	private String queryString;
 	private MultiValueMap<String, String> queryParams;
 	private MultiValueMap<String, String> headers;
 	private Map<String, Object> attributes;
@@ -31,15 +33,14 @@ public class DefaultRequest implements HttpRequest {
 	public DefaultRequest(RequestLine requestLine, MultiValueMap<String, String> headers, ByteBuffer inputChannel) {
 		this.method = requestLine.getMethod();
 		this.uri = requestLine.getUri();
-		this.servletPath = uri.getPath();
 		this.headers = headers;
 		this.httpVersion = requestLine.getHttpVersion();
 		this.inputChannel = inputChannel;
 	}
 
 	public boolean isFormRequest() {
-		return !CollectionUtils.isEmpty(headers) && headers.get(CONTENT_TYPE).stream()
-			.anyMatch(contentType -> contentType.contains(FORM_CONTENT_TYPE));
+		return !CollectionUtils.isEmpty(headers) && headers.containsKey(CONTENT_TYPE) && headers.getFirst(CONTENT_TYPE)
+			.contains(FORM_CONTENT_TYPE);
 	}
 
 	@Override
@@ -80,22 +81,40 @@ public class DefaultRequest implements HttpRequest {
 	}
 
 	public String getServletPath() {
+		if (Objects.isNull(servletPath)) {
+			servletPath = getRequestUri();
+			if (servletPath.contains(".")) {
+				int index = servletPath.lastIndexOf("/");
+				servletPath = servletPath.substring(0, index);
+			}
+		}
 		return servletPath;
 	}
 
 	@Override
-	public URI getURI() {
-		return uri;
+	public String getQueryString() {
+		if (Objects.isNull(queryString)) {
+			this.queryString = uri.getQuery();
+		}
+		return queryString;
+	}
+
+	@Override
+	public String getRequestUri() {
+		if (Objects.isNull(requestUri)) {
+			requestUri = uri.getPath();
+		}
+		return requestUri;
 	}
 
 	@Override
 	public HttpVersion getHttpVersion() {
-		return this.httpVersion;
+		return httpVersion;
 	}
 
 	@Override
 	public HttpMethod getMethod() {
-		return this.method;
+		return method;
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.URISyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,7 @@ import webserver.servlet.ServletMapping;
 public class RequestHandler implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 	private Socket connection;
-	private HttpRequestDecoder httpRequestDecoder;
+	private final HttpRequestDecoder httpRequestDecoder;
 
 	public RequestHandler(Socket connectionSocket) {
 		this.connection = connectionSocket;
@@ -39,7 +38,7 @@ public class RequestHandler implements Runnable {
 			Servlet servlet = ServletMapping.match(servletPath);
 			servlet.service(httpRequest, httpResponse);
 
-		} catch (IOException | URISyntaxException exception) {
+		} catch (IOException exception) {
 			logger.error(exception.getMessage());
 		}
 	}
