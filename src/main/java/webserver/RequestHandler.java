@@ -1,6 +1,5 @@
 package webserver;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -9,62 +8,38 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
+import webserver.http.HttpRequest;
+import webserver.http.HttpRequestDecoder;
+import webserver.http.HttpResponse;
+import webserver.servlet.Servlet;
+import webserver.servlet.ServletMapping;
 
 public class RequestHandler implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private static final int MAX_BUFFER_SIZE = 8192;
+	private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+	private Socket connection;
+	private final HttpRequestDecoder httpRequestDecoder;
 
-    private Socket connection;
-    private HttpRequestDecoder httpRequestDecoder;
+	public RequestHandler(Socket connectionSocket) {
+		this.connection = connectionSocket;
+		this.httpRequestDecoder = new HttpRequestDecoder();
+	}
 
-    public RequestHandler(Socket connectionSocket) {
-        this.connection = connectionSocket;
-        this.httpRequestDecoder = new HttpRequestDecoder();
-    }
+	public void run() {
+		logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
+			connection.getPort());
 
-    public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
+		try (InputStream inputStream = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
-        try (InputStream inputStream = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            // 사용자 요청을 읽어서 처리한 후 응답을 전송한다.
+			HttpRequest httpRequest = httpRequestDecoder.decode(inputStream);
+			HttpResponse httpResponse = new HttpResponse(out);
 
+			String servletPath = httpRequest.getServletPath();
 
-            ByteBuf buffer = ByteBufAllocator.DEFAULT.buffer();
-            buffer.writeBytes(inputStream, MAX_BUFFER_SIZE);
+			Servlet servlet = ServletMapping.match(servletPath);
+			servlet.service(httpRequest, httpResponse);
 
-            HttpRequest httpRequest = httpRequestDecoder.decode(buffer);
-
-
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
+		} catch (IOException exception) {
+			logger.error(exception.getMessage());
+		}
+	}
 }
