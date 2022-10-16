@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 
 class ServletMappingTest {
 	@Test
-	void mappingTest(){
-		ServletMapping servletMapping = new ServletMapping();
-		Servlet servlet = servletMapping.match("/user/create");
+	void givenPathMappedServlet(){
+		Servlet servlet = ServletMapping.match("/user/create");
+
 		assertEquals(servlet.getClass(), UserCreateServlet.class);
 	}
 }

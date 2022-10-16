@@ -39,8 +39,11 @@ public class DefaultRequest implements HttpRequest {
 	}
 
 	public boolean isFormRequest() {
-		return !CollectionUtils.isEmpty(headers) && headers.containsKey(CONTENT_TYPE) && headers.getFirst(CONTENT_TYPE)
-			.contains(FORM_CONTENT_TYPE);
+		if(headers.containsKey(HttpMessage.CONTENT_TYPE)) {
+			return getHeaders().get(HttpMessage.CONTENT_TYPE).stream()
+				.anyMatch(contentType -> contentType.contains(FORM_CONTENT_TYPE));
+		}
+		return false;
 	}
 
 	@Override
@@ -171,6 +174,7 @@ public class DefaultRequest implements HttpRequest {
 	private Map<String, Cookie> initializeCookie(String cookieHeader) {
 		return Splitter.on(";")
 			.omitEmptyStrings()
+			.trimResults()
 			.withKeyValueSeparator("=")
 			.split(cookieHeader)
 			.entrySet()

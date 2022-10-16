@@ -1,32 +1,31 @@
 package webserver.http;
 
-import java.util.List;
+import static org.assertj.core.api.Assertions.*;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.util.MultiValueMap;
 
 class QueryStringDecoderTest {
 	@Test
-	public void parse() {
+	void parseQueryString() {
 		String queryString = "name=alice&age=20&name=bob&age=30&page=1\r\n";
 		QueryStringDecoder decoder = new QueryStringDecoder();
 
 		MultiValueMap<String, String> parameters = decoder.parseQueryString(queryString);
 
-		Assertions.assertThat(parameters)
-			.containsEntry("name", List.of("alice", "bob"))
-			.containsEntry("age", List.of("20", "30"))
-			.containsEntry("page", List.of("1"));
+		assertThat(parameters.get("name")).containsExactly("alice", "bob");
+		assertThat(parameters.get("age")).containsExactly("20", "30");
+		assertThat(parameters.get("page")).containsExactly("1");
 	}
 
-	@Test
-	public void noneValue() {
-		String queryString = "\r\n";
+	@ParameterizedTest
+	@NullAndEmptySource
+	void parseEmptyQueryString(String queryString) {
 		QueryStringDecoder decoder = new QueryStringDecoder();
 
 		MultiValueMap<String, String> parameters = decoder.parseQueryString(queryString);
-		Assertions.assertThat(parameters)
-			.isEmpty();
+		assertThat(parameters).isEmpty();
 	}
 }
