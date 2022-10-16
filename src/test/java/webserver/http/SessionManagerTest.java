@@ -9,17 +9,23 @@ import org.junit.jupiter.api.Test;
 class SessionManagerTest {
 	@Test
 	void removeSession() {
-		UUID sessionId = UUID.randomUUID();
+		String sessionId = getSessionId();
 		SessionManager sessionManager = SessionManager.getInstance();
 		sessionManager.createSession(sessionId);
 		sessionManager.removeSession(sessionId);
+
 		assertFalse(sessionManager.isSessionIdValid(sessionId));
 	}
 	@Test
 	void createSession(){
-		UUID sessionId = UUID.randomUUID();
+		String sessionId = getSessionId();
 		SessionManager sessionManager = SessionManager.getInstance();
 		sessionManager.createSession(sessionId);
+
 		assertTrue(sessionManager.isSessionIdValid(sessionId));
+	}
+
+	String getSessionId() {
+		return UUID.randomUUID().toString();
 	}
 }
