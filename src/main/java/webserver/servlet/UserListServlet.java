@@ -9,6 +9,7 @@ import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.http.response.ResponseBody;
 import webserver.http.response.ResponseLine;
+import webserver.http.session.SessionManager;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
@@ -18,7 +19,6 @@ public class UserListServlet extends HttpServlet {
     private static final String TEMPLATE_KEY = "users";
     private static final String REQUEST_PATH = "/user/list.html";
     private static final String REDIRECT_PATH = "/index.html";
-    private static final int LAST_INDEX = 1;
 
     @Override
     public String getRequestPath() {
@@ -49,7 +49,7 @@ public class UserListServlet extends HttpServlet {
     }
 
     public boolean isSignIn(HttpHeaders httpHeaders) {
-        return httpHeaders.getCookies().hasSignIn();
+        return httpHeaders.getCookies().hasCookie(SessionManager.SESSION_KEY);
     }
 
     private String applyHandlebars(Collection<User> users) {
