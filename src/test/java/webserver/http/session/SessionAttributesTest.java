@@ -14,11 +14,9 @@ class SessionAttributesTest {
     @Test
     @DisplayName("세션 값을 저장한다.")
     void setAttribute() {
-        String key = "session";
-        String attribute = "value";
         SessionAttributes sessionAttributes = new SessionAttributes();
 
-        sessionAttributes.setAttribute(key, attribute);
+        sessionAttributes.setAttribute("session", "value");
 
         assertThat(sessionAttributes.getAttributesSize()).isEqualTo(1);
     }
@@ -27,9 +25,8 @@ class SessionAttributesTest {
     @DisplayName("세션 값을 가져온다.")
     void getAttribute() {
         String key = "session";
-        String attribute = "value";
         SessionAttributes sessionAttributes = new SessionAttributes();
-        sessionAttributes.setAttribute(key, attribute);
+        sessionAttributes.setAttribute(key, "value");
 
         Object actual = sessionAttributes.getAttribute(key);
 
@@ -50,9 +47,8 @@ class SessionAttributesTest {
     @DisplayName("세션 값을 제거한다.")
     void removeAttribute() {
         String key = "session";
-        String attribute = "value";
         SessionAttributes sessionAttributes = new SessionAttributes();
-        sessionAttributes.setAttribute(key, attribute);
+        sessionAttributes.setAttribute(key, "value");
 
         assertThat(sessionAttributes.getAttributesSize()).isEqualTo(1);
 
@@ -73,10 +69,8 @@ class SessionAttributesTest {
     @Test
     @DisplayName("세션은 전부 비운다.")
     void invalidate() {
-        String key = "session";
-        String attribute = "value";
         SessionAttributes sessionAttributes = new SessionAttributes();
-        sessionAttributes.setAttribute(key, attribute);
+        sessionAttributes.setAttribute("session", "value");
 
         assertThat(sessionAttributes.getAttributesSize()).isEqualTo(1);
 
