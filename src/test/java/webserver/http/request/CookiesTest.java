@@ -26,7 +26,7 @@ class CookiesTest {
 
         Cookies actual = Cookies.parse(cookie);
 
-        assertThat(actual.hasSignIn()).isTrue();
+        assertThat(actual.hasCookie("JSESSIONID")).isTrue();
     }
 
     @Test
@@ -34,7 +34,7 @@ class CookiesTest {
     void signInFalse() {
         Cookies cookies = Cookies.empty();
 
-        boolean actual = cookies.hasSignIn();
+        boolean actual = cookies.hasCookie("JSESSIONID");
 
         assertThat(actual).isFalse();
     }

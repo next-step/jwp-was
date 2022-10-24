@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ExecutorsTest {
     private static final Logger logger = LoggerFactory.getLogger(ExecutorsTest.class);
 
-    private static AtomicInteger counter = new AtomicInteger(0);
+    private static final AtomicInteger counter = new AtomicInteger(0);
 
     public static void main(String[] args) throws Exception {
         ExecutorService es = Executors.newFixedThreadPool(100);

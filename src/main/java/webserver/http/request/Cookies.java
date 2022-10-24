@@ -1,7 +1,6 @@
 package webserver.http.request;
 
 import utils.StringUtils;
-import webserver.http.session.SessionManager;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,7 +12,6 @@ public class Cookies {
     private static final String COOKIE_HEADER_DELIMITER = ": ";
     private static final String COOKIE_DELIMITER = ";";
     private static final String COOKIE_VALUE_DELIMITER = "=";
-    private static final String LOGINED = "logined";
     private static final int KEY = 0;
     private static final int VALUE = 1;
 
@@ -46,8 +44,8 @@ public class Cookies {
         return cookieValue[valueIndex];
     }
 
-    public boolean hasSignIn() {
-        return cookies.containsKey(SessionManager.SESSION_KEY);
+    public boolean hasCookie(String cookie) {
+        return cookies.containsKey(cookie);
     }
 
     public String getCookieValue(String cookieKey) {
