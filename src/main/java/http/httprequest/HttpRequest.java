@@ -1,6 +1,7 @@
 package http.httprequest;
 
 import http.HttpSession;
+import http.SessionStorage;
 import http.httprequest.requestbody.RequestBody;
 import http.httprequest.requestheader.RequestHeader;
 import http.httprequest.requestline.RequestLine;
@@ -63,7 +64,9 @@ public class HttpRequest {
     }
 
     public HttpSession getSession() {
-        return httpRequestHeader.getSession();
+        return getCookieValue(httpRequestHeader.getSessionKey())
+                .flatMap(SessionStorage.getInstance()::find)
+                .orElseGet(HttpSession::empty);
     }
 
     public String getBodyValue(String key) {

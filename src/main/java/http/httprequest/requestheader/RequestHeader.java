@@ -49,10 +49,8 @@ public class RequestHeader {
         return Integer.parseInt(headers.getOrDefault(HttpHeaders.CONTENT_LENGTH, "0"));
     }
 
-    public HttpSession getSession() {
-        return getCookieValue(SessionStorage.getDefaultSessionCookieName())
-                .flatMap(SessionStorage.getInstance()::find)
-                .orElseGet(HttpSession::empty);
+    public String getSessionKey() {
+        return SessionStorage.getSessionId();
     }
 
     public Optional<String> getCookieValue(String key) {

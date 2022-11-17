@@ -29,7 +29,7 @@ public class HttpSessionInterceptor {
 
         return response.addHeader(
                 HttpHeaders.SET_COOKIE,
-                new ResponseCookie(SessionStorage.getDefaultSessionCookieName(), httpSession.getId())
+                new ResponseCookie(SessionStorage.getSessionId(), httpSession.getId())
         );
     }
 }

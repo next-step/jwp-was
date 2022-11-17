@@ -9,8 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionStorage {
 
+    private static final String SESSION_ID = "JSESSIONID";
     private final Map<String, HttpSession> sessions;
-    private static final String DEFAULT_SESSION_COOKIE_NAME = "JSESSIONID";
 
     private SessionStorage(Map<String, HttpSession> sessions) {
         Assert.notNull(sessions, "sessions must not be null");
@@ -21,8 +21,8 @@ public class SessionStorage {
         return Holder.instance;
     }
 
-    public static String getDefaultSessionCookieName() {
-        return DEFAULT_SESSION_COOKIE_NAME;
+    public static String getSessionId() {
+        return SESSION_ID;
     }
 
     public Optional<HttpSession> find(String id) {
