@@ -10,5 +10,5 @@ import java.net.URISyntaxException;
 public interface Controller {
     String getPath();
     boolean isMatch(HttpMethod httpMethod, String path);
-    HttpResponse serve(HttpRequest httpRequest) throws IOException, URISyntaxException;
+    HttpResponse execute(HttpRequest httpRequest) throws IOException, URISyntaxException;
 }

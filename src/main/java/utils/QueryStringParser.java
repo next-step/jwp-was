@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 
 public class QueryStringParser {
 
-    private static final String KEY_VALUE_DELIMITER = "=";
     private static final String PARAMS_DELIMITER = "&";
+    private static final String KEY_VALUE_DELIMITER = "=";
     private static final int KEY_INDEX = 0;
     private static final int VALUE_INDEX = 1;
 
@@ -30,11 +30,11 @@ public class QueryStringParser {
         return Arrays.stream(decodedQueryString.split(PARAMS_DELIMITER))
                 .map(param -> param.split(KEY_VALUE_DELIMITER))
                 .map(QueryStringParser::parseToEntry)
-                .collect(Collectors.toUnmodifiableMap((Map.Entry::getKey), (Map.Entry::getValue)));
+                .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     private static Map.Entry<String, String> parseToEntry(String[] keyValuePair) {
-        if (keyValuePair.length == 1) {
+        if (keyValuePair.length < 1) {
             return Map.entry(keyValuePair[KEY_INDEX], "");
         }
 

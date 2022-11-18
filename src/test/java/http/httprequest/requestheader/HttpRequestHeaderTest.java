@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,12 +39,12 @@ class HttpRequestHeaderTest {
     }
 
     @Test
-    @DisplayName("content length 기본값 조회")
-    void cookie() {
+    @DisplayName("쿠키를 잘 가져오는지 확인한다.")
+    void getCookieValue() {
         RequestHeader requestHeader = RequestHeader.from(Map.of(HttpHeaders.COOKIE, "logined=true"));
 
-        assertThat(requestHeader.getCookie())
-                .isEqualTo("logined=true");
+        assertThat(requestHeader.getCookieValue("logined"))
+                .isEqualTo(Optional.of("true"));
     }
 
     @Test
@@ -54,6 +55,4 @@ class HttpRequestHeaderTest {
 
         assertThat(requestHeader).isEqualTo(expected);
     }
-
-
 }

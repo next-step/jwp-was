@@ -31,7 +31,7 @@ public class UserCreateController implements Controller {
     }
 
     @Override
-    public HttpResponse serve(HttpRequest httpRequest) {
+    public HttpResponse execute(HttpRequest httpRequest) {
         DataBase.addUser(new User(
                 httpRequest.getBodyValue("userId"),
                 httpRequest.getBodyValue("password"),

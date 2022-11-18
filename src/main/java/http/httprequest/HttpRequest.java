@@ -1,5 +1,7 @@
 package http.httprequest;
 
+import http.HttpSession;
+import http.SessionStorage;
 import http.httprequest.requestbody.RequestBody;
 import http.httprequest.requestheader.RequestHeader;
 import http.httprequest.requestline.RequestLine;
@@ -9,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class HttpRequest {
     private final RequestLine requestLine;
@@ -48,8 +51,8 @@ public class HttpRequest {
         return httpRequestHeader.getContentLength();
     }
 
-    public String getCookie() {
-        return httpRequestHeader.getCookie();
+    public Optional<String> getCookieValue(String name) {
+        return httpRequestHeader.getCookieValue(name);
     }
 
     public HttpRequest deleteHeader(HttpRequest httpRequest, String key) {
@@ -58,6 +61,12 @@ public class HttpRequest {
                 httpRequestHeader.delete(key),
                 httpRequest.requestBody
         );
+    }
+
+    public HttpSession getSession() {
+        return getCookieValue(httpRequestHeader.getSessionKey())
+                .flatMap(SessionStorage.getInstance()::find)
+                .orElseGet(HttpSession::empty);
     }
 
     public String getBodyValue(String key) {

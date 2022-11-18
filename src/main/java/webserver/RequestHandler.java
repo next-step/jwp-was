@@ -1,5 +1,6 @@
 package webserver;
 
+import http.HttpSessionInterceptor;
 import http.httprequest.HttpRequest;
 import http.httpresponse.HttpResponse;
 import org.slf4j.Logger;
@@ -43,7 +44,7 @@ public class RequestHandler implements Runnable {
     private HttpResponse getHttpResponseSafety(HttpRequest httpRequest) {
         try {
             Controller controller = RequestMapper.getController(httpRequest);
-            return controller.serve(httpRequest);
+            return new HttpSessionInterceptor(controller).execute(httpRequest);
         } catch (IOException | URISyntaxException e) {
             return HttpResponse.internalServerError();
         } catch (IllegalArgumentException e) {
@@ -62,7 +63,7 @@ public class RequestHandler implements Runnable {
 
     private void writeHeaders(DataOutputStream dos,
                               HttpResponse httpResponse) throws IOException {
-        for (Map.Entry<String, String> headerEntry : httpResponse.getResponseHeader().getHeaderEntries()) {
+        for (Map.Entry<String, Object> headerEntry : httpResponse.getResponseHeader().getHeaderEntries()) {
             dos.writeBytes(String.format("%s: %s\r%n", headerEntry.getKey(), headerEntry.getValue()));
         }
     }

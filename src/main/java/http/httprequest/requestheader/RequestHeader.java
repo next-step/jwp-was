@@ -1,5 +1,7 @@
 package http.httprequest.requestheader;
 
+import http.HttpSession;
+import http.SessionStorage;
 import http.httpresponse.HttpHeaders;
 import org.springframework.util.CollectionUtils;
 
@@ -8,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RequestHeader {
@@ -46,8 +49,16 @@ public class RequestHeader {
         return Integer.parseInt(headers.getOrDefault(HttpHeaders.CONTENT_LENGTH, "0"));
     }
 
-    public String getCookie() {
-        return headers.getOrDefault(HttpHeaders.COOKIE, "");
+    public String getSessionKey() {
+        return SessionStorage.getSessionId();
+    }
+
+    public Optional<String> getCookieValue(String key) {
+        return getCookie().getValue(key);
+    }
+
+    private RequestCookie getCookie() {
+        return RequestCookie.from(headers.get(HttpHeaders.COOKIE));
     }
 
     public RequestHeader delete(String header) {
@@ -68,5 +79,4 @@ public class RequestHeader {
     public int hashCode() {
         return Objects.hash(headers);
     }
-
 }

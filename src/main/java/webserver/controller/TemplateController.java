@@ -39,7 +39,7 @@ public class TemplateController implements Controller {
     }
 
     @Override
-    public HttpResponse serve(HttpRequest httpRequest) throws IOException, URISyntaxException {
+    public HttpResponse execute(HttpRequest httpRequest) throws IOException, URISyntaxException {
         return new HttpResponse(
                 new StatusLine(HttpStatusCode.OK),
                 new ResponseHeader(Collections.singletonMap(HttpHeaders.CONTENT_TYPE, "text/html;charset=utf-8")),

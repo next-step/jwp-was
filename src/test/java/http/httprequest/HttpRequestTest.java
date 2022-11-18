@@ -1,9 +1,13 @@
 package http.httprequest;
 
 
+import http.HttpSession;
+import http.SessionAttribute;
+import http.SessionStorage;
 import http.httprequest.requestbody.RequestBody;
 import http.httprequest.requestheader.RequestHeader;
 import http.httprequest.requestline.RequestLine;
+import http.httpresponse.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +19,7 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,14 +40,12 @@ class HttpRequestTest {
         )) {
             buffer.append(current);
         }
-
         BufferedReader br = new BufferedReader(new StringReader(buffer.toString()));
-
         HttpRequest httpRequest = HttpRequest.from(br);
 
         assertAll(
                 () -> assertThat(httpRequest.getRequestLine()).isEqualTo(RequestLine.from("GET /index.html HTTP/1.1")),
-                () -> assertThat(httpRequest.getCookie()).isEqualTo("logined=false")
+                () -> assertThat(httpRequest.getCookieValue("logined")).isEqualTo(Optional.of("false"))
         );
     }
 
@@ -69,5 +71,44 @@ class HttpRequestTest {
         );
 
         assertThat(httpRequest.getContentLength()).isEqualTo(75);
+    }
+
+    @Test
+    @DisplayName("정상적으로 쿠키값을 가져오는지 확인")
+    void getCookieValue() throws IOException {
+        StringBuilder buffer = new StringBuilder();
+
+        for (String current : Arrays.asList(
+                "GET /index.html HTTP/1.1\n",
+                "Host: localhost:8080\n",
+                "Connection: keep-alive\n",
+                "Cookie: logined=false\n"
+        )) {
+            buffer.append(current);
+        }
+        BufferedReader br = new BufferedReader(new StringReader(buffer.toString()));
+        HttpRequest httpRequest = HttpRequest.from(br);
+
+        assertThat(httpRequest.getCookieValue("logined")).isEqualTo(Optional.of("false"));
+    }
+
+    @Test
+    @DisplayName("정상적으로 세션값을 가져오는지 확인")
+    void getSession() throws IOException {
+        StringBuilder buffer = new StringBuilder();
+
+        for (String current : Arrays.asList(
+                "GET /index.html HTTP/1.1",
+                "Host: localhost:8080",
+                "Connection: keep-alive",
+                "Cookie: JSESSIONID=1234"
+        )) {
+            buffer.append(current);
+        }
+        BufferedReader br = new BufferedReader(new StringReader(buffer.toString()));
+        HttpRequest httpRequest = HttpRequest.from(br);
+        SessionStorage.getInstance().add(new HttpSession("1234", new SessionAttribute(Map.of("test", "test"))));
+
+        assertThat(httpRequest.getSession()).isEqualTo(new HttpSession("1234", new SessionAttribute(Map.of("test", "test"))));
     }
 }

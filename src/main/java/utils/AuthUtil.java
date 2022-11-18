@@ -2,6 +2,7 @@ package utils;
 
 import com.google.common.net.HttpHeaders;
 import db.DataBase;
+import http.SessionAttribute;
 import http.httprequest.HttpRequest;
 import http.httpresponse.HttpResponse;
 import http.httpresponse.HttpStatusCode;
@@ -9,7 +10,6 @@ import http.httpresponse.ResponseHeader;
 import http.httpresponse.StatusLine;
 import model.User;
 
-import java.util.Collections;
 import java.util.Map;
 
 public class AuthUtil {
@@ -32,7 +32,7 @@ public class AuthUtil {
 
         return HttpResponse.sendRedirect(
                 "/index.html",
-                new ResponseHeader(Collections.singletonMap(HttpHeaders.SET_COOKIE, "logined=true; Path=/"))
+                new SessionAttribute(Map.of("user", user))
         );
     }
 
@@ -46,8 +46,8 @@ public class AuthUtil {
         );
     }
 
-    public static boolean isLoggedIn(HttpRequest httpRequest) {
-        return httpRequest.getCookie().contains("logined=true");
+    public static boolean isNotLoggedIn(HttpRequest httpRequest) {
+        return httpRequest.getSession().doesNotContainAttribute("user");
     }
 
 }

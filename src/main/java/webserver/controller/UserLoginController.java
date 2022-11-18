@@ -31,7 +31,7 @@ public class UserLoginController implements Controller {
     }
 
     @Override
-    public HttpResponse serve(HttpRequest httpRequest) {
+    public HttpResponse execute(HttpRequest httpRequest) {
         return AuthUtil.login(httpRequest);
     }
 }
